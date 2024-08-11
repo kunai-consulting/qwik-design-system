@@ -26,10 +26,16 @@
   "devDependencies": {
     "@builder.io/qwik": "^1.8.0",
     "@builder.io/qwik-city": "^1.8.0",
+    "@qwik-ui/headless": "^0.5.1",
     "@types/node": "20.14.11",
+    "shiki": "^1.12.1",
     "typescript": "5.4.5",
     "undici": "*",
     "vite": "5.3.5",
     "vite-tsconfig-paths": "^4.2.1"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.0"
   }
 }
