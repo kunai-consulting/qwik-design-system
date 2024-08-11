@@ -2,6 +2,9 @@
   "name": "qwik-design-system",
   "version": "0.0.0",
   "scripts": {
+    "dev": "pnpm --filter ./apps/website dev",
+    "build": "pnpm --filter ./libs/headless build",
+    "preview": "pnpm --filter ./apps/website preview",
     "check": "biome ci .",
     "check.format": "biome format .",
     "check.lint": "biome check .",
