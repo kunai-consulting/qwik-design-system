@@ -1,4 +1,6 @@
 import { component$, Slot } from "@builder.io/qwik";
+import { MDXProvider } from "~/mdx/provider";
+import { components } from "~/mdx/components";
 import type { RequestHandler } from "@builder.io/qwik-city";
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
@@ -13,5 +15,11 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 };
 
 export default component$(() => {
-  return <Slot />;
+  return (
+    <MDXProvider components={components}>
+      <main>
+        <Slot />
+      </main>
+    </MDXProvider>
+  );
 });

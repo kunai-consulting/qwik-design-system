@@ -11,7 +11,7 @@ export const components: Record<string, Component> = {
         {...props}
         class={cn(
           "leading-7 text-cool-700 [&:not(:first-child)]:mt-6",
-          props.class,
+          props.class
         )}
       >
         <Slot />
@@ -24,7 +24,7 @@ export const components: Record<string, Component> = {
         {...props}
         class={cn(
           "mt-2 scroll-m-20 text-4xl font-bold tracking-tight text-cool-700",
-          props.class,
+          props.class
         )}
       >
         <Slot />
@@ -37,7 +37,7 @@ export const components: Record<string, Component> = {
         {...props}
         class={cn(
           "mt-10 scroll-m-20 border-b border-b-cool-200 pb-1 text-3xl font-semibold tracking-tight text-cool-700 first:mt-0",
-          props.class,
+          props.class
         )}
       >
         <Slot />
@@ -50,7 +50,7 @@ export const components: Record<string, Component> = {
         {...props}
         class={cn(
           "mt-8 scroll-m-20 text-2xl font-semibold tracking-tight text-cool-700",
-          props.class,
+          props.class
         )}
       >
         <Slot />
@@ -63,7 +63,7 @@ export const components: Record<string, Component> = {
         {...props}
         class={cn(
           "mt-8 scroll-m-20 text-xl font-semibold tracking-tight text-cool-700",
-          props.class,
+          props.class
         )}
       >
         <Slot />
@@ -76,7 +76,7 @@ export const components: Record<string, Component> = {
         {...props}
         class={cn(
           "mt-8 scroll-m-20 text-lg font-semibold tracking-tight text-cool-700",
-          props.class,
+          props.class
         )}
       >
         <Slot />
@@ -89,7 +89,7 @@ export const components: Record<string, Component> = {
         {...props}
         class={cn(
           "font-medium text-cool-700 underline underline-offset-4",
-          props.class,
+          props.class
         )}
         target="_blank"
         rel="noreferrer"
@@ -131,7 +131,7 @@ export const components: Record<string, Component> = {
         {...props}
         class={cn(
           "mt-6 border-l-2 border-cool-300 pl-6 italic text-cool-700 [&>*]:text-cool-600",
-          props.class,
+          props.class
         )}
       >
         <Slot />
@@ -157,7 +157,7 @@ export const components: Record<string, Component> = {
         {...props}
         class={cn(
           "mb-4 mt-6 overflow-x-auto rounded-lg bg-kunai-blue-50 py-4 text-cool-700",
-          props.class,
+          props.class
         )}
       >
         <Slot />
@@ -170,7 +170,7 @@ export const components: Record<string, Component> = {
         {...props}
         class={cn(
           "py-[0.2rem]font-mono relative rounded border border-cool-400 bg-cool-200 box-decoration-clone px-[0.3rem] py-1 text-sm text-cool-700",
-          props.class,
+          props.class
         )}
       >
         <Slot />
@@ -183,7 +183,7 @@ export const components: Record<string, Component> = {
         {...props}
         class={cn(
           "mt-6 w-full border-collapse border border-cool-200",
-          props.class,
+          props.class
         )}
       >
         <Slot />
@@ -196,7 +196,7 @@ export const components: Record<string, Component> = {
         {...props}
         class={cn(
           "border border-cool-200 px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right",
-          props.class,
+          props.class
         )}
       >
         <Slot />
@@ -209,7 +209,7 @@ export const components: Record<string, Component> = {
         {...props}
         class={cn(
           "border border-cool-200 px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right",
-          props.class,
+          props.class
         )}
       >
         <Slot />
@@ -222,7 +222,7 @@ export const components: Record<string, Component> = {
         {...props}
         class={cn(
           "m-0 border-t border-cool-300 p-0 even:bg-cool-100",
-          props.class,
+          props.class
         )}
       />
     );
