@@ -1,0 +1,15 @@
+{
+	"name": "qwik-design-system",
+	"version": "0.0.0",
+	"scripts": {
+		"check": "biome ci .",
+		"check.format": "biome format .",
+		"check.lint": "biome check .",
+		"fix": "pnpm lint && pnpm format",
+		"format": "biome format --write .",
+		"lint": "biome check --write --unsafe ."
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.8.3"
+	}
+}
