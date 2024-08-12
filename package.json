@@ -10,9 +10,13 @@
     "check.lint": "biome check .",
     "fix": "pnpm lint && pnpm format",
     "format": "biome format --write .",
-    "lint": "biome check --write --unsafe ."
+    "lint": "biome check --write --unsafe .",
+    "test": "playwright test",
+    "test.ui": "playwright test --ui"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.3"
+    "@biomejs/biome": "1.8.3",
+    "@playwright/test": "^1.46.0",
+    "@types/node": "20.14.11"
   }
 }
