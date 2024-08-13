@@ -1,6 +1,6 @@
 {
 	"name": "@kunai-consulting/qwik-headless",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "Create a Qwik library",
 	"main": "./lib/index.qwik.mjs",
 	"qwik": "./lib/index.qwik.mjs",
@@ -12,7 +12,10 @@
 			"types": "./lib-types/index.d.ts"
 		}
 	},
-	"files": ["lib", "lib-types"],
+	"files": [
+		"lib",
+		"lib-types"
+	],
 	"engines": {
 		"node": "^18.17.0 || ^20.3.0 || >=21.0.0"
 	},
