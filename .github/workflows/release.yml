@@ -10,10 +10,6 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
-env:
-  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
 jobs:
   release:
     name: 🚀 Release
@@ -28,7 +24,6 @@ jobs:
         id: checkout
         uses: actions/checkout@v2.3.3
         with:
-          token: ${{ env.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: 🟢 Setup node
@@ -47,9 +42,9 @@ jobs:
       - name: 🎈 Get pnpm store directory
         id: get-pnpm-cache-dir
         run: |
-          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
+          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
 
-      - name: 🔆 Cache pnpm modules
+      - name: 🔆 Cache pnpm
         uses: actions/cache@v3
         id: pnpm-cache
         with:
@@ -76,5 +71,5 @@ jobs:
           version: pnpm version:packages
           commit: "chore(release): version packages 🦋 [skip ci]"
         env:
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ env.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
