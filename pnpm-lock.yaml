@@ -67,7 +67,28 @@ importers:
         specifier: ^4.2.1
         version: 4.3.2(typescript@5.4.5)(vite@5.3.5(@types/node@20.14.11))
 
-  libs/headless:
+  libs/components:
+    devDependencies:
+      '@builder.io/qwik':
+        specifier: 1.8.0
+        version: 1.8.0(@types/node@20.14.11)
+      '@types/node':
+        specifier: 20.14.11
+        version: 20.14.11
+      typescript:
+        specifier: 5.4.5
+        version: 5.4.5
+      undici:
+        specifier: '*'
+        version: 6.19.7
+      vite:
+        specifier: 5.3.5
+        version: 5.3.5(@types/node@20.14.11)
+      vite-tsconfig-paths:
+        specifier: ^4.2.1
+        version: 4.3.2(typescript@5.4.5)(vite@5.3.5(@types/node@20.14.11))
+
+  libs/hooks:
     devDependencies:
       '@builder.io/qwik':
         specifier: 1.8.0
