@@ -1,5 +1,5 @@
 {
-	"name": "@kunai-consulting/qwik-headless",
+	"name": "@kunai-consulting/qwik-components",
 	"version": "0.0.2",
 	"description": "Create a Qwik library",
 	"main": "./lib/index.qwik.mjs",
