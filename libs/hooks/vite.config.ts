@@ -1,9 +1,14 @@
-import { defineConfig } from "vite";
-import pkg from "./package.json";
 import { qwikVite } from "@builder.io/qwik/optimizer";
+import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+import pkg from "./package.json";
 
-const { dependencies = {}, peerDependencies = {} } = pkg as any;
+type PackageJson = {
+  dependencies?: Record<string, string>;
+  peerDependencies?: Record<string, string>;
+};
+
+const { dependencies = {}, peerDependencies = {} } = pkg as PackageJson;
 const makeRegex = (dep) => new RegExp(`^${dep}(/.*)?$`);
 const excludeAll = (obj) => Object.keys(obj).map(makeRegex);
 
@@ -14,9 +19,14 @@ export default defineConfig(() => {
       lib: {
         entry: "./src/index.ts",
         formats: ["es", "cjs"],
-        fileName: (format) => `index.qwik.${format === "es" ? "mjs" : "cjs"}`,
+        fileName: (format, entryName) =>
+          `${entryName}.qwik.${format === "es" ? "mjs" : "cjs"}`,
       },
       rollupOptions: {
+        output: {
+          preserveModules: true,
+          preserveModulesRoot: "src",
+        },
         // externalize deps that shouldn't be bundled into the library
         external: [
           /^node:.*/,
