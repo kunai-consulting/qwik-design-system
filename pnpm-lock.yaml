@@ -39,6 +39,12 @@ importers:
       '@builder.io/qwik-city':
         specifier: 1.7.3
         version: 1.7.3(@types/node@20.14.11)(rollup@4.20.0)
+      '@kunai-consulting/qwik-components':
+        specifier: workspace:*
+        version: link:../../libs/components
+      '@kunai-consulting/qwik-hooks':
+        specifier: workspace:*
+        version: link:../../libs/hooks
       '@qwik-ui/headless':
         specifier: ^0.5.1
         version: 0.5.1(@builder.io/qwik@1.7.3(@types/node@20.14.11))
