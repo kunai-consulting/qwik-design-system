@@ -12,11 +12,15 @@
     "format": "biome format --write .",
     "lint": "biome check --write --unsafe .",
     "test": "playwright test",
-    "test.ui": "playwright test --ui"
+    "test.ui": "playwright test --ui",
+    "changeset": "changeset",
+    "publish:packages": "changeset publish",
+    "version:packages": "changeset version"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
     "@playwright/test": "^1.46.0",
-    "@types/node": "20.14.11"
+    "@types/node": "20.14.11",
+    "@changesets/cli": "^2.27.7"
   }
 }
