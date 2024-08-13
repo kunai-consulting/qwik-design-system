@@ -1,5 +1,6 @@
 import { component$ } from "@builder.io/qwik";
+import { Feed } from "@kunai-consulting/qwik-components";
 
 export default component$(() => {
-  return <div>Hello World</div>;
+  return <Feed />;
 });
