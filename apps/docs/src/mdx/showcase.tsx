@@ -5,7 +5,7 @@ import {
   useSignal,
   useTask$,
 } from "@builder.io/qwik";
-import { Tabs } from "@qwik-ui/headless";
+import { Carousel } from "@qwik-ui/headless";
 import { metaGlobComponents, rawComponents } from "~/utils/component-import";
 
 import { Highlight } from "./highlight";
@@ -25,28 +25,25 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
   const componentCodeSig = useSignal<string>();
 
   useTask$(async () => {
-    MetaGlobComponentSig.value = isDev
-      ? await metaGlobComponents[componentPath]() // We need to call `await metaGlobComponents[componentPath]()` in development as it is `eager:false`
-      : metaGlobComponents[componentPath]; // We need to directly access the `metaGlobComponents[componentPath]` expression in preview/production as it is `eager:true`
-    componentCodeSig.value = isDev
-      ? await rawComponents[componentPath]()
-      : rawComponents[componentPath];
+    MetaGlobComponentSig.value = await metaGlobComponents[componentPath]();
+    componentCodeSig.value = await rawComponents[componentPath]();
   });
 
   return (
-    <Tabs.Root {...props}>
-      <Tabs.List class="mt-4 flex flex-row gap-6">
-        <Tabs.Tab>Preview</Tabs.Tab>
-        <Tabs.Tab>Code</Tabs.Tab>
-      </Tabs.List>
-      <Tabs.Panel class="mt-5 rounded-lg border p-8 shadow-sm">
+    <Carousel.Root>
+      <Carousel.Pagination>
+        <Carousel.Bullet>Preview</Carousel.Bullet>
+        <Carousel.Bullet>Code</Carousel.Bullet>
+      </Carousel.Pagination>
+
+      <Carousel.Slide>
         <section class="flex flex-col items-center">
           {MetaGlobComponentSig.value && <MetaGlobComponentSig.value />}
         </section>
-      </Tabs.Panel>
-      <Tabs.Panel class="mt-5">
+      </Carousel.Slide>
+      <Carousel.Slide>
         <Highlight code={componentCodeSig.value || ""} />
-      </Tabs.Panel>
-    </Tabs.Root>
+      </Carousel.Slide>
+    </Carousel.Root>
   );
 });

@@ -5,7 +5,7 @@ export const metaGlobComponents: Record<string, any> = import.meta.glob(
   "/src/routes/**/examples/*.tsx",
   {
     import: "default",
-    eager: !isDev,
+    eager: false,
   }
 );
 
@@ -15,6 +15,6 @@ export const rawComponents: Record<string, any> = import.meta.glob(
   {
     query: "raw",
     import: "default",
-    eager: !isDev,
+    eager: false,
   }
 );

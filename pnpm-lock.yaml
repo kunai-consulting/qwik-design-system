@@ -34,11 +34,11 @@ importers:
         version: 2.5.0
     devDependencies:
       '@builder.io/qwik':
-        specifier: 1.7.2
-        version: 1.7.2(@types/node@20.14.11)
+        specifier: '1.8'
+        version: 1.8.0(@types/node@20.14.11)
       '@builder.io/qwik-city':
-        specifier: 1.7.2
-        version: 1.7.2(@types/node@20.14.11)(rollup@4.20.0)
+        specifier: '1.8'
+        version: 1.8.0(@types/node@20.14.11)(rollup@4.20.0)
       '@kunai-consulting/qwik-components':
         specifier: workspace:*
         version: link:../../libs/components
@@ -47,7 +47,7 @@ importers:
         version: link:../../libs/hooks
       '@qwik-ui/headless':
         specifier: ^0.5.1
-        version: 0.5.1(@builder.io/qwik@1.7.2(@types/node@20.14.11))
+        version: 0.5.1(@builder.io/qwik@1.8.0(@types/node@20.14.11))
       '@types/estree-jsx':
         specifier: 1.0.5
         version: 1.0.5
@@ -187,14 +187,9 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@builder.io/qwik-city@1.7.2':
-    resolution: {integrity: sha512-b7qy6sKcPzxlwI/KshbmtpRGUML3EBXsU8IoCOH9tRoOqKTrhqfg+vAIsh+f8FslXTt1oVF9tL6KYlpu+ZANnA==}
+  '@builder.io/qwik-city@1.8.0':
+    resolution: {integrity: sha512-3WCyKFf8E5W2HlL/VtYneXsY/d7llNRUo3Bc/PonOgEUpNYM3i7ts9M3MSnkKYf7dLm648+MSeP/x2Ll01lz7Q==}
     engines: {node: '>=16.8.0 <18.0.0 || >=18.11'}
-
-  '@builder.io/qwik@1.7.2':
-    resolution: {integrity: sha512-9pMZHDB6hIHn6jfQu0zRT54G7Lg0gSGVlGSogYttdeNB3qKl9QkuHXSz3wziyBD6mtFMrCkpLshFs/ZBtajoIA==}
-    engines: {node: '>=16.8.0 <18.0.0 || >=18.11'}
-    hasBin: true
 
   '@builder.io/qwik@1.8.0':
     resolution: {integrity: sha512-HM7X6h1NCfhyHt15NZYTF2PaNQmuc1gW6PzTzw2bNhpgBuD/RR/nE79HBXq13djQg6hHjaZpToJySToT9Q3u6w==}
@@ -1158,9 +1153,9 @@ packages:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
     engines: {node: '>= 4'}
 
-  imagetools-core@6.0.4:
-    resolution: {integrity: sha512-N1qs5qn7u9nR3kboISkYuvJm8MohiphCfBa+wx1UOropVaFis9/mh6wuDPLHJNhl6/64C7q2Pch5NASVKAaSrg==}
-    engines: {node: '>=12.0.0'}
+  imagetools-core@7.0.1:
+    resolution: {integrity: sha512-XDUx3Ac1VrZ4XF5eAJNYdHbFXRPNyebHFrwJsZ4WHb7X2MitOVW23cFphSDByT3MH5rdWdxKr4edSW2agChvDg==}
+    engines: {node: '>=18.0.0'}
 
   inline-style-parser@0.1.1:
     resolution: {integrity: sha512-7NXolsK4CAS5+xvdj5OMMbI962hU/wvwoxk+LWR9Ek9bVtyuuYScDN6eS0rUm6TxApFpw7CX1o4uJzcd4AyD3Q==}
@@ -1880,9 +1875,9 @@ packages:
   vfile@6.0.1:
     resolution: {integrity: sha512-1bYqc7pt6NIADBJ98UiG0Bn/CHIVOoZ/IyEkqIruLg0mE1BKzkOXY2D6CSqQIcKqgadppE5lrxgWXJmXd7zZJw==}
 
-  vite-imagetools@6.2.9:
-    resolution: {integrity: sha512-C4ZYhgj2vAj43/TpZ06XlDNP0p/7LIeYbgUYr+xG44nM++4HGX6YZBKAYpiBNgiCFUTJ6eXkRppWBrfPMevgmg==}
-    engines: {node: '>=12.0.0'}
+  vite-imagetools@7.0.4:
+    resolution: {integrity: sha512-C9C7b2p/8/TCN2g26tE9haoer2i8K4x0v2RXUiHsIjiz221vQuKItCQ+VyiVCsUMPXfJC/tlZsmCZVBz5jh7uA==}
+    engines: {node: '>=18.0.0'}
 
   vite-tsconfig-paths@4.3.2:
     resolution: {integrity: sha512-0Vd/a6po6Q+86rPlntHye7F31zA2URZMbH8M3saAZ/xR9QoGN/L21bxEGfXdWmFdNkqPpRdxFT7nmNe12e9/uA==}
@@ -2005,7 +2000,7 @@ snapshots:
   '@biomejs/cli-win32-x64@1.8.3':
     optional: true
 
-  '@builder.io/qwik-city@1.7.2(@types/node@20.14.11)(rollup@4.20.0)':
+  '@builder.io/qwik-city@1.8.0(@types/node@20.14.11)(rollup@4.20.0)':
     dependencies:
       '@mdx-js/mdx': 3.0.1
       '@types/mdx': 2.0.13
@@ -2014,7 +2009,7 @@ snapshots:
       undici: 6.19.7
       vfile: 6.0.1
       vite: 5.3.5(@types/node@20.14.11)
-      vite-imagetools: 6.2.9(rollup@4.20.0)
+      vite-imagetools: 7.0.4(rollup@4.20.0)
       zod: 3.22.4
     transitivePeerDependencies:
       - '@types/node'
@@ -2025,19 +2020,6 @@ snapshots:
       - stylus
       - sugarss
       - supports-color
-      - terser
-
-  '@builder.io/qwik@1.7.2(@types/node@20.14.11)':
-    dependencies:
-      csstype: 3.1.3
-      vite: 5.3.5(@types/node@20.14.11)
-    transitivePeerDependencies:
-      - '@types/node'
-      - less
-      - lightningcss
-      - sass
-      - stylus
-      - sugarss
       - terser
 
   '@builder.io/qwik@1.8.0(@types/node@20.14.11)':
@@ -2460,9 +2442,9 @@ snapshots:
     dependencies:
       playwright: 1.46.0
 
-  '@qwik-ui/headless@0.5.1(@builder.io/qwik@1.7.2(@types/node@20.14.11))':
+  '@qwik-ui/headless@0.5.1(@builder.io/qwik@1.8.0(@types/node@20.14.11))':
     dependencies:
-      '@builder.io/qwik': 1.7.2(@types/node@20.14.11)
+      '@builder.io/qwik': 1.8.0(@types/node@20.14.11)
       '@floating-ui/core': 1.6.7
       '@floating-ui/dom': 1.6.10
       '@oddbird/popover-polyfill': 0.4.3
@@ -3075,9 +3057,7 @@ snapshots:
 
   ignore@5.3.2: {}
 
-  imagetools-core@6.0.4:
-    dependencies:
-      sharp: 0.33.4
+  imagetools-core@7.0.1: {}
 
   inline-style-parser@0.1.1: {}
 
@@ -4027,10 +4007,11 @@ snapshots:
       unist-util-stringify-position: 4.0.0
       vfile-message: 4.0.2
 
-  vite-imagetools@6.2.9(rollup@4.20.0):
+  vite-imagetools@7.0.4(rollup@4.20.0):
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.20.0)
-      imagetools-core: 6.0.4
+      imagetools-core: 7.0.1
+      sharp: 0.33.4
     transitivePeerDependencies:
       - rollup
 

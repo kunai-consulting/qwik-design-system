@@ -29,7 +29,7 @@ export const Highlight = component$(
     const codeSig = useSignal("");
 
     const addShiki$ = $(async () => {
-      let modifiedCode: string = code;
+      let modifiedCode: string = code.toString();
 
       let partsOfCode = modifiedCode.split(splitCommentStart);
 
