@@ -63,6 +63,7 @@ export const Highlight = component$(
           props.class
         )}
       >
+        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}
         <div dangerouslySetInnerHTML={codeSig.value} />
       </div>
     );

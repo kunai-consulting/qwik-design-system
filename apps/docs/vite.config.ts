@@ -10,6 +10,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import pkg from "./package.json";
 
 type PkgDep = Record<string, string>;
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 const { dependencies = {}, devDependencies = {} } = pkg as any as {
   dependencies: PkgDep;
   devDependencies: PkgDep;
@@ -38,23 +39,19 @@ export default defineConfig(({ command, mode }): UserConfig => {
       // For example ['better-sqlite3'] if you use that in server functions.
       exclude: [],
     },
-
-    /**
-     * This is an advanced setting. It improves the bundling of your server code. To use it, make sure you understand when your consumed packages are dependencies or dev dependencies. (otherwise things will break in production)
-     */
-    // ssr:
-    //   command === "build" && mode === "production"
-    //     ? {
-    //         // All dev dependencies should be bundled in the server build
-    //         noExternal: Object.keys(devDependencies),
-    //         // Anything marked as a dependency will not be bundled
-    //         // These should only be production binary deps (including deps of deps), CLI deps, and their module graph
-    //         // If a dep-of-dep needs to be external, add it here
-    //         // For example, if something uses `bcrypt` but you don't have it as a dep, you can write
-    //         // external: [...Object.keys(dependencies), 'bcrypt']
-    //         external: Object.keys(dependencies),
-    //       }
-    //     : undefined,
+    ssr:
+      command === "build" && mode === "production"
+        ? {
+            // All dev dependencies should be bundled in the server build
+            noExternal: Object.keys(devDependencies),
+            // Anything marked as a dependency will not be bundled
+            // These should only be production binary deps (including deps of deps), CLI deps, and their module graph
+            // If a dep-of-dep needs to be external, add it here
+            // For example, if something uses `bcrypt` but you don't have it as a dep, you can write
+            // external: [...Object.keys(dependencies), 'bcrypt']
+            external: Object.keys(dependencies),
+          }
+        : undefined,
 
     server: {
       headers: {
@@ -105,7 +102,9 @@ function errorOnDuplicatesPkgDeps(
   // Format the error message with the duplicates list.
   // The `join` function is used to represent the elements of the 'duplicateDeps' array as a comma-separated string.
   msg = `
-    Warning: The dependency "${duplicateDeps.join(", ")}" is listed in both "devDependencies" and "dependencies".
+    Warning: The dependency "${duplicateDeps.join(
+      ", "
+    )}" is listed in both "devDependencies" and "dependencies".
     Please move the duplicated dependencies to "devDependencies" only and remove it from "dependencies"
   `;
 

@@ -14,6 +14,7 @@ function isNamedFunction(node: FunctionDeclaration, name: string) {
   return Boolean(node.id?.name === name);
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const recmaProvideComponents: Plugin<any, Program> = () => {
   let id = 0;
   return (tree) => {

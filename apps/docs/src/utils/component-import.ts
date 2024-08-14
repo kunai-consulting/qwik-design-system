@@ -1,20 +1,20 @@
 import { isDev } from "@builder.io/qwik/build";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const metaGlobComponents: Record<string, any> = import.meta.glob(
   "/src/routes/**/examples/*.tsx",
   {
     import: "default",
-    eager: isDev ? false : true,
+    eager: !isDev,
   }
 );
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const rawComponents: Record<string, any> = import.meta.glob(
   "/src/routes/**/examples/*.tsx",
   {
     query: "raw",
     import: "default",
-    eager: isDev ? false : true,
+    eager: !isDev,
   }
 );

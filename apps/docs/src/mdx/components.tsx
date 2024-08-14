@@ -143,10 +143,11 @@ export const components: Record<string, Component> = {
       <hr {...props} class={cn("my-6 border-cool-200 md:my-8", props.class)} />
     );
   }),
-  img: component$<PropsOf<"img">>(({ ...props }) => {
+  img: component$<PropsOf<"img">>(({ alt, ...props }) => {
     return (
       <img
         {...props}
+        alt={alt}
         class={cn("rounded-md border border-cool-200", props.class)}
       />
     );

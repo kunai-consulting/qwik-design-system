@@ -1,6 +1,6 @@
 import {
-  Component,
-  PropsOf,
+  type Component,
+  type PropsOf,
   component$,
   useSignal,
   useTask$,
@@ -20,12 +20,11 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
   const location = useLocation();
   const componentPath = `/src/routes${location.url.pathname}examples/${name}.tsx`;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const MetaGlobComponentSig = useSignal<Component<any>>();
   const componentCodeSig = useSignal<string>();
 
   useTask$(async () => {
-    // eslint-disable-next-line qwik/valid-lexical-scope
     MetaGlobComponentSig.value = isDev
       ? await metaGlobComponents[componentPath]() // We need to call `await metaGlobComponents[componentPath]()` in development as it is `eager:false`
       : metaGlobComponents[componentPath]; // We need to directly access the `metaGlobComponents[componentPath]` expression in preview/production as it is `eager:true`

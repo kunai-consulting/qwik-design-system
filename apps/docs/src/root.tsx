@@ -1,10 +1,10 @@
+import { component$ } from "@builder.io/qwik";
 import {
-  component$,
-  PrefetchGraph,
-  PrefetchServiceWorker,
-} from "@builder.io/qwik";
-import { QwikCityProvider, RouterOutlet } from "@builder.io/qwik-city";
-import { RouterHead } from "./components/router-head/router-head";
+  QwikCityProvider,
+  RouterOutlet,
+  ServiceWorkerRegister,
+} from "@builder.io/qwik-city";
+import { RouterHead } from "./docs-widgets/router-head/router-head";
 import { isDev } from "@builder.io/qwik/build";
 
 import "./global.css";
@@ -31,8 +31,7 @@ export default component$(() => {
       </head>
       <body lang="en">
         <RouterOutlet />
-        {!isDev && <PrefetchGraph />}
-        {!isDev && <PrefetchServiceWorker />}
+        <ServiceWorkerRegister />
       </body>
     </QwikCityProvider>
   );
