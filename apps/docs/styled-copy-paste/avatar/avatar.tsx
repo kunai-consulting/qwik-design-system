@@ -24,7 +24,7 @@ export type AvatarContext = {
 };
 
 /** Make sure to update the imageDimensions object for CLS shift. */
-export const avatarSizeVariants = cva(["relative aspect-square"], {
+const avatarSizeVariants = cva(["relative aspect-square"], {
   variants: {
     size: {
       small: "size-9", // 36px
@@ -50,7 +50,7 @@ const Root = component$(({ status, size = "medium", ...props }: RootProps) => {
       {...props}
       class={cn(
         avatarSizeVariants({ size }),
-        "grid grid-cols-1 grid-rows-1",
+        "grid grid-cols-1 grid-rows-1 isolate",
         props.class
       )}
     >
@@ -108,7 +108,7 @@ const Status = component$<PropsOf<"div">>(({ ...props }) => {
     <div
       {...props}
       class={cn(
-        `absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white ${
+        `absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-slate-950 ${
           context.status === "online" && "bg-green-400"
         } ${context.status === "offline" && "bg-gray-300"} ${
           context.status === "dnd" && "bg-red-500"
@@ -124,4 +124,5 @@ export const Avatar = {
   Image,
   Fallback,
   Status,
+  avatarSizeVariants,
 };
