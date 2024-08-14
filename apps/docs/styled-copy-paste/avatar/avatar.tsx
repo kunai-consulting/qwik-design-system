@@ -1,20 +1,27 @@
 import {
+  type ContextId,
   type PropsOf,
   Slot,
   component$,
+  createContextId,
   useContext,
   useContextProvider,
 } from "@builder.io/qwik";
 import { cn } from "../../src/utils/cn";
-import { avatarContextId, type AvatarContext } from "./avatar-context";
 import { type VariantProps, cva } from "class-variance-authority";
-
-type Size = "small" | "medium" | "large";
 
 type RootProps = {
   status?: "online" | "offline" | "dnd";
 } & PropsOf<"div"> &
   VariantProps<typeof avatarSizeVariants>;
+
+export const avatarContextId: ContextId<AvatarContext> =
+  createContextId("general-avatar");
+
+export type AvatarContext = {
+  status?: "online" | "offline" | "dnd";
+  size?: VariantProps<typeof avatarSizeVariants>["size"];
+};
 
 /** Make sure to update the imageDimensions object for CLS shift. */
 export const avatarSizeVariants = cva(["relative aspect-square"], {
