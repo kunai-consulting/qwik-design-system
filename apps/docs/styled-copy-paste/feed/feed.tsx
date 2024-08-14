@@ -8,7 +8,7 @@ const Root = component$((props: RootProps) => {
     <div
       {...props}
       class={cn(
-        "text-white flex flex-col gap-4 selection:bg-slate-700",
+        "p-4 text-white flex flex-col gap-4 selection:bg-slate-700",
         props.class
       )}
     >

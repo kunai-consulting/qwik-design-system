@@ -23,9 +23,6 @@ importers:
 
   apps/docs:
     dependencies:
-      '@qwikest/icons':
-        specifier: ^0.0.13
-        version: 0.0.13(@builder.io/qwik@1.8.0(@types/node@20.14.11))
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -54,6 +51,9 @@ importers:
       '@qwik-ui/headless':
         specifier: ^0.5.1
         version: 0.5.1(@builder.io/qwik@1.8.0(@types/node@20.14.11))
+      '@qwikest/icons':
+        specifier: ^0.0.13
+        version: 0.0.13(@builder.io/qwik@1.8.0(@types/node@20.14.11))
       '@types/estree-jsx':
         specifier: 1.0.5
         version: 1.0.5

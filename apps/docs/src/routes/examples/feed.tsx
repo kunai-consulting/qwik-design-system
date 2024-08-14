@@ -98,15 +98,16 @@ const Comments = component$(() => {
           >
             <Avatar.Fallback>MH</Avatar.Fallback>
           </FeedAvatar>
-          <div>
-            {users[0]} • {timeAgo}
+          <div class="flex gap-2">
+            <span>{users[0]}</span>
+            <Feed.Text>{timeAgo}</Feed.Text>
           </div>
         </div>
         <div>{comments[0]}</div>
       </div>
 
       <textarea
-        class="w-full min-h-20 rounded-md p-4 bg-slate-900 border-slate-800 border resize-none outline-none"
+        class="w-full min-h-20 rounded-md p-4 bg-slate-900 border-slate-800 border resize-none outline-none placeholder:text-gray-600"
         placeholder="Leave a comment..."
       />
     </>

@@ -39,10 +39,10 @@
     "undici": "*",
     "unified": "^11.0.4",
     "vite": "5.3.5",
-    "vite-tsconfig-paths": "^4.2.1"
+    "vite-tsconfig-paths": "^4.2.1",
+    "@qwikest/icons": "^0.0.13"
   },
   "dependencies": {
-    "@qwikest/icons": "^0.0.13",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "rehype-pretty-code": "^0.13.2",
