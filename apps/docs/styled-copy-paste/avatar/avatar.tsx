@@ -27,9 +27,9 @@ export type AvatarContext = {
 const avatarSizeVariants = cva(["relative aspect-square"], {
   variants: {
     size: {
-      small: "size-9", // 36px
-      medium: "size-12", // 48px
-      large: "size-[60px]", // 60px
+      small: "size-9 min-w-9", // 36px
+      medium: "size-12 min-w-12", // 48px
+      large: "size-[60px] min-w-[60px]", // 60px
     },
   },
   defaultVariants: {
@@ -110,8 +110,8 @@ const Status = component$<PropsOf<"div">>(({ ...props }) => {
       class={cn(
         `absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-slate-950 ${
           context.status === "online" && "bg-green-400"
-        } ${context.status === "offline" && "bg-gray-300"} ${
-          context.status === "dnd" && "bg-red-500"
+        } ${context.status === "offline" && "bg-gray-500"} ${
+          context.status === "dnd" && "bg-red-400"
         }`,
         props.class
       )}
@@ -123,6 +123,7 @@ export const Avatar = {
   Root,
   Image,
   Fallback,
+  Content: Fallback,
   Status,
   avatarSizeVariants,
 };

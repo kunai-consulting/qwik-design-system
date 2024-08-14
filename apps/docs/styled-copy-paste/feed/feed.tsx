@@ -5,7 +5,13 @@ type RootProps = PropsOf<"div">;
 
 const Root = component$((props: RootProps) => {
   return (
-    <div {...props} class={cn("text-white flex flex-col gap-4", props.class)}>
+    <div
+      {...props}
+      class={cn(
+        "text-white flex flex-col gap-4 selection:bg-slate-700",
+        props.class
+      )}
+    >
       <Slot />
     </div>
   );
@@ -13,7 +19,7 @@ const Root = component$((props: RootProps) => {
 
 const Item = component$((props: PropsOf<"div">) => {
   return (
-    <div {...props} class="flex items-center gap-4">
+    <div {...props} class="flex items-center gap-4 px-4">
       <Slot />
     </div>
   );

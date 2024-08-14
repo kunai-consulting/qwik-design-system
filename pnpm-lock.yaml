@@ -23,6 +23,9 @@ importers:
 
   apps/docs:
     dependencies:
+      '@qwikest/icons':
+        specifier: ^0.0.13
+        version: 0.0.13(@builder.io/qwik@1.8.0(@types/node@20.14.11))
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -577,6 +580,12 @@ packages:
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@builder.io/qwik': 1.7.2
+
+  '@qwikest/icons@0.0.13':
+    resolution: {integrity: sha512-e0wY8vmx0nDSUiuCATlk+ojTvdBV4txIGHHWjZW5SRkv4XB8H9+3WSDcLPz0ItUdRyzcrohE9k2jtQI/98aRPA==}
+    engines: {node: '>=15.0.0'}
+    peerDependencies:
+      '@builder.io/qwik': '>=1.0.0'
 
   '@rollup/pluginutils@5.1.0':
     resolution: {integrity: sha512-XTIWOPPcpvyKI6L1NHo0lFlCyznUEyPmPY1mc3KpPVDYulHSTvyeLNVW00QTLIAFNhR3kYnJTQHeGqU4M3n09g==}
@@ -2460,6 +2469,10 @@ snapshots:
       '@oddbird/popover-polyfill': 0.4.3
       body-scroll-lock-upgrade: 1.1.0
       focus-trap: 7.5.4
+
+  '@qwikest/icons@0.0.13(@builder.io/qwik@1.8.0(@types/node@20.14.11))':
+    dependencies:
+      '@builder.io/qwik': 1.8.0(@types/node@20.14.11)
 
   '@rollup/pluginutils@5.1.0(rollup@4.20.0)':
     dependencies:
