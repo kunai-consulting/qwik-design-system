@@ -21,5 +21,10 @@
       "~/components/*": ["./styled/*"]
     }
   },
-  "include": ["src", "./*.d.ts", "./*.config.ts"]
+  "include": [
+    "src",
+    "./*.d.ts",
+    "./*.config.ts",
+    "../../libs/components/utils/inline-component.ts"
+  ]
 }
