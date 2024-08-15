@@ -17,8 +17,23 @@ Manual Install:
 1. Add tailwind with `pnpm qwik add tailwind`
 2. Install cva, clsx, and tailwind-merge
 
-```
+```shell
 npm i class-variance-authority clsx tailwind-merge
+```
+
+3. add the cn utility in `src/utils/cn.ts`
+
+```ts
+import { type ClassValue, clsx } from "clsx";
+import { extendTailwindMerge } from "tailwind-merge";
+
+const twMerge = extendTailwindMerge({
+  extend: {},
+});
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 ```
 
 3. Copy the Avatar code:
@@ -33,7 +48,7 @@ import {
   useContext,
   useContextProvider,
 } from "@builder.io/qwik";
-import { cn } from "../../src/utils/cn";
+import { cn } from "~/utils/cn";
 import { type VariantProps, cva } from "class-variance-authority";
 
 type RootProps = {
@@ -157,7 +172,7 @@ export const Avatar = {
 
 4. Copy the Feed block:
 
-```
+```tsx
 import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
 import { cn } from "~/utils/cn";
 
@@ -168,7 +183,7 @@ const Root = component$((props: RootProps) => {
     <div
       {...props}
       class={cn(
-        "p-4 text-white flex flex-col gap-4 selection:bg-slate-700",
+        "flex flex-col gap-4 bg-slate-950 p-4 text-white selection:bg-slate-700",
         props.class
       )}
     >
@@ -209,5 +224,128 @@ export const Feed = {
 };
 ```
 
-5. Copy the Hero code example (above or with the button here):
-   <button>Copy</button>
+5. If you want the icons install `@qwikest/icons`, otherwise remove the icon in the code example below:
+
+```shell
+npm i -D @qwikest/icons
+```
+
+5. Copy the consumer code:
+
+```tsx
+import { component$, Slot } from "@builder.io/qwik";
+import { Avatar, type AvatarContext } from "~/components/avatar/avatar";
+import { Feed } from "~/components/feed/feed";
+import { LuTag } from "@qwikest/icons/lucide";
+
+const ticketData = {
+  users: ["Misko", "Jack"],
+  currStatus: "Todo",
+  prevStatus: "In Progress",
+  timeAgo: "1 day ago",
+  labels: ["Release", "Bug"],
+  comments: ["LGTM - Approved"],
+};
+
+const { users, currStatus, prevStatus, timeAgo, labels, comments } = ticketData;
+
+export default component$(() => {
+  const history = [
+    <FeedAvatar
+      src="https://github.com/mhevery.png"
+      key="history"
+      alt="Misko Hevery Profile"
+      status="offline"
+    >
+      <Avatar.Fallback>MH</Avatar.Fallback>
+    </FeedAvatar>,
+    <Feed.Text key="history">
+      <Feed.Dynamic>{users[0]}</Feed.Dynamic> created the issue • {timeAgo}
+    </Feed.Text>,
+  ];
+
+  const status = [
+    <FeedAvatar
+      status="online"
+      src="https://i.imgur.com/rVyLbyc.png"
+      key="status"
+      alt="Jack Shelton Profile"
+    />,
+    <Feed.Text key="status">
+      <Feed.Dynamic>{users[1]}</Feed.Dynamic> changed status from
+      <Feed.Dynamic> {prevStatus}</Feed.Dynamic> to
+      <Feed.Dynamic> {currStatus}</Feed.Dynamic> • {timeAgo}
+    </Feed.Text>,
+  ];
+
+  const label = [
+    <FeedAvatar key="label">
+      <Avatar.Content class="bg-transparent">
+        <LuTag />
+      </Avatar.Content>
+    </FeedAvatar>,
+    <Feed.Text key="label">
+      <Feed.Dynamic>{users[1]}</Feed.Dynamic> added label
+      <Feed.Dynamic> • {labels[0]}</Feed.Dynamic>
+    </Feed.Text>,
+  ];
+
+  const activityTypes = [history, status, label];
+
+  return (
+    <Feed.Root>
+      <span class="text-2xl">Activity</span>
+      {activityTypes.map((activity) => (
+        <Feed.Item key={activity.toString()}>{activity}</Feed.Item>
+      ))}
+      <Comments />
+    </Feed.Root>
+  );
+});
+
+type FeedAvatarProps = AvatarContext & {
+  src?: string;
+  alt?: string;
+};
+
+const FeedAvatar = component$(
+  ({ status, size = "small", src, alt, ...props }: FeedAvatarProps) => {
+    return (
+      <Avatar.Root status={status} size={size} {...props}>
+        <Avatar.Image hidden={!src} src={src} alt={alt} />
+        {status && <Avatar.Status />}
+        <Slot />
+      </Avatar.Root>
+    );
+  }
+);
+
+const Comments = component$(() => {
+  return (
+    <>
+      {/* Pretend this maps over a list of comments */}
+      <div class="min-h-20 rounded-md border border-slate-800 bg-slate-900 p-4">
+        <div class="mb-4 flex items-center gap-4">
+          <FeedAvatar
+            src="https://github.com/mhevery.png"
+            alt="Misko Hevery Profile"
+            status="offline"
+          >
+            <Avatar.Fallback>MH</Avatar.Fallback>
+          </FeedAvatar>
+          <div class="flex gap-2">
+            <span>{users[0]}</span>
+            <Feed.Text>{timeAgo}</Feed.Text>
+          </div>
+        </div>
+        <div>{comments[0]}</div>
+      </div>
+
+      <textarea
+        class="min-h-20 w-full resize-none rounded-md border border-slate-800 bg-slate-900 p-4 outline-none placeholder:text-gray-600"
+        placeholder="Leave a comment..."
+      />
+    </>
+  );
+});
+```
