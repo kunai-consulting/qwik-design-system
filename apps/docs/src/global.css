@@ -7,5 +7,30 @@
 @tailwind utilities;
 
 body {
-  @apply max-w-screen-2xl mx-auto my-20;
+  @apply max-w-screen-2xl mx-auto my-20 font-sans;
+}
+
+/* font syntax highlighting */
+@font-face {
+  font-family: "Monaspace";
+  src: url("./assets/fonts/syntax-highlight.woff2") format("woff2");
+}
+
+@font-palette-values --kung-fury {
+  font-family: "Monaspace";
+  override-colors: 0 #c4b5fd /* curlies and tags */, 1 hsl(250 100% 80%) /* ? */,
+    2 #d8b4fe /* function */, 3 hsl(188 100% 75%) /* ? */, 4 #18b6f6 /* () */,
+    5 #fff /* property name */, 6 hsl(210 40% 80%) /* ? */,
+    7 #f87171 /* numbers */, 8 #cbd5e1 /* angle brackets */;
+}
+
+pre > code {
+  font-family: "Monaspace", monospace;
+  font-palette: --kung-fury;
+}
+
+pre {
+  min-width: 0;
+  overflow-x: auto;
+  padding: 2ch;
 }
