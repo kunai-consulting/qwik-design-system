@@ -11,13 +11,15 @@ export const OtpNativeInput = component$(() => {
       type="text"
       data-qui-otp-native-input
       value={context.value.value}
-      class=""
+      inputMode="numeric"
+      pattern="[0-9]*"
       onInput$={(event: InputEvent) => {
         const input = event.target as HTMLInputElement;
         context.value.value = input.value;
         context.activeIndexSig.value = input.value.length;
       }}
       maxLength={6}
+      aria-label="Enter your OTP"
     />
   );
 });

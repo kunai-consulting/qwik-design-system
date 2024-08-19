@@ -6,7 +6,9 @@ import {
   OtpRoot,
   OtpItem,
   OtpNativeInput,
+  OtpCaret,
 } from '../../../../../libs/components/src/otp';
+import { VisuallyHidden } from '~/utils/visually-hidden';
 
 export const head: DocumentHead = {
   title: 'Qwik Design System',
@@ -21,16 +23,37 @@ export const head: DocumentHead = {
 export default component$(() => {
   return (
     <div class="mt-10 flex justify-center">
-      <div class="flex flex-col items-center justify-center gap-4">
-        <OtpRoot class="flex flex-col items-center justify-center gap-4">
-          <OtpNativeInput />
+      <div class="flex flex-col items-center justify-center">
+        <div class="m-6 flex h-[8.125rem] w-[23.5rem] flex-col items-center ">
+          <div class="flex w-full justify-center">
+            <InformationCircle />
+          </div>
+          <div class="text-cool-700 w-full py-4 text-center text-lg font-semibold">
+            Two-step verification
+          </div>
+          <div class="text-cool-700 w-full text-center text-sm">
+            A verification code has been sent to your email. Please enter the
+            code below to verify this device.
+          </div>
+        </div>
+
+        <OtpRoot class="flex flex-col items-center justify-center">
+          <VisuallyHidden>
+            <OtpNativeInput />
+          </VisuallyHidden>
+
           <div class="otp-container flex flex-row justify-center gap-2">
-            <OtpItem class="h-9 w-10 border-2 text-center data-[highlighted]:border-blue-200" />
-            <OtpItem class="h-9 w-10 border-2 text-center data-[highlighted]:border-blue-200" />
-            <OtpItem class="h-9 w-10 border-2 text-center data-[highlighted]:border-blue-200" />
-            <OtpItem class="h-9 w-10 border-2 text-center data-[highlighted]:border-blue-200" />
-            <OtpItem class="h-9 w-10 border-2 text-center data-[highlighted]:border-blue-200" />
-            <OtpItem class="h-9 w-10 border-2 text-center data-[highlighted]:border-blue-200" />
+            {Array.from({ length: 6 }, (_, index) => (
+              <OtpItem
+                key={index}
+                autoFocus={index === 0}
+                class={`h-9 w-10 border-2 text-center data-[highlighted]:border-blue-600 rounded data-[highlighted]:ring-blue-100  data-[highlighted]:ring-[3px] data-[highlighted]:pl-1 data-[highlighted]:pr-1 caret-blue-600`}
+              >
+                <OtpCaret class="text-blue-500 text-xl animate-blink-caret">
+                  |
+                </OtpCaret>
+              </OtpItem>
+            ))}
           </div>
           <div class="mt-6 flex flex-row justify-center gap-2">
             <input
@@ -40,6 +63,11 @@ export default component$(() => {
             This is a trusted device, don't ask again
           </div>
         </OtpRoot>
+        <div class="flex flex-row items-center justify-center gap-2 p-6 text-sm">
+          <button class="h-[36px] w-[140px] items-center justify-center whitespace-nowrap rounded-md border-none bg-[#5568AA] px-4 py-0 text-start text-white">
+            Sign in securely
+          </button>
+        </div>
       </div>
     </div>
   );

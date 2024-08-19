@@ -1,4 +1,4 @@
-import { Slot, component$, useStylesScoped$ } from "@builder.io/qwik";
+import { Slot, component$, useStylesScoped$ } from '@builder.io/qwik';
 
 export const VisuallyHidden = component$(() => {
   /* Visually hide text while keeping it accessible */

@@ -1,14 +1,29 @@
-import { component$, PropsOf, useContext, useSignal } from '@builder.io/qwik';
+import {
+  component$,
+  createContextId,
+  PropsOf,
+  Slot,
+  useContext,
+  useContextProvider,
+  useSignal,
+} from '@builder.io/qwik';
 import { OTPContextId } from './otp-context';
 
+interface ItemContextType {
+  index: number;
+}
 type OTPProps = {
   _index?: number;
-} & PropsOf<'input'>;
+} & PropsOf<'div'>;
 
-export const OtpItem = component$(({ _index, ...props }: OTPProps) => {
+export const itemContextId = createContextId<ItemContextType>('qd-otp-item');
+export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
   const context = useContext(OTPContextId);
-  const inputRef = useSignal<HTMLInputElement>();
+  const itemRef = useSignal<HTMLInputElement>();
   const isFocused = useSignal(false);
+  useContextProvider(itemContextId, { index: _index });
+
+  const itemValue = context.value.value[_index] || '';
 
   if (_index === undefined) {
     throw new Error(
@@ -17,24 +32,21 @@ export const OtpItem = component$(({ _index, ...props }: OTPProps) => {
   }
 
   return (
-    <>
-      <input
-        ref={inputRef}
-        {...props}
-        type="text"
-        data-qui-otp-item={_index}
-        data-highlighted={
-          context.activeIndexSig.value === _index ? '' : undefined
-        }
-        value={context.value.value[_index]}
-        size={1}
-        onFocus$={() => {
-          isFocused.value = true;
-          context.nativeInputRef.value?.focus();
-        }}
-        maxLength={1}
-        readOnly
-      />
-    </>
+    <div
+      {...props}
+      ref={itemRef}
+      data-qui-otp-item={_index}
+      data-highlighted={
+        context.activeIndexSig.value === _index ? '' : undefined
+      }
+      onFocus$={() => {
+        context.activeIndexSig.value = _index;
+        isFocused.value = true;
+        context.nativeInputRef.value?.focus();
+      }}
+    >
+      {itemValue}
+      <Slot />
+    </div>
   );
 });
