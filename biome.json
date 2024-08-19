@@ -54,12 +54,6 @@
         "recommended": true,
         "useBlockStatements": "error",
         "useCollapsedElseIf": "warn",
-        "useNamingConvention": {
-          "level": "error",
-          "options": {
-            "strictCase": false
-          }
-        },
         "useShorthandArrayType": "error",
         "useShorthandAssign": "error",
         "useSingleCaseStatement": "error"
