@@ -9,7 +9,6 @@ import { Carousel } from "@qwik-ui/headless";
 import { metaGlobComponents, rawComponents } from "~/utils/component-import";
 
 import { Highlight } from "./highlight";
-import { isDev } from "@builder.io/qwik/build";
 import { useLocation } from "@builder.io/qwik-city";
 
 type ShowcaseProps = PropsOf<"div"> & {
