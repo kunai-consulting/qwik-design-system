@@ -18,13 +18,14 @@
     "noEmit": true,
     "paths": {
       "~/*": ["./src/*"],
-      "~/components/*": ["./styled/*"]
+      "@/styled/*": ["./styled-copy-paste/*"]
     }
   },
   "include": [
     "src",
     "./*.d.ts",
     "./*.config.ts",
+    "styled-copy-paste",
     "../../libs/components/utils/inline-component.ts"
   ]
 }

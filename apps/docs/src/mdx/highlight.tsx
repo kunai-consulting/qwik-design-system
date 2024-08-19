@@ -8,7 +8,6 @@ import {
 } from "@builder.io/qwik";
 
 import { cn } from "~/utils/cn";
-import { codeToHtml } from "shiki";
 
 export type HighlightProps = PropsOf<"div"> & {
   code: string;
@@ -28,7 +27,7 @@ export const Highlight = component$(
   }: HighlightProps) => {
     const codeSig = useSignal("");
 
-    const addShiki$ = $(async () => {
+    useTask$(async () => {
       let modifiedCode: string = code.toString();
 
       let partsOfCode = modifiedCode.split(splitCommentStart);
@@ -43,28 +42,20 @@ export const Highlight = component$(
         modifiedCode = partsOfCode[0];
       }
 
-      const str = await codeToHtml(modifiedCode, {
-        lang: language,
-        theme: "material-theme-palenight",
-      });
-
-      codeSig.value = str.toString();
-    });
-
-    useTask$(async () => {
-      await addShiki$();
+      codeSig.value = modifiedCode.toString();
     });
 
     return (
       <div
         {...props}
         class={cn(
-          "max-h-[31.25rem] max-w-full overflow-auto rounded-lg",
+          "max-h-[31.25rem] max-w-full overflow-auto bg-[#0A0A0B] text-slate-200",
           props.class
         )}
       >
-        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}
-        <div dangerouslySetInnerHTML={codeSig.value} />
+        <pre>
+          <code>{codeSig.value}</code>
+        </pre>
       </div>
     );
   }
