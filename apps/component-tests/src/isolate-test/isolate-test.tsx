@@ -14,14 +14,18 @@ import { metaGlobComponents } from "./component-imports";
 export const IsolateTest = component$(() => {
   const location = useLocation();
 
-  const componentPath = `${location.params.kit}/${location.params.component}/examples/${location.params.example}.tsx`;
+  const componentPath = `${location.params.component}/examples/${location.params.example}.tsx`;
 
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const MetaGlobComponentSig = useSignal<Component<any>>();
 
   useTask$(async () => {
-    // @ts-ignore
-    MetaGlobComponentSig.value = await metaGlobComponents[componentPath]();
+    try {
+      // @ts-ignore
+      MetaGlobComponentSig.value = await metaGlobComponents[componentPath]();
+    } catch (e) {
+      throw new Error(`Unable to load path ${componentPath}`);
+    }
   });
 
   return <>{MetaGlobComponentSig.value && <MetaGlobComponentSig.value />}</>;
