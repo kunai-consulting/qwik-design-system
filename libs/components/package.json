@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@builder.io/qwik": "1.7.3",
+    "@kunai-consulting/qwik-hooks": "workspace:*",
     "@types/node": "20.14.11",
     "typescript": "5.4.5",
     "undici": "*",

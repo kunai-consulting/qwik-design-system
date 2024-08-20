@@ -1,1 +1,1 @@
-export * from "./pagination";
+export * from "./main-hooks/pagination";

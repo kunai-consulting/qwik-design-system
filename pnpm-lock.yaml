@@ -114,6 +114,9 @@ importers:
       '@builder.io/qwik':
         specifier: 1.7.3
         version: 1.7.3(@types/node@20.14.11)
+      '@kunai-consulting/qwik-hooks':
+        specifier: workspace:*
+        version: link:../hooks
       '@types/node':
         specifier: 20.14.11
         version: 20.14.11

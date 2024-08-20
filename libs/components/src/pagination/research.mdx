@@ -1,5 +1,19 @@
 # Headless Pagination Component
 
+## API
+
+```
+<Pagination.Root>
+    <Pagination.Previous />
+    <Pagination.Item />
+    <Pagination.Next />
+
+    {/* grab its children and dynamically show and hide */}
+    <Pagination.Ellipsis>{props.children}</Pagination.Ellipsis>
+</Pagination.Root>
+
+```
+
 ## Todo Items
 
 1. Create a core pagination function that handles page calculations and state management.

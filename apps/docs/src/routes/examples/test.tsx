@@ -1,16 +1,16 @@
 import { type PropsOf, component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import { VisuallyHidden } from "~/utils/visually-hidden";
 import { Otp } from "@kunai-consulting/qwik-components";
+import { VisuallyHidden } from "~/utils/visually-hidden";
 
 export const head: DocumentHead = {
   title: "Qwik Design System",
   meta: [
     {
       name: "description",
-      content: "Qwik Design System",
-    },
-  ],
+      content: "Qwik Design System"
+    }
+  ]
 };
 
 export default component$(() => {
@@ -25,8 +25,8 @@ export default component$(() => {
             Two-step verification
           </div>
           <div class="text-cool-700 w-full text-center text-sm">
-            A verification code has been sent to your email. Please enter the
-            code below to verify this device.
+            A verification code has been sent to your email. Please enter the code below
+            to verify this device.
           </div>
         </div>
 
@@ -55,10 +55,7 @@ export default component$(() => {
             })}
           </div>
           <div class="mt-6 flex flex-row justify-center gap-2">
-            <input
-              type="checkbox"
-              class="text-cool-700 form-checkbox text-sm"
-            />
+            <input type="checkbox" class="text-cool-700 form-checkbox text-sm" />
             This is a trusted device, don't ask again
           </div>
         </Otp.Root>
