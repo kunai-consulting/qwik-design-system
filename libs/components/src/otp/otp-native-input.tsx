@@ -1,6 +1,6 @@
 // File: otp-native-input.tsx
-import { component$, useContext } from '@builder.io/qwik';
-import { OTPContextId } from './otp-context';
+import { component$, useContext } from "@builder.io/qwik";
+import { OTPContextId } from "./otp-context";
 
 export const OtpNativeInput = component$(() => {
   const context = useContext(OTPContextId);

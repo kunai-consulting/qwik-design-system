@@ -7,10 +7,7 @@ const Root = component$((props: RootProps) => {
   return (
     <div
       {...props}
-      class={cn(
-        "p-4 text-white flex flex-col gap-4 selection:bg-slate-700",
-        props.class
-      )}
+      class={cn("p-4 text-white flex flex-col gap-4 selection:bg-slate-700", props.class)}
     >
       <Slot />
     </div>
@@ -45,5 +42,5 @@ export const Feed = {
   Root,
   Item,
   Dynamic,
-  Text,
+  Text
 };

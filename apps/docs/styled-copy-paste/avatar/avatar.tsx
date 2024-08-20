@@ -5,10 +5,10 @@ import {
   component$,
   createContextId,
   useContext,
-  useContextProvider,
+  useContextProvider
 } from "@builder.io/qwik";
-import { cn } from "../../src/utils/cn";
 import { type VariantProps, cva } from "class-variance-authority";
+import { cn } from "../../src/utils/cn";
 
 type RootProps = {
   status?: "online" | "offline" | "dnd";
@@ -29,18 +29,18 @@ const avatarSizeVariants = cva(["relative aspect-square"], {
     size: {
       small: "size-9 min-w-9", // 36px
       medium: "size-12 min-w-12", // 48px
-      large: "size-[60px] min-w-[60px]", // 60px
-    },
+      large: "size-[60px] min-w-[60px]" // 60px
+    }
   },
   defaultVariants: {
-    size: "medium",
-  },
+    size: "medium"
+  }
 });
 
 const Root = component$(({ status, size = "medium", ...props }: RootProps) => {
   const context: AvatarContext = {
     status,
-    size,
+    size
   };
 
   useContextProvider(avatarContextId, context);
@@ -66,7 +66,7 @@ const Image = component$<PropsOf<"img">>(({ alt, width, height, ...props }) => {
   const imageDimensions = {
     small: 36,
     medium: 48,
-    large: 60,
+    large: 60
   };
 
   return (
@@ -75,11 +75,7 @@ const Image = component$<PropsOf<"img">>(({ alt, width, height, ...props }) => {
       alt={alt}
       width={width ? width : imageDimensions[context.size || "medium"]}
       height={height ? height : imageDimensions[context.size || "medium"]}
-      class={cn(
-        avatarSizeVariants({ size: context.size }),
-        "rounded-full",
-        props.class
-      )}
+      class={cn(avatarSizeVariants({ size: context.size }), "rounded-full", props.class)}
     />
   );
 });
@@ -125,5 +121,5 @@ export const Avatar = {
   Fallback,
   Content: Fallback,
   Status,
-  avatarSizeVariants,
+  avatarSizeVariants
 };

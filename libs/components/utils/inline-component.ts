@@ -1,4 +1,4 @@
-import { JSXChildren, JSXNode } from '@builder.io/qwik';
+import type { JSXChildren, JSXNode } from "@builder.io/qwik";
 
 /**
  *
@@ -12,12 +12,14 @@ import { JSXChildren, JSXNode } from '@builder.io/qwik';
 export function processChildren(children: JSXChildren) {
   const childrenToProcess = (
     Array.isArray(children) ? [...children] : children ? [children] : []
-  ) as Array<JSXNode>;
+  ) as JSXNode[];
 
   while (childrenToProcess.length) {
     const child = childrenToProcess.shift();
 
-    if (!child) continue;
+    if (!child) {
+      continue;
+    }
 
     if (Array.isArray(child)) {
       childrenToProcess.unshift(...child);

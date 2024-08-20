@@ -1,4 +1,4 @@
-import { createContextId, Signal } from '@builder.io/qwik';
+import { type Signal, createContextId } from "@builder.io/qwik";
 
 export interface OTPContext {
   value: Signal<string>;
@@ -6,4 +6,4 @@ export interface OTPContext {
   nativeInputRef: Signal<HTMLInputElement | undefined>;
 }
 
-export const OTPContextId = createContextId<OTPContext>('OTPContext');
+export const OTPContextId = createContextId<OTPContext>("OTPContext");

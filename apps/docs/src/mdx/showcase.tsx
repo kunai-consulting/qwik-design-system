@@ -3,13 +3,13 @@ import {
   type PropsOf,
   component$,
   useSignal,
-  useTask$,
+  useTask$
 } from "@builder.io/qwik";
 import { Carousel } from "@qwik-ui/headless";
 import { metaGlobComponents, rawComponents } from "~/utils/component-import";
 
-import { Highlight } from "./highlight";
 import { useLocation } from "@builder.io/qwik-city";
+import { Highlight } from "./highlight";
 
 type ShowcaseProps = PropsOf<"div"> & {
   name?: string;

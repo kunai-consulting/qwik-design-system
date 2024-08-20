@@ -1,23 +1,23 @@
-import { component$, PropsOf } from '@builder.io/qwik';
-import { type DocumentHead } from '@builder.io/qwik-city';
+import { type PropsOf, component$ } from "@builder.io/qwik";
+import type { DocumentHead } from "@builder.io/qwik-city";
 
-import { fromTheme } from 'tailwind-merge';
+import { fromTheme } from "tailwind-merge";
+import { VisuallyHidden } from "~/utils/visually-hidden";
 import {
-  OtpRoot,
+  OtpCaret,
   OtpItem,
   OtpNativeInput,
-  OtpCaret,
-} from '../../../../../libs/components/src/otp';
-import { VisuallyHidden } from '~/utils/visually-hidden';
+  OtpRoot
+} from "../../../../../libs/components/src/otp";
 
 export const head: DocumentHead = {
-  title: 'Qwik Design System',
+  title: "Qwik Design System",
   meta: [
     {
-      name: 'description',
-      content: 'Qwik Design System',
-    },
-  ],
+      name: "description",
+      content: "Qwik Design System"
+    }
+  ]
 };
 
 export default component$(() => {
@@ -32,8 +32,8 @@ export default component$(() => {
             Two-step verification
           </div>
           <div class="text-cool-700 w-full text-center text-sm">
-            A verification code has been sent to your email. Please enter the
-            code below to verify this device.
+            A verification code has been sent to your email. Please enter the code below
+            to verify this device.
           </div>
         </div>
 
@@ -47,19 +47,16 @@ export default component$(() => {
               <OtpItem
                 key={index}
                 autoFocus={index === 0}
-                class={`h-9 w-10 border-2 text-center data-[highlighted]:border-blue-600 rounded data-[highlighted]:ring-blue-100  data-[highlighted]:ring-[3px] data-[highlighted]:pl-1 data-[highlighted]:pr-1 caret-blue-600`}
+                class={
+                  "h-9 w-10 border-2 text-center data-[highlighted]:border-blue-600 rounded data-[highlighted]:ring-blue-100  data-[highlighted]:ring-[3px] data-[highlighted]:pl-1 data-[highlighted]:pr-1 caret-blue-600"
+                }
               >
-                <OtpCaret class="text-blue-500 text-xl animate-blink-caret">
-                  |
-                </OtpCaret>
+                <OtpCaret class="text-blue-500 text-xl animate-blink-caret">|</OtpCaret>
               </OtpItem>
             ))}
           </div>
           <div class="mt-6 flex flex-row justify-center gap-2">
-            <input
-              type="checkbox"
-              class="text-cool-700 form-checkbox text-sm"
-            />
+            <input type="checkbox" class="text-cool-700 form-checkbox text-sm" />
             This is a trusted device, don't ask again
           </div>
         </OtpRoot>
@@ -73,7 +70,7 @@ export default component$(() => {
   );
 });
 
-const InformationCircle = component$((props: PropsOf<'svg'>) => {
+const InformationCircle = component$((props: PropsOf<"svg">) => {
   return (
     <svg
       width="32"

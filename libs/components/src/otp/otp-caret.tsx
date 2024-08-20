@@ -1,8 +1,8 @@
-import { component$, PropsOf, Slot, useContext } from '@builder.io/qwik';
-import { itemContextId } from './otp-item';
-import { OTPContextId } from './otp-context';
+import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
+import { OTPContextId } from "./otp-context";
+import { itemContextId } from "./otp-item";
 
-export const OtpCaret = component$(({ ...props }: PropsOf<'span'>) => {
+export const OtpCaret = component$(({ ...props }: PropsOf<"span">) => {
   const itemContext = useContext(itemContextId);
   const context = useContext(OTPContextId);
   const showCaret = context.activeIndexSig.value === itemContext.index;

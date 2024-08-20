@@ -1,18 +1,15 @@
 import type { Component, PropsOf } from "@builder.io/qwik";
 import { Slot, component$ } from "@builder.io/qwik";
 
-import { Showcase } from "./showcase";
 import { cn } from "~/utils/cn";
+import { Showcase } from "./showcase";
 
 export const components: Record<string, Component> = {
   p: component$<PropsOf<"p">>(({ ...props }) => {
     return (
       <p
         {...props}
-        class={cn(
-          "leading-7 text-cool-700 [&:not(:first-child)]:mt-6",
-          props.class
-        )}
+        class={cn("leading-7 text-cool-700 [&:not(:first-child)]:mt-6", props.class)}
       >
         <Slot />
       </p>
@@ -87,10 +84,7 @@ export const components: Record<string, Component> = {
     return (
       <a
         {...props}
-        class={cn(
-          "font-medium text-cool-700 underline underline-offset-4",
-          props.class
-        )}
+        class={cn("font-medium text-cool-700 underline underline-offset-4", props.class)}
         target="_blank"
         rel="noreferrer"
       >
@@ -100,20 +94,14 @@ export const components: Record<string, Component> = {
   }),
   ul: component$<PropsOf<"ul">>(({ ...props }) => {
     return (
-      <ul
-        {...props}
-        class={cn("my-6 ml-6 list-disc text-cool-700", props.class)}
-      >
+      <ul {...props} class={cn("my-6 ml-6 list-disc text-cool-700", props.class)}>
         <Slot />
       </ul>
     );
   }),
   ol: component$<PropsOf<"ol">>(({ ...props }) => {
     return (
-      <ol
-        {...props}
-        class={cn("my-6 ml-6 list-decimal text-cool-700", props.class)}
-      >
+      <ol {...props} class={cn("my-6 ml-6 list-decimal text-cool-700", props.class)}>
         <Slot />
       </ol>
     );
@@ -139,9 +127,7 @@ export const components: Record<string, Component> = {
     );
   }),
   hr: component$<PropsOf<"hr">>(({ ...props }) => {
-    return (
-      <hr {...props} class={cn("my-6 border-cool-200 md:my-8", props.class)} />
-    );
+    return <hr {...props} class={cn("my-6 border-cool-200 md:my-8", props.class)} />;
   }),
   img: component$<PropsOf<"img">>(({ alt, ...props }) => {
     return (
@@ -182,10 +168,7 @@ export const components: Record<string, Component> = {
     return (
       <table
         {...props}
-        class={cn(
-          "mt-6 w-full border-collapse border border-cool-200",
-          props.class
-        )}
+        class={cn("mt-6 w-full border-collapse border border-cool-200", props.class)}
       >
         <Slot />
       </table>
@@ -221,12 +204,9 @@ export const components: Record<string, Component> = {
     return (
       <tr
         {...props}
-        class={cn(
-          "m-0 border-t border-cool-300 p-0 even:bg-cool-100",
-          props.class
-        )}
+        class={cn("m-0 border-t border-cool-300 p-0 even:bg-cool-100", props.class)}
       />
     );
   }),
-  Showcase,
+  Showcase
 };

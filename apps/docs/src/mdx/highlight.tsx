@@ -4,7 +4,7 @@ import {
   type PropsOf,
   component$,
   useSignal,
-  useTask$,
+  useTask$
 } from "@builder.io/qwik";
 
 import { cn } from "~/utils/cn";

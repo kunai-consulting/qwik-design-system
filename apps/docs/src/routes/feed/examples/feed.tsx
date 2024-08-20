@@ -1,6 +1,6 @@
-import { component$, Slot } from "@builder.io/qwik";
 import { Avatar, type AvatarContext } from "@/styled/avatar";
 import { Feed } from "@/styled/feed";
+import { Slot, component$ } from "@builder.io/qwik";
 import { LuTag } from "@qwikest/icons/lucide";
 
 const ticketData = {
@@ -9,7 +9,7 @@ const ticketData = {
   prevStatus: "In Progress",
   timeAgo: "1 day ago",
   labels: ["Release", "Bug"],
-  comments: ["LGTM - Approved"],
+  comments: ["LGTM - Approved"]
 };
 
 const { users, currStatus, prevStatus, timeAgo, labels, comments } = ticketData;
@@ -26,7 +26,7 @@ export default component$(() => {
     </FeedAvatar>,
     <Feed.Text key="history">
       <Feed.Dynamic>{users[0]}</Feed.Dynamic> created the issue • {timeAgo}
-    </Feed.Text>,
+    </Feed.Text>
   ];
 
   const status = [
@@ -40,7 +40,7 @@ export default component$(() => {
       <Feed.Dynamic>{users[1]}</Feed.Dynamic> changed status from
       <Feed.Dynamic> {prevStatus}</Feed.Dynamic> to
       <Feed.Dynamic> {currStatus}</Feed.Dynamic> • {timeAgo}
-    </Feed.Text>,
+    </Feed.Text>
   ];
 
   const label = [
@@ -52,7 +52,7 @@ export default component$(() => {
     <Feed.Text key="label">
       <Feed.Dynamic>{users[1]}</Feed.Dynamic> added label
       <Feed.Dynamic> • {labels[0]}</Feed.Dynamic>
-    </Feed.Text>,
+    </Feed.Text>
   ];
 
   const activityTypes = [history, status, label];
