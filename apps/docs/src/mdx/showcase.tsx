@@ -24,8 +24,12 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
   const componentCodeSig = useSignal<string>();
 
   useTask$(async () => {
-    MetaGlobComponentSig.value = await metaGlobComponents[componentPath]();
-    componentCodeSig.value = await rawComponents[componentPath]();
+    try {
+      MetaGlobComponentSig.value = await metaGlobComponents[componentPath]();
+      componentCodeSig.value = await rawComponents[componentPath]();
+    } catch (e) {
+      throw new Error(`Unable to load path ${componentPath}`);
+    }
   });
 
   return (
