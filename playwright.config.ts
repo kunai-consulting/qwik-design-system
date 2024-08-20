@@ -4,7 +4,7 @@ import { defineConfig, devices } from "@playwright/test";
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: "./libs/headless",
+  testDir: "./libs/components",
   testMatch: "**/*.test.ts",
   timeout: 30000,
   /* Run tests in files in parallel */
@@ -32,7 +32,7 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: {
     command: "pnpm dev.ct",
-    url: "http://localhost:5173",
+    url: "http://localhost:5174",
     timeout: 120000,
     reuseExistingServer: !process.env.CI,
   },

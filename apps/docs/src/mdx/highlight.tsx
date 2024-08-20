@@ -12,7 +12,6 @@ import { cn } from "~/utils/cn";
 export type HighlightProps = PropsOf<"div"> & {
   code: string;
   copyCodeClass?: ClassList;
-  language?: "tsx" | "html" | "css";
   splitCommentStart?: string;
   splitCommentEnd?: string;
 };
@@ -20,7 +19,6 @@ export type HighlightProps = PropsOf<"div"> & {
 export const Highlight = component$(
   ({
     code,
-    language = "tsx",
     splitCommentStart = "{/* start */}",
     splitCommentEnd = "{/* end */}",
     ...props

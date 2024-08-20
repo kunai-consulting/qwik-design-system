@@ -1,6 +1,6 @@
 {
-  "name": "qwik-design-system-docs",
-  "description": "Documentation for the Qwik Design System",
+  "name": "qwik-design-system-tests",
+  "description": "Testing for the Qwik Design System",
   "engines": {
     "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
   },
@@ -19,32 +19,20 @@
     "deploy": "echo 'Run \"npm run qwik add\" to install a server adapter'",
     "dev": "vite --mode ssr",
     "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
+    "fmt": "prettier --write .",
+    "fmt.check": "prettier --check .",
+    "lint": "eslint \"src/**/*.ts*\"",
     "preview": "qwik build preview && vite preview --open",
     "start": "vite --open --mode ssr",
     "qwik": "qwik"
   },
   "devDependencies": {
-    "@builder.io/qwik": "1.8",
-    "@builder.io/qwik-city": "1.8",
-    "@kunai-consulting/qwik-components": "workspace:*",
-    "@kunai-consulting/qwik-hooks": "workspace:*",
-    "@qwik-ui/headless": "^0.5.1",
-    "@types/estree-jsx": "1.0.5",
+    "@builder.io/qwik": "^1.8.0",
+    "@builder.io/qwik-city": "^1.8.0",
     "@types/node": "20.14.11",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.41",
-    "tailwindcss": "^3.4.10",
     "typescript": "5.4.5",
     "undici": "*",
-    "unified": "^11.0.4",
     "vite": "5.3.5",
-    "vite-tsconfig-paths": "^4.2.1",
-    "@qwikest/icons": "^0.0.13"
-  },
-  "dependencies": {
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.1.1",
-    "rehype-pretty-code": "^0.13.2",
-    "tailwind-merge": "^2.5.0"
+    "vite-tsconfig-paths": "^4.2.1"
   }
 }

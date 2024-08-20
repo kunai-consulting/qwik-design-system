@@ -9,7 +9,6 @@ import { Carousel } from "@qwik-ui/headless";
 import { metaGlobComponents, rawComponents } from "~/utils/component-import";
 
 import { Highlight } from "./highlight";
-import { isDev } from "@builder.io/qwik/build";
 import { useLocation } from "@builder.io/qwik-city";
 
 type ShowcaseProps = PropsOf<"div"> & {
@@ -25,9 +24,19 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
   const componentCodeSig = useSignal<string>();
 
   useTask$(async () => {
-    MetaGlobComponentSig.value = await metaGlobComponents[componentPath]();
-    componentCodeSig.value = await rawComponents[componentPath]();
+    try {
+      MetaGlobComponentSig.value = await metaGlobComponents[componentPath]();
+      componentCodeSig.value = await rawComponents[componentPath]();
+    } catch (e) {
+      throw new Error(`Unable to load path ${componentPath}`);
+    }
   });
+
+  // components that need a dark background in the example
+  const darkBgComponents = ["feed"];
+  const previewBgColor = darkBgComponents.some((c) => componentPath.includes(c))
+    ? "bg-slate-950"
+    : "bg-white";
 
   return (
     <Carousel.Root>
@@ -37,7 +46,7 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
       </Carousel.Pagination>
 
       <Carousel.Slide>
-        <section class="flex flex-col items-center bg-slate-950 py-12">
+        <section class={`${previewBgColor} flex flex-col items-center py-12`}>
           {MetaGlobComponentSig.value && <MetaGlobComponentSig.value />}
         </section>
       </Carousel.Slide>
