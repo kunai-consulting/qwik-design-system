@@ -6,7 +6,7 @@ import {
 } from "@kunai-consulting/qwik-hooks";
 import { PaginationPage } from "./pagination-page";
 
-export const PaginationRoot = ({ children }: PropsOf<"div">) => {
+export const PaginationRoot = ({ children, ...props }: PropsOf<"div">) => {
   let currPageIndex = 0;
 
   findComponent(PaginationPage, (pageProps) => {
@@ -16,7 +16,7 @@ export const PaginationRoot = ({ children }: PropsOf<"div">) => {
 
   processChildren(children);
 
-  return <PaginationBase>{children}</PaginationBase>;
+  return <PaginationBase {...props}>{children}</PaginationBase>;
 };
 
 const PaginationBase = component$((props: PropsOf<"div">) => {

@@ -1,8 +1,8 @@
-import { Slot, component$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
 
-export const PaginationEllipsis = component$(() => {
+export const PaginationEllipsis = component$((props: PropsOf<"div">) => {
   return (
-    <div>
+    <div {...props}>
       <Slot />
     </div>
   );
