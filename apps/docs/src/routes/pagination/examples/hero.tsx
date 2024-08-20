@@ -4,7 +4,7 @@ import { Pagination } from "@kunai-consulting/qwik-components";
 export default component$(() => {
   return (
     <Pagination.Root class="flex gap-4">
-      <Pagination.Ellipsis>Ellipsis</Pagination.Ellipsis>
+      <Pagination.Ellipsis>...</Pagination.Ellipsis>
       <Pagination.Previous>Previous</Pagination.Previous>
 
       {/* creates 10 pages */}
