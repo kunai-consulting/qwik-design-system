@@ -30,7 +30,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
           recmaPlugins: [recmaProvideComponents],
         },
       }),
-      qwikVite(),
+      qwikVite({ lint: false }),
       tsconfigPaths(),
     ],
     // This tells Vite which dependencies to pre-build in dev mode.
