@@ -11,7 +11,7 @@ function createMetaGlobComponents() {
     "../../../docs/src/routes/**/**/examples/*.tsx",
     {
       import: "default",
-      eager: false,
+      eager: false
     }
   );
 

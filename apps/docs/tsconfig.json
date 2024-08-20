@@ -18,7 +18,8 @@
     "noEmit": true,
     "paths": {
       "~/*": ["./src/*"],
-      "@/styled/*": ["./styled-copy-paste/*"]
+      "@/styled/*": ["./styled-copy-paste/*"],
+      "@kunai-consulting/qwik-components": ["../../libs/components/src"]
     }
   },
   "include": ["src", "./*.d.ts", "./*.config.ts", "styled-copy-paste"]

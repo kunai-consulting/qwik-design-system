@@ -4,7 +4,7 @@ import {
   component$,
   createContextId,
   useContext,
-  useContextProvider,
+  useContextProvider
 } from "@builder.io/qwik";
 
 export const MDXContext = createContextId<Components>("MDXContext");
@@ -30,7 +30,7 @@ export const DefaultWrapper = component$(() => {
 export const MDXProvider = component$(
   ({
     components,
-    disableParentContext,
+    disableParentContext
   }: {
     components: Components;
     disableParentContext?: boolean;
@@ -43,7 +43,7 @@ export const MDXProvider = component$(
     }
     useContextProvider(MDXContext, {
       wrapper: DefaultWrapper,
-      ...allComponents,
+      ...allComponents
     });
     return <Slot />;
   }

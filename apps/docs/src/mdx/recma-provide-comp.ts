@@ -5,7 +5,7 @@ import type {
   Node,
   Program,
   VariableDeclaration,
-  VariableDeclarator,
+  VariableDeclarator
 } from "estree-jsx";
 
 import type { Plugin } from "unified";
@@ -40,14 +40,14 @@ export const recmaProvideComponents: Plugin<any, Program> = () => {
                 type: "CallExpression",
                 callee: {
                   type: "Identifier",
-                  name: "_componentQrl",
+                  name: "_componentQrl"
                 },
                 arguments: [
                   {
                     type: "CallExpression",
                     callee: {
                       type: "Identifier",
-                      name: "_inlinedQrl",
+                      name: "_inlinedQrl"
                     },
                     arguments: [
                       {
@@ -56,27 +56,27 @@ export const recmaProvideComponents: Plugin<any, Program> = () => {
                         params: node.params,
                         body: node.body,
                         async: node.async,
-                        generator: node.generator,
+                        generator: node.generator
                       },
                       {
                         type: "Literal",
                         value: symbolName,
-                        raw: String.raw`"${symbolName}"`,
+                        raw: String.raw`"${symbolName}"`
                       } as Literal,
                       {
                         type: "ArrayExpression",
-                        elements: [],
-                      },
-                    ],
-                  } as CallExpression,
-                ],
-              } as CallExpression,
-            },
+                        elements: []
+                      }
+                    ]
+                  } as CallExpression
+                ]
+              } as CallExpression
+            }
           ];
           const newNode: VariableDeclaration = {
             type: "VariableDeclaration",
             kind: "const",
-            declarations,
+            declarations
           };
           replacement.push(newNode);
           continue;
@@ -91,15 +91,15 @@ export const recmaProvideComponents: Plugin<any, Program> = () => {
         {
           type: "ImportSpecifier",
           imported: { type: "Identifier", name: "componentQrl" },
-          local: { type: "Identifier", name: "_componentQrl" },
+          local: { type: "Identifier", name: "_componentQrl" }
         },
         {
           type: "ImportSpecifier",
           imported: { type: "Identifier", name: "inlinedQrl" },
-          local: { type: "Identifier", name: "_inlinedQrl" },
-        },
+          local: { type: "Identifier", name: "_inlinedQrl" }
+        }
       ],
-      source: { type: "Literal", value: "@builder.io/qwik" },
+      source: { type: "Literal", value: "@builder.io/qwik" }
     });
   };
 };
