@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "pnpm --filter ./apps/docs dev",
+    "dev.ct": "pnpm --filter ./apps/component-tests dev -- --port 5174",
     "build": "pnpm --filter ./libs/hooks build && pnpm --filter ./libs/components build",
     "preview": "pnpm --filter ./apps/docs preview",
     "check": "biome ci .",
