@@ -32,6 +32,12 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
     }
   });
 
+  // components that need a dark background in the example
+  const darkBgComponents = ["feed"];
+  const previewBgColor = darkBgComponents.some((c) => componentPath.includes(c))
+    ? "bg-slate-950"
+    : "bg-white";
+
   return (
     <Carousel.Root>
       <Carousel.Pagination>
@@ -40,7 +46,7 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
       </Carousel.Pagination>
 
       <Carousel.Slide>
-        <section class="flex flex-col items-center bg-slate-950 py-12">
+        <section class={`${previewBgColor} flex flex-col items-center py-12`}>
           {MetaGlobComponentSig.value && <MetaGlobComponentSig.value />}
         </section>
       </Carousel.Slide>
