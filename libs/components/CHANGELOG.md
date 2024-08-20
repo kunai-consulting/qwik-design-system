@@ -1,5 +1,11 @@
 # @kunai-consulting/qwik-headless
 
+## 0.0.4
+
+### Patch Changes
+
+- f8414fe: otp component initial implementation
+
 ## 0.0.3
 
 ### Patch Changes
