@@ -1,1 +1,1 @@
-export * from "./otp";
+export * as Otp from "./otp";

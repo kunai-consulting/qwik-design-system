@@ -1,14 +1,7 @@
 import { type PropsOf, component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-
-import { fromTheme } from "tailwind-merge";
 import { VisuallyHidden } from "~/utils/visually-hidden";
-import {
-  OtpCaret,
-  OtpItem,
-  OtpNativeInput,
-  OtpRoot,
-} from "../../../../../libs/components/src/otp";
+import { Otp } from "@kunai-consulting/qwik-components";
 
 export const head: DocumentHead = {
   title: "Qwik Design System",
@@ -37,9 +30,9 @@ export default component$(() => {
           </div>
         </div>
 
-        <OtpRoot class="flex flex-col items-center justify-center">
+        <Otp.Root class="flex flex-col items-center justify-center">
           <VisuallyHidden>
-            <OtpNativeInput />
+            <Otp.HiddenNativeInput />
           </VisuallyHidden>
 
           <div class="otp-container flex flex-row justify-center gap-2">
@@ -47,17 +40,17 @@ export default component$(() => {
               const uniqueKey = `otp-${index}-${Date.now()}`;
 
               return (
-                <OtpItem
+                <Otp.Item
                   key={uniqueKey}
                   autoFocus={index === 0}
                   class={
                     "h-9 w-10 border-2 text-center data-[highlighted]:border-blue-600 rounded data-[highlighted]:ring-blue-100  data-[highlighted]:ring-[3px] data-[highlighted]:pl-1 data-[highlighted]:pr-1 caret-blue-600"
                   }
                 >
-                  <OtpCaret class="text-blue-500 text-xl animate-blink-caret">
+                  <Otp.Caret class="text-blue-500 text-xl animate-blink-caret">
                     |
-                  </OtpCaret>
-                </OtpItem>
+                  </Otp.Caret>
+                </Otp.Item>
               );
             })}
           </div>
@@ -68,7 +61,7 @@ export default component$(() => {
             />
             This is a trusted device, don't ask again
           </div>
-        </OtpRoot>
+        </Otp.Root>
         <div class="flex flex-row items-center justify-center gap-2 p-6 text-sm">
           <button
             type="button"
