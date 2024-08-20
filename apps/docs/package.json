@@ -24,8 +24,8 @@
     "qwik": "qwik"
   },
   "devDependencies": {
-    "@builder.io/qwik": "1.8",
-    "@builder.io/qwik-city": "1.8",
+    "@builder.io/qwik": "1.7.3",
+    "@builder.io/qwik-city": "1.7.3",
     "@kunai-consulting/qwik-components": "workspace:*",
     "@kunai-consulting/qwik-hooks": "workspace:*",
     "@qwik-ui/headless": "^0.5.1",
