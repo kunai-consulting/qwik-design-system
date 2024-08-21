@@ -6,6 +6,7 @@ export interface OTPContext {
   nativeInputRef: Signal<HTMLInputElement | undefined>;
   numItemsSig: Signal<number>;
   fullEntrySig: Signal<boolean>;
+  isFocusedSig: Signal<boolean>;
 }
 
 export const OTPContextId = createContextId<OTPContext>('OTPContext');
