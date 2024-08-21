@@ -25,8 +25,6 @@ export const PaginationRoot = ({ children, ...props }: PropsOf<"div">) => {
 };
 
 const PaginationBase = component$((props: PropsOf<"div">) => {
-  usePagination();
-
   return (
     <div {...props}>
       <Slot />

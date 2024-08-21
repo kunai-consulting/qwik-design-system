@@ -3,7 +3,7 @@ import type { QwikIntrinsicElements } from "@builder.io/qwik";
 
 type AllowedElements = "button" | "a" | "div" | "span";
 
-export const PaginationPage = component$(
+export const Polymorphic = component$(
   <C extends AllowedElements = "button">(
     props: QwikIntrinsicElements[C] & { as?: C }
   ) => {
