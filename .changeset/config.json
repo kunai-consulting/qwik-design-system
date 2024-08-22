@@ -2,7 +2,9 @@
   "$schema": "https://unpkg.com/@changesets/config@3.0.2/schema.json",
   "changelog": "@changesets/cli/changelog",
   "commit": false,
-  "fixed": [],
+  "fixed": [
+    ["@kunai-consulting/qwik-components", "@kunai-consulting/qwik-hooks"]
+  ],
   "linked": [],
   "access": "restricted",
   "baseBranch": "main",
