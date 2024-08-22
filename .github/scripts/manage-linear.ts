@@ -1,4 +1,6 @@
 import { LinearClient } from "@linear/sdk";
+import path from "node:path";
+import fs from "node:fs";
 
 const linearClient = new LinearClient({ apiKey: process.env.LINEAR_API_KEY });
 
@@ -6,7 +8,24 @@ const team = await linearClient.team("QWIK");
 const project = await linearClient.project("af4d86af8e3f");
 
 const prTitle = process.env.PR_TITLE || "No PR Title";
-const prDescription = process.env.PR_DESCRIPTION || "No PR Description";
+let prDescription: string;
+
+// Read contents of .changeset directory
+function readChangesetFiles() {
+  const changesetDir = path.join(process.cwd(), ".changeset");
+  if (fs.existsSync(changesetDir)) {
+    const files = fs.readdirSync(changesetDir);
+
+    for (const file of files) {
+      if (path.extname(file) === ".md") {
+        const content = fs.readFileSync(path.join(changesetDir, file), "utf-8");
+        prDescription += content;
+      }
+    }
+  }
+}
+
+readChangesetFiles();
 
 const existingIssues = await linearClient.issues({
   filter: {
@@ -57,9 +76,9 @@ async function updateLinearReleaseIssue() {
 
 try {
   if (existingIssue) {
-    await createLinearReleaseIssue();
-  } else {
     await updateLinearReleaseIssue();
+  } else {
+    await createLinearReleaseIssue();
   }
 } catch (e) {
   console.error("Error from creating linear ticket script: ", e);
