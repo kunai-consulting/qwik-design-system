@@ -1,6 +1,5 @@
 import { LinearClient } from "@linear/sdk";
-import path from "node:path";
-import fs from "node:fs";
+import read from "@changesets/read";
 
 const linearClient = new LinearClient({ apiKey: process.env.LINEAR_API_KEY });
 
@@ -11,41 +10,45 @@ const prTitle = process.env.PR_TITLE || "No PR Title";
 let prDescription: string;
 
 // Read contents of .changeset directory
-function readChangesetFiles() {
+async function readChangesetFiles() {
   try {
-    const changesetDir = path.join(process.cwd(), ".changeset");
-    console.log("Changeset directory:", changesetDir);
+    const changesets = await read(process.cwd());
+    const packageChanges: Record<
+      string,
+      Array<{ type: string; summary: string }>
+    > = {};
 
-    if (!fs.existsSync(changesetDir)) {
-      console.log(".changeset directory does not exist");
-      return;
-    }
-
-    const files = fs.readdirSync(changesetDir);
-    console.log("Files in .changeset directory:", files);
-
-    if (files.length === 0) {
-      console.log("No files found in .changeset directory");
-      return;
-    }
-
-    for (const file of files) {
-      if (path.extname(file) === ".md") {
-        try {
-          const filePath = path.join(changesetDir, file);
-          console.log("Reading file:", filePath);
-          const content = fs.readFileSync(filePath, "utf-8");
-          prDescription += `\n\nChangeset ${file}:\n${content}`;
-          console.log(`Successfully read ${file}`);
-        } catch (fileError) {
-          console.error(`Error reading file ${file}:`, fileError);
+    for (const changeset of changesets) {
+      for (const release of changeset.releases) {
+        if (!packageChanges[release.name]) {
+          packageChanges[release.name] = [];
         }
+        packageChanges[release.name].push({
+          type: release.type,
+          summary: changeset.summary,
+        });
       }
     }
 
-    console.log("Final prDescription length:", prDescription.length);
+    prDescription = `
+## Release Summary
+
+This issue tracks the changes for the upcoming release of the Qwik Design System.
+
+Project: https://github.com/kunai-consulting/qwik-design-system
+
+`;
+
+    for (const [packageName, changes] of Object.entries(packageChanges)) {
+      prDescription += `### ${packageName}\n\n`;
+      for (const change of changes) {
+        prDescription += `- **${change.type}**:\n ${change.summary}\n`;
+      }
+      prDescription += "\n";
+    }
   } catch (error) {
-    console.error("Error in readChangesetFiles:", error);
+    console.error("Error reading changesets:", error);
+    process.exit(1);
   }
 }
 
@@ -74,11 +77,7 @@ async function createLinearReleaseIssue() {
   const issue = await linearClient.createIssue({
     teamId: team.id,
     title: prTitle,
-    description: `
-      project: https://github.com/kunai-consulting/kunai-design-system
-
-      ${prDescription}
-    `,
+    description: prDescription,
     projectId: project.id,
   });
 
@@ -88,11 +87,7 @@ async function createLinearReleaseIssue() {
 // when we add new changesets before the release
 async function updateLinearReleaseIssue() {
   const updatedIssue = await linearClient.updateIssue(existingIssue.id, {
-    description: `
-    project: https://github.com/kunai-consulting/kunai-design-system
-
-    ${prDescription}
-  `,
+    description: prDescription,
   });
 
   return updatedIssue;
