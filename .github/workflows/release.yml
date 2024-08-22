@@ -73,3 +73,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create Linear Release Issue
+        if: steps.changesets.outputs.pullRequestNumber
+        env:
+          LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
+          PR_TITLE: ${{ steps.changesets.outputs.pullRequestTitle }}
+          PR_DESCRIPTION: ${{ steps.changesets.outputs.pullRequestBody }}
+        run: pnpm vite-node .github/scripts/create-linear-issue.ts
