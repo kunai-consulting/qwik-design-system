@@ -1,0 +1,30 @@
+name: Create Linear Issue on Pull Request
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    types: [opened, reopened]
+
+jobs:
+  create-linear-issue-on-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create the Linear Issue
+        id: createIssue
+        uses: ctriolo/action-create-linear-issue@v1
+        with:
+          linear-api-key: ${{secrets.LINEAR_API_KEY}}
+          linear-team-key: "QWIK"
+          linear-issue-title: ${{github.event.pull_request.title}}
+          linear-issue-description: ${{github.event.pull_request.body}}
+          linear-attachment-url: ${{github.event.pull_request.html_url}}
+          linear-attachment-title: ${{github.event.pull_request.title}}
+
+      - name: Create comment in PR with Linear Issue link
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ${{ steps.createIssue.outputs.linear-issue-url }}"
