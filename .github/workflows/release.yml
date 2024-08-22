@@ -82,16 +82,13 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: 📜 Derive Changelog Data
-        if: steps.changesets.outputs.pullRequestNumber
-        run: |
-          echo 'CHANGELOG<<EOF' >> $GITHUB_ENV
-          pnpm changeset status --output=verbose >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
+        id: derive-changelog-data
+        run: echo "PR_DESCRIPTION=$(cat changelog.txt)" >> $GITHUB_OUTPUT
 
       - name: 💥 Create Linear Release Issue
         if: steps.changesets.outputs.pullRequestNumber
         env:
           LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
           PR_TITLE: "Release QDS v${{ env.NEW_VERSION }}"
-          PR_DESCRIPTION: ${{ env.CHANGELOG }}
+          PR_DESCRIPTION: ${{ steps.derive-changelog-data.outputs.PR_DESCRIPTION }}
         run: pnpm vite-node .github/scripts/create-linear-issue.ts
