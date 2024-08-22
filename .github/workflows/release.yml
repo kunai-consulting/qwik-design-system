@@ -62,20 +62,26 @@ jobs:
         run: |
           pnpm build
 
+      - name: 📊 Determine next version
+        id: next-version
+        run: |
+          pnpm changeset status --output=release.json
+          echo "NEW_VERSION=$(jq -r '.releases[0].newVersion' release.json)" >> $GITHUB_ENV
+          rm release.json
+
       - name: 📣 Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
         with:
-          title: "chore(release): version packages 🦋"
+          title: "Release QDS v${{ env.NEW_VERSION }}"
           publish: pnpm publish:packages
           version: pnpm version:packages
-          commit: "chore(release): version packages 🦋 [skip ci]"
+          commit: "feat: Release QDS v${{ env.NEW_VERSION }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create Linear Release Issue
-        if: steps.changesets.outputs.pullRequestNumber
         env:
           LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
           PR_TITLE: ${{ steps.changesets.outputs.pullRequestTitle }}

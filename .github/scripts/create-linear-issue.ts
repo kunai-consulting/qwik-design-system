@@ -13,6 +13,21 @@ async function createLinearReleaseIssue() {
   const prTitle = process.env.PR_TITLE || "No PR Title";
   const prDescription = process.env.PR_DESCRIPTION || "No PR Description";
 
+  const existingIssues = await linearClient.issues({
+    filter: {
+      team: { id: { eq: team.id } },
+      project: { id: { eq: project.id } },
+      title: { eq: prTitle },
+    },
+  });
+
+  if (existingIssues.nodes.length > 0) {
+    console.log(
+      `Issue with title "${prTitle}" already exists. Skipping creation.`
+    );
+    return existingIssues.nodes[0];
+  }
+
   const issue = await linearClient.createIssue({
     teamId: team.id,
     title: prTitle,
