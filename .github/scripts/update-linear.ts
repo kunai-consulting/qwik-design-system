@@ -12,16 +12,40 @@ let prDescription: string;
 
 // Read contents of .changeset directory
 function readChangesetFiles() {
-  const changesetDir = path.join(process.cwd(), ".changeset");
-  if (fs.existsSync(changesetDir)) {
+  try {
+    const changesetDir = path.join(process.cwd(), ".changeset");
+    console.log("Changeset directory:", changesetDir);
+
+    if (!fs.existsSync(changesetDir)) {
+      console.log(".changeset directory does not exist");
+      return;
+    }
+
     const files = fs.readdirSync(changesetDir);
+    console.log("Files in .changeset directory:", files);
+
+    if (files.length === 0) {
+      console.log("No files found in .changeset directory");
+      return;
+    }
 
     for (const file of files) {
       if (path.extname(file) === ".md") {
-        const content = fs.readFileSync(path.join(changesetDir, file), "utf-8");
-        prDescription += content;
+        try {
+          const filePath = path.join(changesetDir, file);
+          console.log("Reading file:", filePath);
+          const content = fs.readFileSync(filePath, "utf-8");
+          prDescription += `\n\nChangeset ${file}:\n${content}`;
+          console.log(`Successfully read ${file}`);
+        } catch (fileError) {
+          console.error(`Error reading file ${file}:`, fileError);
+        }
       }
     }
+
+    console.log("Final prDescription length:", prDescription.length);
+  } catch (error) {
+    console.error("Error in readChangesetFiles:", error);
   }
 }
 
