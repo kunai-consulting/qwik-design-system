@@ -86,4 +86,4 @@ jobs:
         env:
           LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
           PR_TITLE: "Release QDS v${{ env.NEW_VERSION }}"
-        run: pnpm vite-node .github/scripts/create-linear-issue.ts
+        run: pnpm vite-node .github/scripts/update-linear.ts

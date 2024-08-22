@@ -16,26 +16,12 @@ function readChangesetFiles() {
   if (fs.existsSync(changesetDir)) {
     const files = fs.readdirSync(changesetDir);
 
-    if (files.length === 0) {
-      console.log("No files found in .changeset directory");
-      return;
-    }
-
     for (const file of files) {
       if (path.extname(file) === ".md") {
-        try {
-          const content = fs.readFileSync(
-            path.join(changesetDir, file),
-            "utf-8"
-          );
-          prDescription += content;
-        } catch (error) {
-          console.error(`Error reading file ${file}: ${error.message}`);
-        }
+        const content = fs.readFileSync(path.join(changesetDir, file), "utf-8");
+        prDescription += content;
       }
     }
-  } else {
-    console.log(".changeset directory does not exist");
   }
 }
 
