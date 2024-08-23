@@ -13,19 +13,18 @@ export type ChangesetData = {
   }>;
 };
 
-export const changesetData: ChangesetData = (() => {
-  try {
-    return JSON.parse(process.env.CHANGESET_DATA || "{}");
-  } catch (error) {
-    console.error("Failed to parse CHANGESET_DATA:", error);
-    return { changesets: [], releases: [] };
-  }
-})();
+export const changesetData: ChangesetData = JSON.parse(
+  process.env.CHANGESET_DATA || "{}"
+);
 
 export function convertChangesetToMarkdown(
   changesetData: ChangesetData
 ): string {
   const { changesets, releases } = changesetData;
+
+  if (!Array.isArray(releases)) {
+    return "No changes to report.";
+  }
 
   const changesetsByPackage: { [key: string]: string[] } = {};
 
