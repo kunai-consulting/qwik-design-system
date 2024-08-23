@@ -6,6 +6,7 @@ const team = await linearClient.team("QWIK");
 const project = await linearClient.project("af4d86af8e3f");
 
 const issueTitle = process.env.PR_TITLE || "No PR Title";
+const prUrl = process.env.PR_URL;
 const existingIssues = await linearClient.issues({
   filter: {
     team: { id: { eq: team.id } },
@@ -91,23 +92,45 @@ async function createLinearReleaseIssue() {
     return;
   }
 
-  const issue = await linearClient.createIssue({
+  const issuePayload = await linearClient.createIssue({
     teamId: team.id,
     title: issueTitle,
     description: issueDescription,
     projectId: project.id,
   });
 
-  return issue;
+  const issueId = (await issuePayload.issue)?.id;
+
+  if (!issueId) {
+    throw new Error(
+      "Update Linear: Issue Id needed for attachement to be creted."
+    );
+  }
+
+  await linearClient.createAttachment({
+    issueId: issueId,
+    url: prUrl ?? "",
+    title: "GitHub Pull Request",
+    subtitle: issueTitle,
+  });
+
+  return issuePayload;
 }
 
 // when we add new changesets before the release
 async function updateLinearReleaseIssue() {
-  const updatedIssue = await linearClient.updateIssue(existingIssue.id, {
+  const updatedIssuePayload = await linearClient.updateIssue(existingIssue.id, {
     description: issueDescription,
   });
 
-  return updatedIssue;
+  await linearClient.createAttachment({
+    issueId: existingIssue.id,
+    url: prUrl ?? "",
+    title: "GitHub Pull Request",
+    subtitle: issueTitle,
+  });
+
+  return updatedIssuePayload;
 }
 
 try {
