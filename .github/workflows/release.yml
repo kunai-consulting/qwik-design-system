@@ -62,12 +62,13 @@ jobs:
         run: |
           pnpm build
 
-      - name: 📊 Determine next version and changeset data
-        id: next-version-and-changeset
+      - name: 📊 Generate changeset data and determine next version
         run: |
           pnpm changeset status --output=release.json
           echo "NEW_VERSION=$(jq -r '.releases[0].newVersion' release.json)" >> $GITHUB_ENV
-          echo "CHANGESET_DATA=$(jq -r '.' release.json)" >> $GITHUB_ENV
+          echo "CHANGESET_DATA<<EOF" >> $GITHUB_ENV
+          cat release.json >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
           rm release.json
 
       - name: 📣 Create Release Pull Request or Publish to npm
@@ -87,5 +88,5 @@ jobs:
         env:
           LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
           PR_TITLE: "Release QDS v${{ env.NEW_VERSION }}"
-          PR_DESCRIPTION: "${{ env.CHANGESET_DATA }}"
+          CHANGESET_DATA: ${{ env.CHANGESET_DATA }}
         run: pnpm vite-node .github/scripts/update-linear.ts
