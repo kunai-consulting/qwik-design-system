@@ -21,16 +21,14 @@ jobs:
     steps:
       - name: 🔍 Check PR Title
         id: check-pr-title
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event.issue.number }}
         run: |
-          PR_TITLE=$(gh pr view $PR_NUMBER --json title -q .title)
+          PR_TITLE="${{ github.event.issue.title }}"
           if [[ $PR_TITLE == *"Release v"* ]]; then
             echo "is_release_pr=true" >> $GITHUB_OUTPUT
           else
             echo "is_release_pr=false" >> $GITHUB_OUTPUT
           fi
+        shell: bash
 
   sync-comments:
     name: 🔄 Sync Comments
