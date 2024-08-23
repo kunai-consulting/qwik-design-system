@@ -16,9 +16,7 @@
       "name": "@kunai-consulting/qwik-components",
       "type": "patch",
       "oldVersion": "0.0.4",
-      "changesets": [
-        "olive-actors-sell"
-      ],
+      "changesets": ["olive-actors-sell"],
       "newVersion": "0.0.5"
     },
     {

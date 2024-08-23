@@ -59,19 +59,16 @@ jobs:
 
       - name: 🏗️ Build
         id: build-the-mono-repo
-        run: |
-          pnpm build
+        run: pnpm build
 
       - name: 📊 Generate changeset data and determine next version
+        id: generate-changeset
         run: |
           pnpm changeset status --output=release.json
           echo "NEW_VERSION=$(jq -r '.releases[0].newVersion' release.json)" >> $GITHUB_ENV
-          echo "CHANGESET_DATA=$(base64 -w 0 release.json)" >> $GITHUB_ENV
+          CHANGESET_DATA=$(jq -c . release.json)
+          echo "changeset_data=$CHANGESET_DATA" >> $GITHUB_OUTPUT
           rm release.json
-
-      - name: 🔓 Decode changeset data
-        id: decode-changeset-data
-        run: echo "DECODED_CHANGESET_DATA=$(echo ${{ env.CHANGESET_DATA }} | base64 -d)" >> $GITHUB_ENV
 
       - name: 📣 Create Release Pull Request or Publish to npm
         id: changesets
@@ -90,5 +87,5 @@ jobs:
         env:
           LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
           PR_TITLE: "Release QDS v${{ env.NEW_VERSION }}"
-          CHANGESET_DATA: ${{ env.DECODED_CHANGESET_DATA }}
+          CHANGESET_DATA: ${{ steps.generate-changeset.outputs.changeset_data }}
         run: pnpm vite-node .github/scripts/update-linear.ts
