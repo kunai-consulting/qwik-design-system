@@ -5,16 +5,20 @@ on:
     types: [created]
 
 jobs:
-  sync-comments:
-    name: 🔄 Sync Comments
-    if: github.event.issue.pull_request
+  check-pr:
+    name: 🔍 Check PR
+    if: >
+      github.event.issue.pull_request &&
+      !contains(github.event.comment.user.login, '[bot]') &&
+      github.event.comment.user.type != 'Bot' &&
+      github.actor != 'dependabot[bot]' &&
+      github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
+    outputs:
+      is_release_pr: ${{ steps.check-pr-title.outputs.is_release_pr }}
+      comment_author: ${{ github.event.comment.user.login }}
+      comment_author_profile: ${{ github.event.comment.user.html_url }}
     steps:
-      - name: ⬇️ Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
       - name: 🔍 Check PR Title
         id: check-pr-title
         env:
@@ -28,9 +32,16 @@ jobs:
             echo "is_release_pr=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: 🛑 Exit if not a release PR
-        if: steps.check-pr-title.outputs.is_release_pr != 'true'
-        run: exit 0
+  sync-comments:
+    name: 🔄 Sync Comments
+    needs: check-pr
+    if: needs.check-pr.outputs.is_release_pr == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: 🟢 Setup node
         uses: actions/setup-node@v3
@@ -41,6 +52,21 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: latest
+          run_install: false
+
+      - name: 🎈 Get pnpm store directory
+        id: get-pnpm-cache-dir
+        run: |
+          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: 🔆 Cache pnpm
+        uses: actions/cache@v3
+        id: pnpm-cache
+        with:
+          path: ${{ steps.get-pnpm-cache-dir.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: 🧩 Install Dependencies
         run: pnpm install
@@ -51,4 +77,6 @@ jobs:
           COMMENT_BODY: ${{ github.event.comment.body }}
           LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
           PR_TITLE: ${{ github.event.issue.title }}
+          COMMENT_AUTHOR: ${{ needs.check-pr.outputs.comment_author }}
+          COMMENT_AUTHOR_PROFILE: ${{ needs.check-pr.outputs.comment_author_profile }}
         run: pnpm vite-node .github/scripts/sync-pr-to-linear.ts
