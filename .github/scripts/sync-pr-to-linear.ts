@@ -43,7 +43,7 @@ async function syncPrToLinear() {
   });
 
   console.log(`Comment added to Linear issue ${existingIssue.id}`);
-  return createdComment;
+  return `@[${process.env.COMMENT_AUTHOR}](${process.env.COMMENT_AUTHOR_PROFILE}): ${createdComment}`;
 }
 
 syncPrToLinear().catch((error) => {
