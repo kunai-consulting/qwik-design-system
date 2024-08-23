@@ -82,6 +82,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: 📝 Log Changesets Outputs
+        run: |
+          echo "Published: ${{ steps.changesets.outputs.published }}"
+          echo "Pull Request Number: ${{ steps.changesets.outputs.pullRequestNumber }}"
+          echo "Pull Request URL: ${{ steps.changesets.outputs.pullRequestUrl }}"
+
       - name: 💥 Create Linear Release Issue
         if: steps.changesets.outputs.pullRequestNumber
         env:
