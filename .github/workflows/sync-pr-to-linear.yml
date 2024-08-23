@@ -23,7 +23,7 @@ jobs:
         id: check-pr-title
         run: |
           PR_TITLE="${{ github.event.issue.title }}"
-          if [[ $PR_TITLE == *"Release v"* ]]; then
+          if [[ $PR_TITLE == *"Release QDS"* ]]; then
             echo "is_release_pr=true" >> $GITHUB_OUTPUT
           else
             echo "is_release_pr=false" >> $GITHUB_OUTPUT
