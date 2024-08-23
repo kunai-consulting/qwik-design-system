@@ -50,4 +50,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMENT_BODY: ${{ github.event.comment.body }}
           LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
-        run: pnpm vite-node .github/scripts/sync-pr-comments.ts
+        run: pnpm vite-node .github/scripts/sync-pr-to-linear.ts
