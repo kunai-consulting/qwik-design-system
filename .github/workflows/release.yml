@@ -66,9 +66,9 @@ jobs:
         run: |
           pnpm changeset status --output=release.json
           echo "NEW_VERSION=$(jq -r '.releases[0].newVersion' release.json)" >> $GITHUB_ENV
-          echo "CHANGESET_DATA<<EOF" >> $GITHUB_ENV
+          echo 'CHANGESET_DATA<<EOF' >> $GITHUB_ENV
           cat release.json >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
           rm release.json
 
       - name: 📣 Create Release Pull Request or Publish to npm
