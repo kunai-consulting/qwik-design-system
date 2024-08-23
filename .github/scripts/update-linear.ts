@@ -1,5 +1,5 @@
 import { LinearClient } from "@linear/sdk";
-import read from "@changesets/read";
+import getChangesets from "@changesets/read";
 
 const linearClient = new LinearClient({ apiKey: process.env.LINEAR_API_KEY });
 
@@ -7,12 +7,20 @@ const team = await linearClient.team("QWIK");
 const project = await linearClient.project("af4d86af8e3f");
 
 const prTitle = process.env.PR_TITLE || "No PR Title";
+const existingIssues = await linearClient.issues({
+  filter: {
+    team: { id: { eq: team.id } },
+    project: { id: { eq: project.id } },
+    title: { eq: prTitle },
+  },
+});
+
+const existingIssue = existingIssues.nodes[0];
 let prDescription: string;
 
-// Read contents of .changeset directory
 async function readChangesetFiles() {
   try {
-    const changesets = await read(process.cwd());
+    const changesets = await getChangesets(process.cwd());
     const packageChanges: Record<
       string,
       Array<{ type: string; summary: string }>
@@ -37,6 +45,8 @@ This issue tracks the changes for the upcoming release of the Qwik Design System
 
 Project: https://github.com/kunai-consulting/qwik-design-system
 
+${process.env.PR_DESCRIPTION}
+
 `;
 
     for (const [packageName, changes] of Object.entries(packageChanges)) {
@@ -48,21 +58,10 @@ Project: https://github.com/kunai-consulting/qwik-design-system
     }
   } catch (error) {
     console.error("Error reading changesets:", error);
-    process.exit(1);
   }
 }
 
 readChangesetFiles();
-
-const existingIssues = await linearClient.issues({
-  filter: {
-    team: { id: { eq: team.id } },
-    project: { id: { eq: project.id } },
-    title: { eq: prTitle },
-  },
-});
-
-const existingIssue = existingIssues.nodes[0];
 
 /**
  * Uses the linear SDK. Documentation at:
