@@ -45,7 +45,7 @@ This issue tracks the changes for the upcoming release of the Qwik Design System
 
 Project: https://github.com/kunai-consulting/qwik-design-system
 
-${process.env.PR_DESCRIPTION}
+${process.env.CHANGESET_DATA}
 
 `;
 
