@@ -1,0 +1,53 @@
+name: 🔄 Sync Comments To Linear
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  sync-comments:
+    name: 🔄 Sync Comments
+    if: github.event.issue.pull_request
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 🔍 Check PR Title
+        id: check-pr-title
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          PR_TITLE=$(gh pr view $PR_NUMBER --json title -q .title)
+          if [[ $PR_TITLE == *"Release v"* ]]; then
+            echo "is_release_pr=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_release_pr=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🛑 Exit if not a release PR
+        if: steps.check-pr-title.outputs.is_release_pr != 'true'
+        run: exit 0
+
+      - name: 🟢 Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "lts/*"
+
+      - name: 🥡 Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: 🧩 Install Dependencies
+        run: pnpm install
+
+      - name: 🏃‍♂️ Run Sync Script
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
+        run: pnpm vite-node .github/scripts/sync-pr-comments.ts
