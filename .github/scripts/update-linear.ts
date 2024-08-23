@@ -16,7 +16,6 @@ const existingIssues = await linearClient.issues({
 });
 
 const existingIssue = existingIssues.nodes[0];
-let prDescription: string;
 
 async function readChangesetFiles() {
   try {
@@ -38,14 +37,12 @@ async function readChangesetFiles() {
       }
     }
 
-    prDescription = `
+    let prDescription = `
 ## Release Summary
 
 This issue tracks the changes for the upcoming release of the Qwik Design System.
 
 Project: https://github.com/kunai-consulting/qwik-design-system
-
-${process.env.CHANGESET_DATA}
 
 `;
 
@@ -56,12 +53,15 @@ ${process.env.CHANGESET_DATA}
       }
       prDescription += "\n";
     }
+
+    return prDescription;
   } catch (error) {
     console.error("Error reading changesets:", error);
+    return "";
   }
 }
 
-readChangesetFiles();
+const prDescription = await readChangesetFiles();
 
 /**
  * Uses the linear SDK. Documentation at:
