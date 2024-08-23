@@ -69,6 +69,10 @@ jobs:
           echo "CHANGESET_DATA=$(base64 -w 0 release.json)" >> $GITHUB_ENV
           rm release.json
 
+      - name: 🔓 Decode changeset data
+        id: decode-changeset-data
+        run: echo "DECODED_CHANGESET_DATA=$(echo ${{ env.CHANGESET_DATA }} | base64 -d)" >> $GITHUB_ENV
+
       - name: 📣 Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
@@ -86,5 +90,5 @@ jobs:
         env:
           LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
           PR_TITLE: "Release QDS v${{ env.NEW_VERSION }}"
-          CHANGESET_DATA: ${{ env.CHANGESET_DATA }}
+          CHANGESET_DATA: ${{ env.DECODED_CHANGESET_DATA }}
         run: pnpm vite-node .github/scripts/update-linear.ts

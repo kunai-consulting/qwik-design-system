@@ -44,6 +44,8 @@ This issue tracks the changes for the upcoming release of the Qwik Design System
 
 Project: https://github.com/kunai-consulting/qwik-design-system
 
+${process.env.CHANGESET_DATA}
+
 `;
 
     for (const [packageName, changes] of Object.entries(packageChanges)) {
