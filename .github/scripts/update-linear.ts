@@ -4,6 +4,9 @@ const linearClient = new LinearClient({ apiKey: process.env.LINEAR_API_KEY });
 
 const team = await linearClient.team("QWIK");
 const project = await linearClient.project("af4d86af8e3f");
+const githubUrl = "https://github.com/kunai-consulting/qwik-design-system";
+const repoName = "Qwik Design System";
+const linkedPrUrl = `${githubUrl}/pull/${process.env.PR_NUMBER}`;
 
 const issueTitle = process.env.PR_TITLE || "No PR Title";
 const prUrl = process.env.PR_URL;
@@ -74,9 +77,9 @@ ${changesText}`;
 const issueDescription = `
 ## Release Summary
 
-This issue tracks the changes for the upcoming release of the Qwik Design System.
+This issue tracks the changes for the upcoming release of the ${repoName}.
 
-Project: https://github.com/kunai-consulting/qwik-design-system
+Project: ${githubUrl}
 
 ${convertChangesetToMarkdown(changesetData)}
 
@@ -109,7 +112,7 @@ async function createLinearReleaseIssue() {
 
   await linearClient.createAttachment({
     issueId: issueId,
-    url: prUrl ?? "",
+    url: linkedPrUrl ?? "",
     title: "GitHub Pull Request",
     subtitle: issueTitle,
   });
@@ -125,7 +128,7 @@ async function updateLinearReleaseIssue() {
 
   await linearClient.createAttachment({
     issueId: existingIssue.id,
-    url: prUrl ?? "",
+    url: linkedPrUrl ?? "",
     title: "GitHub Pull Request",
     subtitle: issueTitle,
   });
