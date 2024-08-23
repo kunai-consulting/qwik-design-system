@@ -45,6 +45,8 @@ This issue tracks the changes for the upcoming release of the Qwik Design System
 
 Project: https://github.com/kunai-consulting/qwik-design-system
 
+${process.env.PR_DESCRIPTION}
+
 `;
 
     for (const [packageName, changes] of Object.entries(packageChanges)) {
@@ -56,7 +58,6 @@ Project: https://github.com/kunai-consulting/qwik-design-system
     }
   } catch (error) {
     console.error("Error reading changesets:", error);
-    process.exit(1);
   }
 }
 
