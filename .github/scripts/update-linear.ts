@@ -1,15 +1,18 @@
 import { LinearClient } from "@linear/sdk";
+import { convertChangesetToMarkdown, changesetData } from "./changeset-md";
 
-const linearClient = new LinearClient({ apiKey: process.env.LINEAR_API_KEY });
+export const linearClient = new LinearClient({
+  apiKey: process.env.LINEAR_API_KEY,
+});
 
 const team = await linearClient.team("QWIK");
 const project = await linearClient.project("af4d86af8e3f");
+
 const githubUrl = "https://github.com/kunai-consulting/qwik-design-system";
 const repoName = "Qwik Design System";
 const linkedPrUrl = `${githubUrl}/pull/${process.env.PR_NUMBER}`;
 
 const issueTitle = process.env.PR_TITLE || "No PR Title";
-const prUrl = process.env.PR_URL;
 const existingIssues = await linearClient.issues({
   filter: {
     team: { id: { eq: team.id } },
@@ -18,61 +21,7 @@ const existingIssues = await linearClient.issues({
   },
 });
 
-const existingIssue = existingIssues.nodes[0];
-
-/** Data format of the release.json file */
-type ChangesetData = {
-  changesets: Array<{
-    summary: string;
-    releases: Array<{
-      name: string;
-      type: string;
-    }>;
-  }>;
-  releases: Array<{
-    name: string;
-    type: string;
-  }>;
-};
-
-const changesetData: ChangesetData = JSON.parse(
-  process.env.CHANGESET_DATA || "{}"
-);
-
-function convertChangesetToMarkdown(changesetData: ChangesetData): string {
-  const { changesets, releases } = changesetData;
-
-  const changesetsByPackage: { [key: string]: string[] } = {};
-
-  // Initialize changesetsByPackage with empty arrays for all releases
-  for (const release of releases) {
-    changesetsByPackage[release.name] = [];
-  }
-
-  // Associate changes with packages based on the releases array in each changeset
-  for (const changeset of changesets) {
-    for (const release of changeset.releases) {
-      if (changesetsByPackage[release.name]) {
-        changesetsByPackage[release.name].push(changeset.summary);
-      }
-    }
-  }
-
-  const markdownParts = releases
-    .filter((release) => release.type !== "none")
-    .map((release) => {
-      const changes = changesetsByPackage[release.name];
-      const changesText =
-        changes.length > 0 ? changes.join("\n") : "No changes";
-
-      return `### ${release.name}
-- **Type**: ${release.type}
-
-${changesText}`;
-    });
-
-  return markdownParts.join("\n\n").trim();
-}
+export const existingIssue = existingIssues.nodes[0];
 
 const issueDescription = `
 ## Release Summary
@@ -100,6 +49,7 @@ async function createLinearReleaseIssue() {
     title: issueTitle,
     description: issueDescription,
     projectId: project.id,
+    priority: 1,
   });
 
   const issueId = (await issuePayload.issue)?.id;
@@ -126,12 +76,13 @@ async function updateLinearReleaseIssue() {
     description: issueDescription,
   });
 
-  await linearClient.createAttachment({
-    issueId: existingIssue.id,
-    url: linkedPrUrl ?? "",
-    title: "GitHub Pull Request",
-    subtitle: issueTitle,
-  });
+  // this for sure works, if we can't find the id in createLinearReleaseIssue
+  // await linearClient.createAttachment({
+  //   issueId: existingIssue.id,
+  //   url: linkedPrUrl ?? "",
+  //   title: "GitHub Pull Request",
+  //   subtitle: issueTitle,
+  // });
 
   return updatedIssuePayload;
 }
