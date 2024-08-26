@@ -44,8 +44,12 @@ async function createLinearReleaseIssue() {
     return;
   }
 
-  // user that created the API key
+  // user that created the API
   const me = await linearClient.viewer;
+
+  const inProgress =
+    (await team.states()).nodes.find((state) => state.position === 3)?.id ??
+    undefined;
 
   const issuePayload = await linearClient.createIssue({
     teamId: team.id,
@@ -54,6 +58,7 @@ async function createLinearReleaseIssue() {
     projectId: project.id,
     priority: 1,
     assigneeId: me.id,
+    stateId: inProgress,
   });
 
   const issueId = (await issuePayload.issue)?.id;
