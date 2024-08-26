@@ -1,5 +1,12 @@
 # @kunai-consulting/qwik-headless
 
+## 0.0.5
+
+### Patch Changes
+
+- c304bc7: feat: fixed versioned packages
+  feat: pr title updates with version number
+
 ## 0.0.4
 
 ### Patch Changes
