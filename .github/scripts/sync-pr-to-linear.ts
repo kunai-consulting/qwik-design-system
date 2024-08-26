@@ -37,7 +37,7 @@ async function syncPrToLinear() {
 
   const commentBody = process.env.COMMENT_BODY;
 
-  const fullComment = `@[${process.env.COMMENT_AUTHOR}](${process.env.COMMENT_AUTHOR_PROFILE}): ${commentBody}`;
+  const fullComment = `[@${process.env.COMMENT_AUTHOR}](${process.env.COMMENT_AUTHOR_PROFILE}): ${commentBody}`;
 
   const createdComment = await linearClient.createComment({
     issueId: existingIssue.id,
