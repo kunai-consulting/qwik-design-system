@@ -44,12 +44,16 @@ async function createLinearReleaseIssue() {
     return;
   }
 
+  // user that created the API key
+  const me = await linearClient.viewer;
+
   const issuePayload = await linearClient.createIssue({
     teamId: team.id,
     title: issueTitle,
     description: issueDescription,
     projectId: project.id,
     priority: 1,
+    assigneeId: me.id,
   });
 
   const issueId = (await issuePayload.issue)?.id;
