@@ -1,0 +1,130 @@
+# Checkbox Research
+
+## Initial ideas
+
+Checkbox list -> inline component (increments index of checklist item similar to qwik ui carousel inline)
+
+IF YOU EVER NEED TO, YOU CAN ALSO DO SOMETHING LIKE THIS FOR CHECKLIST:
+
+TAKE A LOOK AT QWIK UI CAROUSEL CODE FOR INSPIRATION
+
+```tsx
+const ChecklistItemIndicator = component$(() => {
+  return <Checkbox.Indicator />;
+});
+
+// in the case where you need to pass specific stuff
+const ChecklistItem = component$(() => {
+  return (
+    <Checkbox.Root>
+      <Slot />
+    </Checkbox.Root>
+  );
+});
+```
+
+Polymorphism:
+
+In this case, we can make it to where the Checkbox root should be polymorphic, meaning we can render it as something else, by specifying an `as` prop.A
+
+```tsx
+import { component$, Slot } from '@builder.io/qwik';
+import type { QwikIntrinsicElements } from '@builder.io/qwik';
+
+type AllowedElements = 'div' | 'li';
+
+export const CheckboxRoot = component$(
+  <C extends AllowedElements = 'div'>(
+    props: QwikIntrinsicElements[C] & { as?: C }
+  ) => {
+    const { as, ...rest } = props;
+    const Comp = as ?? 'div';
+
+    return (
+      <>
+        {/* @ts-expect-error annoying polymorphism */}
+        <Comp {...rest}>
+          <Slot />
+        </Comp>
+      </>
+    );
+  }
+);
+
+// ChecklistRoot -> ul
+
+const ChecklistItem = component$(() => {
+  // our own checklist specific logic here
+
+  return (
+    <Checkbox.Root as="li">
+      <Slot />
+    </Checkbox.Root>
+  );
+});
+
+// item and item indicator pattern is similar to select and combobox
+
+// IF THEY WANT CHECKLIST
+
+/**
+ *
+ *  <Checklist.Root>
+ *      <Checklist.SelectAll>
+ *          <Checklist.Item>
+ *              <Checklist.ItemIndicator />
+ *          </Checklist.Item>
+ *      </Checklist.SelectAll>
+ *
+ *      <Checklist.Item>
+ *          <Checklist.ItemIndicator />
+ *      </Checklist.Item>
+ *
+ *      <Checklist.Item>
+ *          <Checklist.ItemIndicator />
+ *      </Checklist.Item>
+ *
+ * </Checklist.Root>
+ *
+ */
+
+// IF THEY WANT CHECKBOX
+
+/**
+ *
+ *      <Checkbox.Root>
+ *          <Checkbox.Indicator />
+ *      </Checkbox.Root>
+ *
+ */
+```
+
+## API Exploration
+
+### Components
+
+#### Checklist.Item
+
+- Wrapper component for a single checklist item
+
+#### Checkbox.Root
+
+- Root component for the checkbox
+
+#### Checkbox.Indicator
+
+- Indicator component for the checkbox state
+
+#### Checklist.Root
+
+- Container component for the entire checklist
+
+#### Checklist.SelectAll
+
+- Component for the "Select All" functionality
+
+#### ChecklistItem
+
+- User-defined component that combines Checklist.Item and Checkbox components
+
+### Usage Example

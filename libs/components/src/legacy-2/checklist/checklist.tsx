@@ -121,33 +121,3 @@ export const Checklist: Component<CheckListProps> = (props: CheckListProps) => {
   );
 };
 // TODO: deprecate ariaLabelledBy
-
-/**
- *
- *  User defined checkbox component: ChecklistItem
- *
- * returns:
- *
- * <Checklist.Item>
- *  <Checkbox.Root>
- *    <Checkbox.Indicator />
- *  </Checkbox.Root>
- * </Checklist.Item>
- *
- *
- */
-
-/**
- *
- *
- *
- *  <Checklist.Root>
- *    <Checklist.SelectAll>
- *      <CheckListItem />
- *    </Checklist.SelectAll>
- *    <ChecklistItem />
- *    <ChecklistItem />
- *    ...
- *  </Checklist.Root>
- *
- */
