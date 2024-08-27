@@ -161,11 +161,19 @@ export const MixedStateCheckbox = component$<MixedStateCheckboxProps>(
     const changeChecklistSig = $(() => {
       if (appliedSig.value !== true) {
         appliedSig.value = true;
-        childCheckboxes.value.forEach((sig) => (sig.value = true));
+
+        for (const checkbox of childCheckboxes.value) {
+          checkbox.value = true;
+        }
+
         return;
       }
+
       appliedSig.value = false;
-      childCheckboxes.value.forEach((sig) => (sig.value = false));
+
+      for (const checkbox of childCheckboxes.value) {
+        checkbox.value = false;
+      }
     });
     const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
       if (e.key === ' ') {

@@ -49,7 +49,7 @@ test.describe('checkbox', () => {
   test(`GIVEN a checkbox that is checked
         WHEN the checkbox renders
         IT should have aria-checked as true`, async ({ page }) => {
-    const exampleName = 'test-hero';
+    const exampleName = 'test-initial-checked';
     const { getCheckbox } = await setup(page, exampleName);
     await expect(getCheckbox()).toBeVisible();
     await expect(getCheckbox()).toHaveAttribute('aria-checked', 'true');
@@ -58,7 +58,7 @@ test.describe('checkbox', () => {
   test(`GIVEN a checkbox that is checked
         WHEN the spacebar is pressed
         IT should have aria-checked as false`, async ({ page }) => {
-    const exampleName = 'test-hero';
+    const exampleName = 'test-initial-checked';
     const { getCheckbox } = await setup(page, exampleName);
     await expect(getCheckbox()).toBeVisible();
     await getCheckbox().press(' ');
@@ -68,7 +68,7 @@ test.describe('checkbox', () => {
   test(`GIVEN a checkbox with a user sig value of true
   WHEN the checkbox is focused and the spacebar is pressed
   IT should have its icon hidden`, async ({ page }) => {
-    const exampleName = 'test-hero';
+    const exampleName = 'test-initial-checked';
     const { getCheckbox, getIcon } = await setup(page, exampleName);
     await expect(getIcon()).toBeVisible();
     await getCheckbox().focus();
@@ -91,7 +91,7 @@ test.describe('checkbox', () => {
   test(`GIVEN a checkbox with a user sig value of true
         WHEN the checkbox is clicked
         IT should have aria-checked as false`, async ({ page }) => {
-    const exampleName = 'test-hero';
+    const exampleName = 'test-initial-checked';
     const { getCheckbox } = await setup(page, exampleName);
     await expect(getCheckbox()).toBeVisible();
     await getCheckbox().click();
@@ -101,7 +101,7 @@ test.describe('checkbox', () => {
   test(`GIVEN a checkbox with a user sig value of true
         WHEN the checkbox is clicked
         IT should have its icon hidden`, async ({ page }) => {
-    const exampleName = 'test-hero';
+    const exampleName = 'test-initial-checked';
     const { getCheckbox, getIcon } = await setup(page, exampleName);
     await expect(getIcon()).toBeVisible();
     await getCheckbox().click();
