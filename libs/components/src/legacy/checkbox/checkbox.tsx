@@ -11,8 +11,8 @@ import {
   useTask$,
 } from '@builder.io/qwik';
 import { CheckListContext, CheckboxContext } from './context-id';
-import { getTriBool, type TriBool } from '../../utils/tri-bool';
-import { useBoundSignal } from '../../utils/bound-signal';
+import { getTriBool, type TriBool } from '../../../utils/tri-bool';
+import { useBoundSignal } from '../../../utils/bound-signal';
 import { useCheckboxState } from './useCheckBoxState';
 
 export type MixedStateCheckboxProps = {
@@ -191,16 +191,19 @@ export const MixedStateCheckbox = component$<MixedStateCheckboxProps>(
       }
       console.log('changeChecklistSig appliedSig.value', appliedSig.value);
     });
+
     const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
       if (e.key === ' ') {
         e.preventDefault();
       }
     });
+
     const handleKeyDown$ = $((e: KeyboardEvent) => {
       if (e.key === ' ') {
         changeChecklistSig();
       }
     });
+
     const handleClick$ = $(() => {
       changeChecklistSig();
     });
@@ -256,3 +259,24 @@ const TwoStateCheckboxBehavior = component$<TwoStateCheckboxBehaviorProps>(
     );
   }
 );
+
+/**
+ *  Regular
+ *
+ *
+ *  <Checkbox.Root>
+ *    <Checkbox.Indicator />
+ *  </Checkbox.Root>
+ *
+ *
+ *  Mixed
+ *
+ * <Checkbox.Root mixed>
+ *    <Checkbox.Indicator />
+ *
+ *
+ *
+ *
+ * </Checkbox.Root>
+ *
+ */

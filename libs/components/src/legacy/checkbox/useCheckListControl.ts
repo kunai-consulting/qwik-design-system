@@ -6,7 +6,7 @@ import {
   type Signal,
 } from '@builder.io/qwik';
 import { CheckListContext, CheckboxContext } from './context-id';
-import type { TriBool } from '../../utils/tri-bool';
+import type { TriBool } from '../../../utils/tri-bool';
 
 interface UseChecklistControlProps {
   bindChecked?: Signal<boolean>;

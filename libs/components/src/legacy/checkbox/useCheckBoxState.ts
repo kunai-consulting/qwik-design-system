@@ -1,5 +1,5 @@
 import type { Signal } from '@builder.io/qwik';
-import { useBoundSignal } from '../../utils/bound-signal';
+import { useBoundSignal } from '../../../utils/bound-signal';
 
 // supporting multiple frameworks
 export function useCheckboxState(externalSignal?: Signal<boolean>) {

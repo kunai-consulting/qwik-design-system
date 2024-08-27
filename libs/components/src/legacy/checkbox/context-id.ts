@@ -1,5 +1,5 @@
 import { type Signal, createContextId } from '@builder.io/qwik';
-import type { TriBool } from '../../utils/tri-bool';
+import type { TriBool } from '../../../utils/tri-bool';
 
 export type ArrSigs = Signal<boolean>[];
 type CheckContextObj = {
