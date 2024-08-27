@@ -28,6 +28,98 @@ async function setup(page: Page, exampleName: string) {
   };
 }
 
+test.describe('checkbox', () => {
+  test(`GIVEN a checkbox
+        WHEN the checkbox renders
+        It should have aria-checked as false`, async ({ page }) => {
+    const exampleName = 'hero';
+    const { getCheckbox } = await setup(page, exampleName);
+    await expect(getCheckbox()).toHaveAttribute('aria-checked', 'false');
+  });
+
+  test(`GIVEN a checkbox
+        WHEN the checkbox is clicked
+        It should have aria-checked as true`, async ({ page }) => {
+    const exampleName = 'hero';
+    const { getCheckbox } = await setup(page, exampleName);
+    await getCheckbox().click();
+    await expect(getCheckbox()).toHaveAttribute('aria-checked', 'true');
+  });
+
+  test(`GIVEN a checkbox that is checked
+        WHEN the checkbox renders
+        IT should have aria-checked as true`, async ({ page }) => {
+    const exampleName = 'test-hero';
+    const { getCheckbox } = await setup(page, exampleName);
+    await expect(getCheckbox()).toBeVisible();
+    await expect(getCheckbox()).toHaveAttribute('aria-checked', 'true');
+  });
+
+  test(`GIVEN a checkbox that is checked
+        WHEN the spacebar is pressed
+        IT should have aria-checked as false`, async ({ page }) => {
+    const exampleName = 'test-hero';
+    const { getCheckbox } = await setup(page, exampleName);
+    await expect(getCheckbox()).toBeVisible();
+    await getCheckbox().press(' ');
+    await expect(getCheckbox()).toHaveAttribute('aria-checked', 'false');
+  });
+
+  test(`GIVEN a checkbox with a user sig value of true
+  WHEN the checkbox is focused and the spacebar is pressed
+  IT should have its icon hidden`, async ({ page }) => {
+    const exampleName = 'test-hero';
+    const { getCheckbox, getIcon } = await setup(page, exampleName);
+    await expect(getIcon()).toBeVisible();
+    await getCheckbox().focus();
+    await getCheckbox().press(' ');
+    await expect(getCheckbox()).toHaveAttribute('aria-checked', 'false');
+    await expect(getIcon()).toBeHidden();
+  });
+  test(`GIVEN a default checkbox with a default sig value of false
+  WHEN the checkbox is focused and the spacebar is pressed
+  IT should have its icon visible`, async ({ page }) => {
+    const exampleName = 'test-default';
+    const { getCheckbox, getIcon } = await setup(page, exampleName);
+    await expect(getIcon()).toBeHidden();
+    await getCheckbox().focus();
+    await getCheckbox().press(' ');
+    await expect(getCheckbox()).toHaveAttribute('aria-checked', 'false');
+    await expect(getIcon()).toBeVisible();
+  });
+
+  test(`GIVEN a checkbox with a user sig value of true
+        WHEN the checkbox is clicked
+        IT should have aria-checked as false`, async ({ page }) => {
+    const exampleName = 'test-hero';
+    const { getCheckbox } = await setup(page, exampleName);
+    await expect(getCheckbox()).toBeVisible();
+    await getCheckbox().click();
+    await expect(getCheckbox()).toHaveAttribute('aria-checked', 'false');
+  });
+
+  test(`GIVEN a checkbox with a user sig value of true
+        WHEN the checkbox is clicked
+        IT should have its icon hidden`, async ({ page }) => {
+    const exampleName = 'test-hero';
+    const { getCheckbox, getIcon } = await setup(page, exampleName);
+    await expect(getIcon()).toBeVisible();
+    await getCheckbox().click();
+    await expect(getCheckbox()).toHaveAttribute('aria-checked', 'false');
+    await expect(getIcon()).toBeHidden();
+  });
+  test(`GIVEN a default checkbox with a default sig value of false
+        WHEN the checkbox is clicked
+        IT should have its icon visible`, async ({ page }) => {
+    const exampleName = 'test-default';
+    const { getCheckbox, getIcon } = await setup(page, exampleName);
+    await expect(getIcon()).toBeHidden();
+    await getCheckbox().click();
+    await expect(getCheckbox()).toHaveAttribute('aria-checked', 'false');
+    await expect(getIcon()).toBeVisible();
+  });
+});
+
 test.describe('checklist', () => {
   test(`GIVEN a mixed checklist
   WHEN the checklist renders
@@ -373,80 +465,7 @@ test.describe('checklist', () => {
     await expect(getTriCheckbox()).toHaveAttribute('aria-checked', 'false');
   });
 });
-test.describe('checkbox', () => {
-  test(`GIVEN a checkbox with a user sig value of true
-  WHEN the checkbox renders
-  IT should have aria-checked as true`, async ({ page }) => {
-    const exampleName = 'test-hero';
-    const { getCheckbox } = await setup(page, exampleName);
-    await expect(getCheckbox()).toBeVisible();
-    await expect(getCheckbox()).toHaveAttribute('aria-checked', 'true');
-  }),
-    test(`GIVEN a checkbox with a user sig value of true
-WHEN the checkbox is focused and the spacebar is pressed
-IT should have aria-checked as false`, async ({ page }) => {
-      const exampleName = 'test-hero';
-      const { getCheckbox } = await setup(page, exampleName);
-      await expect(getCheckbox()).toBeVisible();
-      await getCheckbox().focus();
-      await getCheckbox().press(' ');
-      await expect(getCheckbox()).toHaveAttribute('aria-checked', 'false');
-    });
 
-  test(`GIVEN a checkbox with a user sig value of true
-  WHEN the checkbox is focused and the spacebar is pressed
-  IT should have its icon hidden`, async ({ page }) => {
-    const exampleName = 'test-hero';
-    const { getCheckbox, getIcon } = await setup(page, exampleName);
-    await expect(getIcon()).toBeVisible();
-    await getCheckbox().focus();
-    await getCheckbox().press(' ');
-    await expect(getCheckbox()).toHaveAttribute('aria-checked', 'false');
-    await expect(getIcon()).toBeHidden();
-  });
-  test(`GIVEN a default checkbox with a default sig value of false
-  WHEN the checkbox is focused and the spacebar is pressed
-  IT should have its icon visible`, async ({ page }) => {
-    const exampleName = 'test-default';
-    const { getCheckbox, getIcon } = await setup(page, exampleName);
-    await expect(getIcon()).toBeHidden();
-    await getCheckbox().focus();
-    await getCheckbox().press(' ');
-    await expect(getCheckbox()).toHaveAttribute('aria-checked', 'false');
-    await expect(getIcon()).toBeVisible();
-  });
-
-  test(`GIVEN a checkbox with a user sig value of true
-        WHEN the checkbox is clicked
-        IT should have aria-checked as false`, async ({ page }) => {
-    const exampleName = 'test-hero';
-    const { getCheckbox } = await setup(page, exampleName);
-    await expect(getCheckbox()).toBeVisible();
-    await getCheckbox().click();
-    await expect(getCheckbox()).toHaveAttribute('aria-checked', 'false');
-  });
-
-  test(`GIVEN a checkbox with a user sig value of true
-        WHEN the checkbox is clicked
-        IT should have its icon hidden`, async ({ page }) => {
-    const exampleName = 'test-hero';
-    const { getCheckbox, getIcon } = await setup(page, exampleName);
-    await expect(getIcon()).toBeVisible();
-    await getCheckbox().click();
-    await expect(getCheckbox()).toHaveAttribute('aria-checked', 'false');
-    await expect(getIcon()).toBeHidden();
-  });
-  test(`GIVEN a default checkbox with a default sig value of false
-        WHEN the checkbox is clicked
-        IT should have its icon visible`, async ({ page }) => {
-    const exampleName = 'test-default';
-    const { getCheckbox, getIcon } = await setup(page, exampleName);
-    await expect(getIcon()).toBeHidden();
-    await getCheckbox().click();
-    await expect(getCheckbox()).toHaveAttribute('aria-checked', 'false');
-    await expect(getIcon()).toBeVisible();
-  });
-});
 //TODO: create util file
 //TODO: add click
 //TODO: refactor to use ids instead of nths since its test-only now
