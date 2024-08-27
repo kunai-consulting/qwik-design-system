@@ -1,5 +1,5 @@
-import { Signal, createContextId } from '@builder.io/qwik';
-import { TriBool } from './checklist-context-wrapper';
+import { type Signal, createContextId } from '@builder.io/qwik';
+import type { TriBool } from './checklist-context-wrapper';
 
 export type ArrSigs = Signal<boolean>[];
 type CheckContextObj = {
@@ -7,4 +7,5 @@ type CheckContextObj = {
   checkboxes: Signal<ArrSigs>;
   idArr: string[];
 };
-export const CheckListContext = createContextId<CheckContextObj>('CheckList.context');
+export const CheckListContext =
+  createContextId<CheckContextObj>('CheckList.context');

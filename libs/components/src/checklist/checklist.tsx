@@ -1,6 +1,18 @@
-import { type JSXNode, Component, PropsOf } from '@builder.io/qwik';
-import { CheckboxRoot, type MixedStateCheckboxProps } from '../checkbox/checkbox';
-import { ChecklistContextWrapper, getTriBool } from './checklist-context-wrapper';
+import type { JSXNode, Component, PropsOf } from '@builder.io/qwik';
+import {
+  CheckboxRoot,
+  type MixedStateCheckboxProps,
+} from '../checkbox/checkbox';
+import {
+  ChecklistContextWrapper,
+  getTriBool,
+} from './checklist-context-wrapper';
+
+import { findComponent, processChildren } from '../../utils/inline-component';
+
+function generateUniqueId(): string {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+}
 
 type CheckListProps = PropsOf<'ul'> & { ariaLabeledBy: string };
 // type CheckBoxes=
@@ -9,17 +21,17 @@ type CheckListProps = PropsOf<'ul'> & { ariaLabeledBy: string };
     for more information.
 */
 export const Checklist: Component<CheckListProps> = (props: CheckListProps) => {
-  const checkArr: JSXNode[] = [];
+  const checkboxJSXArray: JSXNode[] = [];
   const hellSigs = [];
   let checklistCheckbox = undefined;
   const boolArr: boolean[] = [];
   const idArr: Array<false | string> = [];
   const checklistChilds: JSXNode[] = [];
-  const { children: myChildren } = props;
+  const { children } = props;
 
   const childrenToProcess = (
-    Array.isArray(myChildren) ? [...myChildren] : [myChildren]
-  ) as Array<JSXNode>;
+    Array.isArray(children) ? [...children] : [children]
+  ) as JSXNode[];
 
   while (childrenToProcess.length) {
     const child = childrenToProcess.shift();
@@ -36,20 +48,21 @@ export const Checklist: Component<CheckListProps> = (props: CheckListProps) => {
     switch (child.type) {
       case CheckboxRoot: {
         const typedProps = child.props as MixedStateCheckboxProps;
+
         // FYI: Obj.assign mutates
         Object.assign(typedProps, { _useCheckListContext: true });
 
-        checkArr.push(child);
+        checkboxJSXArray.push(child);
         // TODO: fix this if hell by making fn
         if (!typedProps.checklist) {
           checklistChilds.push(child);
 
-          if (typedProps.id != undefined) {
+          if (typedProps.id !== undefined) {
             idArr.push(typedProps.id as string);
           } else {
             idArr.push(false);
           }
-          if (typedProps['bind:checked'] && typedProps['bind:checked'].value) {
+          if (typedProps['bind:checked']?.value) {
             boolArr.push(typedProps['bind:checked'].value);
             hellSigs.push(typedProps['bind:checked']);
           } else {
@@ -76,13 +89,14 @@ export const Checklist: Component<CheckListProps> = (props: CheckListProps) => {
   }
   if (checklistCheckbox === undefined) {
     throw Error(
-      "QWIKUI: checklist doesn't have a checkbox. Did you give the atribute to *checklist* to any of the checkboxes inside the checklist?",
+      "QWIKUI: checklist doesn't have a checkbox. Did you give the atribute to *checklist* to any of the checkboxes inside the checklist?"
     );
   }
+
   if (checklistCheckbox.props['bind:checked']) {
-    checklistChilds.forEach((checkbox) => {
+    for (const checkbox of checklistChilds) {
       Object.assign(checkbox.props, { _overWriteCheckbox: true });
-    });
+    }
   }
 
   return (
@@ -94,12 +108,41 @@ export const Checklist: Component<CheckListProps> = (props: CheckListProps) => {
         idArr={idArr}
       >
         <ul class={props.class}>
-          {checkArr.map((checkbox, i) => (
-            <li key={i}>{checkbox}</li>
-          ))}
+          {checkboxJSXArray.map((checkbox, i) => {
+            const uniqueId = generateUniqueId();
+
+            return <li key={uniqueId}>{checkbox}</li>;
+          })}
         </ul>
       </ChecklistContextWrapper>
     </>
   );
 };
 // TODO: deprecate ariaLabelledBy
+
+/**
+ *
+ *  User defined checkbox component: ChecklistItem
+ *
+ * returns:
+ *
+ * <Checklist.Item>
+ * <Checkbox.Root>
+ *    <Checkbox.Indicator />
+ * </Checkbox.Root>
+ * </Checklist.Item>
+ *
+ *
+ */
+
+/**
+ *
+ *
+ *
+ *  <Checklist.Root>
+ *    <ChecklistItem />
+ *    <ChecklistItem />
+ *    ...
+ *  </Checklist.Root>
+ *
+ */

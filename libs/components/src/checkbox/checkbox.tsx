@@ -150,7 +150,9 @@ export const MixedStateCheckbox = component$<MixedStateCheckboxProps>(
     const ariaControlsStrg =
       checklistContext.idArr.length === 0
         ? ''
-        : checklistContext.idArr.reduce((p, c) => p + ' ' + c);
+        : checklistContext.idArr.reduce(
+            (previous, current) => `${previous} ${current}`
+          );
     useContextProvider(CheckboxContext, appliedSig);
 
     // im not enterily sure why, but the if statement only runs once

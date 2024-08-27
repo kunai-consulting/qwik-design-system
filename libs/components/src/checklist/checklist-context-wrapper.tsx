@@ -1,5 +1,5 @@
 import {
-  PropsOf,
+  type PropsOf,
   Slot,
   useId,
   component$,
@@ -25,7 +25,7 @@ export const ChecklistContextWrapper = component$<CheckListContextWrapperProps>(
     const mehelp = useSignal<TriBool>(props.initialTriBool);
     const id = useId();
     for (let index = 0; index < props.arrSize; index++) {
-      if (props.idArr[index] != false) {
+      if (props.idArr[index] !== false) {
         idArr.push(props.idArr[index] as string);
         continue;
       }
@@ -45,7 +45,7 @@ export const ChecklistContextWrapper = component$<CheckListContextWrapperProps>(
         <Slot />
       </div>
     );
-  },
+  }
 );
 
 export function getTriBool(boolArr: boolean[]): TriBool {
