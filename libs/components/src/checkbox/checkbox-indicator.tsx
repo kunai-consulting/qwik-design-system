@@ -7,7 +7,7 @@ export const CheckboxIndicator = component$<CheckboxIndicatorProps>((props) => {
   const checkSig = useContext(CheckboxContext);
   return (
     <div {...props}>
-      <div hidden={checkSig.value} aria-hidden="true">
+      <div hidden={!checkSig.value} aria-hidden="true">
         <Slot />
       </div>
     </div>
