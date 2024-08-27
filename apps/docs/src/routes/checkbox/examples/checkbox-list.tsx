@@ -6,10 +6,10 @@ export const CheckboxList = component$(() => {
   const checkboxes = Array.from({ length: 5 }, () => useSignal(false));
 
   // Provide the CheckListContext with the array of checkbox signals
-  useContextProvider(CheckListContext, {
-    checkboxes: checkboxes,
-    checklistSig: useSignal('indeterminate'), // Initial state
-  });
+  // useContextProvider(CheckListContext, {
+  //   checkboxes: checkboxes,
+  //   checklistSig: useSignal('indeterminate'), // Initial state
+  // });
 
   return (
     <div>
