@@ -21,7 +21,7 @@ type CheckListProps = PropsOf<'ul'> & { ariaLabeledBy: string };
     for more information.
 */
 export const Checklist: Component<CheckListProps> = (props: CheckListProps) => {
-  const checkboxJSXArray: JSXNode[] = [];
+  const checkboxRootsJSXArray: JSXNode[] = [];
   const hellSigs = [];
   let checklistCheckbox = undefined;
   const boolArr: boolean[] = [];
@@ -52,7 +52,7 @@ export const Checklist: Component<CheckListProps> = (props: CheckListProps) => {
         // FYI: Obj.assign mutates
         Object.assign(typedProps, { _useCheckListContext: true });
 
-        checkboxJSXArray.push(child);
+        checkboxRootsJSXArray.push(child);
         // TODO: fix this if hell by making fn
         if (!typedProps.checklist) {
           checklistChilds.push(child);
@@ -70,6 +70,7 @@ export const Checklist: Component<CheckListProps> = (props: CheckListProps) => {
           }
         } else {
           checklistCheckbox = child;
+          console.log('checklistCheckbox', checklistCheckbox);
         }
 
         break;
@@ -87,9 +88,10 @@ export const Checklist: Component<CheckListProps> = (props: CheckListProps) => {
       }
     }
   }
+
   if (checklistCheckbox === undefined) {
     throw Error(
-      "QWIKUI: checklist doesn't have a checkbox. Did you give the atribute to *checklist* to any of the checkboxes inside the checklist?"
+      "QWIK UI: checklist doesn't have a checkbox. Did you give the atribute of *checklist* to any of the checkboxes inside the checklist?"
     );
   }
 
@@ -108,10 +110,10 @@ export const Checklist: Component<CheckListProps> = (props: CheckListProps) => {
         idArr={idArr}
       >
         <ul class={props.class}>
-          {checkboxJSXArray.map((checkbox, i) => {
+          {checkboxRootsJSXArray.map((checkboxRootJSX, i) => {
             const uniqueId = generateUniqueId();
 
-            return <li key={uniqueId}>{checkbox}</li>;
+            return <li key={uniqueId}>{checkboxRootJSX}</li>;
           })}
         </ul>
       </ChecklistContextWrapper>
@@ -127,9 +129,9 @@ export const Checklist: Component<CheckListProps> = (props: CheckListProps) => {
  * returns:
  *
  * <Checklist.Item>
- * <Checkbox.Root>
+ *  <Checkbox.Root>
  *    <Checkbox.Indicator />
- * </Checkbox.Root>
+ *  </Checkbox.Root>
  * </Checklist.Item>
  *
  *
@@ -140,6 +142,9 @@ export const Checklist: Component<CheckListProps> = (props: CheckListProps) => {
  *
  *
  *  <Checklist.Root>
+ *    <Checklist.SelectAll>
+ *      <CheckListItem />
+ *    </Checklist.SelectAll>
  *    <ChecklistItem />
  *    <ChecklistItem />
  *    ...
