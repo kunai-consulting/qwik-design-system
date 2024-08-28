@@ -16,12 +16,15 @@
     "test.ui": "playwright test --ui",
     "changeset": "changeset",
     "publish:packages": "changeset publish",
-    "version:packages": "changeset version"
+    "version:packages": "changeset version",
+    "create-linear-issue": "vite-node .github/scripts/update-linear.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
+    "@changesets/cli": "^2.27.7",
+    "@linear/sdk": "^27.0.0",
     "@playwright/test": "^1.46.0",
     "@types/node": "20.14.11",
-    "@changesets/cli": "^2.27.7"
+    "vite-node": "^2.0.5"
   }
 }
