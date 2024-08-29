@@ -13,7 +13,7 @@ export const PaginationPage = component$(
     return (
       <>
         {/* @ts-expect-error annoying polymorphism */}
-        <Comp {...rest}>
+        <Comp data-qds-pagination-page {...rest}>
           <Slot />
         </Comp>
       </>

@@ -26,7 +26,7 @@ export const PaginationRoot = ({ children, ...props }: PropsOf<"div">) => {
 
 const PaginationBase = component$((props: PropsOf<"div">) => {
   return (
-    <div {...props}>
+    <div data-qds-pagination-root {...props}>
       <Slot />
     </div>
   );
