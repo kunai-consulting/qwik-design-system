@@ -28,6 +28,37 @@ async function setup(page: Page, exampleName: string) {
   };
 }
 
+// components -> usually modular, sometimes grouped depending on what it is
+// modular -> tests ONE SPECIFIC thing
+
+// grouped -> tests groups of things
+
+/**
+ * 
+ *  test.describe('Critical functionality', () => {
+ *      test(`GIVEN a checkbox
+              When the checkbox is clicked
+              Then it should be checked`, async ({ page }) => {
+          await expect() -> aria-checked
+          await expect() -> data-checked
+       });
+
+       // if there's too many of one thing (for example, maybe you need to check 10 different keys! make it a describe block)
+        test(`GIVEN a checkbox
+              When the checkbox is pressed with space
+              Then it should be checked`, async ({ page }) => {
+          
+       });
+
+       Ex: Select
+
+       test.describe('Keyboard Behavior', () => {
+
+      });
+ * })
+ * 
+ */
+
 test.describe('checkbox', () => {
   // test default state and click from unchecked checkbox
   test(`GIVEN a checkbox that is initially unchecked

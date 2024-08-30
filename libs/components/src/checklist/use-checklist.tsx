@@ -13,13 +13,17 @@ export const useChecklist = (initialItems: boolean[]) => {
   const toggleItem = $((index: number) => {
     const newItems = [...items.value];
     newItems[index] = !newItems[index];
-    setItems(newItems);
+    items.value = newItems;
+    allSelected.value = newItems.every(Boolean);
   });
 
   const toggleAllSelected = $(() => {
+    console.log('toggleAllSelected');
+
     const newState = !allSelected.value;
     allSelected.value = newState;
     items.value = items.value.map(() => newState);
+    console.log(items.value);
   });
 
   useContextProvider(ChecklistContext, {
