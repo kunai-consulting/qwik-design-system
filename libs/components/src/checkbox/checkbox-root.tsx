@@ -11,7 +11,7 @@ import { useBoundSignal } from '../../utils/bound-signal';
 import { CheckboxContext } from './checkbox-context';
 
 export type CheckboxProps = {
-  'bind:checked': Signal<boolean>;
+  'bind:checked'?: Signal<boolean>;
   initialValue?: boolean;
 } & PropsOf<'div'>;
 
@@ -25,12 +25,14 @@ export const CheckboxRoot = component$<CheckboxProps>(
         e.preventDefault();
       }
     });
+
     const handleClick = $(() => {
       checkedSignal.value = !checkedSignal.value;
     });
+
     const handleKeyDown$ = $((e: KeyboardEvent) => {
       if (e.key === ' ') {
-        givenCheckedSig.value = !givenCheckedSig.value;
+        checkedSignal.value = !checkedSignal.value;
       }
     });
 

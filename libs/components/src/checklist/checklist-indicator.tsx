@@ -15,14 +15,10 @@ interface ChecklistItemIndicatorProps extends PropsOf<'div'> {
 
 export const ChecklistItemIndicator = component$(
   (props: ChecklistItemIndicatorProps) => {
-    const { items } = useContext(ChecklistContext);
-    const itemSignal = useSignal(items.value[props.index]);
-    console.log('checklistitemindicator ', items.value[props.index]);
-
     return (
-      <CheckboxRoot bind:checked={itemSignal} {...props}>
-        <CheckboxIndicator />
-      </CheckboxRoot>
+      <CheckboxIndicator>
+        <Slot />
+      </CheckboxIndicator>
     );
   }
 );

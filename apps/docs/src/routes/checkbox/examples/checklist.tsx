@@ -10,13 +10,10 @@ export default component$(() => {
       </Checklist.SelectAll>
       Select All
       <Checklist.Item>
-        <Checklist.ItemIndicator
-          index={1}
-          class="flex h-[25px] w-[25px] items-center justify-centerbg-slate-600 border-2 border-black p-2"
-        >
-          ✅
-        </Checklist.ItemIndicator>{' '}
-        first item
+        <div class="flex h-[25px] w-[25px] items-center justify-centerbg-slate-600 border-2 border-black p-2">
+          <Checklist.ItemIndicator index={1}>✅</Checklist.ItemIndicator>
+        </div>
+        first item is this right example?
       </Checklist.Item>
       <Checklist.Item>
         <Checklist.ItemIndicator
