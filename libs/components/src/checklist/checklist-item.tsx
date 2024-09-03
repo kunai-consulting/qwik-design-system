@@ -1,18 +1,21 @@
-import { component$, Slot, useContext, useSignal } from '@builder.io/qwik';
+import {
+  component$,
+  type Signal,
+  Slot,
+  useContext,
+  useSignal,
+  useTask$,
+} from '@builder.io/qwik';
 import { CheckboxRoot } from '../checkbox/checkbox-root';
 import { ChecklistContext } from './checklist-context';
 
 export const ChecklistItem = component$(() => {
   const { items } = useContext(ChecklistContext);
 
-  // make inline component
-  // const itemSignal = useSignal(items.value[_index]);
-  // console.log('checklistitemindicator ', items.value[_index]);
-
-  // If you do pass bind:checked, from the Checklist, you can now control the checkbox
+  const isCheckedSig = useSignal(false);
 
   return (
-    <CheckboxRoot>
+    <CheckboxRoot as="li" bind:checked={isCheckedSig}>
       <Slot />
     </CheckboxRoot>
   );

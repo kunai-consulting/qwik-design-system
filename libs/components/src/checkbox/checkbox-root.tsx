@@ -9,15 +9,30 @@ import {
 } from '@builder.io/qwik';
 import { useBoundSignal } from '../../utils/bound-signal';
 import { CheckboxContext } from './checkbox-context';
+import type { QwikIntrinsicElements } from '@builder.io/qwik';
+
+type AllowedElements = 'li' | 'div' | 'span';
 
 export type CheckboxProps = {
   'bind:checked'?: Signal<boolean>;
   initialValue?: boolean;
 } & PropsOf<'div'>;
 
-export const CheckboxRoot = component$<CheckboxProps>(
-  ({ 'bind:checked': givenCheckedSig, initialValue, onClick$, ...props }) => {
+export const CheckboxRoot = component$(
+  <C extends AllowedElements = 'div'>(
+    props: QwikIntrinsicElements[C] & { as?: C } & CheckboxProps
+  ) => {
+    const {
+      'bind:checked': givenCheckedSig,
+      initialValue,
+      onClick$,
+      as,
+      ...rest
+    } = props;
+    const Comp = as ?? 'div';
+
     const checkedSignal = useBoundSignal(givenCheckedSig, initialValue);
+    console.log('checkboxROOTcheckedSignal ', checkedSignal.value);
 
     useContextProvider(CheckboxContext, checkedSignal);
     const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
@@ -37,17 +52,21 @@ export const CheckboxRoot = component$<CheckboxProps>(
     });
 
     return (
-      <div
-        {...props}
-        tabIndex={0}
-        role="checkbox"
-        aria-checked={checkedSignal.value}
-        onClick$={onClick$ || handleClick}
-        onKeyDown$={[handleKeyDownSync$, handleKeyDown$]}
-        onKeyPress$={handleClick}
-      >
-        <Slot />
-      </div>
+      <>
+        {/* @ts-ignore */}
+        <Comp
+          {...rest}
+          tabIndex={0}
+          role="checkbox"
+          aria-checked={checkedSignal.value}
+          onClick$={handleClick}
+          onKeyDown$={[handleKeyDownSync$, handleKeyDown$]}
+          onKeyPress$={handleClick}
+          data-qds-checkbox-root
+        >
+          <Slot />
+        </Comp>
+      </>
     );
   }
 );
