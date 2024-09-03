@@ -14,10 +14,10 @@ export type CheckboxIndicatorProps = PropsOf<'div'>;
 
 export const CheckboxIndicator = component$<CheckboxIndicatorProps>((props) => {
   useStyles$(styles);
-  // console.log('checkboxindicator props ', props);
 
   const checkSig = useContext(CheckboxContext);
-  console.log('checkboxindicator checkSig ', checkSig.value);
+
+  console.log('checkboxindicator  checkSig', checkSig.value);
 
   useTask$(({ track }) => {
     track(() => checkSig.value);

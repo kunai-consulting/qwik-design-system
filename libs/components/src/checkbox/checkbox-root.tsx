@@ -32,7 +32,7 @@ export const CheckboxRoot = component$(
     const Comp = as ?? 'div';
 
     const checkedSignal = useBoundSignal(givenCheckedSig, initialValue);
-    console.log('checkboxROOTcheckedSignal ', checkedSignal.value);
+    console.log('checkboxROOT checkedSignal ', checkedSignal.value);
 
     useContextProvider(CheckboxContext, checkedSignal);
     const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
@@ -41,7 +41,7 @@ export const CheckboxRoot = component$(
       }
     });
 
-    const handleClick = $(() => {
+    const handleClick$ = $(() => {
       checkedSignal.value = !checkedSignal.value;
     });
 
@@ -59,9 +59,9 @@ export const CheckboxRoot = component$(
           tabIndex={0}
           role="checkbox"
           aria-checked={checkedSignal.value}
-          onClick$={handleClick}
+          onClick$={onClick$ || handleClick$}
           onKeyDown$={[handleKeyDownSync$, handleKeyDown$]}
-          onKeyPress$={handleClick}
+          onKeyPress$={onClick$ || handleClick$}
           data-qds-checkbox-root
         >
           <Slot />
