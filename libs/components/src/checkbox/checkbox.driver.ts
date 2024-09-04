@@ -10,7 +10,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return getRoot().locator('#indicator');
   };
   const getCheckList = () => {
-    return getRoot().getByRole('group');
+    return getRoot().getByRole('checkbox');
   };
   const getChecklistUL = () => {
     // note: filter method is always relative to the original locator not document root despite using root

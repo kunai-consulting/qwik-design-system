@@ -1,4 +1,9 @@
-import { useContextProvider, $, useSignal } from '@builder.io/qwik';
+import {
+  useContextProvider,
+  $,
+  useSignal,
+  useVisibleTask$,
+} from '@builder.io/qwik';
 import { ChecklistContext } from './checklist-context';
 import { CheckboxContext } from '../checkbox/checkbox-context';
 
@@ -27,6 +32,10 @@ export const useChecklist = (initialItems: boolean[]) => {
     allSelected.value = newState;
     items.value = items.value.map(() => newState);
     setItems(items.value);
+  });
+
+  useVisibleTask$(() => {
+    toggleAllSelected();
   });
 
   useContextProvider(ChecklistContext, {

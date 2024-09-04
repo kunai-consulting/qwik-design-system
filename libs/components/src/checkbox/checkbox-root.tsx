@@ -59,9 +59,10 @@ export const CheckboxRoot = component$(
           tabIndex={0}
           role="checkbox"
           aria-checked={checkedSignal.value}
-          onClick$={onClick$ || handleClick$}
+          aria-labelledby={props['aria-labelledby']}
+          onClick$={handleClick$}
           onKeyDown$={[handleKeyDownSync$, handleKeyDown$]}
-          onKeyPress$={onClick$ || handleClick$}
+          onKeyPress$={handleClick$}
           data-qds-checkbox-root
         >
           <Slot />

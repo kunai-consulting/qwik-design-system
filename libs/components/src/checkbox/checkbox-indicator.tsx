@@ -17,11 +17,8 @@ export const CheckboxIndicator = component$<CheckboxIndicatorProps>((props) => {
 
   const checkSig = useContext(CheckboxContext);
 
-  console.log('checkboxindicator  checkSig', checkSig.value);
-
   useTask$(({ track }) => {
     track(() => checkSig.value);
-    console.log('checkboxindicator useTask$ ', checkSig.value);
   });
 
   return (

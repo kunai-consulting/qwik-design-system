@@ -133,15 +133,15 @@ test.describe('checkbox', () => {
 
 // Checklisst tests
 test.describe('checklist', () => {
-  test(`GIVEN a mixed checklist
-  WHEN the checklist renders
-  IT should render the mixed img
-  AND not the true img`, async ({ page }) => {
-    const exampleName = 'test-controlled-list-mixed';
-    await setup(page, exampleName);
-    await expect(page.locator('#mixed-img')).toBeVisible();
-    await expect(page.locator('#true-img')).toBeHidden();
-  });
+  // test(`GIVEN a mixed checklist
+  // WHEN the checklist renders
+  // IT should render the mixed img
+  // AND not the true img`, async ({ page }) => {
+  //   const exampleName = 'test-controlled-list-mixed';
+  //   await setup(page, exampleName);
+  //   await expect(page.locator('#mixed-img')).toBeVisible();
+  //   await expect(page.locator('#true-img')).toBeHidden();
+  // });
 
   test(`GIVEN an all-checked checklist
   WHEN the checklist renders

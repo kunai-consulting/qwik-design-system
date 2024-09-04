@@ -5,7 +5,7 @@ export default component$(() => {
   const bindChecked = useSignal(false);
   return (
     <Checkbox.Root
-      bindChecked={bindChecked}
+      bind:checked={bindChecked}
       id="test"
       class="flex items-center gap-3 border-2 border-black p-2"
     >
