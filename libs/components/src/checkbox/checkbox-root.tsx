@@ -16,6 +16,7 @@ type AllowedElements = 'li' | 'div' | 'span';
 export type CheckboxProps = {
   'bind:checked'?: Signal<boolean>;
   initialValue?: boolean;
+  index?: number;
 } & PropsOf<'div'>;
 
 export const CheckboxRoot = component$(

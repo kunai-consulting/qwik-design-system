@@ -1,4 +1,4 @@
-import type { JSXChildren, JSXNode } from "@builder.io/qwik";
+import type { JSXChildren, JSXNode } from '@builder.io/qwik';
 
 /**
  *
@@ -13,6 +13,8 @@ export function processChildren(children: JSXChildren) {
   const childrenToProcess = (
     Array.isArray(children) ? [...children] : children ? [children] : []
   ) as JSXNode[];
+
+  console.log('processChildren childrenToProcess ', childrenToProcess);
 
   while (childrenToProcess.length) {
     const child = childrenToProcess.shift();
@@ -45,6 +47,7 @@ const componentRegistry = new Map<any, ComponentProcessor>();
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function findComponent(component: any, processor: ComponentProcessor) {
   componentRegistry.set(component, processor);
+  console.log('findComponent componentRegistry ', componentRegistry);
 }
 
 type ComponentProcessor = (props: Record<string, unknown>) => void;
