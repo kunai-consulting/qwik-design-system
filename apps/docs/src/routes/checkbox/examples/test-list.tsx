@@ -4,8 +4,8 @@ import { Checklist } from '@kunai-consulting/qwik-components';
 
 export default component$(() => {
   return (
-    <Checklist.Root initialStates={[true, true, true]}>
-      <Checklist.SelectAll role="group">
+    <Checklist.Root initialStates={[false, false, false]}>
+      <Checklist.SelectAll aria-labelledby="test123">
         <div class="flex h-[25px] w-[25px] items-center justify-center border-2 border-black p-2">
           <Checklist.ItemIndicator>✅</Checklist.ItemIndicator>
         </div>{' '}

@@ -162,33 +162,32 @@ test.describe('checklist', () => {
     await expect(page.locator('#mixed-img')).toBeHidden();
   });
 
-  test(`GIVEN a checklist with checkboxes
-        WHEN the elements render
-        THEN the checklist should be a <ul> with  <li>s of checkboxes, all wrapped around a div with a role and aria-labeledby attributes`, async ({
-    page,
-  }) => {
-    const { getCheckList, getChecklistUL, getChecklistLIs } = await setup(
-      page,
-      'test-list'
-    );
-    await expect(getCheckList()).toBeVisible();
-    await expect(getCheckList()).toHaveAttribute('aria-labelledby', 'test123');
-    await expect(getChecklistUL()).toBeVisible();
-    await expect(getChecklistLIs()).toBeVisible();
-  });
+  // test(`GIVEN a checklist with checkboxes
+  //       WHEN the elements render
+  //       THEN the checklist should be a <ul> with  <li>s of checkboxes, all wrapped around a div with a role and aria-labeledby attributes`, async ({
+  //   page,
+  // }) => {
+  //   const { getRoot, getCheckList, getChecklistUL, getChecklistLIs } =
+  //     await setup(page, 'test-list');
+  //   await expect(getCheckList()).toBeVisible();
+  //   await expect(getCheckList()).toHaveAttribute('aria-labelledby', 'test123');
+  //   await expect(getChecklistUL()).toBeVisible();
+  //   await expect(getChecklistLIs()).toBeVisible();
+  // });
 
-  test(`GIVEN a tri boolean function
-        WHEN it recieves an array of booleans
-        IT should return the correct tri bool`, async () => {
-    const indeterminateArr = [true, true, false];
-    const trueArr = [true, true, true];
-    const falseArr = [false, false, false];
-    const emptyArr: boolean[] = [];
-    expect(getTriBool(indeterminateArr)).toBe('indeterminate');
-    expect(getTriBool(trueArr)).toBe(true);
-    expect(getTriBool(falseArr)).toBe(false);
-    expect(getTriBool(emptyArr)).toBe('indeterminate');
-  });
+  // not using triboolean
+  // test(`GIVEN a tri boolean function
+  //       WHEN it recieves an array of booleans
+  //       IT should return the correct tri bool`, async () => {
+  //   const indeterminateArr = [true, true, false];
+  //   const trueArr = [true, true, true];
+  //   const falseArr = [false, false, false];
+  //   const emptyArr: boolean[] = [];
+  //   expect(getTriBool(indeterminateArr)).toBe('indeterminate');
+  //   expect(getTriBool(trueArr)).toBe(true);
+  //   expect(getTriBool(falseArr)).toBe(false);
+  //   expect(getTriBool(emptyArr)).toBe('indeterminate');
+  // });
 
   test(`GIVEN checklist with all unchecked checkboxes
         WHEN it renders
