@@ -1,55 +1,41 @@
 import {
-  component$,
   type JSXChildren,
   type PropsOf,
+  component$,
   Slot,
 } from '@builder.io/qwik';
-import { useChecklist } from './use-checklist';
 import { findComponent, processChildren } from '../../utils/inline-component';
+
 import { ChecklistItem } from './checklist-item';
 
-export const ChecklistBase = component$((props: PropsOf<'ul'>) => {
+export const ChecklistRoot = (
+  props: { initialStates: boolean[]; children: JSXChildren } & PropsOf<'ul'>
+) => {
+  const { initialStates } = props;
+  let currItemIndex = 0;
+  const itemsMap = new Map();
+  const children = props.children;
+  findComponent(ChecklistItem, (itemProps) => {
+    itemProps._index = currItemIndex;
+    itemsMap.set(currItemIndex, itemProps.disabled);
+    currItemIndex++;
+    console.log(
+      'findComponent assigned index:',
+      currItemIndex,
+      'to item:',
+      itemProps._index
+    );
+  });
+  processChildren(children);
+  return <ChecklistBase>{children}</ChecklistBase>;
+};
+interface ChecklistItemProps extends PropsOf<'div'> {
+  _index?: number;
+}
+export const ChecklistBase = component$((props: ChecklistItemProps) => {
   return (
-    <ul>
+    <ChecklistItem>
       <Slot />
-    </ul>
+    </ChecklistItem>
   );
 });
-
-export const ChecklistRoot = component$(
-  (props: { initialStates: boolean[]; children: JSXChildren }) => {
-    const { initialStates } = props;
-    useChecklist(initialStates);
-    let currItemIndex = 0;
-    let initialIndex = null;
-    const itemsMap = new Map();
-    const initialValue = initialStates[0];
-    const children = props.children;
-
-    findComponent(ChecklistItem, (itemProps) => {
-      itemProps._index = currItemIndex;
-
-      itemsMap.set(currItemIndex, itemProps.disabled);
-
-      if (initialValue && initialValue === itemProps.value) {
-        initialIndex = currItemIndex;
-      }
-
-      currItemIndex++;
-      console.log(
-        'findComponent assigned index:',
-        currItemIndex,
-        'to item:',
-        itemProps
-      );
-    });
-
-    processChildren(children);
-
-    return (
-      <ChecklistBase>
-        <Slot />
-      </ChecklistBase>
-    );
-  }
-);
