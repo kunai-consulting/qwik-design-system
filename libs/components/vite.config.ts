@@ -20,21 +20,26 @@ export default defineConfig(() => {
         entry: "./src/index.ts",
         formats: ["es", "cjs"],
         fileName: (format, entryName) =>
-          `${entryName}.qwik.${format === "es" ? "mjs" : "cjs"}`
+          `${entryName}.qwik.${format === "es" ? "mjs" : "cjs"}`,
       },
       rollupOptions: {
         output: {
           preserveModules: true,
-          preserveModulesRoot: "src"
+          preserveModulesRoot: "src",
         },
         // externalize deps that shouldn't be bundled into the library
         external: [
           /^node:.*/,
           ...excludeAll(dependencies),
-          ...excludeAll(peerDependencies)
-        ]
-      }
+          ...excludeAll(peerDependencies),
+        ],
+      },
     },
-    plugins: [qwikVite({ lint: false }), tsconfigPaths()]
+    plugins: [qwikVite({ lint: false }), tsconfigPaths()],
+    server: {
+      fs: {
+        allow: ["../.."],
+      },
+    },
   };
 });
