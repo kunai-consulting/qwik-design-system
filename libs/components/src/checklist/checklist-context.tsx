@@ -2,11 +2,11 @@ import { createContextId, type Signal } from '@builder.io/qwik';
 
 export interface ChecklistState {
   items: Signal<boolean[]>;
-  toggleItem: (index: number) => void;
+  // toggleItem: (index: number) => void;
   allSelected: Signal<boolean>;
   toggleAllSelected: () => void;
-  indeterminate: Signal<boolean>;
-  activeIndex: Signal<number>;
+  // indeterminate: Signal<boolean>;
+  // activeIndex: Signal<number>;
 }
 
 export const ChecklistContext =

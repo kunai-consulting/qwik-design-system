@@ -14,8 +14,6 @@ export function processChildren(children: JSXChildren) {
     Array.isArray(children) ? [...children] : children ? [children] : []
   ) as JSXNode[];
 
-  console.log('processChildren childrenToProcess ', childrenToProcess);
-
   while (childrenToProcess.length) {
     const child = childrenToProcess.shift();
 
@@ -47,7 +45,7 @@ const componentRegistry = new Map<any, ComponentProcessor>();
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function findComponent(component: any, processor: ComponentProcessor) {
   componentRegistry.set(component, processor);
-  console.log('findComponent componentRegistry ', componentRegistry);
+  console.log('findComponent componentRegistry ', componentRegistry.size);
 }
 
 type ComponentProcessor = (props: Record<string, unknown>) => void;

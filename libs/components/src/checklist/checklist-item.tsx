@@ -14,20 +14,22 @@ import { ChecklistContext } from './checklist-context';
 
 interface ChecklistItemProps extends PropsOf<'div'> {
   _index?: number;
+  // context: typeof ChecklistContext;
 }
 
 export const ChecklistItem = component$((props: ChecklistItemProps) => {
-  const { items } = useContext(ChecklistContext);
   const isCheckedSig = useSignal(false);
   const initialLoadSig = useSignal(false);
   const context = useContext(ChecklistContext);
   const { _index = 0, ...rest } = props;
-  console.log('ChecklistItem items ', items.value);
+  console.log('ChecklistItem items ', context.items.value);
 
   if (_index === undefined) {
     throw new Error('Checklist Item must have an index.');
   }
-
+  useTask$(() => {
+    console.log('context.items.value ', context.items.value);
+  });
   useTask$(({ track }) => {
     track(() => context.allSelected.value);
 
@@ -44,11 +46,6 @@ export const ChecklistItem = component$((props: ChecklistItemProps) => {
 
   useTask$(({ track }) => {
     initialLoadSig.value = false;
-  });
-
-  useVisibleTask$(({ track }) => {
-    track(() => context.items.value);
-    console.log('ChecklistItem useVisibleTask items ', context.items.value);
   });
 
   return (

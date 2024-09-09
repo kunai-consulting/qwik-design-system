@@ -26,7 +26,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   };
 
   const getTriCheckbox = () => {
-    return getRoot().locator('css=[aria-controls]');
+    return getRoot().locator('#selectAll');
   };
   return {
     ...rootLocator,

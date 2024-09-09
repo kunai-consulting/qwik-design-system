@@ -15,20 +15,20 @@ export const useChecklist = (initialItems: boolean[]) => {
   console.log('use-checklist items ', items.value);
   console.log('use-checklist allSelected ', allSelected.value);
 
-  // const updateAllSelected = $(() => {
-  //   const allChecked = items.value.every(Boolean);
-  //   const anyChecked = items.value.some(Boolean);
-  //   allSelected.value = allChecked;
-  //   indeterminate.value = anyChecked && !allChecked;
-  //   console.log('updateAllSelected items ', items.value);
-  //   console.log('updateAllSelected allSelected ', allSelected.value);
-  //   console.log('updateAllSelected indeterminate ', indeterminate.value);
-  // });
+  const updateAllSelected = $(() => {
+    const allChecked = items.value.every(Boolean);
+    const anyChecked = items.value.some(Boolean);
+    allSelected.value = allChecked;
+    indeterminate.value = anyChecked && !allChecked;
+    console.log('updateAllSelected items ', items.value);
+    console.log('updateAllSelected allSelected ', allSelected.value);
+    console.log('updateAllSelected indeterminate ', indeterminate.value);
+  });
 
-  // const setItems = $((newItems: boolean[]) => {
-  //   items.value = newItems;
-  //   allSelected.value = newItems.every(Boolean);
-  // });
+  const setItems = $((newItems: boolean[]) => {
+    items.value = newItems;
+    allSelected.value = newItems.every(Boolean);
+  });
 
   // const toggleItem = $((index: number) => {
   //   const newItems = [...items.value];
@@ -38,12 +38,12 @@ export const useChecklist = (initialItems: boolean[]) => {
   //   setItems(newItems);
   // });
 
-  // const toggleAllSelected = $(() => {
-  //   const newState = !allSelected.value;
-  //   allSelected.value = newState;
-  //   items.value = items.value.map(() => newState);
-  //   setItems(items.value);
-  // });
+  const toggleAllSelected = $(() => {
+    const newState = !allSelected.value;
+    allSelected.value = newState;
+    items.value = items.value.map(() => newState);
+    setItems(items.value);
+  });
 
   // useVisibleTask$(() => {
   //   toggleAllSelected();
@@ -56,18 +56,20 @@ export const useChecklist = (initialItems: boolean[]) => {
     // updateAllSelected();
   });
 
-  const toggleAllSelected = $(() => {
-    const newState = !allSelected.value || indeterminate.value;
-    items.value = items.value.map(() => newState);
-    // updateAllSelected();
-  });
+  // const toggleAllSelected = $(() => {
+  //   console.log('toggleAllSelected items ', items.value);
+
+  //   const newState = !allSelected.value || indeterminate.value;
+  //   items.value = items.value.map(() => newState);
+  //   updateAllSelected();
+  // });
 
   useContextProvider(ChecklistContext, {
     items,
-    toggleItem,
+    // toggleItem,
     allSelected,
     toggleAllSelected,
-    indeterminate,
-    activeIndex: useSignal(0),
+    // indeterminate,
+    // activeIndex: useSignal(0),
   });
 };
