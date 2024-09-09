@@ -5,7 +5,7 @@ export interface ChecklistState {
   // toggleItem: (index: number) => void;
   allSelected: Signal<boolean>;
   toggleAllSelected: () => void;
-  // indeterminate: Signal<boolean>;
+  indeterminate: Signal<boolean>;
   // activeIndex: Signal<number>;
 }
 

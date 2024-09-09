@@ -8,19 +8,20 @@ import {
   useSignal,
   useTask$,
   useVisibleTask$,
+  $,
 } from '@builder.io/qwik';
 import { CheckboxRoot } from '../checkbox/checkbox-root';
-import { ChecklistContext } from './checklist-context';
+import { ChecklistContext, type ChecklistState } from './checklist-context';
 
 interface ChecklistItemProps extends PropsOf<'div'> {
   _index?: number;
-  // context: typeof ChecklistContext;
 }
 
 export const ChecklistItem = component$((props: ChecklistItemProps) => {
   const isCheckedSig = useSignal(false);
   const initialLoadSig = useSignal(false);
   const context = useContext(ChecklistContext);
+
   const { _index = 0, ...rest } = props;
   console.log('ChecklistItem items ', context.items.value);
 
@@ -54,5 +55,3 @@ export const ChecklistItem = component$((props: ChecklistItemProps) => {
     </CheckboxRoot>
   );
 });
-
-// 2) GET FAILING TEST FOR SELECT ALL ON CHECKLIST. WHAT IS THE IDEAL BEHAVIOR?

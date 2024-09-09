@@ -61,7 +61,7 @@ export const CheckboxRoot = component$(
           role="checkbox"
           aria-checked={checkedSignal.value}
           aria-labelledby={props['aria-labelledby']}
-          onClick$={handleClick$}
+          onClick$={onClick$ || handleClick$}
           onKeyDown$={[handleKeyDownSync$, handleKeyDown$]}
           onKeyPress$={handleClick$}
           data-qds-checkbox-root

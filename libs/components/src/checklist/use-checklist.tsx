@@ -39,15 +39,14 @@ export const useChecklist = (initialItems: boolean[]) => {
   // });
 
   const toggleAllSelected = $(() => {
-    const newState = !allSelected.value;
+    console.log('toggleAllSelected items ', items.value);
+
+    const newState = !allSelected.value || indeterminate.value;
     allSelected.value = newState;
     items.value = items.value.map(() => newState);
-    setItems(items.value);
+    // setItems(items.value);
+    updateAllSelected();
   });
-
-  // useVisibleTask$(() => {
-  //   toggleAllSelected();
-  // });
 
   const toggleItem = $((index: number) => {
     items.value[index] = !items.value[index];
@@ -69,7 +68,7 @@ export const useChecklist = (initialItems: boolean[]) => {
     // toggleItem,
     allSelected,
     toggleAllSelected,
-    // indeterminate,
+    indeterminate,
     // activeIndex: useSignal(0),
   });
 };

@@ -23,7 +23,7 @@ export const ChecklistRoot =
     let currItemIndex = 0;
     const itemsMap = new Map();
     console.log('initialStates ', initialStates);
-    console.log('children ', children);
+    console.log('children ', children ? 'true' : 'false');
 
     findComponent(ChecklistItem, (itemProps) => {
       itemProps._index = currItemIndex;
@@ -55,11 +55,17 @@ export const ChecklistBase = component$((props: ChecklistItemProps) => {
   const toggleAllSelected = $(() => {
     allSelected.value = !allSelected.value;
   });
-  const context: ChecklistState = { items, allSelected, toggleAllSelected };
+  const indeterminate = useSignal(false);
+  const context: ChecklistState = {
+    items,
+    allSelected,
+    toggleAllSelected,
+    indeterminate,
+  };
   useContextProvider(ChecklistContext, context);
   return (
-    <ChecklistItem>
+    <div>
       <Slot />
-    </ChecklistItem>
+    </div>
   );
 });
