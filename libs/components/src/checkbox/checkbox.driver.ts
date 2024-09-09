@@ -25,6 +25,18 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return getRoot().getByRole('checkbox');
   };
 
+  const getCheckboxIndicator = () => {
+    return getRoot().locator('[data-qds-indicator]');
+  };
+
+  const getSelectAll = () => {
+    return getRoot().locator('[data-qds-selectall]');
+  };
+
+  const getSelectAllIndicator = () => {
+    return getSelectAll().locator('[data-qds-indicator]');
+  };
+
   const getTriCheckbox = () => {
     return getRoot().locator('#selectAll');
   };
@@ -38,5 +50,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getChecklistUL,
     getChecklistLIs,
     getTriCheckbox,
+    getSelectAll,
+    getSelectAllIndicator,
   };
 }

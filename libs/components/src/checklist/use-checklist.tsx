@@ -12,17 +12,12 @@ export const useChecklist = (initialItems: boolean[]) => {
   const allSelected = useSignal(initialItems.every(Boolean));
   const indeterminate = useSignal(false);
   useContextProvider(CheckboxContext, allSelected);
-  console.log('use-checklist items ', items.value);
-  console.log('use-checklist allSelected ', allSelected.value);
 
   const updateAllSelected = $(() => {
     const allChecked = items.value.every(Boolean);
     const anyChecked = items.value.some(Boolean);
     allSelected.value = allChecked;
     indeterminate.value = anyChecked && !allChecked;
-    console.log('updateAllSelected items ', items.value);
-    console.log('updateAllSelected allSelected ', allSelected.value);
-    console.log('updateAllSelected indeterminate ', indeterminate.value);
   });
 
   const setItems = $((newItems: boolean[]) => {

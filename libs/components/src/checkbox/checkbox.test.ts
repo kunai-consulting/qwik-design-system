@@ -28,6 +28,18 @@ async function setup(page: Page, exampleName: string) {
   };
 }
 
+/**
+ *  TYPESCRIPT SUPPORT + LESS IMPORTS
+ *   test(`GIVEN a carousel
+        WHEN clicking on the next button
+        THEN it should move to the next slide`, async ({ page }) => {
+    const { driver: d } = await setup(page, 'hero');
+
+    await d.getNextButton().click();
+    await expect(d.getSlideAt(1)).toHaveAttribute('data-active');
+  });
+ */
+
 // components -> usually modular, sometimes grouped depending on what it is
 // modular -> tests ONE SPECIFIC thing
 
@@ -143,14 +155,13 @@ test.describe('checklist', () => {
   //     await expect(page.locator('#true-img')).toBeHidden();
   // });
 
-  test(`GIVEN an all-checked checklist
-  WHEN the checklist renders
-  IT should  render the true img
-  AND not the mixed img`, async ({ page }) => {
-    const exampleName = 'test-controlled-list-true';
-    await setup(page, exampleName);
-    await expect(page.locator('#true-img')).toBeVisible();
-    // await expect(page.locator('#mixed-img')).toBeHidden();
+  test(`GIVEN a checklist with all items checked
+        WHEN the checklist renders
+        The indicator in the toggle all checkbox should be visible`, async ({
+    page,
+  }) => {
+    const { driver: d } = await setup(page, 'test-controlled-list-true');
+    await expect(d.getSelectAllIndicator()).toBeVisible();
   });
 
   test(`GIVEN an all-unchecked checklist
@@ -470,17 +481,17 @@ test.describe('checklist', () => {
   // });
 
   // Not using mixed yet
-  // test(`GIVEN a controlled checklist with a checklist signal of true and default checkboxes as children
-  //     WHEN a child checkbox is unchecked
-  //     THEN the checklist signal should have aria-checked mixed`, async ({
-  //   page,
-  // }) => {
-  //   const exampleName = 'test-controlled-list-true';
-  //   const { getTriCheckbox } = await setup(page, exampleName);
-  //   const firstCheckbox = page.locator('#child-1');
-  //   await firstCheckbox.click();
-  //   await expect(getTriCheckbox()).toHaveAttribute('aria-checked', 'mixed');
-  // });
+  test(`GIVEN a checklist that has all items checked
+        WHEN a child checkbox is unchecked
+        THEN the checklist signal should have a mixed state`, async ({
+    page,
+  }) => {
+    const exampleName = 'test-controlled-list-true';
+    const { getTriCheckbox, getCheckbox } = await setup(page, exampleName);
+    const firstCheckbox = getCheckbox().first();
+    await firstCheckbox.click();
+    await expect(getTriCheckbox()).toHaveAttribute('aria-checked', 'mixed');
+  });
 
   // Not using mixed yet
   //   test(`GIVEN a controlled checklist with a checklist signal of true and default checkboxes as children

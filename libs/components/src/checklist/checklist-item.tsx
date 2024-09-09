@@ -18,19 +18,16 @@ interface ChecklistItemProps extends PropsOf<'div'> {
 }
 
 export const ChecklistItem = component$((props: ChecklistItemProps) => {
-  const isCheckedSig = useSignal(false);
-  const initialLoadSig = useSignal(false);
-  const context = useContext(ChecklistContext);
-
-  const { _index = 0, ...rest } = props;
-  console.log('ChecklistItem items ', context.items.value);
+  const { _index, ...rest } = props;
 
   if (_index === undefined) {
     throw new Error('Checklist Item must have an index.');
   }
-  useTask$(() => {
-    console.log('context.items.value ', context.items.value);
-  });
+
+  const context = useContext(ChecklistContext);
+  const isCheckedSig = useSignal(context.items.value[_index]);
+  const initialLoadSig = useSignal(true);
+
   useTask$(({ track }) => {
     track(() => context.allSelected.value);
 
@@ -43,6 +40,28 @@ export const ChecklistItem = component$((props: ChecklistItemProps) => {
     } else {
       isCheckedSig.value = false;
     }
+  });
+
+  useTask$(({ track }) => {
+    track(() => isCheckedSig.value);
+
+    const isAllSelected = context.items.value.every((item) => item === true);
+
+    if (isAllSelected) {
+      context.allSelected.value = true;
+    }
+
+    if (initialLoadSig.value) {
+      return;
+    }
+
+    context.items.value[_index] = isCheckedSig.value;
+
+    if (isCheckedSig.value === false) {
+      context.allSelected.value = false;
+    }
+
+    console.log('ALL SELECTED ', context.allSelected.value);
   });
 
   useTask$(({ track }) => {

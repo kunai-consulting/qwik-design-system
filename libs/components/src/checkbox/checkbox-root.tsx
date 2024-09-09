@@ -33,7 +33,6 @@ export const CheckboxRoot = component$(
     const Comp = as ?? 'div';
 
     const checkedSignal = useBoundSignal(givenCheckedSig, initialValue);
-    console.log('checkboxROOT checkedSignal ', checkedSignal.value);
 
     useContextProvider(CheckboxContext, checkedSignal);
     const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {

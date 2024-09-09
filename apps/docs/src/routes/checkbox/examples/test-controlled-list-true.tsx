@@ -4,21 +4,15 @@ import { Checkbox, Checklist } from '@kunai-consulting/qwik-components';
 export default component$(() => {
   // const checklistSig = useSignal(true);
   return (
-    <Checklist.Root initialStates={[true, true, true]}>
+    <Checklist.Root initialStates={[true, true]}>
       <Checklist.SelectAll>
-        <Checklist.Item>
-          <Checklist.ItemIndicator index={0}>
-            <p id="true-img">✅</p>
-          </Checklist.ItemIndicator>
-        </Checklist.Item>
+        <Checklist.Indicator>✅</Checklist.Indicator>
       </Checklist.SelectAll>
       <Checklist.Item>
-        <Checklist.ItemIndicator index={1}>✅</Checklist.ItemIndicator> first
-        item
+        <Checklist.ItemIndicator>✅</Checklist.ItemIndicator> first item
       </Checklist.Item>
       <Checklist.Item>
-        <Checklist.ItemIndicator index={2}>✅</Checklist.ItemIndicator> second
-        item
+        <Checklist.ItemIndicator>✅</Checklist.ItemIndicator> second item
       </Checklist.Item>
     </Checklist.Root>
   );

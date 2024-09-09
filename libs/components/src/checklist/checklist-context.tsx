@@ -6,7 +6,7 @@ export interface ChecklistState {
   allSelected: Signal<boolean>;
   toggleAllSelected: () => void;
   indeterminate: Signal<boolean>;
-  // activeIndex: Signal<number>;
+  initialStates: boolean[];
 }
 
 export const ChecklistContext =
