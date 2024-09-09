@@ -42,26 +42,21 @@ export const ChecklistItem = component$((props: ChecklistItemProps) => {
     }
   });
 
-  useTask$(({ track }) => {
+  useTask$(function syncCheckboxState({ track }) {
     track(() => isCheckedSig.value);
 
-    const isAllSelected = context.items.value.every((item) => item === true);
-
-    if (isAllSelected) {
-      context.allSelected.value = true;
-    }
-
-    if (initialLoadSig.value) {
-      return;
-    }
-
+    // itemsSig
     context.items.value[_index] = isCheckedSig.value;
 
     if (isCheckedSig.value === false) {
       context.allSelected.value = false;
     }
 
-    console.log('ALL SELECTED ', context.allSelected.value);
+    const isAllSelected = context.items.value.every((item) => item === true);
+
+    if (isAllSelected) {
+      context.allSelected.value = true;
+    }
   });
 
   useTask$(({ track }) => {
