@@ -6,10 +6,10 @@ export default component$(() => {
   return (
     <>
       <h3 id="test123">Pick a cat</h3>
-      <Checklist.Root class="flex flex-col gap-3" ariaLabeledBy="test123">
+      <Checklist.Root initialStates={[true, true, true]}>
         <Checkbox.Root
           class="flex items-center gap-3 bg-slate-900 p-2 text-white"
-          checklist={true}
+          // checklist={true}
           id="checklist"
         >
           <Checkbox.Indicator class=" flex w-[80px] justify-center bg-white p-3">

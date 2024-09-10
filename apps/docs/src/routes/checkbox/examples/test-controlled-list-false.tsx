@@ -7,10 +7,10 @@ export default component$(() => {
   return (
     <>
       <h3 id="test123">Pick a cat</h3>
-      <Checklist.Root class="flex flex-col gap-3" ariaLabeledBy="test123">
+      <Checklist.Root initialStates={[false, false, false]}>
         <Checkbox.Root
           class="flex items-center gap-3 bg-slate-900  text-white"
-          checklist={true}
+          // checklist={true}
           bind:checked={checklistSig}
           id="checklist"
         >
