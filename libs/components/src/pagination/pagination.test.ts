@@ -42,9 +42,26 @@ test.describe("Critical Functionality", () => {
     const { driver: d } = await setup(page, "hero");
 
     await expect(d.getPageAtIndex(1)).not.toHaveAttribute("data-current");
+    await expect(d.getPageAtIndex(1)).not.toHaveAttribute("aria-current", "page");
     await expect(d.getPageAtIndex(2)).not.toHaveAttribute("data-current");
+    await expect(d.getPageAtIndex(2)).not.toHaveAttribute("aria-current", "page");
     await expect(d.getPageAtIndex(3)).not.toHaveAttribute("data-current");
+    await expect(d.getPageAtIndex(3)).not.toHaveAttribute("aria-current", "page");
   });
+
+  // test(`GIVEN a pagination control
+  //       WHEN the pagination is rendered and the third page selected
+  //       THEN the selected page should be current and disabled`, async ({
+  //   page,
+  // }) => {
+  //   const { driver: d } = await setup(page, "hero");
+  //
+  //   await expect(d.getPageAtIndex(2)).not.toHaveAttribute("data-current");
+  //   await expect(d.getPageAtIndex(2)).not.toHaveAttribute("disabled");
+  //   await d.getPageAtIndex(2).click();
+  //   await expect(d.getPageAtIndex(2)).not.toHaveAttribute("data-current");
+  //   await expect(d.getPageAtIndex(2)).not.toHaveAttribute("disabled");
+  // });
 });
 
 test.describe("A11y", () => {
