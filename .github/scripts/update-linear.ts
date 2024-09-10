@@ -47,9 +47,12 @@ async function createLinearReleaseIssue() {
   // user that created the API
   const me = await linearClient.viewer;
 
-  const inProgress =
-    (await team.states()).nodes.find((state) => state.position === 3)?.id ??
-    undefined;
+  // Find the "In Progress" state
+  const teamStates = await team.states();
+  const inProgressState = teamStates.nodes.find(
+    (state) => state.name.toLowerCase() === "in progress"
+  );
+  const inProgressStateId = inProgressState?.id ?? undefined;
 
   const issuePayload = await linearClient.createIssue({
     teamId: team.id,
@@ -58,7 +61,7 @@ async function createLinearReleaseIssue() {
     projectId: project.id,
     priority: 1,
     assigneeId: me.id,
-    stateId: inProgress,
+    stateId: inProgressStateId,
   });
 
   const issueId = (await issuePayload.issue)?.id;
