@@ -8,14 +8,12 @@ export default component$(() => {
   return (
     <Pagination.Root
       class="flex gap-4"
-      // selectedPage={selectedPageSig.value}
       totalPages={totalPagesSig.value}
       onPageChange$={$((page: number) => {
         selectedPageSig.value = page;
-        console.log('page ', page)
       })}
     >
-      {/*<Pagination.Ellipsis>...</Pagination.Ellipsis>*/}
+      <Pagination.Ellipsis>...</Pagination.Ellipsis>
       <Pagination.Previous>Previous</Pagination.Previous>
 
       {/* creates 10 pages */}

@@ -1,9 +1,9 @@
 import {type PropsOf, Slot, component$, useContext, $, useTask$, useSignal} from "@builder.io/qwik";
-import {PaginationContext} from "./pagination-context";
+import {paginationContext} from "./pagination-context";
 
 export const PaginationPrevious = component$(
   ({type, ...props}: PropsOf<"button">) => {
-    const context = useContext(PaginationContext);
+    const context = useContext(paginationContext);
     const {selectedPage, onPageChange$} = context;
     const isDisabled = useSignal(context.selectedPage.value === 1);
 

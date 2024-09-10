@@ -6,5 +6,5 @@ export interface PaginationState {
   onPageChange$: QRL<(page: number) => void>;
 }
 
-export const PaginationContext =
+export const paginationContext =
   createContextId<PaginationState>('PaginationContext');

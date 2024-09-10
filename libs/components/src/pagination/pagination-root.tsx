@@ -14,10 +14,9 @@ import {
   findComponent,
 } from "@kunai-consulting/qwik-hooks";
 import {PaginationPage} from "./pagination-page";
-import {PaginationContext, PaginationState} from "./pagination-context";
+import {paginationContext, PaginationState} from "./pagination-context";
 
 type PaginationRootProps = PropsOf<"div"> & {
-  // selectedPage: number;
   totalPages: number;
   /** Handler for when the current page changes */
   onPageChange$: QRL<(page: number) => void>;
@@ -27,7 +26,6 @@ export const PaginationRoot =
   (props: {
     children: JSXChildren | JSXNode;
     totalPages: number;
-    // selectedPage: number;
     onPageChange$: QRL<(page: number) => void>;
     class?: string;
   }) => {
@@ -60,12 +58,11 @@ const PaginationBase = component$(
       totalPages,
       onPageChange$
     }
-    useContextProvider(PaginationContext, context);
+    useContextProvider(paginationContext, context);
 
-    useTask$(({track}) => {
-      track(() => context.selectedPage.value);
-      console.log('useTask selectedPage.value', context.selectedPage.value);
-    })
+    // useTask$(({track}) => {
+    //   track(() => context.selectedPage.value);
+    // })
 
     return (
       <div data-qds-pagination-root {...props} class={props.class}>
