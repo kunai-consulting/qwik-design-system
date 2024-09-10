@@ -19,9 +19,7 @@ export function useBoundSignal<T>(
   const internalSignal = useSignal<T>(
     givenSignal?.value ?? (initialValue as T)
   );
-  console.log('useBoundSignal internalSignal', internalSignal);
   const boundSignal = givenSignal ?? internalSignal;
-  console.log('useBoundSignal boundSignal', boundSignal);
 
   useTask$(({ track }) => {
     const value = track(() => boundSignal.value);
