@@ -28,6 +28,7 @@ export const CheckboxRoot = component$(
       initialValue,
       onClick$,
       as,
+      index,
       ...rest
     } = props;
     const Comp = as ?? 'div';

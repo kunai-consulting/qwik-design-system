@@ -48,11 +48,13 @@ export const ChecklistItem = component$((props: ChecklistItemProps) => {
     // itemsSig
     context.items.value[_index] = isCheckedSig.value;
 
-    if (isCheckedSig.value === false) {
-      context.allSelected.value = false;
-    }
+    // root of both checkboxes updating.  context.allselected is updated causing the other useTask$ to run again
+    // if (isCheckedSig.value === false) {
+    //   context.allSelected.value = false;
+    // }
 
     const isAllSelected = context.items.value.every((item) => item === true);
+    const isAnyChecked = context.items.value.some(Boolean);
 
     if (isAllSelected) {
       context.allSelected.value = true;

@@ -13,7 +13,6 @@ import { findComponent, processChildren } from '../../utils/inline-component';
 import { CheckboxRoot } from '../checkbox/checkbox-root';
 import { ChecklistContext, type ChecklistState } from './checklist-context';
 import { ChecklistItem } from './checklist-item';
-import { useChecklist } from './use-checklist';
 
 export const ChecklistRoot =
   //removing component to make inline causes Internal Server
@@ -45,8 +44,8 @@ type ChecklistRootProps = PropsOf<'div'> & {
 
 export const ChecklistBase = component$(
   ({ initialStates, ...props }: ChecklistRootProps) => {
-    const items = useSignal<boolean[]>(initialStates);
-    const allSelected = useSignal(false);
+    const items = useSignal<boolean[]>(initialStates ?? []);
+    const allSelected = useSignal<boolean>(false);
     const toggleAllSelected = $(() => {
       allSelected.value = !allSelected.value;
     });

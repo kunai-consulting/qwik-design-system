@@ -7,9 +7,9 @@ import {
 import { ChecklistContext } from './checklist-context';
 import { CheckboxContext } from '../checkbox/checkbox-context';
 
-export const useChecklist = (initialItems: boolean[]) => {
-  const items = useSignal(initialItems);
-  const allSelected = useSignal(initialItems.every(Boolean));
+export const useChecklist = (initialStates: boolean[]) => {
+  const items = useSignal(initialStates);
+  const allSelected = useSignal(initialStates.every(Boolean));
   const indeterminate = useSignal(false);
   useContextProvider(CheckboxContext, allSelected);
 
@@ -50,20 +50,11 @@ export const useChecklist = (initialItems: boolean[]) => {
     // updateAllSelected();
   });
 
-  // const toggleAllSelected = $(() => {
-  //   console.log('toggleAllSelected items ', items.value);
-
-  //   const newState = !allSelected.value || indeterminate.value;
-  //   items.value = items.value.map(() => newState);
-  //   updateAllSelected();
-  // });
-
   useContextProvider(ChecklistContext, {
     items,
-    // toggleItem,
     allSelected,
     toggleAllSelected,
     indeterminate,
-    // activeIndex: useSignal(0),
+    initialStates,
   });
 };
