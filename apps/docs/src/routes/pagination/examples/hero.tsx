@@ -1,14 +1,25 @@
-import { component$ } from "@builder.io/qwik";
+import {$, component$, useSignal} from "@builder.io/qwik";
 import { Pagination } from "@kunai-consulting/qwik-components";
 
 export default component$(() => {
+  const selectedPageSig = useSignal(1);
+  const totalPagesSig = useSignal(10);
+
   return (
-    <Pagination.Root class="flex gap-4">
-      <Pagination.Ellipsis>...</Pagination.Ellipsis>
+    <Pagination.Root
+      class="flex gap-4"
+      // selectedPage={selectedPageSig.value}
+      totalPages={totalPagesSig.value}
+      onPageChange$={$((page: number) => {
+        selectedPageSig.value = page;
+        console.log('page ', page)
+      })}
+    >
+      {/*<Pagination.Ellipsis>...</Pagination.Ellipsis>*/}
       <Pagination.Previous>Previous</Pagination.Previous>
 
       {/* creates 10 pages */}
-      {Array.from({ length: 10 }, (_, index) => {
+      {Array.from({length: totalPagesSig.value}, (_, index) => {
         const uniqueKey = `page-${index}-${Date.now()}`;
 
         return (
