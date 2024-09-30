@@ -1,0 +1,76 @@
+# Headless Pagination Component
+
+## API
+
+```
+<Pagination.Root>
+    <Pagination.Previous />
+    <Pagination.Item />
+    <Pagination.Next />
+
+    {/* grab its children and dynamically show and hide */}
+    <Pagination.Ellipsis>{props.children}</Pagination.Ellipsis>
+</Pagination.Root>
+
+```
+
+## Todo Items
+
+1. Create a core pagination function that handles page calculations and state management.
+
+2. Implement keyboard navigation support for accessibility.
+
+3. Develop a flexible API that allows customization of the number of visible pages and sibling pages.
+
+4. Create helper functions for generating page ranges and handling bounded/unbounded sets.
+
+5. Implement event handlers for page changes and navigation.
+
+## Requirements
+
+1. Support both controlled and uncontrolled usage modes.
+
+2. Provide a way to set the total number of items and items per page.
+
+3. Allow customization of the current page, either through props or state.
+
+4. Implement proper ARIA attributes for accessibility, including `aria-current="page"` for the current page.
+
+5. Support navigation to first, previous, next, and last pages.
+
+6. Handle ellipsis (overflow) indicators for pages that are not displayed.
+
+7. Ensure the component works with both bounded (known total pages) and unbounded (unknown total pages) sets.
+
+## Nice-to-have Features
+
+1. Internationalization support for labels like "Previous", "Next", etc.
+
+2. Performance optimization for large datasets.
+
+3. Support for different pagination layouts (e.g., compact, expanded).
+
+4. Ability to customize the number of items shown per page.
+
+5. Animation support for page transitions.
+
+6. Server-side rendering compatibility.
+
+7. Support for dynamic page size changes.
+
+8. Ability to jump to a specific page number.
+
+9. Event callbacks for pagination actions (e.g., onPageChange, onNextPage, onPreviousPage).
+
+## Pagination API's
+
+Potential API's:
+
+- `count`: Total number of items to paginate
+- `page`: Current page (for controlled usage)
+- `defaultPage`: Initial page (for uncontrolled usage)
+- `onPageChange`: Callback fired when the page changes
+- `perPage`: Number of items per page
+- `siblingCount`: Number of always visible pages before and after the current page
+- `showFirstLast`: Whether to show first and last page buttons
+- `boundaryCount`: Number of pages to show at the beginning and end

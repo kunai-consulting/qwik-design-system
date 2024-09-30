@@ -1,5 +1,7 @@
 # @kunai-consulting/qwik-hooks
 
+## 0.0.5
+
 ## 0.0.2
 
 ### Patch Changes
