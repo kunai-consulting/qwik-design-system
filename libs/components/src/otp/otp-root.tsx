@@ -34,6 +34,7 @@ export const OtpBase = component$((props: OtpRootProps) => {
   const activeIndex = useSignal(0);
   const nativeInputRef = useSignal<HTMLInputElement>();
   const numItemsSig = useComputed$(() => props._numItems || 0);
+  const isFocusedSig = useSignal(false);
 
   const fullEntrySig = useComputed$(
     () => value.value.length === numItemsSig.value
@@ -45,6 +46,7 @@ export const OtpBase = component$((props: OtpRootProps) => {
     nativeInputRef: nativeInputRef,
     numItemsSig,
     fullEntrySig,
+    isFocusedSig,
   };
 
   useContextProvider(OTPContextId, context);

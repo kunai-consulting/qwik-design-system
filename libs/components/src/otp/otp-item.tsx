@@ -21,9 +21,7 @@ export const itemContextId = createContextId<ItemContextType>('qd-otp-item');
 export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
   const context = useContext(OTPContextId);
   const itemRef = useSignal<HTMLInputElement>();
-  const isFocused = useSignal(false);
   useContextProvider(itemContextId, { index: _index });
-
   const itemValue = context.value.value[_index] || '';
   const isFullEntry = useComputed$(
     () => _index === context.numItemsSig.value - 1
@@ -41,14 +39,17 @@ export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
       ref={itemRef}
       data-qui-otp-item={_index}
       data-highlighted={
-        context.activeIndexSig.value === _index ||
-        (isFullEntry.value && context.fullEntrySig.value)
+        (context.isFocusedSig.value &&
+          context.activeIndexSig.value === _index) ||
+        (isFullEntry.value &&
+          context.fullEntrySig.value &&
+          !context.isFocusedSig.value === false)
           ? ''
           : undefined
       }
       onFocus$={() => {
         context.activeIndexSig.value = _index;
-        isFocused.value = true;
+        context.isFocusedSig.value = true;
         context.nativeInputRef.value?.focus();
       }}
     >

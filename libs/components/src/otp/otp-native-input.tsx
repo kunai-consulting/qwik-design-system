@@ -1,18 +1,27 @@
 // File: otp-native-input.tsx
-import { component$, useContext } from '@builder.io/qwik';
+import { component$, type PropsOf, useContext } from '@builder.io/qwik';
 import { OTPContextId } from './otp-context';
 
-export const OtpNativeInput = component$(() => {
+interface OtpNativeInputProps extends PropsOf<'input'> {}
+
+export const OtpNativeInput = component$((props: OtpNativeInputProps) => {
   const context = useContext(OTPContextId);
 
   return (
     <input
+      {...props}
       ref={context.nativeInputRef}
       type="text"
       data-qui-otp-native-input
       value={context.value.value}
       inputMode="numeric"
       pattern="[0-9]*"
+      onFocus$={() => {
+        context.isFocusedSig.value = true;
+      }}
+      onBlur$={() => {
+        context.isFocusedSig.value = false;
+      }}
       onInput$={(event: InputEvent) => {
         const input = event.target as HTMLInputElement;
         context.value.value = input.value;
@@ -20,7 +29,6 @@ export const OtpNativeInput = component$(() => {
       }}
       maxLength={context.numItemsSig.value}
       aria-label="Enter your OTP"
-      class="invisible"
     />
   );
 });
