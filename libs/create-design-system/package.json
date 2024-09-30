@@ -1,0 +1,62 @@
+{
+  "name": "@kunai-consulting/create-design-system",
+  "type": "module",
+  "license": "MIT",
+  "version": "0.0.1",
+  "description": "Interactive CLI for creating Qwik Design System projects.",
+  "scripts": {
+    "build": "rimraf dist && tsc --build"
+  },
+  "contributors": [
+    {
+      "name": "Jack Shelton",
+      "email": "me@jackshelton.com",
+      "url": "https://twitter.com/TheJackShelton"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kunai-consulting/qwik-design-system",
+    "directory": "libs/create-design-system"
+  },
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "stubs"
+  ],
+  "bin": "./dist/cli.js",
+  "keywords": [
+    "cli",
+    "console",
+    "create-design-system",
+    "generator",
+    "optimization",
+    "perf",
+    "performance",
+    "qwik",
+    "qwikdev",
+    "starter-kit",
+    "template"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": "https://github.com/@QwikDev/astro/issues",
+  "dependencies": {
+    "@clack/prompts": "^0.7.0",
+    "kleur": "^4.1.5",
+    "which-pm-runs": "^1.1.0",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/which-pm-runs": "^1.0.2",
+    "@types/yargs": "^17.0.32",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.4.5"
+  }
+}
