@@ -32,12 +32,12 @@
     "qwik": "qwik"
   },
   "devDependencies": {
-    "@builder.io/qwik": "1.7.3",
+    "@builder.io/qwik": "^1.9",
     "@kunai-consulting/qwik-hooks": "workspace:*",
     "@types/node": "20.14.11",
     "typescript": "5.4.5",
     "undici": "*",
-    "vite": "5.3.5",
+    "vite": "^5.4",
     "vite-tsconfig-paths": "^4.2.1",
     "@axe-core/playwright": "^4.9.1"
   }

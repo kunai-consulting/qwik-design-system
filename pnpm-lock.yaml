@@ -30,11 +30,11 @@ importers:
   apps/component-tests:
     devDependencies:
       '@builder.io/qwik':
-        specifier: ^1.8.0
-        version: 1.8.0(@types/node@20.14.11)
+        specifier: ^1.9
+        version: 1.9.0(@types/node@20.14.11)
       '@builder.io/qwik-city':
-        specifier: ^1.8.0
-        version: 1.8.0(@types/node@20.14.11)(rollup@4.20.0)
+        specifier: ^1.9
+        version: 1.9.0(@types/node@20.14.11)(rollup@4.20.0)(typescript@5.4.5)
       '@types/node':
         specifier: 20.14.11
         version: 20.14.11
@@ -45,11 +45,11 @@ importers:
         specifier: '*'
         version: 6.19.7
       vite:
-        specifier: 5.3.5
-        version: 5.3.5(@types/node@20.14.11)
+        specifier: ^5.4
+        version: 5.4.8(@types/node@20.14.11)
       vite-tsconfig-paths:
         specifier: ^4.2.1
-        version: 4.3.2(typescript@5.4.5)(vite@5.3.5(@types/node@20.14.11))
+        version: 4.3.2(typescript@5.4.5)(vite@5.4.8(@types/node@20.14.11))
 
   apps/docs:
     dependencies:
@@ -121,8 +121,8 @@ importers:
         specifier: ^4.9.1
         version: 4.10.0(playwright-core@1.46.0)
       '@builder.io/qwik':
-        specifier: 1.7.3
-        version: 1.7.3(@types/node@20.14.11)
+        specifier: ^1.9
+        version: 1.9.0(@types/node@20.14.11)
       '@kunai-consulting/qwik-hooks':
         specifier: workspace:*
         version: link:../hooks
@@ -136,17 +136,17 @@ importers:
         specifier: '*'
         version: 6.19.7
       vite:
-        specifier: 5.3.5
-        version: 5.3.5(@types/node@20.14.11)
+        specifier: ^5.4
+        version: 5.4.8(@types/node@20.14.11)
       vite-tsconfig-paths:
         specifier: ^4.2.1
-        version: 4.3.2(typescript@5.4.5)(vite@5.3.5(@types/node@20.14.11))
+        version: 4.3.2(typescript@5.4.5)(vite@5.4.8(@types/node@20.14.11))
 
   libs/hooks:
     devDependencies:
       '@builder.io/qwik':
-        specifier: 1.7.3
-        version: 1.7.3(@types/node@20.14.11)
+        specifier: ^1.9
+        version: 1.9.0(@types/node@20.14.11)
       '@types/node':
         specifier: 20.14.11
         version: 20.14.11
@@ -157,11 +157,11 @@ importers:
         specifier: '*'
         version: 6.19.7
       vite:
-        specifier: 5.3.5
-        version: 5.3.5(@types/node@20.14.11)
+        specifier: ^5.4
+        version: 5.4.8(@types/node@20.14.11)
       vite-tsconfig-paths:
         specifier: ^4.2.1
-        version: 4.3.2(typescript@5.4.5)(vite@5.3.5(@types/node@20.14.11))
+        version: 4.3.2(typescript@5.4.5)(vite@5.4.8(@types/node@20.14.11))
 
 packages:
 
@@ -231,23 +231,9 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@builder.io/qwik-city@1.8.0':
-    resolution: {integrity: sha512-3WCyKFf8E5W2HlL/VtYneXsY/d7llNRUo3Bc/PonOgEUpNYM3i7ts9M3MSnkKYf7dLm648+MSeP/x2Ll01lz7Q==}
-    engines: {node: '>=16.8.0 <18.0.0 || >=18.11'}
-
   '@builder.io/qwik-city@1.9.0':
     resolution: {integrity: sha512-N+TARxsrVMNpIQQ+cnTN+c/gCdI5PlUGPFaRnWT4dw3ug+bizoaldksFvdATarWVYUMkoK7tTpop3cORKN9tAg==}
     engines: {node: '>=16.8.0 <18.0.0 || >=18.11'}
-
-  '@builder.io/qwik@1.7.3':
-    resolution: {integrity: sha512-lVRT4j9redY4X+iOy26U2vhychJgX24aaleu3IuBlEwD8MjCU5k46ApHq+cGqI24/kbqjirPH3SIxtVSByEG/A==}
-    engines: {node: '>=16.8.0 <18.0.0 || >=18.11'}
-    hasBin: true
-
-  '@builder.io/qwik@1.8.0':
-    resolution: {integrity: sha512-HM7X6h1NCfhyHt15NZYTF2PaNQmuc1gW6PzTzw2bNhpgBuD/RR/nE79HBXq13djQg6hHjaZpToJySToT9Q3u6w==}
-    engines: {node: '>=16.8.0 <18.0.0 || >=18.11'}
-    hasBin: true
 
   '@builder.io/qwik@1.9.0':
     resolution: {integrity: sha512-E4EFXOaUz4A6D48lw1CwKR4CLZCPquetuMPrRoAPZjBueL/R1oBzXdRt5zVemS6lAoTSjXBsnxXo2kGYKCI7pA==}
@@ -2183,28 +2169,6 @@ snapshots:
   '@biomejs/cli-win32-x64@1.8.3':
     optional: true
 
-  '@builder.io/qwik-city@1.8.0(@types/node@20.14.11)(rollup@4.20.0)':
-    dependencies:
-      '@mdx-js/mdx': 3.0.1
-      '@types/mdx': 2.0.13
-      source-map: 0.7.4
-      svgo: 3.3.2
-      undici: 6.19.7
-      vfile: 6.0.1
-      vite: 5.3.5(@types/node@20.14.11)
-      vite-imagetools: 7.0.4(rollup@4.20.0)
-      zod: 3.22.4
-    transitivePeerDependencies:
-      - '@types/node'
-      - less
-      - lightningcss
-      - rollup
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-
   '@builder.io/qwik-city@1.9.0(@types/node@20.14.11)(rollup@4.20.0)(typescript@5.4.5)':
     dependencies:
       '@mdx-js/mdx': 3.0.1
@@ -2229,33 +2193,6 @@ snapshots:
       - supports-color
       - terser
       - typescript
-
-  '@builder.io/qwik@1.7.3(@types/node@20.14.11)':
-    dependencies:
-      csstype: 3.1.3
-      vite: 5.4.8(@types/node@20.14.11)
-    transitivePeerDependencies:
-      - '@types/node'
-      - less
-      - lightningcss
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - terser
-
-  '@builder.io/qwik@1.8.0(@types/node@20.14.11)':
-    dependencies:
-      csstype: 3.1.3
-      vite: 5.3.5(@types/node@20.14.11)
-    transitivePeerDependencies:
-      - '@types/node'
-      - less
-      - lightningcss
-      - sass
-      - stylus
-      - sugarss
-      - terser
 
   '@builder.io/qwik@1.9.0(@types/node@20.14.11)':
     dependencies:
@@ -4328,17 +4265,6 @@ snapshots:
       - sugarss
       - supports-color
       - terser
-
-  vite-tsconfig-paths@4.3.2(typescript@5.4.5)(vite@5.3.5(@types/node@20.14.11)):
-    dependencies:
-      debug: 4.3.6
-      globrex: 0.1.2
-      tsconfck: 3.1.1(typescript@5.4.5)
-    optionalDependencies:
-      vite: 5.3.5(@types/node@20.14.11)
-    transitivePeerDependencies:
-      - supports-color
-      - typescript
 
   vite-tsconfig-paths@4.3.2(typescript@5.4.5)(vite@5.4.8(@types/node@20.14.11)):
     dependencies:
