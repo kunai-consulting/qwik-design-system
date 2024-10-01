@@ -121,7 +121,10 @@ function ansiRegex() {
 }
 
 // Used from https://github.com/QwikDev/qwik/blob/main/packages/qwik/src/cli/utils/utils.ts
+// get real length of strings without formatting characters
 const strip = (str: string) => str.replace(ansiRegex(), "");
+
+// add a console message with a title
 export const note = (message = "", title = "") => {
   const lines = `\n${message}\n`.split("\n");
   const titleLen = strip(title).length;
@@ -248,93 +251,89 @@ export const installDependencies = async (cwd: string) => {
 export type ProjectConfig = {
   project: string;
   adapter?: "deno" | "node";
-  force?: boolean;
-  install?: boolean;
-  biome?: boolean;
-  git?: boolean;
-  ci?: boolean;
-  yes: boolean;
-  no: boolean;
-  it: boolean;
-  dryRun: boolean;
+  shouldForce?: boolean;
+  shouldInstallDeps?: boolean;
+  shouldUseBiome?: boolean;
+  shouldInitGit?: boolean;
+  shouldSetupCi?: boolean;
+  isYesMode: boolean;
+  isNoMode: boolean;
+  isInteractive: boolean;
+  isDryRun: boolean;
 };
 
 export function parseArgs(args: string[]): ProjectConfig {
   const parsedArgs = yargs(args)
     .strict()
-    .command(
-      "* <project> [adapter]",
-      "Create a new project powered by QwikDev/astro",
-      (yargs) => {
-        return yargs
-          .positional("project", {
-            type: "string",
-            desc: "Directory of the project",
-          })
-          .positional("adapter", {
-            type: "string",
-            desc: "Server adapter",
-            choices: ["deno", "node"],
-          })
-          .option("force", {
-            alias: "f",
-            type: "boolean",
-            desc: "Overwrite target directory if it exists",
-          })
-          .option("install", {
-            alias: "i",
-            type: "boolean",
-            desc: "Install dependencies",
-          })
-          .option("biome", {
-            type: "boolean",
-            desc: "Prefer Biome to ESLint/Prettier",
-          })
-          .option("git", {
-            type: "boolean",
-            desc: "Initialize Git repository",
-          })
-          .option("ci", {
-            type: "boolean",
-            desc: "Add CI workflow",
-          })
-          .option("yes", {
-            alias: "y",
-            default: false,
-            type: "boolean",
-            desc: "Skip all prompts by accepting defaults",
-          })
-          .option("no", {
-            alias: "n",
-            default: false,
-            type: "boolean",
-            desc: "Skip all prompts by declining defaults",
-          })
-          .option("it", {
-            default: false,
-            type: "boolean",
-            desc: "Execute actions interactively",
-          })
-          .option("dryRun", {
-            default: false,
-            type: "boolean",
-            desc: "Walk through steps without executing",
-          })
-          .example(
-            "npm create @qwikdev/astro@latest",
-            "Create a project in interactive mode"
-          )
-          .example(
-            "npm create @qwikdev/astro@latest ./qwik-astro-app node",
-            "Create a project in commande mode"
-          )
-          .example(
-            "npm create @qwikdev/astro@latest ./qwik-astro-app node --it",
-            "Create a project in interactive command mode"
-          )
-          .usage("npm create @qwikdev/astro [project] [adapter] [...options]");
-      }
-    )
+    .command("* <project> [adapter]", "Create a new design system", (yargs) => {
+      return yargs
+        .positional("project", {
+          type: "string",
+          desc: "Directory of the project",
+        })
+        .positional("adapter", {
+          type: "string",
+          desc: "Server adapter",
+          choices: ["deno", "node"],
+        })
+        .option("force", {
+          alias: "f",
+          type: "boolean",
+          desc: "Overwrite target directory if it exists",
+        })
+        .option("install", {
+          alias: "i",
+          type: "boolean",
+          desc: "Install dependencies",
+        })
+        .option("biome", {
+          type: "boolean",
+          desc: "Prefer Biome to ESLint/Prettier",
+        })
+        .option("git", {
+          type: "boolean",
+          desc: "Initialize Git repository",
+        })
+        .option("ci", {
+          type: "boolean",
+          desc: "Add CI workflow",
+        })
+        .option("yes", {
+          alias: "y",
+          default: false,
+          type: "boolean",
+          desc: "Skip all prompts by accepting defaults",
+        })
+        .option("no", {
+          alias: "n",
+          default: false,
+          type: "boolean",
+          desc: "Skip all prompts by declining defaults",
+        })
+        .option("it", {
+          default: false,
+          type: "boolean",
+          desc: "Execute actions interactively",
+        })
+        .option("dryRun", {
+          default: false,
+          type: "boolean",
+          desc: "Walk through steps without executing",
+        })
+        .example(
+          "npm create @qwikdev/astro@latest",
+          "Create a project in interactive mode"
+        )
+        .example(
+          "npm create @qwikdev/astro@latest ./qwik-astro-app node",
+          "Create a project in commande mode"
+        )
+        .example(
+          "npm create @qwikdev/astro@latest ./qwik-astro-app node --it",
+          "Create a project in interactive command mode"
+        )
+        .usage("npm create @qwikdev/astro [project] [adapter] [...options]");
+    })
     .alias("h", "help").argv as unknown as ProjectConfig;
 
   return parsedArgs;
@@ -345,12 +344,12 @@ export async function createProject(
   defaultProject: string
 ) {
   try {
-    intro(`Let's create a ${bgBlue(" QwikDev/astro App ")} ✨`);
+    intro(`Let's create a ${bgBlue(" design system ")} 🎨`);
 
     const packageManager = getPackageManager();
 
     const projectAnswer =
-      config.project !== defaultProject || !config.it
+      config.project !== defaultProject || !config.isInteractive
         ? config.project
         : (await text({
             message: `Where would you like to create your new project? ${gray(
@@ -368,7 +367,7 @@ export async function createProject(
 
     const adapter =
       config.adapter ||
-      (config.it &&
+      (config.isInteractive &&
         (await confirm({
           message: "Would you like to use a server adapter?",
           initialValue: false,
@@ -392,21 +391,21 @@ export async function createProject(
       panicCanceled();
     }
 
-    let starterKit = adapter as string;
+    let templateVariant = adapter as string;
 
     const preferBiome =
-      config.no && !config.biome
+      config.isNoMode && !config.shouldUseBiome
         ? false
-        : (config.yes && config.biome !== false) ||
-          config.biome ||
-          (config.it &&
+        : (config.isYesMode && config.shouldUseBiome !== false) ||
+          config.shouldUseBiome ||
+          (config.isInteractive &&
             (await confirm({
               message: "Would you prefer Biome over ESLint/Prettier?",
               initialValue: true,
             })));
 
     if (preferBiome) {
-      starterKit += "-biome";
+      templateVariant += "-biome";
     }
 
     const templatePath = path.join(
@@ -414,27 +413,27 @@ export async function createProject(
       "..",
       "stubs",
       "templates",
-      starterKit
+      templateVariant
     );
     const outDir: string = resolveAbsoluteDir((projectAnswer as string).trim());
 
     log.step(`Creating new project in ${bgBlue(` ${outDir} `)} ... 🐇`);
 
     if (fs.existsSync(outDir) && fs.readdirSync(outDir).length > 0) {
-      const force =
-        config.no && !config.force
+      const isForceMode =
+        config.isNoMode && !config.shouldForce
           ? false
-          : (config.yes && config.force !== false) ||
-            config.force ||
-            (config.it &&
+          : (config.isYesMode && config.shouldForce !== false) ||
+            config.shouldForce ||
+            (config.isInteractive &&
               (await confirm({
                 message: `Directory "./${resolveRelativeDir(
                   outDir
                 )}" already exists and is not empty. What would you like to overwrite it?`,
                 initialValue: true,
               })));
-      if (force) {
-        if (!config.dryRun) {
+      if (isForceMode) {
+        if (!config.isDryRun) {
           await clearDir(outDir);
         }
       } else {
@@ -447,7 +446,7 @@ export async function createProject(
       }
     }
 
-    if (!config.dryRun) {
+    if (!config.isDryRun) {
       if (!existsSync(outDir)) {
         mkdirSync(outDir, { recursive: true });
       }
@@ -460,17 +459,17 @@ export async function createProject(
     }
 
     const addCIWorkflow =
-      config.no && !config.ci
+      config.isNoMode && !config.shouldSetupCi
         ? false
-        : (config.yes && config.ci !== false) ||
-          config.ci ||
-          (config.it &&
+        : (config.isYesMode && config.shouldSetupCi !== false) ||
+          config.shouldSetupCi ||
+          (config.isInteractive &&
             (await confirm({
               message: "Would you like to add CI workflow?",
               initialValue: true,
             })));
 
-    if (addCIWorkflow && !config.dryRun) {
+    if (addCIWorkflow && !config.isDryRun) {
       const starterCIPath = join(
         __dirname,
         "..",
@@ -487,11 +486,11 @@ export async function createProject(
     }
 
     const runInstall =
-      config.no && !config.install
+      config.isNoMode && !config.shouldInstallDeps
         ? false
-        : (config.yes && config.install !== false) ||
-          config.install ||
-          (config.it &&
+        : (config.isYesMode && config.shouldInstallDeps !== false) ||
+          config.shouldInstallDeps ||
+          (config.isInteractive &&
             (await confirm({
               message: `Would you like to install ${packageManager} dependencies?`,
               initialValue: true,
@@ -500,18 +499,18 @@ export async function createProject(
     let ranInstall = false;
     if (typeof runInstall !== "symbol" && runInstall) {
       log.step("Installing dependencies...");
-      if (!config.dryRun) {
+      if (!config.isDryRun) {
         await installDependencies(projectAnswer as string);
       }
       ranInstall = true;
     }
 
     const initGit =
-      config.no && !config.git
+      config.isNoMode && !config.shouldInitGit
         ? false
-        : (config.yes && config.git !== false) ||
-          config.git ||
-          (config.it &&
+        : (config.isYesMode && config.shouldInitGit !== false) ||
+          config.shouldInitGit ||
+          (config.isInteractive &&
             (await confirm({
               message: "Initialize a new git repository?",
               initialValue: true,
@@ -526,7 +525,7 @@ export async function createProject(
         s.start("Git initializing...");
 
         try {
-          if (!config.dryRun) {
+          if (!config.isDryRun) {
             const res = [];
             res.push(await $("git", ["init"], outDir).install);
             res.push(await $("git", ["add", "-A"], outDir).install);
@@ -592,7 +591,8 @@ export async function createProject(
 export async function runCreate(...args: string[]) {
   const defaultProject = "./qwik-astro-app";
   const projectConfig = parseArgs(args.length ? args : [defaultProject]);
-  projectConfig.it = projectConfig.it || args.length === 0;
+  projectConfig.isInteractive =
+    projectConfig.isInteractive || args.length === 0;
 
   createProject(projectConfig, defaultProject);
 }
