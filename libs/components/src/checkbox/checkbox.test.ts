@@ -53,3 +53,27 @@ test.describe("critical functionality", () => {
     await expect(d.getIndicator()).toBeHidden();
   });
 });
+
+test.describe("a11y", () => {
+  test(`GIVEN a checkbox
+        WHEN the trigger is clicked
+        THEN aria-checked should be true`, async ({ page }) => {
+    const d = await setup(page, "hero");
+
+    await d.getTrigger().click();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "true");
+  });
+
+  test(`GIVEN a checkbox that is initially checked
+        WHEN the trigger is clicked
+        THEN aria-checked should be false`, async ({ page }) => {
+    const d = await setup(page, "hero");
+
+    // initial setup
+    await d.getTrigger().click();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "true");
+
+    await d.getTrigger().click();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "false");
+  });
+});

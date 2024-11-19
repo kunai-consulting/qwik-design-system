@@ -27,7 +27,11 @@ export const CheckboxRoot = component$((props: CheckboxRootProps) => {
   useContextProvider(checkboxContextId, context);
 
   return (
-    <div {...rest} data-qds-checkbox-root>
+    <div
+      {...rest}
+      data-qds-checkbox-root
+      aria-checked={context.isCheckedSig.value ? "true" : "false"}
+    >
       <Slot />
     </div>
   );
