@@ -1,56 +1,24 @@
-import type { Locator, Page } from '@playwright/test';
+import type { Locator, Page } from "@playwright/test";
 export type DriverLocator = Locator | Page;
 
 export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   const getRoot = () => {
-    return rootLocator;
+    return rootLocator.locator("[data-qds-checkbox-root]");
   };
 
-  const getIcon = () => {
-    return getRoot().locator('#indicator');
-  };
-  const getCheckList = () => {
-    return getRoot().getByRole('checkbox');
-  };
-  const getChecklistUL = () => {
-    // note: filter method is always relative to the original locator not document root despite using root
-    const ul = getCheckList().filter({ has: rootLocator.locator('css=ul') });
-    return ul;
-  };
-  const getChecklistLIs = () => {
-    const li = getChecklistUL().filter({ has: rootLocator.locator('css=li') });
-    return li;
-  };
-  const getCheckbox = () => {
-    return getRoot().getByRole('checkbox');
+  const getTrigger = () => {
+    return rootLocator.locator("[data-qds-checkbox-trigger]");
   };
 
-  const getCheckboxIndicator = () => {
-    return getRoot().locator('[data-qds-indicator]');
+  const getIndicator = () => {
+    return rootLocator.locator("[data-qds-indicator]");
   };
 
-  const getSelectAll = () => {
-    return getRoot().locator('[data-qds-selectall]');
-  };
-
-  const getSelectAllIndicator = () => {
-    return getSelectAll().locator('[data-qds-indicator]');
-  };
-
-  const getTriCheckbox = () => {
-    return getRoot().locator('#selectAll');
-  };
   return {
     ...rootLocator,
     locator: rootLocator,
     getRoot,
-    getIcon,
-    getCheckList,
-    getCheckbox,
-    getChecklistUL,
-    getChecklistLIs,
-    getTriCheckbox,
-    getSelectAll,
-    getSelectAllIndicator,
+    getIndicator,
+    getTrigger
   };
 }

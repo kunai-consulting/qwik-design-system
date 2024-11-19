@@ -1,0 +1,15 @@
+.checkbox-trigger {
+    background: #0a4d70;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+}
+
+.checkbox-trigger:focus-visible {
+    outline: 1px solid white;
+}
+
+.checkbox-indicator[data-checked] {
+    display: flex;
+    justify-content: center;
+}
