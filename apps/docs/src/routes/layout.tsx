@@ -17,7 +17,7 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 export default component$(() => {
   return (
     <MDXProvider components={components}>
-      <main>
+      <main class="mx-auto max-w-screen-lg">
         <Slot />
       </main>
     </MDXProvider>

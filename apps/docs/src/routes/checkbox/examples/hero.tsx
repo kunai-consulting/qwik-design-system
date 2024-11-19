@@ -1,18 +1,15 @@
-import { component$, useSignal, useStyles$ } from '@builder.io/qwik';
-import { Checkbox } from '@kunai-consulting/qwik-components';
+import { component$, useStyles$ } from "@builder.io/qwik";
+import { Checkbox } from "@kunai-consulting/qwik-components";
+
 export default component$(() => {
-  const isCheckedSig = useSignal(false);
+  useStyles$(styles);
 
   return (
-    <Checkbox.Root
-      bind:checked={isCheckedSig}
-      id="test"
-      class="flex items-center gap-3 border-2 border-black p-2"
-    >
-      <div class="flex h-[25px] w-[25px] items-center justify-center bg-slate-600">
-        <Checkbox.Indicator>✅</Checkbox.Indicator>
-      </div>
-      <p> I have read the README</p>
+    <Checkbox.Root class="checkbox-root">
+      <Checkbox.Indicator>✅</Checkbox.Indicator>
     </Checkbox.Root>
   );
 });
+
+// internal
+import styles from "./checkbox.css?inline";

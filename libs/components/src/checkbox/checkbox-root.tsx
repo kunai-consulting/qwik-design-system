@@ -5,52 +5,45 @@ import {
   type Signal,
   $,
   useContextProvider,
-  sync$,
-} from '@builder.io/qwik';
-import { useBoundSignal } from '../../utils/bound-signal';
-import { CheckboxContext, checkboxContextId } from './checkbox-context';
+  sync$
+} from "@builder.io/qwik";
+import { useBoundSignal } from "../../utils/bound-signal";
+import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
 
 export type CheckboxRootProps = {
-  'bind:checked'?: Signal<boolean>;
+  "bind:checked"?: Signal<boolean>;
   checked?: boolean;
-} & PropsOf<'div'>;
+} & PropsOf<"div">;
 
-export const CheckboxRoot = component$((
-    props: CheckboxRootProps
-  ) => {
-    const {
-      'bind:checked': givenCheckedSig,
-      checked,
-      onClick$,
-      ...rest
-    } = props;
+export const CheckboxRoot = component$((props: CheckboxRootProps) => {
+  const { "bind:checked": givenCheckedSig, checked, onClick$, ...rest } = props;
 
-    const isCheckedSig = useBoundSignal(givenCheckedSig, checked ?? false);
+  const isCheckedSig = useBoundSignal(givenCheckedSig, checked ?? false);
 
-    const handleClick$ = $(() => {
-      isCheckedSig.value = !isCheckedSig.value;
-    });
+  const handleClick$ = $(() => {
+    isCheckedSig.value = !isCheckedSig.value;
+  });
 
-    const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
-      if (e.key === ' ') {
-        e.preventDefault();
-      }
-    });
-
-    const handleKeyDown$ = $((e: KeyboardEvent) => {
-      if (e.key === ' ') {
-        isCheckedSig.value = !isCheckedSig.value;
-      }
-    });
-
-    const context: CheckboxContext = {
-      isCheckedSig,
+  const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
+    if (e.key === " ") {
+      e.preventDefault();
     }
+  });
 
-    useContextProvider(checkboxContextId, context);
+  const handleKeyDown$ = $((e: KeyboardEvent) => {
+    if (e.key === " ") {
+      isCheckedSig.value = !isCheckedSig.value;
+    }
+  });
 
-    return (
-      <div
+  const context: CheckboxContext = {
+    isCheckedSig
+  };
+
+  useContextProvider(checkboxContextId, context);
+
+  return (
+    <div
       {...rest}
       tabIndex={0}
       role="checkbox"
@@ -61,6 +54,5 @@ export const CheckboxRoot = component$((
     >
       <Slot />
     </div>
-    );
-  }
-);
+  );
+});
