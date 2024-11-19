@@ -8,69 +8,59 @@ import {
   sync$,
 } from '@builder.io/qwik';
 import { useBoundSignal } from '../../utils/bound-signal';
-import { CheckboxContext } from './checkbox-context';
-import type { QwikIntrinsicElements } from '@builder.io/qwik';
+import { CheckboxContext, checkboxContextId } from './checkbox-context';
 
-type AllowedElements = 'li' | 'div' | 'span';
-
-export type CheckboxProps = {
+export type CheckboxRootProps = {
   'bind:checked'?: Signal<boolean>;
-  initialValue?: boolean;
-  index?: number;
+  checked?: boolean;
 } & PropsOf<'div'>;
 
-export const CheckboxRoot = component$(
-  <C extends AllowedElements = 'div'>(
-    props: QwikIntrinsicElements[C] & { as?: C } & CheckboxProps
+export const CheckboxRoot = component$((
+    props: CheckboxRootProps
   ) => {
     const {
       'bind:checked': givenCheckedSig,
-      initialValue,
+      checked,
       onClick$,
-      as,
-      index,
       ...rest
     } = props;
-    const Comp = as ?? 'div';
 
-    const checkedSignal = useBoundSignal(givenCheckedSig, initialValue);
+    const isCheckedSig = useBoundSignal(givenCheckedSig, checked ?? false);
 
-    useContextProvider(CheckboxContext, checkedSignal);
+    const handleClick$ = $(() => {
+      isCheckedSig.value = !isCheckedSig.value;
+    });
+
     const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
       if (e.key === ' ') {
         e.preventDefault();
       }
     });
 
-    const handleClick$ = $(() => {
-      checkedSignal.value = !checkedSignal.value;
-    });
-
     const handleKeyDown$ = $((e: KeyboardEvent) => {
       if (e.key === ' ') {
-        checkedSignal.value = !checkedSignal.value;
+        isCheckedSig.value = !isCheckedSig.value;
       }
     });
 
+    const context: CheckboxContext = {
+      isCheckedSig,
+    }
+
+    useContextProvider(checkboxContextId, context);
+
     return (
-      <>
-        {/* @ts-ignore */}
-        <Comp
-          {...rest}
-          tabIndex={0}
-          role="checkbox"
-          aria-checked={checkedSignal.value}
-          aria-labelledby={props['aria-labelledby']}
-          // need the onClick$ to work with the handleClick$ below
-          // onClick$={onClick$ || handleClick$}
-          onClick$={handleClick$}
-          onKeyDown$={[handleKeyDownSync$, handleKeyDown$]}
-          onKeyPress$={handleClick$}
-          data-qds-checkbox-root
-        >
-          <Slot />
-        </Comp>
-      </>
+      <div
+      {...rest}
+      tabIndex={0}
+      role="checkbox"
+      aria-checked={isCheckedSig.value}
+      onClick$={handleClick$}
+      onKeyDown$={[handleKeyDownSync$, handleKeyDown$]}
+      data-qds-checkbox-root
+    >
+      <Slot />
+    </div>
     );
   }
 );
