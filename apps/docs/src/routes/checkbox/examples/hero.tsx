@@ -5,8 +5,10 @@ export default component$(() => {
   useStyles$(styles);
 
   return (
-    <Checkbox.Root class="checkbox-root">
-      <Checkbox.Indicator>✅</Checkbox.Indicator>
+    <Checkbox.Root>
+      <Checkbox.Trigger class="checkbox-trigger">
+        <Checkbox.Indicator>✅</Checkbox.Indicator>
+      </Checkbox.Trigger>
     </Checkbox.Root>
   );
 });

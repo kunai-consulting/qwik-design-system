@@ -33,10 +33,12 @@ Keyboard interaction:
 Anatomy:
 
 <Checkbox.Root>
+  <Checkbox.Control>
+      <Checkbox.Indicator />
+  </Checkbox.Control>
   <Checkbox.Label>
   <Checkbox.HiddenNativeInput />
   <Checkbox.ErrorMessage />
-  <Checkbox.Indicator />
   <Checkbox.Description />
 <Checkbox.Root>
 

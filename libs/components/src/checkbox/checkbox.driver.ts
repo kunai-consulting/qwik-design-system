@@ -6,9 +6,19 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator("[data-qds-checkbox-root]");
   };
 
+  const getTrigger = () => {
+    return rootLocator.locator("[data-qds-checkbox-trigger]");
+  };
+
+  const getIndicator = () => {
+    return rootLocator.locator("[data-qds-indicator]");
+  };
+
   return {
     ...rootLocator,
     locator: rootLocator,
-    getRoot
+    getRoot,
+    getIndicator,
+    getTrigger
   };
 }

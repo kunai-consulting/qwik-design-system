@@ -5,17 +5,29 @@ async function setup(page: Page, exampleName: string) {
 
   const driver = createTestDriver(page);
 
-  const { getRoot } = driver;
-
-  return {
-    getRoot
-  };
+  return driver;
 }
 
 test.describe("critical functionality", () => {
   test(`GIVEN a checkbox
-        WHEN clicked
-        THEN it should be visible`, async ({ page }) => {
-    const { getRoot } = await setup(page, "hero");
+        WHEN the root is clicked
+        THEN the indicator should be visible`, async ({ page }) => {
+    const d = await setup(page, "hero");
+
+    await d.getTrigger().click();
+    await expect(d.getIndicator()).toBeVisible();
+  });
+
+  test(`GIVEN a checkbox that is initially checked
+        WHEN the root is clicked
+        THEN the indicator should be hidden`, async ({ page }) => {
+    const d = await setup(page, "hero");
+
+    // initial setup
+    await d.getTrigger().click();
+    await expect(d.getIndicator()).toBeVisible();
+
+    await d.getTrigger().click();
+    await expect(d.getIndicator()).toBeHidden();
   });
 });
