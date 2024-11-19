@@ -4,26 +4,27 @@ import {
   type PropsOf,
   Slot,
   useTask$,
-  useStyles$,
-} from '@builder.io/qwik';
-import { CheckboxContext, checkboxContextId } from './checkbox-context';
-import './checkbox.css';
-import styles from './checkbox.css?inline';
+  useStyles$
+} from "@builder.io/qwik";
+import { CheckboxContext, checkboxContextId } from "./checkbox-context";
+import "./checkbox.css";
+import styles from "./checkbox.css?inline";
 
-export type CheckboxIndicatorProps = PropsOf<'div'>;
+export type CheckboxIndicatorProps = PropsOf<"span">;
 
 export const CheckboxIndicator = component$<CheckboxIndicatorProps>((props) => {
   useStyles$(styles);
   const context = useContext(checkboxContextId);
 
   return (
-    <div
+    <span
       {...props}
       data-hidden={!context.isCheckedSig.value}
+      data-checked={context.isCheckedSig.value ? "" : undefined}
       data-qds-indicator
       aria-hidden="true"
     >
       <Slot />
-    </div>
+    </span>
   );
 });
