@@ -31,7 +31,7 @@ test.describe("Critical Functionality", () => {
   }) => {
     const { driver: d } = await setup(page, "hero");
 
-    await expect(d.getPageAtIndex(0)).toHaveAttribute("data-current");
+    await expect(d.getPageAtIndex(1)).toHaveAttribute("data-current");
   });
 
   test(`GIVEN a pagination control
@@ -41,27 +41,123 @@ test.describe("Critical Functionality", () => {
   }) => {
     const { driver: d } = await setup(page, "hero");
 
-    await expect(d.getPageAtIndex(1)).not.toHaveAttribute("data-current");
-    await expect(d.getPageAtIndex(1)).not.toHaveAttribute("aria-current", "page");
     await expect(d.getPageAtIndex(2)).not.toHaveAttribute("data-current");
     await expect(d.getPageAtIndex(2)).not.toHaveAttribute("aria-current", "page");
     await expect(d.getPageAtIndex(3)).not.toHaveAttribute("data-current");
     await expect(d.getPageAtIndex(3)).not.toHaveAttribute("aria-current", "page");
+    await expect(d.getPageAtIndex(4)).not.toHaveAttribute("data-current");
+    await expect(d.getPageAtIndex(4)).not.toHaveAttribute("aria-current", "page");
   });
 
-  // test(`GIVEN a pagination control
-  //       WHEN the pagination is rendered and the third page selected
-  //       THEN the selected page should be current and disabled`, async ({
-  //   page,
-  // }) => {
-  //   const { driver: d } = await setup(page, "hero");
-  //
-  //   await expect(d.getPageAtIndex(2)).not.toHaveAttribute("data-current");
-  //   await expect(d.getPageAtIndex(2)).not.toHaveAttribute("disabled");
-  //   await d.getPageAtIndex(2).click();
-  //   await expect(d.getPageAtIndex(2)).not.toHaveAttribute("data-current");
-  //   await expect(d.getPageAtIndex(2)).not.toHaveAttribute("disabled");
-  // });
+  test(`GIVEN a pagination control
+        WHEN the pagination is rendered and the third page selected
+        THEN the selected page should be current and disabled`, async ({
+    page,
+  }) => {
+    const { driver: d } = await setup(page, "hero");
+
+    await expect(d.getPageAtIndex(4)).not.toHaveAttribute("data-current");
+    await expect(d.getPageAtIndex(4)).not.toHaveAttribute("disabled");
+    await d.getPageAtIndex(4).click();
+    await expect(d.getPageAtIndex(4)).toHaveAttribute("data-current");
+    await expect(d.getPageAtIndex(4)).toHaveAttribute("disabled");
+  });
+
+  test(`GIVEN a pagination control
+        WHEN the pagination is rendered and the last button clicked
+        THEN the last page should be current and disabled`, async ({
+    page,
+  }) => {
+    const { driver: d } = await setup(page, "first-last");
+
+    await expect(d.getFirstButton()).toBeVisible();
+    await expect(d.getLastButton()).toBeVisible();
+
+    await d.getLastButton().click();
+    await expect(d.getPageAtIndex(11)).toHaveAttribute("data-current");
+    await expect(d.getPageAtIndex(11)).toHaveAttribute("disabled");
+  });
+
+  test(`GIVEN a pagination control
+        WHEN the pagination is rendered and the first button clicked
+        THEN the first page should be current and disabled`, async ({
+    page,
+  }) => {
+    const { driver: d } = await setup(page, "first-last");
+
+    await expect(d.getFirstButton()).toBeVisible();
+    await expect(d.getLastButton()).toBeVisible();
+
+    await d.getLastButton().click();
+    await d.getFirstButton().click();
+    await expect(d.getPageAtIndex(2)).toHaveAttribute("data-current");
+    await expect(d.getPageAtIndex(2)).toHaveAttribute("disabled");
+  });
+
+  test(`GIVEN a pagination control
+        WHEN the pagination is rendered and the default page is set to 5
+        THEN the fifth page should be current and disabled`, async ({
+    page,
+  }) => {
+    const { driver: d } = await setup(page, "default-page");
+
+    await expect(d.getPageAtIndex(5)).toHaveAttribute("data-current");
+    await expect(d.getPageAtIndex(5)).toHaveAttribute("disabled");
+  });
+
+  test(`GIVEN a pagination control
+        WHEN the pagination is rendered and the per page is set to 4 and next button is clicked
+        THEN the fifth page should be current and disabled`, async ({
+    page,
+  }) => {
+    const { driver: d } = await setup(page, "per-page");
+
+    await d.getNextButton().click();
+    await expect(d.getPageAtIndex(5)).toHaveAttribute("data-current");
+    await expect(d.getPageAtIndex(5)).toHaveAttribute("disabled");
+  });
+
+  test(`GIVEN a pagination control
+        WHEN the pagination is rendered and the per page is set to 4 and next button is clicked three times
+        THEN the last page should be current and disabled`, async ({
+    page,
+  }) => {
+    const { driver: d } = await setup(page, "per-page");
+
+    await d.getNextButton().click();
+    await d.getNextButton().click();
+    await d.getNextButton().click();
+    await expect(d.getPageAtIndex(10)).toHaveAttribute("data-current");
+    await expect(d.getPageAtIndex(10)).toHaveAttribute("disabled");
+  });
+
+  test(`GIVEN a pagination control
+        WHEN the pagination is rendered and the per page is set to 4 and previous button is clicked
+        THEN the sixth page should be current and disabled`, async ({
+    page,
+  }) => {
+    const { driver: d } = await setup(page, "per-page");
+
+    await d.getLastButton().click();
+    await d.getPrevButton().click();
+    await expect(d.getPageAtIndex(6)).toHaveAttribute("data-current");
+    await expect(d.getPageAtIndex(6)).toHaveAttribute("disabled");
+  });
+
+  test(`GIVEN a pagination control
+        WHEN the pagination is rendered and the per page is set to 4 and previous button is clicked three times
+        THEN the first page should be current and disabled`, async ({
+    page,
+  }) => {
+    const { driver: d } = await setup(page, "per-page");
+
+    await d.getLastButton().click();
+    await d.getPrevButton().click();
+    await d.getPrevButton().click();
+    await d.getPrevButton().click();
+    await expect(d.getPageAtIndex(1)).toHaveAttribute("data-current");
+    await expect(d.getPageAtIndex(1)).toHaveAttribute("disabled");
+  });
 });
 
 test.describe("A11y", () => {

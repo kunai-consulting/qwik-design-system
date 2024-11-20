@@ -15,6 +15,14 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return getRoot().locator("[data-qds-pagination-previous]");
   };
 
+  const getLastButton = () => {
+    return getRoot().locator("[data-qds-pagination-last]");
+  };
+
+  const getFirstButton = () => {
+    return getRoot().locator("[data-qds-pagination-first]");
+  };
+
   const getPageAtIndex = (index: number) => {
     return getRoot().getByRole("button").nth(index);
   };
@@ -33,6 +41,8 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getRoot,
     getNextButton,
     getPrevButton,
+    getLastButton,
+    getFirstButton,
     getPageAtIndex,
     getEllipsis,
     getActivePage,

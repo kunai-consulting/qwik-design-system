@@ -18,6 +18,8 @@ import {paginationContext, PaginationState} from "./pagination-context";
 
 type PaginationRootProps = PropsOf<"div"> & {
   totalPages: number;
+  defaultPage?: number;
+  perPage?: number;
   /** Handler for when the current page changes */
   onPageChange$: QRL<(page: number) => void>;
 };
@@ -27,6 +29,8 @@ export const PaginationRoot =
     children: JSXChildren | JSXNode;
     totalPages: number;
     onPageChange$: QRL<(page: number) => void>;
+    defaultPage?: number;
+    perPage?: number;
     class?: string;
   }) => {
     let currPageIndex = 0;
@@ -51,11 +55,13 @@ export const PaginationRoot =
 
 const PaginationBase = component$(
   ({totalPages, onPageChange$, ...props}: PaginationRootProps) => {
-    const selectedPage = useSignal(1);
+    const selectedPage = useSignal(props.defaultPage || 1);
+    const perPage = props.perPage || 1;
 
     const context: PaginationState = {
       selectedPage,
       totalPages,
+      perPage,
       onPageChange$
     }
     useContextProvider(paginationContext, context);
