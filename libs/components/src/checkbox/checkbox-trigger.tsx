@@ -8,7 +8,11 @@ export const CheckboxTrigger = component$((props: CheckboxControlProps) => {
   const triggerId = `${context.localId}-trigger`;
 
   const handleClick$ = $(() => {
-    context.isCheckedSig.value = !context.isCheckedSig.value;
+    if (context.isCheckedSig.value === "mixed") {
+      context.isCheckedSig.value = true;
+    } else {
+      context.isCheckedSig.value = !context.isCheckedSig.value;
+    }
   });
 
   const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {

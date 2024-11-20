@@ -32,13 +32,11 @@ export const CheckboxRoot = component$((props: CheckboxRootProps) => {
   const isCheckedSig = useBoundSignal<boolean | "mixed">(givenCheckedSig, checked);
   const isInitialLoadSig = useSignal(true);
   const isDisabledSig = useComputed$(() => props.disabled);
-  const isMixedSig = useComputed$(() => isCheckedSig.value === "mixed");
   const localId = useId();
 
   const context: CheckboxContext = {
     isCheckedSig,
     isDisabledSig,
-    isMixedSig,
     localId
   };
 
@@ -65,7 +63,7 @@ export const CheckboxRoot = component$((props: CheckboxRootProps) => {
       data-disabled={context.isDisabledSig.value ? "" : undefined}
       aria-disabled={context.isDisabledSig.value ? "true" : "false"}
       data-checked={context.isCheckedSig.value ? "" : undefined}
-      data-mixed={context.isMixedSig.value ? "" : undefined}
+      data-mixed={context.isCheckedSig.value === "mixed" ? "" : undefined}
     >
       <Slot />
     </div>

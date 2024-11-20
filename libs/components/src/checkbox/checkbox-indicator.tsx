@@ -21,7 +21,7 @@ export const CheckboxIndicator = component$<CheckboxIndicatorProps>((props) => {
       {...props}
       data-hidden={!context.isCheckedSig.value}
       data-checked={context.isCheckedSig.value ? "" : undefined}
-      data-mixed={context.isMixedSig.value ? "" : undefined}
+      data-mixed={context.isCheckedSig.value === "mixed" ? "" : undefined}
       data-qds-indicator
       aria-hidden="true"
     >

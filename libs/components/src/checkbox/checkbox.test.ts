@@ -221,4 +221,31 @@ test.describe("a11y", () => {
     // initial setup
     await expect(d.getTrigger()).toHaveAttribute("aria-checked", "mixed");
   });
+
+  test(`GIVEN a checkbox that is initially mixed
+    WHEN the checkbox is clicked
+    THEN it should become checked`, async ({ page }) => {
+    const d = await setup(page, "mixed-initial");
+
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "mixed");
+
+    await d.getTrigger().click();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "true");
+    await expect(d.getIndicator()).toBeVisible();
+  });
+
+  test(`GIVEN a checkbox that was mixed and is now checked
+        WHEN the checkbox is clicked again
+        THEN it should become unchecked`, async ({ page }) => {
+    const d = await setup(page, "mixed-initial");
+
+    // Get to checked state first
+    await d.getTrigger().click();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "true");
+
+    // Now click again
+    await d.getTrigger().click();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "false");
+    await expect(d.getIndicator()).toBeHidden();
+  });
 });
