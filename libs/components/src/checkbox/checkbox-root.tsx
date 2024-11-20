@@ -5,7 +5,8 @@ import {
   type Signal,
   $,
   useContextProvider,
-  sync$
+  sync$,
+  useId
 } from "@builder.io/qwik";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
@@ -19,9 +20,11 @@ export const CheckboxRoot = component$((props: CheckboxRootProps) => {
   const { "bind:checked": givenCheckedSig, checked, onClick$, ...rest } = props;
 
   const isCheckedSig = useBoundSignal(givenCheckedSig, checked ?? false);
+  const localId = useId();
 
   const context: CheckboxContext = {
-    isCheckedSig
+    isCheckedSig,
+    localId
   };
 
   useContextProvider(checkboxContextId, context);
@@ -30,7 +33,7 @@ export const CheckboxRoot = component$((props: CheckboxRootProps) => {
     <div
       {...rest}
       data-qds-checkbox-root
-      aria-checked={context.isCheckedSig.value ? "true" : "false"}
+      data-checked={context.isCheckedSig.value ? "" : undefined}
     >
       <Slot />
     </div>

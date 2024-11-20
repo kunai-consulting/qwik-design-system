@@ -1,3 +1,9 @@
+.checkbox-root {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .checkbox-trigger {
     background: #0a4d70;
     width: 30px;

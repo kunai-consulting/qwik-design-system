@@ -76,4 +76,38 @@ test.describe("a11y", () => {
     await d.getTrigger().click();
     await expect(d.getTrigger()).toHaveAttribute("aria-checked", "false");
   });
+
+  test(`GIVEN a checkbox with a label
+        WHEN rendered
+        THEN the trigger should have a correct aria-labelledby attribute`, async ({
+    page
+  }) => {
+    const d = await setup(page, "label");
+
+    const triggerId = await d.getTrigger().getAttribute("id");
+    expect(triggerId).toBeTruthy();
+    await expect(d.getLabel()).toHaveAttribute("for", triggerId as string);
+  });
+
+  test(`GIVEN a checkbox with a label
+        WHEN the label is clicked
+        THEN the checkbox should become checked`, async ({ page }) => {
+    const d = await setup(page, "label");
+
+    await d.getLabel().click();
+    await expect(d.getIndicator()).toBeVisible();
+  });
+
+  test(`GIVEN a checkbox with a label that is initially checked
+        WHEN the label is clicked
+        THEN the checkbox should be unchecked`, async ({ page }) => {
+    const d = await setup(page, "label");
+
+    // initial setup
+    await d.getLabel().click();
+    await expect(d.getIndicator()).toBeVisible();
+
+    await d.getLabel().click();
+    await expect(d.getIndicator()).toBeHidden();
+  });
 });
