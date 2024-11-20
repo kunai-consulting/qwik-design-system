@@ -54,6 +54,106 @@ test.describe("critical functionality", () => {
   });
 });
 
+test.describe("state", () => {
+  test(`GIVEN a checkbox with the checked prop
+        WHEN the checkbox is rendered
+        THEN it should be checked`, async ({ page }) => {
+    const d = await setup(page, "initial");
+
+    await expect(d.getIndicator()).toBeVisible();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "true");
+  });
+
+  test(`GIVEN a checkbox with the bind:checked prop
+        WHEN the checkbox is clicked
+        THEN the read state should be true`, async ({ page }) => {
+    const d = await setup(page, "reactive");
+
+    const readStateEl = page.locator("p");
+
+    await d.getTrigger().click();
+    await expect(d.getIndicator()).toBeVisible();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "true");
+
+    await expect(readStateEl).toContainText("Checked: true");
+  });
+
+  test(`GIVEN a checkbox with the bind:checked prop that is initially checked
+        WHEN the checkbox is clicked
+        THEN the read state should be false`, async ({ page }) => {
+    const d = await setup(page, "reactive");
+
+    const readStateEl = page.locator("p");
+
+    // initial setup
+    await d.getTrigger().click();
+    await expect(d.getIndicator()).toBeVisible();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "true");
+    await expect(readStateEl).toContainText("Checked: true");
+
+    await d.getTrigger().click();
+    await expect(readStateEl).toContainText("Checked: false");
+  });
+
+  test(`GIVEN a checkbox with a bind:checked prop
+        WHEN the signal passed to the bind:checked prop is changed to true
+        THEN the checkbox should be checked`, async ({ page }) => {
+    const d = await setup(page, "programmatic");
+
+    await expect(d.getIndicator()).toBeHidden();
+
+    const programmaticEl = page.locator("button").last();
+
+    await programmaticEl.click();
+    await expect(d.getIndicator()).toBeVisible();
+  });
+
+  test(`GIVEN a checkbox with an onChange$ prop
+    WHEN the checkbox is toggled
+    THEN the onChange$ handler should be called`, async ({ page }) => {
+    const d = await setup(page, "change");
+
+    const readChangeEl = page.locator("p");
+
+    await expect(readChangeEl).toContainText("Times changed: 0");
+    await d.getTrigger().click();
+    await expect(readChangeEl).toContainText("Times changed: 1");
+  });
+
+  test(`GIVEN a checkbox with an onChange$ prop
+        WHEN the checkbox is toggled
+        THEN a new value should be passed as an argument`, async ({ page }) => {
+    const d = await setup(page, "change");
+
+    const isCheckedEl = page.locator("section");
+
+    await expect(isCheckedEl).toContainText("New value: false");
+    await d.getTrigger().click();
+    await expect(isCheckedEl).toContainText("New value: true");
+  });
+
+  test(`GIVEN a checkbox with a disabled prop
+        WHEN the checkbox is rendered
+        THEN the checkbox trigger should be disabled`, async ({ page }) => {
+    const d = await setup(page, "disabled");
+
+    await expect(d.getTrigger()).toBeDisabled();
+  });
+
+  test(`GIVEN a checkbox with a disabled prop
+        WHEN programmatically toggling the disabled prop
+        THEN the checkbox trigger should reflect the new state`, async ({ page }) => {
+    const d = await setup(page, "disabled");
+
+    const toggleDisabledEl = page.locator("button").last();
+
+    await expect(d.getTrigger()).toBeDisabled();
+
+    await toggleDisabledEl.click();
+    await expect(d.getTrigger()).toBeEnabled();
+  });
+});
+
 test.describe("a11y", () => {
   test(`GIVEN a checkbox
         WHEN the trigger is clicked
@@ -75,5 +175,50 @@ test.describe("a11y", () => {
 
     await d.getTrigger().click();
     await expect(d.getTrigger()).toHaveAttribute("aria-checked", "false");
+  });
+
+  test(`GIVEN a checkbox with a label
+        WHEN rendered
+        THEN the trigger should have a correct aria-labelledby attribute`, async ({
+    page
+  }) => {
+    const d = await setup(page, "label");
+
+    const triggerId = await d.getTrigger().getAttribute("id");
+    expect(triggerId).toBeTruthy();
+    await expect(d.getLabel()).toHaveAttribute("for", triggerId as string);
+  });
+
+  test(`GIVEN a checkbox with a label
+        WHEN the label is clicked
+        THEN the checkbox should become checked`, async ({ page }) => {
+    const d = await setup(page, "label");
+
+    await d.getLabel().click();
+    await expect(d.getIndicator()).toBeVisible();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "true");
+  });
+
+  test(`GIVEN a checkbox with a label that is initially checked
+        WHEN the label is clicked
+        THEN the checkbox should be unchecked`, async ({ page }) => {
+    const d = await setup(page, "label");
+
+    // initial setup
+    await d.getLabel().click();
+    await expect(d.getIndicator()).toBeVisible();
+
+    await d.getLabel().click();
+    await expect(d.getIndicator()).toBeHidden();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "false");
+  });
+
+  test(`GIVEN a checkbox that is initially mixed
+        WHEN the checkbox is rendered
+        THEN the trigger should have aria-checked="mixed"`, async ({ page }) => {
+    const d = await setup(page, "mixed-initial");
+
+    // initial setup
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "mixed");
   });
 });

@@ -4,10 +4,12 @@ For sure need:
 
 - [ ] Initial value
 - [ ] Reactive
+- [ ] Programmatic
 - [ ] onChange$
 - [ ] Disabled
+- [ ] Mixed
+- [ ] Name
 - [ ] Required
-- [ ] name
 - [ ] validation example
 
 Not sure:
