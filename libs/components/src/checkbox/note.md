@@ -4,6 +4,7 @@ For sure need:
 
 - [ ] Initial value
 - [ ] Reactive
+- [ ] Programmatic
 - [ ] onChange$
 - [ ] Disabled
 - [ ] Required

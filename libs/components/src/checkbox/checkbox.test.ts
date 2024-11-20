@@ -54,6 +54,61 @@ test.describe("critical functionality", () => {
   });
 });
 
+test.describe("state", () => {
+  test(`GIVEN a checkbox with the checked prop
+        WHEN the checkbox is rendered
+        THEN it should be checked`, async ({ page }) => {
+    const d = await setup(page, "initial");
+
+    await expect(d.getIndicator()).toBeVisible();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "true");
+  });
+
+  test(`GIVEN a checkbox with the bind:checked prop
+        WHEN the checkbox is clicked
+        THEN the read state should be true`, async ({ page }) => {
+    const d = await setup(page, "reactive");
+
+    const readStateEl = page.locator("p");
+
+    await d.getTrigger().click();
+    await expect(d.getIndicator()).toBeVisible();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "true");
+
+    await expect(readStateEl).toContainText("Checked: true");
+  });
+
+  test(`GIVEN a checkbox with the bind:checked prop that is initially checked
+        WHEN the checkbox is clicked
+        THEN the read state should be false`, async ({ page }) => {
+    const d = await setup(page, "reactive");
+
+    const readStateEl = page.locator("p");
+
+    // initial setup
+    await d.getTrigger().click();
+    await expect(d.getIndicator()).toBeVisible();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "true");
+    await expect(readStateEl).toContainText("Checked: true");
+
+    await d.getTrigger().click();
+    await expect(readStateEl).toContainText("Checked: false");
+  });
+
+  test(`GIVEN a checkbox with a bind:checked prop
+        WHEN the signal passed to the bind:checked prop is changed to true
+        THEN the checkbox should be checked`, async ({ page }) => {
+    const d = await setup(page, "programmatic");
+
+    await expect(d.getIndicator()).toBeHidden();
+
+    const programmaticEl = page.locator("button").last();
+
+    await programmaticEl.click();
+    await expect(d.getIndicator()).toBeVisible();
+  });
+});
+
 test.describe("a11y", () => {
   test(`GIVEN a checkbox
         WHEN the trigger is clicked
@@ -96,6 +151,7 @@ test.describe("a11y", () => {
 
     await d.getLabel().click();
     await expect(d.getIndicator()).toBeVisible();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "true");
   });
 
   test(`GIVEN a checkbox with a label that is initially checked
@@ -109,5 +165,6 @@ test.describe("a11y", () => {
 
     await d.getLabel().click();
     await expect(d.getIndicator()).toBeHidden();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "false");
   });
 });

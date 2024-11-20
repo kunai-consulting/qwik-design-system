@@ -1,5 +1,5 @@
 ---
-title: Qwik UI | Checkbox
+title: Qwik Design System | Checkbox
 ---
 
 # Checkbox
@@ -14,3 +14,23 @@ A control that enables users to make binary (or ternary) choices through selecti
 To associate a label with a checkbox, use the `Checkbox.Label` component.
 
 <Showcase name="label" />
+
+## Initially check a checkbox
+
+To set a checkbox to its initial checked state, use the `checked` prop.
+
+<Showcase name="initial" />
+
+## Reactive state
+
+To make a checkbox reactive, use the `bind:checked` prop, and pass in a signal.
+
+<Showcase name="reactive" />
+
+## Programmatic state
+
+To make programmatic changes to a checkbox, change a signal value passed to the `bind:checked` prop.
+
+<Showcase name="programmatic" />
+
+

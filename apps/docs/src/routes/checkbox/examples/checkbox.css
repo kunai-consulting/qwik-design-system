@@ -9,6 +9,7 @@
     width: 30px;
     height: 30px;
     border-radius: 8px;
+    position: relative; 
 }
 
 .checkbox-trigger:focus-visible {
@@ -18,4 +19,7 @@
 .checkbox-indicator[data-checked] {
     display: flex;
     justify-content: center;
+    position: absolute;  
+    inset: 0;           
+    align-items: center;
 }
