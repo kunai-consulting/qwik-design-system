@@ -7,10 +7,10 @@ For sure need:
 - [ ] Programmatic
 - [ ] onChange$
 - [ ] Disabled
-- [ ] Required
-- [ ] name
-- [ ] validation example
 - [ ] Mixed
+- [ ] Name
+- [ ] Required
+- [ ] validation example
 
 Not sure:
 

@@ -13,10 +13,10 @@ import {
 import { useBoundSignal } from "../../utils/bound-signal";
 import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
 
-export type CheckboxRootProps = {
-  "bind:checked"?: Signal<boolean>;
-  checked?: boolean;
-  onChange$?: QRL<(checked: boolean) => Promise<void>>;
+export type CheckboxRootProps<T extends boolean | "mixed" = boolean> = {
+  "bind:checked"?: Signal<boolean | "mixed">;
+  checked?: T;
+  onChange$?: QRL<(checked: T) => void>;
   disabled?: boolean;
 } & PropsOf<"div">;
 
@@ -29,27 +29,29 @@ export const CheckboxRoot = component$((props: CheckboxRootProps) => {
     ...rest
   } = props;
 
-  const isCheckedSig = useBoundSignal(givenCheckedSig, checked ?? false);
+  const isCheckedSig = useBoundSignal<boolean | "mixed">(givenCheckedSig, checked);
   const isInitialLoadSig = useSignal(true);
   const isDisabledSig = useComputed$(() => props.disabled);
+  const isMixedSig = useComputed$(() => isCheckedSig.value === "mixed");
   const localId = useId();
 
   const context: CheckboxContext = {
     isCheckedSig,
     isDisabledSig,
+    isMixedSig,
     localId
   };
 
   useContextProvider(checkboxContextId, context);
 
-  useTask$(async ({ track }) => {
+  useTask$(async function handleChange({ track }) {
     track(() => isCheckedSig.value);
 
     if (isInitialLoadSig.value) {
       return;
     }
 
-    await onChange$?.(isCheckedSig.value);
+    await onChange$?.(isCheckedSig.value as boolean);
   });
 
   useTask$(() => {
@@ -63,6 +65,7 @@ export const CheckboxRoot = component$((props: CheckboxRootProps) => {
       data-disabled={context.isDisabledSig.value ? "" : undefined}
       aria-disabled={context.isDisabledSig.value ? "true" : "false"}
       data-checked={context.isCheckedSig.value ? "" : undefined}
+      data-mixed={context.isMixedSig.value ? "" : undefined}
     >
       <Slot />
     </div>

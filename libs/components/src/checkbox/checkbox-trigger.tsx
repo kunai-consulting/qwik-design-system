@@ -22,7 +22,7 @@ export const CheckboxTrigger = component$((props: CheckboxControlProps) => {
       id={triggerId}
       type="button"
       role="checkbox"
-      aria-checked={context.isCheckedSig.value ? "true" : "false"}
+      aria-checked={`${context.isCheckedSig.value}`}
       disabled={context.isDisabledSig.value}
       data-disabled={context.isDisabledSig.value ? "" : undefined}
       onKeyDown$={[handleKeyDownSync$, props.onKeyDown$]}

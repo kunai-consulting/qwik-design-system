@@ -212,4 +212,13 @@ test.describe("a11y", () => {
     await expect(d.getIndicator()).toBeHidden();
     await expect(d.getTrigger()).toHaveAttribute("aria-checked", "false");
   });
+
+  test(`GIVEN a checkbox that is initially mixed
+        WHEN the checkbox is rendered
+        THEN the trigger should have aria-checked="mixed"`, async ({ page }) => {
+    const d = await setup(page, "mixed-initial");
+
+    // initial setup
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "mixed");
+  });
 });
