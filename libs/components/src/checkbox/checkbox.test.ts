@@ -107,6 +107,30 @@ test.describe("state", () => {
     await programmaticEl.click();
     await expect(d.getIndicator()).toBeVisible();
   });
+
+  test(`GIVEN a checkbox with an onChange$ prop
+    WHEN the checkbox is toggled
+    THEN the onChange$ handler should be called`, async ({ page }) => {
+    const d = await setup(page, "change");
+
+    const readChangeEl = page.locator("p");
+
+    await expect(readChangeEl).toContainText("Times changed: 0");
+    await d.getTrigger().click();
+    await expect(readChangeEl).toContainText("Times changed: 1");
+  });
+
+  test(`GIVEN a checkbox with an onChange$ prop
+        WHEN the checkbox is toggled
+        THEN a new value should be passed as an argument`, async ({ page }) => {
+    const d = await setup(page, "change");
+
+    const isCheckedEl = page.locator("section");
+
+    await expect(isCheckedEl).toContainText("New value: false");
+    await d.getTrigger().click();
+    await expect(isCheckedEl).toContainText("New value: true");
+  });
 });
 
 test.describe("a11y", () => {

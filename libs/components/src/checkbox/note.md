@@ -10,6 +10,7 @@ For sure need:
 - [ ] Required
 - [ ] name
 - [ ] validation example
+- [ ] Mixed
 
 Not sure:
 
