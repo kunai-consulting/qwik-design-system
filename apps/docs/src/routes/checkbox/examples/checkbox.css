@@ -16,6 +16,10 @@
     outline: 1px solid white;
 }
 
+.checkbox-trigger[data-disabled] {
+    opacity: 0.5;
+}
+
 .checkbox-indicator[data-checked] {
     display: flex;
     justify-content: center;

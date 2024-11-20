@@ -131,6 +131,27 @@ test.describe("state", () => {
     await d.getTrigger().click();
     await expect(isCheckedEl).toContainText("New value: true");
   });
+
+  test(`GIVEN a checkbox with a disabled prop
+        WHEN the checkbox is rendered
+        THEN the checkbox trigger should be disabled`, async ({ page }) => {
+    const d = await setup(page, "disabled");
+
+    await expect(d.getTrigger()).toBeDisabled();
+  });
+
+  test(`GIVEN a checkbox with a disabled prop
+        WHEN programmatically toggling the disabled prop
+        THEN the checkbox trigger should reflect the new state`, async ({ page }) => {
+    const d = await setup(page, "disabled");
+
+    const toggleDisabledEl = page.locator("button").last();
+
+    await expect(d.getTrigger()).toBeDisabled();
+
+    await toggleDisabledEl.click();
+    await expect(d.getTrigger()).toBeEnabled();
+  });
 });
 
 test.describe("a11y", () => {

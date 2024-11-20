@@ -4,5 +4,6 @@ export const checkboxContextId = createContextId<CheckboxContext>("qds-checkbox-
 
 export type CheckboxContext = {
   isCheckedSig: Signal<boolean>;
+  isDisabledSig: Signal<boolean | undefined>;
   localId: string;
 };

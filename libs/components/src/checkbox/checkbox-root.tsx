@@ -7,7 +7,8 @@ import {
   useId,
   useTask$,
   useSignal,
-  type QRL
+  type QRL,
+  useComputed$
 } from "@builder.io/qwik";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
@@ -16,6 +17,7 @@ export type CheckboxRootProps = {
   "bind:checked"?: Signal<boolean>;
   checked?: boolean;
   onChange$?: QRL<(checked: boolean) => Promise<void>>;
+  disabled?: boolean;
 } & PropsOf<"div">;
 
 export const CheckboxRoot = component$((props: CheckboxRootProps) => {
@@ -29,10 +31,12 @@ export const CheckboxRoot = component$((props: CheckboxRootProps) => {
 
   const isCheckedSig = useBoundSignal(givenCheckedSig, checked ?? false);
   const isInitialLoadSig = useSignal(true);
+  const isDisabledSig = useComputed$(() => props.disabled);
   const localId = useId();
 
   const context: CheckboxContext = {
     isCheckedSig,
+    isDisabledSig,
     localId
   };
 
@@ -56,6 +60,8 @@ export const CheckboxRoot = component$((props: CheckboxRootProps) => {
     <div
       {...rest}
       data-qds-checkbox-root
+      data-disabled={context.isDisabledSig.value ? "" : undefined}
+      aria-disabled={context.isDisabledSig.value ? "true" : "false"}
       data-checked={context.isCheckedSig.value ? "" : undefined}
     >
       <Slot />
