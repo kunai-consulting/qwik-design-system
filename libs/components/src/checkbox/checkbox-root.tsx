@@ -32,11 +32,13 @@ export const CheckboxRoot = component$((props: CheckboxRootProps) => {
   const isCheckedSig = useBoundSignal<boolean | "mixed">(givenCheckedSig, checked);
   const isInitialLoadSig = useSignal(true);
   const isDisabledSig = useComputed$(() => props.disabled);
+  const isDescriptionSig = useSignal(false);
   const localId = useId();
 
   const context: CheckboxContext = {
     isCheckedSig,
     isDisabledSig,
+    isDescriptionSig,
     localId
   };
 

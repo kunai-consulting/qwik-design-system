@@ -6,6 +6,7 @@ type CheckboxControlProps = PropsOf<"button">;
 export const CheckboxTrigger = component$((props: CheckboxControlProps) => {
   const context = useContext(checkboxContextId);
   const triggerId = `${context.localId}-trigger`;
+  const descriptionId = `${context.localId}-description`;
 
   const handleClick$ = $(() => {
     if (context.isCheckedSig.value === "mixed") {
@@ -27,6 +28,7 @@ export const CheckboxTrigger = component$((props: CheckboxControlProps) => {
       type="button"
       role="checkbox"
       aria-checked={`${context.isCheckedSig.value}`}
+      aria-describedby={context.isDescriptionSig.value ? descriptionId : undefined}
       disabled={context.isDisabledSig.value}
       data-disabled={context.isDisabledSig.value ? "" : undefined}
       onKeyDown$={[handleKeyDownSync$, props.onKeyDown$]}
