@@ -49,7 +49,7 @@ To disable a checkbox, use the `disabled` prop.
 
 Checkboxes can also be in a third mixed or indeterminate state. This is often considered a "partially checked" state.
 
-To set a checkbox to an initial mixed state, use the `mixed` prop.
+To set a mixed state, pass `"mixed"` to the `bind:checked` prop:
 
 <Showcase name="mixed-initial" />
 
@@ -57,6 +57,10 @@ The mixed state can also be set reactively
 
 <Showcase name="mixed-reactive" />
 
-
+> When a checkbox is in a mixed state and the user clicks it:
+> 1. The first click changes the state from "mixed" to "checked"
+> 2. The next click changes the state from "checked" to "unchecked"
+> 
+> This follows the standard accessibility pattern where mixed → checked → unchecked → checked → unchecked, and so on.
 
 

@@ -152,6 +152,19 @@ test.describe("state", () => {
     await toggleDisabledEl.click();
     await expect(d.getTrigger()).toBeEnabled();
   });
+
+  test(`GIVEN a checkbox with bind:checked
+        WHEN programmatically setting the state to mixed
+        THEN the checkbox should reflect the mixed state`, async ({ page }) => {
+    const d = await setup(page, "mixed-reactive");
+
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "false");
+
+    const mixedButton = page.locator("button").last();
+    await mixedButton.click();
+
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "mixed");
+  });
 });
 
 test.describe("a11y", () => {
