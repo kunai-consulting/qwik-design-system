@@ -8,19 +8,19 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   };
 
   const getNextButton = () => {
-    return getRoot().locator("[data-qds-pagination-next]");
+    return getRoot().locator("[data-qds-pagination-next]").first();
   };
 
   const getPrevButton = () => {
-    return getRoot().locator("[data-qds-pagination-previous]");
+    return getRoot().locator("[data-qds-pagination-previous]").last();
   };
 
   const getLastButton = () => {
-    return getRoot().locator("[data-qds-pagination-last]");
+    return getRoot().locator("[data-qds-pagination-next]").last();
   };
 
   const getFirstButton = () => {
-    return getRoot().locator("[data-qds-pagination-first]");
+    return getRoot().locator("[data-qds-pagination-previous]").first();
   };
 
   const getPageAtIndex = (index: number) => {

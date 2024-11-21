@@ -1,15 +1,17 @@
-import {$, component$, useSignal} from "@builder.io/qwik";
+import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
 import { Pagination } from "@kunai-consulting/qwik-components";
 
 export default component$(() => {
+  useStyles$(styles);
   const selectedPageSig = useSignal(1);
   const totalPagesSig = useSignal(10);
+  const pageSig = useSignal(5);
 
   return (
     <Pagination.Root
-      class="flex gap-4"
+      class="pagination-root"
       totalPages={totalPagesSig.value}
-      defaultPage={5}
+      bind:page={pageSig}
       onPageChange$={$((page: number) => {
         selectedPageSig.value = page;
       })}
@@ -23,7 +25,7 @@ export default component$(() => {
 
         return (
           <Pagination.Page
-            class="border-slate-300 border size-8 flex justify-center items-center"
+            class="pagination-page"
             key={uniqueKey}
           >
             <span>{index + 1}</span>
@@ -35,3 +37,5 @@ export default component$(() => {
     </Pagination.Root>
   );
 });
+
+import styles from "./pagination.css?inline";

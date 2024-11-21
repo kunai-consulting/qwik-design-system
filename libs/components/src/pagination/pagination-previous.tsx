@@ -2,24 +2,27 @@ import { type PropsOf, Slot, component$, useContext, $, useTask$, useSignal } fr
 import { paginationContext } from "./pagination-context";
 
 export const PaginationPrevious = component$(
-  ({type, ...props}: PropsOf<"button">) => {
+  ({type, ...props}: PropsOf<"button"> & { isFirst?: boolean }) => {
     const context = useContext(paginationContext);
-    const { selectedPage, perPage, onPageChange$ } = context;
-    const isDisabled = useSignal(context.selectedPage.value === 1);
+    const { selectedPageSig, perPageSig } = context;
+    const isDisabled = useSignal(context.selectedPageSig.value === 1);
 
     useTask$(({ track }) => {
-      track(() => context.selectedPage.value);
-      isDisabled.value = context.selectedPage.value === 1;
+      track(() => context.selectedPageSig.value);
+      isDisabled.value = context.selectedPageSig.value === 1;
     });
 
     const handleClick = $(() => {
-      if (selectedPage.value > 1) {
-        if (selectedPage.value - perPage >= 1) {
-          selectedPage.value = selectedPage.value - perPage;
+      if (props.isFirst) {
+        selectedPageSig.value = 1;
+        return;
+      }
+      if (selectedPageSig.value > 1) {
+        if (selectedPageSig.value - perPageSig.value >= 1) {
+          selectedPageSig.value = selectedPageSig.value - perPageSig.value;
         } else {
-          selectedPage.value = 1;
+          selectedPageSig.value = 1;
         }
-        onPageChange$(selectedPage.value);
       }
     });
 

@@ -99,7 +99,7 @@ test.describe("Critical Functionality", () => {
         THEN the fifth page should be current and disabled`, async ({
     page,
   }) => {
-    const { driver: d } = await setup(page, "default-page");
+    const { driver: d } = await setup(page, "page");
 
     await expect(d.getPageAtIndex(5)).toHaveAttribute("data-current");
     await expect(d.getPageAtIndex(5)).toHaveAttribute("disabled");

@@ -22,7 +22,7 @@ export const PaginationPage = component$(
     }
 
     const isCurrent = useComputed$(() => {
-      return _index + 1 === context.selectedPage.value;
+      return _index + 1 === context.selectedPageSig.value;
     })
 
     return (
@@ -35,7 +35,7 @@ export const PaginationPage = component$(
           {...rest}
           disabled={isCurrent.value}
           onClick$={() => {
-            context.selectedPage.value = _index + 1;
+            context.selectedPageSig.value = _index + 1;
           }}
         >
           <Slot/>
