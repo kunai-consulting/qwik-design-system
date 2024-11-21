@@ -8,7 +8,8 @@ import {
   useTask$,
   useSignal,
   type QRL,
-  useComputed$
+  useComputed$,
+  JSXNode
 } from "@builder.io/qwik";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
@@ -18,6 +19,7 @@ export type CheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   checked?: T;
   onChange$?: QRL<(checked: T) => void>;
   disabled?: boolean;
+  description?: string | JSXNode;
 } & PropsOf<"div">;
 
 export const CheckboxRoot = component$((props: CheckboxRootProps) => {
@@ -26,20 +28,20 @@ export const CheckboxRoot = component$((props: CheckboxRootProps) => {
     checked,
     onClick$,
     onChange$,
+    description,
     ...rest
   } = props;
 
-  const isCheckedSig = useBoundSignal<boolean | "mixed">(givenCheckedSig, checked);
+  const isCheckedSig = useBoundSignal<boolean | "mixed">(givenCheckedSig, checked ?? false);
   const isInitialLoadSig = useSignal(true);
   const isDisabledSig = useComputed$(() => props.disabled);
-  const isDescriptionSig = useSignal(false);
   const localId = useId();
 
   const context: CheckboxContext = {
     isCheckedSig,
     isDisabledSig,
-    isDescriptionSig,
-    localId
+    localId,
+    description
   };
 
   useContextProvider(checkboxContextId, context);

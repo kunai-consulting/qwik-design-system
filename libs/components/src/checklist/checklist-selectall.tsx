@@ -34,7 +34,6 @@ export const ChecklistSelectAll = component$((props: PropsOf<'div'>) => {
    */
   return (
     <CheckboxRoot
-      as="li"
       bind:checked={allSelected}
       onClick$={toggleAll}
       id="selectAll"

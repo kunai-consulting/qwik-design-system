@@ -66,7 +66,7 @@ export const ChecklistItem = component$((props: ChecklistItemProps) => {
   });
 
   return (
-    <CheckboxRoot as="li" bind:checked={isCheckedSig} index={_index}>
+    <CheckboxRoot bind:checked={isCheckedSig}>
       <Slot />
     </CheckboxRoot>
   );
