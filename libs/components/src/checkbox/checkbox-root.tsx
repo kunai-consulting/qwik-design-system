@@ -19,7 +19,7 @@ export type CheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   checked?: T;
   onChange$?: QRL<(checked: T) => void>;
   disabled?: boolean;
-  description?: string | JSXNode;
+  isDescription?: boolean;
 } & PropsOf<"div">;
 
 export const CheckboxRoot = component$((props: CheckboxRootProps) => {
@@ -28,7 +28,7 @@ export const CheckboxRoot = component$((props: CheckboxRootProps) => {
     checked,
     onClick$,
     onChange$,
-    description,
+    isDescription,
     ...rest
   } = props;
 
@@ -41,7 +41,7 @@ export const CheckboxRoot = component$((props: CheckboxRootProps) => {
     isCheckedSig,
     isDisabledSig,
     localId,
-    description
+    isDescription
   };
 
   useContextProvider(checkboxContextId, context);

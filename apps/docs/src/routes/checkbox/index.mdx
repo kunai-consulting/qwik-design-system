@@ -17,13 +17,13 @@ To associate a label with a checkbox, use the `Checkbox.Label` component.
 
 ## Adding a description
 
-To add a description to a checkbox, pass a string or JSX node to the `description` prop in the `Checkbox.Root` component.
+To add a description to a checkbox, add the `isDescription` prop in the `Checkbox.Root` component.
 
 Then use the `Checkbox.Description` component to decide where to render the description.
 
 <Showcase name="description" />
 
-> **Note:** Due to HTML streaming limitations, the `description` prop must be passed to the root component to maintain consistent accessibility across different environments (especially server rendered content). The component will display a warning if no description is provided when this component is rendered.
+> **Note:** Due to HTML streaming limitations, the `isDescription` prop must be passed to the root component to maintain consistent accessibility across different environments (especially server rendered content). The component will display a warning if no description is provided when this component is rendered.
 
 ## Initially check a checkbox
 

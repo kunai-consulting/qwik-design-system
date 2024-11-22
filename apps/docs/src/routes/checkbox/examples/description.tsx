@@ -8,7 +8,7 @@ export default component$(() => {
   const description = "By checking this box, you acknowledge that you have read, understood, and agree to our Terms of Service and Privacy Policy. This includes consent to process your personal data as described in our policies.";
 
   return (
-    <Checkbox.Root description={description}>
+    <Checkbox.Root isDescription>
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
         <Checkbox.Trigger class="checkbox-trigger">
           <Checkbox.Indicator class="checkbox-indicator">
@@ -17,7 +17,9 @@ export default component$(() => {
         </Checkbox.Trigger>
         <Checkbox.Label>I accept the Terms and Conditions</Checkbox.Label>
       </div>
-      <Checkbox.Description />
+      <Checkbox.Description>
+      By checking this box, you acknowledge that you have read, understood, and agree to our Terms of Service and Privacy Policy. This includes consent to process your personal data as described in our policies.
+      </Checkbox.Description>
     </Checkbox.Root>
   );
 });

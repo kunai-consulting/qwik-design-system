@@ -6,5 +6,5 @@ export type CheckboxContext = {
   isCheckedSig: Signal<boolean | "mixed">;
   isDisabledSig: Signal<boolean | undefined>;
   localId: string;
-  description: string | JSXNode | undefined;
+  isDescription: boolean | undefined;
 };

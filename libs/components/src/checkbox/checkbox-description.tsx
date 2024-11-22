@@ -8,14 +8,14 @@ export const CheckboxDescription = component$((props: CheckboxDescriptionProps) 
   const descriptionId = `${context.localId}-description`;
 
   useTask$(() => {
-    if (!context.description) {
+    if (!context.isDescription) {
       console.warn('Qwik Design System Warning: No description prop provided to the Checkbox Root component.');
     }
   })
 
   return (
     <div id={descriptionId} data-qds-checkbox-description {...props}>
-      {context.description}
+      <Slot />
     </div>
   );
 });
