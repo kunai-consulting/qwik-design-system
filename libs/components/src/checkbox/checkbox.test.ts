@@ -296,4 +296,14 @@ test.describe("forms", () => {
     await d.getTrigger().click();
     await expect(d.getHiddenInput()).not.toBeChecked();
   });
+
+  test(`GIVEN a checkbox inside a form
+        WHEN the checkbox is mixed state
+        THEN the hidden input should be indeterminate
+`, async ({ page }) => {
+    const d = await setup(page, "form-mixed");
+
+    await page.locator("[data-test-mixed]").click();
+    await expect(d.getHiddenInput()).toHaveAttribute("indeterminate");
+  });
 });
