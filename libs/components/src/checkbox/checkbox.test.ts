@@ -262,3 +262,38 @@ test.describe("a11y", () => {
     await expect(d.getIndicator()).toBeHidden();
   });
 });
+
+test.describe("forms", () => {
+  test(`GIVEN a checkbox inside a form
+        WHEN the checkbox is rendered
+        THEN there should be a hidden input
+    `, async ({ page }) => {
+    const d = await setup(page, "form");
+
+    await expect(d.getHiddenInput()).toBeVisible();
+  });
+
+  test(`GIVEN a checkbox inside a form
+        WHEN the checkbox is checked
+        THEN the hidden input should be checked
+`, async ({ page }) => {
+    const d = await setup(page, "form");
+
+    await d.getTrigger().click();
+    await expect(d.getHiddenInput()).toBeChecked();
+  });
+
+  test(`GIVEN a checkbox inside a form that is initially checked
+        WHEN the checkbox is checked
+        THEN the hidden input should be unchecked
+`, async ({ page }) => {
+    const d = await setup(page, "form");
+
+    // initial setup
+    await d.getTrigger().click();
+    await expect(d.getHiddenInput()).toBeChecked();
+
+    await d.getTrigger().click();
+    await expect(d.getHiddenInput()).not.toBeChecked();
+  });
+});

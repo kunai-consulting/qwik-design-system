@@ -3,3 +3,4 @@ export { CheckboxIndicator as Indicator } from "./checkbox-indicator";
 export { CheckboxTrigger as Trigger } from "./checkbox-trigger";
 export { CheckboxLabel as Label } from "./checkbox-label";
 export { CheckboxDescription as Description } from "./checkbox-description";
+export { CheckboxHiddenNativeInput as HiddenNativeInput } from "./checkbox-hidden-input";
