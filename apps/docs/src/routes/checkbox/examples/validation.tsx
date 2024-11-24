@@ -45,7 +45,7 @@ type TermsCheckboxProps = {
 
 export const TermsCheckbox = component$(({ isChecked, isError }: TermsCheckboxProps) => {
   return (
-    <Checkbox.Root name="terms" required bind:checked={isChecked} isDescription>
+    <Checkbox.Root name="terms" required bind:checked={isChecked}>
       <Checkbox.HiddenNativeInput />
       <div
         style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}
