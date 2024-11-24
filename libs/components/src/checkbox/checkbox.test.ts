@@ -329,4 +329,28 @@ test.describe("forms", () => {
     await page.getByRole("button").last().click();
     await expect(page.getByText("Submitted")).not.toBeVisible();
   });
+
+  test(`GIVEN a checkbox inside a form
+        WHEN submitting the form
+        THEN an error message should be displayed
+`, async ({ page }) => {
+    const d = await setup(page, "validation");
+
+    await page.getByRole("button").last().click();
+    await expect(d.getErrorMessage()).toBeVisible();
+    await expect(d.getTrigger()).toHaveAttribute("aria-invalid", "true");
+    await expect(d.getTrigger()).toHaveAttribute("aria-describedby");
+  });
+
+  test(`GIVEN a checkbox inside a form
+        WHEN a different value is provided to the checkbox
+        THEN the form should submit that value instead of "on"
+`, async ({ page }) => {
+    const d = await setup(page, "value");
+
+    await d.getTrigger().click();
+    await expect(d.getHiddenInput()).toBeChecked();
+    await page.getByRole("button").last().click();
+    await expect(page.getByText(`Submitted: { "terms": "checked" }`)).toBeVisible();
+  });
 });
