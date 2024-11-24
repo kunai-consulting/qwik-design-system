@@ -12,6 +12,8 @@ export const CheckboxHiddenNativeInput = component$(
       <VisuallyHidden>
         <input
           type="checkbox"
+          tabIndex={-1}
+          onFocus$={() => context.triggerRef.value?.focus()}
           checked={context.isCheckedSig.value === true}
           indeterminate={context.isCheckedSig.value === "mixed"}
           data-qds-checkbox-hidden-input

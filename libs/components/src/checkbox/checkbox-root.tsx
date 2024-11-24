@@ -44,7 +44,9 @@ export const CheckboxRoot = component$((props: CheckboxRootProps) => {
   );
   const isInitialLoadSig = useSignal(true);
   const isDisabledSig = useComputed$(() => props.disabled);
+  const isErrorSig = useSignal(false);
   const localId = useId();
+  const triggerRef = useSignal<HTMLButtonElement>();
 
   const context: CheckboxContext = {
     isCheckedSig,
@@ -53,7 +55,9 @@ export const CheckboxRoot = component$((props: CheckboxRootProps) => {
     isDescription,
     name,
     required,
-    value
+    value,
+    isErrorSig,
+    triggerRef
   };
 
   useContextProvider(checkboxContextId, context);

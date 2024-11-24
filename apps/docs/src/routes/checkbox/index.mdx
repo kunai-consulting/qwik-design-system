@@ -89,12 +89,19 @@ To make a checkbox required, pass `required` to the `Checkbox.Root` component.
 
 <Showcase name="required" />
 
-### Custom required validation
+## Giving a checkbox a value
 
-> Any input props can also be passed to the hidden native input
+By default, the value of a checkbox is `on` when checked. To give a checkbox a distinct value, pass a string to the `value` prop.
 
-<Showcase name="required-custom" />
+<Showcase name="value" />
 
+## Checkbox validation
+
+To validate a checkbox, use the `Checkbox.ErrorMessage` component. Whenever this component is rendered, the checkbox will display a validation error message.
+
+> Screen readers will announce the error message when the component is rendered, along with an indication that the checkbox is invalid.
+
+<Showcase name="validation" />
 
 
 
