@@ -15,6 +15,9 @@ export const CheckboxHiddenNativeInput = component$(
           checked={context.isCheckedSig.value === true}
           indeterminate={context.isCheckedSig.value === "mixed"}
           data-qds-checkbox-hidden-input
+          name={context.name ?? props.name ?? undefined}
+          required={context.required ?? props.required ?? undefined}
+          value={context.value ?? props.value ?? undefined}
           {...props}
         />
       </VisuallyHidden>

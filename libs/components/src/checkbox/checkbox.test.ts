@@ -306,4 +306,27 @@ test.describe("forms", () => {
     await page.locator("[data-test-mixed]").click();
     await expect(d.getHiddenInput()).toHaveAttribute("indeterminate");
   });
+
+  test(`GIVEN a checkbox inside a form that is checked
+        WHEN the submit button is clicked
+        THEN the form should be submitted
+`, async ({ page }) => {
+    const d = await setup(page, "form");
+
+    // initial setup
+    await d.getTrigger().click();
+
+    await page.getByRole("button").last().click();
+    await expect(page.getByText("Submitted")).toBeVisible();
+  });
+
+  test(`GIVEN a checkbox inside a form
+        WHEN the submit button is clicked
+        THEN the form should not be submitted
+`, async ({ page }) => {
+    await setup(page, "form");
+
+    await page.getByRole("button").last().click();
+    await expect(page.getByText("Submitted")).not.toBeVisible();
+  });
 });

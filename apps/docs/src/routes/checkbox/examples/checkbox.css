@@ -5,11 +5,11 @@
 }
 
 .checkbox-trigger {
-    background: #0a4d70;
     width: 30px;
     height: 30px;
     border-radius: 8px;
     position: relative; 
+    background: gray;
 }
 
 .checkbox-trigger:focus-visible {
@@ -26,4 +26,6 @@
     position: absolute;  
     inset: 0;           
     align-items: center;
+    background: #0a4d70;
+    border-radius: 8px;
 }
