@@ -152,6 +152,19 @@ test.describe("state", () => {
     await toggleDisabledEl.click();
     await expect(d.getTrigger()).toBeEnabled();
   });
+
+  test(`GIVEN a checkbox with bind:checked
+        WHEN programmatically setting the state to mixed
+        THEN the checkbox should reflect the mixed state`, async ({ page }) => {
+    const d = await setup(page, "mixed-reactive");
+
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "false");
+
+    const mixedButton = page.locator("button").last();
+    await mixedButton.click();
+
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "mixed");
+  });
 });
 
 test.describe("a11y", () => {
@@ -220,5 +233,124 @@ test.describe("a11y", () => {
 
     // initial setup
     await expect(d.getTrigger()).toHaveAttribute("aria-checked", "mixed");
+  });
+
+  test(`GIVEN a checkbox that is initially mixed
+    WHEN the checkbox is clicked
+    THEN it should become checked`, async ({ page }) => {
+    const d = await setup(page, "mixed-initial");
+
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "mixed");
+
+    await d.getTrigger().click();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "true");
+    await expect(d.getIndicator()).toBeVisible();
+  });
+
+  test(`GIVEN a checkbox that was mixed and is now checked
+        WHEN the checkbox is clicked again
+        THEN it should become unchecked`, async ({ page }) => {
+    const d = await setup(page, "mixed-initial");
+
+    // Get to checked state first
+    await d.getTrigger().click();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "true");
+
+    // Now click again
+    await d.getTrigger().click();
+    await expect(d.getTrigger()).toHaveAttribute("aria-checked", "false");
+    await expect(d.getIndicator()).toBeHidden();
+  });
+});
+
+test.describe("forms", () => {
+  test(`GIVEN a checkbox inside a form
+        WHEN the checkbox is rendered
+        THEN there should be a hidden input
+    `, async ({ page }) => {
+    const d = await setup(page, "form");
+
+    await expect(d.getHiddenInput()).toBeVisible();
+  });
+
+  test(`GIVEN a checkbox inside a form
+        WHEN the checkbox is checked
+        THEN the hidden input should be checked
+`, async ({ page }) => {
+    const d = await setup(page, "form");
+
+    await d.getTrigger().click();
+    await expect(d.getHiddenInput()).toBeChecked();
+  });
+
+  test(`GIVEN a checkbox inside a form that is initially checked
+        WHEN the checkbox is checked
+        THEN the hidden input should be unchecked
+`, async ({ page }) => {
+    const d = await setup(page, "form");
+
+    // initial setup
+    await d.getTrigger().click();
+    await expect(d.getHiddenInput()).toBeChecked();
+
+    await d.getTrigger().click();
+    await expect(d.getHiddenInput()).not.toBeChecked();
+  });
+
+  test(`GIVEN a checkbox inside a form
+        WHEN the checkbox is mixed state
+        THEN the hidden input should be indeterminate
+`, async ({ page }) => {
+    const d = await setup(page, "form-mixed");
+
+    await page.locator("[data-test-mixed]").click();
+    await expect(d.getHiddenInput()).toHaveAttribute("indeterminate");
+  });
+
+  test(`GIVEN a checkbox inside a form that is checked
+        WHEN the submit button is clicked
+        THEN the form should be submitted
+`, async ({ page }) => {
+    const d = await setup(page, "form");
+
+    // initial setup
+    await d.getTrigger().click();
+
+    await page.getByRole("button").last().click();
+    await expect(page.getByText("Submitted")).toBeVisible();
+  });
+
+  test(`GIVEN a checkbox inside a form
+        WHEN the submit button is clicked
+        THEN the form should not be submitted
+`, async ({ page }) => {
+    await setup(page, "form");
+
+    await page.getByRole("button").last().click();
+    await expect(page.getByText("Submitted")).not.toBeVisible();
+  });
+
+  test(`GIVEN a checkbox inside a form
+        WHEN submitting the form
+        THEN an error message should be displayed
+`, async ({ page }) => {
+    const d = await setup(page, "validation");
+
+    await page.getByRole("button").last().click();
+    await expect(d.getErrorMessage()).toBeVisible();
+    await expect(d.getTrigger()).toHaveAttribute("aria-invalid", "true");
+    await expect(d.getTrigger()).toHaveAttribute("aria-describedby");
+  });
+
+  test(`GIVEN a checkbox inside a form
+        WHEN a different value is provided to the checkbox
+        THEN the form should submit that value instead of "on"
+`, async ({ page }) => {
+    const d = await setup(page, "value");
+
+    await d.getTrigger().click();
+    await expect(d.getHiddenInput()).toBeChecked();
+    await page.getByRole("button").last().click();
+    await expect(page.getByText(`Submitted: { "terms": "checked" }`)).toBeVisible();
   });
 });

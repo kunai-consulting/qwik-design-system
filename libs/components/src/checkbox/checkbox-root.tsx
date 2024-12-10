@@ -8,7 +8,8 @@ import {
   useTask$,
   useSignal,
   type QRL,
-  useComputed$
+  useComputed$,
+  JSXNode
 } from "@builder.io/qwik";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
@@ -18,6 +19,10 @@ export type CheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   checked?: T;
   onChange$?: QRL<(checked: T) => void>;
   disabled?: boolean;
+  isDescription?: boolean;
+  name?: string;
+  required?: boolean;
+  value?: string;
 } & PropsOf<"div">;
 
 export const CheckboxRoot = component$((props: CheckboxRootProps) => {
@@ -26,20 +31,33 @@ export const CheckboxRoot = component$((props: CheckboxRootProps) => {
     checked,
     onClick$,
     onChange$,
+    isDescription,
+    name,
+    required,
+    value,
     ...rest
   } = props;
 
-  const isCheckedSig = useBoundSignal<boolean | "mixed">(givenCheckedSig, checked);
+  const isCheckedSig = useBoundSignal<boolean | "mixed">(
+    givenCheckedSig,
+    checked ?? false
+  );
   const isInitialLoadSig = useSignal(true);
   const isDisabledSig = useComputed$(() => props.disabled);
-  const isMixedSig = useComputed$(() => isCheckedSig.value === "mixed");
+  const isErrorSig = useSignal(false);
   const localId = useId();
+  const triggerRef = useSignal<HTMLButtonElement>();
 
   const context: CheckboxContext = {
     isCheckedSig,
     isDisabledSig,
-    isMixedSig,
-    localId
+    localId,
+    isDescription,
+    name,
+    required,
+    value,
+    isErrorSig,
+    triggerRef
   };
 
   useContextProvider(checkboxContextId, context);
@@ -65,7 +83,7 @@ export const CheckboxRoot = component$((props: CheckboxRootProps) => {
       data-disabled={context.isDisabledSig.value ? "" : undefined}
       aria-disabled={context.isDisabledSig.value ? "true" : "false"}
       data-checked={context.isCheckedSig.value ? "" : undefined}
-      data-mixed={context.isMixedSig.value ? "" : undefined}
+      data-mixed={context.isCheckedSig.value === "mixed" ? "" : undefined}
     >
       <Slot />
     </div>
