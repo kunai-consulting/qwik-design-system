@@ -5,11 +5,13 @@ export default component$(() => {
   useStyles$(styles);
   const selectedPageSig = useSignal(1);
   const totalPagesSig = useSignal(10);
+  const pageSig = useSignal(5);
 
   return (
     <Pagination.Root
       class="pagination-root"
       totalPages={totalPagesSig.value}
+      bind:page={pageSig}
       onPageChange$={$((page: number) => {
         selectedPageSig.value = page;
       })}

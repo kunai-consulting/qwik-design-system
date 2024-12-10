@@ -9,12 +9,13 @@ export default component$(() => {
   return (
     <Pagination.Root
       class="pagination-root"
+      page={1}
       totalPages={totalPagesSig.value}
       onPageChange$={$((page: number) => {
         selectedPageSig.value = page;
       })}
     >
-      <Pagination.Ellipsis>...</Pagination.Ellipsis>
+      <Pagination.Previous isFirst>First</Pagination.Previous>
       <Pagination.Previous>Previous</Pagination.Previous>
 
       {/* creates 10 pages */}
@@ -32,6 +33,7 @@ export default component$(() => {
       })}
 
       <Pagination.Next>Next</Pagination.Next>
+      <Pagination.Next isLast>Last</Pagination.Next>
     </Pagination.Root>
   );
 });

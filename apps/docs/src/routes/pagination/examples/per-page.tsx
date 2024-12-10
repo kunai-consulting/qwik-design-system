@@ -10,6 +10,7 @@ export default component$(() => {
     <Pagination.Root
       class="pagination-root"
       totalPages={totalPagesSig.value}
+      perPage={4}
       onPageChange$={$((page: number) => {
         selectedPageSig.value = page;
       })}
@@ -32,6 +33,7 @@ export default component$(() => {
       })}
 
       <Pagination.Next>Next</Pagination.Next>
+      <Pagination.Next isLast>Last</Pagination.Next>
     </Pagination.Root>
   );
 });

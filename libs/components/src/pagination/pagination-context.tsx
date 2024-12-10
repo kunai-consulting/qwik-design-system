@@ -1,8 +1,9 @@
-import {createContextId, QRL, type Signal} from '@builder.io/qwik';
+import { createContextId, QRL, type Signal } from '@builder.io/qwik';
 
 export interface PaginationState {
-  selectedPage: Signal<number>;
+  selectedPageSig: Signal<number>;
   totalPages: number;
+  perPageSig: Signal<number>;
   onPageChange$: QRL<(page: number) => void>;
 }
 

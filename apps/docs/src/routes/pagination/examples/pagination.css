@@ -1,0 +1,13 @@
+.pagination-root {
+    display: flex;
+    gap: 10px;
+}
+
+.pagination-page {
+    border-width: 1px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
