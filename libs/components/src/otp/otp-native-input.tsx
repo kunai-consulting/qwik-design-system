@@ -1,8 +1,8 @@
 // File: otp-native-input.tsx
-import { component$, type PropsOf, useContext } from '@builder.io/qwik';
-import { OTPContextId } from './otp-context';
+import { component$, type PropsOf, useContext } from "@builder.io/qwik";
+import { OTPContextId } from "./otp-context";
 
-interface OtpNativeInputProps extends PropsOf<'input'> {}
+interface OtpNativeInputProps extends PropsOf<"input"> {}
 
 export const OtpNativeInput = component$((props: OtpNativeInputProps) => {
   const context = useContext(OTPContextId);
@@ -16,6 +16,7 @@ export const OtpNativeInput = component$((props: OtpNativeInputProps) => {
       value={context.value.value}
       inputMode="numeric"
       pattern="[0-9]*"
+      autoComplete="one-time-code"
       onFocus$={() => {
         context.isFocusedSig.value = true;
       }}
