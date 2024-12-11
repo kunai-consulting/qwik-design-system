@@ -30,7 +30,7 @@ export default component$(() => {
         </div>
 
         <Otp.Root class="flex flex-col items-center justify-center">
-          <Otp.HiddenNativeInput class="opacity-0" />
+          <Otp.HiddenNativeInput />
 
           <div class="otp-container flex flex-row justify-center gap-2">
             {Array.from({ length: 4 }, (_, index) => {
@@ -50,11 +50,13 @@ export default component$(() => {
               );
             })}
           </div>
-          <div class="mt-6 flex flex-row justify-center gap-2">
-            <input type="checkbox" class="text-cool-700 form-checkbox text-sm" />
-            This is a trusted device, don't ask again
-          </div>
         </Otp.Root>
+
+        <div class="mt-6 flex flex-row justify-center gap-2">
+          <input type="checkbox" class="text-cool-700 form-checkbox text-sm" />
+          This is a trusted device, don't ask again
+        </div>
+
         <div class="flex flex-row items-center justify-center gap-2 p-6 text-sm">
           <button
             type="button"

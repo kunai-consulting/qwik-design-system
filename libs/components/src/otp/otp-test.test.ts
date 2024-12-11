@@ -9,23 +9,30 @@ async function setup(page: Page, exampleName: string) {
   return driver;
 }
 
-test.describe("OTP Component Tests", () => {
-  test("should allow input into OTP fields and verify focus management", async ({
-    page
-  }) => {
+test.describe("critical functionality", () => {
+  test(`GIVEN an OTP control
+        WHEN clicking on the ui
+        THEN the hidden input should have focus
+    `, async ({ page }) => {
     const d = await setup(page, "hero");
 
-    await d.getNativeInput;
+    await expect(d.getNativeInput()).not.toBeFocused();
 
-    const inputs = page.locator("input[data-qui-otp-native-input]");
+    await d.getItemAt(0).click();
 
-    await inputs.focus();
-    // assumes 4 inputs
-    await inputs.fill("1234");
-    expect(inputs).toHaveValue("1234");
+    await expect(d.getNativeInput()).toBeFocused();
+  });
 
-    // assumes 4 inputs
-    const lastOtpItem = page.locator('div[data-qui-otp-item="3"]');
-    await expect(lastOtpItem).toHaveAttribute("data-highlighted", "");
+  test(`GIVEN an OTP control
+        WHEN clicking on the ui
+        THEN the first item should be highlighted
+`, async ({ page }) => {
+    const d = await setup(page, "hero");
+
+    await expect(d.getNativeInput()).not.toBeFocused();
+
+    await d.getItemAt(0).click();
+
+    await expect(d.getItemAt(0)).toHaveAttribute("data-highlighted");
   });
 });

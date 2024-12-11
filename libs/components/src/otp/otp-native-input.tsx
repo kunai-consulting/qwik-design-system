@@ -1,6 +1,7 @@
 // File: otp-native-input.tsx
 import { component$, type PropsOf, useContext } from "@builder.io/qwik";
 import { OTPContextId } from "./otp-context";
+import { VisuallyHidden } from "../visually-hidden/visually-hidden";
 
 interface OtpNativeInputProps extends PropsOf<"input"> {}
 
@@ -11,9 +12,9 @@ export const OtpNativeInput = component$((props: OtpNativeInputProps) => {
     <input
       {...props}
       ref={context.nativeInputRef}
+      data-qds-otp-native-input
       type="text"
-      data-qui-otp-native-input
-      value={context.value.value}
+      value={context.inputValueSig.value}
       inputMode="numeric"
       pattern="[0-9]*"
       autoComplete="one-time-code"
@@ -25,7 +26,7 @@ export const OtpNativeInput = component$((props: OtpNativeInputProps) => {
       }}
       onInput$={(event: InputEvent) => {
         const input = event.target as HTMLInputElement;
-        context.value.value = input.value;
+        context.inputValueSig.value = input.value;
         context.activeIndexSig.value = input.value.length;
       }}
       maxLength={context.numItemsSig.value}

@@ -8,15 +8,13 @@ For sure need:
 - [ ] onChange$
 - [ ] onComplete$ (when finished)
 - [ ] Disabled
+- [ ] Pasting
+- [ ] PWM support
 
 
 ## Existing playwright tests
 
 https://github.com/guilhermerodz/input-otp/tree/master/apps/test/src/tests
-
-Not sure:
-
-- [ ] value (e.g "on" vs "off")
 
 Data attributes:
 
