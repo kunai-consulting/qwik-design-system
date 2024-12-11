@@ -33,66 +33,6 @@ export type PaginationRootProps = PropsOf<"div"> & {
   disabled?: boolean;
 };
 
-// export const PaginationRoot =
-//   (props: {
-//     "bind:page"?: Signal<number | 1>;
-//     children: JSXChildren | JSXNode;
-//     totalPages: number;
-//     onPageChange$: QRL<(page: number) => void>;
-//     page?: number;
-//     disabled?: boolean;
-//     perPage?: number;
-//     class?: string;
-//   }) => {
-//     let currPageIndex = 0;
-
-//     findComponent(PaginationPage, (pageProps) => {
-//       pageProps._index = currPageIndex;
-//       currPageIndex++;
-//     });
-
-//     processChildren(props.children);
-
-//     return (
-//       <PaginationBase
-//         {...props}
-//         totalPages={props.totalPages}
-//         onPageChange$={props.onPageChange$}
-//       >
-//         {props.children}
-//       </PaginationBase>
-//     )
-//   };
-
-// const PaginationBase = component$(
-//   ({"bind:page": givenValueSig, totalPages, onPageChange$, ...props}: PaginationRootProps) => {
-
-//     const selectedPageSig = useBoundSignal(givenValueSig, props.page || 1);
-//     const perPageSig = useSignal(props.perPage || 1);
-//     const isDisabledSig = useComputed$(() => props.disabled);
-
-//     const context: PaginationState = {
-//       selectedPageSig,
-//       totalPages,
-//       perPageSig,
-//       onPageChange$,
-//       isDisabled,
-//       siblingCount
-//     }
-//     useContextProvider(PaginationContext, context);
-
-//     useTask$(({track}) => {
-//       track(() => context.selectedPageSig.value);
-//       onPageChange$(context.selectedPageSig.value);
-//     })
-
-//     return (
-//       <div data-qds-pagination-root {...props} class={props.class}>
-//         <Slot/>
-//       </div>
-//     );
-//   });
-
 export const PaginationRoot = component$((props: PaginationRootProps) => {
   const {
     "bind:page": givenPageSig,
