@@ -1,6 +1,6 @@
 import {component$, Slot, useComputed$, useContext, useTask$} from "@builder.io/qwik";
 import type {QwikIntrinsicElements} from "@builder.io/qwik";
-import {paginationContext} from "./pagination-context";
+import {paginationContextId} from "./pagination-context";
 
 type AllowedElements = "button" | "a" | "div" | "span";
 
@@ -15,7 +15,7 @@ export const PaginationPage = component$(
     const {as, _index, ...rest} = props;
     const Comp = as ?? "button";
 
-    const context = useContext(paginationContext);
+    const context = useContext(paginationContextId);
 
     if (_index === undefined) {
       throw new Error('Qwik Design System: PaginationPage must have an index');

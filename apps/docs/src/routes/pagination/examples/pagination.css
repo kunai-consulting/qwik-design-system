@@ -10,4 +10,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+}
+
+.pagination-page[data-current] {
+    background-color: red;
+    color: white;
+    border-color: red;  /* It is applied here */
 }
