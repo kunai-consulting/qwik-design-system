@@ -17,7 +17,7 @@ export const OtpNativeInput = component$((props: OtpNativeInputProps) => {
       value={context.inputValueSig.value}
       inputMode="numeric"
       pattern="[0-9]*"
-      autoComplete="one-time-code"
+      autoComplete={context.autoComplete || "one-time-code"}
       onFocus$={() => {
         context.isFocusedSig.value = true;
       }}
@@ -27,7 +27,7 @@ export const OtpNativeInput = component$((props: OtpNativeInputProps) => {
       onInput$={(event: InputEvent) => {
         const input = event.target as HTMLInputElement;
         context.inputValueSig.value = input.value;
-        context.activeIndexSig.value = input.value.length;
+        context.currIndexSig.value = input.value.length;
       }}
       maxLength={context.numItemsSig.value}
       aria-label="Enter your OTP"

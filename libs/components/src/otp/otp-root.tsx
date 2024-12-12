@@ -1,4 +1,5 @@
 import {
+  type HTMLInputAutocompleteAttribute,
   type PropsOf,
   Slot,
   component$,
@@ -14,6 +15,7 @@ import styles from "./otp.css?inline";
 
 type OtpRootProps = PropsOf<"div"> & {
   _numItems?: number;
+  autoComplete?: HTMLInputAutocompleteAttribute;
 };
 
 export const OtpRoot = ({ children }: OtpRootProps) => {
@@ -33,9 +35,10 @@ export const OtpRoot = ({ children }: OtpRootProps) => {
 
 export const OtpBase = component$((props: OtpRootProps) => {
   useStyles$(styles);
+  const { autoComplete, ...rest } = props;
 
   const inputValueSig = useSignal<string>("");
-  const activeIndex = useSignal(0);
+  const currIndexSig = useSignal(0);
   const nativeInputRef = useSignal<HTMLInputElement>();
   const numItemsSig = useComputed$(() => props._numItems || 0);
   const isFocusedSig = useSignal(false);
@@ -45,17 +48,18 @@ export const OtpBase = component$((props: OtpRootProps) => {
   );
 
   const context = {
-    inputValueSig: inputValueSig,
-    activeIndexSig: activeIndex,
-    nativeInputRef: nativeInputRef,
+    inputValueSig,
+    currIndexSig,
+    nativeInputRef,
     numItemsSig,
     isLastItemSig,
-    isFocusedSig
+    isFocusedSig,
+    autoComplete
   };
 
   useContextProvider(OTPContextId, context);
   return (
-    <div data-qds-otp-root {...props}>
+    <div data-qds-otp-root {...rest}>
       <Slot />
     </div>
   );

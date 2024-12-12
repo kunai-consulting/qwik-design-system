@@ -35,7 +35,7 @@ export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
       ref={itemRef}
       data-qds-otp-item={_index}
       data-highlighted={
-        (context.isFocusedSig.value && context.activeIndexSig.value === _index) ||
+        (context.isFocusedSig.value && context.currIndexSig.value === _index) ||
         (isLastItemSig.value &&
           context.isLastItemSig.value &&
           !context.isFocusedSig.value === false)

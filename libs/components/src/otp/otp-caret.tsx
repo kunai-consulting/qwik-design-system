@@ -6,7 +6,7 @@ export const OtpCaret = component$(({ ...props }: PropsOf<"span">) => {
   const itemContext = useContext(itemContextId);
   const context = useContext(OTPContextId);
   const showCaret =
-    context.activeIndexSig.value === itemContext.index && context.isFocusedSig.value;
+    context.currIndexSig.value === itemContext.index && context.isFocusedSig.value;
 
   return (
     <span {...props} data-qds-otp-caret={itemContext.index}>
