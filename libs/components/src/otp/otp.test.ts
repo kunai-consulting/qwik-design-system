@@ -171,4 +171,18 @@ test.describe("critical functionality", () => {
     await input.press("Delete");
     await expect(input).toHaveValue("235");
   });
+
+  test(`GIVEN an OTP control that is full
+        WHEN the OTP is complete
+        THEN an onComplete handler should be called
+    `, async ({ page }) => {
+    const d = await setup(page, "hero");
+    const input = d.getInput();
+
+    await input.pressSequentially("1234");
+    await expect(input).toHaveValue("1234");
+
+    // we disable it in onComplete$
+    await expect(input).toBeDisabled();
+  });
 });
