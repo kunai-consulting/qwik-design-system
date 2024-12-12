@@ -185,4 +185,53 @@ test.describe("critical functionality", () => {
     // we disable it in onComplete$
     await expect(input).toBeDisabled();
   });
+
+  test(`GIVEN an OTP root with a value prop
+        WHEN it is rendered
+        THEN the initial value should be what value prop provides
+`, async ({ page }) => {
+    const d = await setup(page, "initial");
+    const input = d.getInput();
+
+    await expect(input).toHaveValue("1234");
+  });
+
+  test(`GIVEN an OTP root with a bind:value prop
+        WHEN a signal is passed
+        THEN the OTP's value should be the signal value
+`, async ({ page }) => {
+    const d = await setup(page, "reactive");
+    const input = d.getInput();
+
+    await expect(input).toHaveValue("1234");
+
+    await page.locator("button").last().click();
+    await expect(input).toHaveValue("4321");
+  });
+
+  test(`GIVEN an OTP root with a onChange$ prop
+        WHEN the OTP value changes
+        THEN the onChange$ handler should be called
+    `, async ({ page }) => {
+    const d = await setup(page, "value");
+    const input = d.getInput();
+
+    await input.press("1");
+
+    await expect(input).toHaveValue("1");
+
+    // p tag rendered from onChange$
+    await expect(page.getByRole("paragraph")).toBeVisible();
+  });
+
+  test(`GIVEN an OTP root
+        WHEN programmatically disabled
+        THEN the OTP should not be interactive
+`, async ({ page }) => {
+    const d = await setup(page, "value");
+    const input = d.getInput();
+
+    await page.locator("button").last().click();
+    await expect(input).toBeDisabled();
+  });
 });
