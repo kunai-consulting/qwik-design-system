@@ -26,15 +26,6 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
   const previousValue = useSignal<string>("");
   const shiftKeyDown = useSignal(false);
 
-  // Track selection state for mirroring
-  const inputMetadata = {
-    prev: [null, null, "none"] as [
-      number | null,
-      number | null,
-      "none" | "forward" | "backward"
-    ]
-  };
-
   const updateSelection = $(() => {
     const input = context.nativeInputRef.value;
     if (!input || document.activeElement !== input) {
@@ -49,7 +40,8 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
     const _dir = input.selectionDirection;
     const _ml = context.numItemsSig.value;
     const _val = input.value;
-    const _prev = inputMetadata.prev;
+    const prevStart = context.selectionStartSig.value;
+    const prevEnd = context.selectionEndSig.value;
 
     if (_val.length === 0 || _s === null || _e === null) {
       return;
@@ -73,9 +65,9 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
         direction = "backward";
       } else if (_ml > 1 && _val.length > 1) {
         let offset = 0;
-        if (_prev[0] !== null && _prev[1] !== null) {
-          direction = _s < _prev[1] ? "backward" : "forward";
-          const wasPreviouslyInserting = _prev[0] === _prev[1] && _prev[0] < _ml;
+        if (prevStart !== null && prevEnd !== null) {
+          direction = _s < prevEnd ? "backward" : "forward";
+          const wasPreviouslyInserting = prevStart === prevEnd && prevStart < _ml;
           if (direction === "backward" && !wasPreviouslyInserting) {
             offset = -1;
           }
@@ -99,9 +91,6 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
     // Update selection range in context
     context.selectionStartSig.value = start ?? _s;
     context.selectionEndSig.value = end ?? _e;
-
-    // Store the previous selection value
-    inputMetadata.prev = [start ?? _s, end ?? _e, _dir ?? "none"];
   });
 
   useOnDocument("selectionchange", updateSelection);
@@ -127,6 +116,12 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
 
     context.inputValueSig.value = newValue;
     context.currIndexSig.value = newValue.length;
+
+    // Update selection to current input position
+    const currentPos = newValue.length;
+    input.setSelectionRange(currentPos, currentPos);
+    context.selectionStartSig.value = currentPos;
+    context.selectionEndSig.value = currentPos;
 
     // Check for completion
     if (
@@ -171,7 +166,9 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
     const input = context.nativeInputRef.value;
     const content = event.clipboardData?.getData("text/plain") ?? "";
 
-    if (!input || content === "") return;
+    if (!input || content === "") {
+      return;
+    }
 
     event.preventDefault();
 

@@ -27,21 +27,25 @@ export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
       return false;
     }
 
+    // During typing, highlight current position
+    if (context.selectionStartSig.value === context.selectionEndSig.value) {
+      return _index === context.selectionStartSig.value;
+    }
+
+    // Handle selection range
     const start = context.selectionStartSig.value;
     const end = context.selectionEndSig.value;
-
-    // Check if current index is within selection range
     if (start !== null && end !== null) {
       return _index >= start && _index < end;
     }
 
-    // Fallback to current index highlighting
-    return context.currIndexSig.value === _index;
-  });
+    // When at the end, highlight the last position
+    if (context.currIndexSig.value === context.numItemsSig.value && isLastItemSig.value) {
+      return true;
+    }
 
-  const isLastItemHighlightedSig = useComputed$(
-    () => isLastItemSig.value && context.isLastItemSig.value && context.isFocusedSig.value
-  );
+    return false;
+  });
 
   if (_index === undefined) {
     throw new Error("Qwik UI: Otp Item must have an index. This is a bug in Qwik UI");
@@ -52,9 +56,7 @@ export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
       {...props}
       ref={itemRef}
       data-qds-otp-item={_index}
-      data-highlighted={
-        isHighlightedSig.value || isLastItemHighlightedSig.value ? "" : undefined
-      }
+      data-highlighted={isHighlightedSig.value ? "" : undefined}
     >
       {itemValue}
       <Slot />
