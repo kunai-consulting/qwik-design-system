@@ -14,7 +14,7 @@ type OTPProps = {
   _index?: number;
 } & PropsOf<"div">;
 
-export const itemContextId = createContextId("qd-otp-item");
+export const itemContextId = createContextId<{ index: number }>("qd-otp-item");
 export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
   const context = useContext(OTPContextId);
   const itemRef = useSignal<HTMLInputElement>();

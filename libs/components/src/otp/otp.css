@@ -3,7 +3,7 @@
     pointer-events: none;
 }
 
-[data-qds-otp-native-input] {
+[data-qds-otp-hidden-input] {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -33,15 +33,15 @@
     font-variant-numeric: tabular-nums;
 }
 
-/* Prevent selection highlighting on native input */
-[data-qds-otp-native-input]::selection {
+/* Prevent selection highlighting on hidden input */
+[data-qds-otp-hidden-input]::selection {
     background: transparent !important;
     color: transparent !important;
 }
 
 /* Common autofill styles */
-[data-qds-otp-native-input]:autofill,
-[data-qds-otp-native-input]:-webkit-autofill {
+[data-qds-otp-hidden-input]:autofill,
+[data-qds-otp-hidden-input]:-webkit-autofill {
     background: transparent !important;
     color: transparent !important;
     border-color: transparent !important;
@@ -53,7 +53,7 @@
 
 /* iOS-specific adjustments */
 @supports (-webkit-touch-callout: none) {
-    [data-qds-otp-native-input] {
+    [data-qds-otp-hidden-input] {
         letter-spacing: -.6em !important;
         font-weight: 100 !important;
         font-stretch: ultra-condensed;
@@ -63,7 +63,7 @@
     }
 }
 
-/* Enable pointer events on elements after the native input */
-[data-qds-otp-native-input] + * {
+/* Enable pointer events on elements after the hidden input */
+[data-qds-otp-hidden-input] + * {
     pointer-events: all !important;
 }

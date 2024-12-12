@@ -30,7 +30,7 @@ export default component$(() => {
         </div>
 
         <Otp.Root class="flex flex-col items-center justify-center">
-          <Otp.HiddenNativeInput />
+          <Otp.HiddenInput />
 
           <div class="otp-container flex flex-row justify-center gap-2">
             {Array.from({ length: 4 }, (_, index) => {

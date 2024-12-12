@@ -1,8 +1,4 @@
-import {
-  type HTMLInputAutocompleteAttribute,
-  type Signal,
-  createContextId
-} from "@builder.io/qwik";
+import { type Signal, createContextId } from "@builder.io/qwik";
 
 export interface OTPContext {
   inputValueSig: Signal<string>;
@@ -11,7 +7,6 @@ export interface OTPContext {
   numItemsSig: Signal<number>;
   isLastItemSig: Signal<boolean>;
   isFocusedSig: Signal<boolean>;
-  autoComplete: HTMLInputAutocompleteAttribute;
 }
 
 export const OTPContextId = createContextId<OTPContext>("OTPContext");

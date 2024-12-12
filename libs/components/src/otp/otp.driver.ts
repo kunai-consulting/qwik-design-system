@@ -11,7 +11,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   };
 
   const getInput = () => {
-    return rootLocator.locator("[data-qds-otp-native-input]");
+    return rootLocator.locator("[data-qds-otp-hidden-input]");
   };
 
   const getItemAt = (index: number) => {

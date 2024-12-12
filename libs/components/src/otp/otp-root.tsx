@@ -35,7 +35,7 @@ export const OtpRoot = ({ children }: OtpRootProps) => {
 
 export const OtpBase = component$((props: OtpRootProps) => {
   useStyles$(styles);
-  const { autoComplete, ...rest } = props;
+  const { ...rest } = props;
 
   const inputValueSig = useSignal<string>("");
   const currIndexSig = useSignal(0);
@@ -53,8 +53,7 @@ export const OtpBase = component$((props: OtpRootProps) => {
     nativeInputRef,
     numItemsSig,
     isLastItemSig,
-    isFocusedSig,
-    autoComplete
+    isFocusedSig
   };
 
   useContextProvider(OTPContextId, context);
