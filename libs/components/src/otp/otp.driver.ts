@@ -2,11 +2,15 @@ import type { Locator, Page } from "@playwright/test";
 export type DriverLocator = Locator | Page;
 
 export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
+  const getRoot = () => {
+    return rootLocator.locator("[data-qds-otp-root]");
+  };
+
   const getItems = () => {
     return rootLocator.locator("[data-qds-otp-item]");
   };
 
-  const getNativeInput = () => {
+  const getInput = () => {
     return rootLocator.locator("[data-qds-otp-native-input]");
   };
 
@@ -25,8 +29,9 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   return {
     ...rootLocator,
     locator: rootLocator,
+    getRoot,
     getItems,
-    getNativeInput,
+    getInput,
     getItemAt,
     getCaretAt,
     getHighlightedItem
