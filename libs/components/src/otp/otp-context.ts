@@ -7,6 +7,8 @@ export interface OTPContext {
   numItemsSig: Signal<number>;
   isLastItemSig: Signal<boolean>;
   isFocusedSig: Signal<boolean>;
+  selectionStartSig: Signal<number | null>;
+  selectionEndSig: Signal<number | null>;
 }
 
 export const OTPContextId = createContextId<OTPContext>("OTPContext");

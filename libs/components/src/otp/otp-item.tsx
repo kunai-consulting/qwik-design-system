@@ -22,9 +22,22 @@ export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
   const itemValue = context.inputValueSig.value[_index] || "";
   const isLastItemSig = useComputed$(() => _index === context.numItemsSig.value - 1);
 
-  const isHighlightedSig = useComputed$(
-    () => context.isFocusedSig.value && context.currIndexSig.value === _index
-  );
+  const isHighlightedSig = useComputed$(() => {
+    if (!context.isFocusedSig.value) {
+      return false;
+    }
+
+    const start = context.selectionStartSig.value;
+    const end = context.selectionEndSig.value;
+
+    // Check if current index is within selection range
+    if (start !== null && end !== null) {
+      return _index >= start && _index < end;
+    }
+
+    // Fallback to current index highlighting
+    return context.currIndexSig.value === _index;
+  });
 
   const isLastItemHighlightedSig = useComputed$(
     () => isLastItemSig.value && context.isLastItemSig.value && context.isFocusedSig.value
