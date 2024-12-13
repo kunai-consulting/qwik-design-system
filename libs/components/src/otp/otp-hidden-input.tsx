@@ -116,12 +116,29 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       // When in an empty slot trying to move to a filled one
       if (!value[currentPos] && value[currentPos - 1]) {
         e.preventDefault();
-        // Find the next non-empty position to the left
+      }
+    }
+  });
+
+  const handleKeyDown = $((e: KeyboardEvent) => {
+    if (e.key === "Shift") {
+      shiftKeyDown.value = true;
+      return;
+    }
+
+    const input = e.target as HTMLInputElement;
+    if (e.key === "ArrowLeft" && input.selectionStart === input.selectionEnd) {
+      const currentPos = input.selectionStart;
+      if (!currentPos) return;
+
+      const value = input.value;
+      if (!value[currentPos] && value[currentPos - 1]) {
         let newPos = currentPos - 1;
         while (newPos > 0 && !value[newPos - 1]) {
           newPos--;
         }
         input.setSelectionRange(newPos, newPos + 1);
+        syncSelection(newPos, newPos + 1, false);
       }
     }
   });
@@ -156,12 +173,6 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       context.selectionStartSig.value = position;
       context.selectionEndSig.value = position + 1;
       input.setSelectionRange(position, position + 1);
-    }
-  });
-
-  const handleKeyDown = $((e: KeyboardEvent) => {
-    if (e.key === "Shift") {
-      shiftKeyDown.value = true;
     }
   });
 
