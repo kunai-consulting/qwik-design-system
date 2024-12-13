@@ -113,7 +113,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
 
     const isDeleting = newValue.length < oldValue.length;
     let currentPos = isDeleting
-      ? input.selectionStart ?? Math.max(newValue.length - 1, 0)
+      ? Math.max(0, (input.selectionStart ?? newValue.length) - 1)
       : newValue.length;
 
     context.inputValueSig.value = newValue;
