@@ -20,6 +20,7 @@ type OtpRootProps = PropsOf<"div"> & {
   _numItems?: number;
   autoComplete?: HTMLInputAutocompleteAttribute;
   onComplete$?: QRL<() => void>;
+  value?: string;
 };
 
 export const OtpRoot = ({ children, ...props }: OtpRootProps) => {
@@ -44,7 +45,7 @@ export const OtpRoot = ({ children, ...props }: OtpRootProps) => {
 export const OtpBase = component$((props: OtpRootProps) => {
   useStyles$(styles);
 
-  const inputValueSig = useSignal<string>("");
+  const inputValueSig = useSignal<string>(props.value || "");
   const currIndexSig = useSignal(0);
   const nativeInputRef = useSignal<HTMLInputElement>();
   const numItemsSig = useComputed$(() => props._numItems || 0);
