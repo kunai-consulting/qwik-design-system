@@ -39,6 +39,8 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
         return;
       }
 
+      // Update the active slot range
+      const indexes = Array.from({ length: end - start }, (_, i) => start + i);
       context.selectionStartSig.value = start;
       context.selectionEndSig.value = end;
       context.currIndexSig.value = start;
@@ -78,27 +80,33 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
     // Handle single caret selection
     const isSingleCaret = start === end;
     if (isSingleCaret) {
-      let newStart = start;
-      let newEnd = start + 1;
+      let selectionStart = start;
+      let selectionEnd = start + 1;
+      let direction: "forward" | "backward" | undefined = undefined;
 
-      // At start of input
       if (start === 0) {
-        newStart = 0;
-        newEnd = 1;
-      }
-      // At end of input
-      else if (start >= maxLength) {
-        newStart = maxLength - 1;
-        newEnd = maxLength;
-      }
-      // Handle backward navigation
-      else if (previousSelection.end !== null && start < previousSelection.end) {
-        newStart = Math.max(0, start - 1);
-        newEnd = start;
+        selectionStart = 0;
+        selectionEnd = 1;
+        direction = "forward";
+      } else if (start === maxLength) {
+        selectionStart = maxLength - 1;
+        selectionEnd = maxLength;
+        direction = "backward";
+      } else {
+        let startOffset = 0;
+        if (previousSelection.start !== null && previousSelection.end !== null) {
+          const navigatedBackwards = start < previousSelection.end;
+          direction = navigatedBackwards ? "backward" : "forward";
+          if (navigatedBackwards && !previousSelection.inserting) {
+            startOffset = -1;
+          }
+        }
+        selectionStart = start + startOffset;
+        selectionEnd = selectionStart + 1;
       }
 
-      input.setSelectionRange(newStart, newEnd);
-      syncSelection(newStart, newEnd, false);
+      input.setSelectionRange(selectionStart, selectionEnd, direction);
+      syncSelection(selectionStart, selectionEnd, false);
     }
   });
 
@@ -115,6 +123,8 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       onInput$={(event) => {
         const input = event.target as HTMLInputElement;
         const newValue = input.value.slice(0, context.numItemsSig.value);
+        const oldValue = previousValue.value;
+        const isBackspace = oldValue.length > newValue.length;
         const pattern =
           props.pattern !== null ? new RegExp(props.pattern ?? "^\\d*$") : null;
 
@@ -123,8 +133,28 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
           return;
         }
 
+        // Update the OTP value
         context.inputValueSig.value = newValue;
-        updateSelection();
+        previousValue.value = newValue;
+
+        // Handle focus position after deletion
+        if (isBackspace) {
+          const deletePosition = Math.min(
+            context.currIndexSig.value ?? 0,
+            newValue.length
+          );
+          input.setSelectionRange(deletePosition, deletePosition);
+          context.currIndexSig.value = deletePosition;
+          context.selectionStartSig.value = deletePosition;
+          context.selectionEndSig.value = deletePosition;
+        } else {
+          // For new input, move to next position
+          const newPosition = Math.min(newValue.length, context.numItemsSig.value);
+          input.setSelectionRange(newPosition, newPosition);
+          context.currIndexSig.value = newPosition;
+          context.selectionStartSig.value = newPosition;
+          context.selectionEndSig.value = newPosition;
+        }
 
         if (newValue.length === context.numItemsSig.value) {
           props.onComplete$?.();
@@ -145,10 +175,9 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
         if (!input) return;
 
         context.isFocusedSig.value = true;
-        const pos = 0;
-        input.focus();
-        input.setSelectionRange(pos, pos + 1);
-        syncSelection(pos, pos + 1, false);
+        const pos = context.inputValueSig.value.length;
+        input.setSelectionRange(pos, pos);
+        syncSelection(pos, pos, false);
       }}
       onBlur$={() => {
         shiftKeyDown.value = false;
