@@ -1,21 +1,39 @@
-import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
+import { $, component$, useSignal, useStyles$, useTask$ } from "@builder.io/qwik";
 import { Pagination } from "@kunai-consulting/qwik-components";
 
 export default component$(() => {
   useStyles$(styles);
   const selectedPageSig = useSignal(1);
   const totalPagesSig = useSignal(10);
-  const exampleArray = Array.from({length: totalPagesSig.value}, (_, index) => index + 1);
+  const maxLengthSig = useSignal(7);
 
-  return (
+  const paginationItems = useSignal(Pagination.getPaginationItems(totalPagesSig.value, selectedPageSig.value, maxLengthSig.value));
+
+  return (  
     <Pagination.Root
-    class="pagination-root"
+      class="pagination-root"
       totalPages={totalPagesSig.value}
+      currentPage={selectedPageSig.value}
       onPageChange$={$((page: number) => {
         selectedPageSig.value = page;
+        paginationItems.value = Pagination.getPaginationItems(totalPagesSig.value, selectedPageSig.value, maxLengthSig.value);
       })}
+      pages={paginationItems.value}
+      // can accept a string, jsx, or a component
+      // ellipsis="..."
     >
-      <Pagination.Page class="pagination-page"/>
+        {paginationItems.value.map((item, index) => {
+        const uniqueKey = `page-${index}-${Date.now()}`;
+        return (
+          <Pagination.Page
+            class="pagination-page"
+            key={uniqueKey}
+            _index={index}
+          >
+            <span>{item}</span>
+          </Pagination.Page>
+        );
+      })}
     </Pagination.Root>
   );
 });

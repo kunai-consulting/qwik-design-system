@@ -17,30 +17,30 @@ export const PaginationPage = component$(
 
     const context = useContext(paginationContextId);
 
+    if (_index === undefined) {
+      throw new Error('Qwik Design System: PaginationPage must have an index');
+    }
+
+    const pageValue = context.pagesSig.value[_index];
+    const isCurrentPage = !isNaN(pageValue) && pageValue === context.selectedPageSig.value;
+
     return (
       <>
-      {Array.from({length: context.totalPages }, (_, _index) => {
-        const isCurrent = useComputed$(() => {
-          return _index + 1 === context.selectedPageSig.value;
-        })
-        return (
-          <>
-          {/* @ts-expect-error annoying polymorphism */}
-          <Comp
-            data-qds-pagination-page
-            data-current={isCurrent.value}
-            aria-current={isCurrent.value ? "page" : ""}
-            {...rest}
-            disabled={isCurrent.value}
-            onClick$={() => {
-              context.selectedPageSig.value = _index + 1;
-            }}
-          >
-            {_index + 1}
-          </Comp></>
-          
-        )
-      })}
+        {/* @ts-expect-error annoying polymorphism */}
+        <Comp
+          data-qds-pagination-page
+          data-current={isCurrentPage}
+          aria-current={isCurrentPage ? "page" : ""}
+          {...rest}
+          disabled={isCurrentPage}
+          onClick$={() => {
+            if (!isNaN(pageValue)) {
+              context.selectedPageSig.value = pageValue;
+            }
+          }}
+        >
+          <Slot/>
+        </Comp>
       </>
     );
   }

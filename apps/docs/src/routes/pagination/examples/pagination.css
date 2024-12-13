@@ -18,3 +18,7 @@
     color: white;
     border-color: red;  /* It is applied here */
 }
+
+.pagination-page:disabled {
+    cursor: default;
+}

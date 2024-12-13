@@ -22,54 +22,48 @@ import { type PaginationContext, paginationContextId } from "./pagination-contex
 import { useBoundSignal } from "../../utils/bound-signal";
 
 export type PaginationRootProps = PropsOf<"div"> & {
-  showFirst?: boolean;
-  showLast?: boolean;
   totalPages: number;
-  page?: number;
+  currentPage?: number;
   "bind:page"?: Signal<number | 1>;
-  perPage?: number;
   /** Handler for when the current page changes */
   onPageChange$: QRL<(page: number) => void>;
   disabled?: boolean;
+  pages: any[];
 };
 
 export const PaginationRoot = component$((props: PaginationRootProps) => {
   const {
     "bind:page": givenPageSig,
-    showFirst,
-    showLast,
     totalPages,
     onPageChange$,
-    page,
+    currentPage,
     disabled,
-    perPage,
+    pages,
     ...rest
   } = props;
   const isInitialLoadSig = useSignal(true);
   const isDisabledSig = useComputed$(() => props.disabled);
-  const selectedPageSig = useBoundSignal(givenPageSig, props.page || 1);
-  const perPageSig = useSignal(props.perPage || 1);
-  const localId = useId();
+  const selectedPageSig = useBoundSignal(givenPageSig, props.currentPage || 1);
+  const pagesSig = useSignal(props.pages);
 
   const context: PaginationContext = {
     isDisabledSig,
-    localId,
-    showFirst,
-    showLast,
     totalPages,
     onPageChange$,
-    page,
-    perPage,
+    currentPage,
+    pagesSig,
     selectedPageSig,
-    perPageSig,
-    siblingCount: 0
   };
 
   useContextProvider(paginationContextId, context);
 
+  useTask$(({ track }) => {
+    const pages = track(() => props.pages);
+    pagesSig.value = pages;
+  });
+
   useTask$(async function handleChange({ track }) {
     track(() => context.selectedPageSig.value);
-
     if (isInitialLoadSig.value) {
       return;
     }
