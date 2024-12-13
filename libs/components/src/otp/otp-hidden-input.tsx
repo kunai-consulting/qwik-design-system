@@ -126,7 +126,8 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
         context.inputValueSig.value = newValue;
         previousValue.value = newValue;
 
-        if (isBackspace && position > 0) {
+        // If backspacing and not at last filled position, move back
+        if (isBackspace && position > 0 && position !== previousValue.value.length) {
           const newPos = position - 1;
           context.currIndexSig.value = newPos;
           context.selectionStartSig.value = newPos;
