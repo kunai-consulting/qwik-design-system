@@ -39,8 +39,6 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
         return;
       }
 
-      // Update the active slot range
-      const indexes = Array.from({ length: end - start }, (_, i) => start + i);
       context.selectionStartSig.value = start;
       context.selectionEndSig.value = Math.min(end, context.numItemsSig.value);
       context.currIndexSig.value = start;
@@ -61,57 +59,41 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
 
     if (value.length === 0 || start === null || end === null) return;
 
-    // Handle insertion mode (cursor at end while typing)
-    const isInserting = value.length < maxLength && start === value.length;
-    if (isInserting) {
-      const newEnd = end + 1;
-      input.setSelectionRange(start, newEnd);
-      syncSelection(start, newEnd, true);
+    const setRange = (
+      s: number,
+      e: number,
+      dir?: "forward" | "backward" | "none",
+      inserting = false
+    ) => {
+      input.setSelectionRange(s, e, dir);
+      syncSelection(s, e, inserting);
+    };
+
+    // Handle insertion mode
+    if (value.length < maxLength && start === value.length) {
+      setRange(start, end + 1, undefined, true);
       return;
     }
 
-    // Handle range selection with shift
+    // Handle range selection
     if (shiftKeyDown.value && start !== end) {
-      input.setSelectionRange(start, end, input.selectionDirection ?? "none");
-      syncSelection(start, end, false);
+      setRange(start, end, input.selectionDirection ?? "none");
       return;
     }
 
-    // Handle single caret selection
-    const isSingleCaret = start === end;
-    if (isSingleCaret) {
+    // Handle single caret
+    if (start === end) {
       if (start === 0) {
-        input.setSelectionRange(0, 1);
-        syncSelection(0, 1, false);
-        return;
+        setRange(0, 1, "forward");
+      } else if (start === maxLength) {
+        setRange(maxLength - 1, maxLength, "backward");
+      } else if (previousSelection.end !== null && start < previousSelection.end) {
+        setRange(start - 1, start);
+      } else if (shiftKeyDown.value && previousSelection.start !== null) {
+        setRange(previousSelection.start, start + 1);
+      } else {
+        setRange(start, start + 1);
       }
-
-      if (start === maxLength) {
-        input.setSelectionRange(maxLength - 1, maxLength);
-        syncSelection(maxLength - 1, maxLength, false);
-        return;
-      }
-
-      const movingBackward =
-        previousSelection.end !== null && start < previousSelection.end;
-      if (movingBackward) {
-        input.setSelectionRange(start - 1, start);
-        syncSelection(start - 1, start, false);
-        return;
-      }
-
-      if (shiftKeyDown.value && previousSelection.start !== null) {
-        const [rangeStart, rangeEnd] =
-          start < previousSelection.start
-            ? [start, previousSelection.start + 1]
-            : [previousSelection.start, start + 1];
-        input.setSelectionRange(rangeStart, rangeEnd);
-        syncSelection(rangeStart, rangeEnd, false);
-        return;
-      }
-
-      input.setSelectionRange(start, start + 1);
-      syncSelection(start, start + 1, false);
     }
   });
 
@@ -137,18 +119,25 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
 
         const isBackspace = previousValue.value.length > newValue.length;
         const position = isBackspace
-          ? Math.max(0, context.currIndexSig.value - 1)
+          ? Math.min(context.currIndexSig.value ?? 0, newValue.length)
           : Math.min(newValue.length, context.numItemsSig.value);
 
         // Update state
         context.inputValueSig.value = newValue;
         previousValue.value = newValue;
-        context.currIndexSig.value = position;
-        context.selectionStartSig.value = position;
-        context.selectionEndSig.value = position + 1;
 
-        // Update cursor
-        input.setSelectionRange(position, position + 1);
+        if (isBackspace && position > 0) {
+          const newPos = position - 1;
+          context.currIndexSig.value = newPos;
+          context.selectionStartSig.value = newPos;
+          context.selectionEndSig.value = newPos + 1;
+          input.setSelectionRange(newPos, newPos + 1);
+        } else {
+          context.currIndexSig.value = position;
+          context.selectionStartSig.value = position;
+          context.selectionEndSig.value = position + 1;
+          input.setSelectionRange(position, position + 1);
+        }
 
         if (newValue.length === context.numItemsSig.value) {
           props.onComplete$?.();
