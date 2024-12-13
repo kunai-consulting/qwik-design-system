@@ -18,17 +18,19 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
   const previousValue = useSignal<string>("");
   const shiftKeyDown = useSignal(false);
 
-  const previousSelection = {
+  const previousSelection = useSignal({
     inserting: false,
     start: null as number | null,
     end: null as number | null
-  };
+  });
 
   const syncSelection = $(
     (start: number | null, end: number | null, inserting: boolean) => {
-      previousSelection.inserting = inserting;
-      previousSelection.start = start;
-      previousSelection.end = end;
+      previousSelection.value = {
+        inserting,
+        start,
+        end
+      };
 
       if (start === null || end === null) {
         context.selectionStartSig.value = null;
@@ -86,10 +88,13 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
         setRange(0, 1, "forward");
       } else if (start === maxLength) {
         setRange(maxLength - 1, maxLength, "backward");
-      } else if (previousSelection.end !== null && start < previousSelection.end) {
+      } else if (
+        previousSelection.value.end !== null &&
+        start < previousSelection.value.end
+      ) {
         setRange(start - 1, start);
-      } else if (shiftKeyDown.value && previousSelection.start !== null) {
-        setRange(previousSelection.start, start + 1);
+      } else if (shiftKeyDown.value && previousSelection.value.start !== null) {
+        setRange(previousSelection.value.start, start + 1);
       } else {
         setRange(start, start + 1);
       }
