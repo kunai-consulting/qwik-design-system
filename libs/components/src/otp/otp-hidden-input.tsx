@@ -18,7 +18,6 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
   const previousValue = useSignal<string>("");
   const shiftKeyDown = useSignal(false);
 
-  // Track previous selection state
   const previousSelection = {
     inserting: false,
     start: null as number | null,
@@ -69,19 +68,19 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       syncSelection(s, e, inserting);
     };
 
-    // Handle insertion mode
+    // insertion mode
     if (value.length < maxLength && start === value.length) {
       setRange(start, end + 1, undefined, true);
       return;
     }
 
-    // Handle range selection
+    // range selection
     if (shiftKeyDown.value && start !== end) {
       setRange(start, end, input.selectionDirection ?? "none");
       return;
     }
 
-    // Handle single caret
+    // single navigation
     if (start === end) {
       if (start === 0) {
         setRange(0, 1, "forward");
@@ -99,75 +98,84 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
 
   useOnDocument("selectionchange", updateSelection);
 
+  const handleInput = $((e: InputEvent) => {
+    const input = e.target as HTMLInputElement;
+    const newValue = input.value.slice(0, context.numItemsSig.value);
+
+    // validate input if pattern provided
+    if (props.pattern && !new RegExp(props.pattern).test(newValue)) {
+      input.value = context.inputValueSig.value;
+      return;
+    }
+
+    const isBackspace = previousValue.value.length > newValue.length;
+    const position = isBackspace
+      ? Math.min(context.currIndexSig.value ?? 0, newValue.length)
+      : Math.min(newValue.length, context.numItemsSig.value);
+
+    context.inputValueSig.value = newValue;
+    previousValue.value = newValue;
+
+    // backspacing and not at last filled position, move back
+    if (isBackspace && position > 0 && position !== previousValue.value.length) {
+      const newPos = position - 1;
+      context.currIndexSig.value = newPos;
+      context.selectionStartSig.value = newPos;
+      context.selectionEndSig.value = newPos + 1;
+      input.setSelectionRange(newPos, newPos + 1);
+    } else {
+      context.currIndexSig.value = position;
+      context.selectionStartSig.value = position;
+      context.selectionEndSig.value = position + 1;
+      input.setSelectionRange(position, position + 1);
+    }
+
+    if (newValue.length === context.numItemsSig.value) {
+      props.onComplete$?.();
+    }
+  });
+
+  const handleKeyDown = $((e: KeyboardEvent) => {
+    if (e.key === "Shift") {
+      shiftKeyDown.value = true;
+    }
+  });
+
+  const handleKeyUp = $((e: KeyboardEvent) => {
+    if (e.key === "Shift") {
+      shiftKeyDown.value = false;
+    }
+  });
+
+  const handleFocus = $((e: FocusEvent) => {
+    const input = context.nativeInputRef.value;
+    if (!input) return;
+
+    context.isFocusedSig.value = true;
+    const pos = context.inputValueSig.value.length;
+    input.setSelectionRange(pos, pos);
+    syncSelection(pos, pos, false);
+  });
+
+  const handleBlur = $(() => {
+    shiftKeyDown.value = false;
+    context.isFocusedSig.value = false;
+    syncSelection(null, null, false);
+  });
+
   return (
     <input
       {...props}
       ref={context.nativeInputRef}
       value={context.inputValueSig.value}
       maxLength={context.numItemsSig.value}
-      data-qds-otp-hidden-input=""
+      data-qds-otp-hidden-input
       inputMode="numeric"
-      onInput$={(event) => {
-        const input = event.target as HTMLInputElement;
-        const newValue = input.value.slice(0, context.numItemsSig.value);
-
-        // Validate input if pattern provided
-        if (props.pattern && !new RegExp(props.pattern).test(newValue)) {
-          input.value = context.inputValueSig.value;
-          return;
-        }
-
-        const isBackspace = previousValue.value.length > newValue.length;
-        const position = isBackspace
-          ? Math.min(context.currIndexSig.value ?? 0, newValue.length)
-          : Math.min(newValue.length, context.numItemsSig.value);
-
-        // Update state
-        context.inputValueSig.value = newValue;
-        previousValue.value = newValue;
-
-        // If backspacing and not at last filled position, move back
-        if (isBackspace && position > 0 && position !== previousValue.value.length) {
-          const newPos = position - 1;
-          context.currIndexSig.value = newPos;
-          context.selectionStartSig.value = newPos;
-          context.selectionEndSig.value = newPos + 1;
-          input.setSelectionRange(newPos, newPos + 1);
-        } else {
-          context.currIndexSig.value = position;
-          context.selectionStartSig.value = position;
-          context.selectionEndSig.value = position + 1;
-          input.setSelectionRange(position, position + 1);
-        }
-
-        if (newValue.length === context.numItemsSig.value) {
-          props.onComplete$?.();
-        }
-      }}
-      onKeyDown$={(event) => {
-        if (event.key === "Shift") {
-          shiftKeyDown.value = true;
-        }
-      }}
-      onKeyUp$={(event) => {
-        if (event.key === "Shift") {
-          shiftKeyDown.value = false;
-        }
-      }}
-      onFocus$={() => {
-        const input = context.nativeInputRef.value;
-        if (!input) return;
-
-        context.isFocusedSig.value = true;
-        const pos = context.inputValueSig.value.length;
-        input.setSelectionRange(pos, pos);
-        syncSelection(pos, pos, false);
-      }}
-      onBlur$={() => {
-        shiftKeyDown.value = false;
-        context.isFocusedSig.value = false;
-        syncSelection(null, null, false);
-      }}
+      onInput$={[handleInput, props.onInput$]}
+      onKeyDown$={[handleKeyDown, props.onKeyDown$]}
+      onKeyUp$={[handleKeyUp, props.onKeyUp$]}
+      onFocus$={[handleFocus, props.onFocus$]}
+      onBlur$={[handleBlur, props.onBlur$]}
     />
   );
 });
