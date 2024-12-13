@@ -21,21 +21,27 @@ export const PaginationPage = component$(
       throw new Error('Qwik Design System: PaginationPage must have an index');
     }
 
-    const pageValue = context.pagesSig.value[_index];
-    const isCurrentPage = !isNaN(pageValue) && pageValue === context.selectedPageSig.value;
+    const pageValue = useComputed$(() => context.pagesSig.value[_index]);
+    const isCurrentPage = useComputed$(() => 
+      !isNaN(pageValue.value) && pageValue.value === context.selectedPageSig.value
+    );
+
+    if (isNaN(pageValue.value)) {
+      return <span>{context.ellipsis}</span>;
+    }
 
     return (
       <>
         {/* @ts-expect-error annoying polymorphism */}
         <Comp
           data-qds-pagination-page
-          data-current={isCurrentPage}
-          aria-current={isCurrentPage ? "page" : ""}
+          data-current={isCurrentPage.value}
+          aria-current={isCurrentPage.value ? "page" : ""}
           {...rest}
-          disabled={isCurrentPage}
+          disabled={isCurrentPage.value}
           onClick$={() => {
-            if (!isNaN(pageValue)) {
-              context.selectedPageSig.value = pageValue;
+            if (!isNaN(pageValue.value)) {
+              context.selectedPageSig.value = pageValue.value;
             }
           }}
         >

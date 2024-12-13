@@ -1,4 +1,4 @@
-import { createContextId, QRL, type Signal } from '@builder.io/qwik';
+import { createContextId, JSXChildren, QRL, type Signal } from '@builder.io/qwik';
 
 export const paginationContextId = createContextId<PaginationContext>('qds-pagination-context');
 
@@ -9,6 +9,7 @@ export type PaginationContext = {
   onPageChange$: QRL<(page: number) => void>;
   currentPage: number | undefined;
   pagesSig: Signal<any[]>;
+  ellipsis?: JSXChildren;
 }
 
 

@@ -19,7 +19,7 @@ export const getPaginationItems = (totalPages: number, selectedPage: number, max
         for (let j = 1; j <= sideLength + firstPage; j++) {
             res.push(j);
           }
-          res.push('...');
+          res.push(NaN);
           for (let k = totalPages - sideLength; k <= totalPages; k++) {
             res.push(k);
           }
@@ -31,7 +31,7 @@ export const getPaginationItems = (totalPages: number, selectedPage: number, max
       ) {
         const deductedSideLength = sideLength - 1;
         res.push(1);
-      res.push('...');
+      res.push(NaN);
 
       for (
         let l = selectedPage - deductedSideLength;
@@ -41,7 +41,7 @@ export const getPaginationItems = (totalPages: number, selectedPage: number, max
         res.push(l);
       }
 
-      res.push('...');
+      res.push(NaN);
       res.push(totalPages);
     }
     // handle ellipsis not in the middle
@@ -56,7 +56,7 @@ export const getPaginationItems = (totalPages: number, selectedPage: number, max
             remainingLength -= 1;
           }
   
-          res.push('...');
+          res.push(NaN);
           remainingLength -= 1;
 
           for (let n = totalPages - (remainingLength - 1); n <= totalPages; n++) {
@@ -68,7 +68,7 @@ export const getPaginationItems = (totalPages: number, selectedPage: number, max
             remainingLength -= 1;
           }
   
-          res.unshift('...');
+          res.unshift(NaN);
           remainingLength -= 1;
 
           for (let p = remainingLength; p >= 1; p--) {

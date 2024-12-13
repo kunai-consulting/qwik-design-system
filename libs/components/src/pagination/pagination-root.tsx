@@ -29,6 +29,7 @@ export type PaginationRootProps = PropsOf<"div"> & {
   onPageChange$: QRL<(page: number) => void>;
   disabled?: boolean;
   pages: any[];
+  ellipsis?: JSXChildren;
 };
 
 export const PaginationRoot = component$((props: PaginationRootProps) => {
@@ -39,6 +40,7 @@ export const PaginationRoot = component$((props: PaginationRootProps) => {
     currentPage,
     disabled,
     pages,
+    ellipsis,
     ...rest
   } = props;
   const isInitialLoadSig = useSignal(true);
@@ -53,6 +55,7 @@ export const PaginationRoot = component$((props: PaginationRootProps) => {
     currentPage,
     pagesSig,
     selectedPageSig,
+    ellipsis,
   };
 
   useContextProvider(paginationContextId, context);

@@ -19,8 +19,7 @@ export default component$(() => {
         paginationItems.value = Pagination.getPaginationItems(totalPagesSig.value, selectedPageSig.value, maxLengthSig.value);
       })}
       pages={paginationItems.value}
-      // can accept a string, jsx, or a component
-      // ellipsis="..."
+      ellipsis="..."
     >
         {paginationItems.value.map((item, index) => {
         const uniqueKey = `page-${index}-${Date.now()}`;
