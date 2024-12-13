@@ -10,7 +10,8 @@ import {
   useTask$,
   type Signal,
   useComputed$,
-  useId
+  useId,
+  $
 } from "@builder.io/qwik";
 import {
   usePagination,
@@ -47,6 +48,7 @@ export const PaginationRoot = component$((props: PaginationRootProps) => {
   const isDisabledSig = useComputed$(() => props.disabled);
   const selectedPageSig = useBoundSignal(givenPageSig, props.currentPage || 1);
   const pagesSig = useSignal(props.pages);
+  const focusedIndexSig = useSignal<number | null>(null);
 
   const context: PaginationContext = {
     isDisabledSig,
@@ -56,6 +58,7 @@ export const PaginationRoot = component$((props: PaginationRootProps) => {
     pagesSig,
     selectedPageSig,
     ellipsis,
+    focusedIndexSig,
   };
 
   useContextProvider(paginationContextId, context);
@@ -78,12 +81,49 @@ export const PaginationRoot = component$((props: PaginationRootProps) => {
     isInitialLoadSig.value = false;
   });
 
+  const handleKeyDown$ = $((e: KeyboardEvent) => {
+    const currentFocusedIndex = focusedIndexSig.value;
+    if (currentFocusedIndex === null) return;
+
+    switch (e.key) {
+      case 'ArrowRight':
+        e.preventDefault();
+        if (currentFocusedIndex < pagesSig.value.length - 1) {
+          focusedIndexSig.value = currentFocusedIndex + 1;
+        }
+        break;
+      case 'ArrowLeft':
+        e.preventDefault();
+        if (currentFocusedIndex > 0) {
+          focusedIndexSig.value = currentFocusedIndex - 1;
+        }
+        break;
+      case 'Home':
+        e.preventDefault();
+        focusedIndexSig.value = 0;
+        break;
+      case 'End':
+        e.preventDefault();
+        focusedIndexSig.value = pagesSig.value.length - 1;
+        break;
+      case 'Enter':
+      case ' ':
+        e.preventDefault();
+        const pageValue = pagesSig.value[currentFocusedIndex];
+        if (!isNaN(pageValue)) {
+          selectedPageSig.value = pageValue;
+        }
+        break;
+    }
+  });
+
   return (
     <div
       {...rest}
       data-qds-pagination-root
       data-disabled={context.isDisabledSig.value ? "" : undefined}
       aria-disabled={context.isDisabledSig.value ? "true" : "false"}
+      onKeyDown$={handleKeyDown$}
     >
       <Slot />
     </div>
