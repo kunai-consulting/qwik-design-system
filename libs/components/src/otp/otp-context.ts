@@ -2,7 +2,7 @@ import { type Signal, createContextId } from "@builder.io/qwik";
 
 export interface OTPContext {
   inputValueSig: Signal<string>;
-  currIndexSig: Signal<number>;
+  currIndexSig: Signal<number | null>;
   nativeInputRef: Signal<HTMLInputElement | undefined>;
   numItemsSig: Signal<number>;
   isLastItemSig: Signal<boolean>;

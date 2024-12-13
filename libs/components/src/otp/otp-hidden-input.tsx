@@ -42,7 +42,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       // Update the active slot range
       const indexes = Array.from({ length: end - start }, (_, i) => start + i);
       context.selectionStartSig.value = start;
-      context.selectionEndSig.value = end;
+      context.selectionEndSig.value = Math.min(end, context.numItemsSig.value);
       context.currIndexSig.value = start;
     }
   );
@@ -123,38 +123,27 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       onInput$={(event) => {
         const input = event.target as HTMLInputElement;
         const newValue = input.value.slice(0, context.numItemsSig.value);
-        const oldValue = previousValue.value;
-        const isBackspace = oldValue.length > newValue.length;
-        const pattern =
-          props.pattern !== null ? new RegExp(props.pattern ?? "^\\d*$") : null;
 
-        if (pattern && !pattern.test(newValue)) {
+        // Validate input if pattern provided
+        if (props.pattern && !new RegExp(props.pattern).test(newValue)) {
           input.value = context.inputValueSig.value;
           return;
         }
 
-        // Update the OTP value
+        const isBackspace = previousValue.value.length > newValue.length;
+        const position = isBackspace
+          ? Math.min(context.currIndexSig.value ?? 0, newValue.length)
+          : Math.min(newValue.length, context.numItemsSig.value);
+
+        // Update state
         context.inputValueSig.value = newValue;
         previousValue.value = newValue;
+        context.currIndexSig.value = position;
+        context.selectionStartSig.value = position;
+        context.selectionEndSig.value = position;
 
-        // Handle focus position after deletion
-        if (isBackspace) {
-          const deletePosition = Math.min(
-            context.currIndexSig.value ?? 0,
-            newValue.length
-          );
-          input.setSelectionRange(deletePosition, deletePosition);
-          context.currIndexSig.value = deletePosition;
-          context.selectionStartSig.value = deletePosition;
-          context.selectionEndSig.value = deletePosition;
-        } else {
-          // For new input, move to next position
-          const newPosition = Math.min(newValue.length, context.numItemsSig.value);
-          input.setSelectionRange(newPosition, newPosition);
-          context.currIndexSig.value = newPosition;
-          context.selectionStartSig.value = newPosition;
-          context.selectionEndSig.value = newPosition;
-        }
+        // Update cursor
+        input.setSelectionRange(position, position);
 
         if (newValue.length === context.numItemsSig.value) {
           props.onComplete$?.();
