@@ -94,15 +94,19 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
         direction = "backward";
       } else {
         let startOffset = 0;
+        let endOffset = 1;
         if (previousSelection.start !== null && previousSelection.end !== null) {
           const navigatedBackwards = start < previousSelection.end;
           direction = navigatedBackwards ? "backward" : "forward";
           if (navigatedBackwards && !previousSelection.inserting) {
             startOffset = -1;
           }
+          if (shiftKeyDown.value && !previousSelection.inserting) {
+            endOffset = 2;
+          }
         }
         selectionStart = start + startOffset;
-        selectionEnd = selectionStart + 1;
+        selectionEnd = start + startOffset + endOffset;
       }
 
       input.setSelectionRange(selectionStart, selectionEnd, direction);
