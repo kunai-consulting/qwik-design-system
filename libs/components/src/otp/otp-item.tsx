@@ -6,52 +6,49 @@ import {
   useComputed$,
   useContext,
   useContextProvider,
-  useSignal,
-} from '@builder.io/qwik';
-import { OTPContextId } from './otp-context';
+  useSignal
+} from "@builder.io/qwik";
+import { OTPContextId } from "./otp-context";
 
-interface ItemContextType {
-  index: number;
-}
 type OTPProps = {
   _index?: number;
-} & PropsOf<'div'>;
+} & PropsOf<"div">;
 
-export const itemContextId = createContextId<ItemContextType>('qd-otp-item');
+export const itemContextId = createContextId<{ index: number }>("qd-otp-item");
 export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
   const context = useContext(OTPContextId);
   const itemRef = useSignal<HTMLInputElement>();
   useContextProvider(itemContextId, { index: _index });
-  const itemValue = context.value.value[_index] || '';
-  const isFullEntry = useComputed$(
-    () => _index === context.numItemsSig.value - 1
-  );
+  const itemValue = context.inputValueSig.value[_index] || "";
+
+  const isHighlightedSig = useComputed$(() => {
+    if (!context.isFocusedSig.value) {
+      return false;
+    }
+
+    const value = context.inputValueSig.value;
+
+    // Handle selection range
+    const start = context.selectionStartSig.value;
+    const end = context.selectionEndSig.value;
+    if (start !== null && end !== null && start !== end) {
+      return _index >= start && _index < end;
+    }
+
+    // Only highlight if this is the current empty position
+    return _index === context.currIndexSig.value && !value[_index];
+  });
 
   if (_index === undefined) {
-    throw new Error(
-      'Qwik UI: Otp Item must have an index. This is a bug in Qwik UI'
-    );
+    throw new Error("Qwik UI: Otp Item must have an index. This is a bug in Qwik UI");
   }
 
   return (
     <div
       {...props}
       ref={itemRef}
-      data-qui-otp-item={_index}
-      data-highlighted={
-        (context.isFocusedSig.value &&
-          context.activeIndexSig.value === _index) ||
-        (isFullEntry.value &&
-          context.fullEntrySig.value &&
-          !context.isFocusedSig.value === false)
-          ? ''
-          : undefined
-      }
-      onFocus$={() => {
-        context.activeIndexSig.value = _index;
-        context.isFocusedSig.value = true;
-        context.nativeInputRef.value?.focus();
-      }}
+      data-qds-otp-item={_index}
+      data-highlighted={isHighlightedSig.value ? "" : undefined}
     >
       {itemValue}
       <Slot />
