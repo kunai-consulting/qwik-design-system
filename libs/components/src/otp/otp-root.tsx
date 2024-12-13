@@ -1,12 +1,15 @@
 import {
   type HTMLInputAutocompleteAttribute,
   type PropsOf,
+  type QRL,
   Slot,
   component$,
+  implicit$FirstArg,
   useComputed$,
   useContextProvider,
   useSignal,
-  useStyles$
+  useStyles$,
+  useTask$
 } from "@builder.io/qwik";
 import { findComponent, processChildren } from "../../utils/inline-component";
 import { OTPContextId } from "./otp-context";
@@ -16,9 +19,10 @@ import styles from "./otp.css?inline";
 type OtpRootProps = PropsOf<"div"> & {
   _numItems?: number;
   autoComplete?: HTMLInputAutocompleteAttribute;
+  onComplete$?: QRL<() => void>;
 };
 
-export const OtpRoot = ({ children }: OtpRootProps) => {
+export const OtpRoot = ({ children, ...props }: OtpRootProps) => {
   let currItemIndex = 0;
   let numItems = 0;
 
@@ -30,12 +34,15 @@ export const OtpRoot = ({ children }: OtpRootProps) => {
 
   processChildren(children);
 
-  return <OtpBase _numItems={numItems}>{children}</OtpBase>;
+  return (
+    <OtpBase _numItems={numItems} {...props}>
+      {children}
+    </OtpBase>
+  );
 };
 
 export const OtpBase = component$((props: OtpRootProps) => {
   useStyles$(styles);
-  const { ...rest } = props;
 
   const inputValueSig = useSignal<string>("");
   const currIndexSig = useSignal(0);
@@ -60,9 +67,17 @@ export const OtpBase = component$((props: OtpRootProps) => {
     selectionEndSig
   };
 
+  useTask$(async ({ track }) => {
+    track(() => inputValueSig.value);
+
+    if (inputValueSig.value.length !== numItemsSig.value) return;
+
+    await props.onComplete$?.();
+  });
+
   useContextProvider(OTPContextId, context);
   return (
-    <div data-qds-otp-root {...rest}>
+    <div data-qds-otp-root {...props}>
       <Slot />
     </div>
   );

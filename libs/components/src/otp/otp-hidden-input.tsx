@@ -4,13 +4,13 @@ import {
   type PropsOf,
   useContext,
   useSignal,
-  useOnDocument
+  useOnDocument,
+  useTask$
 } from "@builder.io/qwik";
 import { OTPContextId } from "./otp-context";
 
 type OtpNativeInputProps = PropsOf<"input"> & {
   pattern?: string | null;
-  onComplete$?: () => void;
 };
 
 export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
@@ -133,10 +133,6 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       context.selectionStartSig.value = position;
       context.selectionEndSig.value = position + 1;
       input.setSelectionRange(position, position + 1);
-    }
-
-    if (newValue.length === context.numItemsSig.value) {
-      props.onComplete$?.();
     }
   });
 

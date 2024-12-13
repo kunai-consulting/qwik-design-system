@@ -29,7 +29,12 @@ export default component$(() => {
           </div>
         </div>
 
-        <Otp.Root class="flex flex-col items-center justify-center">
+        <Otp.Root
+          class="flex flex-col items-center justify-center"
+          onComplete$={() => {
+            console.log("complete");
+          }}
+        >
           <Otp.HiddenInput />
 
           <div class="otp-container flex flex-row justify-center gap-2">
