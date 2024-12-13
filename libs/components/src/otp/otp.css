@@ -18,9 +18,8 @@
     
     /* Hide the actual input content */
     color: transparent;
-    -webkit-text-fill-color: transparent;  /* Add this */
+    -webkit-text-fill-color: transparent;  
     background: transparent;
-    caret-color: transparent;
     
     /* Password manager support */
     width: var(--pwm-width, 100%);

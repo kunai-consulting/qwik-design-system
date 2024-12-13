@@ -91,6 +91,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
     // Update selection range in context
     context.selectionStartSig.value = start ?? _s;
     context.selectionEndSig.value = end ?? _e;
+    context.currIndexSig.value = start ?? _s;
   });
 
   useOnDocument("selectionchange", updateSelection);
@@ -98,6 +99,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
   const handleInput = $((event: InputEvent) => {
     const input = event.target as HTMLInputElement;
     const newValue = input.value.slice(0, context.numItemsSig.value);
+    const oldValue = context.inputValueSig.value;
 
     // Get pattern regex
     const pattern = props.pattern ?? "^\\d*$";
@@ -105,20 +107,19 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
 
     if (newValue.length > 0 && regexp && !regexp.test(newValue)) {
       event.preventDefault();
-      input.value = context.inputValueSig.value;
+      input.value = oldValue;
       return;
     }
 
-    const maybeHasDeleted = newValue.length < context.inputValueSig.value.length;
-    if (maybeHasDeleted) {
-      document.dispatchEvent(new Event("selectionchange"));
-    }
+    const isDeleting = newValue.length < oldValue.length;
+    let currentPos = isDeleting
+      ? input.selectionStart ?? Math.max(newValue.length - 1, 0)
+      : newValue.length;
 
     context.inputValueSig.value = newValue;
-    context.currIndexSig.value = newValue.length;
+    context.currIndexSig.value = currentPos;
 
-    // Update selection to current input position
-    const currentPos = newValue.length;
+    // Update selection to maintain position during deletion or advance during input
     input.setSelectionRange(currentPos, currentPos);
     context.selectionStartSig.value = currentPos;
     context.selectionEndSig.value = currentPos;
@@ -134,8 +135,21 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
   });
 
   const handleKeyDown = $((event: KeyboardEvent) => {
+    const input = event.target as HTMLInputElement;
     if (event.key === "Shift") {
       shiftKeyDown.value = true;
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      event.preventDefault();
+      const currentPos = context.currIndexSig.value;
+      const newPos =
+        event.key === "ArrowLeft"
+          ? Math.max(0, currentPos - 1)
+          : Math.min(context.numItemsSig.value - 1, currentPos + 1);
+
+      context.currIndexSig.value = newPos;
+      context.selectionStartSig.value = newPos;
+      context.selectionEndSig.value = newPos;
+      input.setSelectionRange(newPos, newPos);
     }
   });
 
@@ -147,13 +161,23 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
 
   const handleFocus = $(() => {
     const input = context.nativeInputRef.value;
-    if (input) {
-      const start = Math.min(input.value.length, context.numItemsSig.value - 1);
-      const end = input.value.length;
-      input.setSelectionRange(start, end);
+    if (!input) {
+      return;
     }
+
     context.isFocusedSig.value = true;
-    updateSelection();
+
+    // Set initial selection to first empty position
+    const currentValue = input.value;
+    let pos = 0;
+    while (pos < currentValue.length && currentValue[pos]) {
+      pos++;
+    }
+
+    input.setSelectionRange(pos, pos);
+    context.selectionStartSig.value = pos;
+    context.selectionEndSig.value = pos;
+    context.currIndexSig.value = pos;
   });
 
   const handleBlur = $(() => {

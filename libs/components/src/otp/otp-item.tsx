@@ -20,31 +20,23 @@ export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
   const itemRef = useSignal<HTMLInputElement>();
   useContextProvider(itemContextId, { index: _index });
   const itemValue = context.inputValueSig.value[_index] || "";
-  const isLastItemSig = useComputed$(() => _index === context.numItemsSig.value - 1);
 
   const isHighlightedSig = useComputed$(() => {
     if (!context.isFocusedSig.value) {
       return false;
     }
 
-    // During typing, highlight current position
-    if (context.selectionStartSig.value === context.selectionEndSig.value) {
-      return _index === context.selectionStartSig.value;
-    }
+    const value = context.inputValueSig.value;
 
     // Handle selection range
     const start = context.selectionStartSig.value;
     const end = context.selectionEndSig.value;
-    if (start !== null && end !== null) {
+    if (start !== null && end !== null && start !== end) {
       return _index >= start && _index < end;
     }
 
-    // When at the end, highlight the last position
-    if (context.currIndexSig.value === context.numItemsSig.value && isLastItemSig.value) {
-      return true;
-    }
-
-    return false;
+    // Only highlight if this is the current empty position
+    return _index === context.currIndexSig.value && !value[_index];
   });
 
   if (_index === undefined) {
