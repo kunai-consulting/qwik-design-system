@@ -80,37 +80,38 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
     // Handle single caret selection
     const isSingleCaret = start === end;
     if (isSingleCaret) {
-      let selectionStart = start;
-      let selectionEnd = start + 1;
-      let direction: "forward" | "backward" | undefined = undefined;
-
       if (start === 0) {
-        selectionStart = 0;
-        selectionEnd = 1;
-        direction = "forward";
-      } else if (start === maxLength) {
-        selectionStart = maxLength - 1;
-        selectionEnd = maxLength;
-        direction = "backward";
-      } else {
-        let startOffset = 0;
-        let endOffset = 1;
-        if (previousSelection.start !== null && previousSelection.end !== null) {
-          const navigatedBackwards = start < previousSelection.end;
-          direction = navigatedBackwards ? "backward" : "forward";
-          if (navigatedBackwards && !previousSelection.inserting) {
-            startOffset = -1;
-          }
-          if (shiftKeyDown.value && !previousSelection.inserting) {
-            endOffset = 2;
-          }
-        }
-        selectionStart = start + startOffset;
-        selectionEnd = start + startOffset + endOffset;
+        input.setSelectionRange(0, 1);
+        syncSelection(0, 1, false);
+        return;
       }
 
-      input.setSelectionRange(selectionStart, selectionEnd, direction);
-      syncSelection(selectionStart, selectionEnd, false);
+      if (start === maxLength) {
+        input.setSelectionRange(maxLength - 1, maxLength);
+        syncSelection(maxLength - 1, maxLength, false);
+        return;
+      }
+
+      const movingBackward =
+        previousSelection.end !== null && start < previousSelection.end;
+      if (movingBackward) {
+        input.setSelectionRange(start - 1, start);
+        syncSelection(start - 1, start, false);
+        return;
+      }
+
+      if (shiftKeyDown.value && previousSelection.start !== null) {
+        const [rangeStart, rangeEnd] =
+          start < previousSelection.start
+            ? [start, previousSelection.start + 1]
+            : [previousSelection.start, start + 1];
+        input.setSelectionRange(rangeStart, rangeEnd);
+        syncSelection(rangeStart, rangeEnd, false);
+        return;
+      }
+
+      input.setSelectionRange(start, start + 1);
+      syncSelection(start, start + 1, false);
     }
   });
 
@@ -136,7 +137,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
 
         const isBackspace = previousValue.value.length > newValue.length;
         const position = isBackspace
-          ? Math.min(context.currIndexSig.value ?? 0, newValue.length)
+          ? Math.max(0, context.currIndexSig.value - 1)
           : Math.min(newValue.length, context.numItemsSig.value);
 
         // Update state
@@ -144,10 +145,10 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
         previousValue.value = newValue;
         context.currIndexSig.value = position;
         context.selectionStartSig.value = position;
-        context.selectionEndSig.value = position;
+        context.selectionEndSig.value = position + 1;
 
         // Update cursor
-        input.setSelectionRange(position, position);
+        input.setSelectionRange(position, position + 1);
 
         if (newValue.length === context.numItemsSig.value) {
           props.onComplete$?.();

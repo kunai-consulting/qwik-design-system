@@ -26,8 +26,6 @@ export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
       return false;
     }
 
-    const value = context.inputValueSig.value;
-
     // Handle selection range
     const start = context.selectionStartSig.value;
     const end = context.selectionEndSig.value;
@@ -35,8 +33,8 @@ export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
       return _index >= start && _index < end;
     }
 
-    // Only highlight if this is the current empty position
-    return _index === context.currIndexSig.value && !value[_index];
+    // Highlight current position regardless of value
+    return _index === context.currIndexSig.value;
   });
 
   if (_index === undefined) {
