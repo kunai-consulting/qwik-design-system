@@ -5,7 +5,8 @@ import {
   useContext,
   useSignal,
   useOnDocument,
-  useTask$
+  useTask$,
+  sync$
 } from "@builder.io/qwik";
 import { OTPContextId } from "./otp-context";
 
@@ -103,6 +104,28 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
 
   useOnDocument("selectionchange", updateSelection);
 
+  const handleKeyDownSync = sync$((e: KeyboardEvent) => {
+    const input = e.target as HTMLInputElement;
+
+    // Only handle left arrow key
+    if (e.key === "ArrowLeft" && input.selectionStart === input.selectionEnd) {
+      const currentPos = input.selectionStart;
+      if (!currentPos) return;
+
+      const value = input.value;
+      // When in an empty slot trying to move to a filled one
+      if (!value[currentPos] && value[currentPos - 1]) {
+        e.preventDefault();
+        // Find the next non-empty position to the left
+        let newPos = currentPos - 1;
+        while (newPos > 0 && !value[newPos - 1]) {
+          newPos--;
+        }
+        input.setSelectionRange(newPos, newPos + 1);
+      }
+    }
+  });
+
   const handleInput = $((e: InputEvent) => {
     const input = e.target as HTMLInputElement;
     const newValue = input.value.slice(0, context.numItemsSig.value);
@@ -173,7 +196,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       data-qds-otp-hidden-input
       inputMode="numeric"
       onInput$={[handleInput, props.onInput$]}
-      onKeyDown$={[handleKeyDown, props.onKeyDown$]}
+      onKeyDown$={[handleKeyDownSync, handleKeyDown, props.onKeyDown$]}
       onKeyUp$={[handleKeyUp, props.onKeyUp$]}
       onFocus$={[handleFocus, props.onFocus$]}
       onBlur$={[handleBlur, props.onBlur$]}

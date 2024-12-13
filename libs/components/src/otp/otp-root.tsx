@@ -4,7 +4,6 @@ import {
   type QRL,
   Slot,
   component$,
-  implicit$FirstArg,
   useComputed$,
   useContextProvider,
   useSignal,
@@ -14,7 +13,7 @@ import {
 import { findComponent, processChildren } from "../../utils/inline-component";
 import { OTPContextId } from "./otp-context";
 import { OtpItem } from "./otp-item";
-import styles from "./otp.css?inline";
+// import styles from "./otp.css?inline";
 
 type OtpRootProps = PropsOf<"div"> & {
   _numItems?: number;
@@ -43,7 +42,7 @@ export const OtpRoot = ({ children, ...props }: OtpRootProps) => {
 };
 
 export const OtpBase = component$((props: OtpRootProps) => {
-  useStyles$(styles);
+  // useStyles$(styles);
 
   const inputValueSig = useSignal<string>(props.value || "");
   const currIndexSig = useSignal(0);
