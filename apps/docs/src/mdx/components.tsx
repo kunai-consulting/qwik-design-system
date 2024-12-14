@@ -33,7 +33,7 @@ export const components: Record<string, Component> = {
       <h2
         {...props}
         class={cn(
-          "mt-10 scroll-m-20 border-b border-b-cool-200 pb-1 text-3xl font-semibold tracking-tight text-cool-700 first:mt-0",
+          "mt-16 scroll-m-20 border-b border-b-qwik-neutral-900 pb-1 text-3xl font-semibold tracking-tight text-cool-700 first:mt-0",
           props.class
         )}
       >

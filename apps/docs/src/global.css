@@ -7,7 +7,7 @@
 @tailwind utilities;
 
 body {
-  @apply max-w-screen-2xl mx-auto my-20 font-sans;
+  @apply max-w-screen-2xl mx-auto my-20 font-sans px-6;
 }
 
 /* font syntax highlighting */
