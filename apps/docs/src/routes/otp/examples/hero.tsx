@@ -24,7 +24,7 @@ export default component$(() => {
             <Otp.Item
               key={`otp-item-${slot}`}
               class={
-                "size-10 border-2 text-center rounded data-[highlighted]:ring-qwik-blue-800 data-[highlighted]:ring-[3px] caret-blue-600"
+                "h-9 w-10 border-2 text-center rounded data-[highlighted]:ring-qwik-blue-800 data-[highlighted]:ring-[3px] caret-blue-600"
               }
             >
               <Otp.Caret class="text-blue-500 text-xl animate-blink-caret">|</Otp.Caret>
