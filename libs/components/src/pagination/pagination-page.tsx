@@ -1,4 +1,4 @@
-import {component$, Slot, useComputed$, useContext, useTask$} from "@builder.io/qwik";
+import {component$, Slot, useComputed$, useContext, useTask$, useSignal} from "@builder.io/qwik";
 import type {QwikIntrinsicElements} from "@builder.io/qwik";
 import {paginationContextId} from "./pagination-context";
 
@@ -15,53 +15,55 @@ export const PaginationPage = component$(
     const {as, _index, ...rest} = props;
     const Comp = as ?? "button";
     const context = useContext(paginationContextId);
+    const pageRef = useSignal<HTMLElement>();
 
     if (_index === undefined) {
       throw new Error('Qwik Design System: PaginationPage must have an index');
     }
 
-    const pageValue = useComputed$(() => context.pagesSig.value[_index]);
+    const isVisible = useComputed$(() => 
+      context.ellipsisSig.value.includes(_index + 1)
+    );
+
+    if (!isVisible.value) {
+      const isPrevVisible = context.ellipsisSig.value.includes(_index);
+      return isPrevVisible ? <span>{context.ellipsis}</span> : null;
+    }
+
     const isCurrentPage = useComputed$(() => 
-      !isNaN(pageValue.value) && pageValue.value === context.selectedPageSig.value
+      (_index + 1) === context.selectedPageSig.value
     );
 
     useTask$(({ track }) => {
       const focusedIndex = track(() => context.focusedIndexSig.value);
       if (focusedIndex === _index) {
-        // Focus the button element
-        (document.querySelector(`[data-qds-pagination-page][data-index="${_index}"]`) as HTMLElement)?.focus();
+        pageRef.value?.focus();
       }
     });
-
-    if (isNaN(pageValue.value)) {
-      return <span>{context.ellipsis}</span>;
-    }
 
     return (
       <>
         {/* @ts-expect-error annoying polymorphism */}
         <Comp
-         data-qds-pagination-page
-         data-index={_index}
-         data-current={isCurrentPage.value}
-         aria-current={isCurrentPage.value ? "page" : undefined}
-         aria-label={`Page ${pageValue.value}`}
-         role="button"
-         tabIndex={0}
-         {...rest}
-         disabled={isCurrentPage.value}
-         onClick$={(e: Event) => {
-           // Prevent default to avoid losing focus
-           e.preventDefault();
-           if (!isNaN(pageValue.value)) {
-             context.selectedPageSig.value = pageValue.value;
-           }
-         }}
-         onFocus$={() => {
-           context.focusedIndexSig.value = _index;
-         }}
+          ref={pageRef}
+          data-qds-pagination-page
+          data-index={_index}
+          data-current={isCurrentPage.value}
+          aria-current={isCurrentPage.value ? "page" : undefined}
+          aria-label={`Page ${_index + 1}`}
+          role="button"
+          tabIndex={0}
+          {...rest}
+          disabled={isCurrentPage.value}
+          onClick$={(e: Event) => {
+            e.preventDefault();
+            context.selectedPageSig.value = _index + 1;
+          }}
+          onFocus$={() => {
+            context.focusedIndexSig.value = _index;
+          }}
         >
-          <Slot/>
+          <Slot />
         </Comp>
       </>
     );

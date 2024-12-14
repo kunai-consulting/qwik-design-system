@@ -21,34 +21,57 @@ import {
 import { PaginationPage } from "./pagination-page";
 import { type PaginationContext, paginationContextId } from "./pagination-context";
 import { useBoundSignal } from "../../utils/bound-signal";
+import { getPaginationItems } from "./utils";
 
 export type PaginationRootProps = PropsOf<"div"> & {
   totalPages: number;
   currentPage?: number;
   "bind:page"?: Signal<number | 1>;
-  /** Handler for when the current page changes */
-  onPageChange$: QRL<(page: number) => void>;
+  onPageChange$?: QRL<(page: number) => void>;
   disabled?: boolean;
   pages: any[];
   ellipsis?: JSXChildren;
+  maxLength?: number;
 };
 
-export const PaginationRoot = component$((props: PaginationRootProps) => {
+export const PaginationRoot =
+  (props: PaginationRootProps) => {
+    let currPageIndex = 0;
+
+    findComponent(PaginationPage, (pageProps) => {
+      pageProps._index = currPageIndex;
+      currPageIndex++;
+    });
+
+    processChildren(props.children);
+
+    return (
+      <PaginationBase
+        {...props}
+      >
+        {props.children}
+      </PaginationBase>
+    )
+  };
+
+export const PaginationBase = component$((props: PaginationRootProps) => {
   const {
     "bind:page": givenPageSig,
     totalPages,
     onPageChange$,
     currentPage,
     disabled,
+    maxLength,
     pages,
     ellipsis,
     ...rest
   } = props;
   const isInitialLoadSig = useSignal(true);
-  const isDisabledSig = useComputed$(() => props.disabled);
-  const selectedPageSig = useBoundSignal(givenPageSig, props.currentPage || 1);
-  const pagesSig = useSignal(props.pages);
+  const isDisabledSig = useComputed$(() => disabled);
+  const selectedPageSig = useBoundSignal(givenPageSig, currentPage || 1);
   const focusedIndexSig = useSignal<number | null>(null);
+  const ellipsisSig = useComputed$(() => getPaginationItems(pages.length, selectedPageSig.value, maxLength || 7));
+  const pagesSig = useSignal(pages)
 
   const context: PaginationContext = {
     isDisabledSig,
@@ -57,22 +80,20 @@ export const PaginationRoot = component$((props: PaginationRootProps) => {
     currentPage,
     pagesSig,
     selectedPageSig,
+    ellipsisSig,
     ellipsis,
     focusedIndexSig,
   };
 
   useContextProvider(paginationContextId, context);
 
-  useTask$(({ track }) => {
-    const pages = track(() => props.pages);
-    pagesSig.value = pages;
-  });
-
   useTask$(async function handleChange({ track }) {
     track(() => context.selectedPageSig.value);
     if (isInitialLoadSig.value) {
       return;
     }
+
+    selectedPageSig.value = context.selectedPageSig.value;
 
     await onPageChange$?.(context.selectedPageSig.value);
   });
@@ -105,14 +126,6 @@ export const PaginationRoot = component$((props: PaginationRootProps) => {
       case 'End':
         e.preventDefault();
         focusedIndexSig.value = pagesSig.value.length - 1;
-        break;
-      case 'Enter':
-      case ' ':
-        e.preventDefault();
-        const pageValue = pagesSig.value[currentFocusedIndex];
-        if (!isNaN(pageValue)) {
-          selectedPageSig.value = pageValue;
-        }
         break;
     }
   });
