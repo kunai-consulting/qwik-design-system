@@ -13,7 +13,7 @@ export default component$(() => {
       totalPages={totalPagesSig.value}
       currentPage={selectedPageSig.value}
       pages={paginationItems}
-      maxLength={7}
+      siblingCount={2}
       ellipsis="..."
     >
         {paginationItems.map((item, index) => {

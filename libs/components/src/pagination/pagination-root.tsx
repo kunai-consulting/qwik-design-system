@@ -14,7 +14,6 @@ import {
   $
 } from "@builder.io/qwik";
 import {
-  usePagination,
   processChildren,
   findComponent,
 } from "@kunai-consulting/qwik-hooks";
@@ -31,7 +30,7 @@ export type PaginationRootProps = PropsOf<"div"> & {
   disabled?: boolean;
   pages: any[];
   ellipsis?: JSXChildren;
-  maxLength?: number;
+  siblingCount?: number;
 };
 
 export const PaginationRoot =
@@ -61,7 +60,7 @@ export const PaginationBase = component$((props: PaginationRootProps) => {
     onPageChange$,
     currentPage,
     disabled,
-    maxLength,
+    siblingCount,
     pages,
     ellipsis,
     ...rest
@@ -70,7 +69,7 @@ export const PaginationBase = component$((props: PaginationRootProps) => {
   const isDisabledSig = useComputed$(() => disabled);
   const selectedPageSig = useBoundSignal(givenPageSig, currentPage || 1);
   const focusedIndexSig = useSignal<number | null>(null);
-  const ellipsisSig = useComputed$(() => getPaginationItems(pages.length, selectedPageSig.value, maxLength || 7));
+  const ellipsisSig = useComputed$(() => getPaginationItems(totalPages,selectedPageSig.value,siblingCount || 1));
   const pagesSig = useSignal(pages)
 
   const context: PaginationContext = {
