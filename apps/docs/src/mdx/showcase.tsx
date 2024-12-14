@@ -39,18 +39,22 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
     : "bg-white";
 
   return (
-    <Carousel.Root>
-      <Carousel.Pagination>
-        <Carousel.Bullet>Preview</Carousel.Bullet>
-        <Carousel.Bullet>Code</Carousel.Bullet>
+    <Carousel.Root class="my-8 mb-16">
+      <Carousel.Pagination class="flex gap-2 py-4">
+        <Carousel.Bullet class="data-[active]:bg-qwik-blue-800 data-[active]:!text-[#fff] p-2 rounded-md hover:bg-qwik-blue-200 hover:text-qwik-neutral-700 transition-colors outline-qwik-blue-500">
+          Preview
+        </Carousel.Bullet>
+        <Carousel.Bullet class="data-[active]:bg-qwik-blue-800 data-[active]:!text-[#fff] p-2 rounded-md hover:bg-qwik-blue-200 hover:text-qwik-neutral-700 transition-colors outline-qwik-blue-500">
+          Code
+        </Carousel.Bullet>
       </Carousel.Pagination>
 
-      <Carousel.Slide>
+      <Carousel.Slide class="border border-qwik-neutral-900 rounded-md">
         <section class={`${previewBgColor} flex flex-col items-center py-12`}>
           {MetaGlobComponentSig.value && <MetaGlobComponentSig.value />}
         </section>
       </Carousel.Slide>
-      <Carousel.Slide>
+      <Carousel.Slide class="border border-qwik-neutral-900 rounded-md overflow-clip">
         <Highlight code={componentCodeSig.value || ""} />
       </Carousel.Slide>
     </Carousel.Root>
