@@ -55,6 +55,7 @@ export const CheckboxTrigger = component$((props: CheckboxControlProps) => {
       data-disabled={context.isDisabledSig.value ? "" : undefined}
       onKeyDown$={[handleKeyDownSync$, props.onKeyDown$]}
       onClick$={[handleClick$, props.onClick$]}
+      data-checked={context.isCheckedSig.value ? "" : undefined}
       data-qds-checkbox-trigger
       {...props}
     >
