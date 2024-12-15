@@ -1,5 +1,6 @@
 import { Slot, component$ } from "@builder.io/qwik";
 import { useContent, type RequestHandler } from "@builder.io/qwik-city";
+import { Sidebar } from "~/docs-widgets/sidebar/sidebar";
 import { TOC } from "~/docs-widgets/toc/toc";
 import { components } from "~/mdx/components";
 import { MDXProvider } from "~/mdx/provider";
@@ -20,11 +21,12 @@ export default component$(() => {
   return (
     <MDXProvider components={components}>
       <div class="flex gap-4">
-        <main class="mx-auto max-w-screen-lg">
+        <Sidebar />
+        <main class="mx-auto max-w-screen-md">
           <Slot />
         </main>
         <aside class="hidden w-60 xl:block">
-          <div class="fixed h-[calc(100vh-64px)] overflow-auto">
+          <div class="fixed h-[calc(100vh-64px)] w-full  overflow-auto">
             <TOC headings={headings || []} />
           </div>
         </aside>

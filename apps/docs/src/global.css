@@ -38,4 +38,5 @@ pre {
 body {
   @apply bg-[#1c1e1f] text-qwik-blue-100;
   font-family: Seravek, Avenir, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+  scrollbar-gutter: stable;
 }
