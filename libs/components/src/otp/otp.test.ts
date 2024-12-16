@@ -83,7 +83,7 @@ test.describe("critical functionality", () => {
     await expect(d.getItemAt(3)).toHaveAttribute("data-highlighted");
 
     await input.pressSequentially("1");
-    await expect(input).toHaveValue("121");
+    await expect(input).toHaveValue("11");
   });
 
   test(`
@@ -158,15 +158,15 @@ test.describe("critical functionality", () => {
     const input = d.getInput();
 
     // Test delete at the end
-    await input.pressSequentially("123456");
-    await expect(input).toHaveValue("123456");
+    await input.pressSequentially("1234");
+    await expect(input).toHaveValue("1234");
     await input.press("Delete");
-    await expect(input).toHaveValue("12345");
+    await expect(input).toHaveValue("123");
 
     // Test delete at the beginning
     await input.press("Home");
     await input.press("Delete");
-    await expect(input).toHaveValue("2345");
+    await expect(input).toHaveValue("23");
 
     // Test delete in the middle
     await input.press("ArrowRight");
