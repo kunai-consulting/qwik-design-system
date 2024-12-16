@@ -104,16 +104,17 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
 
   useOnDocument("selectionchange", updateSelection);
 
+  /**
+   *  Prevent the left arrow key from skipping over filled slots when traveling from empty slots
+   */
   const handleKeyDownSync = sync$((e: KeyboardEvent) => {
     const input = e.target as HTMLInputElement;
 
-    // Only handle left arrow key
     if (e.key === "ArrowLeft" && input.selectionStart === input.selectionEnd) {
       const currentPos = input.selectionStart;
       if (!currentPos) return;
 
       const value = input.value;
-      // When in an empty slot trying to move to a filled one
       if (!value[currentPos] && value[currentPos - 1]) {
         e.preventDefault();
       }

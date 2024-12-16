@@ -13,13 +13,13 @@
     outline: 0 solid transparent;
     box-shadow: none;
     
-    /* Hide the actual input content */
+    /* hide native input content */
     color: transparent;
     background: transparent;
     caret-color: transparent;
     -webkit-text-fill-color: transparent;
     
-    /* Text layout */
+    /* text layout */
     line-height: 1;
     letter-spacing: -.5em;
     font-family: monospace;
@@ -38,14 +38,14 @@
     }
 }
 
-/* Prevent selection highlighting on hidden input */
+/* prevent selection highlighting on hidden input */
 [data-qds-otp-hidden-input]::selection {
     background: transparent !important;
     color: transparent !important;
     -webkit-text-fill-color: transparent !important;
 }
 
-/* Common autofill styles */
+/* autofill styles */
 [data-qds-otp-hidden-input]:autofill,
 [data-qds-otp-hidden-input]:-webkit-autofill {
     background: transparent !important;
