@@ -2,14 +2,18 @@ import { test, expect, type Page, type Locator } from "@playwright/test";
 import { createTestDriver } from "./otp.driver";
 import { modifier } from "./utils/modifier";
 
+/** Playwright doesn't support selectionchange, this is a hack / workaround */
 async function setupEventListeners(input: Locator) {
   await input.evaluate((el) => {
     return new Promise<void>((resolve) => {
       let lastStart = (el as HTMLInputElement).selectionStart;
       let lastEnd = (el as HTMLInputElement).selectionEnd;
       let stableCount = 0;
+      let isResolved = false;
 
       const checkSelection = () => {
+        if (isResolved) return;
+
         const currentStart = (el as HTMLInputElement).selectionStart;
         const currentEnd = (el as HTMLInputElement).selectionEnd;
 
@@ -18,7 +22,7 @@ async function setupEventListeners(input: Locator) {
         if (currentStart === lastStart && currentEnd === lastEnd) {
           stableCount++;
           if (stableCount >= 3) {
-            // Selection has been stable for 3 checks
+            isResolved = true;
             resolve();
             return;
           }
@@ -31,16 +35,28 @@ async function setupEventListeners(input: Locator) {
         requestAnimationFrame(checkSelection);
       };
 
-      el.addEventListener("selectionchange", () => {
+      const selectionListener = () => {
+        if (isResolved) return;
+
         console.log(
           "selection change:",
           (el as HTMLInputElement).selectionStart,
           (el as HTMLInputElement).selectionEnd
         );
-        stableCount = 0; // Reset stability counter on selection change
-      });
+        stableCount = 0;
+      };
 
+      el.addEventListener("selectionchange", selectionListener);
       checkSelection();
+
+      // Cleanup after 5 seconds to prevent hanging
+      setTimeout(() => {
+        if (!isResolved) {
+          isResolved = true;
+          el.removeEventListener("selectionchange", selectionListener);
+          resolve();
+        }
+      }, 5000);
     });
   });
 }
@@ -55,6 +71,19 @@ async function setup(page: Page, exampleName: string) {
 }
 
 test.describe("critical functionality", () => {
+  test.describe.configure({ mode: "serial" });
+
+  test.beforeEach(async ({ page }) => {
+    // Clear any existing listeners
+    await page.evaluate(() => {
+      const oldEl = document.querySelector("input");
+      if (oldEl) {
+        const newEl = oldEl.cloneNode(true);
+        oldEl.parentNode?.replaceChild(newEl, oldEl);
+      }
+    });
+  });
+
   test(`GIVEN an OTP control
         WHEN rendered
         THEN the hidden input should be empty
@@ -142,7 +171,9 @@ test.describe("critical functionality", () => {
     await input.pressSequentially("1234");
     await expect(input).toHaveValue("1234");
 
-    await input.press(`${modifier}+Backspace`);
+    // Select all text first, then delete
+    await input.press(`${modifier}+a`);
+    await input.press("Backspace");
     await expect(input).toHaveValue("");
   });
 
