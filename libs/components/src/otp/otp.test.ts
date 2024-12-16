@@ -4,12 +4,43 @@ import { modifier } from "./utils/modifier";
 
 async function setupEventListeners(input: Locator) {
   await input.evaluate((el) => {
-    el.addEventListener("selectionchange", () => {
-      console.log(
-        "selection:",
-        (el as HTMLInputElement).selectionStart,
-        (el as HTMLInputElement).selectionEnd
-      );
+    return new Promise<void>((resolve) => {
+      let lastStart = (el as HTMLInputElement).selectionStart;
+      let lastEnd = (el as HTMLInputElement).selectionEnd;
+      let stableCount = 0;
+
+      const checkSelection = () => {
+        const currentStart = (el as HTMLInputElement).selectionStart;
+        const currentEnd = (el as HTMLInputElement).selectionEnd;
+
+        console.log("selection:", currentStart, currentEnd);
+
+        if (currentStart === lastStart && currentEnd === lastEnd) {
+          stableCount++;
+          if (stableCount >= 3) {
+            // Selection has been stable for 3 checks
+            resolve();
+            return;
+          }
+        } else {
+          stableCount = 0;
+        }
+
+        lastStart = currentStart;
+        lastEnd = currentEnd;
+        requestAnimationFrame(checkSelection);
+      };
+
+      el.addEventListener("selectionchange", () => {
+        console.log(
+          "selection change:",
+          (el as HTMLInputElement).selectionStart,
+          (el as HTMLInputElement).selectionEnd
+        );
+        stableCount = 0; // Reset stability counter on selection change
+      });
+
+      checkSelection();
     });
   });
 }
