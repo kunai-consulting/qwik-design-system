@@ -54,7 +54,7 @@
         "recommended": true,
         "useBlockStatements": "off",
         "useCollapsedElseIf": "warn",
-        "useShorthandArrayType": "error",
+        "useShorthandArrayType": "off",
         "useShorthandAssign": "error",
         "useSingleCaseStatement": "error"
       },

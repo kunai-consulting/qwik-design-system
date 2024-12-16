@@ -2,6 +2,7 @@ import {
   type HTMLInputAutocompleteAttribute,
   type PropsOf,
   type QRL,
+  type Signal,
   Slot,
   component$,
   useComputed$,
@@ -14,8 +15,10 @@ import { findComponent, processChildren } from "../../utils/inline-component";
 import { OTPContextId } from "./otp-context";
 import { OtpItem } from "./otp-item";
 import styles from "./otp.css?inline";
+import { useBoundSignal } from "../../utils/bound-signal";
 
 type OtpRootProps = PropsOf<"div"> & {
+  "bind:value"?: Signal<string>;
   _numItems?: number;
   autoComplete?: HTMLInputAutocompleteAttribute;
   onComplete$?: QRL<() => void>;
@@ -42,9 +45,11 @@ export const OtpRoot = ({ children, ...props }: OtpRootProps) => {
 };
 
 export const OtpBase = component$((props: OtpRootProps) => {
+  const { "bind:value": givenValueSig, ...rest } = props;
+
   useStyles$(styles);
 
-  const inputValueSig = useSignal<string>(props.value || "");
+  const inputValueSig = useBoundSignal<string>(givenValueSig, props.value || "");
   const currIndexSig = useSignal(0);
   const nativeInputRef = useSignal<HTMLInputElement>();
   const numItemsSig = useComputed$(() => props._numItems || 0);
@@ -77,7 +82,7 @@ export const OtpBase = component$((props: OtpRootProps) => {
 
   useContextProvider(OTPContextId, context);
   return (
-    <div data-qds-otp-root {...props}>
+    <div data-qds-otp-root {...rest}>
       <Slot />
     </div>
   );

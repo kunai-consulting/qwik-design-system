@@ -1,5 +1,7 @@
 import { Slot, component$ } from "@builder.io/qwik";
-import type { RequestHandler } from "@builder.io/qwik-city";
+import { useContent, type RequestHandler } from "@builder.io/qwik-city";
+import { Sidebar } from "~/docs-widgets/sidebar/sidebar";
+import { TOC } from "~/docs-widgets/toc/toc";
 import { components } from "~/mdx/components";
 import { MDXProvider } from "~/mdx/provider";
 
@@ -15,11 +17,20 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 };
 
 export default component$(() => {
+  const { headings } = useContent();
   return (
     <MDXProvider components={components}>
-      <main class="mx-auto max-w-screen-lg">
-        <Slot />
-      </main>
+      <div class="flex gap-4">
+        <Sidebar />
+        <main class="mx-auto max-w-screen-md">
+          <Slot />
+        </main>
+        <aside class="hidden w-60 xl:block">
+          <div class="fixed h-[calc(100vh-64px)] w-full  overflow-auto">
+            <TOC headings={headings || []} />
+          </div>
+        </aside>
+      </div>
     </MDXProvider>
   );
 });
