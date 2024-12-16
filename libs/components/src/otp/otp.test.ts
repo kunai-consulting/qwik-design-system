@@ -150,36 +150,55 @@ test.describe("critical functionality", () => {
     await expect(input).toHaveValue("124");
   });
 
-  test(`GIVEN a full OTP control
-        WHEN hitting delete at different positions
-        THEN characters should be deleted correctly
-    `, async ({ page }) => {
+  test(`
+    GIVEN a full OTP control
+    WHEN hitting delete at the end
+    THEN the last character should be deleted
+  `, async ({ page }) => {
     const d = await setup(page, "hero");
     const input = d.getInput();
 
-    // Test delete at the end
     await input.pressSequentially("1234");
     await expect(input).toHaveValue("1234");
     await input.press("Delete");
     await expect(input).toHaveValue("123");
+  });
 
-    // Test delete at the beginning
+  test(`
+      GIVEN a full OTP control
+      WHEN hitting delete at the beginning
+      THEN the first character should be deleted
+  `, async ({ page }) => {
+    const d = await setup(page, "hero");
+    const input = d.getInput();
+
+    await input.pressSequentially("1234");
     await input.press("Home");
     await input.press("Delete");
-    await expect(input).toHaveValue("23");
+    await expect(input).toHaveValue("234");
+  });
 
-    // Test delete in the middle
+  test(`
+      GIVEN a full OTP control
+      WHEN hitting delete in the middle
+      THEN the character at cursor position should be deleted
+  `, async ({ page }) => {
+    const d = await setup(page, "hero");
+    const input = d.getInput();
+
+    await input.pressSequentially("1234");
+    await input.press("Home");
     await input.press("ArrowRight");
     await input.press("ArrowRight");
     await input.press("Delete");
-    await expect(input).toHaveValue("235");
+    await expect(input).toHaveValue("124");
   });
 
   test(`GIVEN an OTP control that is full
         WHEN the OTP is complete
         THEN an onComplete handler should be called
     `, async ({ page }) => {
-    const d = await setup(page, "hero");
+    const d = await setup(page, "complete");
     const input = d.getInput();
 
     await input.pressSequentially("1234");

@@ -14,59 +14,26 @@ export const head: DocumentHead = {
 
 export default component$(() => {
   return (
-    <div class="mt-10 flex justify-center">
-      <div class="flex flex-col items-center justify-center">
-        <div class="m-6 flex h-[8.125rem] w-[23.5rem] flex-col items-center ">
-          <div class="flex w-full justify-center">
-            <InformationCircle />
-          </div>
-          <div class="text-cool-700 w-full py-4 text-center text-lg font-semibold">
-            Two-step verification
-          </div>
-          <div class="text-cool-700 w-full text-center text-sm">
-            A verification code has been sent to your email. Please enter the code below
-            to verify this device.
-          </div>
-        </div>
+    <Otp.Root value="1234" class="flex flex-col items-center justify-center">
+      <Otp.HiddenInput />
 
-        <Otp.Root value="1234" class="flex flex-col items-center justify-center">
-          <Otp.HiddenInput />
+      <div class="otp-container flex flex-row justify-center gap-2">
+        {Array.from({ length: 4 }, (_, index) => {
+          const uniqueKey = `otp-${index}-${Date.now()}`;
 
-          <div class="otp-container flex flex-row justify-center gap-2">
-            {Array.from({ length: 4 }, (_, index) => {
-              const uniqueKey = `otp-${index}-${Date.now()}`;
-
-              return (
-                <Otp.Item
-                  key={uniqueKey}
-                  class={
-                    "h-9 w-10 border-2 text-center data-[highlighted]:border-blue-600 rounded data-[highlighted]:ring-blue-100  data-[highlighted]:ring-[3px] data-[highlighted]:pl-1 data-[highlighted]:pr-1 caret-blue-600"
-                  }
-                >
-                  <Otp.Caret class="text-blue-500 text-xl animate-blink-caret">
-                    |
-                  </Otp.Caret>
-                </Otp.Item>
-              );
-            })}
-          </div>
-        </Otp.Root>
-
-        <div class="mt-6 flex flex-row justify-center gap-2">
-          <input type="checkbox" class="text-cool-700 form-checkbox text-sm" />
-          This is a trusted device, don't ask again
-        </div>
-
-        <div class="flex flex-row items-center justify-center gap-2 p-6 text-sm">
-          <button
-            type="button"
-            class="h-[36px] w-[140px] items-center justify-center whitespace-nowrap rounded-md border-none bg-[#5568AA] px-4 py-0 text-start text-white"
-          >
-            Sign in securely
-          </button>
-        </div>
+          return (
+            <Otp.Item
+              key={uniqueKey}
+              class={
+                "h-9 w-10 border-2 text-center data-[highlighted]:border-blue-600 rounded data-[highlighted]:ring-blue-100  data-[highlighted]:ring-[3px] data-[highlighted]:pl-1 data-[highlighted]:pr-1 caret-blue-600"
+              }
+            >
+              <Otp.Caret class="text-blue-500 text-xl animate-blink-caret">|</Otp.Caret>
+            </Otp.Item>
+          );
+        })}
       </div>
-    </div>
+    </Otp.Root>
   );
 });
 
