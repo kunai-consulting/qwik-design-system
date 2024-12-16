@@ -1,12 +1,25 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect, type Page, type Locator } from "@playwright/test";
 import { createTestDriver } from "./otp.driver";
 import { modifier } from "./utils/modifier";
 
+async function setupEventListeners(input: Locator) {
+  await input.evaluate((el) => {
+    el.addEventListener("selectionchange", () => {
+      console.log(
+        "selection:",
+        (el as HTMLInputElement).selectionStart,
+        (el as HTMLInputElement).selectionEnd
+      );
+    });
+  });
+}
+
 async function setup(page: Page, exampleName: string) {
   await page.goto(`http://localhost:6174/otp/${exampleName}`);
-
   const driver = createTestDriver(page);
-
+  const input = driver.getInput();
+  await input.focus();
+  await setupEventListeners(input);
   return driver;
 }
 
@@ -56,9 +69,11 @@ test.describe("critical functionality", () => {
     const input = d.getInput();
 
     await input.pressSequentially("123");
-    // arrow left on keyboard
-    await input.press("ArrowLeft");
-    await input.pressSequentially("1");
+    await expect(input).toBeFocused();
+    await page.keyboard.press("ArrowLeft");
+    await expect(d.getItemAt(2)).toHaveAttribute("data-highlighted");
+
+    await page.keyboard.insertText("1");
     await expect(input).toHaveValue("121");
   });
 
@@ -94,7 +109,7 @@ test.describe("critical functionality", () => {
     // initial setup
     await input.pressSequentially("1234");
 
-    await input.press("5");
+    await input.pressSequentially("5");
     await expect(input).toHaveValue("1235");
   });
 
@@ -216,7 +231,7 @@ test.describe("critical functionality", () => {
     const d = await setup(page, "value");
     const input = d.getInput();
 
-    await input.press("1");
+    await input.pressSequentially("1");
 
     await expect(input).toHaveValue("1");
 

@@ -61,7 +61,8 @@
       "suspicious": {
         "noApproximativeNumericConstant": "error",
         "noMisrefactoredShorthandAssign": "warn",
-        "recommended": true
+        "recommended": true,
+        "noAssignInExpressions": "off"
       }
     }
   },
