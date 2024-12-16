@@ -17,11 +17,12 @@ import { OtpItem } from "./otp-item";
 import styles from "./otp.css?inline";
 import { useBoundSignal } from "../../utils/bound-signal";
 
-type OtpRootProps = PropsOf<"div"> & {
+type OtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   "bind:value"?: Signal<string>;
   _numItems?: number;
   autoComplete?: HTMLInputAutocompleteAttribute;
   onComplete$?: QRL<() => void>;
+  onChange$?: QRL<(value: string) => void>;
   value?: string;
 };
 
@@ -45,7 +46,7 @@ export const OtpRoot = ({ children, ...props }: OtpRootProps) => {
 };
 
 export const OtpBase = component$((props: OtpRootProps) => {
-  const { "bind:value": givenValueSig, ...rest } = props;
+  const { "bind:value": givenValueSig, onChange$, onComplete$, ...rest } = props;
 
   useStyles$(styles);
 
@@ -72,12 +73,14 @@ export const OtpBase = component$((props: OtpRootProps) => {
     selectionEndSig
   };
 
-  useTask$(async ({ track }) => {
+  useTask$(async function handleChange({ track }) {
     track(() => inputValueSig.value);
+
+    await onChange$?.(inputValueSig.value);
 
     if (inputValueSig.value.length !== numItemsSig.value) return;
 
-    await props.onComplete$?.();
+    await onComplete$?.();
   });
 
   useContextProvider(OTPContextId, context);
