@@ -204,6 +204,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       {...props}
       ref={context.nativeInputRef}
       value={context.inputValueSig.value}
+      disabled={context.isDisabledSig.value ?? false}
       maxLength={context.numItemsSig.value}
       data-qds-otp-hidden-input
       inputMode="numeric"

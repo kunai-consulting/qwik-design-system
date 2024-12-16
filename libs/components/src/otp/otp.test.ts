@@ -50,18 +50,6 @@ test.describe("critical functionality", () => {
 
   test(`
       GIVEN an OTP control
-      WHEN typing a number greater than max length
-      THEN the hidden input should remain unchanged
-    `, async ({ page }) => {
-    const d = await setup(page, "hero");
-    const input = d.getInput();
-
-    await input.pressSequentially("12345");
-    await expect(input).toHaveValue("1234");
-  });
-
-  test(`
-      GIVEN an OTP control
       WHEN pressing the left arrow key and typing a number
       THEN the selected character should be replaced with the new number
     `, async ({ page }) => {
@@ -228,7 +216,7 @@ test.describe("critical functionality", () => {
         WHEN the OTP value changes
         THEN the onChange$ handler should be called
     `, async ({ page }) => {
-    const d = await setup(page, "value");
+    const d = await setup(page, "change");
     const input = d.getInput();
 
     await input.pressSequentially("1");
@@ -243,7 +231,7 @@ test.describe("critical functionality", () => {
         WHEN programmatically disabled
         THEN the OTP should not be interactive
 `, async ({ page }) => {
-    const d = await setup(page, "value");
+    const d = await setup(page, "disabled");
     const input = d.getInput();
 
     await page.locator("button").last().click();

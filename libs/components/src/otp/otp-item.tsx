@@ -33,7 +33,7 @@ export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
     if (start !== null && end !== null && start !== end) {
       return _index >= start && _index < end;
     }
-    
+
     return _index === context.currIndexSig.value && !value[_index];
   });
 
@@ -47,6 +47,7 @@ export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
       ref={itemRef}
       data-qds-otp-item={_index}
       data-highlighted={isHighlightedSig.value ? "" : undefined}
+      data-disabled={context.isDisabledSig.value ? "" : undefined}
     >
       {itemValue}
       <Slot />

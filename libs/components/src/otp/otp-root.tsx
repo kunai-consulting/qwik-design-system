@@ -24,6 +24,7 @@ type OtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   onComplete$?: QRL<() => void>;
   onChange$?: QRL<(value: string) => void>;
   value?: string;
+  disabled?: boolean;
 };
 
 export const OtpRoot = ({ children, ...props }: OtpRootProps) => {
@@ -55,6 +56,7 @@ export const OtpBase = component$((props: OtpRootProps) => {
   const nativeInputRef = useSignal<HTMLInputElement>();
   const numItemsSig = useComputed$(() => props._numItems || 0);
   const isFocusedSig = useSignal(false);
+  const isDisabledSig = useComputed$(() => props.disabled);
   const selectionStartSig = useSignal<number | null>(null);
   const selectionEndSig = useSignal<number | null>(null);
 
@@ -69,6 +71,7 @@ export const OtpBase = component$((props: OtpRootProps) => {
     numItemsSig,
     isLastItemSig,
     isFocusedSig,
+    isDisabledSig,
     selectionStartSig,
     selectionEndSig
   };
@@ -85,7 +88,7 @@ export const OtpBase = component$((props: OtpRootProps) => {
 
   useContextProvider(OTPContextId, context);
   return (
-    <div data-qds-otp-root {...rest}>
+    <div data-qds-otp-root data-disabled={isDisabledSig.value ? "" : undefined} {...rest}>
       <Slot />
     </div>
   );

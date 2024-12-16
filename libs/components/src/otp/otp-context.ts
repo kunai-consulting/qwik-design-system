@@ -7,6 +7,7 @@ export interface OTPContext {
   numItemsSig: Signal<number>;
   isLastItemSig: Signal<boolean>;
   isFocusedSig: Signal<boolean>;
+  isDisabledSig: Signal<boolean | undefined>;
   selectionStartSig: Signal<number | null>;
   selectionEndSig: Signal<number | null>;
 }
