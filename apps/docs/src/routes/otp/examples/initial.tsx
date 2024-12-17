@@ -1,6 +1,5 @@
 import { type PropsOf, component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import { VisuallyHidden } from "~/utils/visually-hidden";
 import { Otp } from "@kunai-consulting/qwik-components";
 
 export const head: DocumentHead = {
@@ -8,9 +7,9 @@ export const head: DocumentHead = {
   meta: [
     {
       name: "description",
-      content: "Qwik Design System",
-    },
-  ],
+      content: "Qwik Design System"
+    }
+  ]
 };
 
 export default component$(() => {
@@ -25,13 +24,13 @@ export default component$(() => {
             Two-step verification
           </div>
           <div class="text-cool-700 w-full text-center text-sm">
-            A verification code has been sent to your email. Please enter the
-            code below to verify this device.
+            A verification code has been sent to your email. Please enter the code below
+            to verify this device.
           </div>
         </div>
 
-        <Otp.Root class="flex flex-col items-center justify-center">
-          <Otp.HiddenNativeInput class="opacity-0" />
+        <Otp.Root value="1234" class="flex flex-col items-center justify-center">
+          <Otp.HiddenInput />
 
           <div class="otp-container flex flex-row justify-center gap-2">
             {Array.from({ length: 4 }, (_, index) => {
@@ -51,14 +50,13 @@ export default component$(() => {
               );
             })}
           </div>
-          <div class="mt-6 flex flex-row justify-center gap-2">
-            <input
-              type="checkbox"
-              class="text-cool-700 form-checkbox text-sm"
-            />
-            This is a trusted device, don't ask again
-          </div>
         </Otp.Root>
+
+        <div class="mt-6 flex flex-row justify-center gap-2">
+          <input type="checkbox" class="text-cool-700 form-checkbox text-sm" />
+          This is a trusted device, don't ask again
+        </div>
+
         <div class="flex flex-row items-center justify-center gap-2 p-6 text-sm">
           <button
             type="button"

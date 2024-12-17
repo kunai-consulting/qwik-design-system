@@ -1,0 +1,79 @@
+---
+title: Qwik Design System | OTP Input
+---
+
+# OTP Input
+
+A control that enables users to enter one-time passwords or verification codes with individual character inputs.
+
+<Showcase name="hero" />
+
+## Initial State
+
+<Showcase name="initial" />
+
+## Basic Usage
+
+To create an OTP input, use the `Otp.Root` component to wrap individual `Otp.Item` components. Each item represents one character input.
+
+{/* <Showcase name="basic" /> */}
+
+## Adding a Caret
+
+To show a visual indicator for the active input position, use the `Otp.Caret` component inside an `Otp.Item`.
+
+{/* <Showcase name="caret" /> */}
+
+## Hidden Native Input
+
+The OTP component uses a hidden native input for accessibility and mobile keyboard support. Include it using the `Otp.HiddenNativeInput` component.
+
+{/* <Showcase name="native" /> */}
+
+## Numeric Input
+
+By default, the OTP input is configured for numeric input with:
+- `inputMode="numeric"`
+- `pattern="[0-9]*"`
+
+This ensures a numeric keyboard on mobile devices.
+{/* 
+<Showcase name="numeric" /> */}
+
+## Custom Length
+
+The OTP input automatically determines its length based on the number of `Otp.Item` components provided.
+
+{/* <Showcase name="length" /> */}
+
+## Focus Management
+
+The component handles focus states automatically:
+1. Clicking any item focuses the hidden native input
+2. Visual indicators show the current active position
+3. The caret appears only on the active position when focused
+
+{/* <Showcase name="focus" /> */}
+
+## Full Entry State
+
+When all characters are entered, the component enters a "full entry" state. This can be used for styling or validation purposes.
+
+{/* <Showcase name="full" /> */}
+
+## Inside a Form
+
+To use the OTP input in a form, include the `Otp.HiddenNativeInput` component with a `name` prop.
+
+{/* <Showcase name="form" /> */}
+
+## Accessibility
+
+The OTP input follows accessibility best practices:
+- Uses a native input element for keyboard interaction
+- Provides proper aria-labels
+- Maintains focus management for screen readers
+- Supports both mouse and keyboard navigation
+
+> **Note:** The hidden native input uses `aria-label="Enter your OTP"` by default. You can customize this by passing your own `aria-label` to the `Otp.HiddenNativeInput` component.
+

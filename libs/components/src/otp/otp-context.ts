@@ -1,12 +1,14 @@
-import { type Signal, createContextId } from '@builder.io/qwik';
+import { type QRL, type Signal, createContextId } from "@builder.io/qwik";
 
 export interface OTPContext {
-  value: Signal<string>;
-  activeIndexSig: Signal<number>;
+  inputValueSig: Signal<string>;
+  currIndexSig: Signal<number | null>;
   nativeInputRef: Signal<HTMLInputElement | undefined>;
   numItemsSig: Signal<number>;
-  fullEntrySig: Signal<boolean>;
+  isLastItemSig: Signal<boolean>;
   isFocusedSig: Signal<boolean>;
+  selectionStartSig: Signal<number | null>;
+  selectionEndSig: Signal<number | null>;
 }
 
-export const OTPContextId = createContextId<OTPContext>('OTPContext');
+export const OTPContextId = createContextId<OTPContext>("OTPContext");

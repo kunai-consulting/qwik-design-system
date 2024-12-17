@@ -1,0 +1,63 @@
+[data-qds-otp-root] {
+    position: relative;
+    pointer-events: none;
+}
+
+[data-qds-otp-hidden-input] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: all;
+    border: 0 solid transparent;
+    outline: 0 solid transparent;
+    box-shadow: none;
+    
+    /* Hide the actual input content */
+    color: transparent;
+    background: transparent;
+    caret-color: transparent;
+    -webkit-text-fill-color: transparent;
+    
+    /* Text layout */
+    line-height: 1;
+    letter-spacing: -.5em;
+    font-family: monospace;
+    font-variant-numeric: tabular-nums;
+}
+
+/* iOS-specific adjustments */
+@supports (-webkit-touch-callout: none) {
+    [data-qds-otp-hidden-input] {
+        letter-spacing: -.6em !important;
+        font-weight: 100 !important;
+        font-stretch: ultra-condensed;
+        font-optical-sizing: none !important;
+        left: -1px !important;
+        right: 1px !important;
+    }
+}
+
+/* Prevent selection highlighting on hidden input */
+[data-qds-otp-hidden-input]::selection {
+    background: transparent !important;
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+/* Common autofill styles */
+[data-qds-otp-hidden-input]:autofill,
+[data-qds-otp-hidden-input]:-webkit-autofill {
+    background: transparent !important;
+    color: transparent !important;
+    border-color: transparent !important;
+    opacity: 0 !important;
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+/* Enable pointer events on elements after the hidden input */
+[data-qds-otp-hidden-input] + * {
+    pointer-events: all !important;
+}
