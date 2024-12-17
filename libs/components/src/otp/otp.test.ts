@@ -318,4 +318,16 @@ test.describe("critical functionality", () => {
     await page.locator("button").last().click();
     await expect(input).toBeDisabled();
   });
+
+  test(`GIVEN an empty OTP control
+        WHEN an invalid character is typed
+        THEN highlight should remain on the first item
+`, async ({ page }) => {
+    const d = await setup(page, "hero");
+    const input = d.getInput();
+
+    await input.press("-");
+    await expect(d.getItemAt(0)).toHaveAttribute("data-highlighted");
+    await expect(input).toHaveValue("");
+  });
 });
