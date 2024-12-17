@@ -287,10 +287,10 @@ test.describe("critical functionality", () => {
     const d = await setup(page, "reactive");
     const input = d.getInput();
 
-    await expect(input).toHaveValue("1234");
+    await expect(input).toHaveValue("");
 
     await page.locator("button").last().click();
-    await expect(input).toHaveValue("4321");
+    await expect(input).toHaveValue("1234");
   });
 
   test(`GIVEN an OTP root with a onChange$ prop

@@ -1,7 +1,6 @@
 import { $, type PropsOf, component$, useSignal } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { Otp } from "@kunai-consulting/qwik-components";
-import value from "~/routes/checkbox/examples/value";
 
 export const head: DocumentHead = {
   title: "Qwik Design System",
@@ -20,12 +19,12 @@ export default component$(() => {
     <>
       <Otp.Root
         onChange$={$(() => {
+          console.log("onChange$");
           isChange.value = true;
         })}
         class="flex flex-col items-center justify-center"
       >
         <Otp.HiddenInput />
-
         <div class="otp-container flex flex-row justify-center gap-2">
           {Array.from({ length: 4 }, (_, index) => {
             const uniqueKey = `otp-${index}-${Date.now()}`;
@@ -43,7 +42,7 @@ export default component$(() => {
           })}
         </div>
       </Otp.Root>
-      {isChange.value && <p>isChange: {isChange.value}</p>}
+      {isChange.value && <p>onChange$</p>}
     </>
   );
 });

@@ -59,6 +59,7 @@ export const OtpBase = component$((props: OtpRootProps) => {
   const isDisabledSig = useComputed$(() => props.disabled);
   const selectionStartSig = useSignal<number | null>(null);
   const selectionEndSig = useSignal<number | null>(null);
+  const isInitialLoadSig = useSignal(true);
 
   const isLastItemSig = useComputed$(
     () => inputValueSig.value.length === numItemsSig.value
@@ -79,7 +80,11 @@ export const OtpBase = component$((props: OtpRootProps) => {
   useTask$(async function handleChange({ track }) {
     track(() => inputValueSig.value);
 
-    await onChange$?.(inputValueSig.value);
+    if (!isInitialLoadSig.value) {
+      await onChange$?.(inputValueSig.value);
+    }
+
+    isInitialLoadSig.value = false;
 
     if (inputValueSig.value.length !== numItemsSig.value) return;
 
