@@ -18,6 +18,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
   const context = useContext(OTPContextId);
   const previousValue = useSignal<string>("");
   const shiftKeyDown = useSignal(false);
+  const pattern = props.pattern ?? "^[0-9]*$";
 
   const previousSelection = useSignal({
     inserting: false,
@@ -149,7 +150,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
     const newValue = input.value.slice(0, context.numItemsSig.value);
 
     // validate input if pattern provided
-    if (props.pattern && !new RegExp(props.pattern).test(newValue)) {
+    if (!new RegExp(pattern).test(newValue)) {
       input.value = context.inputValueSig.value;
       return;
     }
