@@ -6,13 +6,14 @@ type AllowedElements = "button" | "a" | "div" | "span";
 
 type PaginationPageProps = {
   _index?: number;
+  isDisabled?: boolean;
 }
 
 export const PaginationPage = component$(
   <C extends AllowedElements = "button">(
     props: QwikIntrinsicElements[C] & { as?: C } & PaginationPageProps
   ) => {
-    const {as, _index, ...rest} = props;
+    const {as, _index, isDisabled, ...rest} = props;
     const Comp = as ?? "button";
     const context = useContext(paginationContextId);
     const pageRef = useSignal<HTMLElement>();
@@ -81,6 +82,8 @@ export const PaginationPage = component$(
           aria-label={`Page ${_index + 1}`}
           role="button"
           tabIndex={0}
+          disabled={isDisabled}
+          aria-disabled={isDisabled}
           {...rest}
           onClick$={(e: Event) => {
             e.preventDefault();

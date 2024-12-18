@@ -43,7 +43,7 @@ When there are many pages, ellipsis (...) is automatically shown to indicate ski
 
 ## Disabled State
 
-The pagination component handles disabled states automatically:
+The pagination component handles disabled states:
 - Previous button is disabled on the first page
 - Next button is disabled on the last page
 - Current page button is disabled
@@ -57,13 +57,14 @@ The pagination component supports keyboard navigation:
 - Home key to jump to first page
 - End key to jump to last page
 
-{/* <Showcase name="keyboard" /> */}
+<Showcase name="keyboard" />
 
 ## Accessibility
 
-The pagination component follows accessibility best practices:
-- Proper ARIA labels for navigation buttons
-- Keyboard navigation support
-- Clear visual indicators for current page
-- Disabled states for unavailable actions
+The pagination component is built with accessibility in mind and follows WCAG guidelines:
 
+### ARIA Attributes
+- Uses `aria-label="pagination"` on the navigation container
+- Each page button includes `aria-current="page"` for the active page
+- Previous/Next buttons have descriptive `aria-label` values
+- Disabled buttons include `aria-disabled="true"`
