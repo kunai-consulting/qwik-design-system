@@ -330,4 +330,35 @@ test.describe("critical functionality", () => {
     await expect(d.getItemAt(0)).toHaveAttribute("data-highlighted");
     await expect(input).toHaveValue("");
   });
+
+  test(`GIVEN an empty OTP control
+    WHEN an invalid character is typed
+    THEN highlight should remain on the first item
+`, async ({ page }) => {
+    const d = await setup(page, "hero");
+    const input = d.getInput();
+
+    await input.press("-");
+    await expect(d.getItemAt(0)).toHaveAttribute("data-highlighted");
+    await expect(input).toHaveValue("");
+  });
+
+  test(`GIVEN an OTP control with some characters
+        WHEN inserting a character between existing characters
+        THEN the highlight should change direction at the insertion point
+    `, async ({ page }) => {
+    const d = await setup(page, "hero");
+    const input = d.getInput();
+
+    await input.pressSequentially("124");
+    
+    await input.press("Home");
+    await input.press("ArrowRight");
+    
+    await input.pressSequentially("3");
+    
+    await expect(input).toHaveValue("134");
+    
+    await expect(d.getItemAt(2)).toHaveAttribute("data-highlighted");
+  });
 });

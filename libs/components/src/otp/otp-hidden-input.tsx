@@ -168,9 +168,8 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
     isFirstKeystroke.value = false;
     
     const isBackspace = previousValue.value.length > newValue.length;
-    const position = isBackspace
-      ? Math.min(context.currIndexSig.value ?? 0, newValue.length)
-      : Math.min(newValue.length, context.numItemsSig.value);
+    
+    const position = input.selectionStart ?? 0;
 
     context.inputValueSig.value = newValue;
     previousValue.value = newValue;
@@ -188,7 +187,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       context.selectionEndSig.value = position + 1;
       input.setSelectionRange(position, position + 1);
     }
-  });
+});
 
   const handleKeyUp = $((e: KeyboardEvent) => {
     if (e.key === "Shift") {
