@@ -145,6 +145,8 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
     }
   });
 
+  const isFirstKeystroke = useSignal(true);
+
   const handleInput = $((e: InputEvent) => {
     const input = e.target as HTMLInputElement;
     const newValue = input.value.slice(0, context.numItemsSig.value);
@@ -152,9 +154,19 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
     // validate input if pattern provided
     if (!new RegExp(pattern).test(newValue)) {
       input.value = context.inputValueSig.value;
+      // make sure invalid characters don't affect the highlight position
+      if (isFirstKeystroke.value) {
+        context.currIndexSig.value = 0;
+        context.selectionStartSig.value = 0;
+        context.selectionEndSig.value = 1;
+        input.setSelectionRange(0, 1);
+      }
       return;
     }
 
+    // No longer first keystroke
+    isFirstKeystroke.value = false;
+    
     const isBackspace = previousValue.value.length > newValue.length;
     const position = isBackspace
       ? Math.min(context.currIndexSig.value ?? 0, newValue.length)
@@ -184,7 +196,9 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
     }
   });
 
-  const handleFocus = $((e: FocusEvent) => {
+  const handleFocus = $(() => {
+    // Reset first keystroke flag on focus
+    isFirstKeystroke.value = true;
     const input = context.nativeInputRef.value;
     if (!input) return;
 
