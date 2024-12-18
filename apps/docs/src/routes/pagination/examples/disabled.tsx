@@ -23,6 +23,7 @@ export default component$(() => {
           <Pagination.Page
             class="pagination-page disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
             key={`page-${index}-1`}
+            disabled={item === firstPageSig.value}
           >
             {item}
           </Pagination.Page>
@@ -43,6 +44,7 @@ export default component$(() => {
           <Pagination.Page
             class="pagination-page disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
             key={`page-${index}-2`}
+            disabled={item === lastPageSig.value}
           >
             {item}
           </Pagination.Page>

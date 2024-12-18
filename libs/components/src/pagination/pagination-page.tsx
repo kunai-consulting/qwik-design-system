@@ -1,4 +1,4 @@
-import {component$, Slot, useComputed$, useContext, useTask$, useSignal} from "@builder.io/qwik";
+import {component$, Slot, useComputed$, useContext, useTask$, useSignal, $} from "@builder.io/qwik";
 import type {QwikIntrinsicElements} from "@builder.io/qwik";
 import {paginationContextId} from "./pagination-context";
 
@@ -41,6 +41,34 @@ export const PaginationPage = component$(
       }
     });
 
+    const handleKeyDown$ = $((e: KeyboardEvent) => {
+      const currentFocusedIndex = context.focusedIndexSig.value;
+      if (currentFocusedIndex === null) return;
+  
+      switch (e.key) {
+        case 'ArrowRight':
+          e.preventDefault();
+          if (currentFocusedIndex < context.pagesSig.value.length - 1) {
+            context.focusedIndexSig.value = currentFocusedIndex + 1;
+          }
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          if (currentFocusedIndex > 0) {
+            context.focusedIndexSig.value = currentFocusedIndex - 1;
+          }
+          break;
+        case 'Home':
+          e.preventDefault();
+          context.focusedIndexSig.value = 0;
+          break;
+        case 'End':
+          e.preventDefault();
+          context.focusedIndexSig.value = context.pagesSig.value.length - 1;
+          break;
+      }
+    });
+
     return (
       <>
         {/* @ts-expect-error annoying polymorphism */}
@@ -54,7 +82,6 @@ export const PaginationPage = component$(
           role="button"
           tabIndex={0}
           {...rest}
-          disabled={isCurrentPage.value}
           onClick$={(e: Event) => {
             e.preventDefault();
             context.selectedPageSig.value = _index + 1;
@@ -62,6 +89,7 @@ export const PaginationPage = component$(
           onFocus$={() => {
             context.focusedIndexSig.value = _index;
           }}
+          onKeyDown$={handleKeyDown$}
         >
           <Slot />
         </Comp>

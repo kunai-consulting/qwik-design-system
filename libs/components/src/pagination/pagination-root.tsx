@@ -101,33 +101,7 @@ export const PaginationBase = component$((props: PaginationRootProps) => {
     isInitialLoadSig.value = false;
   });
 
-  const handleKeyDown$ = $((e: KeyboardEvent) => {
-    const currentFocusedIndex = focusedIndexSig.value;
-    if (currentFocusedIndex === null) return;
 
-    switch (e.key) {
-      case 'ArrowRight':
-        e.preventDefault();
-        if (currentFocusedIndex < pagesSig.value.length - 1) {
-          focusedIndexSig.value = currentFocusedIndex + 1;
-        }
-        break;
-      case 'ArrowLeft':
-        e.preventDefault();
-        if (currentFocusedIndex > 0) {
-          focusedIndexSig.value = currentFocusedIndex - 1;
-        }
-        break;
-      case 'Home':
-        e.preventDefault();
-        focusedIndexSig.value = 0;
-        break;
-      case 'End':
-        e.preventDefault();
-        focusedIndexSig.value = pagesSig.value.length - 1;
-        break;
-    }
-  });
 
   return (
     <div
@@ -135,7 +109,6 @@ export const PaginationBase = component$((props: PaginationRootProps) => {
       data-qds-pagination-root
       data-disabled={context.isDisabledSig.value ? "" : undefined}
       aria-disabled={context.isDisabledSig.value ? "true" : "false"}
-      onKeyDown$={handleKeyDown$}
     >
       <Slot />
     </div>
