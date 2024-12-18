@@ -13,9 +13,10 @@ export default component$(() => {
       totalPages={totalPagesSig.value}
       currentPage={selectedPageSig.value}
       pages={paginationItems}
-      siblingCount={2}
+      siblingCount={totalPagesSig.value}
       ellipsis="..."
     >
+      <Pagination.Previous class="pagination-previous">Prev</Pagination.Previous>
         {paginationItems.map((item, index) => {
         const uniqueKey = `page-${index}-${Date.now()}`;
         return (
@@ -27,6 +28,7 @@ export default component$(() => {
           </Pagination.Page>
         );
       })}
+      <Pagination.Next class="pagination-next">Next</Pagination.Next>
     </Pagination.Root>
   );
 });
