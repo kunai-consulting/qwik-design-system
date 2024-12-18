@@ -8,88 +8,82 @@ A control that enables users to enter one-time passwords or verification codes w
 
 <Showcase name="hero" />
 
-## Initial State
+## Initially Setting an OTP
+
+To configure an initial state for the OTP, use either the "value" prop or the "bind:value" prop if you already have a signal.
 
 <Showcase name="initial" />
 
 ## Reactive State
 
+Make the OTP reactive by binding its value to a signal. Any changes to that signal will be reflected, and user input will also update the signal.
+
 <Showcase name="reactive" />
 
-## Disabled 
+## Disabled
+
+Disable user interaction by passing the "disabled" prop to the root component. This will disable the hidden native input and prevent further user input.
 
 <Showcase name="disabled" />
 
 ## onChange$
 
+Use the "onChange$" prop on the root to listen for changes as the user types. This is called for each keystroke or edit.
+
 <Showcase name="change" />
 
 ## onComplete$
 
+When the user has filled in all required characters, the OTP is considered "complete." The "onComplete$" prop can be used to trigger any final logic (e.g., auto-submitting).
+
 <Showcase name="complete" />
-
-## Basic Usage
-
-To create an OTP input, use the `Otp.Root` component to wrap individual `Otp.Item` components. Each item represents one character input.
-
-{/* <Showcase name="basic" /> */}
 
 ## Adding a Caret
 
-To show a visual indicator for the active input position, use the `Otp.Caret` component inside an `Otp.Item`.
+To show a caret (like a blinking cursor) on the active input position, include the Otp.Caret component inside each Otp.Item. The caret appears only on the focused, empty position.
 
 {/* <Showcase name="caret" /> */}
 
 ## Hidden Native Input
 
-The OTP component uses a hidden native input for accessibility and mobile keyboard support. Include it using the `Otp.HiddenNativeInput` component.
+The OTP input features a hidden native input for accessibility and mobile keyboards. Ensure you include it by placing Otp.HiddenInput inside your Otp.Root.
 
 {/* <Showcase name="native" /> */}
 
 ## Numeric Input
 
-By default, the OTP input is configured for numeric input with:
-- `inputMode="numeric"`
-- `pattern="[0-9]*"`
+By default, the hidden input is configured to accept numbers (inputMode="numeric" and pattern="[0-9]*"). This prompts numeric keyboards on mobile devices. You can override this if you need alphanumeric codes.
 
-This ensures a numeric keyboard on mobile devices.
-{/* 
-<Showcase name="numeric" /> */}
+{/* <Showcase name="numeric" /> */}
 
 ## Custom Length
 
-The OTP input automatically determines its length based on the number of `Otp.Item` components provided.
+The length of the OTP is determined by the number of Otp.Item components. Add or remove items to change the length.
 
 {/* <Showcase name="length" /> */}
 
 ## Focus Management
 
-The component handles focus states automatically:
-1. Clicking any item focuses the hidden native input
-2. Visual indicators show the current active position
-3. The caret appears only on the active position when focused
+The component automatically manages focus. Clicking any Otp.Item focuses the hidden input, and the caret or highlight will track the currently active position.
 
 {/* <Showcase name="focus" /> */}
 
 ## Full Entry State
 
-When all characters are entered, the component enters a "full entry" state. This can be used for styling or validation purposes.
+When all characters are filled, the component enters a "full" state. You can use this for styling or to trigger further logic, such as validation or auto-submission.
 
 {/* <Showcase name="full" /> */}
 
 ## Inside a Form
 
-To use the OTP input in a form, include the `Otp.HiddenNativeInput` component with a `name` prop.
+When using the OTP within a form, include the Otp.HiddenInput with a "name" prop. This links the collected code to form submissions.
 
 {/* <Showcase name="form" /> */}
 
 ## Accessibility
 
-The OTP input follows accessibility best practices:
-- Uses a native input element for keyboard interaction
-- Provides proper aria-labels
-- Maintains focus management for screen readers
-- Supports both mouse and keyboard navigation
-
-> **Note:** The hidden native input uses `aria-label="Enter your OTP"` by default. You can customize this by passing your own `aria-label` to the `Otp.HiddenNativeInput` component.
+• A hidden native input helps ensure screen readers announce the OTP properly.  
+• Default aria-label of "Enter your OTP" is used (customizable through props).  
+• Keyboard interactions are preserved, including arrow keys, Shift+arrow range selection, and pasting.  
+• Disabled state is exposed with proper attributes for assistive technologies.
 
