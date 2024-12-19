@@ -24,7 +24,7 @@ export const Render = component$((props: RenderInternalProps) => {
     props: Record<string, unknown>;
   };
 
-  return jsx((component?.type ?? fallback) as string | FunctionComponent, {
+  return jsx(component?.type ?? fallback, {
     ...component?.props,
     ...rest,
     children: <Slot />
