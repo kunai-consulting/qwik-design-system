@@ -16,7 +16,9 @@ export type RenderProps = {
 };
 
 type RenderInternalProps<T extends AllowedFallbacks = "div"> = {
+  /** What gets passed to the jsx transform, pass in props.render */
   component: JSXNode | JSXOutput | undefined;
+  /** The default element and types if a render prop is not provided */
   fallback: T;
 } & QwikIntrinsicElements[T];
 
