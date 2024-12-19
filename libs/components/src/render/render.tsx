@@ -12,6 +12,7 @@ import {
 type AllowedFallbacks = "div" | "span" | "a" | "button";
 
 export type RenderProps = {
+  /** Add in your own component or JSX node */
   render?: JSXNode | JSXOutput;
 };
 
