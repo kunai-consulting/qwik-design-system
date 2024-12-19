@@ -4,29 +4,33 @@ import {
   jsx,
   type JSXNode,
   type JSXOutput,
-  type PropsOf,
+  type QwikIntrinsicElements,
   Slot
 } from "@builder.io/qwik";
+
+type AllowedFallbacks = "div" | "span" | "a" | "button";
 
 export type RenderProps = {
   render?: JSXNode | JSXOutput;
 };
 
-type RenderInternalProps = {
+type RenderInternalProps<T extends AllowedFallbacks = "div"> = {
   component: JSXNode | JSXOutput | undefined;
-  fallback: string;
-} & PropsOf<"div">;
+  fallback: T;
+} & QwikIntrinsicElements[T];
 
-export const Render = component$((props: RenderInternalProps) => {
-  const { fallback, component: rawComponent, ...rest } = props;
-  const component = rawComponent as {
-    type: string | FunctionComponent;
-    props: Record<string, unknown>;
-  };
+export const Render = component$(
+  <T extends AllowedFallbacks = "div">(props: RenderInternalProps<T>) => {
+    const { fallback, component: rawComponent, ...rest } = props;
+    const component = rawComponent as {
+      type: string | FunctionComponent;
+      props: Record<string, unknown>;
+    };
 
-  return jsx(component?.type ?? fallback, {
-    ...component?.props,
-    ...rest,
-    children: <Slot />
-  });
-});
+    return jsx(component?.type ?? fallback, {
+      ...component?.props,
+      ...rest,
+      children: <Slot />
+    });
+  }
+);

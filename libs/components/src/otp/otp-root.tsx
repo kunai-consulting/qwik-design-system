@@ -16,8 +16,6 @@ import { OTPContextId } from "./otp-context";
 import { OtpItem } from "./otp-item";
 import styles from "./otp.css?inline";
 import { useBoundSignal } from "../../utils/bound-signal";
-import type { JSXNode, FunctionComponent } from "@builder.io/qwik";
-import { jsx } from "@builder.io/qwik/jsx-runtime";
 import { Render, type RenderProps } from "../render/render";
 
 type OtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
