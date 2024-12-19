@@ -7,15 +7,15 @@ export default component$(() => {
   const items = Array.from({ length: 4 }, (_, i) => `Item ${i + 1}`);
 
   return (
-    <Checklist.Root>
+    <Checklist.Root class="checklist-root">
       {items.map((item) => (
         <Checklist.Item class="checkbox-root" key={item}>
           <Checklist.ItemTrigger class="checkbox-trigger">
-            <Checklist.ItemLabel>{item}</Checklist.ItemLabel>
             <Checklist.ItemIndicator class="checkbox-indicator">
               <LuCheck />
             </Checklist.ItemIndicator>
           </Checklist.ItemTrigger>
+          <Checklist.ItemLabel>{item}</Checklist.ItemLabel>
         </Checklist.Item>
       ))}
     </Checklist.Root>
