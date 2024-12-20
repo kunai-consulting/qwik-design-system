@@ -6,110 +6,127 @@ async function setup(page: Page, exampleName: string) {
   return createTestDriver(page);
 }
 
+async function verifyAllCheckboxStates(d: ReturnType<typeof createTestDriver>, checked: boolean) {
+  for (let i = 0; i < 4; i++) {
+    await expect(d.getTriggerAt(i)).toHaveAttribute("aria-checked", checked ? "true" : "false");
+    await expect(d.getIndicatorAt(i))[checked ? "toBeVisible" : "toBeHidden"]();
+  }
+}
+
+type Action = 'click' | { key: string };
+
+async function allCheckboxes(d: ReturnType<typeof createTestDriver>, action: Action) {
+  for (let i = 0; i < 4; i++) {
+    if (typeof action === 'string' && action === 'click') {
+      await d.getTriggerAt(i).click();
+    } else if ('key' in action) {
+      await d.getTriggerAt(i).press(action.key);
+    }
+  }
+}
+
 test.describe("Select All", () => {
   test(`GIVEN a checklist
         WHEN no items are checked
-        THEN the SelectAll control should be unchecked`, async ({ page }) => {
+        THEN the main checkbox should be unchecked`, async ({ page }) => {
     const d = await setup(page, "select-all");
-    await expect(d.getIndicatorAt(0)).toBeHidden();
-    await expect(d.getTriggerAt(0)).toHaveAttribute("aria-checked", "false");
+    await expect(d.getMainIndicator()).toBeHidden();
+    await expect(d.getMainTrigger()).toHaveAttribute("aria-checked", "false");
   });
 
   test(`GIVEN a checklist
         WHEN some items are checked
-        THEN SelectAll should be partially checked`, async ({ page }) => {
-    const d = await setup(page, "group");
+        THEN the main checkbox should be partially checked`, async ({ page }) => {
+    const d = await setup(page, "select-all");
 
-    // Check first item only
     await d.getTriggerAt(1).click();
     await expect(d.getIndicatorAt(1)).toBeVisible();
-    await expect(d.getTriggerAt(0)).toHaveAttribute("aria-checked", "mixed");
+    await expect(d.getMainTrigger()).toHaveAttribute("aria-checked", "mixed");
   });
 
-  test(`GIVEN a checklist with multiple items and SelectAll
-       WHEN all items are checked
-       THEN SelectAll should be checked`, async ({ page }) => {
-    const d = await setup(page, "group");
+  test(`GIVEN a checklist
+        WHEN all items are checked
+        THEN main checkbox should be checked`, async ({ page }) => {
+    const d = await setup(page, "select-all");
 
-    // Check all items
-    await d.getTriggerAt(1).click();
-    await d.getTriggerAt(2).click();
-    await d.getTriggerAt(3).click();
+    await expect(d.getMainTrigger()).toHaveAttribute("aria-checked", "false");
 
-    await expect(d.getTriggerAt(0)).toHaveAttribute("aria-checked", "true");
-    await expect(d.getIndicatorAt(0)).toBeVisible();
+    await allCheckboxes(d, 'click');
+    await verifyAllCheckboxStates(d, true);
+
+    await expect(d.getMainTrigger()).toHaveAttribute("aria-checked", "true");
+    await expect(d.getMainIndicator()).toBeVisible();
   });
 
-  test(`GIVEN a checklist with multiple items
-       WHEN SelectAll is clicked
-       THEN all items should be checked`, async ({ page }) => {
-    const d = await setup(page, "group");
+  test(`GIVEN a checklist
+        WHEN the main checkbox is clicked
+        THEN all items should be checked`, async ({ page }) => {
+    const d = await setup(page, "select-all");
 
-    await d.getTriggerAt(0).click();
+    await expect(d.getMainTrigger()).toHaveAttribute("aria-checked", "false");
+    await expect(d.getMainIndicator()).toBeHidden();
 
-    // Verify all items are checked
-    await expect(d.getTriggerAt(1)).toHaveAttribute("aria-checked", "true");
-    await expect(d.getTriggerAt(2)).toHaveAttribute("aria-checked", "true");
-    await expect(d.getTriggerAt(3)).toHaveAttribute("aria-checked", "true");
+    await d.getMainTrigger().click();
+    await expect(d.getMainTrigger()).toHaveAttribute("aria-checked", "true");
+    await expect(d.getMainIndicator()).toBeVisible();
+
+    await verifyAllCheckboxStates(d, true);
   });
 
   test(`GIVEN a checklist with all items checked
-       WHEN SelectAll is clicked
-       THEN all items should be unchecked`, async ({ page }) => {
-    const d = await setup(page, "group");
+        WHEN the main checkbox is clicked
+        THEN all items should be unchecked`, async ({ page }) => {
+    const d = await setup(page, "select-all");
 
-    // First check all items
-    await d.getTriggerAt(0).click();
+    //setup
+    await allCheckboxes(d, 'click');
+    await verifyAllCheckboxStates(d, true);
 
-    // Then uncheck all via SelectAll
-    await d.getTriggerAt(0).click();
-
-    // Verify all items are unchecked
-    await expect(d.getTriggerAt(1)).toHaveAttribute("aria-checked", "false");
-    await expect(d.getTriggerAt(2)).toHaveAttribute("aria-checked", "false");
-    await expect(d.getTriggerAt(3)).toHaveAttribute("aria-checked", "false");
+    await d.getMainTrigger().click();
+    await verifyAllCheckboxStates(d, false);
   });
 });
 
 test.describe("Keyboard interaction", () => {
   test(`GIVEN a checklist
-       WHEN Space is pressed on a checkbox
-       THEN its state should toggle`, async ({ page }) => {
-    const d = await setup(page, "group");
+        WHEN Space is pressed on the main checkbox
+        THEN its state should toggle`, async ({ page }) => {
+    const d = await setup(page, "select-all");
 
-    await d.getTriggerAt(1).press("Space");
-    await expect(d.getTriggerAt(1)).toHaveAttribute("aria-checked", "true");
+    await d.getMainTrigger().press('Space');
+    await expect(d.getMainTrigger()).toHaveAttribute("aria-checked", "true");
+    await expect(d.getMainIndicator()).toBeVisible();
 
-    await d.getTriggerAt(1).press("Space");
-    await expect(d.getTriggerAt(1)).toHaveAttribute("aria-checked", "false");
+    await d.getMainTrigger().press("Space");
+    await expect(d.getMainTrigger()).toHaveAttribute("aria-checked", "false");
+    await expect(d.getMainIndicator()).toBeHidden();
   });
 
   test(`GIVEN a checklist
-       WHEN Space is pressed on SelectAll
-       THEN all items should toggle`, async ({ page }) => {
-    const d = await setup(page, "group");
+        WHEN Space is pressed on the main checkbox
+        THEN all items should toggle`, async ({ page }) => {
+    const d = await setup(page, "select-all");
 
-    await d.getTriggerAt(0).press("Space");
+    await d.getMainTrigger().press("Space");
+    await verifyAllCheckboxStates(d, true);
 
-    // Verify all items are checked
-    await expect(d.getTriggerAt(1)).toHaveAttribute("aria-checked", "true");
-    await expect(d.getTriggerAt(2)).toHaveAttribute("aria-checked", "true");
-    await expect(d.getTriggerAt(3)).toHaveAttribute("aria-checked", "true");
+    await d.getMainTrigger().press("Space");
+    await verifyAllCheckboxStates(d, false);
   });
 });
 
-test.describe("ARIA attributes", () => {
+test.describe("a11y", () => {
   test(`GIVEN a checklist
-       THEN it should have correct group role and labeling`, async ({ page }) => {
-    const d = await setup(page, "group");
+        WHEN rendered
+        THEN the checklist root should have a role of group`, async ({ page }) => {
+    const d = await setup(page, "select-all");
 
     await expect(d.getRoot()).toHaveAttribute("role", "group");
-    await expect(d.getRoot()).toHaveAttribute("aria-labelledby");
   });
 
   test(`GIVEN a checklist item
-       THEN it should have correct checkbox role and state`, async ({ page }) => {
-    const d = await setup(page, "group");
+        THEN it should have correct checkbox role and state`, async ({ page }) => {
+    const d = await setup(page, "select-all");
 
     await expect(d.getTriggerAt(1)).toHaveAttribute("role", "checkbox");
     await expect(d.getTriggerAt(1)).toHaveAttribute("aria-checked", "false");

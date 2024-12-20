@@ -6,15 +6,15 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator("[data-qds-checklist-root]");
   };
 
-  const getSelectAll = () => {
+  const getMainCheckbox = () => {
     return rootLocator.locator("[data-qds-checklist-select-all]");
   };
 
-  const getSelectAllTrigger = () => {
+  const getMainTrigger = () => {
     return rootLocator.locator("[data-qds-checklist-select-all-trigger]");
   };
 
-  const getSelectAllIndicator = () => {
+  const getMainIndicator = () => {
     return rootLocator.locator("[data-qds-checklist-select-all-indicator]");
   };
 
@@ -51,6 +51,9 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getIndicatorAt,
     getLabelAt,
     getHiddenInput,
-    getErrorMessage
+    getErrorMessage,
+    getMainCheckbox,
+    getMainTrigger,
+    getMainIndicator,
   };
 }
