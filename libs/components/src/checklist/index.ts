@@ -6,3 +6,6 @@ export { ChecklistItemTrigger as ItemTrigger } from "./checklist-item-trigger";
 export { ChecklistItemDescription as ItemDescription } from "./checklist-item-description";
 export { ChecklistHiddenInput as HiddenInput } from "./checklist-hidden-input";
 export { ChecklistErrorMessage as ErrorMessage } from "./checklist-error-message";
+export { ChecklistSelectAll as SelectAll } from "./checklist-select-all";
+export { ChecklistSelectAllIndicator as SelectAllIndicator } from "./checklist-select-all-indicator";
+export { ChecklistLabel as Label } from "./checklist-label";

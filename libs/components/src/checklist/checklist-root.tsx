@@ -1,7 +1,7 @@
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";
 import { findComponent, processChildren } from "../../utils/inline-component";
 import { ChecklistItem } from "./checklist-item";
-
+import { Checkbox } from "..";
 type ChecklistRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   _numItems?: number;
 };
@@ -26,9 +26,10 @@ export const ChecklistRoot = ({ children, ...props }: ChecklistRootProps) => {
 };
 
 export const ChecklistBase = component$((props: ChecklistRootProps) => {
+  // The checkbox root to the select all checkbox
   return (
-    <div {...props}>
+    <Checkbox.Root data-qds-checklist-root {...props}>
       <Slot />
-    </div>
+    </Checkbox.Root>
   );
 });
