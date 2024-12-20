@@ -35,3 +35,16 @@
     background: #0a4d70;
     border-radius: 8px;
 }
+
+.select-all-trigger [data-check-icon],
+.select-all-trigger [data-minus-icon] {
+    display: none;
+}
+
+.select-all-trigger[data-checked] [data-check-icon] {
+    display: block;
+}
+
+.select-all-trigger[data-mixed] [data-minus-icon] {
+    display: block;
+}

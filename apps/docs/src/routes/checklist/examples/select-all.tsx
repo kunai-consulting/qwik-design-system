@@ -1,6 +1,6 @@
 import { component$, useStyles$ } from "@builder.io/qwik";
 import { Checklist } from "@kunai-consulting/qwik-components";
-import { LuCheck } from "@qwikest/icons/lucide";
+import { LuCheck, LuMinus } from "@qwikest/icons/lucide";
 
 export default component$(() => {
   useStyles$(styles);
@@ -9,9 +9,10 @@ export default component$(() => {
   return (
     <Checklist.Root>
       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-        <Checklist.SelectAll class="checkbox-trigger">
+        <Checklist.SelectAll class="checkbox-trigger select-all-trigger">
           <Checklist.SelectAllIndicator class="checkbox-indicator">
-            <LuCheck />
+            <LuCheck data-check-icon />
+            <LuMinus data-minus-icon />
           </Checklist.SelectAllIndicator>
         </Checklist.SelectAll>
         <Checklist.Label>All items</Checklist.Label>
