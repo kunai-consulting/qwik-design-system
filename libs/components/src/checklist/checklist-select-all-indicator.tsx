@@ -4,7 +4,7 @@ import { Checkbox } from "..";
 export const ChecklistSelectAllIndicator = component$(
   (props: PropsOf<typeof Checkbox.Indicator>) => {
     return (
-      <Checkbox.Indicator {...props}>
+      <Checkbox.Indicator data-qds-checklist-select-all-indicator {...props}>
         <Slot />
       </Checkbox.Indicator>
     );
