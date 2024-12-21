@@ -39,7 +39,7 @@ export const ChecklistBase = component$((props: ChecklistRootProps) => {
 
   // The checkbox root to the select all checkbox
   return (
-    <Checkbox.Root bind:checked={isAllCheckedSig} data-qds-checklist-root {...props}>
+    <Checkbox.Root role="group" bind:checked={isAllCheckedSig} data-qds-checklist-root {...props}>
       <Slot />
     </Checkbox.Root>
   );
