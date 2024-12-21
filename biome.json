@@ -85,5 +85,7 @@
   "vcs": {
     "clientKind": "git",
     "enabled": true
-  }
+  },
+
+  "extends": ["./libs/create-design-system/biome.json"]
 }
