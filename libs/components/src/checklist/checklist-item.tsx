@@ -8,12 +8,12 @@ import {
   useSignal,
   useTask$,
   useVisibleTask$,
-  $,
-} from '@builder.io/qwik';
-import { CheckboxRoot } from '../checkbox/checkbox-root';
-import { ChecklistContext, type ChecklistState } from './checklist-context';
+  $
+} from "@builder.io/qwik";
+import { CheckboxRoot } from "../checkbox/checkbox-root";
+import { ChecklistContext, type ChecklistState } from "./checklist-context";
 
-interface ChecklistItemProps extends PropsOf<'div'> {
+interface ChecklistItemProps extends PropsOf<"div"> {
   _index?: number;
 }
 
@@ -21,7 +21,7 @@ export const ChecklistItem = component$((props: ChecklistItemProps) => {
   const { _index, ...rest } = props;
 
   if (_index === undefined) {
-    throw new Error('Checklist Item must have an index.');
+    throw new Error("Checklist Item must have an index.");
   }
 
   const context = useContext(ChecklistContext);
