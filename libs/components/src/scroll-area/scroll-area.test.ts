@@ -31,7 +31,7 @@ test.describe("critical functionality", () => {
     const viewport = d.getViewport();
 
     // Scroll to bottom
-    await viewport.evaluate(el => {
+    await viewport.evaluate((el) => {
       el.scrollTop = el.scrollHeight;
     });
 
@@ -47,9 +47,12 @@ test.describe("critical functionality", () => {
     const thumbBox = await thumb.boundingBox();
     const scrollbarBox = await scrollbar.boundingBox();
 
+    if (!thumbBox) return;
+    if (!scrollbarBox) return;
+
     // Calculate expected bottom position considering padding
-    const expectedBottom = scrollbarBox!.y + scrollbarBox!.height ;
-    const actualBottom = thumbBox!.y + thumbBox!.height - 2; // 2px for padding
+    const expectedBottom = scrollbarBox.y + scrollbarBox.height;
+    const actualBottom = thumbBox.y + thumbBox.height - 2; // 2px for padding
 
     expect(actualBottom).toBeCloseTo(expectedBottom, 1);
   });
@@ -64,11 +67,11 @@ test.describe("drag functionality", () => {
     const viewport = d.getViewport();
 
     // Get initial scroll position
-    const initialScrollTop = await viewport.evaluate(el => el.scrollTop);
+    const initialScrollTop = await viewport.evaluate((el) => el.scrollTop);
 
     // Get thumb position
     const thumbBox = await thumb.boundingBox();
-    if (!thumbBox) throw new Error('Could not get thumb position');
+    if (!thumbBox) throw new Error("Could not get thumb position");
 
     // Simulate drag operation
     // Start at the center of the thumb
@@ -91,7 +94,7 @@ test.describe("drag functionality", () => {
     await page.waitForTimeout(100);
 
     // Verify new scroll position
-    const newScrollTop = await viewport.evaluate(el => el.scrollTop);
+    const newScrollTop = await viewport.evaluate((el) => el.scrollTop);
     expect(newScrollTop).toBeGreaterThan(initialScrollTop);
   });
 
@@ -103,11 +106,11 @@ test.describe("drag functionality", () => {
     const viewport = d.getViewport();
 
     // Get initial scroll position
-    const initialScrollLeft = await viewport.evaluate(el => el.scrollLeft);
+    const initialScrollLeft = await viewport.evaluate((el) => el.scrollLeft);
 
     // Get thumb position
     const thumbBox = await thumb.boundingBox();
-    if (!thumbBox) throw new Error('Could not get thumb position');
+    if (!thumbBox) throw new Error("Could not get thumb position");
 
     // Simulate drag operation
     // Start at the center of the thumb
@@ -130,7 +133,7 @@ test.describe("drag functionality", () => {
     await page.waitForTimeout(100);
 
     // Verify new scroll position
-    const newScrollLeft = await viewport.evaluate(el => el.scrollLeft);
+    const newScrollLeft = await viewport.evaluate((el) => el.scrollLeft);
     expect(newScrollLeft).toBeGreaterThan(initialScrollLeft);
   });
 });
@@ -144,7 +147,7 @@ test.describe("thumb behavior", () => {
 
     // Get thumb position
     const thumbBox = await thumb.boundingBox();
-    if (!thumbBox) throw new Error('Could not get thumb position');
+    if (!thumbBox) throw new Error("Could not get thumb position");
 
     // Move to center of thumb and click
     await page.mouse.move(
@@ -156,7 +159,7 @@ test.describe("thumb behavior", () => {
     // Wait for drag state to update
     await page.waitForTimeout(50);
 
-    await expect(thumb).toHaveAttribute('data-dragging', '');
+    await expect(thumb).toHaveAttribute("data-dragging", "");
 
     // Cleanup
     await page.mouse.up();
@@ -170,23 +173,20 @@ test.describe("thumb behavior", () => {
     const viewport = d.getViewport();
 
     // Get initial scroll position
-    const initialScrollTop = await viewport.evaluate(el => el.scrollTop);
+    const initialScrollTop = await viewport.evaluate((el) => el.scrollTop);
 
     // Get scrollbar position
     const box = await scrollbar.boundingBox();
-    if (!box) throw new Error('Could not get scrollbar position');
+    if (!box) throw new Error("Could not get scrollbar position");
 
     // Click in the middle of the scrollbar, but account for padding
-    await page.mouse.click(
-      box.x + box.width / 2,
-      box.y + box.height / 2
-    );
+    await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
 
     // Wait for scroll to complete
     await page.waitForTimeout(50);
 
     // Verify new scroll position
-    const newScrollTop = await viewport.evaluate(el => el.scrollTop);
+    const newScrollTop = await viewport.evaluate((el) => el.scrollTop);
     expect(newScrollTop).toBeGreaterThan(initialScrollTop);
   });
 });
@@ -202,13 +202,13 @@ test.describe("a11y", () => {
     await viewport.focus();
 
     // Test various keyboard shortcuts
-    const shortcuts = ['PageDown', 'PageUp', 'Home', 'End'];
+    const shortcuts = ["PageDown", "PageUp", "Home", "End"];
     for (const key of shortcuts) {
-      const initialScrollTop = await viewport.evaluate(el => el.scrollTop);
+      const initialScrollTop = await viewport.evaluate((el) => el.scrollTop);
       await page.keyboard.press(key);
-      const newScrollTop = await viewport.evaluate(el => el.scrollTop);
+      const newScrollTop = await viewport.evaluate((el) => el.scrollTop);
 
-      if (key === 'PageDown' || key === 'End') {
+      if (key === "PageDown" || key === "End") {
         expect(newScrollTop).toBeGreaterThanOrEqual(initialScrollTop);
       } else {
         expect(newScrollTop).toBeLessThanOrEqual(initialScrollTop);
@@ -216,4 +216,3 @@ test.describe("a11y", () => {
     }
   });
 });
-

@@ -4,9 +4,11 @@ import {
   useSignal,
   useOnDocument,
   type Signal,
-  type PropsOf
+  type PropsOf,
+  useContext
 } from "@builder.io/qwik";
 import type { PropFunction } from "@builder.io/qwik";
+import { scrollAreaContextId } from "./scroll-area-context";
 
 type ScrollAreaThumb = {
   ref?: Signal<HTMLDivElement | undefined>;
@@ -16,7 +18,7 @@ type ScrollAreaThumb = {
 } & PropsOf<"div">;
 
 export const ScrollAreaThumb = component$<ScrollAreaThumb>((props) => {
-  const thumbRef = useSignal<HTMLDivElement>();
+  const context = useContext(scrollAreaContextId);
   const isDragging = useSignal(false);
   const dragData = useSignal({
     startClientY: 0,
@@ -26,14 +28,13 @@ export const ScrollAreaThumb = component$<ScrollAreaThumb>((props) => {
   });
 
   const onDragStart$ = $((e: MouseEvent) => {
-    const thumb = thumbRef.value;
+    const thumb = context.thumbRef.value;
+    const scrollbar = context.scrollbarRef.value;
+    const viewport = context.viewportRef.value;
+
+    if (!scrollbar) return;
+    if (!viewport) return;
     if (!thumb) return;
-
-    const scrollbar = thumb.closest("[data-scroll-area-scrollbar]");
-    const root = scrollbar?.closest("[data-scroll-area-root]");
-    const viewport = root?.querySelector("[data-scroll-area-viewport]") as HTMLElement;
-
-    if (!scrollbar || !viewport) return;
 
     e.preventDefault();
     isDragging.value = true;
@@ -49,14 +50,13 @@ export const ScrollAreaThumb = component$<ScrollAreaThumb>((props) => {
   const onDragMove$ = $((e: MouseEvent) => {
     if (!isDragging.value) return;
 
-    const thumb = thumbRef.value;
+    const thumb = context.thumbRef.value;
+    const scrollbar = context.scrollbarRef.value;
+    const viewport = context.viewportRef.value;
+
+    if (!scrollbar) return;
+    if (!viewport) return;
     if (!thumb) return;
-
-    const scrollbar = thumb.closest("[data-scroll-area-scrollbar]");
-    const root = scrollbar?.closest("[data-scroll-area-root]");
-    const viewport = root?.querySelector("[data-scroll-area-viewport]") as HTMLElement;
-
-    if (!scrollbar || !viewport) return;
 
     const isVertical = scrollbar.getAttribute("data-orientation") === "vertical";
 
@@ -89,7 +89,7 @@ export const ScrollAreaThumb = component$<ScrollAreaThumb>((props) => {
   return (
     <div
       {...props}
-      ref={thumbRef}
+      ref={context.thumbRef}
       data-scroll-area-thumb
       data-dragging={isDragging.value ? "" : undefined}
       onMouseDown$={onDragStart$}

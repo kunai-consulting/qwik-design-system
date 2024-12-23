@@ -17,10 +17,9 @@ type ScrollBarType = PropsOf<"div"> & {
 export const ScrollAreaScrollbar = component$<ScrollBarType>((props) => {
   const context = useContext(scrollAreaContextId);
   const { orientation = "vertical" } = props;
-  const scrollbarRef = useSignal<HTMLDivElement>();
 
   const onTrackClick$ = $((e: MouseEvent) => {
-    const scrollbar = scrollbarRef.value;
+    const scrollbar = context.scrollbarRef.value;
     if (!scrollbar) return;
 
     const viewport = context.viewportRef.value;

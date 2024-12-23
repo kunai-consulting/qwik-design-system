@@ -1,10 +1,19 @@
-import { $, component$, type PropFunction, type PropsOf, Slot } from "@builder.io/qwik";
+import {
+  $,
+  component$,
+  type PropFunction,
+  type PropsOf,
+  Slot,
+  useContext
+} from "@builder.io/qwik";
+import { scrollAreaContextId } from "./scroll-area-context";
 
 type ViewPortProps = PropsOf<"div"> & {
   onScroll$?: PropFunction<(e: Event) => void>;
 };
 
 export const ScrollAreaViewPort = component$<ViewPortProps>((props) => {
+  const context = useContext(scrollAreaContextId);
   const onScroll$ = $((e: Event) => {
     const viewport = e.target as HTMLElement;
     const scrollbars = viewport.parentElement?.querySelectorAll(
@@ -35,7 +44,12 @@ export const ScrollAreaViewPort = component$<ViewPortProps>((props) => {
   });
 
   return (
-    <div {...props} data-scroll-area-viewport onScroll$={onScroll$}>
+    <div
+      {...props}
+      data-scroll-area-viewport
+      onScroll$={onScroll$}
+      ref={context.viewportRef}
+    >
       <Slot />
     </div>
   );
