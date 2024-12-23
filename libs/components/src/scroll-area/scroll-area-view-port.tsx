@@ -16,11 +16,11 @@ export const ScrollAreaViewPort = component$<ViewPortProps>((props) => {
   const context = useContext(scrollAreaContextId);
   const onScroll$ = $((e: Event) => {
     const viewport = e.target as HTMLElement;
-    const scrollbars = viewport.parentElement?.querySelectorAll(
-      "[data-scroll-area-scrollbar]"
+    const scrollbars = Array.from(
+      viewport.parentElement?.querySelectorAll("[data-scroll-area-scrollbar]") || []
     );
 
-    scrollbars?.forEach((scrollbar) => {
+    for (const scrollbar of scrollbars) {
       const thumb = scrollbar.querySelector("[data-scroll-area-thumb]") as HTMLElement;
       if (!thumb) return;
 
@@ -37,7 +37,7 @@ export const ScrollAreaViewPort = component$<ViewPortProps>((props) => {
         const maxLeft = scrollbar.clientWidth - thumb.clientWidth;
         thumb.style.transform = `translateX(${scrollRatio * maxLeft}px)`;
       }
-    });
+    }
 
     // Call the provided onScroll$ handler if it exists
     props.onScroll$?.(e);
