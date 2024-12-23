@@ -1,27 +1,37 @@
-import { $, component$, PropsOf, QRL, Slot, useSignal } from "@builder.io/qwik";
+import {
+  $,
+  component$,
+  type PropsOf,
+  type QRL,
+  Slot,
+  useContext,
+  useSignal
+} from "@builder.io/qwik";
+import { scrollAreaContextId } from "./scroll-area-context";
 
-type ScrollBarType = PropsOf<'div'> & {
-  orientation?: 'vertical' | 'horizontal';
+type ScrollBarType = PropsOf<"div"> & {
+  orientation?: "vertical" | "horizontal";
   onScroll$?: QRL<(e: Event) => void>;
 };
 
 export const ScrollAreaScrollbar = component$<ScrollBarType>((props) => {
-  const { orientation = 'vertical' } = props;
+  const context = useContext(scrollAreaContextId);
+  const { orientation = "vertical" } = props;
   const scrollbarRef = useSignal<HTMLDivElement>();
 
   const onTrackClick$ = $((e: MouseEvent) => {
     const scrollbar = scrollbarRef.value;
     if (!scrollbar) return;
 
-    const root = scrollbar.closest('[data-scroll-area-root]');
-    const viewport = root?.querySelector('[data-scroll-area-viewport]') as HTMLElement;
-    const thumb = scrollbar.querySelector('[data-scroll-area-thumb]') as HTMLElement;
+    const viewport = context.viewportRef.value;
+    const thumb = context.thumbRef.value;
 
-    if (!thumb || !viewport || e.target === thumb) return;
+    if (!thumb || e.target === thumb) return;
+    if (!viewport) return;
 
     const rect = scrollbar.getBoundingClientRect();
 
-    if (orientation === 'vertical') {
+    if (orientation === "vertical") {
       const clickPos = e.clientY - rect.top;
       // Calculate click position as a ratio of the scrollbar height
       const scrollRatio = clickPos / rect.height;
@@ -43,7 +53,7 @@ export const ScrollAreaScrollbar = component$<ScrollBarType>((props) => {
   return (
     <div
       {...props}
-      ref={scrollbarRef}
+      ref={context.scrollbarRef}
       data-scroll-area-scrollbar
       data-orientation={orientation}
       onClick$={onTrackClick$}

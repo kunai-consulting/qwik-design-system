@@ -1,4 +1,11 @@
-import { component$, $, useSignal, useOnDocument, Signal, PropsOf } from "@builder.io/qwik";
+import {
+  component$,
+  $,
+  useSignal,
+  useOnDocument,
+  type Signal,
+  type PropsOf
+} from "@builder.io/qwik";
 import type { PropFunction } from "@builder.io/qwik";
 
 type ScrollAreaThumb = {
@@ -6,7 +13,7 @@ type ScrollAreaThumb = {
   onDragStart$?: PropFunction<(e: MouseEvent) => void>;
   onDragMove$?: PropFunction<(e: MouseEvent) => void>;
   onDragEnd$?: PropFunction<() => void>;
-} & PropsOf<'div'>;
+} & PropsOf<"div">;
 
 export const ScrollAreaThumb = component$<ScrollAreaThumb>((props) => {
   const thumbRef = useSignal<HTMLDivElement>();
@@ -22,9 +29,9 @@ export const ScrollAreaThumb = component$<ScrollAreaThumb>((props) => {
     const thumb = thumbRef.value;
     if (!thumb) return;
 
-    const scrollbar = thumb.closest('[data-scroll-area-scrollbar]');
-    const root = scrollbar?.closest('[data-scroll-area-root]');
-    const viewport = root?.querySelector('[data-scroll-area-viewport]') as HTMLElement;
+    const scrollbar = thumb.closest("[data-scroll-area-scrollbar]");
+    const root = scrollbar?.closest("[data-scroll-area-root]");
+    const viewport = root?.querySelector("[data-scroll-area-viewport]") as HTMLElement;
 
     if (!scrollbar || !viewport) return;
 
@@ -45,13 +52,13 @@ export const ScrollAreaThumb = component$<ScrollAreaThumb>((props) => {
     const thumb = thumbRef.value;
     if (!thumb) return;
 
-    const scrollbar = thumb.closest('[data-scroll-area-scrollbar]');
-    const root = scrollbar?.closest('[data-scroll-area-root]');
-    const viewport = root?.querySelector('[data-scroll-area-viewport]') as HTMLElement;
+    const scrollbar = thumb.closest("[data-scroll-area-scrollbar]");
+    const root = scrollbar?.closest("[data-scroll-area-root]");
+    const viewport = root?.querySelector("[data-scroll-area-viewport]") as HTMLElement;
 
     if (!scrollbar || !viewport) return;
 
-    const isVertical = scrollbar.getAttribute('data-orientation') === 'vertical';
+    const isVertical = scrollbar.getAttribute("data-orientation") === "vertical";
 
     e.preventDefault();
 
@@ -59,14 +66,16 @@ export const ScrollAreaThumb = component$<ScrollAreaThumb>((props) => {
       const deltaY = e.clientY - dragData.value.startClientY;
       const scrollbarHeight = scrollbar.clientHeight;
       const thumbHeight = thumb.clientHeight;
-      const scrollRatio = (viewport.scrollHeight - viewport.clientHeight) / (scrollbarHeight - thumbHeight);
-      viewport.scrollTop = dragData.value.startScrollTop + (deltaY * scrollRatio);
+      const scrollRatio =
+        (viewport.scrollHeight - viewport.clientHeight) / (scrollbarHeight - thumbHeight);
+      viewport.scrollTop = dragData.value.startScrollTop + deltaY * scrollRatio;
     } else {
       const deltaX = e.clientX - dragData.value.startClientX;
       const scrollbarWidth = scrollbar.clientWidth;
       const thumbWidth = thumb.clientWidth;
-      const scrollRatio = (viewport.scrollWidth - viewport.clientWidth) / (scrollbarWidth - thumbWidth);
-      viewport.scrollLeft = dragData.value.startScrollLeft + (deltaX * scrollRatio);
+      const scrollRatio =
+        (viewport.scrollWidth - viewport.clientWidth) / (scrollbarWidth - thumbWidth);
+      viewport.scrollLeft = dragData.value.startScrollLeft + deltaX * scrollRatio;
     }
   });
 
@@ -74,15 +83,15 @@ export const ScrollAreaThumb = component$<ScrollAreaThumb>((props) => {
     isDragging.value = false;
   });
 
-  useOnDocument('mousemove', onDragMove$);
-  useOnDocument('mouseup', onDragEnd$);
+  useOnDocument("mousemove", onDragMove$);
+  useOnDocument("mouseup", onDragEnd$);
 
   return (
     <div
       {...props}
       ref={thumbRef}
       data-scroll-area-thumb
-      data-dragging={isDragging.value ? '' : undefined}
+      data-dragging={isDragging.value ? "" : undefined}
       onMouseDown$={onDragStart$}
     />
   );
