@@ -1,5 +1,13 @@
 # @kunai-consulting/qwik-headless
 
+## 0.0.6
+
+### Patch Changes
+
+- f6a49a1: Added signals to track the total number of input fields present and if all fields are filled. Applied invisible style to hiddenInput
+- bb73935: test: creating linear ticket
+- 580634c: Updated focus state, added test
+
 ## 0.0.5
 
 ### Patch Changes
