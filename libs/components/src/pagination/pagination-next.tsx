@@ -1,10 +1,10 @@
 import { type PropsOf, Slot, component$, useContext, useTask$, $, useSignal } from "@builder.io/qwik";
-import { paginationContext } from "./pagination-context";
+import { paginationContextId } from "./pagination-context";
 
 export const PaginationNext = component$(
   ({type, ...props}: PropsOf<"button"> & { isLast?: boolean }) => {
-    const context = useContext(paginationContext);
-    const { selectedPageSig, totalPages, perPageSig } = context;
+    const context = useContext(paginationContextId);
+    const { selectedPageSig, totalPages } = context;
 
     const isDisabled = useSignal(selectedPageSig.value === totalPages);
 
@@ -19,8 +19,8 @@ export const PaginationNext = component$(
         return;
       }
       if (selectedPageSig.value < totalPages) {
-        if (selectedPageSig.value + perPageSig.value <= totalPages) {
-          selectedPageSig.value = selectedPageSig.value + perPageSig.value;
+        if (selectedPageSig.value + 1 <= totalPages) {
+          selectedPageSig.value = selectedPageSig.value + 1;
         } else {
           selectedPageSig.value = totalPages;
         }
