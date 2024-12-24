@@ -8,7 +8,7 @@ export type PaginationContext = {
   totalPages: number;
   onPageChange$: QRL<(page: number) => void> | undefined;
   currentPage: number | undefined;
-  pagesSig: Signal<any[]>;
+  pagesSig: Signal<number[]>;
   ellipsisSig: Signal<any[]>;
   focusedIndexSig: Signal<number | null>;
   ellipsis?: JSXChildren;
