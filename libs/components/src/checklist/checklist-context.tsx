@@ -1,13 +1,8 @@
-import { createContextId, type Signal } from '@builder.io/qwik';
+import { createContextId, Signal } from "@builder.io/qwik";
 
-export interface ChecklistState {
-  items: Signal<boolean[]>;
-  // toggleItem: (index: number) => void;
-  allSelected: Signal<boolean>;
-  toggleAllSelected: () => void;
-  indeterminate: Signal<boolean>;
-  initialStates: boolean[];
-}
+export type ChecklistContext = {
+  isAllCheckedSig: Signal<boolean | 'mixed'>;
+  checkedStatesSig: Signal<(boolean | 'mixed')[]>;
+};
 
-export const ChecklistContext =
-  createContextId<ChecklistState>('ChecklistContext');
+export const checklistContextId = createContextId<ChecklistContext>("checklist");
