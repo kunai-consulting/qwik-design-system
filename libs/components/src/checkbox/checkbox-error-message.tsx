@@ -1,5 +1,5 @@
 import { component$, Slot, useContext, useTask$, type PropsOf } from "@builder.io/qwik";
-import { checkboxContextId } from "./checkbox-context";
+import { checkboxContextId } from "./checkbox-context.ts";
 
 type CheckboxErrorMessageProps = PropsOf<"div">;
 
