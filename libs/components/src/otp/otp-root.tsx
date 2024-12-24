@@ -16,6 +16,7 @@ import { OTPContextId } from "./otp-context";
 import { OtpItem } from "./otp-item";
 import styles from "./otp.css?inline";
 import { useBoundSignal } from "../../utils/bound-signal";
+import { Render, type RenderProps } from "../render/render";
 
 type OtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   "bind:value"?: Signal<string>;
@@ -25,7 +26,7 @@ type OtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   onChange$?: QRL<(value: string) => void>;
   value?: string;
   disabled?: boolean;
-};
+} & RenderProps;
 
 export const OtpRoot = ({ children, ...props }: OtpRootProps) => {
   let currItemIndex = 0;
@@ -47,7 +48,13 @@ export const OtpRoot = ({ children, ...props }: OtpRootProps) => {
 };
 
 export const OtpBase = component$((props: OtpRootProps) => {
-  const { "bind:value": givenValueSig, onChange$, onComplete$, ...rest } = props;
+  const {
+    "bind:value": givenValueSig,
+    onChange$,
+    onComplete$,
+    render: Comp,
+    ...rest
+  } = props;
 
   useStyles$(styles);
 
@@ -92,9 +99,16 @@ export const OtpBase = component$((props: OtpRootProps) => {
   });
 
   useContextProvider(OTPContextId, context);
+
   return (
-    <div data-qds-otp-root data-disabled={isDisabledSig.value ? "" : undefined} {...rest}>
+    <Render
+      component={Comp}
+      fallback="div"
+      data-qds-otp-root
+      data-disabled={isDisabledSig.value ? "" : undefined}
+      {...rest}
+    >
       <Slot />
-    </div>
+    </Render>
   );
 });

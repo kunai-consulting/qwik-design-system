@@ -1,23 +1,23 @@
 {
-  "tasks": {
-    "install:deps": "deno install --allow-scripts=npm:sharp@0.33.5",
-    "dev": "vite --mode ssr --host"
-  },
-  "imports": {
-    "@builder.io/qwik": "npm:@builder.io/qwik@^1.9",
-    "@builder.io/qwik-city": "npm:@builder.io/qwik-city@^1.9",
-    "@kunai-consulting/qwik-components": "workspace:*",
-    "@qwik-ui/headless": "npm:@qwik-ui/headless@^0.6.1",
-    "@types/estree-jsx": "npm:@types/estree-jsx@1.0.5",
-    "@types/node": "npm:@types/node@20.14.11",
-    "autoprefixer": "npm:autoprefixer@^10.4.20",
-    "postcss": "npm:postcss@^8.4.41",
-    "tailwindcss": "npm:tailwindcss@^3.4.10",
-    "typescript": "npm:typescript@5.4.5",
-    "undici": "npm:undici@*",
-    "unified": "npm:unified@^11.0.4",
-    "vite": "npm:vite@^5.4",
-    "vite-tsconfig-paths": "npm:vite-tsconfig-paths@^4.2.1",
-    "@qwikest/icons": "npm:@qwikest/icons@^0.0.13"
-  }
+	"tasks": {
+		"install:deps": "deno install --allow-scripts=npm:sharp@0.33.5",
+		"dev": "vite --mode ssr --host"
+	},
+	"imports": {
+		"@builder.io/qwik": "npm:@builder.io/qwik@^1.9",
+		"@builder.io/qwik-city": "npm:@builder.io/qwik-city@^1.9",
+		"@kunai-consulting/qwik-components": "workspace:*",
+		"@qwik-ui/headless": "npm:@qwik-ui/headless@^0.6.1",
+		"@types/estree-jsx": "npm:@types/estree-jsx@1.0.5",
+		"@types/node": "npm:@types/node@20.14.11",
+		"autoprefixer": "npm:autoprefixer@^10.4.20",
+		"postcss": "npm:postcss@^8.4.41",
+		"tailwindcss": "npm:tailwindcss@^3.4.10",
+		"typescript": "npm:typescript@5.4.5",
+		"undici": "npm:undici@*",
+		"unified": "npm:unified@^11.0.4",
+		"vite": "npm:vite@^5.4",
+		"vite-tsconfig-paths": "npm:vite-tsconfig-paths@^4.2.1",
+		"@qwikest/icons": "npm:@qwikest/icons@^0.0.13"
+	}
 }
