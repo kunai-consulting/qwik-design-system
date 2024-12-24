@@ -3,24 +3,21 @@ import {
   type QRL,
   Slot,
   component$,
-  JSXNode,
-  JSXChildren,
   useContextProvider,
   useSignal,
   useTask$,
   type Signal,
   useComputed$,
-  useId,
-  $
+  type JSXChildren,
 } from "@builder.io/qwik";
 import {
   processChildren,
   findComponent,
-} from "@kunai-consulting/qwik-hooks";
-import { PaginationPage } from "./pagination-page";
-import { type PaginationContext, paginationContextId } from "./pagination-context";
-import { useBoundSignal } from "../../utils/bound-signal";
-import { getPaginationItems } from "./utils";
+} from "../../utils/inline-component.ts";
+import { PaginationPage } from "./pagination-page.tsx";
+import { type PaginationContext, paginationContextId } from "./pagination-context.ts";
+import { useBoundSignal } from "../../utils/bound-signal.tsx";
+import { getPaginationItems } from "./utils.ts";
 
 export type PaginationRootProps = PropsOf<"div"> & {
   totalPages: number;
@@ -28,7 +25,7 @@ export type PaginationRootProps = PropsOf<"div"> & {
   "bind:page"?: Signal<number | 1>;
   onPageChange$?: QRL<(page: number) => void>;
   disabled?: boolean;
-  pages: any[];
+  pages: number[];
   ellipsis?: JSXChildren;
   siblingCount?: number;
 };

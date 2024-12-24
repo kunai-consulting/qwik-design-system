@@ -1,5 +1,5 @@
 import { type PropsOf, Slot, component$, useContext, $, useTask$, useSignal } from "@builder.io/qwik";
-import { paginationContextId } from "./pagination-context";
+import { paginationContextId } from "./pagination-context.ts";
 
 export const PaginationPrevious = component$(
   ({type, ...props}: PropsOf<"button"> & { isFirst?: boolean }) => {

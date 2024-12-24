@@ -1,0 +1,25 @@
+{
+	"name": "@kunai-consulting/qwik-components",
+	"version": "0.0.5",
+	"tasks": {
+		"dev": "vite --mode ssr"
+	},
+	"imports": {
+		"@builder.io/qwik": "npm:@builder.io/qwik@^1.9",
+		"@types/node": "npm:@types/node@20.14.11",
+		"typescript": "npm:typescript@5.4.5",
+		"undici": "npm:undici@*",
+		"vite": "npm:vite@^5.4",
+		"vite-tsconfig-paths": "npm:vite-tsconfig-paths@^4.2.1",
+		"@axe-core/playwright": "npm:@axe-core/playwright@^4.9.1"
+	},
+	"exports": "./src/mod.ts",
+	"compilerOptions": {
+		"allowJs": true,
+		"lib": ["es2020", "DOM"],
+		"jsx": "react-jsx",
+		"jsxImportSource": "@builder.io/qwik",
+		"strict": true,
+		"types": ["vite/client"]
+	}
+}

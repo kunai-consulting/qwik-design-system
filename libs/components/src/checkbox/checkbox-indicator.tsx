@@ -1,13 +1,5 @@
-import {
-  component$,
-  useContext,
-  type PropsOf,
-  Slot,
-  useTask$,
-  useStyles$
-} from "@builder.io/qwik";
-import { CheckboxContext, checkboxContextId } from "./checkbox-context";
-import "./checkbox.css";
+import { component$, useContext, type PropsOf, Slot, useStyles$ } from "@builder.io/qwik";
+import { checkboxContextId } from "./checkbox-context.ts";
 import styles from "./checkbox.css?inline";
 
 export type CheckboxIndicatorProps = PropsOf<"span">;

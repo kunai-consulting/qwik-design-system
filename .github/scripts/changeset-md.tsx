@@ -1,4 +1,5 @@
 /** Data format of the release.json file */
+import process from "node:process";
 export type ChangesetData = {
   changesets: Array<{
     summary: string;

@@ -1,6 +1,6 @@
 import {component$, Slot, useComputed$, useContext, useTask$, useSignal, $} from "@builder.io/qwik";
 import type {QwikIntrinsicElements} from "@builder.io/qwik";
-import {paginationContextId} from "./pagination-context";
+import {paginationContextId} from "./pagination-context.ts";
 
 type AllowedElements = "button" | "a" | "div" | "span";
 

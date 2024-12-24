@@ -172,8 +172,8 @@ const Anchor = component$<AnchorProps>(({ node, activeItem }) => {
           if (element) {
             const navbarHeight = 90;
             const position =
-              element.getBoundingClientRect().top + window.scrollY - navbarHeight;
-            window.scrollTo({ top: position, behavior: "auto" });
+              element.getBoundingClientRect().top + globalThis.scrollY - navbarHeight;
+            globalThis.scrollTo({ top: position, behavior: "auto" });
           }
         })
       ]}

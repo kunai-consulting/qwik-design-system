@@ -1,56 +1,60 @@
 import {
-  component$,
-  Slot,
-  useContext,
-  useSignal,
-  useTask$,
-  type PropsOf
+	component$,
+	Slot,
+	useContext,
+	useSignal,
+	useTask$,
+	type PropsOf,
 } from "@builder.io/qwik";
-import { Checkbox } from "..";
-import { checklistContextId } from "./checklist-context";
+import { Checkbox } from "../mod.ts";
+import { checklistContextId } from "./checklist-context.ts";
 
 type ChecklistItemProps = PropsOf<typeof Checkbox.Root> & {
-  _index?: number;
+	_index?: number;
 };
 
 export const ChecklistItem = component$((props: ChecklistItemProps) => {
-  console.log(props._index);
-  const context = useContext(checklistContextId);
+	console.log(props._index);
+	const context = useContext(checklistContextId);
 
-  if (props._index === undefined) {
-    throw new Error("Qwik Design System: Checklist Item must have an index");
-  }
+	if (props._index === undefined) {
+		throw new Error("Qwik Design System: Checklist Item must have an index");
+	}
 
-  const index = props._index;
-  const isCheckedSig = useSignal(false);
+	const index = props._index;
+	const isCheckedSig = useSignal(false);
 
-  useTask$(function checkAllManager({ track }) {
-    track(() => context.isAllCheckedSig.value);
+	useTask$(function checkAllManager({ track }) {
+		track(() => context.isAllCheckedSig.value);
 
-    if (context.isAllCheckedSig.value === true) {
-      isCheckedSig.value = true;
-    } else if (context.isAllCheckedSig.value === false) {
-      isCheckedSig.value = false;
-    }
-  });
+		if (context.isAllCheckedSig.value === true) {
+			isCheckedSig.value = true;
+		} else if (context.isAllCheckedSig.value === false) {
+			isCheckedSig.value = false;
+		}
+	});
 
-  useTask$(function checkItemsManager({ track }) {
-    track(() => isCheckedSig.value);
+	useTask$(function checkItemsManager({ track }) {
+		track(() => isCheckedSig.value);
 
-    context.checkedStatesSig.value[index] = isCheckedSig.value;
+		console.log("isCheckedSig.value", isCheckedSig.value);
 
-    if (context.checkedStatesSig.value.every((state) => state === true)) {
-      context.isAllCheckedSig.value = true;
-    } else if (context.checkedStatesSig.value.every((state) => state === false)) {
-      context.isAllCheckedSig.value = false;
-    } else {
-      context.isAllCheckedSig.value = "mixed";
-    }
-  });
+		context.checkedStatesSig.value[index] = isCheckedSig.value;
 
-  return (
-    <Checkbox.Root bind:checked={isCheckedSig} {...props}>
-      <Slot />
-    </Checkbox.Root>
-  );
+		if (context.checkedStatesSig.value.every((state) => state === true)) {
+			context.isAllCheckedSig.value = true;
+		} else if (
+			context.checkedStatesSig.value.every((state) => state === false)
+		) {
+			context.isAllCheckedSig.value = false;
+		} else {
+			context.isAllCheckedSig.value = "mixed";
+		}
+	});
+
+	return (
+		<Checkbox.Root bind:checked={isCheckedSig} {...props}>
+			<Slot />
+		</Checkbox.Root>
+	);
 });

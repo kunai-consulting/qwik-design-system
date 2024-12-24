@@ -1,6 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
-import { createTestDriver } from "./pagination.driver";
+import { createTestDriver } from "./pagination.driver.ts";
 
 async function setup(page: Page, exampleName: string) {
   await page.goto(`http://localhost:6174/pagination/${exampleName}`);
