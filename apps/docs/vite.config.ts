@@ -6,7 +6,7 @@ import { qwikVite } from "@builder.io/qwik/optimizer";
  */
 import { type UserConfig, defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
-import pkg from "./package.json";
+import pkg from "./package.json" with { type: "json" };
 import { recmaProvideComponents } from "./src/mdx/recma-provide-comp";
 
 type PkgDep = Record<string, string>;
