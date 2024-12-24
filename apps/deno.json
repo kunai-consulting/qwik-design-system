@@ -1,0 +1,35 @@
+{
+  "name": "@kunai-consulting/qwik-design-system-docs",
+  "description": "Documentation for the Qwik Design System",
+  "imports": {
+    "@builder.io/qwik": "npm:@builder.io/qwik@^1.9",
+    "@builder.io/qwik-city": "npm:@builder.io/qwik-city@^1.9",
+    "@qwik-ui/headless": "npm:@qwik-ui/headless@^0.6.1",
+    "@types/estree-jsx": "npm:@types/estree-jsx@1.0.5",
+    "autoprefixer": "npm:autoprefixer@^10.4.20",
+    "postcss": "npm:postcss@^8.4.41",
+    "tailwindcss": "npm:tailwindcss@^3.4.10",
+    "typescript": "npm:typescript@5.4.5",
+    "undici": "npm:undici@latest",
+    "unified": "npm:unified@^11.0.4",
+    "vite": "npm:vite@^5.4",
+    "vite-tsconfig-paths": "npm:vite-tsconfig-paths@^4.2.1",
+    "@qwikest/icons": "npm:@qwikest/icons@^0.0.13",
+    "class-variance-authority": "npm:class-variance-authority@^0.7.0",
+    "clsx": "npm:clsx@^2.1.1",
+    "rehype-pretty-code": "npm:rehype-pretty-code@^0.13.2",
+    "tailwind-merge": "npm:tailwind-merge@^2.5.0",
+    "@kunai-consulting/qwik-components": "../libs/components/mod.ts",
+    "@kunai-consulting/qwik-hooks": "../libs/hooks/mod.ts"
+  },
+  "tasks": {
+    "build": "qwik build",
+    "build:client": "vite build",
+    "build:preview": "vite build --ssr src/entry.preview.tsx",
+    "build:types": "tsc --incremental --noEmit",
+    "dev": "vite --mode ssr --host",
+    "dev:debug": "vite --mode ssr --force --debug",
+    "preview": "qwik build preview && vite preview --open",
+    "start": "vite --open --mode ssr"
+  }
+}

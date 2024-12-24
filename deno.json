@@ -1,0 +1,42 @@
+{
+  "name": "@kunai-consulting/qwik-design-system",
+  "version": "0.0.0",
+  "workspace": [
+    "./apps/docs",
+    "./libs/components",
+    "./libs/hooks",
+    "./apps/component-tests"
+  ],
+  "tasks": {
+    "dev": "deno run -A ./apps/docs",
+    "dev:ct": "deno run --allow-run npm:pnpm --filter ./apps/component-tests dev -- --port 6174",
+    "build": "deno run --allow-run npm:pnpm --filter ./libs/hooks build && deno run --allow-run npm:pnpm --filter ./libs/components build",
+    "preview": "deno run --allow-run npm:pnpm --filter ./apps/docs preview",
+    "check": "deno fmt --check && deno lint",
+    "check:format": "deno fmt --check",
+    "check:lint": "deno lint",
+    "fix": "deno task lint && deno task format",
+    "format": "deno fmt",
+    "lint": "deno lint --fix",
+    "test": "deno test --allow-all",
+    "test:ui": "deno test --allow-all --watch"
+  },
+  "imports": {
+    "@changesets/cli": "npm:@changesets/cli@^2.27.7",
+    "@linear/sdk": "npm:@linear/sdk@^27.0.0",
+    "@playwright/test": "npm:@playwright/test@^1.46.0",
+    "@types/node": "npm:@types/node@20.14.11",
+    "vite-node": "npm:vite-node@^2.0.5"
+  },
+  "fmt": {
+    "indentWidth": 2,
+    "lineWidth": 80,
+    "semiColons": true,
+    "singleQuote": false
+  },
+  "lint": {
+    "rules": {
+      "tags": ["recommended"]
+    }
+  }
+}
