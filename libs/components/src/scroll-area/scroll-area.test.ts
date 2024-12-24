@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { createTestDriver } from "./scroll-area.driver";
+import { createTestDriver } from "./scroll-area.driver.ts";
 
 async function setup(page: Page, exampleName: string) {
   await page.goto(`http://localhost:6174/scroll-area/${exampleName}`);

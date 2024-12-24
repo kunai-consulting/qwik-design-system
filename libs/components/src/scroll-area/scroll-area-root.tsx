@@ -5,7 +5,7 @@ import {
   useContextProvider,
   useSignal
 } from "@builder.io/qwik";
-import { scrollAreaContextId } from "./scroll-area-context";
+import { scrollAreaContextId } from "./scroll-area-context.ts";
 
 type RootProps = PropsOf<"div">;
 
