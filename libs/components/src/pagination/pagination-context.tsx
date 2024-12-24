@@ -1,11 +1,17 @@
-import { createContextId, QRL, type Signal } from '@builder.io/qwik';
+import { createContextId, JSXChildren, QRL, type Signal } from '@builder.io/qwik';
 
-export interface PaginationState {
+export const paginationContextId = createContextId<PaginationContext>('qds-pagination-context');
+
+export type PaginationContext = {
   selectedPageSig: Signal<number>;
+  isDisabledSig: Signal<boolean | undefined>;
   totalPages: number;
-  perPageSig: Signal<number>;
-  onPageChange$: QRL<(page: number) => void>;
+  onPageChange$: QRL<(page: number) => void> | undefined;
+  currentPage: number | undefined;
+  pagesSig: Signal<any[]>;
+  ellipsisSig: Signal<any[]>;
+  focusedIndexSig: Signal<number | null>;
+  ellipsis?: JSXChildren;
 }
 
-export const paginationContext =
-  createContextId<PaginationState>('PaginationContext');
+
