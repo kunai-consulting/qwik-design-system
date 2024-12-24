@@ -1,4 +1,5 @@
 import { LinearClient } from "@linear/sdk";
+import process from "node:process";
 
 async function syncPrToLinear() {
   const linearClient = new LinearClient({

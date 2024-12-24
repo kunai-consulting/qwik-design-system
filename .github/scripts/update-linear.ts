@@ -1,5 +1,6 @@
 import { LinearClient } from "@linear/sdk";
 import { convertChangesetToMarkdown, changesetData } from "./changeset-md";
+import process from "node:process";
 
 const linearClient = new LinearClient({
   apiKey: process.env.LINEAR_API_KEY,
