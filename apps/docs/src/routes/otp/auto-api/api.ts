@@ -24,7 +24,7 @@ export const api = {
         {
           "PublicOtpRootProps": [
             {
-              "comment": "here's a",
+              "comment": "new comment 123!",
               "prop": "\"bind:value\"",
               "type": "Signal<string>"
             },
@@ -72,7 +72,7 @@ export const api = {
   "anatomy": [
     {
       "name": "Otp.Root",
-      "description": "Here's a comment"
+      "description": "Here's a comment for you!"
     },
     {
       "name": "Otp.Item"

@@ -19,7 +19,7 @@ import { useBoundSignal } from "../../utils/bound-signal";
 import { Render, type RenderProps } from "../render/render";
 
 type PublicOtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
-  // here's a 
+  // new comment 123!
   "bind:value"?: Signal<string>;
   // here's a comment
   _numItems?: number;
@@ -35,7 +35,7 @@ type PublicOtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   disabled?: boolean;
 } & RenderProps;
 
-/** Here's a comment */
+/** Here's a comment for you! */
 export const OtpRoot = ({ children, ...props }: PublicOtpRootProps) => {
   let currItemIndex = 0;
   let numItems = 0;
