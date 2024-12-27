@@ -1,19 +1,16 @@
 import * as fs from 'node:fs';
 import { resolve } from 'node:path';
-import type { ViteDevServer } from 'vite';
 import ts from 'typescript';
 
 export default function autoAPI() {
   return {
     name: 'watch-monorepo-changes',
-    configureServer(server: ViteDevServer) {
-      const watchPath = resolve(__dirname, '../../libs/components');
-      server.watcher.on('change', (file: string) => {
+    watchChange(file: string) {
         console.log('file changed', file);
+        const watchPath = resolve(__dirname, '../../libs/components');
         if (file.startsWith(watchPath)) {
           loopOnAllChildFiles(file);
         }
-      });
     },
   };
 }
