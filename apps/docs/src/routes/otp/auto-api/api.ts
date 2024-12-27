@@ -7,7 +7,17 @@ export const api = {
       "otp-hidden-input": []
     },
     {
-      "otp-item": []
+      "otp-item": [],
+      "dataAttributes": [
+        {
+          "name": "data-highlighted",
+          "type": "string | undefined"
+        },
+        {
+          "name": "data-disabled",
+          "type": "string | undefined"
+        }
+      ]
     },
     {
       "otp-root": [
@@ -46,23 +56,32 @@ export const api = {
             {
               "comment": "here's a comment",
               "prop": "disabled",
-              "type": "boolean",
-              "dataAttributes": [
-                {
-                  "name": "data-disabled",
-                  "type": "string | undefined"
-                }
-              ]
+              "type": "boolean"
             }
           ]
+        }
+      ],
+      "dataAttributes": [
+        {
+          "name": "data-disabled",
+          "type": "string | undefined"
         }
       ]
     }
   ],
   "anatomy": [
-    "Otp.Root",
-    "Otp.Item",
-    "Otp.HiddenInput",
-    "Otp.Caret"
+    {
+      "name": "Otp.Root",
+      "description": "Here's a comment"
+    },
+    {
+      "name": "Otp.Item"
+    },
+    {
+      "name": "Otp.HiddenInput"
+    },
+    {
+      "name": "Otp.Caret"
+    }
   ]
 };

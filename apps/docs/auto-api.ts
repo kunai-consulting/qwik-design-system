@@ -23,133 +23,160 @@ export default function autoAPI() {
 // THE UPPER-MOST KEY IS ALWAYS USED AS A HEADING
 
 export type ComponentParts = {
-  [key: string]: SubComponents | string[];
-  anatomy: string[];
+  [key: string]: SubComponents | AnatomyItem[];
+  anatomy: AnatomyItem[];
 };
+
 type SubComponents = SubComponent[];
-export type SubComponent = Record<string, PublicType[]>;
+
+export type SubComponent = {
+  [key: string]: PublicType[] | Array<{ name: string; type: string; }>;
+} & {
+  dataAttributes?: Array<{ 
+    name: string; 
+    type: string; 
+  }>;
+};
+
 export type PublicType = Record<string, ParsedProps[]>;
+
 type ParsedProps = {
   comment: string;
   prop: string;
   type: string;
-  dataAttributes?: Array<{
-    name: string;
-    type: string;
-  }>;
 };
 
-function parseComponentAnatomy(indexPath: string, componentName: string): string[] {
-  const sourceFile = ts.createSourceFile(
-    indexPath,
-    fs.readFileSync(indexPath, 'utf-8'),
+type AnatomyItem = {
+  name: string;
+  description?: string;
+};
+
+// Helper functions
+function getSourceFile(path: string) {
+  return ts.createSourceFile(
+    path,
+    fs.readFileSync(path, 'utf-8'),
     ts.ScriptTarget.Latest,
     true
   );
+}
+
+function getLeadingComment(sourceFile: ts.SourceFile, node: ts.Node): string | undefined {
+  const comment = ts.getLeadingCommentRanges(sourceFile.text, node.pos)?.[0];
+  if (!comment) return undefined;
   
-  const subComponents: string[] = [];
+  return sourceFile.text
+    .slice(comment.pos, comment.end)
+    .replace(/[/*]/g, '')
+    .trim();
+}
+
+function parseComponentAnatomy(indexPath: string, componentName: string): AnatomyItem[] {
+  const sourceFile = getSourceFile(indexPath);
+  const subComponents: AnatomyItem[] = [];
   const capitalizedComponent = componentName.charAt(0).toUpperCase() + componentName.slice(1);
+  const parentDir = indexPath.replace(/index\.ts$/, '');
   
-  function visit(node: ts.Node) {
-    if (ts.isExportDeclaration(node)) {
-      const clause = node.exportClause;
-      if (clause && ts.isNamedExports(clause)) {
-        for (const element of clause.elements) {
-          if (element.propertyName) {
-            // Prefix each component with capitalized name and dot
-            subComponents.push(`${capitalizedComponent}.${element.name.text}`);
-          }
-        }
+  function getComponentSource(propertyName: string) {
+    const kebabName = propertyName.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+    const componentPath = resolve(parentDir, `${kebabName}.tsx`);
+    return fs.existsSync(componentPath) ? getSourceFile(componentPath) : null;
+  }
+
+  function findExportedComponentComment(source: ts.SourceFile): string | undefined {
+    let description: string | undefined;
+    
+    function visit(node: ts.Node) {
+      if (description) return; // Stop if we found the comment
+      
+      if (ts.isVariableStatement(node) && 
+          node.modifiers?.some(mod => mod.kind === ts.SyntaxKind.ExportKeyword)) {
+        description = getLeadingComment(source, node);
+        return;
+      }
+      ts.forEachChild(node, visit);
+    }
+
+    visit(source);
+    return description;
+  }
+
+  function createAnatomyItem(element: ts.ExportSpecifier): AnatomyItem {
+    if (!element.propertyName) return { name: '' }; // Should never happen due to earlier check
+    
+    const anatomyItem: AnatomyItem = {
+      name: `${capitalizedComponent}.${element.name.text}`
+    };
+
+    const componentSource = getComponentSource(element.propertyName.text);
+    if (componentSource) {
+      const description = findExportedComponentComment(componentSource);
+      if (description) {
+        anatomyItem.description = description;
       }
     }
-    ts.forEachChild(node, visit);
+
+    return anatomyItem;
+  }
+
+  function visit(node: ts.Node) {
+    if (!ts.isExportDeclaration(node)) {
+      ts.forEachChild(node, visit);
+      return;
+    }
+
+    const clause = node.exportClause;
+    if (!clause) return;
+    if (!ts.isNamedExports(clause)) return;
+
+    for (const element of clause.elements) {
+      if (element.propertyName) {
+        subComponents.push(createAnatomyItem(element));
+      }
+    }
   }
   
   visit(sourceFile);
   return subComponents;
 }
 
-/**
- * Note: For this code to run, you need to prefix the type with 'Public' (e.g., 'PublicMyType') in your TypeScript files
- *
- *  * e.g:
- *
- * ```tsx
- * type PublicModalRootProps = {
- *     //blablabla
- *     onShow$?: QRL<() => void>;
- *     //blablabla
- *     onClose$?: QRL<() => void>;
- *     //blablabla
- *     'bind:show'?: Signal<boolean>;
- *     //blablabla
- *     closeOnBackdropClick?: boolean;
- *     //blablabla
- *     alert?: boolean;
- * };
- * ```
- * This convention helps the parser identify and process the public types correctly.
- *
- * Now when you save the corresponding .mdx file, the API will be updated accordingly.
- *
- **/
-
-function parseSingleComponentFromDir(
-  path: string,
-  ref: SubComponents,
-): SubComponents | undefined {
+function parseSingleComponentFromDir(path: string, ref: SubComponents): SubComponents | undefined {
   const componentNameMatch = /[\\/](\w[\w-]*)\.tsx$/.exec(path);
   if (!componentNameMatch) return;
   
   const componentName = componentNameMatch[1];
-  const sourceFile = ts.createSourceFile(
-    path,
-    fs.readFileSync(path, 'utf-8'),
-    ts.ScriptTarget.Latest,
-    true
-  );
-
+  const sourceFile = getSourceFile(path);
   const parsed: PublicType[] = [];
   let currentType: PublicType | undefined;
+  let dataAttributes: Array<{ name: string; type: string }> = [];
 
   function visit(node: ts.Node) {
-    // Look for type aliases that start with "Public"
-    if (ts.isTypeAliasDeclaration(node) && 
-        node.name.text.startsWith('Public')) {
+    if (ts.isTypeAliasDeclaration(node) && node.name.text.startsWith('Public')) {
       const typeName = node.name.text;
       currentType = { [typeName]: [] };
       parsed.push(currentType);
     }
 
-    // Look for property signatures with comments
     if (ts.isPropertySignature(node) && currentType) {
       const typeName = Object.keys(currentType)[0];
-      const comment = ts.getLeadingCommentRanges(
-        sourceFile.text,
-        node.pos
-      )?.[0];
+      const comment = getLeadingComment(sourceFile, node);
       
       if (comment) {
-        const commentText = sourceFile.text
-          .slice(comment.pos, comment.end)
-          .replace(/[/*]/g, '')
-          .trim();
-
         currentType[typeName].push({
-          comment: commentText,
+          comment,
           prop: node.name.getText(),
           type: node.type?.getText() || ''
         });
       }
     }
 
-    // Look for JSX elements to collect data attributes
+    // Move data attributes collection outside of the PublicType
     if (ts.isJsxElement(node) || ts.isJsxSelfClosingElement(node)) {
       const attributes = ts.isJsxElement(node) 
         ? node.openingElement.attributes.properties 
         : node.attributes.properties;
 
-      const dataAttrs = attributes
+      const newDataAttrs = attributes
         .filter(attr => 
           ts.isJsxAttribute(attr) && 
           ts.isIdentifier(attr.name) &&
@@ -159,8 +186,6 @@ function parseSingleComponentFromDir(
         .map(attr => {
           const jsxAttr = attr as ts.JsxAttribute;
           const attrName = jsxAttr.name.getText();
-          // If there's a conditional expression or undefined in the initializer, 
-          // it's likely string | undefined, otherwise just string
           const attrType = jsxAttr.initializer && 
             ts.isJsxExpression(jsxAttr.initializer) && 
             jsxAttr.initializer.expression &&
@@ -175,13 +200,7 @@ function parseSingleComponentFromDir(
           };
         });
 
-      if (dataAttrs.length > 0 && currentType) {
-        const typeName = Object.keys(currentType)[0];
-        const lastProp = currentType[typeName][currentType[typeName].length - 1];
-        if (lastProp) {
-          lastProp.dataAttributes = dataAttrs;
-        }
-      }
+      dataAttributes = [...dataAttributes, ...newDataAttrs];
     }
 
     ts.forEachChild(node, visit);
@@ -189,7 +208,12 @@ function parseSingleComponentFromDir(
 
   visit(sourceFile);
 
-  const completeSubComponent: SubComponent = { [componentName]: parsed };
+  // Add data attributes as a separate property
+  const completeSubComponent: SubComponent = { 
+    [componentName]: parsed,
+    ...(dataAttributes.length > 0 && { dataAttributes })
+  };
+  
   ref.push(completeSubComponent);
   return ref;
 }
@@ -228,7 +252,7 @@ function loopOnAllChildFiles(filePath: string) {
   
   // Add anatomy parsing
   const indexPath = resolve(parentDir, 'index.ts');
-  let anatomy: string[] = [];
+  let anatomy: AnatomyItem[] = [];
   
   if (fs.existsSync(indexPath)) {
     anatomy = parseComponentAnatomy(indexPath, componentName);
