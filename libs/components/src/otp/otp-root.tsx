@@ -18,7 +18,8 @@ import styles from "./otp.css?inline";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { Render, type RenderProps } from "../render/render";
 
-type OtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
+type PublicOtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
+  /** here's a comment */
   "bind:value"?: Signal<string>;
   _numItems?: number;
   autoComplete?: HTMLInputAutocompleteAttribute;
@@ -28,7 +29,7 @@ type OtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   disabled?: boolean;
 } & RenderProps;
 
-export const OtpRoot = ({ children, ...props }: OtpRootProps) => {
+export const OtpRoot = ({ children, ...props }: PublicOtpRootProps) => {
   let currItemIndex = 0;
   let numItems = 0;
 
@@ -47,7 +48,7 @@ export const OtpRoot = ({ children, ...props }: OtpRootProps) => {
   );
 };
 
-export const OtpBase = component$((props: OtpRootProps) => {
+export const OtpBase = component$((props: PublicOtpRootProps) => {
   const {
     "bind:value": givenValueSig,
     onChange$,
