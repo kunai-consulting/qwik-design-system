@@ -59,12 +59,10 @@ export const api = {
       ]
     }
   ],
-  "anatomy": {
-    "otp": [
-      "Otp.Root",
-      "Otp.Item",
-      "Otp.HiddenInput",
-      "Otp.Caret"
-    ]
-  }
+  "anatomy": [
+    "Otp.Root",
+    "Otp.Item",
+    "Otp.HiddenInput",
+    "Otp.Caret"
+  ]
 };

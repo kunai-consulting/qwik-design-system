@@ -23,8 +23,8 @@ export default function autoAPI() {
 // THE UPPER-MOST KEY IS ALWAYS USED AS A HEADING
 
 export type ComponentParts = {
-  [key: string]: SubComponents | ComponentAnatomy;
-  anatomy: ComponentAnatomy;
+  [key: string]: SubComponents | string[];
+  anatomy: string[];
 };
 type SubComponents = SubComponent[];
 export type SubComponent = Record<string, PublicType[]>;
@@ -37,11 +37,6 @@ type ParsedProps = {
     name: string;
     type: string;
   }>;
-};
-
-// Add new type for component anatomy
-type ComponentAnatomy = {
-  [componentName: string]: string[];
 };
 
 function parseComponentAnatomy(indexPath: string, componentName: string): string[] {
@@ -233,10 +228,10 @@ function loopOnAllChildFiles(filePath: string) {
   
   // Add anatomy parsing
   const indexPath = resolve(parentDir, 'index.ts');
-  const anatomy: ComponentAnatomy = {};
+  let anatomy: string[] = [];
   
   if (fs.existsSync(indexPath)) {
-    anatomy[componentName] = parseComponentAnatomy(indexPath, componentName);
+    anatomy = parseComponentAnatomy(indexPath, componentName);
   }
 
   const allParts: SubComponents = [];
