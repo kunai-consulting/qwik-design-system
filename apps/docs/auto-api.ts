@@ -1,41 +1,7 @@
 import * as fs from 'node:fs';
 import { resolve } from 'node:path';
 import type { ViteDevServer } from 'vite';
-import Parser, { Query } from 'tree-sitter';
-import TS from 'tree-sitter-typescript';
-
-const parser = new Parser();
-
-/**
- * Tree-Sitter query docs: https://tree-sitter.github.io/tree-sitter/using-parsers#query-syntax
- * Pay particular attention to the following sections: capturing nodes, wildcard nodes,predicates,alternations, and anchors.
- *
- * To have a way of being able to see the Tree-Sitter AST in real-time: the ideal setup comes included in Neovim. In ex mode, simply run
- * the command below and you'll have the file's AST viewer open in real-time: `:InspectTree`
- **/
-const commentPropType = `
-  (object_type
-    (comment) @comment
-    .
-    (property_signature
-      name: (_) @prop
-      type: (type_annotation (_) @type)
-    )
-  )`;
-const nestedTypeDef = `(_ ${commentPropType})`;
-const query = new Query(
-  TS.tsx,
-  `(type_alias_declaration
-     name: (type_identifier) @subComponentName (#match? @subComponentName "^Public")
-     [
-       (${nestedTypeDef})
-       (${commentPropType})
-     ]
-  )
-  `,
-);
-
-parser.setLanguage(TS.tsx);
+import ts from 'typescript';
 
 export default function autoAPI() {
   return {
@@ -98,44 +64,54 @@ function parseSingleComponentFromDir(
   ref: SubComponents,
 ): SubComponents | undefined {
   const componentNameMatch = /[\\/](\w[\w-]*)\.tsx$/.exec(path);
-  if (!componentNameMatch) {
-    // May need better behavior
-    return;
-  }
+  if (!componentNameMatch) return;
+  
   const componentName = componentNameMatch[1];
-  const sourceCode = fs.readFileSync(path, 'utf-8');
-  const tree = parser.parse(sourceCode);
-  const parsed: PublicType[] = [];
+  const sourceFile = ts.createSourceFile(
+    path,
+    fs.readFileSync(path, 'utf-8'),
+    ts.ScriptTarget.Latest,
+    true
+  );
 
-  const matches = query.matches(tree.rootNode);
-  matches.forEach((match) => {
-    const last: PublicType | undefined = parsed[parsed.length - 1];
-    let subComponentName = '';
-    const parsedProps: ParsedProps = { comment: '', prop: '', type: '' };
-    match.captures.forEach((capture) => {
-      // Statements are ordered as they appear in capture array
-      if (capture.name === 'subComponentName' && subComponentName !== capture.node.text) {
-        subComponentName = capture.node.text;
+  const parsed: PublicType[] = [];
+  let currentType: PublicType | undefined;
+
+  function visit(node: ts.Node) {
+    // Look for type aliases that start with "Public"
+    if (ts.isTypeAliasDeclaration(node) && 
+        node.name.text.startsWith('Public')) {
+      const typeName = node.name.text;
+      currentType = { [typeName]: [] };
+      parsed.push(currentType);
+    }
+
+    // Look for property signatures with comments
+    if (ts.isPropertySignature(node) && currentType) {
+      const typeName = Object.keys(currentType)[0];
+      const comment = ts.getLeadingCommentRanges(
+        sourceFile.text,
+        node.pos
+      )?.[0];
+      
+      if (comment) {
+        const commentText = sourceFile.text
+          .slice(comment.pos, comment.end)
+          .replace(/[/*]/g, '')
+          .trim();
+
+        currentType[typeName].push({
+          comment: commentText,
+          prop: node.name.getText(),
+          type: node.type?.getText() || ''
+        });
       }
-      if (capture.name === 'comment') {
-        // This removes the comment syntax
-        const justText = capture.node.text.replace(/[/*]/g, '').trim();
-        parsedProps.comment = justText;
-      }
-      if (capture.name === 'prop') {
-        parsedProps.prop = capture.node.text;
-      }
-      if (capture.name === 'type') {
-        parsedProps.type = capture.node.text;
-        const topKey = last ? Object.keys(last)[0] : '';
-        if (subComponentName === topKey) {
-          last[topKey].push(parsedProps);
-        } else {
-          parsed.push({ [subComponentName]: [parsedProps] });
-        }
-      }
-    });
-  });
+    }
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
 
   const completeSubComponent: SubComponent = { [componentName]: parsed };
   ref.push(completeSubComponent);
