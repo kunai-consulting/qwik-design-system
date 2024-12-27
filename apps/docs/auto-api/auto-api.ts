@@ -8,7 +8,10 @@ export default function autoAPI() {
     name: 'watch-monorepo-changes',
     watchChange(file: string) {
         console.log('file changed', file);
-        const watchPath = resolve(__dirname, '../../libs/components');
+        const watchPath = resolve(__dirname, '../../../libs/components');
+        console.log('watchPath', watchPath, file.startsWith(watchPath));
+        console.log('file', file);
+        console.log(file.startsWith(watchPath));
         if (file.startsWith(watchPath)) {
           console.log('looping on all child files', file);
           loopOnAllChildFiles(file);
@@ -19,7 +22,7 @@ export default function autoAPI() {
 
 function writeToDocs(fullPath: string, componentName: string, api: ComponentParts) {
   if (fullPath.includes("components")) {
-    const relDocPath = `../docs/src/routes/${componentName}`;
+    const relDocPath = `../src/routes/${componentName}`;
     const fullDocPath = resolve(__dirname, relDocPath);
     const dirPath = resolve(fullDocPath, 'auto-api');
 
