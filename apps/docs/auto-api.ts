@@ -44,7 +44,7 @@ type ComponentAnatomy = {
   [componentName: string]: string[];
 };
 
-function parseComponentAnatomy(indexPath: string): string[] {
+function parseComponentAnatomy(indexPath: string, componentName: string): string[] {
   const sourceFile = ts.createSourceFile(
     indexPath,
     fs.readFileSync(indexPath, 'utf-8'),
@@ -53,6 +53,7 @@ function parseComponentAnatomy(indexPath: string): string[] {
   );
   
   const subComponents: string[] = [];
+  const capitalizedComponent = componentName.charAt(0).toUpperCase() + componentName.slice(1);
   
   function visit(node: ts.Node) {
     if (ts.isExportDeclaration(node)) {
@@ -60,7 +61,8 @@ function parseComponentAnatomy(indexPath: string): string[] {
       if (clause && ts.isNamedExports(clause)) {
         for (const element of clause.elements) {
           if (element.propertyName) {
-            subComponents.push(element.name.text);
+            // Prefix each component with capitalized name and dot
+            subComponents.push(`${capitalizedComponent}.${element.name.text}`);
           }
         }
       }
@@ -234,7 +236,7 @@ function loopOnAllChildFiles(filePath: string) {
   const anatomy: ComponentAnatomy = {};
   
   if (fs.existsSync(indexPath)) {
-    anatomy[componentName] = parseComponentAnatomy(indexPath);
+    anatomy[componentName] = parseComponentAnatomy(indexPath, componentName);
   }
 
   const allParts: SubComponents = [];

@@ -61,10 +61,10 @@ export const api = {
   ],
   "anatomy": {
     "otp": [
-      "Root",
-      "Item",
-      "HiddenInput",
-      "Caret"
+      "Otp.Root",
+      "Otp.Item",
+      "Otp.HiddenInput",
+      "Otp.Caret"
     ]
   }
 };
