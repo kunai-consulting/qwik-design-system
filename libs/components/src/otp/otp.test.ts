@@ -363,9 +363,9 @@ test.describe("critical functionality", () => {
   });
 
   test(`GIVEN an OTP control with an initial value
-        WHEN inserting a character between existing characters
+        WHEN backspacing a character between existing filled characters
         AND the right arrow key is pressed
-        THEN the highlight should move to the right
+        THEN the highlight should move back to the previous highlighted item
     `, async ({ page }) => {
     const d = await setup(page, "hero");
     const input = d.getInput();
