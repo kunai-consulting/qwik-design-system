@@ -9,6 +9,7 @@ export default function autoAPI() {
         console.log('file changed', file);
         const watchPath = resolve(__dirname, '../../libs/components');
         if (file.startsWith(watchPath)) {
+          console.log('looping on all child files', file);
           loopOnAllChildFiles(file);
         }
     },
@@ -143,19 +144,18 @@ function loopOnAllChildFiles(filePath: string) {
   }
   const parentDir = filePath.replace(childComponentMatch[0], '');
   const componentMatch = /[\\/](\w+)$/.exec(parentDir);
-  if (!fs.existsSync(parentDir) || !componentMatch) {
-    return;
-  }
+  if (!componentMatch) return;
+  if (!fs.existsSync(parentDir)) return;
   const componentName = componentMatch[1];
   const allParts: SubComponents = [];
   const store: ComponentParts = { [componentName]: allParts };
 
-  fs.readdirSync(parentDir).forEach((fileName) => {
+  for (const fileName of fs.readdirSync(parentDir)) {
     if (/\.tsx$/.test(fileName)) {
       const fullPath = resolve(parentDir, fileName);
       parseSingleComponentFromDir(fullPath, store[componentName]);
     }
-  });
+  }
 
   writeToDocs(filePath, componentName, store);
 }
