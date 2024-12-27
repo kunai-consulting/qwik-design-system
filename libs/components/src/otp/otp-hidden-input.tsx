@@ -168,7 +168,6 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
     isFirstKeystroke.value = false;
     
     const isBackspace = previousValue.value.length > newValue.length;
-    
     const position = input.selectionStart ?? 0;
 
     context.inputValueSig.value = newValue;
@@ -181,11 +180,23 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       context.selectionStartSig.value = newPos;
       context.selectionEndSig.value = newPos + 1;
       input.setSelectionRange(newPos, newPos + 1);
+      // after backspace
+      previousSelection.value = {
+        inserting: false,
+        start: newPos,
+        end: newPos + 1
+      };
     } else {
       context.currIndexSig.value = position;
       context.selectionStartSig.value = position;
       context.selectionEndSig.value = position + 1;
       input.setSelectionRange(position, position + 1);
+      // normal input
+      previousSelection.value = {
+        inserting: false,
+        start: position,
+        end: position + 1
+      };
     }
 });
 

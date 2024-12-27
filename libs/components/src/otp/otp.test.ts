@@ -361,4 +361,23 @@ test.describe("critical functionality", () => {
     
     await expect(d.getItemAt(2)).toHaveAttribute("data-highlighted");
   });
+
+  test(`GIVEN an OTP control with an initial value
+        WHEN backspacing a character between existing filled characters
+        AND the right arrow key is pressed
+        THEN the highlight should move back to the previous highlighted item
+    `, async ({ page }) => {
+    const d = await setup(page, "hero");
+    const input = d.getInput();
+
+    // initial setup
+    await input.pressSequentially("1234");
+    await expect(input).toHaveValue("1234");
+    await input.press("ArrowLeft");
+    await expect(d.getItemAt(2)).toHaveAttribute("data-highlighted");
+
+    await input.press("Backspace")
+    await input.press("ArrowRight");
+    await expect(d.getItemAt(2)).toHaveAttribute("data-highlighted");
+  });
 });
