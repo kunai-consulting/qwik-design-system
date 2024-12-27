@@ -58,5 +58,13 @@ export const api = {
         }
       ]
     }
-  ]
+  ],
+  "anatomy": {
+    "otp": [
+      "Root",
+      "Item",
+      "HiddenInput",
+      "Caret"
+    ]
+  }
 };

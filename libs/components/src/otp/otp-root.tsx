@@ -35,6 +35,7 @@ type PublicOtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   disabled?: boolean;
 } & RenderProps;
 
+/** Here's a comment */
 export const OtpRoot = ({ children, ...props }: PublicOtpRootProps) => {
   let currItemIndex = 0;
   let numItems = 0;

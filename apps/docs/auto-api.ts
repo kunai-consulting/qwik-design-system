@@ -22,7 +22,10 @@ export default function autoAPI() {
 // PublicType: [{ comment, prop, type }, { comment, prop, type }, ...] & PublicType comes from type inside file
 // THE UPPER-MOST KEY IS ALWAYS USED AS A HEADING
 
-export type ComponentParts = Record<string, SubComponents>;
+export type ComponentParts = {
+  [key: string]: SubComponents | ComponentAnatomy;
+  anatomy: ComponentAnatomy;
+};
 type SubComponents = SubComponent[];
 export type SubComponent = Record<string, PublicType[]>;
 export type PublicType = Record<string, ParsedProps[]>;
@@ -35,6 +38,39 @@ type ParsedProps = {
     type: string;
   }>;
 };
+
+// Add new type for component anatomy
+type ComponentAnatomy = {
+  [componentName: string]: string[];
+};
+
+function parseComponentAnatomy(indexPath: string): string[] {
+  const sourceFile = ts.createSourceFile(
+    indexPath,
+    fs.readFileSync(indexPath, 'utf-8'),
+    ts.ScriptTarget.Latest,
+    true
+  );
+  
+  const subComponents: string[] = [];
+  
+  function visit(node: ts.Node) {
+    if (ts.isExportDeclaration(node)) {
+      const clause = node.exportClause;
+      if (clause && ts.isNamedExports(clause)) {
+        for (const element of clause.elements) {
+          if (element.propertyName) {
+            subComponents.push(element.name.text);
+          }
+        }
+      }
+    }
+    ts.forEachChild(node, visit);
+  }
+  
+  visit(sourceFile);
+  return subComponents;
+}
 
 /**
  * Note: For this code to run, you need to prefix the type with 'Public' (e.g., 'PublicMyType') in your TypeScript files
@@ -192,13 +228,25 @@ function loopOnAllChildFiles(filePath: string) {
   if (!componentMatch) return;
   if (!fs.existsSync(parentDir)) return;
   const componentName = componentMatch[1];
+  
+  // Add anatomy parsing
+  const indexPath = resolve(parentDir, 'index.ts');
+  const anatomy: ComponentAnatomy = {};
+  
+  if (fs.existsSync(indexPath)) {
+    anatomy[componentName] = parseComponentAnatomy(indexPath);
+  }
+
   const allParts: SubComponents = [];
-  const store: ComponentParts = { [componentName]: allParts };
+  const store: ComponentParts = { 
+    [componentName]: allParts,
+    anatomy: anatomy
+  };
 
   for (const fileName of fs.readdirSync(parentDir)) {
     if (/\.tsx$/.test(fileName)) {
       const fullPath = resolve(parentDir, fileName);
-      parseSingleComponentFromDir(fullPath, store[componentName]);
+      parseSingleComponentFromDir(fullPath, allParts);
     }
   }
 
