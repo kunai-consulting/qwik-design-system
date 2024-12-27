@@ -30,6 +30,10 @@ type ParsedProps = {
   comment: string;
   prop: string;
   type: string;
+  dataAttributes?: Array<{
+    name: string;
+    type: string;
+  }>;
 };
 
 /**
@@ -103,6 +107,47 @@ function parseSingleComponentFromDir(
           prop: node.name.getText(),
           type: node.type?.getText() || ''
         });
+      }
+    }
+
+    // Look for JSX elements to collect data attributes
+    if (ts.isJsxElement(node) || ts.isJsxSelfClosingElement(node)) {
+      const attributes = ts.isJsxElement(node) 
+        ? node.openingElement.attributes.properties 
+        : node.attributes.properties;
+
+      const dataAttrs = attributes
+        .filter(attr => 
+          ts.isJsxAttribute(attr) && 
+          ts.isIdentifier(attr.name) &&
+          attr.name.text.startsWith('data-') &&
+          !attr.name.text.startsWith('data-qds-')
+        )
+        .map(attr => {
+          const jsxAttr = attr as ts.JsxAttribute;
+          const attrName = jsxAttr.name.getText();
+          // If there's a conditional expression or undefined in the initializer, 
+          // it's likely string | undefined, otherwise just string
+          const attrType = jsxAttr.initializer && 
+            ts.isJsxExpression(jsxAttr.initializer) && 
+            jsxAttr.initializer.expression &&
+            (ts.isConditionalExpression(jsxAttr.initializer.expression) || 
+             jsxAttr.initializer.expression.getText().includes('undefined'))
+            ? 'string | undefined'
+            : 'string';
+
+          return {
+            name: attrName,
+            type: attrType
+          };
+        });
+
+      if (dataAttrs.length > 0 && currentType) {
+        const typeName = Object.keys(currentType)[0];
+        const lastProp = currentType[typeName][currentType[typeName].length - 1];
+        if (lastProp) {
+          lastProp.dataAttributes = dataAttrs;
+        }
       }
     }
 

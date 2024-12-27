@@ -46,7 +46,13 @@ export const api = {
             {
               "comment": "here's a comment",
               "prop": "disabled",
-              "type": "boolean"
+              "type": "boolean",
+              "dataAttributes": [
+                {
+                  "name": "data-disabled",
+                  "type": "string | undefined"
+                }
+              ]
             }
           ]
         }
