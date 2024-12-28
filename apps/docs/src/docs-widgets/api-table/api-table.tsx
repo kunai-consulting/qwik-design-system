@@ -8,21 +8,22 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
     const componentName = Object.keys(api)[0];
     if (!componentName) return null;
 
-    const rootComponent = api[componentName]?.find(comp => {
-        const compName = Object.keys(comp)[0];
-        return compName?.toLowerCase().includes('root');
-    });
+    const items = Object.values(api)[0];
+    if (!items) return null;
 
-    if (!rootComponent) return null;
+    const propsContainer = items
+        .map(item => Object.values(item)[0])
+        .find(value => 
+            Array.isArray(value) && 
+            value.length > 0 && 
+            Object.keys(value[0]).some(key => key.endsWith('Props'))
+        );
 
-    const propsObj = Object.values(rootComponent)[0][0];
-    // Get the actual array of props
-    const props = propsObj.PublicOtpRootProps;
+    const propsArray = propsContainer?.[0]?.[
+        Object.keys(propsContainer[0]).find(key => key.endsWith('Props')) ?? ''
+    ];
 
-    if (!Array.isArray(props)) {
-        console.error('Props is not an array:', props);
-        return null;
-    }
+    if (!propsArray) return null;
 
     return (
         <div class="overflow-x-auto">
@@ -37,7 +38,7 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {props.map((prop: ParsedProps) => (
+                    {propsArray.map((prop: ParsedProps) => (
                         <tr key={prop.prop} class="border-b border-gray-200 dark:border-gray-800">
                             <td class="py-4 px-4 font-mono text-sm">{prop.prop}</td>
                             <td class="py-4 px-4 font-mono text-sm">{prop.type}</td>
