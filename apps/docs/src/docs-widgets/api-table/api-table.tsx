@@ -5,8 +5,6 @@ import type { ComponentParts, ParsedProps } from "../../../auto-api/types";
 export const APITable = component$(({ api }: { api: ComponentParts }) => {
   if (!api) return null;
 
-  console.log(api);
-
   const componentName = Object.keys(api)[0];
   if (!componentName) return null;
 
@@ -29,6 +27,8 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
 
   if (!propsArray) return null;
 
+  console.log(propsArray);
+
   return (
     <div class="overflow-x-auto">
       <h2>API</h2>
@@ -46,7 +46,7 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
             <tr key={prop.prop} class="border-b border-gray-200 dark:border-gray-800">
               <td class="py-4 px-4 font-mono text-sm">{prop.prop}</td>
               <td class="py-4 px-4 font-mono text-sm">{prop.type}</td>
-              <td class="py-4 px-4 font-mono text-sm">{prop.default || "-"}</td>
+              <td class="py-4 px-4 font-mono text-sm">{prop.defaultValue || "-"}</td>
               <td class="py-4 px-4">
                 {prop.comment && (
                   <Popover.Root>

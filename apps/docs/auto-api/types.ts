@@ -6,11 +6,11 @@ export type ComponentParts = {
 export type SubComponents = SubComponent[];
 
 export type SubComponent = {
-  [key: string]: PublicType[] | Array<{ name: string; type: string; }>;
+  [key: string]: PublicType[] | Array<{ name: string; type: string }>;
 } & {
-  dataAttributes?: Array<{ 
-    name: string; 
-    type: string; 
+  dataAttributes?: Array<{
+    name: string;
+    type: string;
   }>;
 };
 
@@ -20,6 +20,7 @@ export type ParsedProps = {
   comment: string;
   prop: string;
   type: string;
+  defaultValue?: string;
 };
 
 export type AnatomyItem = {

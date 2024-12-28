@@ -1,22 +1,18 @@
-import * as fs from 'node:fs';
-import { resolve } from 'node:path';
-import type { AnatomyItem, ComponentParts, SubComponents } from './types';
-import { parseComponentAnatomy, parseSingleComponentFromDir } from './utils';
+import * as fs from "node:fs";
+import { resolve } from "node:path";
+import type { AnatomyItem, ComponentParts, SubComponents } from "./types";
+import { parseComponentAnatomy, parseSingleComponentFromDir } from "./utils";
 
 export default function autoAPI() {
   return {
-    name: 'watch-monorepo-changes',
+    name: "watch-monorepo-changes",
     watchChange(file: string) {
-        console.log('file changed', file);
-        const watchPath = resolve(__dirname, '../../../libs/components');
-        console.log('watchPath', watchPath, file.startsWith(watchPath));
-        console.log('file', file);
-        console.log(file.startsWith(watchPath));
-        if (file.startsWith(watchPath)) {
-          console.log('looping on all child files', file);
-          loopOnAllChildFiles(file);
-        }
-    },
+      const watchPath = resolve(__dirname, "../../../libs/components");
+      if (file.startsWith(watchPath)) {
+        console.log("looping on all child files", file);
+        loopOnAllChildFiles(file);
+      }
+    }
   };
 }
 
@@ -24,20 +20,20 @@ function writeToDocs(fullPath: string, componentName: string, api: ComponentPart
   if (fullPath.includes("components")) {
     const relDocPath = `../src/routes/${componentName}`;
     const fullDocPath = resolve(__dirname, relDocPath);
-    const dirPath = resolve(fullDocPath, 'auto-api');
+    const dirPath = resolve(fullDocPath, "auto-api");
 
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath);
     }
-    
+
     const json = JSON.stringify(api, null, 2);
     const exportedApi = `export const api = ${json};`;
 
     try {
-      fs.writeFileSync(resolve(dirPath, 'api.ts'), exportedApi);
-      console.log('auto-api: successfully generated new JSON!');
+      fs.writeFileSync(resolve(dirPath, "api.ts"), exportedApi);
+      console.log("auto-api: successfully generated new JSON!");
     } catch (err) {
-      console.error('Error writing API file:', err);
+      console.error("Error writing API file:", err);
     }
   }
 }
@@ -47,22 +43,22 @@ function loopOnAllChildFiles(filePath: string) {
   if (!childComponentMatch) {
     return;
   }
-  const parentDir = filePath.replace(childComponentMatch[0], '');
+  const parentDir = filePath.replace(childComponentMatch[0], "");
   const componentMatch = /[\\/](\w+)$/.exec(parentDir);
   if (!componentMatch) return;
   if (!fs.existsSync(parentDir)) return;
   const componentName = componentMatch[1];
-  
+
   // Add anatomy parsing
-  const indexPath = resolve(parentDir, 'index.ts');
+  const indexPath = resolve(parentDir, "index.ts");
   let anatomy: AnatomyItem[] = [];
-  
+
   if (fs.existsSync(indexPath)) {
     anatomy = parseComponentAnatomy(indexPath, componentName);
   }
 
   const allParts: SubComponents = [];
-  const store: ComponentParts = { 
+  const store: ComponentParts = {
     [componentName]: allParts,
     anatomy: anatomy
   };
