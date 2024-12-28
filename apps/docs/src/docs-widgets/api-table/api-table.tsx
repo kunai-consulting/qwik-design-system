@@ -1,8 +1,11 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, useContext, useTask$ } from "@builder.io/qwik";
 import { Popover } from "@qwik-ui/headless";
 import type { ComponentParts, ParsedProps } from "../../../auto-api/types";
+import { rootContextId } from "~/routes/layout";
 
 export const APITable = component$(({ api }: { api: ComponentParts }) => {
+  console.log("init api table");
+  const context = useContext(rootContextId);
   if (!api) return null;
 
   const componentName = Object.keys(api)[0];
@@ -27,7 +30,30 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
 
   if (!propsArray) return null;
 
-  console.log(propsArray);
+  console.log("items: ", items);
+
+  useTask$(() => {
+    context.allHeadingsSig.value = [
+      {
+        text: "API Reference",
+        id: "api-reference",
+        level: 2
+      }
+    ];
+
+    for (const item of items) {
+      const apiHeading = Object.keys(item)[0];
+      console.log("apiHeading: ", apiHeading.split("-")[0]);
+      context.allHeadingsSig.value = [
+        ...context.allHeadingsSig.value,
+        {
+          text: apiHeading,
+          id: componentName,
+          level: 3
+        }
+      ];
+    }
+  });
 
   return (
     <div class="overflow-x-auto">

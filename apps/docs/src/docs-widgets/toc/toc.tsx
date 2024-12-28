@@ -1,14 +1,31 @@
 import type { ContentHeading } from "@builder.io/qwik-city";
 import { cn } from "~/utils/cn";
-import { component$, useSignal, $, useOnWindow } from "@builder.io/qwik";
+import {
+  component$,
+  useSignal,
+  $,
+  useOnWindow,
+  useContext,
+  useTask$
+} from "@builder.io/qwik";
+import { rootContextId } from "~/routes/layout";
 
 export const TOC = component$(({ headings }: { headings: ContentHeading[] }) => {
+  console.log("init toc");
+  const context = useContext(rootContextId);
+
+  useTask$(() => {
+    context.allHeadingsSig.value = [...headings, ...context.allHeadingsSig.value];
+
+    console.log("context.allHeadingsSig.value", context.allHeadingsSig.value);
+  });
+
   if (headings.length === 0) {
     return null;
   }
   return (
     <div class="space-y-2">
-      <TableOfContents headings={headings} />
+      <TableOfContents headings={context.allHeadingsSig.value} />
     </div>
   );
 });
