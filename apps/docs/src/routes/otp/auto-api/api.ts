@@ -56,7 +56,8 @@ export const api = {
             {
               "comment": "here's a comment",
               "prop": "disabled",
-              "type": "boolean"
+              "type": "boolean",
+              "defaultValue": "false"
             }
           ]
         }

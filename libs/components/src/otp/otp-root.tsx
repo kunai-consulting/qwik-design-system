@@ -61,6 +61,7 @@ export const OtpBase = component$((props: PublicOtpRootProps) => {
     onChange$,
     onComplete$,
     render: Comp,
+    disabled = false,
     ...rest
   } = props;
 
