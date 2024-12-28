@@ -1,13 +1,13 @@
 export const api = {
   "otp": [
     {
-      "otp-caret": []
+      "Otp Caret": []
     },
     {
-      "otp-hidden-input": []
+      "Otp Hidden Input": []
     },
     {
-      "otp-item": [],
+      "Otp Item": [],
       "dataAttributes": [
         {
           "name": "data-highlighted",
@@ -20,7 +20,7 @@ export const api = {
       ]
     },
     {
-      "otp-root": [
+      "Otp Root": [
         {
           "PublicOtpRootProps": [
             {

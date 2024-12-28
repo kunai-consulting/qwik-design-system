@@ -158,12 +158,19 @@ export function getSourceFile(path: string) {
     }
   
     visit(sourceFile);
+
+    const transformedName = componentName
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
   
     // Add data attributes as a separate property
     const completeSubComponent: SubComponent = { 
-      [componentName]: parsed,
+      [transformedName]: parsed,
       ...(dataAttributes.length > 0 && { dataAttributes })
     };
+
+    console.log('completeSubComponent', completeSubComponent);
     
     ref.push(completeSubComponent);
     return ref;
