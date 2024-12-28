@@ -3,6 +3,7 @@ import { Slot, component$ } from "@builder.io/qwik";
 
 import { cn } from "~/utils/cn";
 import { Showcase } from "./showcase";
+import { APITable } from "../docs-widgets/api-table/api-table";
 
 export const components: Record<string, Component> = {
   p: component$<PropsOf<"p">>(({ ...props }) => {
@@ -208,5 +209,6 @@ export const components: Record<string, Component> = {
       />
     );
   }),
-  Showcase
+  Showcase,
+  APITable
 };
