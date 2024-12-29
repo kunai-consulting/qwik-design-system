@@ -95,51 +95,52 @@ ${file.content}`
         console.log("AI Response:", content);
 
         const commentBlocks = content.split("\nFILE: ").slice(1);
-        console.log("Comment blocks found:", commentBlocks.length);
+        let diffReport = "";
 
-        // Process the AI response and insert comments
         for (const block of commentBlocks) {
           const [filename, ...lines] = block.split("\n");
-          console.log("Processing file:", filename.trim());
+          diffReport += `\n## ${filename.trim()}\n\n`;
+
           const filePath = resolve(componentPath, filename.trim());
           const fileContent = fs.readFileSync(filePath, "utf-8").split("\n");
 
-          // Process each comment in the block
           let currentLine = "";
-          let comment = "";
-          let modified = false;
+          let pendingComment = [];
 
           for (const line of lines) {
-            console.log("Processing line:", line);
             if (line.startsWith("LINE: ")) {
-              currentLine = line.replace("LINE: ", "").trim();
-              console.log("Found target line:", currentLine);
-            } else if (line.trim() === "/**" || line.trim().startsWith("/** ")) {
-              comment = line.trim();
-              console.log("Found comment:", comment);
-              // Find the line number where this declaration exists
-              const targetLineIndex = fileContent.findIndex((l) =>
-                l.includes(currentLine)
-              );
-              console.log("Target line index:", targetLineIndex);
-              if (targetLineIndex !== -1) {
-                // Insert comment above the target line
-                fileContent.splice(targetLineIndex, 0, comment);
-                modified = true;
-                console.log("Inserted comment at line", targetLineIndex);
+              // if pending comment, insert it at the previous location
+              if (pendingComment.length > 0) {
+                const targetLineIndex = fileContent.findIndex((l) =>
+                  l.includes(currentLine)
+                );
+                if (targetLineIndex !== -1) {
+                  fileContent.splice(targetLineIndex, 0, ...pendingComment);
+                  diffReport += `\nAdded comment at line ${targetLineIndex + 1}\n`;
+                }
+                pendingComment = [];
               }
+              currentLine = line.replace("LINE: ", "").trim();
+            } else if (line.trim()) {
+              pendingComment.push(line.trim());
             }
           }
 
-          if (modified) {
-            fs.writeFileSync(filePath, fileContent.join("\n"));
-            console.log(`✅ Updated ${filename}`);
-          } else {
-            console.log(`No changes made to ${filename}`);
+          // any remaining comment handling
+          if (pendingComment.length > 0 && currentLine) {
+            const targetLineIndex = fileContent.findIndex((l) => l.includes(currentLine));
+            if (targetLineIndex !== -1) {
+              fileContent.splice(targetLineIndex, 0, ...pendingComment);
+              diffReport += `\nAdded comment at line ${targetLineIndex + 1}\n`;
+            }
           }
+
+          // Write the updated content back to the file
+          fs.writeFileSync(filePath, fileContent.join("\n"), "utf-8");
         }
-      } else {
-        console.log("No text content in response");
+
+        console.log("Generated diff report:", diffReport);
+        return diffReport;
       }
     } catch (error) {
       console.error("Error generating API docs:", error);
