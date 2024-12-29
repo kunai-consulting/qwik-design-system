@@ -15,6 +15,7 @@ import { Sidebar } from "~/docs-widgets/sidebar/sidebar";
 import { TOC } from "~/docs-widgets/toc/toc";
 import { components } from "~/mdx/components";
 import { MDXProvider } from "~/mdx/provider";
+import { Header } from "~/docs-widgets/header/header";
 
 type RootContext = {
   allHeadingsSig: Signal<ContentHeading[]>;
@@ -43,6 +44,7 @@ export default component$(() => {
 
   return (
     <MDXProvider components={components}>
+      <Header />
       <div class="flex gap-4">
         <Sidebar />
         <main class="mx-auto max-w-screen-md">
