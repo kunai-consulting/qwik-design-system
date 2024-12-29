@@ -53,9 +53,9 @@ LINE: [exact line to add above]
 /** Your JSDoc comment */
 
 Example of correct output:
-FILE: types.tsx
-LINE: type PublicButtonProps
-/** Configuration options for the Button component */
+FILE: popover-trigger.tsx
+LINE: export const PopoverTrigger = component$
+/** A button that opens the popover panel */
 
 LINE: disabled
 /** The button cannot be interacted with when this is enabled */
