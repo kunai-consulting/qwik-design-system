@@ -16,46 +16,107 @@ export const DocsAI = component$(() => {
       const route = loc.url.pathname.split("/").filter(Boolean)[0];
       const componentPath = resolve(process.cwd(), `../../libs/components/src/${route}`);
 
-      // 2. Read component files
+      // Read component files
       const files = fs
         .readdirSync(componentPath)
         .filter((file) => file.endsWith(".tsx") || file.endsWith(".ts"));
+
+      const fileContents = files.map((file) => ({
+        name: file,
+        content: fs.readFileSync(resolve(componentPath, file), "utf-8")
+      }));
 
       const anthropic = new Anthropic({
         apiKey: process.env.ANTHROPIC_API_KEY
       });
 
-      // 3. Process each file
-      for (const file of files) {
-        const filePath = resolve(componentPath, file);
-        const content = fs.readFileSync(filePath, "utf-8");
+      const response = await anthropic.messages.create({
+        model: "claude-3-5-sonnet-20241022",
+        max_tokens: 8192,
+        messages: [
+          {
+            role: "user",
+            content: `Analyze these files and output ONLY JSDoc comments that should be added.
 
-        // 4. Generate documentation with Claude
-        const response = await anthropic.messages.create({
-          model: "claude-3-5-sonnet-20241022",
-          max_tokens: 4000,
-          messages: [
-            {
-              role: "user",
-              content: `You are a technical documentation expert. Please:
-              1. Add detailed JSDoc comments to any types/interfaces/components
-              2. Add 'Public' prefix to exposed types that don't have _ or 'internal' in their name or property names
-              3. Add references to where types are used in components if the Public prefix is used
-              4. DO NOT modify any functionality
+CRITICAL:
+- DO NOT output any code blocks
+- DO NOT output any example usage
+- DO NOT output any explanations
+- DO NOT rename or modify any existing code
+- ONLY output the exact comment and its location
 
-              Here's the TypeScript code:
-              ${content}`
+Output format must be EXACTLY:
+FILE: filename.tsx
+LINE: [exact line to add above]
+/** Your JSDoc comment */
+
+Example of correct output:
+FILE: button.tsx
+LINE: export const Button
+/** Renders a customizable button element */
+
+Here are the files to process:
+${fileContents
+  .map(
+    (file) => `
+--- ${file.name} ---
+${file.content}`
+  )
+  .join("\n")}`
+          }
+        ]
+      });
+
+      if (response.content[0].type === "text") {
+        const content = response.content[0].text;
+        console.log("AI Response:", content);
+
+        const commentBlocks = content.split("\nFILE: ").slice(1);
+        console.log("Comment blocks found:", commentBlocks.length);
+
+        // Process the AI response and insert comments
+        for (const block of commentBlocks) {
+          const [filename, ...lines] = block.split("\n");
+          console.log("Processing file:", filename.trim());
+          const filePath = resolve(componentPath, filename.trim());
+          const fileContent = fs.readFileSync(filePath, "utf-8").split("\n");
+
+          // Process each comment in the block
+          let currentLine = "";
+          let comment = "";
+          let modified = false;
+
+          for (const line of lines) {
+            console.log("Processing line:", line);
+            if (line.startsWith("LINE: ")) {
+              currentLine = line.replace("LINE: ", "").trim();
+              console.log("Found target line:", currentLine);
+            } else if (line.trim() === "/**" || line.trim().startsWith("/** ")) {
+              comment = line.trim();
+              console.log("Found comment:", comment);
+              // Find the line number where this declaration exists
+              const targetLineIndex = fileContent.findIndex((l) =>
+                l.includes(currentLine)
+              );
+              console.log("Target line index:", targetLineIndex);
+              if (targetLineIndex !== -1) {
+                // Insert comment above the target line
+                fileContent.splice(targetLineIndex, 0, comment);
+                modified = true;
+                console.log("Inserted comment at line", targetLineIndex);
+              }
             }
-          ]
-        });
+          }
 
-        // 5. Write updated content back
-        const updatedContent =
-          response.content[0].type === "text" ? response.content[0].text : "";
-        if (!updatedContent) {
-          throw new Error("No content received from Claude");
+          if (modified) {
+            fs.writeFileSync(filePath, fileContent.join("\n"));
+            console.log(`✅ Updated ${filename}`);
+          } else {
+            console.log(`No changes made to ${filename}`);
+          }
         }
-        fs.writeFileSync(filePath, updatedContent);
+      } else {
+        console.log("No text content in response");
       }
     } catch (error) {
       console.error("Error generating API docs:", error);
