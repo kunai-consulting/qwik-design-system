@@ -40,29 +40,30 @@ export const DocsAI = component$(() => {
             role: "user",
             content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
 
-Required output format:
-[{
-  "filename": "component.tsx",
-  "comments": [{
-    "targetLine": "export const Button = component$",
-    "comment": ["/** A button component */"]
-  }]
-}]
+            Required output format:
+            [{
+              "filename": "component.tsx",
+              "comments": [{
+                "targetLine": "export const Button = component$",
+                "comment": ["/** A button component */"]
+              }]
+            }]
 
-Rules for generating JSDoc comments:
-1. Components (anything with component$ call)
-2. Properties within types/interfaces (add comment above each property)
+            Rules for generating JSDoc comments:
+            1. Components (anything with component$ call)
+            2. Properties within types/interfaces (add comment above each property)
 
-Documentation rules:
-- bind:x properties = "Reactive value that can be controlled via signal"
-- regular properties = "Initial value that cannot be changed after"
-- on$ properties = "Event handler for [event] events"
-- Never mention QRL or implementation details
+            Documentation rules:
+            - bind:x properties = "Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property"
+            - if a property is x, with bind: removed, it is an initial value to set when the page loads
+            - regular properties = describe what the property does
+            - on$ properties = "Event handler for [event] events"
+            - Never mention QRL or implementation details
 
-Ignore files containing: context, test, driver, index
+            Ignore files named: context, test, driver, index
 
-Files to analyze:
-${fileContents.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`
+            Files to analyze:
+            ${fileContents.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`
           }
         ]
       });
