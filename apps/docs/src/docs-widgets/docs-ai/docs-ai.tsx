@@ -40,10 +40,12 @@ export const DocsAI = component$(() => {
 
 CRITICAL:
 - DO NOT output any code blocks
-- DO NOT output any example usage
 - DO NOT output any explanations
-- DO NOT rename or modify any existing code
 - ONLY output the exact comment and its location
+
+Add JSDoc comments for:
+1. Public types/interfaces (add comment above the type/interface)
+2. Properties within types/interfaces (add comment above each property)
 
 Output format must be EXACTLY:
 FILE: filename.tsx
@@ -51,9 +53,12 @@ LINE: [exact line to add above]
 /** Your JSDoc comment */
 
 Example of correct output:
-FILE: button.tsx
-LINE: export const Button
-/** Renders a customizable button element */
+FILE: types.tsx
+LINE: type PublicButtonProps
+/** Configuration options for the Button component */
+
+LINE: disabled
+/** Whether the button is in a disabled state */
 
 Here are the files to process:
 ${fileContents
@@ -130,7 +135,6 @@ ${file.content}`
       <AIButton onClick$={() => generateAPI()} disabled={isGenerating.value}>
         {isGenerating.value ? "Generating..." : "Generate API"}
       </AIButton>
-      <AIButton>Generate Anatomy</AIButton>
       <AIButton>Generate Docs</AIButton>
     </div>
   );
