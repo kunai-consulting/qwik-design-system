@@ -4,6 +4,70 @@ import { server$, useLocation } from "@builder.io/qwik-city";
 import * as fs from "node:fs";
 import { resolve } from "node:path";
 
+interface CommentBlock {
+  filename: string;
+  comments: Array<{
+    targetLine: string;
+    comment: string[];
+  }>;
+}
+
+function parseCommentBlocks(content: string): CommentBlock[] {
+  return content
+    .split("\nFILE: ")
+    .slice(1)
+    .map((block) => {
+      const [filename, ...lines] = block.split("\n");
+      const comments = [];
+      let currentLine = "";
+      let tempComment: string[] = [];
+
+      for (const line of lines) {
+        if (line.startsWith("LINE: ")) {
+          if (tempComment.length > 0) {
+            comments.push({
+              targetLine: currentLine,
+              comment: [...tempComment]
+            });
+            tempComment = [];
+          }
+          currentLine = line.replace("LINE: ", "").trim();
+        } else if (line.trim()) {
+          tempComment.push(line.trim());
+        }
+      }
+
+      // close out the last comment block
+      if (tempComment.length > 0 && currentLine) {
+        comments.push({
+          targetLine: currentLine,
+          comment: tempComment
+        });
+      }
+
+      return {
+        filename: filename.trim(),
+        comments
+      };
+    });
+}
+
+function applyComments(filePath: string, comments: CommentBlock["comments"]): string {
+  const fileContent = fs.readFileSync(filePath, "utf-8").split("\n");
+  let diffReport = "";
+
+  for (const { targetLine, comment } of comments) {
+    const targetLineIndex = fileContent.findIndex((l) => l.includes(targetLine));
+    if (targetLineIndex !== -1) {
+      fileContent.splice(targetLineIndex, 0, ...comment);
+      diffReport += `\nAdded comment at line ${targetLineIndex + 1}\n`;
+    }
+  }
+
+  fs.writeFileSync(filePath, fileContent.join("\n"), "utf-8");
+  return diffReport;
+}
+
 export const DocsAI = component$(() => {
   const loc = useLocation();
   const isGenerating = useSignal(false);
@@ -16,7 +80,6 @@ export const DocsAI = component$(() => {
       const route = loc.url.pathname.split("/").filter(Boolean)[0];
       const componentPath = resolve(process.cwd(), `../../libs/components/src/${route}`);
 
-      // Read component files
       const files = fs
         .readdirSync(componentPath)
         .filter((file) => file.endsWith(".tsx") || file.endsWith(".ts"));
@@ -94,49 +157,13 @@ ${file.content}`
         const content = response.content[0].text;
         console.log("AI Response:", content);
 
-        const commentBlocks = content.split("\nFILE: ").slice(1);
+        const commentBlocks = parseCommentBlocks(content);
         let diffReport = "";
 
         for (const block of commentBlocks) {
-          const [filename, ...lines] = block.split("\n");
-          diffReport += `\n## ${filename.trim()}\n\n`;
-
-          const filePath = resolve(componentPath, filename.trim());
-          const fileContent = fs.readFileSync(filePath, "utf-8").split("\n");
-
-          let currentLine = "";
-          let pendingComment = [];
-
-          for (const line of lines) {
-            if (line.startsWith("LINE: ")) {
-              // if pending comment, insert it at the previous location
-              if (pendingComment.length > 0) {
-                const targetLineIndex = fileContent.findIndex((l) =>
-                  l.includes(currentLine)
-                );
-                if (targetLineIndex !== -1) {
-                  fileContent.splice(targetLineIndex, 0, ...pendingComment);
-                  diffReport += `\nAdded comment at line ${targetLineIndex + 1}\n`;
-                }
-                pendingComment = [];
-              }
-              currentLine = line.replace("LINE: ", "").trim();
-            } else if (line.trim()) {
-              pendingComment.push(line.trim());
-            }
-          }
-
-          // any remaining comment handling
-          if (pendingComment.length > 0 && currentLine) {
-            const targetLineIndex = fileContent.findIndex((l) => l.includes(currentLine));
-            if (targetLineIndex !== -1) {
-              fileContent.splice(targetLineIndex, 0, ...pendingComment);
-              diffReport += `\nAdded comment at line ${targetLineIndex + 1}\n`;
-            }
-          }
-
-          // Write the updated content back to the file
-          fs.writeFileSync(filePath, fileContent.join("\n"), "utf-8");
+          diffReport += `\n## ${block.filename}\n\n`;
+          const filePath = resolve(componentPath, block.filename);
+          diffReport += applyComments(filePath, block.comments);
         }
 
         console.log("Generated diff report:", diffReport);
