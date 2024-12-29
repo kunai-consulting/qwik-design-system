@@ -72,6 +72,12 @@ Anything with on and $ in the name is a handler, which allows consumers to pass 
 
 Anything with a $ is also a QRL, a lazy loadable resource, this is good to know, but consumers of this library don't need to know this. keep it simple.
 
+Do NOT write to any file that includes the following words in the filename:
+- context
+- test
+- driver
+- index
+
 Here are the files to process:
 ${fileContents
   .map(
