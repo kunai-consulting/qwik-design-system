@@ -16,49 +16,47 @@ export const DocsAI = component$(() => {
       const route = loc.url.pathname.split("/").filter(Boolean)[0];
       const componentPath = resolve(process.cwd(), `../../libs/components/src/${route}`);
 
-      console.log(componentPath);
+      // 2. Read component files
+      const files = fs
+        .readdirSync(componentPath)
+        .filter((file) => file.endsWith(".tsx") || file.endsWith(".ts"));
 
-      //   // 2. Read component files
-      //   const files = fs
-      //     .readdirSync(componentPath)
-      //     .filter((file) => file.endsWith(".tsx") || file.endsWith(".ts"));
+      const anthropic = new Anthropic({
+        apiKey: process.env.ANTHROPIC_API_KEY
+      });
 
-      //   const anthropic = new Anthropic({
-      //     apiKey: process.env.ANTHROPIC_API_KEY
-      //   });
+      // 3. Process each file
+      for (const file of files) {
+        const filePath = resolve(componentPath, file);
+        const content = fs.readFileSync(filePath, "utf-8");
 
-      //   // 3. Process each file
-      //   for (const file of files) {
-      //     const filePath = resolve(componentPath, file);
-      //     const content = fs.readFileSync(filePath, "utf-8");
+        // 4. Generate documentation with Claude
+        const response = await anthropic.messages.create({
+          model: "claude-3-5-sonnet-20241022",
+          max_tokens: 4000,
+          messages: [
+            {
+              role: "user",
+              content: `You are a technical documentation expert. Please:
+              1. Add detailed JSDoc comments to any types/interfaces/components
+              2. Add 'Public' prefix to exposed types that don't have _ or 'internal' in their name or property names
+              3. Add references to where types are used in components if the Public prefix is used
+              4. DO NOT modify any functionality
 
-      //     // 4. Generate documentation with Claude
-      //     const response = await anthropic.messages.create({
-      //       model: "claude-3-sonnet-20240229",
-      //       max_tokens: 4000,
-      //       messages: [
-      //         {
-      //           role: "user",
-      //           content: `You are a technical documentation expert. Please:
-      //         1. Add detailed JSDoc comments to any types/interfaces/components
-      //         2. Add 'Public' prefix to exposed types that don't have _ or 'internal' in their name or property names
-      //         3. Add references to where types are used in components if the Public prefix is used
-      //         4. DO NOT modify any functionality
+              Here's the TypeScript code:
+              ${content}`
+            }
+          ]
+        });
 
-      //         Here's the TypeScript code:
-      //         ${content}`
-      //         }
-      //       ]
-      //     });
-
-      //     // 5. Write updated content back
-      //     const updatedContent =
-      //       response.content[0].type === "text" ? response.content[0].text : "";
-      //     if (!updatedContent) {
-      //       throw new Error("No content received from Claude");
-      //     }
-      //     fs.writeFileSync(filePath, updatedContent);
-      //   }
+        // 5. Write updated content back
+        const updatedContent =
+          response.content[0].type === "text" ? response.content[0].text : "";
+        if (!updatedContent) {
+          throw new Error("No content received from Claude");
+        }
+        fs.writeFileSync(filePath, updatedContent);
+      }
     } catch (error) {
       console.error("Error generating API docs:", error);
     } finally {
