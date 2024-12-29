@@ -44,7 +44,7 @@ CRITICAL:
 - ONLY output the exact comment and its location
 
 Add JSDoc comments for:
-1. Public types/interfaces (add comment above the type/interface)
+1. Components, which is anything with a component$ call
 2. Properties within types/interfaces (add comment above each property)
 
 Output format must be EXACTLY:
@@ -58,7 +58,19 @@ LINE: type PublicButtonProps
 /** Configuration options for the Button component */
 
 LINE: disabled
-/** Whether the button is in a disabled state */
+/** The button cannot be interacted with when this is enabled */
+
+Additional info:
+
+Any API with bind:x is a reactive value, which allows consumers to pass in their own signal and change that specific property.
+
+For example, bind:value, allows them to change the main state. With a select component, that might be the selected value.
+
+if there is the same api without the bind:x, just x, then it is an initial value that they get on page load. For example, the selected item might be "Apple" on page load.
+
+Anything with on and $ in the name is a handler, which allows consumers to pass in their own function and run code when a specific event happens.
+
+Anything with a $ is also a QRL, a lazy loadable resource, this is good to know, but consumers of this library don't need to know this. keep it simple.
 
 Here are the files to process:
 ${fileContents
