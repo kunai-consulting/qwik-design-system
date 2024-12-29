@@ -2,6 +2,7 @@ import { component$, useContext, useTask$ } from "@builder.io/qwik";
 import { Popover } from "@qwik-ui/headless";
 import type { ComponentParts, ParsedProps } from "../../../auto-api/types";
 import { rootContextId } from "~/routes/layout";
+import { MainHeading, SubHeading } from "../toc/toc";
 
 export const APITable = component$(({ api }: { api: ComponentParts }) => {
   console.log("init api table");
@@ -57,7 +58,7 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
 
   return (
     <div class="overflow-x-auto">
-      <h2>API</h2>
+      <MainHeading id="api-reference">API Reference</MainHeading>
       <table class="w-full border-collapse text-sm">
         <thead>
           <tr class="border-b border-gray-200 dark:border-gray-800">

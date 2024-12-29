@@ -4,7 +4,7 @@ import { Slot, component$ } from "@builder.io/qwik";
 import { cn } from "~/utils/cn";
 import { Showcase } from "./showcase";
 import { APITable } from "../docs-widgets/api-table/api-table";
-
+import { MainHeading, SubHeading } from "../docs-widgets/toc/toc";
 export const components: Record<string, Component> = {
   p: component$<PropsOf<"p">>(({ ...props }) => {
     return (
@@ -29,32 +29,8 @@ export const components: Record<string, Component> = {
       </h1>
     );
   }),
-  h2: component$<PropsOf<"h2">>(({ ...props }) => {
-    return (
-      <h2
-        {...props}
-        class={cn(
-          "mt-16 scroll-m-20 border-b border-b-qwik-neutral-900 pb-1 text-3xl font-semibold tracking-tight text-cool-700 first:mt-0",
-          props.class
-        )}
-      >
-        <Slot />
-      </h2>
-    );
-  }),
-  h3: component$<PropsOf<"h3">>(({ ...props }) => {
-    return (
-      <h3
-        {...props}
-        class={cn(
-          "mt-8 scroll-m-20 text-2xl font-semibold tracking-tight text-cool-700",
-          props.class
-        )}
-      >
-        <Slot />
-      </h3>
-    );
-  }),
+  h2: MainHeading,
+  h3: SubHeading,
   h4: component$<PropsOf<"h4">>(({ ...props }) => {
     return (
       <h4
