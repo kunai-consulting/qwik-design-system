@@ -1,7 +1,13 @@
 import ts from "typescript";
 import * as fs from "node:fs";
 import { resolve } from "node:path";
-import type { AnatomyItem, SubComponents, PublicType, SubComponent } from "./types";
+import type {
+  AnatomyItem,
+  SubComponents,
+  PublicType,
+  SubComponent,
+  ComponentEntry
+} from "./types";
 
 export function getSourceFile(path: string) {
   return ts.createSourceFile(
@@ -109,6 +115,7 @@ export function parseSingleComponentFromDir(
   const parsed: PublicType[] = [];
   let currentType: PublicType | undefined;
   let dataAttributes: Array<{ name: string; type: string }> = [];
+  let inheritsFrom: string | undefined;
 
   function findDefaultValueInDestructuring(propName: string): string | undefined {
     let defaultValue: string | undefined;
@@ -194,6 +201,19 @@ export function parseSingleComponentFromDir(
       dataAttributes = [...dataAttributes, ...newDataAttrs];
     }
 
+    // Check for PropsOf in a type-safe way
+    if (
+      ts.isTypeReferenceNode(node) &&
+      ts.isIdentifier(node.typeName) &&
+      node.typeName.text === "PropsOf" &&
+      node.typeArguments?.length === 1
+    ) {
+      const typeArg = node.typeArguments[0];
+      if (ts.isLiteralTypeNode(typeArg) && ts.isStringLiteral(typeArg.literal)) {
+        inheritsFrom = typeArg.literal.text;
+      }
+    }
+
     ts.forEachChild(node, visit);
   }
 
@@ -205,11 +225,13 @@ export function parseSingleComponentFromDir(
     .join(" ");
 
   const completeSubComponent: SubComponent = {
-    [transformedName]: parsed,
+    types: parsed,
+    ...(inheritsFrom && { inheritsFrom }),
     ...(dataAttributes.length > 0 && { dataAttributes })
   };
 
-  ref.push(completeSubComponent);
+  const componentEntry: ComponentEntry = { [transformedName]: completeSubComponent };
+  ref.push(componentEntry);
   return ref;
 }
 

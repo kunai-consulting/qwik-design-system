@@ -3,16 +3,21 @@ export type ComponentParts = {
   anatomy: AnatomyItem[];
 };
 
-export type SubComponents = SubComponent[];
-
 export type SubComponent = {
-  [key: string]: PublicType[] | Array<{ name: string; type: string }>;
-} & {
+  types?: PublicType[];
   dataAttributes?: Array<{
     name: string;
     type: string;
+    comment?: string;
   }>;
+  inheritsFrom?: string;
 };
+
+export type ComponentEntry = {
+  [key: string]: SubComponent;
+};
+
+export type SubComponents = ComponentEntry[];
 
 export type PublicType = Record<string, ParsedProps[]>;
 
