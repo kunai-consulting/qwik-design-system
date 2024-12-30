@@ -11,11 +11,13 @@ export const api = {
       "dataAttributes": [
         {
           "name": "data-highlighted",
-          "type": "string | undefined"
+          "type": "string | undefined",
+          "comment": "Indicates if the OTP item is currently highlighted"
         },
         {
           "name": "data-disabled",
-          "type": "string | undefined"
+          "type": "string | undefined",
+          "comment": "Indicates if the OTP item is disabled"
         }
       ]
     },
@@ -24,9 +26,8 @@ export const api = {
         {
           "PublicOtpRootProps": [
             {
-              "comment":
-                "Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property",
-              "prop": '"bind:value"',
+              "comment": "Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property",
+              "prop": "\"bind:value\"",
               "type": "Signal<string>"
             },
             {
@@ -66,7 +67,8 @@ export const api = {
       "dataAttributes": [
         {
           "name": "data-disabled",
-          "type": "string | undefined"
+          "type": "string | undefined",
+          "comment": "Indicates if the entire OTP input is disabled"
         }
       ]
     }
@@ -82,8 +84,7 @@ export const api = {
     },
     {
       "name": "Otp.HiddenInput",
-      "description":
-        "Hidden input component that handles OTP input interactions and validation"
+      "description": "Hidden input component that handles OTP input interactions and validation"
     },
     {
       "name": "Otp.Caret",

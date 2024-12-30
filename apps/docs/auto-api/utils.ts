@@ -174,6 +174,7 @@ export function parseSingleComponentFromDir(
         .map((attr) => {
           const jsxAttr = attr as ts.JsxAttribute;
           const attrName = jsxAttr.name.getText();
+          const comment = getLeadingComment(sourceFile, jsxAttr);
           const attrType =
             jsxAttr.initializer &&
             ts.isJsxExpression(jsxAttr.initializer) &&
@@ -185,7 +186,8 @@ export function parseSingleComponentFromDir(
 
           return {
             name: attrName,
-            type: attrType
+            type: attrType,
+            ...(comment && { comment })
           };
         });
 
