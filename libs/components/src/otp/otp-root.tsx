@@ -19,23 +19,17 @@ import { useBoundSignal } from "../../utils/bound-signal";
 import { Render, type RenderProps } from "../render/render";
 
 type PublicOtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
-  // new comment 123!
   "bind:value"?: Signal<string>;
-  // here's a comment
   _numItems?: number;
-  // here's a comment
   autoComplete?: HTMLInputAutocompleteAttribute;
-  // here's a comment
   onComplete$?: QRL<() => void>;
-  // here's a comment
   onChange$?: QRL<(value: string) => void>;
-  // here's a comment
   value?: string;
-  // here's a comment
   disabled?: boolean;
 } & RenderProps;
 
 /** Here's a comment for you! */
+/** Root component for OTP input that manages multiple input items */
 export const OtpRoot = ({ children, ...props }: PublicOtpRootProps) => {
   let currItemIndex = 0;
   let numItems = 0;
