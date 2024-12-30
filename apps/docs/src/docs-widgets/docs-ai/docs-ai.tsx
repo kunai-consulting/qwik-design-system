@@ -15,14 +15,15 @@ interface CommentBlock {
 export const DocsAI = component$(() => {
   const loc = useLocation();
   const isGenerating = useSignal(false);
+  const status = useSignal('');
 
-  const generateAPI = server$(async () => {
-    if (isGenerating.value) return;
-    isGenerating.value = true;
-
+  const generateAPI = server$(async function() {
     try {
       const route = loc.url.pathname.split("/").filter(Boolean)[0];
       const componentPath = resolve(process.cwd(), `../../libs/components/src/${route}`);
+      
+      const updates = [];
+      updates.push('Reading files...');
       const files = fs
         .readdirSync(componentPath)
         .filter((f) => f.endsWith(".tsx") || f.endsWith(".ts"));
@@ -31,6 +32,7 @@ export const DocsAI = component$(() => {
         content: fs.readFileSync(resolve(componentPath, file), "utf-8")
       }));
 
+      updates.push('Analyzing with Claude...');
       const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
       const response = await anthropic.messages.create({
         model: "claude-3-5-sonnet-20241022",
@@ -69,6 +71,7 @@ export const DocsAI = component$(() => {
       });
 
       if (response.content[0].type === "text") {
+        updates.push('Adding comments...');
         const commentBlocks: CommentBlock[] = JSON.parse(response.content[0].text);
         let diffReport = "";
 
@@ -89,17 +92,34 @@ export const DocsAI = component$(() => {
 
         return diffReport;
       }
+      
+      return updates;
     } catch (error) {
       console.error("Error generating API docs:", error);
-    } finally {
-      isGenerating.value = false;
+      return ['Error occurred'];
     }
   });
 
   return (
     <div class="flex gap-2">
-      <AIButton onClick$={() => generateAPI()} disabled={isGenerating.value}>
-        {isGenerating.value ? "Generating..." : "Generate API"}
+      <AIButton 
+        onClick$={async () => {
+          isGenerating.value = true;
+          status.value = 'Generating...';
+          try {
+            const updates = await generateAPI();
+            for (const update of updates) {
+              status.value = update;
+              await new Promise(r => setTimeout(r, 100));
+            }
+          } finally {
+            isGenerating.value = false;
+            status.value = '';
+          }
+        }} 
+        disabled={isGenerating.value}
+      >
+        {isGenerating.value ? status.value : "Generate API"}
       </AIButton>
       <AIButton>Generate Docs</AIButton>
     </div>
