@@ -12,7 +12,7 @@ export const OtpCaret = component$(({ ...props }: PropsOf<"span">) => {
   const showCaret = isHighlighted && isEmpty;
 
   return (
-// The identifier for the OTP caret element with its specific index
+    // The identifier for the OTP caret element with its specific index
     <span {...props} data-qds-otp-caret={itemContext.index}>
       {showCaret && <Slot />}
     </span>

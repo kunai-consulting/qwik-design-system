@@ -25,9 +25,10 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
     for (const item of items) {
       const apiHeading = Object.keys(item)[0];
       const value = item[apiHeading as keyof typeof item];
-      
-      if (!value || typeof value !== 'object' || Object.keys(value).length === 0) continue;
-      
+
+      if (!value || typeof value !== "object" || Object.keys(value).length === 0)
+        continue;
+
       context.allHeadingsSig.value = [
         ...context.allHeadingsSig.value,
         {

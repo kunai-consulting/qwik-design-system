@@ -2,7 +2,7 @@ import { LinearClient } from "@linear/sdk";
 import { convertChangesetToMarkdown, changesetData } from "./changeset-md";
 
 const linearClient = new LinearClient({
-  apiKey: process.env.LINEAR_API_KEY,
+  apiKey: process.env.LINEAR_API_KEY
 });
 
 const team = await linearClient.team("QWIK");
@@ -17,8 +17,8 @@ const existingIssues = await linearClient.issues({
   filter: {
     team: { id: { eq: team.id } },
     project: { id: { eq: project.id } },
-    title: { eq: issueTitle },
-  },
+    title: { eq: issueTitle }
+  }
 });
 
 export const existingIssue = existingIssues.nodes[0];
@@ -61,22 +61,20 @@ async function createLinearReleaseIssue() {
     projectId: project.id,
     priority: 1,
     assigneeId: me.id,
-    stateId: inProgressStateId,
+    stateId: inProgressStateId
   });
 
   const issueId = (await issuePayload.issue)?.id;
 
   if (!issueId) {
-    throw new Error(
-      "Update Linear: Issue Id needed for attachement to be creted."
-    );
+    throw new Error("Update Linear: Issue Id needed for attachement to be creted.");
   }
 
   await linearClient.createAttachment({
     issueId: issueId,
     url: linkedPrUrl ?? "",
     title: "GitHub Pull Request",
-    subtitle: issueTitle,
+    subtitle: issueTitle
   });
 
   return issuePayload;
@@ -85,7 +83,7 @@ async function createLinearReleaseIssue() {
 // when we add new changesets before the release
 async function updateLinearReleaseIssue() {
   const updatedIssuePayload = await linearClient.updateIssue(existingIssue.id, {
-    description: issueDescription,
+    description: issueDescription
   });
 
   // this for sure works, if we can't find the id in createLinearReleaseIssue

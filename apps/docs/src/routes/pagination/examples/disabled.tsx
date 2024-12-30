@@ -18,7 +18,9 @@ export default component$(() => {
         currentPage={firstPageSig.value}
         pages={paginationItems}
       >
-        <Pagination.Previous class="pagination-previous disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none">Previous</Pagination.Previous>
+        <Pagination.Previous class="pagination-previous disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none">
+          Previous
+        </Pagination.Previous>
         {paginationItems.map((item, index) => (
           <Pagination.Page
             class="pagination-page disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
@@ -28,7 +30,9 @@ export default component$(() => {
             {item}
           </Pagination.Page>
         ))}
-        <Pagination.Next class="pagination-next disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none">Next</Pagination.Next>
+        <Pagination.Next class="pagination-next disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none">
+          Next
+        </Pagination.Next>
       </Pagination.Root>
 
       {/* Last page - Next button disabled */}
@@ -39,7 +43,9 @@ export default component$(() => {
         currentPage={lastPageSig.value}
         pages={paginationItems}
       >
-        <Pagination.Previous class="pagination-previous disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none">Previous</Pagination.Previous>
+        <Pagination.Previous class="pagination-previous disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none">
+          Previous
+        </Pagination.Previous>
         {paginationItems.map((item, index) => (
           <Pagination.Page
             class="pagination-page disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
@@ -49,8 +55,10 @@ export default component$(() => {
             {item}
           </Pagination.Page>
         ))}
-        <Pagination.Next class="pagination-next disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none">Next</Pagination.Next>
+        <Pagination.Next class="pagination-next disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none">
+          Next
+        </Pagination.Next>
       </Pagination.Root>
     </div>
   );
-}); 
+});

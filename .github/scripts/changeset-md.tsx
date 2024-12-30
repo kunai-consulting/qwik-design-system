@@ -17,9 +17,7 @@ export const changesetData: ChangesetData = JSON.parse(
   process.env.CHANGESET_DATA || "{}"
 );
 
-export function convertChangesetToMarkdown(
-  changesetData: ChangesetData
-): string {
+export function convertChangesetToMarkdown(changesetData: ChangesetData): string {
   const { changesets, releases } = changesetData;
 
   if (!Array.isArray(releases)) {
@@ -46,8 +44,7 @@ export function convertChangesetToMarkdown(
     .filter((release) => release.type !== "none")
     .map((release) => {
       const changes = changesetsByPackage[release.name];
-      const changesText =
-        changes.length > 0 ? changes.join("\n") : "No changes";
+      const changesText = changes.length > 0 ? changes.join("\n") : "No changes";
 
       return `### ${release.name}
   - **Type**: ${release.type}

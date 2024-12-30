@@ -7,7 +7,7 @@ export default component$(() => {
   const totalPagesSig = useSignal(10);
   const paginationItems = [...Array(totalPagesSig.value)].map((_, index) => index + 1);
 
-  return (  
+  return (
     <Pagination.Root
       class="pagination-root"
       totalPages={totalPagesSig.value}
@@ -17,13 +17,10 @@ export default component$(() => {
       ellipsis="..."
     >
       <Pagination.Previous class="pagination-previous">Prev</Pagination.Previous>
-        {paginationItems.map((item, index) => {
+      {paginationItems.map((item, index) => {
         const uniqueKey = `page-${index}-${Date.now()}`;
         return (
-          <Pagination.Page
-            class="pagination-page"
-            key={uniqueKey}
-          >
+          <Pagination.Page class="pagination-page" key={uniqueKey}>
             <span>{item}</span>
           </Pagination.Page>
         );
