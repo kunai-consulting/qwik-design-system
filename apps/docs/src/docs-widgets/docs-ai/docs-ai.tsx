@@ -4,6 +4,8 @@ import { server$, useLocation } from "@builder.io/qwik-city";
 import * as fs from "node:fs";
 import { resolve } from "node:path";
 import { execSync } from "node:child_process";
+import * as ts from "typescript";
+import { transformPublicTypes, getSourceFile } from "../../../auto-api/utils";
 
 const generateComponentDocs = server$(
   async (files: Array<{ name: string; content: string }>) => {
@@ -109,6 +111,47 @@ const generateDataAttributeDocs = server$(
   }
 );
 
+const analyzeTypesForPublic = server$(
+  async (files: Array<{ name: string; content: string }>) => {
+    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+    const response = await anthropic.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 8192,
+      messages: [
+        {
+          role: "user",
+          content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
+        Required output format: [{ "filename": "component.tsx", "comments": [{ "targetLine": "export type ButtonProps", "shouldBePublic": true, "reason": "Contains only public properties and is used for component props" }] }]
+        
+        IMPORTANT: Return a direct array, not an object with a 'files' property.
+        
+        Analyze exported types/interfaces and determine if they should be public based on:
+        1. No properties with underscore prefix (_) or marked as @internal
+        2. Properties appear to be intended for public consumption
+        3. Type is used for component props or public API
+        
+        Example of public type:
+        export type ButtonProps = {
+          variant?: 'primary' | 'secondary';
+          size?: 'small' | 'medium' | 'large';
+        };
+
+        Example of internal type:
+        export type ButtonState = {
+          _isPressed: boolean;
+          _internalId: string;
+        };
+
+        Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`
+        }
+      ]
+    });
+    const parsed =
+      response.content[0].type === "text" ? JSON.parse(response.content[0].text) : [];
+    return parsed.files || parsed;
+  }
+);
+
 export const DocsAI = component$(() => {
   const loc = useLocation();
   const isGenerating = useSignal(false);
@@ -134,11 +177,13 @@ export const DocsAI = component$(() => {
       }));
 
       updates.push("Analyzing with Claude...");
-      const [componentComments, typeComments, dataAttributeComments] = await Promise.all([
-        generateComponentDocs(fileContents),
-        generateTypeDocs(fileContents),
-        generateDataAttributeDocs(fileContents)
-      ]);
+      const [componentComments, typeComments, dataAttributeComments, publicTypeAnalysis] =
+        await Promise.all([
+          generateComponentDocs(fileContents),
+          generateTypeDocs(fileContents),
+          generateDataAttributeDocs(fileContents),
+          analyzeTypesForPublic(fileContents)
+        ]);
 
       console.log("componentComments", componentComments);
       console.log("typeComments", typeComments);
@@ -165,6 +210,15 @@ export const DocsAI = component$(() => {
         }
 
         fs.writeFileSync(filePath, fileContent.join("\n"), "utf-8");
+      }
+
+      updates.push("Transforming public types...");
+      for (const block of publicTypeAnalysis) {
+        const filePath = resolve(componentPath, block.filename);
+        const sourceFile = getSourceFile(filePath);
+        const transformedCode = transformPublicTypes(sourceFile, block.comments);
+        fs.writeFileSync(filePath, transformedCode, "utf-8");
+        diffReport += `\nTransformed types in ${block.filename}\n`;
       }
 
       // Format all modified files from project root

@@ -212,3 +212,56 @@ export function parseSingleComponentFromDir(
   ref.push(completeSubComponent);
   return ref;
 }
+
+export function transformPublicTypes(
+  sourceFile: ts.SourceFile,
+  publicTypes: Array<{ targetLine: string }>
+) {
+  const transformer = (
+    context: ts.TransformationContext
+  ): ts.Transformer<ts.SourceFile> => {
+    return (rootNode: ts.SourceFile) => {
+      function visit(node: ts.Node): ts.Node {
+        if (ts.isTypeAliasDeclaration(node) || ts.isInterfaceDeclaration(node)) {
+          if (publicTypes.some((t) => node.getText().includes(t.targetLine))) {
+            const factory = context.factory;
+            return ts.isTypeAliasDeclaration(node)
+              ? factory.updateTypeAliasDeclaration(
+                  node,
+                  node.modifiers,
+                  factory.createIdentifier(`Public${node.name.text}`),
+                  node.typeParameters,
+                  node.type
+                )
+              : factory.updateInterfaceDeclaration(
+                  node,
+                  node.modifiers,
+                  factory.createIdentifier(`Public${node.name.text}`),
+                  node.typeParameters,
+                  node.heritageClauses ?? [],
+                  node.members
+                );
+          }
+        }
+
+        if (ts.isTypeReferenceNode(node)) {
+          const typeName = node.typeName.getText();
+          if (publicTypes.some((t) => t.targetLine.includes(typeName))) {
+            return context.factory.createTypeReferenceNode(
+              `Public${typeName}`,
+              node.typeArguments
+            );
+          }
+        }
+
+        return ts.visitEachChild(node, visit, context);
+      }
+
+      return ts.visitNode(rootNode, visit) as ts.SourceFile;
+    };
+  };
+
+  const result = ts.transform(sourceFile, [transformer]);
+  const printer = ts.createPrinter();
+  return printer.printFile(result.transformed[0] as ts.SourceFile);
+}
