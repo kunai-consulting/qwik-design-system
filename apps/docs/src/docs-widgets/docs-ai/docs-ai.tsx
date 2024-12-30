@@ -54,12 +54,14 @@ export const DocsAI = component$(() => {
             Rules for generating JSDoc comments:
             1. Components (anything with component$ call)
             2. Properties within types/interfaces (add comment above each property)
+            3. Data attributes (format: "data-*") - describe what the attribute indicates or controls
 
             Documentation rules:
             - bind:x properties = "Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property"
             - if a property is x, with bind: removed, it is an initial value to set when the page loads
             - regular properties = describe what the property does
             - on$ properties = "Event handler for [event] events"
+            - data-* attributes = "Present when [condition]. Describe the state or behavior it represents"
             - Never mention QRL or implementation details
 
             Ignore files named: context, test, driver, index
