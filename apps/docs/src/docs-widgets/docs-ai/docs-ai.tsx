@@ -4,22 +4,6 @@ import { server$, useLocation } from "@builder.io/qwik-city";
 import * as fs from "node:fs";
 import { resolve } from "node:path";
 
-interface CommentBlock {
-  filename: string;
-  comments: Array<{
-    targetLine: string;
-    comment: string[];
-  }>;
-}
-
-interface APIResponse {
-  filename: string;
-  comments: Array<{
-    targetLine: string;
-    comment: string[];
-  }>;
-}
-
 const generateComponentDocs = server$(async function(files: Array<{name: string, content: string}>) {
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const response = await anthropic.messages.create({
@@ -29,6 +13,8 @@ const generateComponentDocs = server$(async function(files: Array<{name: string,
       role: "user",
       content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
         Required output format: [{ "filename": "component.tsx", "comments": [{ "targetLine": "export const Button = component$", "comment": ["/** A button component */"] }] }]
+
+        IMPORTANT: Return a direct array, not an object with a 'files' property.
         
         Only analyze component definitions (anything with component$ call). Example:
         // The button that opens the popover panel when clicked
@@ -39,7 +25,9 @@ const generateComponentDocs = server$(async function(files: Array<{name: string,
         Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`
     }]
   });
-  return response.content[0].type === "text" ? JSON.parse(response.content[0].text) : [];
+  const parsed = response.content[0].type === "text" ? JSON.parse(response.content[0].text) : [];
+  // If we get an object with files property, return that array, otherwise return the direct array
+  return parsed.files || parsed;
 });
 
 const generateTypeDocs = server$(async function(files: Array<{name: string, content: string}>) {
@@ -52,6 +40,8 @@ const generateTypeDocs = server$(async function(files: Array<{name: string, cont
       content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
         Required output format: [{ "filename": "component.tsx", "comments": [{ "targetLine": "gap?: number;", "comment": ["/** The gap between slides */"] }] }]
         
+        IMPORTANT: Return a direct array, not an object with a 'files' property.
+        
         Only analyze properties within types/interfaces. Example:
         export type PublicCarouselRootProps = PropsOf<'div'> & {
           /** The gap between slides */
@@ -63,31 +53,6 @@ const generateTypeDocs = server$(async function(files: Array<{name: string, cont
         - if a property is x, with bind: removed, it is an initial value to set when the page loads
         - regular properties = describe what the property does
         - on$ properties = "Event handler for [event] events"
-
-        Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`
-    }]
-  });
-  return response.content[0].type === "text" ? JSON.parse(response.content[0].text) : [];
-});
-
-const generateDataAttributeDocs = server$(async function(files: Array<{name: string, content: string}>) {
-  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-  const response = await anthropic.messages.create({
-    model: "claude-3-5-sonnet-20241022",
-    max_tokens: 8192,
-    messages: [{
-      role: "user",
-      content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
-        Required output format: [{ "filename": "component.tsx", "comments": [{ "targetLine": "data-qui-carousel-scroller", "comment": ["// The identifier for the container that enables scrolling and dragging in a carousel"] }] }]
-        
-        IMPORTANT: Return a direct array, not an object with a 'files' property.
-        
-        Only analyze data attributes (format: "data-*"). Example:
-        return <div {...props}
-          // The identifier for the container that enables scrolling and dragging in a carousel         
-          data-qui-carousel-scroller
-          // Whether the carousel is draggable
-          data-draggable={context.isDraggableSig.value ? '' : undefined} />;
 
         Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`
     }]
@@ -118,16 +83,16 @@ export const DocsAI = component$(() => {
       }));
 
       updates.push('Analyzing with Claude...');
-      const [componentComments, typeComments, dataAttributeComments] = await Promise.all([
+      const [componentComments, typeComments] = await Promise.all([
         generateComponentDocs(fileContents),
         generateTypeDocs(fileContents),
-        generateDataAttributeDocs(fileContents)
       ]);
 
-      console.log(componentComments, typeComments, dataAttributeComments);
+      console.log("componentComments", componentComments);
+      console.log("typeComments", typeComments);
 
       updates.push('Adding comments...');
-      const allComments = [...componentComments, ...typeComments, ...dataAttributeComments];
+      const allComments = [...componentComments, ...typeComments];
       let diffReport = "";
 
       for (const block of allComments) {
@@ -159,11 +124,7 @@ export const DocsAI = component$(() => {
           isGenerating.value = true;
           status.value = 'Generating...';
           try {
-            const updates = await generateAPI();
-            for (const update of updates) {
-              status.value = update;
-              await new Promise(r => setTimeout(r, 100));
-            }
+            await generateAPI();
           } finally {
             isGenerating.value = false;
             status.value = '';
