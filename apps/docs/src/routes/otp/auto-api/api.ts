@@ -24,37 +24,37 @@ export const api = {
         {
           "PublicOtpRootProps": [
             {
-              "comment": "new comment 123!",
+              "comment": "",
               "prop": "\"bind:value\"",
               "type": "Signal<string>"
             },
             {
-              "comment": "here's a comment",
+              "comment": "",
               "prop": "_numItems",
               "type": "number"
             },
             {
-              "comment": "here's a comment",
+              "comment": "",
               "prop": "autoComplete",
               "type": "HTMLInputAutocompleteAttribute"
             },
             {
-              "comment": "here's a comment",
+              "comment": "",
               "prop": "onComplete$",
               "type": "QRL<() => void>"
             },
             {
-              "comment": "here's a comment",
+              "comment": "",
               "prop": "onChange$",
               "type": "QRL<(value: string) => void>"
             },
             {
-              "comment": "here's a comment",
+              "comment": "",
               "prop": "value",
               "type": "string"
             },
             {
-              "comment": "here's a comment",
+              "comment": "",
               "prop": "disabled",
               "type": "boolean",
               "defaultValue": "false"

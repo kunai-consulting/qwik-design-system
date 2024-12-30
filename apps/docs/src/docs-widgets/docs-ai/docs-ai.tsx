@@ -53,8 +53,9 @@ export const DocsAI = component$(() => {
 
             Rules for generating JSDoc comments:
             1. Components (anything with component$ call)
-            2. Properties within types/interfaces (add comment above each property)
-            3. Data attributes (format: "data-*") - describe what the attribute indicates or controls
+            2. Types and interfaces (add comment above the type/interface definition)
+            3. Properties within types/interfaces (add comment above each property)
+            4. Data attributes (format: "data-*") - describe what the attribute indicates or controls
 
             Documentation rules:
             - bind:x properties = "Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property"
