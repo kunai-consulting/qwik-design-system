@@ -4,14 +4,17 @@ import { server$, useLocation } from "@builder.io/qwik-city";
 import * as fs from "node:fs";
 import { resolve } from "node:path";
 
-const generateComponentDocs = server$(async function(files: Array<{name: string, content: string}>) {
+const generateComponentDocs = server$(async function (
+  files: Array<{ name: string; content: string }>
+) {
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const response = await anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 8192,
-    messages: [{
-      role: "user",
-      content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
+    messages: [
+      {
+        role: "user",
+        content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
         Required output format: [{ "filename": "component.tsx", "comments": [{ "targetLine": "export const Button = component$", "comment": ["/** A button component */"] }] }]
 
         IMPORTANT: Return a direct array, not an object with a 'files' property.
@@ -23,21 +26,26 @@ const generateComponentDocs = server$(async function(files: Array<{name: string,
         });
 
         Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`
-    }]
+      }
+    ]
   });
-  const parsed = response.content[0].type === "text" ? JSON.parse(response.content[0].text) : [];
+  const parsed =
+    response.content[0].type === "text" ? JSON.parse(response.content[0].text) : [];
   // If we get an object with files property, return that array, otherwise return the direct array
   return parsed.files || parsed;
 });
 
-const generateTypeDocs = server$(async function(files: Array<{name: string, content: string}>) {
+const generateTypeDocs = server$(async function (
+  files: Array<{ name: string; content: string }>
+) {
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const response = await anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 8192,
-    messages: [{
-      role: "user",
-      content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
+    messages: [
+      {
+        role: "user",
+        content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
         Required output format: [{ "filename": "component.tsx", "comments": [{ "targetLine": "gap?: number;", "comment": ["/** The gap between slides */"] }] }]
         
         IMPORTANT: Return a direct array, not an object with a 'files' property.
@@ -55,44 +63,92 @@ const generateTypeDocs = server$(async function(files: Array<{name: string, cont
         - on$ properties = "Event handler for [event] events"
 
         Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`
-    }]
+      }
+    ]
   });
-  const parsed = response.content[0].type === "text" ? JSON.parse(response.content[0].text) : [];
+  const parsed =
+    response.content[0].type === "text" ? JSON.parse(response.content[0].text) : [];
   // If we get an object with files property, return that array, otherwise return the direct array
+  return parsed.files || parsed;
+});
+
+const generateDataAttributeDocs = server$(async function (
+  files: Array<{ name: string; content: string }>
+) {
+  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  const response = await anthropic.messages.create({
+    model: "claude-3-5-sonnet-20241022",
+    max_tokens: 8192,
+    messages: [
+      {
+        role: "user",
+        content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
+        Required output format: [{ "filename": "component.tsx", "comments": [{ "targetLine": "data-qui-carousel-scroller", "comment": ["// The identifier for the container that enables scrolling and dragging in a carousel"] }] }]
+        
+        IMPORTANT: 
+        - Return a direct array, not an object with a 'files' property
+        - Each data-* attribute must have its own comment
+        - Comment should be placed directly above the line containing the data attribute
+        
+        Only analyze data attributes (format: "data-*"). Example:
+        return <div {...props}
+          // Indicates whether the element is currently disabled
+          data-disabled={isDisabled ? '' : undefined}
+          // Indicates whether the element is currently checked
+          data-checked={isChecked ? '' : undefined}
+          // Indicates whether the element is in an indeterminate state
+          data-mixed={isMixed ? '' : undefined} />;
+
+        Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`
+      }
+    ]
+  });
+  const parsed =
+    response.content[0].type === "text" ? JSON.parse(response.content[0].text) : [];
   return parsed.files || parsed;
 });
 
 export const DocsAI = component$(() => {
   const loc = useLocation();
   const isGenerating = useSignal(false);
-  const status = useSignal('');
+  const status = useSignal("");
 
-  const generateAPI = server$(async function() {
+  const generateAPI = server$(async function () {
     try {
       const route = loc.url.pathname.split("/").filter(Boolean)[0];
       const componentPath = resolve(process.cwd(), `../../libs/components/src/${route}`);
-      
+
       const updates = [];
-      updates.push('Reading files...');
+      updates.push("Reading files...");
       const files = fs
         .readdirSync(componentPath)
-        .filter((f) => (f.endsWith(".tsx") || f.endsWith(".ts")) && !['context', 'test', 'driver', 'index'].some(ignore => f.includes(ignore)));
+        .filter(
+          (f) =>
+            (f.endsWith(".tsx") || f.endsWith(".ts")) &&
+            !["context", "test", "driver", "index"].some((ignore) => f.includes(ignore))
+        );
       const fileContents = files.map((file) => ({
         name: file,
         content: fs.readFileSync(resolve(componentPath, file), "utf-8")
       }));
 
-      updates.push('Analyzing with Claude...');
-      const [componentComments, typeComments] = await Promise.all([
+      updates.push("Analyzing with Claude...");
+      const [componentComments, typeComments, dataAttributeComments] = await Promise.all([
         generateComponentDocs(fileContents),
         generateTypeDocs(fileContents),
+        generateDataAttributeDocs(fileContents)
       ]);
 
       console.log("componentComments", componentComments);
       console.log("typeComments", typeComments);
+      console.log("dataAttributeComments", dataAttributeComments);
 
-      updates.push('Adding comments...');
-      const allComments = [...componentComments, ...typeComments];
+      updates.push("Adding comments...");
+      const allComments = [
+        ...componentComments,
+        ...typeComments,
+        ...dataAttributeComments
+      ];
       let diffReport = "";
 
       for (const block of allComments) {
@@ -113,23 +169,23 @@ export const DocsAI = component$(() => {
       return diffReport ? [diffReport] : updates;
     } catch (error) {
       console.error("Error generating API docs:", error);
-      return ['Error occurred'];
+      return ["Error occurred"];
     }
   });
 
   return (
     <div class="flex gap-2">
-      <AIButton 
+      <AIButton
         onClick$={async () => {
           isGenerating.value = true;
-          status.value = 'Generating...';
+          status.value = "Generating...";
           try {
             await generateAPI();
           } finally {
             isGenerating.value = false;
-            status.value = '';
+            status.value = "";
           }
-        }} 
+        }}
         disabled={isGenerating.value}
       >
         {isGenerating.value ? status.value : "Generate API"}
