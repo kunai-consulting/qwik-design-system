@@ -53,9 +53,99 @@ export const DocsAI = component$(() => {
 
             Rules for generating JSDoc comments:
             1. Components (anything with component$ call)
-            2. Types and interfaces (add comment above the type/interface definition)
-            3. Properties within types/interfaces (add comment above each property)
-            4. Data attributes (format: "data-*") - describe what the attribute indicates or controls
+
+            Example:
+            // The button that opens the popover panel when clicked
+            export const PopoverTrigger = component$((props: PropsOf<"button">) => {
+              // rest of implementation
+
+              return <button onClick$={...} {...props} />;
+            });
+
+            2. Properties within types/interfaces (add comment above each property)
+
+            Example:
+
+            export type PublicCarouselRootProps = PropsOf<'div'> & {
+              /** The gap between slides */
+              gap?: number;
+
+              /** Number of slides to show at once */
+              slidesPerView?: number;
+
+              /** Whether the carousel is draggable */
+              draggable?: boolean;
+
+              /** Alignment of slides within the viewport */
+              align?: 'start' | 'center' | 'end';
+
+              /** Whether the carousel should rewind */
+              rewind?: boolean;
+
+              /** Bind the selected index to a signal */
+              'bind:selectedIndex'?: Signal<number>;
+
+              /** change the initial index of the carousel on render */
+              startIndex?: number;
+
+              /**
+               * @deprecated Use bind:selectedIndex instead
+               * Bind the current slide index to a signal
+               */
+              'bind:currSlideIndex'?: Signal<number>;
+
+              /** Whether the carousel should autoplay */
+              'bind:autoplay'?: Signal<boolean>;
+
+              /** the current progress of the carousel */
+              'bind:progress'?: Signal<number>;
+
+              /** Time in milliseconds before the next slide plays during autoplay */
+              autoPlayIntervalMs?: number;
+
+              /** @internal Total number of slides */
+              _numSlides?: number;
+
+              /** @internal Whether this carousel has a title */
+              _isTitle?: boolean;
+
+              /** The sensitivity of the carousel dragging */
+              sensitivity?: {
+                mouse?: number;
+                touch?: number;
+              };
+
+              /** The amount of slides to move when hitting the next or previous button */
+              move?: number;
+
+              /** The carousel's direction */
+              orientation?: 'horizontal' | 'vertical';
+
+              /** The maximum height of the slides. Needed in vertical carousels */
+              maxSlideHeight?: number;
+
+              /** Whether the carousel should support mousewheel navigation */
+              mousewheel?: boolean;
+            };
+
+
+            3. Data attributes (format: "data-*") - describe what the attribute indicates or controls
+
+            Example:
+
+            export const CarouselScroller = component$((props: PropsOf<'div'>) => {
+              return <div {...props}
+              // The identifier for the container that enables scrolling and dragging in a carousel         
+              data-qui-carousel-scroller
+              // Whether the carousel is draggable
+              data-draggable={context.isDraggableSig.value ? '' : undefined}
+              // The alignment of the slides within the scroll container
+              data-align={context.alignSig.value}
+              // Whether the carousel was interacted with on a mobile device
+              data-initial-touch={isTouchStartSig.value ? '' : undefined}
+              // The initial position of the carousel on load
+              data-initial={isNewPosOnLoadSig.value ? '' : undefined}" />;
+            });
 
             Documentation rules:
             - bind:x properties = "Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property"
