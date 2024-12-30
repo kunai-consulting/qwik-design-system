@@ -14,6 +14,7 @@ type OtpNativeInputProps = PropsOf<"input"> & {
   pattern?: string | null;
 };
 
+/** Hidden input component that handles OTP input interactions and validation */
 export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
   const context = useContext(OTPContextId);
   const previousValue = useSignal<string>("");
@@ -231,6 +232,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       value={context.inputValueSig.value}
       disabled={context.isDisabledSig.value ?? false}
       maxLength={context.numItemsSig.value}
+// The identifier for the hidden input element that handles OTP input
       data-qds-otp-hidden-input
       inputMode="numeric"
       onInput$={[handleInput, props.onInput$]}

@@ -19,16 +19,24 @@ import { useBoundSignal } from "../../utils/bound-signal";
 import { Render, type RenderProps } from "../render/render";
 
 type PublicOtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
+/** Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property */
   "bind:value"?: Signal<string>;
+/** Number of OTP input items to display */
   _numItems?: number;
+/** HTML autocomplete attribute for the input */
   autoComplete?: HTMLInputAutocompleteAttribute;
+/** Event handler for when all OTP items are filled */
   onComplete$?: QRL<() => void>;
+/** Event handler for when the OTP value changes */
   onChange$?: QRL<(value: string) => void>;
+/** Initial value of the OTP input */
   value?: string;
+/** Whether the OTP input is disabled */
   disabled?: boolean;
 } & RenderProps;
 
 /** Here's a comment for you! */
+/** Root component for OTP input that manages multiple input items */
 /** Root component for OTP input that manages multiple input items */
 export const OtpRoot = ({ children, ...props }: PublicOtpRootProps) => {
   let currItemIndex = 0;
@@ -49,6 +57,7 @@ export const OtpRoot = ({ children, ...props }: PublicOtpRootProps) => {
   );
 };
 
+/** Base implementation of the OTP root component with context provider */
 export const OtpBase = component$((props: PublicOtpRootProps) => {
   const {
     "bind:value": givenValueSig,
@@ -107,7 +116,9 @@ export const OtpBase = component$((props: PublicOtpRootProps) => {
     <Render
       component={Comp}
       fallback="div"
+// The identifier for the root OTP input container
       data-qds-otp-root
+// Indicates if the entire OTP input is disabled
       data-disabled={isDisabledSig.value ? "" : undefined}
       {...rest}
     >

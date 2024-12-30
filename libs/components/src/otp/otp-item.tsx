@@ -15,6 +15,7 @@ type OTPProps = {
 } & PropsOf<"div">;
 
 export const itemContextId = createContextId<{ index: number }>("qd-otp-item");
+/** Individual item component for displaying a single OTP digit */
 export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
   const context = useContext(OTPContextId);
   const itemRef = useSignal<HTMLInputElement>();
@@ -45,8 +46,11 @@ export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
     <div
       {...props}
       ref={itemRef}
+// The identifier for individual OTP input items with their index
       data-qds-otp-item={_index}
+// Indicates if the OTP item is currently highlighted
       data-highlighted={isHighlightedSig.value ? "" : undefined}
+// Indicates if the OTP item is disabled
       data-disabled={context.isDisabledSig.value ? "" : undefined}
     >
       {itemValue}

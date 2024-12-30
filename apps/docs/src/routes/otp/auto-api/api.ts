@@ -24,37 +24,37 @@ export const api = {
         {
           "PublicOtpRootProps": [
             {
-              "comment": "",
+              "comment": "Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property",
               "prop": "\"bind:value\"",
               "type": "Signal<string>"
             },
             {
-              "comment": "",
+              "comment": "Number of OTP input items to display",
               "prop": "_numItems",
               "type": "number"
             },
             {
-              "comment": "",
+              "comment": "HTML autocomplete attribute for the input",
               "prop": "autoComplete",
               "type": "HTMLInputAutocompleteAttribute"
             },
             {
-              "comment": "",
+              "comment": "Event handler for when all OTP items are filled",
               "prop": "onComplete$",
               "type": "QRL<() => void>"
             },
             {
-              "comment": "",
+              "comment": "Event handler for when the OTP value changes",
               "prop": "onChange$",
               "type": "QRL<(value: string) => void>"
             },
             {
-              "comment": "",
+              "comment": "Initial value of the OTP input",
               "prop": "value",
               "type": "string"
             },
             {
-              "comment": "",
+              "comment": "Whether the OTP input is disabled",
               "prop": "disabled",
               "type": "boolean",
               "defaultValue": "false"
@@ -76,13 +76,16 @@ export const api = {
       "description": "Here's a comment for you!"
     },
     {
-      "name": "Otp.Item"
+      "name": "Otp.Item",
+      "description": "Individual item component for displaying a single OTP digit"
     },
     {
-      "name": "Otp.HiddenInput"
+      "name": "Otp.HiddenInput",
+      "description": "Hidden input component that handles OTP input interactions and validation"
     },
     {
-      "name": "Otp.Caret"
+      "name": "Otp.Caret",
+      "description": "Component that renders a caret for OTP input focus indication"
     }
   ]
 };

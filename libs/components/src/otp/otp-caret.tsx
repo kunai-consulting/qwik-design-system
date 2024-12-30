@@ -2,6 +2,7 @@ import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
 import { OTPContextId } from "./otp-context";
 import { itemContextId } from "./otp-item";
 
+/** Component that renders a caret for OTP input focus indication */
 export const OtpCaret = component$(({ ...props }: PropsOf<"span">) => {
   const itemContext = useContext(itemContextId);
   const context = useContext(OTPContextId);
@@ -11,6 +12,7 @@ export const OtpCaret = component$(({ ...props }: PropsOf<"span">) => {
   const showCaret = isHighlighted && isEmpty;
 
   return (
+// The identifier for the OTP caret element with its specific index
     <span {...props} data-qds-otp-caret={itemContext.index}>
       {showCaret && <Slot />}
     </span>
