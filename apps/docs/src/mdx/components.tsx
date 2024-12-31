@@ -5,6 +5,8 @@ import { cn } from "~/utils/cn";
 import { Showcase } from "./showcase";
 import { APITable } from "../docs-widgets/api-table/api-table";
 import { MainHeading, SubHeading } from "../docs-widgets/toc/toc";
+import { AnatomyTable } from "../docs-widgets/anatomy-table/anatomy-table";
+
 export const components: Record<string, Component> = {
   p: component$<PropsOf<"p">>(({ ...props }) => {
     return (
@@ -186,5 +188,6 @@ export const components: Record<string, Component> = {
     );
   }),
   Showcase,
-  APITable
+  APITable,
+  AnatomyTable
 };
