@@ -253,8 +253,17 @@ export const DocsAI = component$(() => {
         for (const { targetLine, comment } of block.comments) {
           const lineIndex = fileContent.findIndex((l) => l.includes(targetLine));
           if (lineIndex !== -1) {
-            fileContent.splice(lineIndex, 0, ...comment);
-            diffReport += `\nAdded comment to ${block.filename} at line ${lineIndex + 1}\n`;
+            // Check if there's already a comment above this line
+            const hasPreviousComment =
+              lineIndex > 0 &&
+              (fileContent[lineIndex - 1].includes("/*") ||
+                fileContent[lineIndex - 1].includes("//"));
+
+            // Only add comment if there isn't one already
+            if (!hasPreviousComment) {
+              fileContent.splice(lineIndex, 0, ...comment);
+              diffReport += `\nAdded comment to ${block.filename} at line ${lineIndex + 1}\n`;
+            }
           }
         }
 
