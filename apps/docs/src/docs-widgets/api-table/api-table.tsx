@@ -1,6 +1,11 @@
 import { component$, Fragment, useContext, useTask$ } from "@builder.io/qwik";
 import { Popover } from "@qwik-ui/headless";
-import type { ComponentParts, ParsedProps } from "../../../auto-api/types";
+import type {
+  AnatomyItem,
+  ComponentEntry,
+  ComponentParts,
+  ParsedProps
+} from "../../../auto-api/types";
 import { rootContextId } from "~/routes/layout";
 import { MainHeading, SubHeading } from "../toc/toc";
 
@@ -10,6 +15,31 @@ type DataAttribute = {
   comment: string;
 };
 
+type ItemProps = {
+  types?: Array<Record<string, ParsedProps[]>>;
+  dataAttributes?: DataAttribute[];
+};
+
+const getItemPropsCount = (item: Record<string, ItemProps>) => {
+  const propsCount =
+    Object.values(item)[0]?.types?.[0]?.[
+      Object.keys(Object.values(item)[0]?.types?.[0] || {})[0]
+    ]?.length || 0;
+
+  const dataAttributesCount = Object.values(item)[0]?.dataAttributes?.length || 0;
+
+  return propsCount + dataAttributesCount;
+};
+
+const sortByPropsCount = (
+  a: AnatomyItem | ComponentEntry,
+  b: AnatomyItem | ComponentEntry
+) => {
+  const aProps = getItemPropsCount(a as Record<string, ItemProps>);
+  const bProps = getItemPropsCount(b as Record<string, ItemProps>);
+  return bProps - aProps;
+};
+
 export const APITable = component$(({ api }: { api: ComponentParts }) => {
   const context = useContext(rootContextId);
   if (!api) return null;
@@ -17,7 +47,9 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
   const componentName = Object.keys(api)[0];
   if (!componentName) return null;
 
-  const items = Object.values(api)[0].filter((item) => !("anatomy" in item));
+  const items = Object.values(api)[0]
+    .filter((item) => !("anatomy" in item))
+    .sort(sortByPropsCount);
 
   useTask$(() => {
     context.allHeadingsSig.value = [
@@ -48,6 +80,7 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
         <Fragment key={componentName}>
           {items
             .filter((item) => !("anatomy" in item))
+            .sort(sortByPropsCount)
             .map((item) => {
               const componentData = Object.entries(item)[0];
               const [itemName, itemProps] = componentData;
