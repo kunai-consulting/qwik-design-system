@@ -1,23 +1,29 @@
 import { component$, Fragment, useContext, useTask$ } from "@builder.io/qwik";
 import { Popover } from "@qwik-ui/headless";
-import type {
-  AnatomyItem,
-  ComponentEntry,
-  ComponentParts,
-  ParsedProps
-} from "../../../auto-api/types";
+import type { AnatomyItem, ComponentEntry, ParsedProps } from "../../../auto-api/types";
 import { rootContextId } from "~/routes/layout";
 import { MainHeading, SubHeading } from "../toc/toc";
 
 type DataAttribute = {
   name: string;
   type: string;
-  comment: string;
+  comment?: string;
 };
 
 type ItemProps = {
   types?: Array<Record<string, ParsedProps[]>>;
   dataAttributes?: DataAttribute[];
+};
+
+type KeyboardInteraction = {
+  key: string;
+  comment: string;
+};
+
+type ComponentParts = {
+  [key: string]: Array<AnatomyItem | ComponentEntry> | KeyboardInteraction[];
+} & {
+  keyboardInteractions?: KeyboardInteraction[];
 };
 
 const getItemPropsCount = (item: Record<string, ItemProps>) => {
@@ -48,7 +54,7 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
   if (!componentName) return null;
 
   const items = Object.values(api)[0]
-    .filter((item) => !("anatomy" in item))
+    .filter((item): item is ComponentEntry => !("anatomy" in item || "key" in item))
     .sort(sortByPropsCount);
 
   useTask$(() => {
@@ -71,6 +77,22 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
         }
       ];
     }
+
+    if (api.keyboardInteractions?.length) {
+      context.allHeadingsSig.value = [
+        ...context.allHeadingsSig.value,
+        {
+          text: "Accessibility",
+          id: "accessibility",
+          level: 2
+        },
+        {
+          text: "Keyboard Interactions",
+          id: "keyboard-interactions",
+          level: 3
+        }
+      ];
+    }
   });
 
   return (
@@ -79,7 +101,9 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
       {Object.entries(api).map(([componentName, items]) => (
         <Fragment key={componentName}>
           {items
-            .filter((item) => !("anatomy" in item))
+            .filter(
+              (item): item is ComponentEntry => !("anatomy" in item || "key" in item)
+            )
             .sort(sortByPropsCount)
             .map((item) => {
               const componentData = Object.entries(item)[0];
@@ -172,6 +196,33 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
             })}
         </Fragment>
       ))}
+
+      {/* Add Keyboard Interactions Table */}
+      {api.keyboardInteractions && api.keyboardInteractions.length > 0 && (
+        <>
+          <MainHeading id="accessibility">Accessibility</MainHeading>
+          <SubHeading id="keyboard-interactions">Keyboard Interactions</SubHeading>
+          <table class="w-full border-collapse text-sm">
+            <thead>
+              <tr class="border-b border-gray-200 dark:border-gray-800">
+                <th class="py-4 px-4 text-left font-medium">Key</th>
+                <th class="py-4 px-4 text-left font-medium">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {api.keyboardInteractions.map((interaction) => (
+                <tr
+                  key={interaction.key}
+                  class="border-b border-gray-200 dark:border-gray-800"
+                >
+                  <td class="py-4 px-4 font-mono text-sm">{interaction.key}</td>
+                  <td class="py-4 px-4">{interaction.comment}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
     </div>
   );
 });
