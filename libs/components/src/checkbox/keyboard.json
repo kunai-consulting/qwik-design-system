@@ -1,0 +1,16 @@
+{
+  "keyboard": [
+    {
+      "key": "Space",
+      "comment": "When focus is on the checkbox trigger button, toggles between checked, unchecked, or mixed states"
+    },
+    {
+      "key": "Enter",
+      "comment": "When focus is on the checkbox trigger button, toggles between checked, unchecked, or mixed states (preventDefault is applied)"
+    },
+    {
+      "key": "Tab",
+      "comment": "Moves focus to the checkbox trigger button in the natural tab order"
+    }
+  ]
+}

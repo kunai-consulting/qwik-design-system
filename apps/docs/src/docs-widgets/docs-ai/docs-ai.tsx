@@ -151,6 +151,37 @@ const analyzeTypesForPublic = server$(
   }
 );
 
+const generateKeyboardDocs = server$(
+  async (files: Array<{ name: string; content: string }>) => {
+    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+    const response = await anthropic.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 8192,
+      messages: [
+        {
+          role: "user",
+          content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
+          Required output format: {
+            "keyboard": [
+              { "key": "Space", "comment": "When focus is on the trigger, activates the element" },
+              { "key": "Enter", "comment": "When focus is on the trigger, activates the element" }
+            ]
+          }
+
+          Analyze the component files and provide keyboard interaction documentation.
+          Be specific about which part of the component is being interacted with.
+          
+          Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`
+        }
+      ]
+    });
+
+    return response.content[0].type === "text"
+      ? JSON.parse(response.content[0].text).keyboard
+      : [];
+  }
+);
+
 export const DocsAI = component$(() => {
   const loc = useLocation();
   const isGenerating = useSignal(false);
@@ -176,17 +207,24 @@ export const DocsAI = component$(() => {
       }));
 
       updates.push("Analyzing with Claude...");
-      const [componentComments, typeComments, dataAttributeComments, publicTypeAnalysis] =
-        await Promise.all([
-          generateComponentDocs(fileContents),
-          generateTypeDocs(fileContents),
-          generateDataAttributeDocs(fileContents),
-          analyzeTypesForPublic(fileContents)
-        ]);
+      const [
+        componentComments,
+        typeComments,
+        dataAttributeComments,
+        publicTypeAnalysis,
+        keyboardDocs
+      ] = await Promise.all([
+        generateComponentDocs(fileContents),
+        generateTypeDocs(fileContents),
+        generateDataAttributeDocs(fileContents),
+        analyzeTypesForPublic(fileContents),
+        generateKeyboardDocs(fileContents)
+      ]);
 
       console.log("componentComments", componentComments);
       console.log("typeComments", typeComments);
       console.log("dataAttributeComments", dataAttributeComments);
+      console.log("keyboardDocs", keyboardDocs);
 
       updates.push("Adding comments...");
       const allComments = [
@@ -219,6 +257,11 @@ export const DocsAI = component$(() => {
         fs.writeFileSync(filePath, transformedCode, "utf-8");
         diffReport += `\nTransformed types in ${block.filename}\n`;
       }
+
+      updates.push("Analyzing keyboard interactions...");
+      // Write keyboard docs to keyboard.json in the auto-api directory
+      const keyboardContent = JSON.stringify({ keyboard: keyboardDocs }, null, 2);
+      fs.writeFileSync(resolve(componentPath, "keyboard.json"), keyboardContent);
 
       // Format all modified files from project root
       updates.push("Formatting files...");

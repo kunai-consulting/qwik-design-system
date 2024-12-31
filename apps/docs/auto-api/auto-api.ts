@@ -60,10 +60,15 @@ function loopOnAllChildFiles(filePath: string) {
   const allParts: SubComponents = [];
   const store: ComponentParts = {
     [componentName]: allParts,
-    anatomy: anatomy
+    anatomy: anatomy,
+    keyboardInteractions: []
   };
 
   for (const fileName of fs.readdirSync(parentDir)) {
+    if (fileName === "keyboard.json" && fs.existsSync(resolve(parentDir, fileName))) {
+      const keyboardContent = fs.readFileSync(resolve(parentDir, fileName), "utf-8");
+      store.keyboardInteractions = JSON.parse(keyboardContent).keyboard;
+    }
     if (/\.tsx$/.test(fileName)) {
       const fullPath = resolve(parentDir, fileName);
       parseSingleComponentFromDir(fullPath, allParts);
