@@ -1,11 +1,6 @@
 export const api = {
   "checkbox": [
     {
-      "Checkbox Context": {
-        "types": []
-      }
-    },
-    {
       "Checkbox Description": {
         "types": [
           {

@@ -110,6 +110,10 @@ export function parseSingleComponentFromDir(
   const componentNameMatch = /[\\/](\w[\w-]*)\.tsx$/.exec(path);
   if (!componentNameMatch) return;
 
+  if (componentNameMatch[1].toLowerCase().includes("context")) {
+    return;
+  }
+
   const componentName = componentNameMatch[1];
   const sourceFile = getSourceFile(path);
   const parsed: PublicType[] = [];
