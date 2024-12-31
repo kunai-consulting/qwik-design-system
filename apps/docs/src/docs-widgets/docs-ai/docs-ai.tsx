@@ -4,7 +4,6 @@ import { server$, useLocation } from "@builder.io/qwik-city";
 import * as fs from "node:fs";
 import { resolve } from "node:path";
 import { execSync } from "node:child_process";
-import * as ts from "typescript";
 import { transformPublicTypes, getSourceFile } from "../../../auto-api/utils";
 
 const generateComponentDocs = server$(

@@ -4,6 +4,12 @@ import type { ComponentParts, ParsedProps } from "../../../auto-api/types";
 import { rootContextId } from "~/routes/layout";
 import { MainHeading, SubHeading } from "../toc/toc";
 
+type DataAttribute = {
+  name: string;
+  type: string;
+  comment: string;
+};
+
 export const APITable = component$(({ api }: { api: ComponentParts }) => {
   const context = useContext(rootContextId);
   if (!api) return null;
@@ -11,7 +17,7 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
   const componentName = Object.keys(api)[0];
   if (!componentName) return null;
 
-  const items = Object.values(api)[0];
+  const items = Object.values(api)[0].filter((item) => !("anatomy" in item));
 
   useTask$(() => {
     context.allHeadingsSig.value = [
@@ -24,11 +30,6 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
 
     for (const item of items) {
       const apiHeading = Object.keys(item)[0];
-      const value = item[apiHeading as keyof typeof item];
-
-      if (!value || typeof value !== "object" || Object.keys(value).length === 0)
-        continue;
-
       context.allHeadingsSig.value = [
         ...context.allHeadingsSig.value,
         {
@@ -45,59 +46,97 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
       <MainHeading id="api-reference">API Reference</MainHeading>
       {Object.entries(api).map(([componentName, items]) => (
         <Fragment key={componentName}>
-          {items.map((item) => {
-            const componentData = Object.entries(item)[0];
-            const [itemName, itemProps] = componentData;
+          {items
+            .filter((item) => !("anatomy" in item))
+            .map((item) => {
+              const componentData = Object.entries(item)[0];
+              const [itemName, itemProps] = componentData;
 
-            const propsArray =
-              itemProps[0]?.[
-                Object.keys(itemProps[0]).find((key) => key.endsWith("Props")) ?? ""
-              ];
+              if (!itemProps || typeof itemProps !== "object") return null;
 
-            if (!propsArray) return null;
+              const propsArray =
+                itemProps.types?.[0]?.[Object.keys(itemProps.types[0])[0]];
 
-            return (
-              <div key={itemName}>
-                <SubHeading id={itemName}>{itemName}</SubHeading>
-                <table class="w-full border-collapse text-sm">
-                  <thead>
-                    <tr class="border-b border-gray-200 dark:border-gray-800">
-                      <th class="py-4 px-4 text-left font-medium">Prop</th>
-                      <th class="py-4 px-4 text-left font-medium">Type</th>
-                      <th class="py-4 px-4 text-left font-medium">Default</th>
-                      <th class="py-4 px-4 text-left font-medium">Description</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {propsArray.map((prop: ParsedProps) => (
-                      <tr
-                        key={prop.prop}
-                        class="border-b border-gray-200 dark:border-gray-800"
-                      >
-                        <td class="py-4 px-4 font-mono text-sm">{prop.prop}</td>
-                        <td class="py-4 px-4 font-mono text-sm">{prop.type}</td>
-                        <td class="py-4 px-4 font-mono text-sm">
-                          {prop.defaultValue || "-"}
-                        </td>
-                        <td class="py-4 px-4">
-                          {prop.comment && (
-                            <Popover.Root>
-                              <Popover.Trigger class="text-blue-500 hover:text-blue-600">
-                                Details
-                              </Popover.Trigger>
-                              <Popover.Panel class="p-4 max-w-xs">
-                                {prop.comment}
-                              </Popover.Panel>
-                            </Popover.Root>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            );
-          })}
+              return (
+                <div key={itemName}>
+                  <SubHeading id={itemName}>{itemName}</SubHeading>
+                  {itemProps.inheritsFrom && (
+                    <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                      Inherits from: <code>{itemProps.inheritsFrom}</code>
+                    </p>
+                  )}
+
+                  {/* Props Table */}
+                  {propsArray && propsArray.length > 0 && (
+                    <>
+                      <h4 class="mb-2 font-medium">Props</h4>
+                      <table class="w-full border-collapse text-sm mb-6">
+                        <thead>
+                          <tr class="border-b border-gray-200 dark:border-gray-800">
+                            <th class="py-4 px-4 text-left font-medium">Prop</th>
+                            <th class="py-4 px-4 text-left font-medium">Type</th>
+                            <th class="py-4 px-4 text-left font-medium">Default</th>
+                            <th class="py-4 px-4 text-left font-medium">Description</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {propsArray.map((prop: ParsedProps) => (
+                            <tr
+                              key={prop.prop}
+                              class="border-b border-gray-200 dark:border-gray-800"
+                            >
+                              <td class="py-4 px-4 font-mono text-sm">{prop.prop}</td>
+                              <td class="py-4 px-4 font-mono text-sm">{prop.type}</td>
+                              <td class="py-4 px-4 font-mono text-sm">
+                                {prop.defaultValue || "-"}
+                              </td>
+                              <td class="py-4 px-4">
+                                {prop.comment && (
+                                  <Popover.Root>
+                                    <Popover.Trigger class="text-blue-500 hover:text-blue-600">
+                                      Details
+                                    </Popover.Trigger>
+                                    <Popover.Panel class="p-4 max-w-xs">
+                                      {prop.comment}
+                                    </Popover.Panel>
+                                  </Popover.Root>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </>
+                  )}
+
+                  {/* Data Attributes Table */}
+                  {itemProps.dataAttributes && itemProps.dataAttributes.length > 0 && (
+                    <>
+                      <h4 class="mb-2 font-medium">Data Attributes</h4>
+                      <table class="w-full border-collapse text-sm">
+                        <thead>
+                          <tr class="border-b border-gray-200 dark:border-gray-800">
+                            <th class="py-4 px-4 text-left font-medium">Attribute</th>
+                            <th class="py-4 px-4 text-left font-medium">Description</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {itemProps.dataAttributes.map((attr: DataAttribute) => (
+                            <tr
+                              key={attr.name}
+                              class="border-b border-gray-200 dark:border-gray-800"
+                            >
+                              <td class="py-4 px-4 font-mono text-sm">{attr.name}</td>
+                              <td class="py-4 px-4">{attr.comment}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </>
+                  )}
+                </div>
+              );
+            })}
         </Fragment>
       ))}
     </div>

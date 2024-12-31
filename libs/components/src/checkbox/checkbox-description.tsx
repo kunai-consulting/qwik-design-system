@@ -8,13 +8,11 @@ import {
   useTask$
 } from "@builder.io/qwik";
 import { checkboxContextId } from "./checkbox-context";
-
-type CheckboxDescriptionProps = PropsOf<"div">;
-
-export const CheckboxDescription = component$((props: CheckboxDescriptionProps) => {
+type PublicCheckboxDescriptionProps = PropsOf<"div">;
+/** A component that renders the description text for a checkbox */
+export const CheckboxDescription = component$((props: PublicCheckboxDescriptionProps) => {
   const context = useContext(checkboxContextId);
   const descriptionId = `${context.localId}-description`;
-
   useTask$(() => {
     if (!context.isDescription) {
       console.warn(
@@ -22,8 +20,8 @@ export const CheckboxDescription = component$((props: CheckboxDescriptionProps) 
       );
     }
   });
-
   return (
+    // Identifier for the checkbox description element
     <div id={descriptionId} data-qds-checkbox-description {...props}>
       <Slot />
     </div>
