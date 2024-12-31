@@ -122,7 +122,10 @@ const analyzeTypesForPublic = server$(
           content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
         Required output format: [{ "filename": "component.tsx", "comments": [{ "targetLine": "export type ButtonProps", "shouldBePublic": true, "reason": "Contains only public properties and is used for component props" }] }]
         
-        IMPORTANT: Return a direct array, not an object with a 'files' property.
+        IMPORTANT: 
+        - Return a direct array, not an object with a 'files' property
+        - IGNORE any types that already start with "Public" prefix
+        - Only analyze types that don't already have the Public prefix
         
         Analyze exported types/interfaces and determine if they should be public based on:
         1. No properties with underscore prefix (_) or marked as @internal
@@ -161,12 +164,10 @@ const generateKeyboardDocs = server$(
         {
           role: "user",
           content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
-          Required output format: {
-            "keyboard": [
-              { "key": "Space", "comment": "When focus is on the trigger, activates the element" },
-              { "key": "Enter", "comment": "When focus is on the trigger, activates the element" }
-            ]
-          }
+          Required output format: [
+            { "key": "Space", "comment": "When focus is on the trigger, activates the element" },
+            { "key": "Enter", "comment": "When focus is on the trigger, activates the element" }
+          ]
 
           Analyze the component files and provide keyboard interaction documentation.
           Be specific about which part of the component is being interacted with.
@@ -177,7 +178,7 @@ const generateKeyboardDocs = server$(
     });
 
     return response.content[0].type === "text"
-      ? JSON.parse(response.content[0].text).keyboard
+      ? JSON.parse(response.content[0].text)
       : [];
   }
 );
@@ -226,7 +227,10 @@ export const DocsAI = component$(() => {
       console.log("dataAttributeComments", dataAttributeComments);
       console.log("keyboardDocs", keyboardDocs);
 
-      updates.push("Adding comments...");
+      // Split the updates into two parts
+
+      // 1. Handle type transformations and comments
+      updates.push("Adding comments and transforming types...");
       const allComments = [
         ...componentComments,
         ...typeComments,
@@ -234,6 +238,7 @@ export const DocsAI = component$(() => {
       ];
       let diffReport = "";
 
+      // Handle comments
       for (const block of allComments) {
         const filePath = resolve(componentPath, block.filename);
         const fileContent = fs.readFileSync(filePath, "utf-8").split("\n");
@@ -249,7 +254,7 @@ export const DocsAI = component$(() => {
         fs.writeFileSync(filePath, fileContent.join("\n"), "utf-8");
       }
 
-      updates.push("Transforming public types...");
+      // Handle public type transformations
       for (const block of publicTypeAnalysis) {
         const filePath = resolve(componentPath, block.filename);
         const sourceFile = getSourceFile(filePath);
@@ -258,10 +263,25 @@ export const DocsAI = component$(() => {
         diffReport += `\nTransformed types in ${block.filename}\n`;
       }
 
-      updates.push("Analyzing keyboard interactions...");
-      // Write keyboard docs to keyboard.json in the auto-api directory
-      const keyboardContent = JSON.stringify({ keyboard: keyboardDocs }, null, 2);
-      fs.writeFileSync(resolve(componentPath, "keyboard.json"), keyboardContent);
+      // 2. Handle keyboard interactions separately
+      updates.push("Updating API with keyboard interactions...");
+      const apiPath = resolve(
+        process.cwd(),
+        `apps/docs/src/routes/${route}/auto-api/api.ts`
+      );
+
+      const apiContent = fs.readFileSync(apiPath, "utf-8");
+      const apiMatch = apiContent.match(/export const api = ({[\s\S]*});/);
+      if (apiMatch) {
+        const api = JSON.parse(apiMatch[1]);
+        // Only update keyboard interactions, don't touch types
+        api.keyboardInteractions = keyboardDocs;
+        fs.writeFileSync(
+          apiPath,
+          `export const api = ${JSON.stringify(api, null, 2)};`,
+          "utf-8"
+        );
+      }
 
       // Format all modified files from project root
       updates.push("Formatting files...");

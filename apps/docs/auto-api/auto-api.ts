@@ -3,42 +3,7 @@ import { resolve } from "node:path";
 import type { AnatomyItem, ComponentParts, SubComponents } from "./types";
 import { parseComponentAnatomy, parseSingleComponentFromDir } from "./utils";
 
-export default function autoAPI() {
-  return {
-    name: "watch-monorepo-changes",
-    watchChange(file: string) {
-      const watchPath = resolve(__dirname, "../../../libs/components");
-      if (file.startsWith(watchPath)) {
-        console.log("looping on all child files", file);
-        loopOnAllChildFiles(file);
-      }
-    }
-  };
-}
-
-function writeToDocs(fullPath: string, componentName: string, api: ComponentParts) {
-  if (fullPath.includes("components")) {
-    const relDocPath = `../src/routes/${componentName}`;
-    const fullDocPath = resolve(__dirname, relDocPath);
-    const dirPath = resolve(fullDocPath, "auto-api");
-
-    if (!fs.existsSync(dirPath)) {
-      fs.mkdirSync(dirPath);
-    }
-
-    const json = JSON.stringify(api, null, 2);
-    const exportedApi = `export const api = ${json};`;
-
-    try {
-      fs.writeFileSync(resolve(dirPath, "api.ts"), exportedApi);
-      console.log("auto-api: successfully generated new JSON!");
-    } catch (err) {
-      console.error("Error writing API file:", err);
-    }
-  }
-}
-
-function loopOnAllChildFiles(filePath: string) {
+export function loopOnAllChildFiles(filePath: string) {
   const childComponentMatch = /[\\/](\w[\w-]*)\.tsx$/.exec(filePath);
   if (!childComponentMatch) {
     return;
@@ -76,4 +41,39 @@ function loopOnAllChildFiles(filePath: string) {
   }
 
   writeToDocs(filePath, componentName, store);
+}
+
+export default function autoAPI() {
+  return {
+    name: "watch-monorepo-changes",
+    watchChange(file: string) {
+      const watchPath = resolve(__dirname, "../../../libs/components");
+      if (file.startsWith(watchPath)) {
+        console.log("looping on all child files", file);
+        loopOnAllChildFiles(file);
+      }
+    }
+  };
+}
+
+function writeToDocs(fullPath: string, componentName: string, api: ComponentParts) {
+  if (fullPath.includes("components")) {
+    const relDocPath = `../src/routes/${componentName}`;
+    const fullDocPath = resolve(__dirname, relDocPath);
+    const dirPath = resolve(fullDocPath, "auto-api");
+
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath);
+    }
+
+    const json = JSON.stringify(api, null, 2);
+    const exportedApi = `export const api = ${json};`;
+
+    try {
+      fs.writeFileSync(resolve(dirPath, "api.ts"), exportedApi);
+      console.log("auto-api: successfully generated new JSON!");
+    } catch (err) {
+      console.error("Error writing API file:", err);
+    }
+  }
 }
