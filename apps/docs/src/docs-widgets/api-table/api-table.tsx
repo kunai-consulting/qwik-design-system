@@ -105,7 +105,7 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
               (item): item is ComponentEntry => !("anatomy" in item || "key" in item)
             )
             .sort(sortByPropsCount)
-            .map((item) => {
+            .map((item, index) => {
               const componentData = Object.entries(item)[0];
               const [itemName, itemProps] = componentData;
 
@@ -116,6 +116,10 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
 
               return (
                 <div key={itemName}>
+                  <div
+                    class={`h-[1px] bg-qwik-neutral-900 ${index === 0 ? "mt-0" : "mt-8"}`}
+                    aria-hidden="true"
+                  />
                   <SubHeading id={itemName}>{itemName}</SubHeading>
                   {itemProps.inheritsFrom && (
                     <p class="mb-4 text-sm text-gray-600 dark:text-gray-400 mt-4">
@@ -178,7 +182,7 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
                       <div class="rounded-md border-qwik-neutral-900 border">
                         <table class="w-full border-collapse text-sm">
                           <thead>
-                            <tr class="border-b border-qwik-neutral-900 dark:border-gray-800 bg-qwik-neutral-950">
+                            <tr class="border-b border-qwik-neutral-900 bg-qwik-neutral-950">
                               <th class="py-4 px-4 text-left font-medium">Attribute</th>
                               <th class="py-4 px-4 text-left font-medium">Description</th>
                             </tr>
@@ -214,7 +218,7 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
           <div class="rounded-md border-qwik-neutral-900 border mt-6">
             <table class="w-full border-collapse border-spacing-1 text-sm">
               <thead>
-                <tr class="border-b border-qwik-neutral-900 dark:border-gray-800 bg-qwik-neutral-950">
+                <tr class="border-b border-qwik-neutral-900 bg-qwik-neutral-950">
                   <th class="py-4 px-4 text-left font-medium rounded-tl-md">Key</th>
                   <th class="py-4 px-4 text-left font-medium rounded-tr-md">
                     Description
