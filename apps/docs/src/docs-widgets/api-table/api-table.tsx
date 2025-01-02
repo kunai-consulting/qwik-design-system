@@ -119,7 +119,10 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
                   <SubHeading id={itemName}>{itemName}</SubHeading>
                   {itemProps.inheritsFrom && (
                     <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-                      Inherits from: <code>{itemProps.inheritsFrom}</code>
+                      Inherits from:{" "}
+                      <code class="px-2 py-1 bg-qwik-neutral-950 text-qwik-blue-300">
+                        {`<${itemProps.inheritsFrom} />`}
+                      </code>
                     </p>
                   )}
 
@@ -127,42 +130,44 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
                   {propsArray && propsArray.length > 0 && (
                     <>
                       <h4 class="mb-2 font-medium">Props</h4>
-                      <table class="w-full border-collapse text-sm mb-6">
-                        <thead>
-                          <tr class="border-b border-gray-200 dark:border-gray-800">
-                            <th class="py-4 px-4 text-left font-medium">Prop</th>
-                            <th class="py-4 px-4 text-left font-medium">Type</th>
-                            <th class="py-4 px-4 text-left font-medium">Default</th>
-                            <th class="py-4 px-4 text-left font-medium">Description</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {propsArray.map((prop: ParsedProps) => (
-                            <tr
-                              key={prop.prop}
-                              class="border-b border-gray-200 dark:border-gray-800"
-                            >
-                              <td class="py-4 px-4 font-mono text-sm">{prop.prop}</td>
-                              <td class="py-4 px-4 font-mono text-sm">{prop.type}</td>
-                              <td class="py-4 px-4 font-mono text-sm">
-                                {prop.defaultValue || "-"}
-                              </td>
-                              <td class="py-4 px-4">
-                                {prop.comment && (
-                                  <Popover.Root>
-                                    <Popover.Trigger class="text-blue-500 hover:text-blue-600">
-                                      Details
-                                    </Popover.Trigger>
-                                    <Popover.Panel class="p-4 max-w-xs">
-                                      {prop.comment}
-                                    </Popover.Panel>
-                                  </Popover.Root>
-                                )}
-                              </td>
+                      <div class="rounded-md border-qwik-neutral-900 border">
+                        <table class="w-full border-collapse text-sm">
+                          <thead>
+                            <tr class="border-b border-qwik-neutral-900 dark:border-gray-800 bg-qwik-neutral-950">
+                              <th class="py-4 px-4 text-left font-medium">Prop</th>
+                              <th class="py-4 px-4 text-left font-medium">Type</th>
+                              <th class="py-4 px-4 text-left font-medium">Default</th>
+                              <th class="py-4 px-4 text-left font-medium">Description</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            {propsArray.map((prop: ParsedProps) => (
+                              <tr
+                                key={prop.prop}
+                                class="border-b last-of-type:border-b-0 border-qwik-neutral-900"
+                              >
+                                <td class="py-4 px-4 font-mono text-sm">{prop.prop}</td>
+                                <td class="py-4 px-4 font-mono text-sm">{prop.type}</td>
+                                <td class="py-4 px-4 font-mono text-sm">
+                                  {prop.defaultValue || "-"}
+                                </td>
+                                <td class="py-4 px-4">
+                                  {prop.comment && (
+                                    <Popover.Root>
+                                      <Popover.Trigger class="text-blue-500 hover:text-blue-600">
+                                        Details
+                                      </Popover.Trigger>
+                                      <Popover.Panel class="p-4 max-w-xs">
+                                        {prop.comment}
+                                      </Popover.Panel>
+                                    </Popover.Root>
+                                  )}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </>
                   )}
 
@@ -170,25 +175,29 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
                   {itemProps.dataAttributes && itemProps.dataAttributes.length > 0 && (
                     <>
                       <h4 class="mb-2 font-medium">Data Attributes</h4>
-                      <table class="w-full border-collapse text-sm">
-                        <thead>
-                          <tr class="border-b border-gray-200 dark:border-gray-800">
-                            <th class="py-4 px-4 text-left font-medium">Attribute</th>
-                            <th class="py-4 px-4 text-left font-medium">Description</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {itemProps.dataAttributes.map((attr: DataAttribute) => (
-                            <tr
-                              key={attr.name}
-                              class="border-b border-gray-200 dark:border-gray-800"
-                            >
-                              <td class="py-4 px-4 font-mono text-sm">{attr.name}</td>
-                              <td class="py-4 px-4">{attr.comment}</td>
+                      <div class="rounded-md border-qwik-neutral-900 border">
+                        <table class="w-full border-collapse text-sm">
+                          <thead>
+                            <tr class="border-b border-qwik-neutral-900 dark:border-gray-800 bg-qwik-neutral-950">
+                              <th class="py-4 px-4 text-left font-medium">Attribute</th>
+                              <th class="py-4 px-4 text-left font-medium">Description</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            {itemProps.dataAttributes.map((attr: DataAttribute) => (
+                              <tr
+                                key={attr.name}
+                                class="border-b last-of-type:border-b-0 border-qwik-neutral-900"
+                              >
+                                <td class="py-4 px-4 font-mono text-sm text-qwik-blue-200">
+                                  {attr.name}
+                                </td>
+                                <td class="py-4 px-4">{attr.comment}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </>
                   )}
                 </div>
