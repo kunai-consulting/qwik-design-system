@@ -20,7 +20,17 @@ export const AnatomyTable = component$(() => {
                 class="border-b last-of-type:border-b-0 border-qwik-neutral-900"
               >
                 <td class="py-4 px-4 font-mono text-sm">
-                  <span class="bg-qwik-neutral-950 text-qwik-blue-300 p-1 rounded-sm">{`<${item.name}>`}</span>
+                  <span class="bg-qwik-neutral-950 rounded-sm block p-1 px-2 w-fit">
+                    <span class="text-qwik-neutral-400">{"<"}</span>
+                    <span class="text-white">{item.name.split(".")[0]}</span>
+                    {item.name.includes(".") && (
+                      <>
+                        <span class="text-qwik-neutral-400">.</span>
+                        <span class="text-qwik-blue-300">{item.name.split(".")[1]}</span>
+                      </>
+                    )}
+                    <span class="text-qwik-neutral-400">{">"}</span>
+                  </span>
                 </td>
                 <td class="py-4 px-4">{item.description || "—"}</td>
               </tr>
