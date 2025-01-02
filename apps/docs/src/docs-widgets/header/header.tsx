@@ -1,10 +1,17 @@
 import { component$ } from "@builder.io/qwik";
-import { DocsAI } from "../docs-ai/docs-ai";
+import { APIReference } from "../docs-ai/api";
+import { DocsAI } from "../docs-ai/docs";
+import { isDev } from "@builder.io/qwik/build";
 
 export const Header = component$(() => {
   return (
-    <header>
-      <DocsAI />
+    <header class="flex gap-2">
+      {isDev && (
+        <>
+          <APIReference />
+          <DocsAI />
+        </>
+      )}
     </header>
   );
 });

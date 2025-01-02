@@ -5,6 +5,7 @@ import * as fs from "node:fs";
 import { resolve } from "node:path";
 import { execSync } from "node:child_process";
 import { transformPublicTypes, getSourceFile } from "../../../auto-api/utils";
+import { AIButton } from "./ai-button";
 
 const generateComponentDocs = server$(
   async (files: Array<{ name: string; content: string }>) => {
@@ -190,7 +191,7 @@ const generateKeyboardDocs = server$(
   }
 );
 
-export const DocsAI = component$(() => {
+export const APIReference = component$(() => {
   const loc = useLocation();
   const isGenerating = useSignal(false);
   const status = useSignal("");
@@ -313,35 +314,20 @@ export const DocsAI = component$(() => {
   });
 
   return (
-    <div class="flex gap-2">
-      <AIButton
-        onClick$={async () => {
-          isGenerating.value = true;
-          status.value = "Generating...";
-          try {
-            await generateAPI();
-          } finally {
-            isGenerating.value = false;
-            status.value = "";
-          }
-        }}
-        disabled={isGenerating.value}
-      >
-        {isGenerating.value ? status.value : "Generate API"}
-      </AIButton>
-      <AIButton>Generate Docs</AIButton>
-    </div>
-  );
-});
-
-export const AIButton = component$((props: PropsOf<"button">) => {
-  return (
-    <button
-      class="bg-qwik-purple-700 text-white px-4 py-2 rounded-md disabled:opacity-50"
-      type="button"
-      {...props}
+    <AIButton
+      onClick$={async () => {
+        isGenerating.value = true;
+        status.value = "Generating...";
+        try {
+          await generateAPI();
+        } finally {
+          isGenerating.value = false;
+          status.value = "";
+        }
+      }}
+      disabled={isGenerating.value}
     >
-      <Slot />
-    </button>
+      {isGenerating.value ? status.value : "Generate API"}
+    </AIButton>
   );
 });
