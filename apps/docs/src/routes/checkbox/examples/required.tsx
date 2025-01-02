@@ -26,7 +26,7 @@ export default component$(() => {
 export const TermsCheckbox = component$(() => {
   return (
     <Checkbox.Root name="terms" required>
-      <Checkbox.HiddenNativeInput />
+      <Checkbox.HiddenInput />
       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
         <Checkbox.Trigger class="checkbox-trigger">
           <Checkbox.Indicator class="checkbox-indicator">

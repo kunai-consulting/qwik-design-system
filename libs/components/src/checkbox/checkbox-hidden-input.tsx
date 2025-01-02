@@ -1,9 +1,11 @@
 import { $, component$, useContext, type PropsOf } from "@builder.io/qwik";
 import { VisuallyHidden } from "../visually-hidden/visually-hidden";
 import { checkboxContextId } from "./checkbox-context";
+
 type PublicCheckboxHiddenNativeInputProps = PropsOf<"input">;
+
 /** A hidden native checkbox input for form submission */
-export const CheckboxHiddenNativeInput = component$(
+export const CheckboxHiddenInput = component$(
   (props: PublicCheckboxHiddenNativeInputProps) => {
     const context = useContext(checkboxContextId);
     // In the case where the native checkbox is checked, but the state is not, we need to update the state

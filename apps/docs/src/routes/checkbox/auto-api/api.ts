@@ -185,7 +185,8 @@ export const api = {
       "description": "A component that renders the description text for a checkbox"
     },
     {
-      "name": "Checkbox.HiddenNativeInput"
+      "name": "Checkbox.HiddenInput",
+      "description": "A hidden native checkbox input for form submission"
     },
     {
       "name": "Checkbox.ErrorMessage",

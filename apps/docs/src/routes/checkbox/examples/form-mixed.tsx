@@ -36,7 +36,7 @@ export const TermsCheckbox = component$(
   ({ isChecked }: { isChecked: Signal<boolean | "mixed"> }) => {
     return (
       <Checkbox.Root bind:checked={isChecked}>
-        <Checkbox.HiddenNativeInput />
+        <Checkbox.HiddenInput />
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <Checkbox.Trigger class="checkbox-trigger">
             <Checkbox.Indicator class="checkbox-indicator">
