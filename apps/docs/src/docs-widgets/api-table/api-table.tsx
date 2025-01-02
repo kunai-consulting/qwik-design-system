@@ -118,7 +118,7 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
                 <div key={itemName}>
                   <SubHeading id={itemName}>{itemName}</SubHeading>
                   {itemProps.inheritsFrom && (
-                    <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <p class="mb-4 text-sm text-gray-600 dark:text-gray-400 mt-4">
                       Inherits from:{" "}
                       <code class="px-2 py-1 bg-qwik-neutral-950 text-qwik-blue-300">
                         {`<${itemProps.inheritsFrom} />`}
@@ -130,7 +130,7 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
                   {propsArray && propsArray.length > 0 && (
                     <>
                       <h4 class="mb-2 font-medium">Props</h4>
-                      <div class="rounded-md border-qwik-neutral-900 border">
+                      <div class="rounded-md border-qwik-neutral-900 border mb-6">
                         <table class="w-full border-collapse text-sm">
                           <thead>
                             <tr class="border-b border-qwik-neutral-900 dark:border-gray-800 bg-qwik-neutral-950">
