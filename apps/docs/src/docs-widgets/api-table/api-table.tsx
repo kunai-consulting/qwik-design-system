@@ -202,26 +202,33 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
         <>
           <MainHeading id="accessibility">Accessibility</MainHeading>
           <SubHeading id="keyboard-interactions">Keyboard Interactions</SubHeading>
-          <table class="w-full border-collapse text-sm">
-            <thead>
-              <tr class="border-b border-qwik-neutral-900 dark:border-gray-800">
-                <th class="py-4 px-4 text-left font-medium">Key</th>
-                <th class="py-4 px-4 text-left font-medium">Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              {api.keyboardInteractions.map((interaction) => (
-                <tr key={interaction.key} class="border-b border-qwik-neutral-900">
-                  <td class="py-4 px-4 font-mono text-sm flex items-center">
-                    <span class="bg-qwik-neutral-800 px-3 py-1 rounded-md border-b-2 border-qwik-neutral-900">
-                      {interaction.key}
-                    </span>
-                  </td>
-                  <td class="py-4 px-4">{interaction.comment}</td>
+          <div class="rounded-md border-qwik-neutral-900 border mt-6">
+            <table class="w-full border-collapse border-spacing-1 text-sm">
+              <thead>
+                <tr class="border-b border-qwik-neutral-900 dark:border-gray-800 bg-qwik-neutral-950">
+                  <th class="py-4 px-4 text-left font-medium rounded-tl-md">Key</th>
+                  <th class="py-4 px-4 text-left font-medium rounded-tr-md">
+                    Description
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {api.keyboardInteractions.map((interaction) => (
+                  <tr
+                    key={interaction.key}
+                    class="border-b last-of-type:border-b-0 border-qwik-neutral-900"
+                  >
+                    <td class="py-4 px-4 font-mono text-sm flex items-center">
+                      <span class="bg-qwik-neutral-800 px-3 py-1 rounded-md border-b-2 border-qwik-neutral-900">
+                        {interaction.key}
+                      </span>
+                    </td>
+                    <td class="py-4 px-4">{interaction.comment}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </>
       )}
     </div>
