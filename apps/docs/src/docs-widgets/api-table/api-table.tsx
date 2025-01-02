@@ -204,18 +204,19 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
           <SubHeading id="keyboard-interactions">Keyboard Interactions</SubHeading>
           <table class="w-full border-collapse text-sm">
             <thead>
-              <tr class="border-b border-gray-200 dark:border-gray-800">
+              <tr class="border-b border-qwik-neutral-900 dark:border-gray-800">
                 <th class="py-4 px-4 text-left font-medium">Key</th>
                 <th class="py-4 px-4 text-left font-medium">Description</th>
               </tr>
             </thead>
             <tbody>
               {api.keyboardInteractions.map((interaction) => (
-                <tr
-                  key={interaction.key}
-                  class="border-b border-gray-200 dark:border-gray-800"
-                >
-                  <td class="py-4 px-4 font-mono text-sm">{interaction.key}</td>
+                <tr key={interaction.key} class="border-b border-qwik-neutral-900">
+                  <td class="py-4 px-4 font-mono text-sm flex items-center">
+                    <span class="bg-qwik-neutral-800 px-3 py-1 rounded-md border-b-2 border-qwik-neutral-900">
+                      {interaction.key}
+                    </span>
+                  </td>
                   <td class="py-4 px-4">{interaction.comment}</td>
                 </tr>
               ))}
