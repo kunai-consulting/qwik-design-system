@@ -55,122 +55,117 @@ const generateDocs = server$(async (route: string) => {
 
     const updates = [];
 
-    // 1. overview
-    const introResponse = await anthropic.messages.create({
+    const initialResponse = await anthropic.messages.create({
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 4096,
       messages: [
         {
           role: "user",
-          content: `ONLY OUTPUT PRODUCTION WRITING. NOTHING TO DO WITH THE PROMPT.
-          
-          Analyze this checkbox component implementation and write a minimal introduction.
-            Component implementation:
-            ${formattedComponents}
+          content: `Create component documentation following this structure:
 
-            Examples:
-            ${formattedExamples}
-
-            Required format:
-
-            # Component name
-
-            [One-line description that a 15 year old can understand of what the component is and how it relates to ui development]
-
-            Example:
-
-            Checkbox
-
-            A control that enables users to make binary (or ternary) choices through selection and deselection.
-
-            Next is the hero example.
-
-            <Showcase name="hero" />
-
-            Rules:
-            - Description must be based on the actual code
-            - Focus on the component's core form control purpose
-            - Keep existing code blocks if present
-            - Document how to build with this headless component, NOT how the headless component is built
-            `
-        }
-      ]
-    });
-
-    // 2. component state
-    const stateResponse = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
-      max_tokens: 4096,
-      messages: [
-        {
-          role: "user",
-          content: `Document the core state management examples.
-            Component implementation:
-            ${formattedComponents}
-
-            Examples:
-            ${formattedExamples}
-
-            Required section:
-            ## Component State
-
-            Analyze the examples and group them based on their core state management patterns.
-
-            Rules:
-            - One clear sentence per example
-            - Use note blocks for important details: > Detail here (1 per example max)
-            - Use <Showcase name="example-name" /> for examples
-            - Only include examples that actually exist
-            - Don't wrap <Showcase /> components in code blocks
-            - Keep existing code blocks if present`
-        }
-      ]
-    });
-
-    // 3. improvise examples
-    const additionalResponse = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
-      max_tokens: 4096,
-      messages: [
-        {
-          role: "user",
-          content: `Organize the remaining examples based on their relationships.
         Component implementation:
         ${formattedComponents}
 
         Examples:
         ${formattedExamples}
 
-        Rules:
-        - Analyze examples and group by related functionality
-        - Create logical section headings based on the examples
-        - One sentence description per example
-        - Use note blocks for important details
-        - Use <Showcase name="example-name" /> for examples
-        - Don't wrap <Showcase /> components in code blocks
-        - Keep existing code blocks if present`
+        Write documentation that:
+        1. Start with a practical description focused on what users can do with it
+           Example: "A checkbox lets users select or deselect an option."
+           - Use simple, direct language
+           - One line only
+           - Focus on the core action users can take
+        
+        2. Preview section with <Showcase name="hero" />
+        
+        3. Building blocks section with basic implementation
+        
+        4. For each usage pattern:
+           - Write a brief, practical explanation focused on user needs
+           - Add <Showcase name="[example-file-name]" /> using the actual example file names
+           - No code blocks (they're handled by the Showcase component)
+        
+        5. Group patterns from basic to advanced
+        
+        6. Add keyboard interactions at the end if applicable
+
+        Focus on what users can do with the component rather than technical descriptions.`
         }
       ]
     });
 
-    const getResponseText = (response: Anthropic.Messages.Message) => {
-      const content = response.content[0];
-      return content?.type === "text" ? content.text : "";
-    };
+    const evaluationResponse = await anthropic.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 4096,
+      messages: [
+        {
+          role: "user",
+          content: `Review this documentation against the component:
+
+        Component implementation:
+        ${formattedComponents}
+
+        Examples:
+        ${formattedExamples}
+
+        Documentation to review:
+        ${getResponseText(initialResponse)}
+
+        Check for:
+        1. Simple, direct language in descriptions
+           - One line for component description
+           - Focus on core user actions
+           - No marketing terms like "versatile" or "powerful"
+        
+        2. Proper showcase components:
+           - <Showcase name="hero" /> for preview
+           - <Showcase name="[example-file-name]" /> using actual file names
+           - No code blocks
+        
+        3. Brief, practical explanations for each pattern
+        4. Logical progression from basic to advanced patterns
+        
+        Provide specific improvement suggestions.`
+        }
+      ]
+    });
+
+    const finalResponse = await anthropic.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 4096,
+      messages: [
+        {
+          role: "user",
+          content: `Improve this documentation based on the evaluation while maintaining:
+
+        Component implementation:
+        ${formattedComponents}
+
+        Examples:
+        ${formattedExamples}
+
+        Original docs:
+        ${getResponseText(initialResponse)}
+
+        Editor feedback:
+        ${getResponseText(evaluationResponse)}
+
+        Requirements:
+        1. Keep language simple and direct
+        2. Focus on user actions and practical usage
+        3. Use proper showcase components
+        4. Brief explanations for each pattern
+        5. No code blocks`
+        }
+      ]
+    });
 
     const mdxContent = [
       'import { api } from "./auto-api/api";',
-      getResponseText(introResponse),
-      `## Anatomy
-      
-       <AnatomyTable />
-      `,
-      getResponseText(stateResponse),
-      getResponseText(additionalResponse),
+      getResponseText(finalResponse),
+      `## Anatomy\n\n<AnatomyTable />`,
       "<APITable api={api} />"
-    ]
-      .filter(Boolean)
-      .join("\n\n");
+    ].join("\n\n");
 
     fs.writeFileSync(docsPath, mdxContent);
     updates.push("Documentation updated");
@@ -183,6 +178,11 @@ const generateDocs = server$(async (route: string) => {
     ];
   }
 });
+
+const getResponseText = (response: Anthropic.Messages.Message) => {
+  const content = response.content[0];
+  return content?.type === "text" ? content.text : "";
+};
 
 export const DocsAI = component$(() => {
   const isGenerating = useSignal(false);
