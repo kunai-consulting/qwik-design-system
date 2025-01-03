@@ -215,4 +215,44 @@ test.describe("a11y", () => {
       }
     }
   });
+
+  test(`GIVEN a scroll area
+        WHEN checking viewport attributes
+        THEN it should have proper accessibility attributes`, async ({ page }) => {
+    const d = await setup(page, "vertical-test");
+    const viewport = d.getViewport();
+
+    // Check required accessibility attributes
+    await expect(viewport).toHaveAttribute("tabindex", "0");
+    await expect(viewport).toHaveAttribute("role", "region");
+    await expect(viewport).toHaveAttribute("aria-label");
+  });
+
+  test(`GIVEN a scroll area
+        WHEN focusing the viewport
+        THEN it should be focusable`, async ({ page }) => {
+    const d = await setup(page, "vertical-test");
+    const viewport = d.getViewport();
+
+    // Try to focus the viewport
+    await viewport.focus();
+
+    // Check if viewport is focused
+    const isFocused = await viewport.evaluate(el => document.activeElement === el);
+    expect(isFocused).toBe(true);
+  });
+
+  test(`GIVEN a scroll area
+        WHEN tabbing through the page
+        THEN viewport should be in the tab order`, async ({ page }) => {
+    const d = await setup(page, "vertical-test");
+    const viewport = d.getViewport();
+
+    // Start from the beginning of the page
+    await page.keyboard.press("Tab");
+
+    // Check if viewport becomes focused
+    const isFocused = await viewport.evaluate(el => document.activeElement === el);
+    expect(isFocused).toBe(true);
+  });
 });

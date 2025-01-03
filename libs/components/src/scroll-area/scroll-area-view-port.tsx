@@ -49,6 +49,9 @@ export const ScrollAreaViewPort = component$<ViewPortProps>((props) => {
       data-scroll-area-viewport
       onScroll$={onScroll$}
       ref={context.viewportRef}
+      tabIndex={0}
+      role="region"
+      aria-label="Scrollable content"
     >
       <Slot />
     </div>

@@ -5,7 +5,6 @@ import {
   type QRL,
   Slot,
   useContext,
-  useSignal
 } from "@builder.io/qwik";
 import { scrollAreaContextId } from "./scroll-area-context";
 
