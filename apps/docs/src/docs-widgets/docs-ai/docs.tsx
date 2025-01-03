@@ -15,24 +15,27 @@ const generateDocs = server$(async (route: string) => {
     }
 
     const examplesPath = resolve(process.cwd(), `src/routes/${route}/examples`);
-    console.log("Looking for examples in:", examplesPath);
-
-    if (!fs.existsSync(examplesPath)) {
-      throw new Error(`No examples folder found for ${route}`);
-    }
-
     const examples = fs
       .readdirSync(examplesPath)
       .filter((f) => f.endsWith(".tsx"))
       .map((file) => ({
-        name: file.replace(".tsx", ""),
+        name: file,
         content: fs.readFileSync(resolve(examplesPath, file), "utf-8")
       }));
 
-    console.log(
-      "Found examples:",
-      examples.map((e) => e.name)
-    );
+    const formattedExamples = examples
+      .map(
+        (e) => `=== ${e.name} ===
+${e.content}
+`
+      )
+      .join("\n");
+
+    console.log("Found examples:", formattedExamples);
+
+    if (!fs.existsSync(examplesPath)) {
+      throw new Error(`No examples folder found for ${route}`);
+    }
 
     const docsPath = resolve(process.cwd(), `src/routes/${route}/index.mdx`);
     let existingDocs = "";
@@ -73,14 +76,7 @@ Component implementation:
 ${formattedComponents}
 
 Examples:
-${examples
-  .map(
-    (e) => `
-=== ${e.name} ===
-${e.content}
-`
-  )
-  .join("\n")}
+${formattedExamples}
 
 Required format:
 import { api } from "./auto-api/api";

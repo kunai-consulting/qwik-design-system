@@ -41,13 +41,10 @@ export const SubHeading = component$((props: PropsOf<"h3">) => {
 });
 
 export const TOC = component$(({ headings }: { headings: ContentHeading[] }) => {
-  console.log("init toc");
   const context = useContext(rootContextId);
 
   useTask$(() => {
     context.allHeadingsSig.value = [...headings, ...context.allHeadingsSig.value];
-
-    console.log("context.allHeadingsSig.value", context.allHeadingsSig.value);
   });
 
   if (headings.length === 0) {
