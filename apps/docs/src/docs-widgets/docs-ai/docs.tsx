@@ -9,33 +9,40 @@ const generateDocs = server$(async (route: string) => {
   try {
     console.log("Starting docs generation for route:", route);
 
+    // Validate API key first
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
     if (!process.env.ANTHROPIC_API_KEY) {
       throw new Error("ANTHROPIC_API_KEY is not set");
     }
 
-    const examplesPath = resolve(process.cwd(), `src/routes/${route}/examples`);
-    const examples = fs
-      .readdirSync(examplesPath)
-      .filter((f) => f.endsWith(".tsx"))
-      .map((file) => ({
-        name: file,
-        content: fs.readFileSync(resolve(examplesPath, file), "utf-8")
-      }));
+    // Consolidated file reading and formatting
+    const readAndFormatFiles = (
+      path: string,
+      filter = (f: string) => f.endsWith(".tsx")
+    ) => {
+      if (!fs.existsSync(path)) {
+        throw new Error(`No folder found at ${path}`);
+      }
 
-    const formattedExamples = examples
-      .map(
-        (e) => `=== ${e.name} ===
-${e.content}
-`
-      )
-      .join("\n");
+      return fs
+        .readdirSync(path)
+        .filter(filter)
+        .map((file) => ({
+          name: file,
+          content: fs.readFileSync(resolve(path, file), "utf-8")
+        }))
+        .map(({ name, content }) => `=== ${name} ===\n${content}\n`)
+        .join("\n");
+    };
+
+    const examplesPath = resolve(process.cwd(), `src/routes/${route}/examples`);
+    const componentPath = resolve(process.cwd(), `../../libs/components/src/${route}`);
+
+    const formattedExamples = readAndFormatFiles(examplesPath);
+    const formattedComponents = readAndFormatFiles(componentPath);
 
     console.log("Found examples:", formattedExamples);
-
-    if (!fs.existsSync(examplesPath)) {
-      throw new Error(`No examples folder found for ${route}`);
-    }
+    console.log("formattedComponents:", formattedComponents);
 
     const docsPath = resolve(process.cwd(), `src/routes/${route}/index.mdx`);
     let existingDocs = "";
@@ -47,22 +54,6 @@ ${e.content}
     }
 
     const updates = [];
-
-    const componentPath = resolve(process.cwd(), `../../libs/components/src/${route}`);
-    const componentFiles = fs
-      .readdirSync(componentPath)
-      .filter((f) => f.endsWith(".tsx"))
-      .map((file) => fs.readFileSync(resolve(componentPath, file), "utf-8"));
-
-    const formattedComponents = Object.entries(componentFiles)
-      .map(
-        ([filename, content]) => `=== ${filename} ===
-${content}
-`
-      )
-      .join("\n");
-
-    console.log("formattedComponents", formattedComponents);
 
     // 1. overview
     const introResponse = await anthropic.messages.create({
@@ -107,21 +98,24 @@ Rules:
         {
           role: "user",
           content: `Document the core state management examples.
-        Component implementation: ${JSON.stringify(componentFiles)}
-        Examples: ${examples.map((e) => `\n--- ${e.name} ---\n${e.content}`).join("\n")}
-        
-        Required section:
-        ## Component State
+Component implementation:
+${formattedComponents}
 
-        Analyze the examples and group them based on their core state management patterns.
+Examples:
+${formattedExamples}
 
-        Rules:
-        - One clear sentence per example
-        - Use note blocks for important details: > [!NOTE] Detail here
-        - Use <Showcase name="example-name" /> for examples
-        - Only include examples that actually exist
-        - Don't wrap <Showcase /> components in code blocks
-        - Keep existing code blocks if present`
+Required section:
+## Component State
+
+Analyze the examples and group them based on their core state management patterns.
+
+Rules:
+- One clear sentence per example
+- Use note blocks for important details: > [!NOTE] Detail here
+- Use <Showcase name="example-name" /> for examples
+- Only include examples that actually exist
+- Don't wrap <Showcase /> components in code blocks
+- Keep existing code blocks if present`
         }
       ]
     });
@@ -134,17 +128,20 @@ Rules:
         {
           role: "user",
           content: `Organize the remaining examples based on their relationships.
-        Component implementation: ${JSON.stringify(componentFiles)}
-        Examples: ${examples.map((e) => `\n--- ${e.name} ---\n${e.content}`).join("\n")}
-        
-        Rules:
-        - Analyze examples and group by related functionality
-        - Create logical section headings based on the examples
-        - One sentence description per example
-        - Use note blocks for important details
-        - Use <Showcase name="example-name" /> for examples
-        - Don't wrap <Showcase /> components in code blocks
-        - Keep existing code blocks if present`
+Component implementation:
+${formattedComponents}
+
+Examples:
+${formattedExamples}
+
+Rules:
+- Analyze examples and group by related functionality
+- Create logical section headings based on the examples
+- One sentence description per example
+- Use note blocks for important details
+- Use <Showcase name="example-name" /> for examples
+- Don't wrap <Showcase /> components in code blocks
+- Keep existing code blocks if present`
         }
       ]
     });
