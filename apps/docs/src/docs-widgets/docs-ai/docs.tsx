@@ -62,30 +62,37 @@ const generateDocs = server$(async (route: string) => {
       messages: [
         {
           role: "user",
-          content: `Analyze this checkbox component implementation and write a minimal introduction.
-Component implementation:
-${formattedComponents}
+          content: `ONLY OUTPUT PRODUCTION WRITING. NOTHING TO DO WITH THE PROMPT.
+          
+          Analyze this checkbox component implementation and write a minimal introduction.
+            Component implementation:
+            ${formattedComponents}
 
-Examples:
-${formattedExamples}
+            Examples:
+            ${formattedExamples}
 
-Required format:
-import { api } from "./auto-api/api";
+            Required format:
 
-# Checkbox
-[One-line description based on the actual implementation]
+            # Component name
 
-<Showcase name="hero" />
+            [One-line description that a 15 year old can understand of what the component is and how it relates to ui development]
 
-## Anatomy
+            Example:
 
-<AnatomyTable />
+            Checkbox
 
-Rules:
-- Must start with the api import
-- Description must be based on the actual code
-- Focus on the component's core form control purpose
-- Keep existing code blocks if present`
+            A control that enables users to make binary (or ternary) choices through selection and deselection.
+
+            Next is the hero example.
+
+            <Showcase name="hero" />
+
+            Rules:
+            - Description must be based on the actual code
+            - Focus on the component's core form control purpose
+            - Keep existing code blocks if present
+            - Document how to build with this headless component, NOT how the headless component is built
+            `
         }
       ]
     });
@@ -98,24 +105,24 @@ Rules:
         {
           role: "user",
           content: `Document the core state management examples.
-Component implementation:
-${formattedComponents}
+            Component implementation:
+            ${formattedComponents}
 
-Examples:
-${formattedExamples}
+            Examples:
+            ${formattedExamples}
 
-Required section:
-## Component State
+            Required section:
+            ## Component State
 
-Analyze the examples and group them based on their core state management patterns.
+            Analyze the examples and group them based on their core state management patterns.
 
-Rules:
-- One clear sentence per example
-- Use note blocks for important details: > [!NOTE] Detail here
-- Use <Showcase name="example-name" /> for examples
-- Only include examples that actually exist
-- Don't wrap <Showcase /> components in code blocks
-- Keep existing code blocks if present`
+            Rules:
+            - One clear sentence per example
+            - Use note blocks for important details: > Detail here (1 per example max)
+            - Use <Showcase name="example-name" /> for examples
+            - Only include examples that actually exist
+            - Don't wrap <Showcase /> components in code blocks
+            - Keep existing code blocks if present`
         }
       ]
     });
@@ -128,32 +135,42 @@ Rules:
         {
           role: "user",
           content: `Organize the remaining examples based on their relationships.
-Component implementation:
-${formattedComponents}
+        Component implementation:
+        ${formattedComponents}
 
-Examples:
-${formattedExamples}
+        Examples:
+        ${formattedExamples}
 
-Rules:
-- Analyze examples and group by related functionality
-- Create logical section headings based on the examples
-- One sentence description per example
-- Use note blocks for important details
-- Use <Showcase name="example-name" /> for examples
-- Don't wrap <Showcase /> components in code blocks
-- Keep existing code blocks if present`
+        Rules:
+        - Analyze examples and group by related functionality
+        - Create logical section headings based on the examples
+        - One sentence description per example
+        - Use note blocks for important details
+        - Use <Showcase name="example-name" /> for examples
+        - Don't wrap <Showcase /> components in code blocks
+        - Keep existing code blocks if present`
         }
       ]
     });
 
+    const getResponseText = (response: Anthropic.Messages.Message) => {
+      const content = response.content[0];
+      return content?.type === "text" ? content.text : "";
+    };
+
     const mdxContent = [
-      introResponse.content[0].type === "text" ? introResponse.content[0].text : "",
-      stateResponse.content[0].type === "text" ? stateResponse.content[0].text : "",
-      additionalResponse.content[0].type === "text"
-        ? additionalResponse.content[0].text
-        : "",
+      'import { api } from "./auto-api/api";',
+      getResponseText(introResponse),
+      `## Anatomy
+      
+       <AnatomyTable />
+      `,
+      getResponseText(stateResponse),
+      getResponseText(additionalResponse),
       "<APITable api={api} />"
-    ].join("\n\n");
+    ]
+      .filter(Boolean)
+      .join("\n\n");
 
     fs.writeFileSync(docsPath, mdxContent);
     updates.push("Documentation updated");
