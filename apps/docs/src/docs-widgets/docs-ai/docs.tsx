@@ -5,69 +5,15 @@ import * as fs from "node:fs";
 import { resolve } from "node:path";
 import { AIButton } from "./ai-button";
 
-const generateDocs = server$(async (route: string) => {
-  try {
-    console.log("Starting docs generation for route:", route);
-
-    // Validate API key first
-    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-    if (!process.env.ANTHROPIC_API_KEY) {
-      throw new Error("ANTHROPIC_API_KEY is not set");
-    }
-
-    // Consolidated file reading and formatting
-    const readAndFormatFiles = (
-      path: string,
-      filter = (f: string) => f.endsWith(".tsx")
-    ) => {
-      if (!fs.existsSync(path)) {
-        throw new Error(`No folder found at ${path}`);
-      }
-
-      return fs
-        .readdirSync(path)
-        .filter(filter)
-        .map((file) => ({
-          name: file,
-          content: fs.readFileSync(resolve(path, file), "utf-8")
-        }))
-        .map(({ name, content }) => `=== ${name} ===\n${content}\n`)
-        .join("\n");
-    };
-
-    const examplesPath = resolve(process.cwd(), `src/routes/${route}/examples`);
-    const componentPath = resolve(process.cwd(), `../../libs/components/src/${route}`);
-
-    const formattedExamples = readAndFormatFiles(examplesPath);
-    const formattedComponents = readAndFormatFiles(componentPath);
-
-    console.log("Found examples:", formattedExamples);
-    console.log("formattedComponents:", formattedComponents);
-
-    const docsPath = resolve(process.cwd(), `src/routes/${route}/index.mdx`);
-    let existingDocs = "";
-    try {
-      existingDocs = fs.readFileSync(docsPath, "utf-8");
-      console.log("Found existing docs");
-    } catch (e) {
-      console.log("No existing docs found");
-    }
-
-    const updates = [];
-
-    const initialResponse = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
-      max_tokens: 4096,
-      messages: [
-        {
-          role: "user",
-          content: `Create component documentation following this structure:
-
-        Component implementation:
-        ${formattedComponents}
-
-        Examples:
-        ${formattedExamples}
+const generateInitialDocs = server$(async (promptPrefix: string) => {
+  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  return anthropic.messages.create({
+    model: "claude-3-5-sonnet-20241022",
+    max_tokens: 8192,
+    messages: [
+      {
+        role: "user",
+        content: `${promptPrefix}
 
         Write documentation that:
         1. Start with a practical description focused on what users can do with it
@@ -90,26 +36,23 @@ const generateDocs = server$(async (route: string) => {
         6. Add keyboard interactions at the end if applicable
 
         Focus on what users can do with the component rather than technical descriptions.`
-        }
-      ]
-    });
+      }
+    ]
+  });
+});
 
-    const evaluationResponse = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
-      max_tokens: 4096,
-      messages: [
-        {
-          role: "user",
-          content: `Review this documentation against the component:
-
-        Component implementation:
-        ${formattedComponents}
-
-        Examples:
-        ${formattedExamples}
+const evaluateDocs = server$(async (promptPrefix: string, initialDocs: string) => {
+  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  return anthropic.messages.create({
+    model: "claude-3-5-sonnet-20241022",
+    max_tokens: 4096,
+    messages: [
+      {
+        role: "user",
+        content: `${promptPrefix}
 
         Documentation to review:
-        ${getResponseText(initialResponse)}
+        ${initialDocs}
 
         Check for:
         1. Simple, direct language in descriptions
@@ -126,29 +69,27 @@ const generateDocs = server$(async (route: string) => {
         4. Logical progression from basic to advanced patterns
         
         Provide specific improvement suggestions.`
-        }
-      ]
-    });
+      }
+    ]
+  });
+});
 
-    const finalResponse = await anthropic.messages.create({
+const finalizeDocs = server$(
+  async (promptPrefix: string, initialDocs: string, feedback: string) => {
+    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+    return anthropic.messages.create({
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 4096,
       messages: [
         {
           role: "user",
-          content: `Improve this documentation based on the evaluation while maintaining:
-
-        Component implementation:
-        ${formattedComponents}
-
-        Examples:
-        ${formattedExamples}
+          content: `${promptPrefix}
 
         Original docs:
-        ${getResponseText(initialResponse)}
+        ${initialDocs}
 
         Editor feedback:
-        ${getResponseText(evaluationResponse)}
+        ${feedback}
 
         Requirements:
         1. Keep language simple and direct
@@ -159,30 +100,45 @@ const generateDocs = server$(async (route: string) => {
         }
       ]
     });
+  }
+);
 
-    const mdxContent = [
-      'import { api } from "./auto-api/api";',
-      getResponseText(finalResponse),
-      `## Anatomy\n\n<AnatomyTable />`,
-      "<APITable api={api} />"
-    ].join("\n\n");
-
-    fs.writeFileSync(docsPath, mdxContent);
-    updates.push("Documentation updated");
-
-    return updates;
-  } catch (error) {
-    console.error("Error generating docs:", error);
-    return [
-      `Error: ${error instanceof Error ? error.message : "Unknown error occurred"}`
-    ];
+const readFiles = server$(async (path: string) => {
+  try {
+    const files = fs.readdirSync(path);
+    return files
+      .map((file) => {
+        const content = fs.readFileSync(resolve(path, file), "utf-8");
+        return `// ${file}\n${content}`;
+      })
+      .join("\n\n");
+  } catch (e) {
+    console.warn(`Could not read files from ${path}:`, e);
+    return "";
   }
 });
 
-const getResponseText = (response: Anthropic.Messages.Message) => {
-  const content = response.content[0];
-  return content?.type === "text" ? content.text : "";
-};
+const writeDocs = server$(async (mdxContent: string, route: string) => {
+  try {
+    const docsPath = resolve(process.cwd(), `src/routes/${route}/index.mdx`);
+    fs.writeFileSync(docsPath, mdxContent);
+    return "Documentation updated successfully!";
+  } catch (error) {
+    console.error("Error writing docs:", error);
+    throw new Error(
+      `Failed to write documentation: ${error instanceof Error ? error.message : "Unknown error"}`
+    );
+  }
+});
+
+const getFilePaths = server$(async (route: string) => {
+  const { resolve } = await import("node:path");
+  return {
+    examplesPath: resolve(process.cwd(), `src/routes/${route}/examples`),
+    apiPath: resolve(process.cwd(), `src/routes/${route}/auto-api/api.ts`),
+    componentPath: resolve(process.cwd(), `../../libs/components/src/${route}`)
+  };
+});
 
 export const DocsAI = component$(() => {
   const isGenerating = useSignal(false);
@@ -194,10 +150,62 @@ export const DocsAI = component$(() => {
     <AIButton
       onClick$={async () => {
         isGenerating.value = true;
-        status.value = "Generating...";
         try {
-          const updates = await generateDocs(route);
-          status.value = updates[updates.length - 1] || "";
+          const paths = await getFilePaths(route);
+
+          status.value = "Reading component files...";
+          const [formattedExamples, formattedComponents, formattedAPI] =
+            await Promise.all([
+              readFiles(paths.examplesPath),
+              readFiles(paths.componentPath),
+              readFiles(paths.apiPath)
+            ]);
+
+          console.log("Found examples:", formattedExamples);
+          console.log("formattedComponents:", formattedComponents);
+          console.log("formattedAPI:", formattedAPI);
+
+          const promptPrefix = `
+            Act as a professional documentation writer for a design system that uses Qwik.
+
+            You will be given a component implementation and examples.
+
+            You will also be given an object that contains API's found.
+
+            Component implementation:
+            ${formattedComponents}
+
+            Examples:
+            ${formattedExamples}
+
+            API's:
+            ${formattedAPI}
+          `;
+
+          status.value = "Generating initial documentation...";
+          const initialResponse = await generateInitialDocs(promptPrefix);
+          const initialDocs = getResponseText(initialResponse);
+
+          status.value = "Evaluating documentation...";
+          const evaluationResponse = await evaluateDocs(promptPrefix, initialDocs);
+          const feedback = getResponseText(evaluationResponse);
+
+          status.value = "Finalizing documentation...";
+          const finalResponse = await finalizeDocs(promptPrefix, initialDocs, feedback);
+
+          const mdxContent = [
+            'import { api } from "./auto-api/api";',
+            getResponseText(finalResponse),
+            "## Anatomy\n\n<AnatomyTable />",
+            "<APITable api={api} />"
+          ].join("\n\n");
+
+          status.value = "Saving documentation...";
+          const result = await writeDocs(mdxContent, route);
+          status.value = result;
+        } catch (error) {
+          console.error("Error generating docs:", error);
+          status.value = `Error: ${error instanceof Error ? error.message : "Unknown error occurred"}`;
         } finally {
           isGenerating.value = false;
         }
@@ -208,3 +216,8 @@ export const DocsAI = component$(() => {
     </AIButton>
   );
 });
+
+const getResponseText = (response: Anthropic.Messages.Message) => {
+  const content = response.content[0];
+  return content?.type === "text" ? content.text : "";
+};
