@@ -49,7 +49,9 @@ const evaluateDocs = server$(async (promptPrefix: string, initialDocs: string) =
     messages: [
       {
         role: "user",
-        content: `${promptPrefix}
+        content: `
+        
+        ${promptPrefix}
 
         Documentation to review:
         ${initialDocs}
@@ -105,15 +107,19 @@ const finalizeDocs = server$(
 
 const readFiles = server$(async (path: string) => {
   try {
-    const files = fs.readdirSync(path);
-    return files
-      .map((file) => {
-        const content = fs.readFileSync(resolve(path, file), "utf-8");
-        return `// ${file}\n${content}`;
-      })
-      .join("\n\n");
+    const stats = fs.statSync(path);
+
+    if (stats.isDirectory()) {
+      const files = fs.readdirSync(path);
+      const contents = files
+        .filter((file) => file.endsWith(".ts") || file.endsWith(".tsx"))
+        .map((file) => fs.readFileSync(resolve(path, file), "utf-8"))
+        .join("\n");
+      return contents;
+    }
+    return fs.readFileSync(path, "utf-8");
   } catch (e) {
-    console.warn(`Could not read files from ${path}:`, e);
+    console.warn(`Could not read from ${path}:`, e);
     return "";
   }
 });
@@ -161,26 +167,24 @@ export const DocsAI = component$(() => {
               readFiles(paths.apiPath)
             ]);
 
-          console.log("Found examples:", formattedExamples);
-          console.log("formattedComponents:", formattedComponents);
-          console.log("formattedAPI:", formattedAPI);
-
           const promptPrefix = `
             Act as a professional documentation writer for a design system that uses Qwik.
 
-            You will be given a component implementation and examples.
+            You will be given a component implementation and examples. Each new component or example is separated by ---NEW COMPONENT--- or ---NEW EXAMPLE---.
 
             You will also be given an object that contains API's found.
 
             Component implementation:
-            ${formattedComponents}
+            ${formattedComponents.split("\n\n").join("\n\n---NEW COMPONENT---\n\n")}
 
             Examples:
-            ${formattedExamples}
+            ${formattedExamples.split("\n\n").join("\n\n---NEW EXAMPLE---\n\n")}
 
             API's:
             ${formattedAPI}
           `;
+
+          console.log("promptPrefix:", promptPrefix);
 
           status.value = "Generating initial documentation...";
           const initialResponse = await generateInitialDocs(promptPrefix);
