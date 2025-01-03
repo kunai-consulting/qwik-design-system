@@ -6,70 +6,172 @@ import { resolve } from "node:path";
 import { AIButton } from "./ai-button";
 
 const generateDocs = server$(async (route: string) => {
-  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
-  const examplesPath = resolve(process.cwd(), `src/routes/${route}/examples`);
-  const examples = fs
-    .readdirSync(examplesPath)
-    .filter((f) => f.endsWith(".tsx"))
-    .map((file) => ({
-      name: file.replace(".tsx", ""),
-      content: fs.readFileSync(resolve(examplesPath, file), "utf-8")
-    }));
-
-  const apiPath = resolve(process.cwd(), `src/routes/${route}/auto-api/api.ts`);
-  const api = fs.readFileSync(apiPath, "utf-8");
-
-  const docsPath = resolve(process.cwd(), `src/routes/${route}/index.mdx`);
-  let existingDocs = "";
   try {
-    existingDocs = fs.readFileSync(docsPath, "utf-8");
-  } catch (e) {
-    console.log("e", e);
-  }
+    console.log("Starting docs generation for route:", route);
 
-  const response = await anthropic.messages.create({
-    model: "claude-3-5-sonnet-20241022",
-    max_tokens: 8192,
-    messages: [
-      {
-        role: "user",
-        content: `You are a technical writer creating component documentation in MDX format.
+    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new Error("ANTHROPIC_API_KEY is not set");
+    }
 
-Required sections and order:
-1. Title (H1) and brief description
-2. Basic usage with hero example
-3. Anatomy section using <AnatomyTable /> component
-4. Component state examples (uncontrolled, reactive, disabled)
-5. Additional examples grouped by category
-6. API reference section at the end using <APITable api={api} />
+    const examplesPath = resolve(process.cwd(), `src/routes/${route}/examples`);
+    console.log("Looking for examples in:", examplesPath);
+
+    if (!fs.existsSync(examplesPath)) {
+      throw new Error(`No examples folder found for ${route}`);
+    }
+
+    const examples = fs
+      .readdirSync(examplesPath)
+      .filter((f) => f.endsWith(".tsx"))
+      .map((file) => ({
+        name: file.replace(".tsx", ""),
+        content: fs.readFileSync(resolve(examplesPath, file), "utf-8")
+      }));
+
+    console.log(
+      "Found examples:",
+      examples.map((e) => e.name)
+    );
+
+    const docsPath = resolve(process.cwd(), `src/routes/${route}/index.mdx`);
+    let existingDocs = "";
+    try {
+      existingDocs = fs.readFileSync(docsPath, "utf-8");
+      console.log("Found existing docs");
+    } catch (e) {
+      console.log("No existing docs found");
+    }
+
+    const updates = [];
+
+    const componentPath = resolve(process.cwd(), `../../libs/components/src/${route}`);
+    const componentFiles = fs
+      .readdirSync(componentPath)
+      .filter((f) => f.endsWith(".tsx"))
+      .map((file) => fs.readFileSync(resolve(componentPath, file), "utf-8"));
+
+    const formattedComponents = Object.entries(componentFiles)
+      .map(
+        ([filename, content]) => `=== ${filename} ===
+${content}
+`
+      )
+      .join("\n");
+
+    console.log("formattedComponents", formattedComponents);
+
+    // 1. overview
+    const introResponse = await anthropic.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 4096,
+      messages: [
+        {
+          role: "user",
+          content: `Analyze this checkbox component implementation and write a minimal introduction.
+Component implementation:
+${formattedComponents}
+
+Examples:
+${examples
+  .map(
+    (e) => `
+=== ${e.name} ===
+${e.content}
+`
+  )
+  .join("\n")}
+
+Required format:
+import { api } from "./auto-api/api";
+
+# Checkbox
+[One-line description based on the actual implementation]
+
+<Showcase name="hero" />
+
+## Anatomy
+
+<AnatomyTable />
 
 Rules:
-- Use <Showcase name="example-name" /> to reference examples
-- Group related examples under appropriate headings
-- Keep descriptions clear and concise
-- Include practical use cases and tips
-- DO NOT wrap code in MDX code blocks
-- If good documentation already exists, preserve it and only add missing sections
-- Use the <AnatomyTable /> component for the anatomy section
-- End with API reference
+- Must start with the api import
+- Description must be based on the actual code
+- Focus on the component's core form control purpose
+- Keep existing code blocks if present`
+        }
+      ]
+    });
 
-Existing docs: ${existingDocs}
+    // 2. component state
+    const stateResponse = await anthropic.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 4096,
+      messages: [
+        {
+          role: "user",
+          content: `Document the core state management examples.
+        Component implementation: ${JSON.stringify(componentFiles)}
+        Examples: ${examples.map((e) => `\n--- ${e.name} ---\n${e.content}`).join("\n")}
+        
+        Required section:
+        ## Component State
 
-Component name: ${route}
-API reference: ${api}
-Example files: ${examples.map((e) => `\n--- ${e.name}.tsx ---\n${e.content}`).join("\n")}
+        Analyze the examples and group them based on their core state management patterns.
 
-Generate or enhance the MDX documentation while preserving any existing high-quality content.`
-      }
-    ]
-  });
+        Rules:
+        - One clear sentence per example
+        - Use note blocks for important details: > [!NOTE] Detail here
+        - Use <Showcase name="example-name" /> for examples
+        - Only include examples that actually exist
+        - Don't wrap <Showcase /> components in code blocks
+        - Keep existing code blocks if present`
+        }
+      ]
+    });
 
-  const mdxContent = response.content[0].type === "text" ? response.content[0].text : "";
+    // 3. improvise examples
+    const additionalResponse = await anthropic.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 4096,
+      messages: [
+        {
+          role: "user",
+          content: `Organize the remaining examples based on their relationships.
+        Component implementation: ${JSON.stringify(componentFiles)}
+        Examples: ${examples.map((e) => `\n--- ${e.name} ---\n${e.content}`).join("\n")}
+        
+        Rules:
+        - Analyze examples and group by related functionality
+        - Create logical section headings based on the examples
+        - One sentence description per example
+        - Use note blocks for important details
+        - Use <Showcase name="example-name" /> for examples
+        - Don't wrap <Showcase /> components in code blocks
+        - Keep existing code blocks if present`
+        }
+      ]
+    });
 
-  fs.writeFileSync(docsPath, mdxContent, "utf-8");
+    const mdxContent = [
+      introResponse.content[0].type === "text" ? introResponse.content[0].text : "",
+      stateResponse.content[0].type === "text" ? stateResponse.content[0].text : "",
+      additionalResponse.content[0].type === "text"
+        ? additionalResponse.content[0].text
+        : "",
+      "<APITable api={api} />"
+    ].join("\n\n");
 
-  return ["Documentation generated successfully"];
+    fs.writeFileSync(docsPath, mdxContent);
+    updates.push("Documentation updated");
+
+    return updates;
+  } catch (error) {
+    console.error("Error generating docs:", error);
+    return [
+      `Error: ${error instanceof Error ? error.message : "Unknown error occurred"}`
+    ];
+  }
 });
 
 export const DocsAI = component$(() => {
@@ -84,10 +186,10 @@ export const DocsAI = component$(() => {
         isGenerating.value = true;
         status.value = "Generating...";
         try {
-          await generateDocs(route);
+          const updates = await generateDocs(route);
+          status.value = updates[updates.length - 1] || "";
         } finally {
           isGenerating.value = false;
-          status.value = "";
         }
       }}
       disabled={isGenerating.value}
