@@ -26,15 +26,23 @@ const generateInitialDocs = server$(async (promptPrefix: string) => {
 
         <Showcase name="hero" />
 
-        Then add a Features component:
+        Then add the exact text:
 
-        <Features />
+        ## Features
 
-        Followed by an Anatomy component:
+        <Features api={api} />
 
-        <AnatomyTable />
+        ## Anatomy
 
-        
+        <AnatomyTable api={api} />
+
+        Now add document any examples that are absolutely critical to the accessibility of the component, for example, adding an accessible label to a checkbox.
+
+        Group the examples with an h2 title, with the h3's being the examples. Otherwise, just add the h3's.
+
+        This is NOT related to anything to do with the component state (initial, reactive, uncontrolled, controlled, events, disabled, etc.)
+
+        Then provide a transition paragraph into the state documentation.
         `
       }
     ]
@@ -51,95 +59,51 @@ const generateStateDocs = server$(async (promptPrefix: string) => {
         role: "user",
         content: `${promptPrefix}
 
-        Write a brief sentence describing the component. 
+        You are now writing the documentation specific to the state of the component.
 
-        Some examples:
-        - Display and navigate through multiple content items. (Carousel)
-        - A set of interactive sections that show or hide connected information. (Accordion)
-        - A panel that appears above all other content, blocking interaction with the rest of the page. (Modal)
+        Find and gather the examples that belong to the state section.
 
-        After the description, add the hero showcase component with:
+        Write an h2 with the text "Component State"
 
-        <Showcase name="hero" />
+        From there, look for examples that would fall under this category.
 
-        Then add a Features component:
+        For example:
 
-        <Features />
+        Initial values:
 
-        Followed by an Anatomy component:
+        Example:
 
-        <AnatomyTable />
+        To set a default or initial value on page load, use the value prop on the <Accordion.Root /> component.
 
+        Reactive values:
+
+        Example:
+
+        ### Reactive value
         
+        Pass reactive state by using the bind:value prop on the <Accordion.Root /> component.
+
+        <Showcase name="reactive" />
+
+        Events:
+
+        ### Handling selection changes
+
+        <Showcase name="change" />
+
+        Use the onChange$ prop to listen for changes in the selected value. It provides the new selected value as an argument.
+
+        ### Disabled
+
+        <Showcase name="disabled" />
+
+        To disable the component, set the disabled prop to true on the <Accordion.Root /> component.
+
         `
       }
     ]
   });
 });
-
-const evaluateDocs = server$(async (promptPrefix: string, initialDocs: string) => {
-  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-  return anthropic.messages.create({
-    model: "claude-3-5-sonnet-20241022",
-    max_tokens: 4096,
-    messages: [
-      {
-        role: "user",
-        content: `
-        
-        ${promptPrefix}
-
-        Documentation to review:
-        ${initialDocs}
-
-        Check for:
-        1. Simple, direct language in descriptions
-           - One line for component description
-           - Focus on core user actions
-           - No marketing terms like "versatile" or "powerful"
-        
-        2. Proper showcase components:
-           - <Showcase name="hero" /> for preview
-           - <Showcase name="[example-file-name]" /> using actual file names
-           - No code blocks
-        
-        3. Brief, practical explanations for each pattern
-        4. Logical progression from basic to advanced patterns
-        
-        Provide specific improvement suggestions.`
-      }
-    ]
-  });
-});
-
-const finalizeDocs = server$(
-  async (promptPrefix: string, initialDocs: string, feedback: string) => {
-    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-    return anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
-      max_tokens: 4096,
-      messages: [
-        {
-          role: "user",
-          content: `${promptPrefix}
-
-        Original docs:
-        ${initialDocs}
-
-        Editor feedback:
-        ${feedback}
-
-        Requirements:
-        1. Keep language simple and direct
-        2. Focus on user actions and practical usage
-        3. Use proper showcase components
-        4. Brief explanations for each pattern
-        5. No code blocks`
-        }
-      ]
-    });
-  }
-);
 
 const readFiles = server$(async (path: string) => {
   try {
@@ -218,6 +182,17 @@ export const DocsAI = component$(() => {
 
             API's:
             ${formattedAPI}
+
+            When adding examples, make sure to use the <Showcase name="example-file-name" /> component.
+
+            For each example, explain the highlighted API's that are used in the example.
+
+            Example:
+            We can select an initial uncontrolled value by passing the open prop to the <Collapsible.Root /> component.
+
+            <Showcase name="initial" /> (initial is the file name)
+
+            When mentioning an API or component surround it with backticks.
           `;
 
           console.log("promptPrefix:", promptPrefix);
@@ -225,17 +200,18 @@ export const DocsAI = component$(() => {
           status.value = "Generating initial documentation...";
           const initialResponse = await generateInitialDocs(promptPrefix);
           const initialDocs = getResponseText(initialResponse);
+          const stateResponse = await generateStateDocs(promptPrefix);
+          const stateDocs = getResponseText(stateResponse);
+
+          console.log("initialDocs:", initialDocs);
+          console.log("stateDocs:", stateDocs);
 
           status.value = "Evaluating documentation...";
-          const evaluationResponse = await evaluateDocs(promptPrefix, initialDocs);
-          const feedback = getResponseText(evaluationResponse);
-
-          status.value = "Finalizing documentation...";
-          const finalResponse = await finalizeDocs(promptPrefix, initialDocs, feedback);
 
           const mdxContent = [
             'import { api } from "./auto-api/api";',
-            getResponseText(finalResponse),
+            initialDocs,
+            stateDocs,
             "## Anatomy\n\n<AnatomyTable />",
             "<APITable api={api} />"
           ].join("\n\n");
