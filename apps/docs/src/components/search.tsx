@@ -41,8 +41,6 @@ declare global {
 export const SearchModal = component$(() => {
   const isOpen = useSignal(false);
 
-  console.log(isOpen.value);
-
   useOnWindow(
     'keydown',
     $((event: KeyboardEvent) => {
@@ -62,7 +60,6 @@ export const SearchModal = component$(() => {
     if (isOpen.value && !isInitialized.value) {
       window.dispatchEvent(new CustomEvent('initPagefind'));
       isInitialized.value = true;
-      console.log('initPagefind');
     }
   });
 
@@ -87,6 +84,8 @@ export const Search = component$(() => {
   const results = useSignal<PagefindSearchResult[]>([]);
   const handleInput = $(async (e: InputEvent) => {
     const target = e.target as HTMLInputElement;
+
+    console.log(window);
 
     await window.pagefind.preload(target.value);
 

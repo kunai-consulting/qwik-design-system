@@ -29,12 +29,12 @@ export default component$(() => {
       <body lang="en">
         <RouterOutlet />
         <ServiceWorkerRegister />
-        <link href="/pagefind/pagefind-ui.css" rel="stylesheet"/>
-        <script src="/pagefind/pagefind-ui.js"></script>
         <script
           dangerouslySetInnerHTML={`
             window.addEventListener('initPagefind', async () => {
+              console.log('initPagefind');
               const pagefind = await import("/pagefind/pagefind.js");
+              console.log(pagefind);
               await pagefind.init();
               window.pagefind = pagefind;
             });

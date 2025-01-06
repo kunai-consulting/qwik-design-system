@@ -25,7 +25,7 @@ export default component$(() => {
       <MDXProvider components={components}>
         <div class="flex gap-4">
           <Sidebar />
-        <main class="mx-auto max-w-screen-md">
+        <main data-pagefind-body class="mx-auto max-w-screen-md">
           <Slot />
         </main>
         <aside class="hidden w-60 xl:block">
