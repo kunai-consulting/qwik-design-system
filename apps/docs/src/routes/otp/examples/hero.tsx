@@ -1,6 +1,20 @@
-import { type PropsOf, component$ } from "@builder.io/qwik";
+import {
+  type PropsOf,
+  Slot,
+  component$,
+  useSignal,
+  useVisibleTask$
+} from "@builder.io/qwik";
 import { Otp, Checkbox } from "@kunai-consulting/qwik-components";
 import { LuCheck } from "@qwikest/icons/lucide";
+
+export const MyDiv = component$((props: PropsOf<"div">) => {
+  return (
+    <div {...props}>
+      <Slot />
+    </div>
+  );
+});
 
 export default component$(() => {
   const slots = Array.from({ length: 4 });
@@ -16,7 +30,7 @@ export default component$(() => {
         </p>
       </div>
 
-      <Otp.Root class="flex flex-col items-center justify-center">
+      <Otp.Root class="flex flex-col items-center justify-center" render={<MyDiv />}>
         <Otp.HiddenInput />
 
         <div class="otp-container flex flex-row justify-center gap-2">

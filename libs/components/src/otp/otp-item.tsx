@@ -28,14 +28,12 @@ export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
 
     const value = context.inputValueSig.value;
 
-    // Handle selection range
     const start = context.selectionStartSig.value;
     const end = context.selectionEndSig.value;
     if (start !== null && end !== null && start !== end) {
       return _index >= start && _index < end;
     }
 
-    // Only highlight if this is the current empty position
     return _index === context.currIndexSig.value && !value[_index];
   });
 
@@ -49,6 +47,7 @@ export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
       ref={itemRef}
       data-qds-otp-item={_index}
       data-highlighted={isHighlightedSig.value ? "" : undefined}
+      data-disabled={context.isDisabledSig.value ? "" : undefined}
     >
       {itemValue}
       <Slot />

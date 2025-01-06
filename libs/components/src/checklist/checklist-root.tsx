@@ -1,69 +1,46 @@
-import {
-  type JSXNode,
-  type JSXChildren,
-  type PropsOf,
-  component$,
-  useContext,
-  useSignal,
-  Slot,
-  useContextProvider,
-  $,
-} from '@builder.io/qwik';
-import { findComponent, processChildren } from '../../utils/inline-component';
-import { CheckboxRoot } from '../checkbox/checkbox-root';
-import { ChecklistContext, type ChecklistState } from './checklist-context';
-import { ChecklistItem } from './checklist-item';
-
-export const ChecklistRoot =
-  //removing component to make inline causes Internal Server
-  (props: { initialStates: boolean[]; children: JSXChildren | JSXNode }) => {
-    const children = props.children;
-    let currItemIndex = 0;
-    const itemsMap = new Map();
-
-    findComponent(ChecklistItem, (itemProps) => {
-      itemProps._index = currItemIndex;
-      itemsMap.set(currItemIndex, itemProps.disabled);
-      currItemIndex++;
-    });
-
-    processChildren(props.children);
-
-    return (
-      <ul>
-        <ChecklistBase initialStates={props.initialStates}>
-          {children}
-        </ChecklistBase>
-      </ul>
-    );
-  };
-
-type ChecklistRootProps = PropsOf<'div'> & {
-  initialStates: boolean[];
+import { component$, type PropsOf, Slot, useContextProvider, useSignal, useTask$ } from "@builder.io/qwik";
+import { findComponent, processChildren } from "../../utils/inline-component";
+import { ChecklistItem } from "./checklist-item";
+import { Checkbox } from "..";
+import { ChecklistContext, checklistContextId } from "./checklist-context";
+type ChecklistRootProps = Omit<PropsOf<"div">, "onChange$"> & {
+  _numItems?: number;
 };
 
-export const ChecklistBase = component$(
-  ({ initialStates, ...props }: ChecklistRootProps) => {
-    const items = useSignal<boolean[]>(initialStates ?? []);
-    const allSelected = useSignal<boolean>(false);
-    const toggleAllSelected = $(() => {
-      allSelected.value = !allSelected.value;
-    });
-    const indeterminate = useSignal(false);
+export const ChecklistRoot = ({ children, ...props }: ChecklistRootProps) => {
+  let currItemIndex = 0;
+  let numItems = 0;
 
-    const context: ChecklistState = {
-      items,
-      allSelected,
-      toggleAllSelected,
-      indeterminate,
-      initialStates,
-    };
+  findComponent(ChecklistItem, (itemProps) => {
+    itemProps._index = currItemIndex;
+    currItemIndex++;
+    numItems = currItemIndex;
+  });
 
-    useContextProvider(ChecklistContext, context);
-    return (
-      <div>
-        <Slot />
-      </div>
-    );
-  }
-);
+  processChildren(children);
+
+  return (
+    <ChecklistBase _numItems={numItems} {...props}>
+      {children}
+    </ChecklistBase>
+  );
+};
+
+export const ChecklistBase = component$((props: ChecklistRootProps) => {
+  const isAllCheckedSig = useSignal(false);
+  const checkedStatesSig = useSignal<(boolean | 'mixed')[]>([]);
+
+  const context: ChecklistContext = {
+    isAllCheckedSig,
+    checkedStatesSig
+  };
+
+  useContextProvider(checklistContextId, context);
+
+  // The checkbox root to the select all checkbox
+  return (
+    <Checkbox.Root role="group" bind:checked={isAllCheckedSig} data-qds-checklist-root {...props}>
+      <Slot />
+    </Checkbox.Root>
+  );
+});

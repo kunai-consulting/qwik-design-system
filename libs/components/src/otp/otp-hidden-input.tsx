@@ -18,6 +18,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
   const context = useContext(OTPContextId);
   const previousValue = useSignal<string>("");
   const shiftKeyDown = useSignal(false);
+  const pattern = props.pattern ?? "^[0-9]*$";
 
   const previousSelection = useSignal({
     inserting: false,
@@ -104,16 +105,17 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
 
   useOnDocument("selectionchange", updateSelection);
 
+  /**
+   *  Prevent the left arrow key from skipping over filled slots when traveling from empty slots
+   */
   const handleKeyDownSync = sync$((e: KeyboardEvent) => {
     const input = e.target as HTMLInputElement;
 
-    // Only handle left arrow key
     if (e.key === "ArrowLeft" && input.selectionStart === input.selectionEnd) {
       const currentPos = input.selectionStart;
       if (!currentPos) return;
 
       const value = input.value;
-      // When in an empty slot trying to move to a filled one
       if (!value[currentPos] && value[currentPos - 1]) {
         e.preventDefault();
       }
@@ -143,20 +145,30 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
     }
   });
 
+  const isFirstKeystroke = useSignal(true);
+
   const handleInput = $((e: InputEvent) => {
     const input = e.target as HTMLInputElement;
     const newValue = input.value.slice(0, context.numItemsSig.value);
 
     // validate input if pattern provided
-    if (props.pattern && !new RegExp(props.pattern).test(newValue)) {
+    if (!new RegExp(pattern).test(newValue)) {
       input.value = context.inputValueSig.value;
+      // make sure invalid characters don't affect the highlight position
+      if (isFirstKeystroke.value) {
+        context.currIndexSig.value = 0;
+        context.selectionStartSig.value = 0;
+        context.selectionEndSig.value = 1;
+        input.setSelectionRange(0, 1);
+      }
       return;
     }
 
+    // No longer first keystroke
+    isFirstKeystroke.value = false;
+    
     const isBackspace = previousValue.value.length > newValue.length;
-    const position = isBackspace
-      ? Math.min(context.currIndexSig.value ?? 0, newValue.length)
-      : Math.min(newValue.length, context.numItemsSig.value);
+    const position = input.selectionStart ?? 0;
 
     context.inputValueSig.value = newValue;
     previousValue.value = newValue;
@@ -168,13 +180,25 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       context.selectionStartSig.value = newPos;
       context.selectionEndSig.value = newPos + 1;
       input.setSelectionRange(newPos, newPos + 1);
+      // after backspace
+      previousSelection.value = {
+        inserting: false,
+        start: newPos,
+        end: newPos + 1
+      };
     } else {
       context.currIndexSig.value = position;
       context.selectionStartSig.value = position;
       context.selectionEndSig.value = position + 1;
       input.setSelectionRange(position, position + 1);
+      // normal input
+      previousSelection.value = {
+        inserting: false,
+        start: position,
+        end: position + 1
+      };
     }
-  });
+});
 
   const handleKeyUp = $((e: KeyboardEvent) => {
     if (e.key === "Shift") {
@@ -182,7 +206,9 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
     }
   });
 
-  const handleFocus = $((e: FocusEvent) => {
+  const handleFocus = $(() => {
+    // Reset first keystroke flag on focus
+    isFirstKeystroke.value = true;
     const input = context.nativeInputRef.value;
     if (!input) return;
 
@@ -203,6 +229,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       {...props}
       ref={context.nativeInputRef}
       value={context.inputValueSig.value}
+      disabled={context.isDisabledSig.value ?? false}
       maxLength={context.numItemsSig.value}
       data-qds-otp-hidden-input
       inputMode="numeric"

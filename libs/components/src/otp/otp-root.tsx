@@ -16,14 +16,17 @@ import { OTPContextId } from "./otp-context";
 import { OtpItem } from "./otp-item";
 import styles from "./otp.css?inline";
 import { useBoundSignal } from "../../utils/bound-signal";
+import { Render, type RenderProps } from "../render/render";
 
-type OtpRootProps = PropsOf<"div"> & {
+type OtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   "bind:value"?: Signal<string>;
   _numItems?: number;
   autoComplete?: HTMLInputAutocompleteAttribute;
   onComplete$?: QRL<() => void>;
+  onChange$?: QRL<(value: string) => void>;
   value?: string;
-};
+  disabled?: boolean;
+} & RenderProps;
 
 export const OtpRoot = ({ children, ...props }: OtpRootProps) => {
   let currItemIndex = 0;
@@ -45,7 +48,13 @@ export const OtpRoot = ({ children, ...props }: OtpRootProps) => {
 };
 
 export const OtpBase = component$((props: OtpRootProps) => {
-  const { "bind:value": givenValueSig, ...rest } = props;
+  const {
+    "bind:value": givenValueSig,
+    onChange$,
+    onComplete$,
+    render: Comp,
+    ...rest
+  } = props;
 
   useStyles$(styles);
 
@@ -54,8 +63,10 @@ export const OtpBase = component$((props: OtpRootProps) => {
   const nativeInputRef = useSignal<HTMLInputElement>();
   const numItemsSig = useComputed$(() => props._numItems || 0);
   const isFocusedSig = useSignal(false);
+  const isDisabledSig = useComputed$(() => props.disabled);
   const selectionStartSig = useSignal<number | null>(null);
   const selectionEndSig = useSignal<number | null>(null);
+  const isInitialLoadSig = useSignal(true);
 
   const isLastItemSig = useComputed$(
     () => inputValueSig.value.length === numItemsSig.value
@@ -68,22 +79,36 @@ export const OtpBase = component$((props: OtpRootProps) => {
     numItemsSig,
     isLastItemSig,
     isFocusedSig,
+    isDisabledSig,
     selectionStartSig,
     selectionEndSig
   };
 
-  useTask$(async ({ track }) => {
+  useTask$(async function handleChange({ track }) {
     track(() => inputValueSig.value);
+
+    if (!isInitialLoadSig.value) {
+      await onChange$?.(inputValueSig.value);
+    }
+
+    isInitialLoadSig.value = false;
 
     if (inputValueSig.value.length !== numItemsSig.value) return;
 
-    await props.onComplete$?.();
+    await onComplete$?.();
   });
 
   useContextProvider(OTPContextId, context);
+
   return (
-    <div data-qds-otp-root {...rest}>
+    <Render
+      component={Comp}
+      fallback="div"
+      data-qds-otp-root
+      data-disabled={isDisabledSig.value ? "" : undefined}
+      {...rest}
+    >
       <Slot />
-    </div>
+    </Render>
   );
 });

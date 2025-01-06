@@ -1,0 +1,60 @@
+---
+title: Qwik Design System | Scroll Area
+---
+
+# Scroll Area
+
+A scrollable container that provides a custom-styled scrollbar with support for both vertical and horizontal scrolling.
+
+<Showcase name="vertical" />
+
+## Basic Usage
+
+The Scroll Area component provides a customizable scrolling container that replaces the browser's default scrollbars with a more aesthetically pleasing design.
+
+## Anatomy
+
+The Scroll Area component is composed of several parts:
+
+```tsx
+<ScrollArea.Root>
+  <ScrollArea.ViewPort>
+    {/* Your content */}
+  </ScrollArea.ViewPort>
+  <ScrollArea.Scrollbar orientation="vertical">
+    <ScrollArea.Thumb />
+  </ScrollArea.Scrollbar>
+  <ScrollArea.Scrollbar orientation="horizontal">
+    <ScrollArea.Thumb />
+  </ScrollArea.Scrollbar>
+</ScrollArea.Root>
+```
+
+## Vertical Scrolling
+By default, Scroll Area supports vertical scrolling when content exceeds the container height.
+
+<Showcase name="vertical" />
+
+## Horizontal Scrolling
+To enable horizontal scrolling, add the horizontal scrollbar component.
+<Showcase name="horizontal" />
+
+## Both Directions
+Scroll Area supports both vertical and horizontal scrolling simultaneously.
+<Showcase name="both" />
+
+## Custom Styling
+The Scroll Area component can be styled using CSS classes.
+
+## Sizing
+The Scroll Area component adapts to its container size. You can control its dimensions using standard CSS properties.
+
+## Hidden Scrollbars
+The Scroll Area component automatically hides the native browser scrollbars while maintaining scroll functionality.
+
+## Scroll Thumb Behavior
+The scroll thumb responds to:
+
+* Direct dragging
+* Click and drag interactions
+* Content scrolling
