@@ -38,6 +38,67 @@ const generateComponentDocs = server$(
   }
 );
 
+const generateFeatureList = server$(
+  async (files: Array<{ name: string; content: string }>) => {
+    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+    const response = await anthropic.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 8192,
+      messages: [
+        {
+          role: "user",
+          content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
+        Required output format: { "features": ["Feature 1", "Feature 2", ...] }
+
+        Analyze the component implementation and return a list of features. Here are examples of good feature lists:
+
+        Combobox example features:
+        - "WAI ARIA Combobox design pattern"
+        - "Single and multiple selection"
+        - "Reactive and initial value changes"
+        - "Disabled items"
+        - "Tab key focus management"
+        - "Grouped items"
+        - "Looping"
+        - "Custom scroll behavior"
+        - "Popover UI above all"
+        - "Custom positioning (Popover)"
+        - "Typeahead item selection and focus"
+        - "Arrow key navigation and focus management"
+        - "Open/Close popover by typing, focus, or manually"
+        - "Custom filter function"
+        - "Closes on no matching items"
+
+        Modal example features:
+        - "WAI ARIA Dialog design pattern"
+        - "Focus trap within modal"
+        - "Return focus on close"
+        - "Escape to close"
+        - "Click outside to dismiss"
+        - "Prevents background scrolling"
+        - "Animated transitions"
+        - "Custom positioning"
+        - "Nested modal support"
+        - "Accessible descriptions"
+        - "Custom close triggers"
+        - "Backdrop customization"
+        - "Multiple modal stacking"
+        - "Responsive sizing"
+        - "Keyboard navigation"
+
+        Analyze the files and return a similar style list of features:
+        ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`
+        }
+      ]
+    });
+    const parsed =
+      response.content[0].type === "text"
+        ? JSON.parse(response.content[0].text)
+        : { features: [] };
+    return parsed.features;
+  }
+);
+
 const generateTypeDocs = server$(
   async (files: Array<{ name: string; content: string }>) => {
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -221,20 +282,22 @@ export const APIReference = component$(() => {
         typeComments,
         dataAttributeComments,
         publicTypeAnalysis,
-        keyboardDocs
+        keyboardDocs,
+        featureList
       ] = await Promise.all([
         generateComponentDocs(fileContents),
         generateTypeDocs(fileContents),
         generateDataAttributeDocs(fileContents),
         analyzeTypesForPublic(fileContents),
-        generateKeyboardDocs(fileContents)
+        generateKeyboardDocs(fileContents),
+        generateFeatureList(fileContents)
       ]);
 
       console.log("componentComments", componentComments);
       console.log("typeComments", typeComments);
       console.log("dataAttributeComments", dataAttributeComments);
       console.log("keyboardDocs", keyboardDocs);
-
+      console.log("featureList", featureList);
       // Split the updates into two parts
 
       // 1. Handle type transformations and comments
@@ -293,6 +356,7 @@ export const APIReference = component$(() => {
         const api = JSON.parse(apiMatch[1]);
         // Only update keyboard interactions, don't touch types
         api.keyboardInteractions = keyboardDocs;
+        api.features = featureList;
         fs.writeFileSync(
           apiPath,
           `export const api = ${JSON.stringify(api, null, 2)};`,

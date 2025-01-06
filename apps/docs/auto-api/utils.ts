@@ -249,6 +249,11 @@ export function transformPublicTypes(
     return (rootNode: ts.SourceFile) => {
       function visit(node: ts.Node): ts.Node {
         if (ts.isTypeAliasDeclaration(node) || ts.isInterfaceDeclaration(node)) {
+          // Skip if the type already has Public prefix
+          if (node.name.text.startsWith("Public")) {
+            return node;
+          }
+
           if (publicTypes.some((t) => node.getText().includes(t.targetLine))) {
             const factory = context.factory;
             return ts.isTypeAliasDeclaration(node)
@@ -271,6 +276,11 @@ export function transformPublicTypes(
         }
 
         if (ts.isTypeReferenceNode(node)) {
+          // Skip if the type reference already has Public prefix
+          if (node.typeName.getText().startsWith("Public")) {
+            return node;
+          }
+
           const typeName = node.typeName.getText();
           if (publicTypes.some((t) => t.targetLine.includes(typeName))) {
             return context.factory.createTypeReferenceNode(

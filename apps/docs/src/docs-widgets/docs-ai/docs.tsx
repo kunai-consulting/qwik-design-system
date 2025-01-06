@@ -15,27 +15,63 @@ const generateInitialDocs = server$(async (promptPrefix: string) => {
         role: "user",
         content: `${promptPrefix}
 
-        Write documentation that:
-        1. Start with a practical description focused on what users can do with it
-           Example: "A checkbox lets users select or deselect an option."
-           - Use simple, direct language
-           - One line only
-           - Focus on the core action users can take
-        
-        2. Preview section with <Showcase name="hero" />
-        
-        3. Building blocks section with basic implementation
-        
-        4. For each usage pattern:
-           - Write a brief, practical explanation focused on user needs
-           - Add <Showcase name="[example-file-name]" /> using the actual example file names
-           - No code blocks (they're handled by the Showcase component)
-        
-        5. Group patterns from basic to advanced
-        
-        6. Add keyboard interactions at the end if applicable
+        Write a brief sentence describing the component. 
 
-        Focus on what users can do with the component rather than technical descriptions.`
+        Some examples:
+        - Display and navigate through multiple content items. (Carousel)
+        - A set of interactive sections that show or hide connected information. (Accordion)
+        - A panel that appears above all other content, blocking interaction with the rest of the page. (Modal)
+
+        After the description, add the hero showcase component with:
+
+        <Showcase name="hero" />
+
+        Then add a Features component:
+
+        <Features />
+
+        Followed by an Anatomy component:
+
+        <AnatomyTable />
+
+        
+        `
+      }
+    ]
+  });
+});
+
+const generateStateDocs = server$(async (promptPrefix: string) => {
+  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  return anthropic.messages.create({
+    model: "claude-3-5-sonnet-20241022",
+    max_tokens: 8192,
+    messages: [
+      {
+        role: "user",
+        content: `${promptPrefix}
+
+        Write a brief sentence describing the component. 
+
+        Some examples:
+        - Display and navigate through multiple content items. (Carousel)
+        - A set of interactive sections that show or hide connected information. (Accordion)
+        - A panel that appears above all other content, blocking interaction with the rest of the page. (Modal)
+
+        After the description, add the hero showcase component with:
+
+        <Showcase name="hero" />
+
+        Then add a Features component:
+
+        <Features />
+
+        Followed by an Anatomy component:
+
+        <AnatomyTable />
+
+        
+        `
       }
     ]
   });
