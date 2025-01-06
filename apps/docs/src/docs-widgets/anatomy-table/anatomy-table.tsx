@@ -1,8 +1,14 @@
 import { component$ } from "@builder.io/qwik";
-import { api } from "~/routes/checkbox/auto-api/api";
-import { SubHeading } from "../toc/toc";
+import type { ComponentParts } from "../api-table/api-table";
+import type { AnatomyItem } from "../../../auto-api/types";
 
-export const AnatomyTable = component$(() => {
+export const AnatomyTable = component$<{ api: ComponentParts }>(({ api }) => {
+  if (!api?.anatomy?.length) {
+    return null;
+  }
+
+  const anatomyItems = api.anatomy.filter((item): item is AnatomyItem => "name" in item);
+
   return (
     <div class="my-4">
       <div class="rounded-md border-qwik-neutral-900 border overflow-hidden">
@@ -14,7 +20,7 @@ export const AnatomyTable = component$(() => {
             </tr>
           </thead>
           <tbody>
-            {api.anatomy.map((item) => (
+            {anatomyItems.map((item) => (
               <tr
                 key={item.name}
                 class="border-b last-of-type:border-b-0 border-qwik-neutral-900"

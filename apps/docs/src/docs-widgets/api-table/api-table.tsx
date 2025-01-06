@@ -20,7 +20,7 @@ type KeyboardInteraction = {
   comment: string;
 };
 
-type ComponentParts = {
+export type ComponentParts = {
   [key: string]: Array<AnatomyItem | ComponentEntry> | KeyboardInteraction[];
 } & {
   keyboardInteractions?: KeyboardInteraction[];
