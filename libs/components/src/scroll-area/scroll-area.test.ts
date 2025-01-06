@@ -136,6 +136,148 @@ test.describe("drag functionality", () => {
     const newScrollLeft = await viewport.evaluate((el) => el.scrollLeft);
     expect(newScrollLeft).toBeGreaterThan(initialScrollLeft);
   });
+
+  test(`GIVEN a scroll area with both scrollbars
+        WHEN dragging the vertical thumb outside scrollbar bounds
+        THEN thumb should move smoothly without jumps`, async ({ page }) => {
+    const d = await setup(page, "both-test");
+    const thumb = d.getVerticalThumb();
+    const viewport = d.getViewport();
+
+    // Get initial positions
+    const initialScrollTop = await viewport.evaluate(el => el.scrollTop);
+    const initialThumbBox = await thumb.boundingBox();
+    if (!initialThumbBox) throw new Error("Could not get thumb position");
+
+    // Start drag from thumb center
+    await page.mouse.move(
+      initialThumbBox.x + initialThumbBox.width / 2,
+      initialThumbBox.y + initialThumbBox.height / 2
+    );
+    await page.mouse.down();
+
+    // Move mouse outside scrollbar bounds
+    await page.mouse.move(
+      initialThumbBox.x + initialThumbBox.width * 2, // Move far right
+      initialThumbBox.y + initialThumbBox.height / 2 + 100, // Move down
+      { steps: 10 }
+    );
+
+    // Get new positions
+    const newScrollTop = await viewport.evaluate(el => el.scrollTop);
+    const newThumbBox = await thumb.boundingBox();
+    if (!newThumbBox) throw new Error("Could not get new thumb position");
+
+    // Verify scroll position changed
+    expect(newScrollTop).toBeGreaterThan(initialScrollTop);
+
+    // Verify thumb stayed within scrollbar bounds
+    const scrollbar = d.getVerticalScrollbar();
+    const scrollbarBox = await scrollbar.boundingBox();
+    if (!scrollbarBox) throw new Error("Could not get scrollbar bounds");
+
+    expect(newThumbBox.x).toBeCloseTo(initialThumbBox.x, 0); // X position shouldn't change
+    expect(newThumbBox.y).toBeGreaterThanOrEqual(scrollbarBox.y); // Should stay within top bound
+    expect(newThumbBox.y + newThumbBox.height).toBeLessThanOrEqual(scrollbarBox.y + scrollbarBox.height); // Should stay within bottom bound
+
+    await page.mouse.up();
+  });
+
+  test(`GIVEN a scroll area with both scrollbars
+        WHEN dragging the horizontal thumb outside scrollbar bounds
+        THEN thumb should move smoothly without jumps`, async ({ page }) => {
+    const d = await setup(page, "both-test");
+    const thumb = d.getHorizontalThumb();
+    const viewport = d.getViewport();
+
+    // Get initial positions
+    const initialScrollLeft = await viewport.evaluate(el => el.scrollLeft);
+    const initialThumbBox = await thumb.boundingBox();
+    if (!initialThumbBox) throw new Error("Could not get thumb position");
+
+    // Start drag from thumb center
+    await page.mouse.move(
+      initialThumbBox.x + initialThumbBox.width / 2,
+      initialThumbBox.y + initialThumbBox.height / 2
+    );
+    await page.mouse.down();
+
+    // Move mouse outside scrollbar bounds
+    await page.mouse.move(
+      initialThumbBox.x + initialThumbBox.width / 2 + 100, // Move right
+      initialThumbBox.y + initialThumbBox.height * 2, // Move far down
+      { steps: 10 }
+    );
+
+    // Get new positions
+    const newScrollLeft = await viewport.evaluate(el => el.scrollLeft);
+    const newThumbBox = await thumb.boundingBox();
+    if (!newThumbBox) throw new Error("Could not get new thumb position");
+
+    // Verify scroll position changed
+    expect(newScrollLeft).toBeGreaterThan(initialScrollLeft);
+
+    // Verify thumb stayed within scrollbar bounds
+    const scrollbar = d.getHorizontalScrollbar();
+    const scrollbarBox = await scrollbar.boundingBox();
+    if (!scrollbarBox) throw new Error("Could not get scrollbar bounds");
+
+    expect(newThumbBox.y).toBeCloseTo(initialThumbBox.y, 0); // Y position shouldn't change
+    expect(newThumbBox.x).toBeGreaterThanOrEqual(scrollbarBox.x); // Should stay within left bound
+    expect(newThumbBox.x + newThumbBox.width).toBeLessThanOrEqual(scrollbarBox.x + scrollbarBox.width); // Should stay within right bound
+
+    await page.mouse.up();
+  });
+
+  test(`GIVEN a scroll area with both scrollbars
+        WHEN dragging is active
+        THEN thumb should maintain its drag state`, async ({ page }) => {
+    const d = await setup(page, "both-test");
+    const verticalThumb = d.getVerticalThumb();
+    const horizontalThumb = d.getHorizontalThumb();
+
+    // Test vertical thumb
+    const verticalThumbBox = await verticalThumb.boundingBox();
+    if (!verticalThumbBox) throw new Error("Could not get vertical thumb position");
+
+    await page.mouse.move(
+      verticalThumbBox.x + verticalThumbBox.width / 2,
+      verticalThumbBox.y + verticalThumbBox.height / 2
+    );
+    await page.mouse.down();
+
+    // Move outside bounds
+    await page.mouse.move(
+      verticalThumbBox.x + 100,
+      verticalThumbBox.y + 100
+    );
+
+    // Verify drag state maintained
+    await expect(verticalThumb).toHaveAttribute("data-dragging", "");
+
+    await page.mouse.up();
+
+    // Test horizontal thumb
+    const horizontalThumbBox = await horizontalThumb.boundingBox();
+    if (!horizontalThumbBox) throw new Error("Could not get horizontal thumb position");
+
+    await page.mouse.move(
+      horizontalThumbBox.x + horizontalThumbBox.width / 2,
+      horizontalThumbBox.y + horizontalThumbBox.height / 2
+    );
+    await page.mouse.down();
+
+    // Move outside bounds
+    await page.mouse.move(
+      horizontalThumbBox.x + 100,
+      horizontalThumbBox.y + 100
+    );
+
+    // Verify drag state maintained
+    await expect(horizontalThumb).toHaveAttribute("data-dragging", "");
+
+    await page.mouse.up();
+  });
 });
 
 test.describe("thumb behavior", () => {

@@ -18,6 +18,8 @@ export const ScrollAreaScrollbar = component$<ScrollBarType>((props) => {
   const { orientation = "vertical" } = props;
 
   const onTrackClick$ = $((e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const clickedOrientation = target.getAttribute('data-orientation');
     const scrollbar = context.scrollbarRef.value;
     if (!scrollbar) return;
 
@@ -27,9 +29,9 @@ export const ScrollAreaScrollbar = component$<ScrollBarType>((props) => {
     if (!thumb || e.target === thumb) return;
     if (!viewport) return;
 
-    const rect = scrollbar.getBoundingClientRect();
+    const rect = target.getBoundingClientRect();
 
-    if (orientation === "vertical") {
+    if (clickedOrientation === "vertical") {
       const clickPos = e.clientY - rect.top;
       // Calculate click position as a ratio of the scrollbar height
       const scrollRatio = clickPos / rect.height;
