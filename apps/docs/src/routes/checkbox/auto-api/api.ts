@@ -195,16 +195,38 @@ export const api = {
   ],
   "keyboardInteractions": [
     {
-      "key": "Space",
-      "comment": "When focus is on the checkbox trigger button, toggles between checked, unchecked, or mixed states"
+      "key": "Enter",
+      "comment": "When focused on the checkbox trigger button, toggles the checkbox state"
     },
     {
-      "key": "Enter",
-      "comment": "When focus is on the checkbox trigger button, toggles between checked, unchecked, or mixed states (preventDefault is applied)"
+      "key": "Space",
+      "comment": "When focused on the checkbox trigger button, toggles the checkbox state"
     },
     {
       "key": "Tab",
-      "comment": "Moves focus to the checkbox trigger button in the natural tab order"
+      "comment": "Moves focus to the checkbox trigger button or to the next focusable element"
     }
+  ],
+  "features": [
+    "WAI ARIA Checkbox design pattern",
+    "Hidden native checkbox input for form submission",
+    "Three-state checkbox (checked, unchecked, indeterminate)",
+    "Accessible labels and descriptions",
+    "Error message support",
+    "Customizable error states",
+    "Form validation integration",
+    "Disabled state support",
+    "Custom styling API through data attributes",
+    "Controlled and uncontrolled state management",
+    "Keyboard navigation and interaction",
+    "Focus management",
+    "Event handler customization",
+    "Reactive state changes",
+    "Required field support",
+    "Form name and value attributes",
+    "Visual indicator component",
+    "Compound component architecture",
+    "Accessibility descriptions and ARIA attributes",
+    "Enter key handling prevention"
   ]
 };

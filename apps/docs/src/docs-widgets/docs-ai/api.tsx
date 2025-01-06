@@ -86,6 +86,12 @@ const generateFeatureList = server$(
         - "Responsive sizing"
         - "Keyboard navigation"
 
+        Rules:
+        - Minimum 5 features
+        - Focus on meaningful functionality that users care about
+        - Exclude obvious implementation details
+        - Don't list basic features that every component would have
+
         Analyze the files and return a similar style list of features:
         ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`
         }

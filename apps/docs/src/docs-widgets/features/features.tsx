@@ -1,5 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 import type { ComponentParts } from "../api-table/api-table";
+import { LuBadgeCheck } from "@qwikest/icons/lucide";
 
 export const Features = component$<{ api: ComponentParts }>(({ api }) => {
   if (!api?.features?.length) return null;
@@ -12,7 +13,12 @@ export const Features = component$<{ api: ComponentParts }>(({ api }) => {
     <div class="my-4">
       <ul class="list-disc list-inside space-y-2">
         {features.map((feature) => (
-          <li key={feature}>{feature}</li>
+          <li class="flex items-center gap-2" key={feature}>
+            <span>
+              <LuBadgeCheck class="text-qwik-blue-400" />
+            </span>
+            <span>{feature}</span>
+          </li>
         ))}
       </ul>
     </div>
