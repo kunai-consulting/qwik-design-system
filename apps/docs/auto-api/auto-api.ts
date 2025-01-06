@@ -26,13 +26,16 @@ export function loopOnAllChildFiles(filePath: string) {
   const store: ComponentParts = {
     [componentName]: allParts,
     anatomy: anatomy,
-    keyboardInteractions: []
+    keyboardInteractions: [],
+    features: []
   };
 
   for (const fileName of fs.readdirSync(parentDir)) {
-    if (fileName === "keyboard.json" && fs.existsSync(resolve(parentDir, fileName))) {
-      const keyboardContent = fs.readFileSync(resolve(parentDir, fileName), "utf-8");
-      store.keyboardInteractions = JSON.parse(keyboardContent).keyboard;
+    if (fileName === "metadata.json" && fs.existsSync(resolve(parentDir, fileName))) {
+      const metadataContent = fs.readFileSync(resolve(parentDir, fileName), "utf-8");
+      const metadata = JSON.parse(metadataContent);
+      store.keyboardInteractions = metadata.keyboard || [];
+      store.features = metadata.features || [];
     }
     if (/\.tsx$/.test(fileName)) {
       const fullPath = resolve(parentDir, fileName);

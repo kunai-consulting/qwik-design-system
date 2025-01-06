@@ -277,6 +277,14 @@ export const APIReference = component$(() => {
       }));
 
       updates.push("Analyzing with Claude...");
+      // Get existing metadata if it exists
+      const metadataPath = resolve(componentPath, "metadata.json");
+      let existingMetadata = {};
+      if (fs.existsSync(metadataPath)) {
+        existingMetadata = JSON.parse(fs.readFileSync(metadataPath, "utf-8"));
+      }
+
+      // Analyze with Claude and merge with existing metadata
       const [
         componentComments,
         typeComments,
@@ -292,6 +300,13 @@ export const APIReference = component$(() => {
         generateKeyboardDocs(fileContents),
         generateFeatureList(fileContents)
       ]);
+
+      // Update metadata.json with fresh data only
+      const metadata = {
+        keyboard: keyboardDocs,
+        features: featureList
+      };
+      fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
 
       console.log("componentComments", componentComments);
       console.log("typeComments", typeComments);
