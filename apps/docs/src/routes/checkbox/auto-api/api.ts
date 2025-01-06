@@ -195,38 +195,32 @@ export const api = {
   ],
   "keyboardInteractions": [
     {
-      "key": "Enter",
-      "comment": "When focused on the checkbox trigger button, toggles the checkbox state"
+      "key": "Space",
+      "comment": "When focus is on the checkbox trigger, toggles the checkbox state between checked and unchecked"
     },
     {
-      "key": "Space",
-      "comment": "When focused on the checkbox trigger button, toggles the checkbox state"
+      "key": "Enter",
+      "comment": "When focus is on the checkbox trigger, toggles the checkbox state between checked and unchecked (default behavior prevented)"
     },
     {
       "key": "Tab",
-      "comment": "Moves focus to the checkbox trigger button or to the next focusable element"
+      "comment": "Moves focus to the checkbox trigger or away from it following the document tab sequence"
     }
   ],
   "features": [
     "WAI ARIA Checkbox design pattern",
-    "Hidden native checkbox input for form submission",
-    "Three-state checkbox (checked, unchecked, indeterminate)",
-    "Accessible labels and descriptions",
-    "Error message support",
-    "Customizable error states",
-    "Form validation integration",
-    "Disabled state support",
-    "Custom styling API through data attributes",
-    "Controlled and uncontrolled state management",
-    "Keyboard navigation and interaction",
-    "Focus management",
-    "Event handler customization",
-    "Reactive state changes",
-    "Required field support",
-    "Form name and value attributes",
-    "Visual indicator component",
-    "Compound component architecture",
-    "Accessibility descriptions and ARIA attributes",
-    "Enter key handling prevention"
+    "Indeterminate state support",
+    "Form binding with hidden native input",
+    "Error message handling and validation",
+    "Custom description text with screenreader support",
+    "Reactive state management with signals",
+    "Keyboard navigation with Enter key handling",
+    "Accessible labeling system",
+    "Disabled state management",
+    "Two-way data binding with bind:checked prop",
+    "Custom onChange event handling",
+    "Automatic ARIA state management",
+    "Visual indicator customization",
+    "Compound component architecture"
   ]
 };
