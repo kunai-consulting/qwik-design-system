@@ -105,6 +105,14 @@ const generateStateDocs = server$(async (promptPrefix: string) => {
   });
 });
 
+// TODO: Configuration based examples
+
+// TODO: Behavioral based example
+
+// TODO: form based examples (form submission, form validation)
+
+// TODO: environment based examples (CSR)
+
 const readFiles = server$(async (path: string) => {
   try {
     const stats = fs.statSync(path);
