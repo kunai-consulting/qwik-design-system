@@ -29,6 +29,17 @@ export default component$(() => {
       <body lang="en">
         <RouterOutlet />
         <ServiceWorkerRegister />
+        <link href="/pagefind/pagefind-ui.css" rel="stylesheet"/>
+        <script src="/pagefind/pagefind-ui.js"></script>
+        <script
+          dangerouslySetInnerHTML={`
+            window.addEventListener('initPagefind', async () => {
+              const pagefind = await import("/pagefind/pagefind.js");
+              await pagefind.init();
+              window.pagefind = pagefind;
+            });
+          `}
+        ></script>
       </body>
     </QwikCityProvider>
   );
