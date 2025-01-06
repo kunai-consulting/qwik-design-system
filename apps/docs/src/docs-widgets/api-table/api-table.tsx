@@ -24,6 +24,8 @@ export type ComponentParts = {
   [key: string]: Array<AnatomyItem | ComponentEntry> | KeyboardInteraction[];
 } & {
   keyboardInteractions?: KeyboardInteraction[];
+  features?: string[];
+  anatomy?: AnatomyItem[];
 };
 
 const getItemPropsCount = (item: Record<string, ItemProps>) => {
