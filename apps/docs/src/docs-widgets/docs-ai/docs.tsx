@@ -10,6 +10,7 @@ const generateInitialDocs = server$(async (promptPrefix: string) => {
   return anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 8192,
+    temperature: 0,
     messages: [
       {
         role: "user",
@@ -19,14 +20,15 @@ const generateInitialDocs = server$(async (promptPrefix: string) => {
 
         Example:
 
-        # Combobox
+        # Component Name
 
-        Then, write a brief sentence describing the component in a way that is easy to understand for 15 year olds (make it 8-15 words). 
+        Then write a brief sentence describing the component in a way that is generic and easy to understand for 15 year olds (maximum 15 words). 
+        
+        Do not repeat yourself.
+        
+        Do not mention the words "component" or the component name in the description.
 
-        Some examples:
-        - Display and navigate through multiple content items. (Carousel)
-        - A set of interactive sections that show or hide connected information. (Accordion)
-        - A panel that appears above all other content, blocking interaction with the rest of the page. (Modal)
+        This description should be directly related to what the component does. Do not write about other components or libraries.
 
         After the description, add the hero showcase component with:
 
@@ -47,8 +49,6 @@ const generateInitialDocs = server$(async (promptPrefix: string) => {
         Group the examples with an h2 title, with the h3's being the examples. Otherwise, just add the h3's.
 
         This is NOT related to anything to do with the component state (initial, reactive, uncontrolled, controlled, events, disabled, etc.)
-
-        Then provide a transition paragraph into the state documentation.
         `
       }
     ]
@@ -60,6 +60,7 @@ const generateStateDocs = server$(async (promptPrefix: string) => {
   return anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 8192,
+    temperature: 0,
     messages: [
       {
         role: "user",
@@ -82,6 +83,7 @@ const generateStateDocs = server$(async (promptPrefix: string) => {
         - Configuration examples (filter, loop, etc.)
         - Behavioral examples (empty, inline, etc.)
         - Form examples (form, validation, etc.)
+        - Examples you already wrote in this response
 
         For example:
 
@@ -115,6 +117,54 @@ const generateStateDocs = server$(async (promptPrefix: string) => {
 
         To disable the component, set the disabled prop to true on the <Accordion.Root /> component.
 
+        You are then writing the documentation specific to the behavior of the component.
+
+        Find and gather examples that are related to the behavior of the component. 
+
+        Only write something if the behavioral examples exist.
+
+        DO NOT write about anything that mentions or is relatively considered to be part of a component's state. (e.g. initial, reactive, disabled, etc.), this also cover's the exposed component state
+
+        Do not repeat content from the previous sections!
+
+        Do not write about:
+
+        - Accessibility (label, description, etc.)
+        - Environment examples (CSR, SSR, etc.)
+        - State examples (initial, reactive, disabled, etc.)
+        - Configuration examples (filter, loop, etc.)
+        - Form examples (form, validation, etc.)
+
+        ### Empty UI
+
+        By default, the popover automatically closes when there are no items to display.
+
+        To show UI when there are no items in the popover, use the Combobox.Empty component.
+
+        <Showcase name="empty" />
+
+        ### Inline Mode (Command Palette)
+
+        The Combobox supports an inline mode which allows for searching and selection from a list of options decoupled from the popover.
+
+        To enable inline mode:
+        - Add the mode="inline" prop to <Combobox.Root>
+        - Use the Combobox.Inline component instead of <Combobox.Popover>.
+
+        <Showcase name="inline" />
+
+        Key Differences in Inline Mode:
+        - Always Visible: The listbox remains visible at all times, even after item selection or pressing Escape
+        - Initial State: The first option is automatically highlighted when the combobox renders
+        - Selection Behavior:
+          - Selecting an item does not close the listbox
+          - The input value remains empty after selection
+        - Focus Management:
+          - Highlight state persists when filtering items
+          - Highlight state is preserved when tabbing away and back to the input
+
+        Inline mode is useful when you want users to quickly browse and select from a list while maintaining context of all available options.
+
         `
       }
     ]
@@ -126,6 +176,7 @@ const generateConfigDocs = server$(async (promptPrefix: string) => {
   return anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 8192,
+    temperature: 0,
     messages: [
       {
         role: "user",
@@ -172,66 +223,6 @@ const generateConfigDocs = server$(async (promptPrefix: string) => {
         - Pressing the down arrow key moves focus to the first enabled item.
         - Pressing the up arrow key moves focus to the last enabled item.
         `
-      }
-    ]
-  });
-});
-
-const generateBehavioralDocs = server$(async (promptPrefix: string) => {
-  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-  return anthropic.messages.create({
-    model: "claude-3-5-sonnet-20241022",
-    max_tokens: 8192,
-    messages: [
-      {
-        role: "user",
-        content: `${promptPrefix}
-
-        You are now writing the documentation specific to the behavioral of the component.
-
-        Find and gather examples that are related to the behavioral of the component. 
-        
-        This is NOT related to the state of the component. (e.g. initial, reactive, disabled, etc.)
-
-        Only write something if the behavioral examples exist.
-
-        Do not write about:
-
-        - Accessibility (label, description, etc.)
-        - Environment examples (CSR, SSR, etc.)
-        - State examples (initial, reactive, disabled, etc.)
-        - Configuration examples (filter, loop, etc.)
-        - Form examples (form, validation, etc.)
-
-        ### Empty UI
-
-        By default, the popover automatically closes when there are no items to display.
-
-        To show UI when there are no items in the popover, use the Combobox.Empty component.
-
-        <Showcase name="empty" />
-
-        ### Inline Mode (Command Palette)
-
-        The Combobox supports an inline mode which allows for searching and selection from a list of options decoupled from the popover.
-
-        To enable inline mode:
-        - Add the mode="inline" prop to <Combobox.Root>
-        - Use the Combobox.Inline component instead of <Combobox.Popover>.
-
-        <Showcase name="inline" />
-
-        Key Differences in Inline Mode:
-        - Always Visible: The listbox remains visible at all times, even after item selection or pressing Escape
-        - Initial State: The first option is automatically highlighted when the combobox renders
-        - Selection Behavior:
-          - Selecting an item does not close the listbox
-          - The input value remains empty after selection
-        - Focus Management:
-          - Highlight state persists when filtering items
-          - Highlight state is preserved when tabbing away and back to the input
-
-        Inline mode is useful when you want users to quickly browse and select from a list while maintaining context of all available options.`
       }
     ]
   });
@@ -293,6 +284,7 @@ const generateEnvDocs = server$(async (promptPrefix: string) => {
   return anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 8192,
+    temperature: 0,
     messages: [
       {
         role: "user",
@@ -304,7 +296,14 @@ const generateEnvDocs = server$(async (promptPrefix: string) => {
         
         This is NOT related to the state of the component. (e.g. initial, reactive, disabled, etc.)
 
-        Only write something if the environmental examples exist.
+        ONLY write something if the environmental examples exist. If they don't exist, your output should be empty.
+
+        Do not write about:
+
+        - Accessibility (label, description, etc.)
+        - State examples (initial, reactive, disabled, etc.)
+        - Configuration examples (filter, loop, etc.)
+        - Form examples (form, validation, etc.)
 
         Example:
 
@@ -319,8 +318,6 @@ const generateEnvDocs = server$(async (promptPrefix: string) => {
     ]
   });
 });
-
-// TODO: environment based examples (CSR)
 
 const readFiles = server$(async (path: string) => {
   try {
@@ -363,9 +360,29 @@ const getFilePaths = server$(async (route: string) => {
   };
 });
 
+const writeLogFile = server$(async (content: string) => {
+  try {
+    const { dirname } = await import("node:path");
+    const { fileURLToPath } = await import("node:url");
+
+    const currentFilePath = fileURLToPath(import.meta.url);
+    const logPath = resolve(dirname(currentFilePath), "log.mdx");
+
+    console.log("Writing log to:", logPath);
+    fs.appendFileSync(logPath, `${content}\n\n---\n\n`, "utf-8");
+    return "Log updated successfully!";
+  } catch (error) {
+    console.error("Error writing log:", error);
+    throw new Error(
+      `Failed to write log: ${error instanceof Error ? error.message : "Unknown error"}`
+    );
+  }
+});
+
 export const DocsAI = component$(() => {
   const isGenerating = useSignal(false);
   const status = useSignal("");
+  const currentDocs = useSignal("");
   const loc = useLocation();
   const route = loc.url.pathname.split("/").filter(Boolean)[0];
 
@@ -385,6 +402,8 @@ export const DocsAI = component$(() => {
             ]);
 
           const promptPrefix = `
+            ${currentDocs.value !== "" ? `Documentation written for this component so far: ${currentDocs.value}` : ""}
+          
             Act as a professional documentation writer for a design system that uses Qwik.
 
             You will be given a component implementation and examples. Each new component or example is separated by ---NEW COMPONENT--- or ---NEW EXAMPLE---.
@@ -410,6 +429,8 @@ export const DocsAI = component$(() => {
             <Showcase name="initial" /> (initial is the file name)
 
             When mentioning an API or component surround it with backticks.
+
+            Only output production ready documentation.
           `;
 
           console.log("promptPrefix:", promptPrefix);
@@ -417,19 +438,31 @@ export const DocsAI = component$(() => {
           status.value = "Generating initial documentation...";
           const initialResponse = await generateInitialDocs(promptPrefix);
           const initialDocs = getResponseText(initialResponse);
+          currentDocs.value += initialDocs;
+
+          status.value = "Generating state documentation...";
           const stateResponse = await generateStateDocs(promptPrefix);
           const stateDocs = getResponseText(stateResponse);
+          currentDocs.value += stateDocs;
+
+          status.value = "Generating config documentation...";
           const configResponse = await generateConfigDocs(promptPrefix);
           const configDocs = getResponseText(configResponse);
-          const behavioralResponse = await generateBehavioralDocs(promptPrefix);
-          const behavioralDocs = getResponseText(behavioralResponse);
+          currentDocs.value += configDocs;
+
+          status.value = "Generating form documentation...";
           const formResponse = await generateFormDocs(promptPrefix);
           const formDocs = getResponseText(formResponse);
+          currentDocs.value += formDocs;
+
+          status.value = "Generating environment documentation...";
           const envResponse = await generateEnvDocs(promptPrefix);
           const envDocs = getResponseText(envResponse);
+          currentDocs.value += envDocs;
 
-          console.log("initialDocs:", initialDocs);
-          console.log("stateDocs:", stateDocs);
+          const logResults = await writeDocs(currentDocs.value, route);
+          await writeLogFile(currentDocs.value);
+          status.value = logResults;
 
           status.value = "Evaluating documentation...";
 
@@ -437,10 +470,10 @@ export const DocsAI = component$(() => {
             'import { api } from "./auto-api/api";',
             initialDocs,
             stateDocs,
-            configDocs,
-            behavioralDocs,
-            formDocs,
-            envDocs,
+            configDocs.includes("##") ? configDocs : "",
+            formDocs.includes("##") ? formDocs : "",
+            // Only add the environment documentation if it exists
+            envDocs.includes("##") ? envDocs : "",
             "<APITable api={api} />"
           ].join("\n\n");
 

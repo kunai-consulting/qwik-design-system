@@ -1,0 +1,684 @@
+# Checkbox
+
+A customizable input that lets users select one or more options from a list.
+
+<Showcase name="hero" />
+
+## Features
+
+<Features api={api} />
+
+## Anatomy
+
+<AnatomyTable api={api} />
+
+## Accessibility
+
+### Labeling
+
+Labels are essential for screen readers to identify the checkbox's purpose.
+
+<Showcase name="label" />
+
+In this example, we use the `Checkbox.Label` component to provide an accessible label. The label is automatically associated with the checkbox through ARIA attributes.
+
+### Description
+
+Add descriptive text to provide additional context about the checkbox's purpose.
+
+<Showcase name="description" />
+
+This example demonstrates using `Checkbox.Description` with the `isDescription` prop on `Checkbox.Root` to provide additional context. The description is automatically associated with the checkbox through ARIA attributes.
+
+### Error Messages
+
+Display validation errors in an accessible way.
+
+<Showcase name="validation" />
+
+This example shows how to use `Checkbox.ErrorMessage` to display validation errors. The error message is automatically associated with the checkbox through ARIA attributes and updates the checkbox's `aria-invalid` state.# Checkbox
+
+Select or deselect options with a simple click, perfect for forms and lists.
+
+<Showcase name="hero" />
+
+## Features
+
+<Features api={api} />
+
+## Anatomy
+
+<AnatomyTable api={api} />
+
+## Accessibility
+
+### Labeling
+
+Labels are essential for screen readers to identify the checkbox's purpose. Use the `Checkbox.Label` component to provide an accessible label.
+
+<Showcase name="label" />
+
+In this example, we use the `Checkbox.Label` component which automatically associates the label with the checkbox trigger through proper ARIA attributes.
+
+### Description
+
+For complex choices, provide additional context using the `Checkbox.Description` component. This text is automatically linked to the checkbox through ARIA attributes.
+
+<Showcase name="description" />
+
+The `isDescription` prop on `Checkbox.Root` must be set to `true` when using `Checkbox.Description`.
+
+### Error Messages
+
+When validation fails, use `Checkbox.ErrorMessage` to provide clear feedback. This component automatically sets the appropriate ARIA attributes for accessibility.
+
+<Showcase name="validation" />
+
+The error message is automatically associated with the checkbox through `aria-describedby` and sets `aria-invalid` to true.
+
+### Form Integration
+
+For proper form submission, include `Checkbox.HiddenInput`. This ensures the checkbox works with native form handling while maintaining accessibility.
+
+<Showcase name="form" />
+
+The `name` and `required` props on `Checkbox.Root` are automatically passed to the hidden input element.## Component State
+
+### Initial State
+
+You can set the initial checked state of the checkbox using the `checked` prop on the `Checkbox.Root` component.
+
+<Showcase name="initial" />
+
+### Reactive State
+
+To bind the checkbox state to a reactive signal, use the `bind:checked` prop on the `Checkbox.Root` component. This enables two-way data binding between the checkbox and your application state.
+
+<Showcase name="reactive" />
+
+### Handling State Changes
+
+The `onChange$` prop allows you to listen for changes in the checkbox state. The handler receives the new checked state as an argument.
+
+<Showcase name="change" />
+
+### Programmatic Control
+
+You can programmatically control the checkbox state by modifying the signal passed to the `bind:checked` prop.
+
+<Showcase name="programmatic" />
+
+### Disabled State
+
+To disable the checkbox, set the `disabled` prop to `true` on the `Checkbox.Root` component. This prevents user interaction and applies appropriate visual styling.
+
+<Showcase name="disabled" />
+
+### Indeterminate State
+
+The checkbox supports an indeterminate (mixed) state, which can be useful for representing partially selected states in hierarchical selections. Set the value of `bind:checked` to `"mixed"` to enable this state.
+
+<Showcase name="mixed-initial" />
+
+You can also programmatically toggle between regular and indeterminate states:
+
+<Showcase name="mixed-reactive" />
+
+The indeterminate state automatically transitions to checked state when clicked, following the standard checkbox behavior pattern.## Component State
+
+### Initial State
+
+You can set the initial checked state of the checkbox using the `checked` prop on the `Checkbox.Root` component.
+
+<Showcase name="initial" />
+
+### Reactive State
+
+To bind the checkbox state to a reactive signal, use the `bind:checked` prop on the `Checkbox.Root` component. This enables two-way data binding between the checkbox and your application state.
+
+<Showcase name="reactive" />
+
+### Handling State Changes
+
+The `onChange$` prop allows you to listen for changes in the checkbox state. The handler receives the new checked state as an argument.
+
+<Showcase name="change" />
+
+### Programmatic Control
+
+You can programmatically control the checkbox state by modifying the signal passed to the `bind:checked` prop.
+
+<Showcase name="programmatic" />
+
+### Disabled State
+
+To disable the checkbox, set the `disabled` prop to `true` on the `Checkbox.Root` component. This prevents user interaction and applies appropriate visual styling.
+
+<Showcase name="disabled" />
+
+### Indeterminate State
+
+The checkbox supports an indeterminate (mixed) state, which can be useful for representing partially selected states in hierarchical selections. Set the value of `bind:checked` to `"mixed"` to enable this state.
+
+<Showcase name="mixed-initial" />
+
+You can also programmatically toggle between regular and indeterminate states:
+
+<Showcase name="mixed-reactive" />
+
+The indeterminate state automatically transitions to checked state when clicked, following the standard checkbox behavior pattern.Based on the provided examples and API documentation, I don't see any specific configuration examples for the Checkbox component. The examples provided are focused on:
+
+- Basic usage
+- State management (initial, reactive, disabled)
+- Form integration
+- Validation
+- Accessibility features (labels, descriptions, error messages)
+- Mixed/indeterminate states
+
+There are no examples demonstrating configuration options like:
+- Custom filtering
+- Menu behavior
+- Animation configuration
+- Custom positioning
+- Custom timing
+- Custom sorting
+- etc.
+
+The Checkbox component appears to be focused on core functionality rather than configurable behaviors. If you'd like to document configuration options, you would need to add examples demonstrating specific configurable features of the component.
+
+Would you like me to help document a different aspect of the component, or would you like suggestions for potential configuration options that could be added to the component?Based on the provided examples and API documentation, I don't see any specific configuration examples for the Checkbox component. The examples provided are focused on:
+
+- Basic usage
+- State management (initial, reactive, disabled)
+- Form integration
+- Validation
+- Accessibility features (labels, descriptions, error messages)
+- Mixed/indeterminate states
+
+There are no examples demonstrating configuration options like:
+- Custom filtering
+- Menu behavior
+- Animation configuration
+- Custom positioning
+- Custom timing
+- Custom sorting
+- etc.
+
+The Checkbox component appears to be focused on core checkbox functionality without additional configuration options that would warrant a dedicated configuration section in the documentation.
+
+If you'd like to document configuration options, you would need examples that demonstrate specific configurable behaviors beyond the basic checkbox functionality shown in the current examples.I'll help document the behavioral aspects of the Checkbox component based on the provided examples. Let me analyze the examples that demonstrate behavioral patterns.
+
+## Behavioral Patterns
+
+### Mixed State
+
+The Checkbox supports a mixed (indeterminate) state, which is useful for representing partially selected states, commonly used in parent-child checkbox relationships.
+
+<Showcase name="mixed-reactive" />
+
+In this example, we use:
+- The `bind:checked` prop with a signal that can accept `boolean | "mixed"` type
+- The `Checkbox.Indicator` component conditionally renders different icons based on the state
+
+When in a mixed state:
+1. Clicking the checkbox will set it to `checked`
+2. Subsequent clicks will toggle between `checked` and `unchecked`
+
+You can programmatically set the mixed state:
+
+<Showcase name="mixed-initial" />
+
+### Programmatic Control
+
+The checkbox state can be controlled programmatically using the `bind:checked` signal:
+
+<Showcase name="programmatic" />
+
+This example demonstrates:
+- External control of the checkbox state
+- Using the `bind:checked` prop for two-way data binding
+- Programmatic updates that automatically reflect in the UI
+
+### Change Detection
+
+You can monitor checkbox state changes using the `onChange$` prop:
+
+<Showcase name="change" />
+
+The `onChange$` handler:
+- Receives the new checkbox state as an argument
+- Is called after the internal state updates
+- Can be used to trigger side effects or update other parts of your application
+
+Note: The `onChange$` handler is not called during the initial render, only on user interactions or programmatic changes.
+
+These behavioral patterns provide flexibility in handling complex checkbox interactions and state management scenarios in your application.I'll help document the behavioral aspects of the Checkbox component based on the provided examples. Let me analyze the examples that demonstrate behavioral patterns.
+
+## Behavioral Patterns
+
+### Mixed State
+
+The Checkbox supports a mixed (indeterminate) state, which is useful for representing partially selected states, often used in parent-child checkbox relationships.
+
+<Showcase name="mixed-reactive" />
+
+In this example, we use:
+- The `bind:checked` prop with a signal that can accept `boolean | "mixed"` type
+- The `Checkbox.Indicator` component conditionally renders different icons based on the state
+
+When in a mixed state:
+- Clicking the checkbox will set it to `checked`
+- Subsequent clicks will toggle between `checked` and `unchecked`
+- The mixed state can only be set programmatically
+
+### Programmatic Control
+
+You can programmatically control the checkbox state from outside the component.
+
+<Showcase name="programmatic" />
+
+This example demonstrates:
+- Using the `bind:checked` prop for two-way data binding
+- External button triggering state changes
+- The checkbox immediately reflects state changes from external controls
+
+### Click Behavior
+
+The checkbox can be toggled by clicking either the trigger or its associated label.
+
+<Showcase name="label" />
+
+Key behaviors:
+- Clicking the `Checkbox.Trigger` toggles the state
+- Clicking the `Checkbox.Label` also toggles the state
+- The checkbox maintains a single source of truth for both interaction points
+
+These are the main behavioral patterns demonstrated in the examples. The component follows standard checkbox interaction patterns while providing additional features like the mixed state and programmatic control.
+
+Note: I've focused solely on behavioral aspects and excluded other topics like accessibility, state management, and form integration as requested.Based on the provided examples and component implementation, I'll document the form-related configuration for the Checkbox component.
+
+## Forms
+
+The checkbox can be used within forms by utilizing the `<Checkbox.HiddenInput>` component, which creates a hidden native checkbox input for form submission.
+
+<Showcase name="form" />
+
+The following props can be used to configure the form behavior on the `<Checkbox.Root>` component:
+
+- `name`: Sets the name attribute for the form field
+- `required`: Makes the checkbox a required form field
+- `value`: Sets a custom value to be submitted (defaults to "on")
+
+<Showcase name="value" />
+
+When a custom `value` is provided, the form will submit that value instead of the default "on" value when the checkbox is checked.
+
+## Validation
+
+The checkbox supports form validation through the `<Checkbox.ErrorMessage>` component.
+
+<Showcase name="validation" />
+
+When the `<Checkbox.ErrorMessage>` component is rendered, the checkbox trigger receives an `aria-invalid` state and is automatically associated with the error message through `aria-describedby`.
+
+This allows you to integrate the checkbox with any form validation library or create custom validation logic.
+
+The error state can be triggered by:
+- Form submission attempts
+- Real-time validation
+- External validation libraries
+
+The error message is only displayed when rendered, making it easy to conditionally show validation feedback based on your application's needs.Based on the provided examples and component implementation, I'll document the form-related configuration for the Checkbox component.
+
+## Forms
+
+The checkbox can be used within forms by utilizing the `<Checkbox.HiddenInput>` component, which creates a hidden native checkbox input for form submission.
+
+<Showcase name="form" />
+
+The following props can be used to configure the form behavior on the `<Checkbox.Root>` component:
+
+- `name`: Sets the name attribute for the form field
+- `required`: Makes the checkbox a required form field
+- `value`: Sets a custom value to be submitted (defaults to "on")
+
+<Showcase name="value" />
+
+When a custom `value` is provided, the form will submit that value instead of the default "on" value when the checkbox is checked.
+
+## Validation
+
+The checkbox supports form validation through the `<Checkbox.ErrorMessage>` component.
+
+<Showcase name="validation" />
+
+When the `<Checkbox.ErrorMessage>` component is rendered, the checkbox trigger receives an `aria-invalid` state and is automatically associated with the error message through `aria-describedby`.
+
+This allows you to integrate the checkbox with any form validation library or create custom validation logic.
+
+The error state can be triggered by:
+- Form submission attempts
+- Real-time validation
+- External validation libraries
+
+The error message is only displayed when rendered, making it easy to conditionally show validation feedback based on your application's needs.Based on the provided examples and component implementation, I don't see any specific environmental examples (such as CSR, SSR, or environment-specific implementations) in the showcase examples.
+
+All the provided examples demonstrate functional aspects like state management, form handling, accessibility, and styling, but none specifically showcase environment-related implementations.
+
+Therefore, I have no environment-specific documentation to write for this component.
+
+---
+
+# Checkbox
+
+A customizable input that lets users select one or more options from a list.
+
+<Showcase name="hero" />
+
+## Features
+
+<Features api={api} />
+
+## Anatomy
+
+<AnatomyTable api={api} />
+
+## Accessibility
+
+### Labeling
+
+Labels are essential for screen readers to identify the checkbox's purpose.
+
+<Showcase name="label" />
+
+In this example, we use the `Checkbox.Label` component to provide an accessible label. The label is automatically associated with the checkbox through ARIA attributes.
+
+### Description
+
+Add descriptive text to provide additional context about the checkbox's purpose.
+
+<Showcase name="description" />
+
+This example demonstrates using `Checkbox.Description` with the `isDescription` prop on `Checkbox.Root` to provide additional context. The description is automatically associated with the checkbox through ARIA attributes.
+
+### Error Messages
+
+Display validation errors in an accessible way.
+
+<Showcase name="validation" />
+
+This example shows how to use `Checkbox.ErrorMessage` to display validation errors. The error message is automatically associated with the checkbox through ARIA attributes and updates the checkbox's `aria-invalid` state.## Component State
+
+### Initial State
+
+You can set the initial checked state of the checkbox using the `checked` prop on the `Checkbox.Root` component.
+
+<Showcase name="initial" />
+
+### Reactive State
+
+To bind the checkbox state to a reactive signal, use the `bind:checked` prop on the `Checkbox.Root` component. This enables two-way data binding between the checkbox and your application state.
+
+<Showcase name="reactive" />
+
+### Handling State Changes
+
+The `onChange$` prop allows you to listen for changes in the checkbox state. The handler receives the new checked state as an argument.
+
+<Showcase name="change" />
+
+### Programmatic Control
+
+You can programmatically control the checkbox state by modifying the signal passed to the `bind:checked` prop.
+
+<Showcase name="programmatic" />
+
+### Disabled State
+
+To disable the checkbox, set the `disabled` prop to `true` on the `Checkbox.Root` component. This prevents user interaction and applies appropriate visual styling.
+
+<Showcase name="disabled" />
+
+### Indeterminate State
+
+The checkbox supports an indeterminate (mixed) state, which can be set by passing `"mixed"` as the value to either the `checked` prop or through the bound signal.
+
+<Showcase name="mixed-initial" />
+
+You can also control the indeterminate state programmatically:
+
+<Showcase name="mixed-reactive" />
+
+The indeterminate state is automatically cleared when the user interacts with the checkbox, setting it to either checked or unchecked.Based on the provided examples and API documentation, I don't see any specific configuration examples for the Checkbox component. The examples provided are focused on:
+
+- Basic usage
+- State management (initial, reactive, disabled)
+- Form integration
+- Validation
+- Accessibility features (labels, descriptions, error messages)
+- Mixed/indeterminate states
+
+There are no examples demonstrating configuration options like:
+- Custom filtering
+- Menu behavior
+- Animation configuration
+- Custom positioning
+- Custom timing
+- Custom sorting
+- etc.
+
+The Checkbox component appears to be focused on core functionality rather than configurable behaviors. If you want to document configuration options, you would need examples that demonstrate customizable aspects of the component's behavior beyond its basic functionality.
+
+Would you like me to help document a different aspect of the component, or would you like to add some configuration examples to the component first?Looking through the examples, I can identify behavioral patterns related to the checkbox's indeterminate (mixed) state functionality. Let me document this behavior:
+
+### Indeterminate State
+
+The checkbox supports an indeterminate (mixed) state, which is useful for representing partially selected states, commonly used in hierarchical selections like file trees or bulk actions.
+
+When a checkbox is in an indeterminate state:
+- The checkbox displays a different visual indicator (typically a minus sign)
+- Clicking the checkbox will set it to `checked` state
+- Subsequent clicks will toggle between `checked` and `unchecked` states
+
+<Showcase name="mixed-initial" />
+
+The indeterminate state can be programmatically controlled using the `bind:checked` prop with a value of `"mixed"`:
+
+<Showcase name="mixed-reactive" />
+
+Key Differences in Mixed State:
+- Visual Representation: Uses a distinct visual indicator to represent the partial selection
+- Click Behavior: First click transitions from mixed to checked, then follows normal toggle pattern
+- State Flow: mixed → checked → unchecked → checked (and so on)
+
+This behavior is particularly useful for:
+- Parent checkboxes that control a group of child checkboxes
+- Representing partial selections in bulk actions
+- Indicating incomplete or partial states in complex forms
+
+Note: The indeterminate state is a visual state only - the underlying input element will still submit either a checked or unchecked value when used in forms.Based on the provided examples and component implementation, I'll document the form-related configuration for the Checkbox component.
+
+## Forms
+
+The checkbox can be used within forms by utilizing the `<Checkbox.HiddenInput>` component, which creates a hidden native checkbox input for form submission.
+
+<Showcase name="form" />
+
+The following props can be used to configure the form behavior on the `<Checkbox.Root>` component:
+
+- `name`: Sets the name attribute for the form field
+- `required`: Makes the checkbox a required form field
+- `value`: Sets a custom value to be submitted (defaults to "on")
+
+<Showcase name="value" />
+
+When a custom `value` is provided, the form will submit that value instead of the default "on" value when the checkbox is checked.
+
+## Validation
+
+The checkbox supports form validation through the `<Checkbox.ErrorMessage>` component.
+
+<Showcase name="validation" />
+
+When the `<Checkbox.ErrorMessage>` component is rendered, the checkbox trigger receives an `aria-invalid` state and is automatically associated with the error message through `aria-describedby`.
+
+This allows you to integrate the checkbox with any form validation library or create custom validation logic.
+
+The error state can be used to:
+- Display validation messages
+- Style the checkbox differently when invalid
+- Provide feedback to assistive technologiesBased on the provided examples and component implementation, I don't see any specific environmental examples (such as CSR, SSR, or environment-specific implementations) in the showcase examples.
+
+All the provided examples demonstrate functional aspects like state management, form handling, accessibility, and styling, but none specifically showcase environment-related implementations.
+
+Therefore, I have no environment-specific documentation to write for this component.
+
+---
+
+# Checkbox
+
+Select or deselect options with a simple click, supporting both binary and indeterminate states.
+
+<Showcase name="hero" />
+
+## Features
+
+<Features api={api} />
+
+## Anatomy
+
+<AnatomyTable api={api} />
+
+## Accessibility
+
+### Labeling
+
+Labels are essential for screen readers to identify the checkbox's purpose.
+
+<Showcase name="label" />
+
+In this example, we use the `Checkbox.Label` component to provide an accessible label. The label is automatically associated with the checkbox through ARIA attributes.
+
+### Description
+
+Add detailed explanatory text to help users understand the implications of their choice.
+
+<Showcase name="description" />
+
+This example demonstrates using the `Checkbox.Description` component to provide additional context. The description is automatically linked to the checkbox through ARIA attributes and is read by screen readers.
+
+### Validation
+
+Show error messages when validation fails to guide users toward correct input.
+
+<Showcase name="validation" />
+
+The `Checkbox.ErrorMessage` component provides accessible error feedback. When present, it's automatically announced by screen readers and visually indicates the error state through the `aria-invalid` attribute.## Component State
+
+### Initial State
+
+You can set the initial checked state of a checkbox using the `checked` prop on the `Checkbox.Root` component.
+
+<Showcase name="initial" />
+
+### Reactive State
+
+To bind the checkbox state to a reactive signal, use the `bind:checked` prop on the `Checkbox.Root` component.
+
+<Showcase name="reactive" />
+
+The checkbox state can be read from the bound signal.
+
+### Programmatic Control
+
+The checkbox state can be controlled programmatically using the bound signal.
+
+<Showcase name="programmatic" />
+
+### Change Events
+
+Listen for state changes using the `onChange$` prop. The handler receives the new checked state as an argument.
+
+<Showcase name="change" />
+
+### Disabled State
+
+To disable the checkbox, set the `disabled` prop on the `Checkbox.Root` component. This prevents user interaction and applies appropriate styling.
+
+<Showcase name="disabled" />
+
+The disabled state can also be controlled programmatically.
+
+### Indeterminate State
+
+The checkbox supports an indeterminate (mixed) state, which is useful for representing partially selected states, like in a tree structure.
+
+<Showcase name="mixed-initial" />
+
+The indeterminate state can be set:
+- Initially using `checked="mixed"`
+- Reactively using a signal with `bind:checked`
+
+<Showcase name="mixed-reactive" />
+
+When clicked, an indeterminate checkbox transitions to the checked state, then follows the normal checked/unchecked cycle.Based on the provided examples and API documentation, I don't see any specific configuration examples for the Checkbox component. The examples provided are focused on:
+
+- Basic usage
+- State management (initial, reactive, disabled)
+- Form integration
+- Validation
+- Accessibility features (labels, descriptions, error messages)
+- Mixed/indeterminate states
+
+There are no examples demonstrating configuration options like:
+- Custom filtering
+- Menu behavior
+- Animation configuration
+- Custom positioning
+- Custom timing
+- Custom sorting
+- etc.
+
+The Checkbox component appears to be focused on core checkbox functionality without additional configuration options that would warrant a dedicated configuration section in the documentation.
+
+If you'd like to document configuration options, you would need examples that demonstrate specific configurable behaviors beyond the basic checkbox functionality shown in the current examples.Based on the provided examples and component implementation, I'll document the form-related configuration for the Checkbox component.
+
+## Forms
+
+The checkbox can be used within forms by utilizing the `<Checkbox.HiddenInput>` component, which creates a hidden native checkbox input for form submission.
+
+<Showcase name="form" />
+
+The following props can be used to configure the form behavior on the `<Checkbox.Root>` component:
+
+- `name`: Sets the name attribute for the form field
+- `required`: Makes the checkbox a required form field
+- `value`: Sets a custom value to be submitted (defaults to "on")
+
+<Showcase name="value" />
+
+When a custom `value` is provided, the form will submit that value instead of the default "on" value when the checkbox is checked.
+
+## Validation
+
+The checkbox supports form validation through the `<Checkbox.ErrorMessage>` component.
+
+<Showcase name="validation" />
+
+When the `<Checkbox.ErrorMessage>` component is rendered, the checkbox trigger receives an `aria-invalid` state and is automatically associated with the error message through `aria-describedby`.
+
+This allows you to integrate the checkbox with any form validation library or create custom validation logic.
+
+The error state can be triggered by:
+- Form submission attempts
+- Real-time validation
+- External validation libraries
+
+The error message is only displayed when rendered, making it easy to conditionally show validation feedback based on your application's needs.Based on the provided examples and component implementation, I don't see any specific environmental examples (such as CSR, SSR, or environment-specific implementations) in the showcase examples.
+
+All the provided examples demonstrate functionality like state management, form handling, accessibility features, and various checkbox states, but none specifically showcase environment-related implementations.
+
+Therefore, I have no environment-specific documentation to write for this component.
+
+---
+
