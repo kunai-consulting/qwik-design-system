@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@qwik-ui/headless':
-        specifier: https://pkg.pr.new/qwikifiers/qwik-ui/@qwik-ui/headless@b5fda89
-        version: https://pkg.pr.new/qwikifiers/qwik-ui/@qwik-ui/headless@b5fda89(@builder.io/qwik@1.9.0(@types/node@20.14.11))
+        specifier: 0.6.4
+        version: 0.6.4(@builder.io/qwik@1.9.0(@types/node@20.14.11))
       pagefind:
         specifier: 1.2.0
         version: 1.2.0
@@ -86,8 +86,8 @@ importers:
         specifier: workspace:*
         version: link:../../libs/hooks
       '@qwik-ui/headless':
-        specifier: ^0.6.1
-        version: 0.6.1(@builder.io/qwik@1.9.0(@types/node@20.14.11))
+        specifier: ^0.6.4
+        version: 0.6.4(@builder.io/qwik@1.9.0(@types/node@20.14.11))
       '@qwikest/icons':
         specifier: ^0.0.13
         version: 0.0.13(@builder.io/qwik@1.9.0(@types/node@20.14.11))
@@ -847,15 +847,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@qwik-ui/headless@0.6.1':
-    resolution: {integrity: sha512-WN6q09OogYx3O/3t/HlJDUhCGVWQC3mzXioPgaDJl9G0wWkCvBBxI7AUfpTsvErwhbWL3oqMLn9BnV763NAq2Q==}
-    engines: {node: '>=16.0.0'}
-    peerDependencies:
-      '@builder.io/qwik': ^1.9
-
-  '@qwik-ui/headless@https://pkg.pr.new/qwikifiers/qwik-ui/@qwik-ui/headless@b5fda89':
-    resolution: {tarball: https://pkg.pr.new/qwikifiers/qwik-ui/@qwik-ui/headless@b5fda89}
-    version: 0.6.3
+  '@qwik-ui/headless@0.6.4':
+    resolution: {integrity: sha512-ZHKB3UpJGTzOEfy1c8VTppndQb6dZfIXael9DaNxpaSUWI/Zd88lV4fEBNZ1x//FezvbRybHLwJtVpQ8xmvz3g==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@builder.io/qwik': '>=1.3.1'
@@ -3148,16 +3141,7 @@ snapshots:
     dependencies:
       playwright: 1.46.0
 
-  '@qwik-ui/headless@0.6.1(@builder.io/qwik@1.9.0(@types/node@20.14.11))':
-    dependencies:
-      '@builder.io/qwik': 1.9.0(@types/node@20.14.11)
-      '@floating-ui/core': 1.6.7
-      '@floating-ui/dom': 1.6.10
-      '@oddbird/popover-polyfill': 0.4.3
-      body-scroll-lock-upgrade: 1.1.0
-      focus-trap: 7.5.4
-
-  '@qwik-ui/headless@https://pkg.pr.new/qwikifiers/qwik-ui/@qwik-ui/headless@b5fda89(@builder.io/qwik@1.9.0(@types/node@20.14.11))':
+  '@qwik-ui/headless@0.6.4(@builder.io/qwik@1.9.0(@types/node@20.14.11))':
     dependencies:
       '@builder.io/qwik': 1.9.0(@types/node@20.14.11)
       '@floating-ui/core': 1.6.7
