@@ -11,11 +11,15 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   };
 
   const getVerticalScrollbar = () => {
-    return rootLocator.locator('[data-scroll-area-scrollbar][data-orientation="vertical"]');
+    return rootLocator.locator(
+      '[data-scroll-area-scrollbar][data-orientation="vertical"]'
+    );
   };
 
   const getHorizontalScrollbar = () => {
-    return rootLocator.locator('[data-scroll-area-scrollbar][data-orientation="horizontal"]');
+    return rootLocator.locator(
+      '[data-scroll-area-scrollbar][data-orientation="horizontal"]'
+    );
   };
 
   const getVerticalThumb = () => {
@@ -34,6 +38,6 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getVerticalScrollbar,
     getHorizontalScrollbar,
     getVerticalThumb,
-    getHorizontalThumb,
+    getHorizontalThumb
   };
 }

@@ -13,22 +13,15 @@ export default component$(() => {
       currentPage={selectedPageSig.value}
       pages={paginationItems}
     >
-      <Pagination.Previous class="pagination-previous">
-        ← Previous
-      </Pagination.Previous>
-      
+      <Pagination.Previous class="pagination-previous">← Previous</Pagination.Previous>
+
       {paginationItems.map((item, index) => (
-        <Pagination.Page
-          key={`page-${index}`}
-          class="pagination-page"
-        >
+        <Pagination.Page key={`page-${index}`} class="pagination-page">
           {item}
         </Pagination.Page>
       ))}
-      
-      <Pagination.Next class="pagination-next">
-        Next →
-      </Pagination.Next>
+
+      <Pagination.Next class="pagination-next">Next →</Pagination.Next>
     </Pagination.Root>
   );
-}); 
+});

@@ -1,14 +1,58 @@
 import type { ContentHeading } from "@builder.io/qwik-city";
 import { cn } from "~/utils/cn";
-import { component$, useSignal, $, useOnWindow } from "@builder.io/qwik";
+import {
+  component$,
+  useSignal,
+  $,
+  useOnWindow,
+  useContext,
+  useTask$,
+  type PropsOf,
+  Slot
+} from "@builder.io/qwik";
+import { rootContextId } from "~/routes/layout";
+
+export const MainHeading = component$((props: PropsOf<"h2">) => {
+  return (
+    <h2
+      {...props}
+      class={cn(
+        "mt-16 scroll-m-20 border-b border-b-qwik-neutral-900 pb-1 text-3xl font-semibold tracking-tight text-cool-700 first:mt-0",
+        props.class
+      )}
+    >
+      <Slot />
+    </h2>
+  );
+});
+
+export const SubHeading = component$((props: PropsOf<"h3">) => {
+  return (
+    <h3
+      {...props}
+      class={cn(
+        "mt-8 scroll-m-20 text-2xl font-semibold tracking-tight text-cool-700",
+        props.class
+      )}
+    >
+      <Slot />
+    </h3>
+  );
+});
 
 export const TOC = component$(({ headings }: { headings: ContentHeading[] }) => {
+  const context = useContext(rootContextId);
+
+  useTask$(() => {
+    context.allHeadingsSig.value = [...headings, ...context.allHeadingsSig.value];
+  });
+
   if (headings.length === 0) {
     return null;
   }
   return (
     <div class="space-y-2">
-      <TableOfContents headings={headings} />
+      <TableOfContents headings={context.allHeadingsSig.value} />
     </div>
   );
 });

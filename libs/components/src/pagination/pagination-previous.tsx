@@ -1,8 +1,16 @@
-import { type PropsOf, Slot, component$, useContext, $, useTask$, useSignal } from "@builder.io/qwik";
+import {
+  type PropsOf,
+  Slot,
+  component$,
+  useContext,
+  $,
+  useTask$,
+  useSignal
+} from "@builder.io/qwik";
 import { paginationContextId } from "./pagination-context";
 
 export const PaginationPrevious = component$(
-  ({type, ...props}: PropsOf<"button"> & { isFirst?: boolean }) => {
+  ({ type, ...props }: PropsOf<"button"> & { isFirst?: boolean }) => {
     const context = useContext(paginationContextId);
     const { selectedPageSig } = context;
     const isDisabled = useSignal(context.selectedPageSig.value === 1);
@@ -34,7 +42,7 @@ export const PaginationPrevious = component$(
         disabled={isDisabled.value}
         onClick$={handleClick}
       >
-        <Slot/>
+        <Slot />
       </button>
     );
   }

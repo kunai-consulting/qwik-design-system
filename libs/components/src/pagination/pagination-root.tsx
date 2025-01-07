@@ -13,10 +13,7 @@ import {
   useId,
   $
 } from "@builder.io/qwik";
-import {
-  processChildren,
-  findComponent,
-} from "@kunai-consulting/qwik-hooks";
+import { processChildren, findComponent } from "@kunai-consulting/qwik-hooks";
 import { PaginationPage } from "./pagination-page";
 import { type PaginationContext, paginationContextId } from "./pagination-context";
 import { useBoundSignal } from "../../utils/bound-signal";
@@ -33,25 +30,18 @@ export type PaginationRootProps = PropsOf<"div"> & {
   siblingCount?: number;
 };
 
-export const PaginationRoot =
-  (props: PaginationRootProps) => {
-    let currPageIndex = 0;
+export const PaginationRoot = (props: PaginationRootProps) => {
+  let currPageIndex = 0;
 
-    findComponent(PaginationPage, (pageProps) => {
-      pageProps._index = currPageIndex;
-      currPageIndex++;
-    });
+  findComponent(PaginationPage, (pageProps) => {
+    pageProps._index = currPageIndex;
+    currPageIndex++;
+  });
 
-    processChildren(props.children);
+  processChildren(props.children);
 
-    return (
-      <PaginationBase
-        {...props}
-      >
-        {props.children}
-      </PaginationBase>
-    )
-  };
+  return <PaginationBase {...props}>{props.children}</PaginationBase>;
+};
 
 export const PaginationBase = component$((props: PaginationRootProps) => {
   const {
@@ -69,8 +59,10 @@ export const PaginationBase = component$((props: PaginationRootProps) => {
   const isDisabledSig = useComputed$(() => disabled);
   const selectedPageSig = useBoundSignal(givenPageSig, currentPage || 1);
   const focusedIndexSig = useSignal<number | null>(null);
-  const ellipsisSig = useComputed$(() => getPaginationItems(totalPages,selectedPageSig.value,siblingCount || 1));
-  const pagesSig = useSignal(pages)
+  const ellipsisSig = useComputed$(() =>
+    getPaginationItems(totalPages, selectedPageSig.value, siblingCount || 1)
+  );
+  const pagesSig = useSignal(pages);
 
   const context: PaginationContext = {
     isDisabledSig,
@@ -81,7 +73,7 @@ export const PaginationBase = component$((props: PaginationRootProps) => {
     selectedPageSig,
     ellipsisSig,
     ellipsis,
-    focusedIndexSig,
+    focusedIndexSig
   };
 
   useContextProvider(paginationContextId, context);
@@ -101,8 +93,6 @@ export const PaginationBase = component$((props: PaginationRootProps) => {
     isInitialLoadSig.value = false;
   });
 
-
-
   return (
     <div
       {...rest}
@@ -114,5 +104,3 @@ export const PaginationBase = component$((props: PaginationRootProps) => {
     </div>
   );
 });
-
-

@@ -46,7 +46,7 @@ export const Highlight = component$(
     return (
       <div
         {...props}
-        class={cn("max-h-[31.25rem] max-w-full overflow-auto bg-[#0A0A0B]", props.class)}
+        class={cn("max-h-[31.25rem] max-w-full overflow-auto bg-[#181e20]", props.class)}
       >
         <pre class="whitespace-pre-wrap">
           <code>{codeSig.value}</code>

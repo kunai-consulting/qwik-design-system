@@ -21,14 +21,14 @@ export default component$(() => {
           <kbd class="px-2 py-1 bg-gray-100 rounded">End</kbd> Last page
         </span>
       </p>
-    
+
       <Pagination.Root
         class="pagination-root"
         totalPages={totalPagesSig.value}
         currentPage={selectedPageSig.value}
         pages={paginationItems}
       >
-        <Pagination.Previous 
+        <Pagination.Previous
           class="pagination-previous disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
           aria-label="Go to previous page"
         >
@@ -45,7 +45,7 @@ export default component$(() => {
           </Pagination.Page>
         ))}
 
-        <Pagination.Next 
+        <Pagination.Next
           class="pagination-next disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
           aria-label="Go to next page"
         >
@@ -54,4 +54,4 @@ export default component$(() => {
       </Pagination.Root>
     </div>
   );
-}); 
+});
