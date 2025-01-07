@@ -10,7 +10,7 @@ const generateInitialDocs = server$(async (promptPrefix: string) => {
   return anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 8192,
-    temperature: 1.0,
+    temperature: 0.2,
     messages: [
       {
         role: "user",
@@ -22,7 +22,9 @@ const generateInitialDocs = server$(async (promptPrefix: string) => {
 
         # Component Name
 
-        Then write a brief sentence describing the component in a way that is easy to understand for 15 year olds (make it 8-15 words). 
+        Then write a brief sentence describing the component in a way that is generic and easy to understand for 15 year olds (maximum 15 words). 
+        
+        Do not repeat yourself.
         
         Do not mention the words "component" or the component name in the description.
 
@@ -60,7 +62,7 @@ const generateStateDocs = server$(async (promptPrefix: string) => {
   return anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 8192,
-    temperature: 0,
+    temperature: 0.2,
     messages: [
       {
         role: "user",
@@ -127,7 +129,7 @@ const generateConfigDocs = server$(async (promptPrefix: string) => {
   return anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 8192,
-    temperature: 0,
+    temperature: 0.2,
     messages: [
       {
         role: "user",
@@ -184,7 +186,7 @@ const generateBehavioralDocs = server$(async (promptPrefix: string) => {
   return anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 8192,
-    temperature: 0,
+    temperature: 0.2,
     messages: [
       {
         role: "user",
@@ -245,7 +247,7 @@ const generateFormDocs = server$(async (promptPrefix: string) => {
   return anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 8192,
-    temperature: 0,
+    temperature: 0.2,
     messages: [
       {
         role: "user",
@@ -296,7 +298,7 @@ const generateEnvDocs = server$(async (promptPrefix: string) => {
   return anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 8192,
-    temperature: 0,
+    temperature: 0.2,
     messages: [
       {
         role: "user",
@@ -377,6 +379,7 @@ const getFilePaths = server$(async (route: string) => {
 export const DocsAI = component$(() => {
   const isGenerating = useSignal(false);
   const status = useSignal("");
+  const currentDocs = useSignal("");
   const loc = useLocation();
   const route = loc.url.pathname.split("/").filter(Boolean)[0];
 
@@ -396,6 +399,8 @@ export const DocsAI = component$(() => {
             ]);
 
           const promptPrefix = `
+            ${currentDocs.value !== "" ? `Documentation written for this component so far: ${currentDocs.value}` : ""}
+          
             Act as a professional documentation writer for a design system that uses Qwik.
 
             You will be given a component implementation and examples. Each new component or example is separated by ---NEW COMPONENT--- or ---NEW EXAMPLE---.
@@ -430,18 +435,23 @@ export const DocsAI = component$(() => {
           status.value = "Generating initial documentation...";
           const initialResponse = await generateInitialDocs(promptPrefix);
           const initialDocs = getResponseText(initialResponse);
+          currentDocs.value += initialDocs;
           status.value = "Generating state documentation...";
           const stateResponse = await generateStateDocs(promptPrefix);
           const stateDocs = getResponseText(stateResponse);
+          currentDocs.value += stateDocs;
           status.value = "Generating config documentation...";
           const configResponse = await generateConfigDocs(promptPrefix);
           const configDocs = getResponseText(configResponse);
+          currentDocs.value += configDocs;
           status.value = "Generating behavioral documentation...";
           const behavioralResponse = await generateBehavioralDocs(promptPrefix);
           const behavioralDocs = getResponseText(behavioralResponse);
+          currentDocs.value += behavioralDocs;
           status.value = "Generating form documentation...";
           const formResponse = await generateFormDocs(promptPrefix);
           const formDocs = getResponseText(formResponse);
+          currentDocs.value += formDocs;
           status.value = "Generating environment documentation...";
           const envResponse = await generateEnvDocs(promptPrefix);
           const envDocs = getResponseText(envResponse);
