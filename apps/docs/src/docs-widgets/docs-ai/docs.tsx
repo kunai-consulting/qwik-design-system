@@ -15,7 +15,13 @@ const generateInitialDocs = server$(async (promptPrefix: string) => {
         role: "user",
         content: `${promptPrefix}
 
-        Write a brief sentence describing the component. 
+        Write the title of the component as an h1.
+
+        Example:
+
+        # Combobox
+
+        Then, write a brief sentence describing the component in a way that is easy to understand for 15 year olds (make it 8-15 words). 
 
         Some examples:
         - Display and navigate through multiple content items. (Carousel)
@@ -69,6 +75,14 @@ const generateStateDocs = server$(async (promptPrefix: string) => {
 
         Only write something if the state examples exist.
 
+        Do not write about:
+
+        - Accessibility (label, description, etc.)
+        - Environment examples (CSR, SSR, etc.)
+        - Configuration examples (filter, loop, etc.)
+        - Behavioral examples (empty, inline, etc.)
+        - Form examples (form, validation, etc.)
+
         For example:
 
         Initial values:
@@ -120,8 +134,16 @@ const generateConfigDocs = server$(async (promptPrefix: string) => {
         You are now writing the documentation specific to the configuration of the component.
 
         Find and gather examples that are related to the configuration of the component. 
-        
-        This is NOT related to the state of the component. (e.g. initial, reactive, disabled, etc.)
+
+        Only write something if the configuration examples exist.
+
+        Do not write about:
+
+        - Accessibility (label, description, etc.)
+        - Environment examples (CSR, SSR, etc.)
+        - State examples (initial, reactive, disabled, etc.)
+        - Behavioral examples (empty, inline, etc.)
+        - Form examples (form, validation, etc.)
 
         Determine the h2's and h3's that should be used to organize the examples.
 
@@ -173,6 +195,14 @@ const generateBehavioralDocs = server$(async (promptPrefix: string) => {
 
         Only write something if the behavioral examples exist.
 
+        Do not write about:
+
+        - Accessibility (label, description, etc.)
+        - Environment examples (CSR, SSR, etc.)
+        - State examples (initial, reactive, disabled, etc.)
+        - Configuration examples (filter, loop, etc.)
+        - Form examples (form, validation, etc.)
+
         ### Empty UI
 
         By default, the popover automatically closes when there are no items to display.
@@ -212,6 +242,7 @@ const generateFormDocs = server$(async (promptPrefix: string) => {
   return anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 8192,
+    temperature: 0,
     messages: [
       {
         role: "user",
@@ -224,6 +255,14 @@ const generateFormDocs = server$(async (promptPrefix: string) => {
         This is NOT related to the state of the component. (e.g. initial, reactive, disabled, etc.)
 
         Only write something if the form examples exist.
+
+        Do not write about:
+
+        - Accessibility (label, description, etc.)
+        - Environment examples (CSR, SSR, etc.)
+        - State examples (initial, reactive, disabled, etc.)
+        - Configuration examples (filter, loop, etc.)
+        - Behavioral examples (empty, inline, etc.)
 
         Below is an example of how the form section works in a headless Combobox component:
 
