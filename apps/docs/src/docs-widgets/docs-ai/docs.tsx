@@ -67,6 +67,8 @@ const generateStateDocs = server$(async (promptPrefix: string) => {
 
         From there, look for examples that would fall under this category.
 
+        Only write something if the state examples exist.
+
         For example:
 
         Initial values:
@@ -105,11 +107,179 @@ const generateStateDocs = server$(async (promptPrefix: string) => {
   });
 });
 
-// TODO: Configuration based examples
+const generateConfigDocs = server$(async (promptPrefix: string) => {
+  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  return anthropic.messages.create({
+    model: "claude-3-5-sonnet-20241022",
+    max_tokens: 8192,
+    messages: [
+      {
+        role: "user",
+        content: `${promptPrefix}
 
-// TODO: Behavioral based example
+        You are now writing the documentation specific to the configuration of the component.
 
-// TODO: form based examples (form submission, form validation)
+        Find and gather examples that are related to the configuration of the component. 
+        
+        This is NOT related to the state of the component. (e.g. initial, reactive, disabled, etc.)
+
+        Determine the h2's and h3's that should be used to organize the examples.
+
+        Only write something if the configuration examples exist.
+
+        Below are some configuration examples from a headless Combobox component:
+
+        ## Menu behavior
+
+        ### Custom Filter
+
+        By default, the Combobox filters items based on user input. To disable this, set the filter prop to false.
+
+        <Showcase name="filter" />
+
+        You can use any filtering library. In the example above, we use match-sorter.
+
+        > The filter prop is true by default, using the includes method to filter items.
+
+        ### Looping
+
+        To loop through items, use the loop prop on <Combobox.Root />.
+
+        <Showcase name="loop" />
+
+        - Pressing the down arrow key moves focus to the first enabled item.
+        - Pressing the up arrow key moves focus to the last enabled item.
+        `
+      }
+    ]
+  });
+});
+
+const generateBehavioralDocs = server$(async (promptPrefix: string) => {
+  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  return anthropic.messages.create({
+    model: "claude-3-5-sonnet-20241022",
+    max_tokens: 8192,
+    messages: [
+      {
+        role: "user",
+        content: `${promptPrefix}
+
+        You are now writing the documentation specific to the behavioral of the component.
+
+        Find and gather examples that are related to the behavioral of the component. 
+        
+        This is NOT related to the state of the component. (e.g. initial, reactive, disabled, etc.)
+
+        Only write something if the behavioral examples exist.
+
+        ### Empty UI
+
+        By default, the popover automatically closes when there are no items to display.
+
+        To show UI when there are no items in the popover, use the Combobox.Empty component.
+
+        <Showcase name="empty" />
+
+        ### Inline Mode (Command Palette)
+
+        The Combobox supports an inline mode which allows for searching and selection from a list of options decoupled from the popover.
+
+        To enable inline mode:
+        - Add the mode="inline" prop to <Combobox.Root>
+        - Use the Combobox.Inline component instead of <Combobox.Popover>.
+
+        <Showcase name="inline" />
+
+        Key Differences in Inline Mode:
+        - Always Visible: The listbox remains visible at all times, even after item selection or pressing Escape
+        - Initial State: The first option is automatically highlighted when the combobox renders
+        - Selection Behavior:
+          - Selecting an item does not close the listbox
+          - The input value remains empty after selection
+        - Focus Management:
+          - Highlight state persists when filtering items
+          - Highlight state is preserved when tabbing away and back to the input
+
+        Inline mode is useful when you want users to quickly browse and select from a list while maintaining context of all available options.`
+      }
+    ]
+  });
+});
+
+const generateFormDocs = server$(async (promptPrefix: string) => {
+  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  return anthropic.messages.create({
+    model: "claude-3-5-sonnet-20241022",
+    max_tokens: 8192,
+    messages: [
+      {
+        role: "user",
+        content: `${promptPrefix}
+
+        You are now writing the documentation specific to the configuration of the component.
+
+        Find and gather examples that are related to the configuration of the component. 
+        
+        This is NOT related to the state of the component. (e.g. initial, reactive, disabled, etc.)
+
+        Only write something if the form examples exist.
+
+        Below is an example of how the form section works in a headless Combobox component:
+
+        ## Forms
+
+        To use the combobox in a form, a visually hidden native select element is provided inside of <Combobox.HiddenNativeSelect>.
+
+        <Showcase name="form" />
+
+        The name prop on the Combobox.Root component is used to name the Combobox form field.
+
+        ## Validation
+
+        Form libaries like Modular Forms can be used to validate the combobox form field.
+
+        <Showcase name="validation" />
+
+        When the <Combobox.ErrorMessage> component is rendered, the component is in an invalid state.
+
+        This allows you to use Qwik UI with any form validation library.`
+      }
+    ]
+  });
+});
+
+const generateEnvDocs = server$(async (promptPrefix: string) => {
+  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  return anthropic.messages.create({
+    model: "claude-3-5-sonnet-20241022",
+    max_tokens: 8192,
+    messages: [
+      {
+        role: "user",
+        content: `${promptPrefix}
+
+        You are now writing the documentation specific to the environment of the component.
+
+        Find and gather examples that are related to the environment of the component. 
+        
+        This is NOT related to the state of the component. (e.g. initial, reactive, disabled, etc.)
+
+        Only write something if the environmental examples exist.
+
+        Example:
+
+        ### CSR
+
+        Like every Qwik UI component, the Combobox component can be rendered server-side or client-side.
+
+        <Showcase name="csr" />
+
+        `
+      }
+    ]
+  });
+});
 
 // TODO: environment based examples (CSR)
 
@@ -210,6 +380,14 @@ export const DocsAI = component$(() => {
           const initialDocs = getResponseText(initialResponse);
           const stateResponse = await generateStateDocs(promptPrefix);
           const stateDocs = getResponseText(stateResponse);
+          const configResponse = await generateConfigDocs(promptPrefix);
+          const configDocs = getResponseText(configResponse);
+          const behavioralResponse = await generateBehavioralDocs(promptPrefix);
+          const behavioralDocs = getResponseText(behavioralResponse);
+          const formResponse = await generateFormDocs(promptPrefix);
+          const formDocs = getResponseText(formResponse);
+          const envResponse = await generateEnvDocs(promptPrefix);
+          const envDocs = getResponseText(envResponse);
 
           console.log("initialDocs:", initialDocs);
           console.log("stateDocs:", stateDocs);
@@ -220,7 +398,10 @@ export const DocsAI = component$(() => {
             'import { api } from "./auto-api/api";',
             initialDocs,
             stateDocs,
-            "## Anatomy\n\n<AnatomyTable />",
+            configDocs,
+            behavioralDocs,
+            formDocs,
+            envDocs,
             "<APITable api={api} />"
           ].join("\n\n");
 
