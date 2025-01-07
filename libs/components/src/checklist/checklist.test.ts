@@ -6,20 +6,26 @@ async function setup(page: Page, exampleName: string) {
   return createTestDriver(page);
 }
 
-async function verifyAllCheckboxStates(d: ReturnType<typeof createTestDriver>, checked: boolean) {
+async function verifyAllCheckboxStates(
+  d: ReturnType<typeof createTestDriver>,
+  checked: boolean
+) {
   for (let i = 0; i < 4; i++) {
-    await expect(d.getTriggerAt(i)).toHaveAttribute("aria-checked", checked ? "true" : "false");
+    await expect(d.getTriggerAt(i)).toHaveAttribute(
+      "aria-checked",
+      checked ? "true" : "false"
+    );
     await expect(d.getIndicatorAt(i))[checked ? "toBeVisible" : "toBeHidden"]();
   }
 }
 
-type Action = 'click' | { key: string };
+type Action = "click" | { key: string };
 
 async function allCheckboxes(d: ReturnType<typeof createTestDriver>, action: Action) {
   for (let i = 0; i < 4; i++) {
-    if (typeof action === 'string' && action === 'click') {
+    if (typeof action === "string" && action === "click") {
       await d.getTriggerAt(i).click();
-    } else if ('key' in action) {
+    } else if ("key" in action) {
       await d.getTriggerAt(i).press(action.key);
     }
   }
@@ -51,7 +57,7 @@ test.describe("Select All", () => {
 
     await expect(d.getMainTrigger()).toHaveAttribute("aria-checked", "false");
 
-    await allCheckboxes(d, 'click');
+    await allCheckboxes(d, "click");
     await verifyAllCheckboxStates(d, true);
 
     await expect(d.getMainTrigger()).toHaveAttribute("aria-checked", "true");
@@ -79,7 +85,7 @@ test.describe("Select All", () => {
     const d = await setup(page, "select-all");
 
     //setup
-    await allCheckboxes(d, 'click');
+    await allCheckboxes(d, "click");
     await verifyAllCheckboxStates(d, true);
 
     await d.getMainTrigger().click();
@@ -93,7 +99,7 @@ test.describe("Keyboard interaction", () => {
         THEN its state should toggle`, async ({ page }) => {
     const d = await setup(page, "select-all");
 
-    await d.getMainTrigger().press('Space');
+    await d.getMainTrigger().press("Space");
     await expect(d.getMainTrigger()).toHaveAttribute("aria-checked", "true");
     await expect(d.getMainIndicator()).toBeVisible();
 

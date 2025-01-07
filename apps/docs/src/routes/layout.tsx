@@ -1,10 +1,28 @@
-import { Slot, component$ } from "@builder.io/qwik";
-import { useContent, type RequestHandler } from "@builder.io/qwik-city";
+import {
+  type Signal,
+  Slot,
+  component$,
+  createContextId,
+  useContextProvider,
+  useSignal
+} from "@builder.io/qwik";
+import {
+  type ContentHeading,
+  useContent,
+  type RequestHandler
+} from "@builder.io/qwik-city";
 import { SearchModal } from "~/components/search";
 import { Sidebar } from "~/docs-widgets/sidebar/sidebar";
 import { TOC } from "~/docs-widgets/toc/toc";
 import { components } from "~/mdx/components";
 import { MDXProvider } from "~/mdx/provider";
+import { Header } from "~/docs-widgets/header/header";
+
+type RootContext = {
+  allHeadingsSig: Signal<ContentHeading[]>;
+};
+
+export const rootContextId = createContextId<RootContext>("root-context");
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
   // Control caching for this request for best performance and to reduce hosting costs:
@@ -18,14 +36,19 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 };
 
 export default component$(() => {
+  const allHeadingsSig = useSignal<ContentHeading[]>([]);
   const { headings } = useContent();
+
+  useContextProvider(rootContextId, {
+    allHeadingsSig
+  });
+
   return (
-    <>
-      <SearchModal />
-      <MDXProvider components={components}>
-        <div class="flex gap-4">
-          <Sidebar />
-        <main data-pagefind-body class="mx-auto max-w-screen-md">
+    <MDXProvider components={components}>
+      <Header />
+      <div class="flex gap-4">
+        <Sidebar />
+        <main class="mx-auto max-w-screen-md">
           <Slot />
         </main>
         <aside class="hidden w-60 xl:block">

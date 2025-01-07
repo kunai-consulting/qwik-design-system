@@ -45,6 +45,6 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getFirstButton,
     getPageAtIndex,
     getEllipsis,
-    getActivePage,
+    getActivePage
   };
 }

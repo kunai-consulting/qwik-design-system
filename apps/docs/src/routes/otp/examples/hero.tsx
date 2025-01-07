@@ -84,7 +84,7 @@ const InformationCircle = component$((props: PropsOf<"svg">) => {
 export const TrustedCheckbox = component$(() => {
   return (
     <Checkbox.Root>
-      <Checkbox.HiddenNativeInput />
+      <Checkbox.HiddenInput />
       <div class="flex items-center gap-2">
         <Checkbox.Trigger
           class="size-[25px] rounded-lg relative bg-gray-500 

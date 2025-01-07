@@ -16,5 +16,5 @@ export default component$(() => {
 });
 
 // example styles
-import styles from "./checkbox.css?inline";import { LuCheck } from "@qwikest/icons/lucide";
-
+import styles from "./checkbox.css?inline";
+import { LuCheck } from "@qwikest/icons/lucide";

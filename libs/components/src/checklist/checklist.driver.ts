@@ -54,6 +54,6 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getErrorMessage,
     getMainCheckbox,
     getMainTrigger,
-    getMainIndicator,
+    getMainIndicator
   };
 }

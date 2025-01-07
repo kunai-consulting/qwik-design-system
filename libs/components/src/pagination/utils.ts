@@ -1,5 +1,5 @@
 interface PaginationItem {
-  type: 'page' | 'ellipsis';
+  type: "page" | "ellipsis";
   value?: number;
   key: string;
 }
@@ -13,25 +13,25 @@ interface PaginationProps {
 export function getPaginationItems(
   totalPages: number,
   selectedPage: number,
-  siblingCount = 1,
-): Array<number | '...'> {
+  siblingCount = 1
+): Array<number | "..."> {
   // Input validation
-  if (totalPages < 1) throw new Error('Total pages must be at least 1');
-  if (siblingCount < 0) throw new Error('Sibling count must be non-negative');
+  if (totalPages < 1) throw new Error("Total pages must be at least 1");
+  if (siblingCount < 0) throw new Error("Sibling count must be non-negative");
 
   // Ensure page is within valid range
   const page = Math.min(Math.max(1, selectedPage), totalPages);
-  
+
   const generatePaginationRange = ({
     page,
     totalPages,
-    siblingCount = 1,
+    siblingCount = 1
   }: PaginationProps): PaginationItem[] => {
     const visiblePages = new Set([1, totalPages]);
-    
+
     // Calculate threshold points
-    const minVisiblePages = 5 + (siblingCount * 2); // 1 + ellipsis + siblings + current + ellipsis + last
-    
+    const minVisiblePages = 5 + siblingCount * 2; // 1 + ellipsis + siblings + current + ellipsis + last
+
     if (totalPages <= minVisiblePages) {
       // Show all pages if total is small
       for (let i = 2; i < totalPages; i++) {
@@ -53,13 +53,14 @@ export function getPaginationItems(
       .sort((a, b) => a - b)
       .reduce<PaginationItem[]>((items, pageNum, idx, array) => {
         if (idx > 0 && pageNum - array[idx - 1] > 1) {
-          items.push({ type: 'ellipsis', key: `ellipsis-${items.length}` });
+          items.push({ type: "ellipsis", key: `ellipsis-${items.length}` });
         }
-        items.push({ type: 'page', value: pageNum, key: `page-${pageNum}` });
+        items.push({ type: "page", value: pageNum, key: `page-${pageNum}` });
         return items;
       }, []);
   };
 
-  return generatePaginationRange({ page, totalPages, siblingCount })
-    .map(item => item.type === 'page' ? item.value! : '...');
+  return generatePaginationRange({ page, totalPages, siblingCount }).map((item) =>
+    item.type === "page" ? item.value! : "..."
+  );
 }

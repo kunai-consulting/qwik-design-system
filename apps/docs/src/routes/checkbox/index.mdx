@@ -2,12 +2,21 @@
 title: Qwik Design System | Checkbox
 ---
 
+import { api } from "./auto-api/api";
+
 # Checkbox
 
 A control that enables users to make binary (or ternary) choices through selection and deselection.
 
 <Showcase name="hero" />
 
+## Features
+
+<Features api={api} />
+
+## Anatomy
+
+<AnatomyTable api={api} />
 
 ## Adding a label
 
@@ -102,6 +111,8 @@ To validate a checkbox, use the `Checkbox.ErrorMessage` component. Whenever this
 > Screen readers will announce the error message when the component is rendered, along with an indication that the checkbox is invalid.
 
 <Showcase name="validation" />
+
+<APITable api={api} />
 
 
 

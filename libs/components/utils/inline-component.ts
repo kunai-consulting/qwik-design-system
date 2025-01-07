@@ -1,4 +1,4 @@
-import type { JSXChildren, JSXNode } from '@builder.io/qwik';
+import type { JSXChildren, JSXNode } from "@builder.io/qwik";
 
 /**
  *
