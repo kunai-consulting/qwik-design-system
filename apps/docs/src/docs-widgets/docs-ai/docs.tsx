@@ -10,6 +10,7 @@ const generateInitialDocs = server$(async (promptPrefix: string) => {
   return anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 8192,
+    temperature: 1.0,
     messages: [
       {
         role: "user",
@@ -19,14 +20,13 @@ const generateInitialDocs = server$(async (promptPrefix: string) => {
 
         Example:
 
-        # Combobox
+        # Component Name
 
-        Then, write a brief sentence describing the component in a way that is easy to understand for 15 year olds (make it 8-15 words). 
+        Then write a brief sentence describing the component in a way that is easy to understand for 15 year olds (make it 8-15 words). 
+        
+        Do not mention the words "component" or the component name in the description.
 
-        Some examples:
-        - Display and navigate through multiple content items. (Carousel)
-        - A set of interactive sections that show or hide connected information. (Accordion)
-        - A panel that appears above all other content, blocking interaction with the rest of the page. (Modal)
+        This description should be directly related to what the component does. Do not write about other components or libraries.
 
         After the description, add the hero showcase component with:
 
@@ -60,6 +60,7 @@ const generateStateDocs = server$(async (promptPrefix: string) => {
   return anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 8192,
+    temperature: 0,
     messages: [
       {
         role: "user",
@@ -126,6 +127,7 @@ const generateConfigDocs = server$(async (promptPrefix: string) => {
   return anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 8192,
+    temperature: 0,
     messages: [
       {
         role: "user",
@@ -182,6 +184,7 @@ const generateBehavioralDocs = server$(async (promptPrefix: string) => {
   return anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 8192,
+    temperature: 0,
     messages: [
       {
         role: "user",
@@ -293,6 +296,7 @@ const generateEnvDocs = server$(async (promptPrefix: string) => {
   return anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 8192,
+    temperature: 0,
     messages: [
       {
         role: "user",
@@ -304,7 +308,14 @@ const generateEnvDocs = server$(async (promptPrefix: string) => {
         
         This is NOT related to the state of the component. (e.g. initial, reactive, disabled, etc.)
 
-        Only write something if the environmental examples exist.
+        ONLY write something if the environmental examples exist. If they don't exist, your output should be empty.
+
+        Do not write about:
+
+        - Accessibility (label, description, etc.)
+        - State examples (initial, reactive, disabled, etc.)
+        - Configuration examples (filter, loop, etc.)
+        - Form examples (form, validation, etc.)
 
         Example:
 
@@ -410,6 +421,8 @@ export const DocsAI = component$(() => {
             <Showcase name="initial" /> (initial is the file name)
 
             When mentioning an API or component surround it with backticks.
+
+            Only output production ready documentation.
           `;
 
           console.log("promptPrefix:", promptPrefix);
@@ -417,14 +430,19 @@ export const DocsAI = component$(() => {
           status.value = "Generating initial documentation...";
           const initialResponse = await generateInitialDocs(promptPrefix);
           const initialDocs = getResponseText(initialResponse);
+          status.value = "Generating state documentation...";
           const stateResponse = await generateStateDocs(promptPrefix);
           const stateDocs = getResponseText(stateResponse);
+          status.value = "Generating config documentation...";
           const configResponse = await generateConfigDocs(promptPrefix);
           const configDocs = getResponseText(configResponse);
+          status.value = "Generating behavioral documentation...";
           const behavioralResponse = await generateBehavioralDocs(promptPrefix);
           const behavioralDocs = getResponseText(behavioralResponse);
+          status.value = "Generating form documentation...";
           const formResponse = await generateFormDocs(promptPrefix);
           const formDocs = getResponseText(formResponse);
+          status.value = "Generating environment documentation...";
           const envResponse = await generateEnvDocs(promptPrefix);
           const envDocs = getResponseText(envResponse);
 
@@ -440,7 +458,8 @@ export const DocsAI = component$(() => {
             configDocs,
             behavioralDocs,
             formDocs,
-            envDocs,
+            // Only add the environment documentation if it exists
+            envDocs.includes("##") ? envDocs : "",
             "<APITable api={api} />"
           ].join("\n\n");
 
