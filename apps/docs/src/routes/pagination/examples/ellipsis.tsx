@@ -19,10 +19,7 @@ export default component$(() => {
       >
         <Pagination.Previous class="pagination-previous">Previous</Pagination.Previous>
         {paginationItems.map((item, index) => (
-          <Pagination.Page
-            class="pagination-page"
-            key={`page-${index}-1`}
-          >
+          <Pagination.Page class="pagination-page" key={`page-${index}-1`}>
             {item}
           </Pagination.Page>
         ))}
@@ -40,10 +37,7 @@ export default component$(() => {
       >
         <Pagination.Previous class="pagination-previous">Previous</Pagination.Previous>
         {paginationItems.map((item, index) => (
-          <Pagination.Page
-            class="pagination-page"
-            key={`page-${index}-2`}
-          >
+          <Pagination.Page class="pagination-page" key={`page-${index}-2`}>
             {item}
           </Pagination.Page>
         ))}
@@ -51,4 +45,4 @@ export default component$(() => {
       </Pagination.Root>
     </div>
   );
-}); 
+});

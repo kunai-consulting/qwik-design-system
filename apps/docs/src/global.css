@@ -18,15 +18,29 @@ body {
 
 @font-palette-values --kung-fury {
   font-family: "Monaspace";
-  override-colors: 0 #c4b5fd /* curlies and tags */, 1 hsl(250 100% 80%) /* ? */,
-    2 #d8b4fe /* function */, 3 hsl(188 100% 75%) /* ? */, 4 #18b6f6 /* () */,
-    5 #fff /* property name */, 6 hsl(210 40% 80%) /* ? */,
-    7 #f87171 /* numbers */, 8 #cbd5e1 /* angle brackets */;
+  override-colors: 
+    0 theme('colors.qwik.neutral.400') /* curlies and tags */,
+    1 theme('colors.qwik.neutral.300') /* punctuation */,
+    2 theme('colors.qwik.blue.300') /* function */,
+    3 theme('colors.qwik.neutral.200') /* operators */,
+    4 theme('colors.qwik.neutral.300') /* parentheses */,
+    5 theme('colors.qwik.blue.100') /* property name */,
+    6 theme('colors.qwik.neutral.200') /* misc syntax */,
+    7 theme('colors.qwik.purple.200') /* numbers */,
+    8 theme('colors.qwik.neutral.300') /* angle brackets */,
+    9 theme('colors.qwik.purple.300') /* keywords */,
+    10 theme('colors.qwik.blue.200') /* strings */,
+    11 theme('colors.qwik.neutral.400') /* comments */,
+    12 theme('colors.qwik.purple.100') /* decorators */,
+    13 theme('colors.qwik.blue.400') /* special characters */,
+    14 theme('colors.qwik.neutral.100') /* doc strings */,
+    15 theme('colors.qwik.blue.300') /* class names */;
 }
 
 pre > code {
   font-family: "Monaspace", monospace;
   font-palette: --kung-fury;
+  line-height: 1.6;
 }
 
 pre {

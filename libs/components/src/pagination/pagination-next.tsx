@@ -1,14 +1,22 @@
-import { type PropsOf, Slot, component$, useContext, useTask$, $, useSignal } from "@builder.io/qwik";
+import {
+  type PropsOf,
+  Slot,
+  component$,
+  useContext,
+  useTask$,
+  $,
+  useSignal
+} from "@builder.io/qwik";
 import { paginationContextId } from "./pagination-context";
 
 export const PaginationNext = component$(
-  ({type, ...props}: PropsOf<"button"> & { isLast?: boolean }) => {
+  ({ type, ...props }: PropsOf<"button"> & { isLast?: boolean }) => {
     const context = useContext(paginationContextId);
     const { selectedPageSig, totalPages } = context;
 
     const isDisabled = useSignal(selectedPageSig.value === totalPages);
 
-    useTask$(({track}) => {
+    useTask$(({ track }) => {
       track(() => context.selectedPageSig.value);
       isDisabled.value = context.selectedPageSig.value === totalPages;
     });
@@ -35,7 +43,7 @@ export const PaginationNext = component$(
         disabled={isDisabled.value}
         onClick$={handleClick}
       >
-        <Slot/>
+        <Slot />
       </button>
     );
   }

@@ -351,14 +351,14 @@ test.describe("critical functionality", () => {
     const input = d.getInput();
 
     await input.pressSequentially("124");
-    
+
     await input.press("Home");
     await input.press("ArrowRight");
-    
+
     await input.pressSequentially("3");
-    
+
     await expect(input).toHaveValue("134");
-    
+
     await expect(d.getItemAt(2)).toHaveAttribute("data-highlighted");
   });
 
@@ -376,7 +376,7 @@ test.describe("critical functionality", () => {
     await input.press("ArrowLeft");
     await expect(d.getItemAt(2)).toHaveAttribute("data-highlighted");
 
-    await input.press("Backspace")
+    await input.press("Backspace");
     await input.press("ArrowRight");
     await expect(d.getItemAt(2)).toHaveAttribute("data-highlighted");
   });

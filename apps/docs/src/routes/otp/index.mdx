@@ -2,6 +2,8 @@
 title: Qwik Design System | OTP Input
 ---
 
+import { api } from './auto-api/api';
+
 # OTP Input
 
 A control that enables users to enter one-time passwords or verification codes with individual character inputs.
@@ -86,4 +88,6 @@ When using the OTP within a form, include the Otp.HiddenInput with a "name" prop
 • Default aria-label of "Enter your OTP" is used (customizable through props).  
 • Keyboard interactions are preserved, including arrow keys, Shift+arrow range selection, and pasting.  
 • Disabled state is exposed with proper attributes for assistive technologies.
+
+<APITable api={api} />
 

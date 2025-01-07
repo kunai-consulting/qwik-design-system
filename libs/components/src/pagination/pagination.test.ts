@@ -8,7 +8,7 @@ async function setup(page: Page, exampleName: string) {
   const driver = createTestDriver(page);
 
   return {
-    driver,
+    driver
   };
 }
 
@@ -26,9 +26,7 @@ test.describe("Critical Functionality", () => {
 
   test(`GIVEN a pagination control
         WHEN the pagination is rendered
-        THEN the first page control should be the current page`, async ({
-    page,
-  }) => {
+        THEN the first page control should be the current page`, async ({ page }) => {
     const { driver: d } = await setup(page, "hero");
 
     await expect(d.getPageAtIndex(1)).toHaveAttribute("data-current");
@@ -36,9 +34,7 @@ test.describe("Critical Functionality", () => {
 
   test(`GIVEN a pagination control
         WHEN the pagination is rendered
-        THEN other page controls should not be the current page`, async ({
-    page,
-  }) => {
+        THEN other page controls should not be the current page`, async ({ page }) => {
     const { driver: d } = await setup(page, "hero");
 
     await expect(d.getPageAtIndex(2)).not.toHaveAttribute("data-current");
@@ -51,9 +47,7 @@ test.describe("Critical Functionality", () => {
 
   test(`GIVEN a pagination control
         WHEN the pagination is rendered and the third page selected
-        THEN the selected page should be current and disabled`, async ({
-    page,
-  }) => {
+        THEN the selected page should be current and disabled`, async ({ page }) => {
     const { driver: d } = await setup(page, "hero");
 
     await expect(d.getPageAtIndex(4)).not.toHaveAttribute("data-current");
@@ -65,9 +59,7 @@ test.describe("Critical Functionality", () => {
 
   test(`GIVEN a pagination control
         WHEN the pagination is rendered and the last button clicked
-        THEN the last page should be current and disabled`, async ({
-    page,
-  }) => {
+        THEN the last page should be current and disabled`, async ({ page }) => {
     const { driver: d } = await setup(page, "first-last");
 
     await expect(d.getFirstButton()).toBeVisible();
@@ -80,9 +72,7 @@ test.describe("Critical Functionality", () => {
 
   test(`GIVEN a pagination control
         WHEN the pagination is rendered and the first button clicked
-        THEN the first page should be current and disabled`, async ({
-    page,
-  }) => {
+        THEN the first page should be current and disabled`, async ({ page }) => {
     const { driver: d } = await setup(page, "first-last");
 
     await expect(d.getFirstButton()).toBeVisible();
@@ -96,9 +86,7 @@ test.describe("Critical Functionality", () => {
 
   test(`GIVEN a pagination control
         WHEN the pagination is rendered and the default page is set to 5
-        THEN the fifth page should be current and disabled`, async ({
-    page,
-  }) => {
+        THEN the fifth page should be current and disabled`, async ({ page }) => {
     const { driver: d } = await setup(page, "page");
 
     await expect(d.getPageAtIndex(5)).toHaveAttribute("data-current");
@@ -107,9 +95,7 @@ test.describe("Critical Functionality", () => {
 
   test(`GIVEN a pagination control
         WHEN the pagination is rendered and the per page is set to 4 and next button is clicked
-        THEN the fifth page should be current and disabled`, async ({
-    page,
-  }) => {
+        THEN the fifth page should be current and disabled`, async ({ page }) => {
     const { driver: d } = await setup(page, "per-page");
 
     await d.getNextButton().click();
@@ -119,9 +105,7 @@ test.describe("Critical Functionality", () => {
 
   test(`GIVEN a pagination control
         WHEN the pagination is rendered and the per page is set to 4 and next button is clicked three times
-        THEN the last page should be current and disabled`, async ({
-    page,
-  }) => {
+        THEN the last page should be current and disabled`, async ({ page }) => {
     const { driver: d } = await setup(page, "per-page");
 
     await d.getNextButton().click();
@@ -133,9 +117,7 @@ test.describe("Critical Functionality", () => {
 
   test(`GIVEN a pagination control
         WHEN the pagination is rendered and the per page is set to 4 and previous button is clicked
-        THEN the sixth page should be current and disabled`, async ({
-    page,
-  }) => {
+        THEN the sixth page should be current and disabled`, async ({ page }) => {
     const { driver: d } = await setup(page, "per-page");
 
     await d.getLastButton().click();
@@ -146,9 +128,7 @@ test.describe("Critical Functionality", () => {
 
   test(`GIVEN a pagination control
         WHEN the pagination is rendered and the per page is set to 4 and previous button is clicked three times
-        THEN the first page should be current and disabled`, async ({
-    page,
-  }) => {
+        THEN the first page should be current and disabled`, async ({ page }) => {
     const { driver: d } = await setup(page, "per-page");
 
     await d.getLastButton().click();

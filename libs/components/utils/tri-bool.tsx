@@ -1,7 +1,7 @@
-export type TriBool = boolean | 'indeterminate';
+export type TriBool = boolean | "indeterminate";
 export function getTriBool(boolArr: boolean[]): TriBool {
   if (boolArr.length === 0) {
-    return 'indeterminate';
+    return "indeterminate";
   }
   if (boolArr.every((e) => e === true)) {
     return true;
@@ -11,5 +11,5 @@ export function getTriBool(boolArr: boolean[]): TriBool {
     return false;
   }
 
-  return 'indeterminate';
+  return "indeterminate";
 }

@@ -1,4 +1,11 @@
-import { component$, type PropsOf, Slot, useContextProvider, useSignal, useTask$ } from "@builder.io/qwik";
+import {
+  component$,
+  type PropsOf,
+  Slot,
+  useContextProvider,
+  useSignal,
+  useTask$
+} from "@builder.io/qwik";
 import { findComponent, processChildren } from "../../utils/inline-component";
 import { ChecklistItem } from "./checklist-item";
 import { Checkbox } from "..";
@@ -28,7 +35,7 @@ export const ChecklistRoot = ({ children, ...props }: ChecklistRootProps) => {
 
 export const ChecklistBase = component$((props: ChecklistRootProps) => {
   const isAllCheckedSig = useSignal(false);
-  const checkedStatesSig = useSignal<(boolean | 'mixed')[]>([]);
+  const checkedStatesSig = useSignal<(boolean | "mixed")[]>([]);
 
   const context: ChecklistContext = {
     isAllCheckedSig,
@@ -39,7 +46,12 @@ export const ChecklistBase = component$((props: ChecklistRootProps) => {
 
   // The checkbox root to the select all checkbox
   return (
-    <Checkbox.Root role="group" bind:checked={isAllCheckedSig} data-qds-checklist-root {...props}>
+    <Checkbox.Root
+      role="group"
+      bind:checked={isAllCheckedSig}
+      data-qds-checklist-root
+      {...props}
+    >
       <Slot />
     </Checkbox.Root>
   );

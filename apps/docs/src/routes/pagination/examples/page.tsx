@@ -20,14 +20,11 @@ export default component$(() => {
       <Pagination.Previous>Previous</Pagination.Previous>
 
       {/* creates 10 pages */}
-      {Array.from({length: totalPagesSig.value}, (_, index) => {
+      {Array.from({ length: totalPagesSig.value }, (_, index) => {
         const uniqueKey = `page-${index}-${Date.now()}`;
 
         return (
-          <Pagination.Page
-            class="pagination-page"
-            key={uniqueKey}
-          >
+          <Pagination.Page class="pagination-page" key={uniqueKey}>
             <span>{index + 1}</span>
           </Pagination.Page>
         );

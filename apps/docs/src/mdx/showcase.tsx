@@ -54,7 +54,7 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
           {MetaGlobComponentSig.value && <MetaGlobComponentSig.value />}
         </section>
       </Carousel.Slide>
-      <Carousel.Slide class="border border-qwik-neutral-900 rounded-md overflow-clip">
+      <Carousel.Slide class="border border-qwik-neutral-900 rounded-md overflow-clip text-sm">
         <Highlight code={componentCodeSig.value || ""} />
       </Carousel.Slide>
     </Carousel.Root>
