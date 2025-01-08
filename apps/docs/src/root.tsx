@@ -32,9 +32,7 @@ export default component$(() => {
         <script
           dangerouslySetInnerHTML={`
             window.addEventListener('initPagefind', async () => {
-              console.log('initPagefind');
               const pagefind = await import("/pagefind/pagefind.js");
-              console.log(pagefind);
               await pagefind.init();
               window.pagefind = pagefind;
             });
