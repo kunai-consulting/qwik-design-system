@@ -30,6 +30,15 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return getHorizontalScrollbar().locator("[data-scroll-area-thumb]");
   };
 
+  const getViewportAttributes = async () => {
+    const viewport = getViewport();
+    return {
+      tabIndex: await viewport.getAttribute("tabindex"),
+      role: await viewport.getAttribute("role"),
+      ariaLabel: await viewport.getAttribute("aria-label"),
+    };
+  };
+
   return {
     ...rootLocator,
     locator: rootLocator,
@@ -38,6 +47,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getVerticalScrollbar,
     getHorizontalScrollbar,
     getVerticalThumb,
-    getHorizontalThumb
+    getHorizontalThumb,
+    getViewportAttributes
   };
 }
