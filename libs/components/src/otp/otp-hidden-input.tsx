@@ -14,6 +14,7 @@ type OtpNativeInputProps = PropsOf<"input"> & {
   pattern?: string | null;
 };
 
+/** Hidden input component that handles OTP input interactions and validation */
 export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
   const context = useContext(OTPContextId);
   const previousValue = useSignal<string>("");
@@ -166,7 +167,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
 
     // No longer first keystroke
     isFirstKeystroke.value = false;
-    
+
     const isBackspace = previousValue.value.length > newValue.length;
     const position = input.selectionStart ?? 0;
 
@@ -198,7 +199,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
         end: position + 1
       };
     }
-});
+  });
 
   const handleKeyUp = $((e: KeyboardEvent) => {
     if (e.key === "Shift") {
@@ -231,6 +232,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       value={context.inputValueSig.value}
       disabled={context.isDisabledSig.value ?? false}
       maxLength={context.numItemsSig.value}
+      // The identifier for the hidden input element that handles OTP input
       data-qds-otp-hidden-input
       inputMode="numeric"
       onInput$={[handleInput, props.onInput$]}

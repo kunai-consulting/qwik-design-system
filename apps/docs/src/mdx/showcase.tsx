@@ -40,7 +40,7 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
 
   return (
     <Carousel.Root class="my-4">
-      <Carousel.Pagination class="flex gap-2 py-4">
+      <Carousel.Pagination data-pagefind-ignore class="flex gap-2 py-4">
         <Carousel.Bullet class="data-[active]:bg-qwik-blue-800 data-[active]:!text-[#fff] p-2 rounded-md hover:bg-qwik-blue-200 hover:text-qwik-neutral-700 transition-colors outline-qwik-blue-500">
           Preview
         </Carousel.Bullet>
@@ -54,7 +54,7 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
           {MetaGlobComponentSig.value && <MetaGlobComponentSig.value />}
         </section>
       </Carousel.Slide>
-      <Carousel.Slide class="border border-qwik-neutral-900 rounded-md overflow-clip">
+      <Carousel.Slide class="border border-qwik-neutral-900 rounded-md overflow-clip text-sm">
         <Highlight code={componentCodeSig.value || ""} />
       </Carousel.Slide>
     </Carousel.Root>

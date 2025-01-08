@@ -1,6 +1,8 @@
-import { createContextId, JSXChildren, QRL, type Signal } from '@builder.io/qwik';
+import { createContextId, JSXChildren, QRL, type Signal } from "@builder.io/qwik";
 
-export const paginationContextId = createContextId<PaginationContext>('qds-pagination-context');
+export const paginationContextId = createContextId<PaginationContext>(
+  "qds-pagination-context"
+);
 
 export type PaginationContext = {
   selectedPageSig: Signal<number>;
@@ -12,6 +14,4 @@ export type PaginationContext = {
   ellipsisSig: Signal<any[]>;
   focusedIndexSig: Signal<number | null>;
   ellipsis?: JSXChildren;
-}
-
-
+};

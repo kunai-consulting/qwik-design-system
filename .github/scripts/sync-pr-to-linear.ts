@@ -2,7 +2,7 @@ import { LinearClient } from "@linear/sdk";
 
 async function syncPrToLinear() {
   const linearClient = new LinearClient({
-    apiKey: process.env.LINEAR_API_KEY,
+    apiKey: process.env.LINEAR_API_KEY
   });
 
   const team = await linearClient.team("QWIK");
@@ -24,8 +24,8 @@ async function syncPrToLinear() {
     filter: {
       team: { id: { eq: team.id } },
       project: { id: { eq: project.id } },
-      title: { eq: issueTitle },
-    },
+      title: { eq: issueTitle }
+    }
   });
 
   const existingIssue = existingIssues.nodes[0];
@@ -41,7 +41,7 @@ async function syncPrToLinear() {
 
   const createdComment = await linearClient.createComment({
     issueId: existingIssue.id,
-    body: fullComment,
+    body: fullComment
   });
 
   console.log(`Comment added to Linear issue ${existingIssue.id}`);

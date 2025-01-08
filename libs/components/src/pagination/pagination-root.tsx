@@ -13,11 +13,7 @@ import {
   useId,
   $,
 } from '@builder.io/qwik';
-// import {
-//   processChildren,
-//   findComponent,
-// } from "@kunai-consulting/qwik-hooks";
-import { processChildren, findComponent } from '../../utils/inline-component';
+import { findComponent, processChildren } from '../../utils/inline-component';
 import { PaginationPage } from './pagination-page';
 import {
   type PaginationContext,

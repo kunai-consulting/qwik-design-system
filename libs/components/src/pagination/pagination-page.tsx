@@ -1,38 +1,44 @@
-import {component$, Slot, useComputed$, useContext, useTask$, useSignal, $} from "@builder.io/qwik";
-import type {QwikIntrinsicElements} from "@builder.io/qwik";
-import {paginationContextId} from "./pagination-context";
+import {
+  component$,
+  Slot,
+  useComputed$,
+  useContext,
+  useTask$,
+  useSignal,
+  $
+} from "@builder.io/qwik";
+import type { QwikIntrinsicElements } from "@builder.io/qwik";
+import { paginationContextId } from "./pagination-context";
 
 type AllowedElements = "button" | "a" | "div" | "span";
 
 type PaginationPageProps = {
   _index?: number;
   isDisabled?: boolean;
-}
+};
 
 export const PaginationPage = component$(
   <C extends AllowedElements = "button">(
     props: QwikIntrinsicElements[C] & { as?: C } & PaginationPageProps
   ) => {
-    const {as, _index, isDisabled, ...rest} = props;
+    const { as, _index, isDisabled, ...rest } = props;
     const Comp = as ?? "button";
     const context = useContext(paginationContextId);
     const pageRef = useSignal<HTMLElement>();
 
     if (_index === undefined) {
-      throw new Error('Qwik Design System: PaginationPage must have an index');
+      throw new Error("Qwik Design System: PaginationPage must have an index");
     }
 
-    const isVisible = useComputed$(() => 
-      context.ellipsisSig.value.includes(_index + 1)
-    );
+    const isVisible = useComputed$(() => context.ellipsisSig.value.includes(_index + 1));
 
     if (!isVisible.value) {
       const isPrevVisible = context.ellipsisSig.value.includes(_index);
       return isPrevVisible ? <span>{context.ellipsis}</span> : null;
     }
 
-    const isCurrentPage = useComputed$(() => 
-      (_index + 1) === context.selectedPageSig.value
+    const isCurrentPage = useComputed$(
+      () => _index + 1 === context.selectedPageSig.value
     );
 
     useTask$(({ track }) => {
@@ -45,25 +51,25 @@ export const PaginationPage = component$(
     const handleKeyDown$ = $((e: KeyboardEvent) => {
       const currentFocusedIndex = context.focusedIndexSig.value;
       if (currentFocusedIndex === null) return;
-  
+
       switch (e.key) {
-        case 'ArrowRight':
+        case "ArrowRight":
           e.preventDefault();
           if (currentFocusedIndex < context.pagesSig.value.length - 1) {
             context.focusedIndexSig.value = currentFocusedIndex + 1;
           }
           break;
-        case 'ArrowLeft':
+        case "ArrowLeft":
           e.preventDefault();
           if (currentFocusedIndex > 0) {
             context.focusedIndexSig.value = currentFocusedIndex - 1;
           }
           break;
-        case 'Home':
+        case "Home":
           e.preventDefault();
           context.focusedIndexSig.value = 0;
           break;
-        case 'End':
+        case "End":
           e.preventDefault();
           context.focusedIndexSig.value = context.pagesSig.value.length - 1;
           break;

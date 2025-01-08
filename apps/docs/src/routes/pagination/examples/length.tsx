@@ -17,14 +17,11 @@ export default component$(() => {
     >
       <Pagination.Previous class="pagination-previous">Previous</Pagination.Previous>
       {paginationItems.map((item, index) => (
-        <Pagination.Page
-          class="pagination-page"
-          key={`page-${index}`}
-        >
+        <Pagination.Page class="pagination-page" key={`page-${index}`}>
           {item}
         </Pagination.Page>
       ))}
       <Pagination.Next class="pagination-next">Next</Pagination.Next>
     </Pagination.Root>
   );
-}); 
+});

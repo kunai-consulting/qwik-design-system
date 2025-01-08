@@ -1,5 +1,5 @@
-import { expect, test, type Page } from '@playwright/test';
-import { createTestDriver } from './label.driver';
+import { expect, test, type Page } from "@playwright/test";
+import { createTestDriver } from "./label.driver";
 
 async function setup(page: Page, exampleName: string) {
   await page.goto(`/headless/label/${exampleName}`);
@@ -8,12 +8,12 @@ async function setup(page: Page, exampleName: string) {
   return { driver };
 }
 
-test.describe('Label usage', () => {
+test.describe("Label usage", () => {
   test(`GIVEN a label
         WHEN a label is rendered
         THEN it should be visible
   `, async ({ page }) => {
-    const { driver: d } = await setup(page, 'hero');
+    const { driver: d } = await setup(page, "hero");
 
     await expect(d.getLabel()).toBeVisible();
   });
@@ -22,7 +22,7 @@ test.describe('Label usage', () => {
         WHEN the label is clicked
         THEN the input should be focused
   `, async ({ page }) => {
-    const { driver: d } = await setup(page, 'hero');
+    const { driver: d } = await setup(page, "hero");
 
     await d.getLabel().click();
     await expect(d.getInput()).toBeFocused();
@@ -32,7 +32,7 @@ test.describe('Label usage', () => {
         WHEN the label is double clicked
         THEN the label text should not be selected
     `, async ({ page }) => {
-    const { driver: d } = await setup(page, 'hero');
+    const { driver: d } = await setup(page, "hero");
 
     await d.getLabel().dblclick();
     const selection = await page.evaluate(() => window.getSelection()?.toString());

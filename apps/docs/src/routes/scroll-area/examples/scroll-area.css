@@ -5,6 +5,7 @@
     width: 100%;
     height: 100%;
     --thumb-size: 12px;
+    --scroll-bar-size: 16px;
 }
 
 .scroll-area-viewport {
@@ -27,7 +28,7 @@
     touch-action: none;
     user-select: none;
     padding: 2px;
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.12);
     transition: background 160ms ease-out;
     position: absolute;
 }
@@ -50,15 +51,15 @@
     position: relative;
     height: var(--thumb-size);
     width: var(--thumb-size);
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.4);
     border-radius: 9999px;
     transition: background 160ms ease-out;
 }
 
 .scroll-area-thumb:hover {
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.5);
 }
 
 .scroll-area-thumb[data-dragging] {
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(255, 255, 255, 0.6);
 }

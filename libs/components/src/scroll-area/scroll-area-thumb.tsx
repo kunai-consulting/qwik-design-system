@@ -24,12 +24,14 @@ export const ScrollAreaThumb = component$<ScrollAreaThumb>((props) => {
     startClientY: 0,
     startClientX: 0,
     startScrollTop: 0,
-    startScrollLeft: 0
+    startScrollLeft: 0,
+    activeThumb: null as HTMLElement | null,
+    activeScrollbar: null as HTMLElement | null
   });
 
   const onDragStart$ = $((e: MouseEvent) => {
-    const thumb = context.thumbRef.value;
-    const scrollbar = context.scrollbarRef.value;
+    const thumb = e.target as HTMLElement;
+    const scrollbar = thumb.parentElement;
     const viewport = context.viewportRef.value;
 
     if (!scrollbar) return;
@@ -43,15 +45,17 @@ export const ScrollAreaThumb = component$<ScrollAreaThumb>((props) => {
       startClientY: e.clientY,
       startClientX: e.clientX,
       startScrollTop: viewport.scrollTop,
-      startScrollLeft: viewport.scrollLeft
+      startScrollLeft: viewport.scrollLeft,
+      activeThumb: thumb,
+      activeScrollbar: scrollbar
     };
   });
 
   const onDragMove$ = $((e: MouseEvent) => {
     if (!isDragging.value) return;
 
-    const thumb = context.thumbRef.value;
-    const scrollbar = context.scrollbarRef.value;
+    const thumb = dragData.value.activeThumb;
+    const scrollbar = dragData.value.activeScrollbar;
     const viewport = context.viewportRef.value;
 
     if (!scrollbar) return;

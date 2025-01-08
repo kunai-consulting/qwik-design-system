@@ -3,7 +3,7 @@ import { Checkbox } from "..";
 import { checklistContextId } from "./checklist-context";
 
 export const ChecklistSelectAll = component$(
-  (props: PropsOf<typeof Checkbox.Trigger>) => {    
+  (props: PropsOf<typeof Checkbox.Trigger>) => {
     return (
       <Checkbox.Trigger data-qds-checklist-select-all-trigger {...props}>
         <Slot />
