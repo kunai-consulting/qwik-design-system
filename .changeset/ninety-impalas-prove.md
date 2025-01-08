@@ -1,5 +1,5 @@
 ---
-"@kunai-consulting/qwik-components": patch
+"@kunai-consulting/qwik": patch
 ---
 
 Updated focus state, added test

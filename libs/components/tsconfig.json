@@ -16,9 +16,6 @@
     "incremental": true,
     "isolatedModules": true,
     "types": ["vite/client"],
-    "paths": {
-      "@kunai-consulting/qwik-hooks": ["../hooks"]
-    }
   },
   "include": ["src"]
 }

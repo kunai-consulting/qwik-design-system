@@ -1,6 +1,6 @@
 import { type PropsOf, component$, useSignal } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import { Otp } from "@kunai-consulting/qwik-components";
+import { Otp } from "@kunai-consulting/qwik";
 
 export const head: DocumentHead = {
   title: "Qwik Design System",

@@ -38,14 +38,8 @@ Create a new design system from the Qwik Design System template, a starting poin
 
 ## Installation 💻
 
-To install Qwik the ui components, run the following command:
+To install the project, run the following command:
 
 ```shell
-npm i -D @kunai-consulting/qwik-components
-```
-
-To install the ui hooks, run the following command:
-
-```shell
-npm i -D @kunai-consulting/qwik-hooks
+npm i -D @kunai-consulting/qwik
 ```
