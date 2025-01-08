@@ -3,59 +3,56 @@ import {
   type QRL,
   Slot,
   component$,
-  JSXNode,
-  JSXChildren,
+  type JSXNode,
+  type JSXChildren,
   useContextProvider,
   useSignal,
   useTask$,
   type Signal,
   useComputed$,
   useId,
-  $
-} from "@builder.io/qwik";
+  $,
+} from '@builder.io/qwik';
+// import {
+//   processChildren,
+//   findComponent,
+// } from "@kunai-consulting/qwik-hooks";
+import { processChildren, findComponent } from '../../utils/inline-component';
+import { PaginationPage } from './pagination-page';
 import {
-  processChildren,
-  findComponent,
-} from "@kunai-consulting/qwik-hooks";
-import { PaginationPage } from "./pagination-page";
-import { type PaginationContext, paginationContextId } from "./pagination-context";
-import { useBoundSignal } from "../../utils/bound-signal";
-import { getPaginationItems } from "./utils";
+  type PaginationContext,
+  paginationContextId,
+} from './pagination-context';
+import { useBoundSignal } from '../../utils/bound-signal';
+import { getPaginationItems } from './utils';
 
-export type PaginationRootProps = PropsOf<"div"> & {
+export type PaginationRootProps = PropsOf<'div'> & {
   totalPages: number;
   currentPage?: number;
-  "bind:page"?: Signal<number | 1>;
+  'bind:page'?: Signal<number | 1>;
   onPageChange$?: QRL<(page: number) => void>;
   disabled?: boolean;
-  pages: any[];
+  pages: JSXNode[];
   ellipsis?: JSXChildren;
   siblingCount?: number;
 };
 
-export const PaginationRoot =
-  (props: PaginationRootProps) => {
-    let currPageIndex = 0;
+export const PaginationRoot = (props: PaginationRootProps) => {
+  let currPageIndex = 0;
 
-    findComponent(PaginationPage, (pageProps) => {
-      pageProps._index = currPageIndex;
-      currPageIndex++;
-    });
+  findComponent(PaginationPage, (pageProps) => {
+    pageProps._index = currPageIndex;
+    currPageIndex++;
+  });
 
-    processChildren(props.children);
+  processChildren(props.children);
 
-    return (
-      <PaginationBase
-        {...props}
-      >
-        {props.children}
-      </PaginationBase>
-    )
-  };
+  return <PaginationBase {...props}>{props.children}</PaginationBase>;
+};
 
 export const PaginationBase = component$((props: PaginationRootProps) => {
   const {
-    "bind:page": givenPageSig,
+    'bind:page': givenPageSig,
     totalPages,
     onPageChange$,
     currentPage,
@@ -69,8 +66,10 @@ export const PaginationBase = component$((props: PaginationRootProps) => {
   const isDisabledSig = useComputed$(() => disabled);
   const selectedPageSig = useBoundSignal(givenPageSig, currentPage || 1);
   const focusedIndexSig = useSignal<number | null>(null);
-  const ellipsisSig = useComputed$(() => getPaginationItems(totalPages,selectedPageSig.value,siblingCount || 1));
-  const pagesSig = useSignal(pages)
+  const ellipsisSig = useComputed$(() =>
+    getPaginationItems(totalPages, selectedPageSig.value, siblingCount || 1)
+  );
+  const pagesSig = useSignal(pages);
 
   const context: PaginationContext = {
     isDisabledSig,
@@ -101,18 +100,14 @@ export const PaginationBase = component$((props: PaginationRootProps) => {
     isInitialLoadSig.value = false;
   });
 
-
-
   return (
     <div
       {...rest}
       data-qds-pagination-root
-      data-disabled={context.isDisabledSig.value ? "" : undefined}
-      aria-disabled={context.isDisabledSig.value ? "true" : "false"}
+      data-disabled={context.isDisabledSig.value ? '' : undefined}
+      aria-disabled={context.isDisabledSig.value ? 'true' : 'false'}
     >
       <Slot />
     </div>
   );
 });
-
-
