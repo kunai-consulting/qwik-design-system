@@ -1,5 +1,5 @@
 import { component$, useStyles$ } from "@builder.io/qwik";
-import { Checkbox } from "@kunai-consulting/qwik-components";
+import { Checkbox } from "@kunai-consulting/qwik";
 
 export default component$(() => {
   useStyles$(styles);

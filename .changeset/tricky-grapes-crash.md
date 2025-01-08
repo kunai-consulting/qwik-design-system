@@ -2,4 +2,4 @@
 "@kunai-consulting/qwik": patch
 ---
 
-Updated focus state, added test
+feat: change to one package

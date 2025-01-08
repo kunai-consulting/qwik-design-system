@@ -1,5 +1,5 @@
 ---
-"@kunai-consulting/qwik-components": patch
+"@kunai-consulting/qwik": patch
 ---
 
 test: creating linear ticket

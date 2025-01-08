@@ -82,12 +82,9 @@ importers:
       '@builder.io/qwik-city':
         specifier: ^1.9
         version: 1.9.0(@types/node@20.14.11)(rollup@4.20.0)(typescript@5.4.5)
-      '@kunai-consulting/qwik-components':
+      '@kunai-consulting/qwik':
         specifier: workspace:*
         version: link:../../libs/components
-      '@kunai-consulting/qwik-hooks':
-        specifier: workspace:*
-        version: link:../../libs/hooks
       '@qwik-ui/headless':
         specifier: ^0.6.4
         version: 0.6.4(@builder.io/qwik@1.9.0(@types/node@20.14.11))
@@ -136,30 +133,6 @@ importers:
       '@axe-core/playwright':
         specifier: ^4.9.1
         version: 4.10.0(playwright-core@1.46.0)
-      '@builder.io/qwik':
-        specifier: ^1.9
-        version: 1.9.0(@types/node@20.14.11)
-      '@kunai-consulting/qwik-hooks':
-        specifier: workspace:*
-        version: link:../hooks
-      '@types/node':
-        specifier: 20.14.11
-        version: 20.14.11
-      typescript:
-        specifier: 5.4.5
-        version: 5.4.5
-      undici:
-        specifier: '*'
-        version: 6.19.7
-      vite:
-        specifier: ^5.4
-        version: 5.4.8(@types/node@20.14.11)
-      vite-tsconfig-paths:
-        specifier: ^4.2.1
-        version: 4.3.2(typescript@5.4.5)(vite@5.4.8(@types/node@20.14.11))
-
-  libs/hooks:
-    devDependencies:
       '@builder.io/qwik':
         specifier: ^1.9
         version: 1.9.0(@types/node@20.14.11)

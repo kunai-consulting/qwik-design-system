@@ -1,5 +1,5 @@
 import { component$, useSignal, useStyles$ } from "@builder.io/qwik";
-import { Pagination } from "@kunai-consulting/qwik-components";
+import { Pagination } from "@kunai-consulting/qwik";
 
 export default component$(() => {
   // Examples for first page and last page
