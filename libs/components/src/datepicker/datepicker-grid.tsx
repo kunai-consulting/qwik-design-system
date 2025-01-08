@@ -220,7 +220,11 @@ export const DatePickerGrid = component$<DatePickerGridProps>((props) => {
                   <tr key={week.toString()} {...props.tbodyRowProps}>
                     {context.showWeekNumber && (
                       <td {...props.weekNumberProps}>
-                        <span>{getWeekNumber(week.filter((day) => day !== null)[0]).toString()}</span>
+                        <span>
+                          {week.find((day): day is string => day !== null)
+                            ? getWeekNumber(week.find((day): day is string => day !== null)!).toString()
+                            : ''}
+                        </span>
                       </td>
                     )}
                     {week.map((day) => {

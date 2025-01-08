@@ -8,6 +8,7 @@
 - [OTP](/otp)
 - [Scroll Area](/scroll-area)
 - [Radio Group](/radio-group)
+- [Datepicker](/datepicker)
 
 ## Styled
 

@@ -1,6 +1,6 @@
 import { $, component$ } from "@builder.io/qwik";
 
-import { Datepicker } from "@kunai-consulting/qwik-components";
+import { Datepicker } from "@kunai-consulting/qwik";
 
 export default component$(() => {
   return <Datepicker.Root
