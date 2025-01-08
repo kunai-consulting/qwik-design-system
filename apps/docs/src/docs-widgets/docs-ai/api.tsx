@@ -359,6 +359,7 @@ export const APIReference = component$(() => {
       // Handle public type transformations
       for (const block of publicTypeAnalysis) {
         const filePath = resolve(componentPath, block.filename);
+        if (!isDev) return
         const sourceFile = getSourceFile(filePath);
         const transformedCode = transformPublicTypes(sourceFile, block.comments);
         fs.writeFileSync(filePath, transformedCode, "utf-8");

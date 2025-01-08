@@ -1,8 +1,9 @@
 import { isDev } from "@builder.io/qwik/build";
 const fs = isDev ? await import("node:fs") : undefined as any;
-const { resolve } = isDev ? await import("node:path") : { resolve: undefined as any };
+// const { resolve } = isDev ? await import("node:path") : { resolve: undefined as any };
 import type { AnatomyItem, ComponentParts, SubComponents } from "./types";
 import { parseComponentAnatomy, parseSingleComponentFromDir } from "./utils";
+import { resolve } from "node:path";
 
 export function loopOnAllChildFiles(filePath: string) {
   const childComponentMatch = /[\\/](\w[\w-]*)\.tsx$/.exec(filePath);
