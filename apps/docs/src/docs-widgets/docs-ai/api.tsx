@@ -2,9 +2,9 @@ import { isDev } from "@builder.io/qwik/build";
 import { component$, type PropsOf, Slot, $, useSignal } from "@builder.io/qwik";
 import { Anthropic } from "@anthropic-ai/sdk";
 import { server$, useLocation } from "@builder.io/qwik-city";
-const fs = isDev ? await import("node:fs") : undefined as any;
-const { resolve } = isDev ? await import("node:path") : { resolve: undefined as any };
-const { execSync } = isDev ? await import("node:child_process") : { execSync: undefined as any };
+import fs from "node:fs";
+import { resolve } from "node:path";
+import { execSync } from "node:child_process";
 import { transformPublicTypes, getSourceFile } from "../../../auto-api/utils";
 import { AIButton } from "./ai-button";
 

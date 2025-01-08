@@ -2,10 +2,9 @@ import { component$, useSignal } from "@builder.io/qwik";
 import { server$, useLocation } from "@builder.io/qwik-city";
 import { Anthropic } from "@anthropic-ai/sdk";
 import { AIButton } from "./ai-button";
-import { isDev } from "@builder.io/qwik/build";
-const fs = isDev ? await import("node:fs") : undefined as any;
-const { resolve, dirname } = isDev ? await import("node:path") : { resolve: undefined as any, dirname: undefined as any };
-const { fileURLToPath } = isDev ? await import("node:url") : { fileURLToPath: undefined }
+import fs from "node:fs";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
 export const DocsAI = component$(() => {
   const isGenerating = useSignal(false);

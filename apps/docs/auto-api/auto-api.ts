@@ -1,6 +1,4 @@
-import { isDev } from "@builder.io/qwik/build";
-const fs = isDev ? await import("node:fs") : undefined as any;
-// const { resolve } = isDev ? await import("node:path") : { resolve: undefined as any };
+import fs from "node:fs";
 import type { AnatomyItem, ComponentParts, SubComponents } from "./types";
 import { parseComponentAnatomy, parseSingleComponentFromDir } from "./utils";
 import { resolve } from "node:path";

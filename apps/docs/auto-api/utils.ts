@@ -1,7 +1,7 @@
 import ts from "typescript";
-import { isDev } from '@builder.io/qwik/build'
-const fs = isDev ? await import("node:fs") : undefined as any;
-const { resolve } = isDev ? await import("node:path") : { resolve: undefined as any };
+import { resolve } from "node:path";
+import fs from "node:fs";
+
 import type {
   AnatomyItem,
   SubComponents,
