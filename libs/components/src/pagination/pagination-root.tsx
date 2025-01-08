@@ -28,7 +28,7 @@ export type PaginationRootProps = PropsOf<'div'> & {
   'bind:page'?: Signal<number | 1>;
   onPageChange$?: QRL<(page: number) => void>;
   disabled?: boolean;
-  pages: JSXNode[];
+  pages: number[];
   ellipsis?: JSXChildren;
   siblingCount?: number;
 };

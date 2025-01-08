@@ -7,7 +7,7 @@ import {
   useStyles$,
 } from '@builder.io/qwik';
 import { RadioGroupContext, radioGroupContextId } from './radio-group-context';
-import './radio-groupcss';
+import './radio-group.css';
 import styles from './radio-group.css?inline';
 
 export type RadioGroupIndicatorProps = PropsOf<'span'>;
