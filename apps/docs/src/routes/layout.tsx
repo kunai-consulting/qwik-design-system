@@ -46,6 +46,7 @@ export default component$(() => {
   return (
     <MDXProvider components={components}>
       <Header />
+      <SearchModal />
       <div class="flex gap-4">
         <Sidebar />
         <main class="mx-auto max-w-screen-md">
@@ -58,6 +59,5 @@ export default component$(() => {
           </aside>
         </div>
       </MDXProvider>
-    </>
   );
 });
