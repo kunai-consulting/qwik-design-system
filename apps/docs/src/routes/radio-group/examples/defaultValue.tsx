@@ -5,7 +5,7 @@ export default component$(() => {
   const items = Array.from({ length: 4 }, (_, i) => `Item ${i + 1}`);
 
   return (
-    <RadioGroup.Root class="radio-group-root">
+    <RadioGroup.Root class="radio-group-root" defaultValue="Item 2">
       <RadioGroup.Label>Radio Group Label</RadioGroup.Label>
       {items.map((item) => (
         <RadioGroup.Item value={item} key={item}>
