@@ -1,19 +1,19 @@
 import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
-import { Pagination } from "@kunai-consulting/qwik-components";
+import { Pagination } from "@kunai-consulting/qwik";
 
 export default component$(() => {
   useStyles$(styles);
   const selectedPageSig = useSignal(1);
   const totalPagesSig = useSignal(10);
-
+  const paginationItems = [...Array(totalPagesSig.value)].map((_, index) => index + 1);
   return (
     <Pagination.Root
       class="pagination-root"
       totalPages={totalPagesSig.value}
-      perPage={4}
       onPageChange$={$((page: number) => {
         selectedPageSig.value = page;
       })}
+      pages={paginationItems}
     >
       <Pagination.Ellipsis>...</Pagination.Ellipsis>
       <Pagination.Previous>Previous</Pagination.Previous>

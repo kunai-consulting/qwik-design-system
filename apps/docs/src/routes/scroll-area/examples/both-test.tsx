@@ -1,5 +1,5 @@
 import { component$, useStyles$ } from "@builder.io/qwik";
-import { ScrollArea } from "@kunai-consulting/qwik-components";
+import { ScrollArea } from "@kunai-consulting/qwik";
 import styles from './scroll-area.css?inline';
 
 export default component$(() => {

@@ -1,5 +1,5 @@
 import { component$, useSignal } from "@builder.io/qwik";
-import { Pagination } from "@kunai-consulting/qwik-components";
+import { Pagination } from "@kunai-consulting/qwik";
 
 export default component$(() => {
   const selectedPageSig = useSignal(3);

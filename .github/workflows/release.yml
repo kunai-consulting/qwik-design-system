@@ -74,10 +74,10 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          title: "Release QDS v${{ env.NEW_VERSION }}"
+          title: "Release QDS - v${{ env.NEW_VERSION }}"
           publish: pnpm publish:packages
           version: pnpm version:packages
-          commit: "feat: Release QDS v${{ env.NEW_VERSION }}"
+          commit: "feat: Release QDS - v${{ env.NEW_VERSION }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -86,7 +86,8 @@ jobs:
         if: steps.changesets.outputs.pullRequestNumber
         env:
           LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
-          PR_TITLE: "Release QDS v${{ env.NEW_VERSION }}"
+          PR_TITLE: "Release QDS - v${{ env.NEW_VERSION }}"
           CHANGESET_DATA: ${{ steps.generate-changeset.outputs.changeset_data }}
           PR_NUMBER: ${{ steps.changesets.outputs.pullRequestNumber }}
         run: pnpm vite-node .github/scripts/update-linear.ts
+

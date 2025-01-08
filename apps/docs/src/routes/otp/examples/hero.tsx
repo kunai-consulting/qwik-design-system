@@ -5,7 +5,7 @@ import {
   useSignal,
   useVisibleTask$
 } from "@builder.io/qwik";
-import { Otp, Checkbox } from "@kunai-consulting/qwik-components";
+import { Otp, Checkbox } from "@kunai-consulting/qwik";
 import { LuCheck } from "@qwikest/icons/lucide";
 
 export const MyDiv = component$((props: PropsOf<"div">) => {
