@@ -11,6 +11,7 @@ import {
   useContent,
   type RequestHandler
 } from "@builder.io/qwik-city";
+import { SearchModal } from "~/components/search";
 import { Sidebar } from "~/docs-widgets/sidebar/sidebar";
 import { TOC } from "~/docs-widgets/toc/toc";
 import { components } from "~/mdx/components";
@@ -45,17 +46,18 @@ export default component$(() => {
   return (
     <MDXProvider components={components}>
       <Header />
+      <SearchModal />
       <div class="flex gap-4">
         <Sidebar />
-        <main class="mx-auto max-w-screen-md">
+        <main data-pagefind-body class="mx-auto max-w-screen-md">
           <Slot />
         </main>
         <aside class="hidden w-60 xl:block">
           <div class="fixed h-[calc(100vh-64px)] w-full  overflow-auto">
             <TOC headings={headings || []} />
           </div>
-        </aside>
-      </div>
-    </MDXProvider>
+          </aside>
+        </div>
+      </MDXProvider>
   );
 });

@@ -1,6 +1,7 @@
 import ts from "typescript";
-import * as fs from "node:fs";
 import { resolve } from "node:path";
+import fs from "node:fs";
+
 import type {
   AnatomyItem,
   SubComponents,

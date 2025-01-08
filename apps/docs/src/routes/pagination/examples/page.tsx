@@ -6,6 +6,7 @@ export default component$(() => {
   const selectedPageSig = useSignal(1);
   const totalPagesSig = useSignal(10);
   const pageSig = useSignal(5);
+  const paginationItems = [...Array(totalPagesSig.value)].map((_, index) => index + 1);
 
   return (
     <Pagination.Root
@@ -15,6 +16,7 @@ export default component$(() => {
       onPageChange$={$((page: number) => {
         selectedPageSig.value = page;
       })}
+      pages={paginationItems}
     >
       <Pagination.Ellipsis>...</Pagination.Ellipsis>
       <Pagination.Previous>Previous</Pagination.Previous>

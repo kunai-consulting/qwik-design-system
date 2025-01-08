@@ -1,7 +1,8 @@
+import { isDev } from "@builder.io/qwik/build";
 import { component$, type PropsOf, Slot, $, useSignal } from "@builder.io/qwik";
 import { Anthropic } from "@anthropic-ai/sdk";
 import { server$, useLocation } from "@builder.io/qwik-city";
-import * as fs from "node:fs";
+import fs from "node:fs";
 import { resolve } from "node:path";
 import { execSync } from "node:child_process";
 import { transformPublicTypes, getSourceFile } from "../../../auto-api/utils";
@@ -273,11 +274,11 @@ export const APIReference = component$(() => {
       const files = fs
         .readdirSync(componentPath)
         .filter(
-          (f) =>
+          (f: string) =>
             (f.endsWith(".tsx") || f.endsWith(".ts")) &&
             !["context", "test", "driver", "index"].some((ignore) => f.includes(ignore))
         );
-      const fileContents = files.map((file) => ({
+      const fileContents = files.map((file: string) => ({
         name: file,
         content: fs.readFileSync(resolve(componentPath, file), "utf-8")
       }));
@@ -336,7 +337,7 @@ export const APIReference = component$(() => {
         const fileContent = fs.readFileSync(filePath, "utf-8").split("\n");
 
         for (const { targetLine, comment } of block.comments) {
-          const lineIndex = fileContent.findIndex((l) => l.includes(targetLine));
+          const lineIndex = fileContent.findIndex((l: string) => l.includes(targetLine));
           if (lineIndex !== -1) {
             // Check if there's already a comment above this line
             const hasPreviousComment =
@@ -358,6 +359,7 @@ export const APIReference = component$(() => {
       // Handle public type transformations
       for (const block of publicTypeAnalysis) {
         const filePath = resolve(componentPath, block.filename);
+        if (!isDev) return
         const sourceFile = getSourceFile(filePath);
         const transformedCode = transformPublicTypes(sourceFile, block.comments);
         fs.writeFileSync(filePath, transformedCode, "utf-8");
