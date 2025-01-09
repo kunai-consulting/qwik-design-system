@@ -5,7 +5,8 @@ import {
   Slot,
   PropsOf,
   noSerialize,
-  useSignal
+  useSignal,
+  useOn
 } from "@builder.io/qwik";
 import { FileInfo, fileUploadContextId } from "./file-upload-context";
 
@@ -91,17 +92,80 @@ export const FileUploadDropzone = component$<DropzoneProps>((props) => {
   });
 
   // Handle file drop event
-  const onDrop$ = $(async (e: DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  // const onDrop$ = $(async (e: DragEvent) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
 
-    if (context.disabled) return;
+  //   if (context.disabled) return;
 
-    // Reset dragging state
-    isDragging.value = false;
-    context.isDragging.value = false;
+  //   // Reset dragging state
+  //   isDragging.value = false;
+  //   context.isDragging.value = false;
 
-    const dt = e.dataTransfer;
+  //   const dt = e.dataTransfer;
+  //   // console.log('Drop event:', {
+  //   //   hasDataTransfer: !!dt,
+  //   //   types: dt?.types ? Array.from(dt.types) : [],
+  //   //   items: dt?.items?.length || 0,
+  //   //   files: dt?.files?.length || 0
+  //   // });
+
+  //   if (!dt) return;
+
+  //   let files: File[] = [];
+
+  //   // Try to get files using the Files API first
+  //   if (dt.files?.length) {
+  //     // console.log('Using files API');
+  //     files = Array.from(dt.files);
+  //   }
+
+  //   if (!files.length) {
+  //     console.log("No valid files found");
+  //     return;
+  //   }
+
+  //   // Convert Files to FileInfo objects
+  //   const fileInfos: FileInfo[] = files.map((file) => ({
+  //     name: file.name,
+  //     size: file.size,
+  //     type: file.type,
+  //     lastModified: file.lastModified,
+  //     file: noSerialize(file)
+  //   }));
+
+  //   console.log(
+  //     "Processing files:",
+  //     fileInfos.map((f) => f.name)
+  //   );
+
+  //   if (context.multiple) {
+  //     context.files.value = [...context.files.value, ...fileInfos];
+  //   } else {
+  //     context.files.value = fileInfos.slice(0, 1);
+  //   }
+
+  //   // Notify parent component about new files
+  //   if (context.onFilesChange$) {
+  //     context.onFilesChange$(context.files.value);
+  //   }
+  // });
+
+  // you have access to fileInfos with e.detail.fileInfos, now add this to the context with the logic you had before in here
+  useOn('qdsFileDrop', $((e: CustomEvent) => {
+    console.log('Drop event', e);
+  }))
+
+  const onDropScript = `
+    (function() {
+      const dropzone = document.querySelector('[data-file-upload-dropzone]');
+      if (!dropzone) return;
+
+      dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+            const dt = e.dataTransfer;
     // console.log('Drop event:', {
     //   hasDataTransfer: !!dt,
     //   types: dt?.types ? Array.from(dt.types) : [],
@@ -111,24 +175,12 @@ export const FileUploadDropzone = component$<DropzoneProps>((props) => {
 
     if (!dt) return;
 
-    let files: File[] = [];
+    let files = [];
 
     // Try to get files using the Files API first
     if (dt.files?.length) {
       // console.log('Using files API');
       files = Array.from(dt.files);
-    }
-    // Fall back to Items API if Files API didn't work
-    else if (dt.items?.length) {
-      // console.log('Using items API');
-      const itemFiles = Array.from(dt.items)
-        .filter((item) => item.kind === "file")
-        .map((item) => item.getAsFile())
-        .filter((file): file is File => file !== null);
-
-      if (itemFiles.length) {
-        files = itemFiles;
-      }
     }
 
     if (!files.length) {
@@ -137,12 +189,12 @@ export const FileUploadDropzone = component$<DropzoneProps>((props) => {
     }
 
     // Convert Files to FileInfo objects
-    const fileInfos: FileInfo[] = files.map((file) => ({
+    const fileInfos = files.map((file) => ({
       name: file.name,
       size: file.size,
       type: file.type,
       lastModified: file.lastModified,
-      file: noSerialize(file)
+      file
     }));
 
     console.log(
@@ -150,20 +202,18 @@ export const FileUploadDropzone = component$<DropzoneProps>((props) => {
       fileInfos.map((f) => f.name)
     );
 
-    if (context.multiple) {
-      context.files.value = [...context.files.value, ...fileInfos];
-    } else {
-      context.files.value = fileInfos.slice(0, 1);
-    }
-
-    // Notify parent component about new files
-    if (context.onFilesChange$) {
-      context.onFilesChange$(context.files.value);
-    }
-  });
+        const event = new CustomEvent('qdsFileDrop', {
+      detail: { fileInfos }
+    });
+    dropzone.dispatchEvent(event);
+      
+    });
+    })()
+  `
 
   return (
-    <div
+    <>
+      <div
       {...props}
       ref={dropzoneRef}
       // Prevent default file handling at window level
@@ -177,12 +227,13 @@ export const FileUploadDropzone = component$<DropzoneProps>((props) => {
       onDragEnter$={onDragEnter$}
       onDragOver$={onDragOver$}
       onDragLeave$={onDragLeave$}
-      onDrop$={onDrop$}
       data-file-upload-dropzone
       data-dragging={isDragging.value ? "" : undefined}
       data-disabled={context.disabled ? "" : undefined}
     >
       <Slot />
     </div>
+    <script dangerouslySetInnerHTML={onDropScript} />
+    </>
   );
 });
