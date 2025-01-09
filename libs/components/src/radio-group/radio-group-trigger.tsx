@@ -52,7 +52,7 @@ export const RadioGroupTrigger = component$((props: RadioGroupControlProps) => {
       onKeyDown$={[handleKeyDownSync$, props.onKeyDown$]}
       onClick$={[handleClick$, props.onClick$]}
       data-checked={context.isCheckedSig.value ? '' : undefined}
-      data-qds-radio-group-trigger
+      data-qds-checkbox-trigger
       {...props}
     >
       <Slot />

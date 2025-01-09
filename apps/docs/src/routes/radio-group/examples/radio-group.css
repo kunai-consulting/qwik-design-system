@@ -4,21 +4,40 @@
   gap: 8px;
 }
 
-.radrio-group-trigger {
+.radio-group-root {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+}
+
+.radrio-group-trigger {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  position: relative;
+  background: gray;
+}
+
+.radio-group-trigger:focus-visible {
+  outline: 1px solid white;
+  /* outline-offset: 2px; */
+}
+
+.radio-group-trigger[data-disabled] {
+  opacity: 0.5;
+}
+
+.radio-group-trigger[data-checked] [data-check-icon] {
+  display: block;
 }
 
 .radio-group-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background-color: #ccc;
+  /* position: absolute; */
+  inset: 0;
+
+  border-radius: 8px;
+  background: #0a4d70;
 }

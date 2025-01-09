@@ -47,6 +47,7 @@ export const RadioGroupRoot = component$(
       checked ?? false
     );
     const isInitialLoadSig = useSignal(true);
+    const selectedValueSig = useSignal<string | undefined>(undefined);
     const isDisabledSig = useComputed$(() => props.disabled);
     const isErrorSig = useSignal(false);
     const localId = useId();
@@ -54,6 +55,7 @@ export const RadioGroupRoot = component$(
 
     const context: RadioGroupContext = {
       isCheckedSig,
+      selectedValueSig,
       isDisabledSig,
       localId,
       isDescription,
@@ -83,6 +85,7 @@ export const RadioGroupRoot = component$(
     return (
       <div
         {...rest}
+        // role="radiogroup"
         data-qds-radio-group-root
         data-disabled={context.isDisabledSig.value ? '' : undefined}
         aria-disabled={context.isDisabledSig.value ? 'true' : 'false'}

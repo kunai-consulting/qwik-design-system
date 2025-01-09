@@ -5,3 +5,4 @@ export { RadioGroupLabel as Label } from './radio-group-label';
 export { RadioGroupDescription as Description } from './radio-group-description';
 export { RadioGroupHiddenNativeInput as HiddenNativeInput } from './radio-group-hidden-input';
 export { RadioGroupErrorMessage as ErrorMessage } from './radio-group-error-message';
+export { RadioGroupItem as Item } from './radio-group-item';
