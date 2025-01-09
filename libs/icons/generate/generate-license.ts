@@ -4,7 +4,7 @@ import { configs } from "./configs";
 
 const baseLicense = (year: number, name: string) => `MIT License ${year} ${name}
 
-Copyright (c) Year Niklas Portmann
+Copyright (c) ${year} ${name}
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -21,7 +21,7 @@ Icons are taken from other projects. Please check each individual license for us
 const filename = "LICENSE";
 
 async function run() {
-  const license = baseLicense(new Date().getFullYear(), "Niklas Portmann");
+  const license = baseLicense(new Date().getFullYear(), "Kunai Consulting");
   const iconLicenses = configs
     .map((config) => `${config.name}: ${config.license}\n${config.licenseUrl}`)
     .join("\n\n");

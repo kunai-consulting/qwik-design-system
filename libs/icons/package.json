@@ -1,12 +1,12 @@
 {
-  "name": "@qwikest/icons",
-  "version": "0.0.13",
-  "description": "Include popular icons easily in your Qwik projects with `@qwikest/icons`. Includes lucide, octicons & more 🎁",
+  "name": "@kunai-consulting/qwik-icons",
+  "version": "0.0.1",
+  "description": "A comprehensive icon library for Qwik projects featuring Lucide, Octicons, and more icon sets",
   "license": "MIT",
-  "homepage": "https://github.com/qwikest/icons",
+  "homepage": "https://github.com/kunai-consulting/qwik-icons",
   "repository": {
     "type": "git",
-    "url": "https://github.com/qwikest/icons.git"
+    "url": "https://github.com/kunai-consulting/qwik-icons.git"
   },
   "keywords": [
     "qwik",
