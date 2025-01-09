@@ -20,12 +20,12 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
 
   const isDragging = async () => {
     const dropzone = getDropzone();
-    return await dropzone.getAttribute('data-dragging') !== null;
+    return (await dropzone.getAttribute("data-dragging")) !== null;
   };
 
   const isDisabled = async () => {
     const root = getRoot();
-    return await root.getAttribute('data-disabled') !== null;
+    return (await root.getAttribute("data-disabled")) !== null;
   };
 
   return {

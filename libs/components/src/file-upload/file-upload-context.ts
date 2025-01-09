@@ -1,4 +1,9 @@
-import { createContextId, type Signal, NoSerialize, PropFunction } from "@builder.io/qwik";
+import {
+  createContextId,
+  type Signal,
+  NoSerialize,
+  PropFunction
+} from "@builder.io/qwik";
 
 export interface FileInfo {
   name: string;
@@ -18,4 +23,5 @@ export interface FileUploadContext {
   onFilesChange$?: PropFunction<(files: FileInfo[]) => void>;
 }
 
-export const fileUploadContextId = createContextId<FileUploadContext>("file-upload-context");
+export const fileUploadContextId =
+  createContextId<FileUploadContext>("file-upload-context");

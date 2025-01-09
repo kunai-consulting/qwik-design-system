@@ -1,7 +1,7 @@
 import { component$, useContext, $, Slot, PropsOf } from "@builder.io/qwik";
 import { fileUploadContextId } from "./file-upload-context";
 
-type TriggerProps = PropsOf<'button'>;
+type TriggerProps = PropsOf<"button">;
 
 /**
  * Trigger component that opens the file selection dialog

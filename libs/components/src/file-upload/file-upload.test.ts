@@ -1,8 +1,8 @@
 import { expect, test as base, type Page } from "@playwright/test";
 import { createTestDriver } from "./file-upload.driver";
-import fs from 'fs';
-import path from 'path';
-import os from 'os';
+import fs from "fs";
+import path from "path";
+import os from "os";
 
 /**
  * Test fixtures interface for file upload testing
@@ -18,25 +18,23 @@ type TestFixtures = {
 const test = base.extend<TestFixtures>({
   testFiles: async ({}, use) => {
     // Create temporary test directory
-    const tmpDir = await fs.promises.mkdtemp(
-      path.join(os.tmpdir(), 'file-upload-test-')
-    );
+    const tmpDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "file-upload-test-"));
 
     // Initialize test file contents
-    const imageContent = Buffer.from('fake image content');
-    const textContent = Buffer.from('fake text content');
+    const imageContent = Buffer.from("fake image content");
+    const textContent = Buffer.from("fake text content");
 
     const imageFile = {
-      path: path.join(tmpDir, 'test.jpg'),
-      name: 'test.jpg',
-      type: 'image/jpeg',
+      path: path.join(tmpDir, "test.jpg"),
+      name: "test.jpg",
+      type: "image/jpeg",
       size: imageContent.length
     };
 
     const textFile = {
-      path: path.join(tmpDir, 'test.txt'),
-      name: 'test.txt',
-      type: 'text/plain',
+      path: path.join(tmpDir, "test.txt"),
+      name: "test.txt",
+      type: "text/plain",
       size: textContent.length
     };
 
@@ -76,12 +74,17 @@ test.describe("critical functionality", () => {
     const d = await setup(page, "basic");
 
     // Create promise that resolves on input click
-    const clickPromise = d.getInput().waitFor({ state: 'attached' })
-      .then(() => d.getInput().evaluate(
-        input => new Promise<void>(resolve => {
-          input.addEventListener('click', () => resolve(), { once: true });
-        })
-      ));
+    const clickPromise = d
+      .getInput()
+      .waitFor({ state: "attached" })
+      .then(() =>
+        d.getInput().evaluate(
+          (input) =>
+            new Promise<void>((resolve) => {
+              input.addEventListener("click", () => resolve(), { once: true });
+            })
+        )
+      );
 
     // Trigger file selection
     await d.getTrigger().click();
@@ -90,11 +93,11 @@ test.describe("critical functionality", () => {
       // Wait for click with timeout
       await Promise.race([
         clickPromise,
-        new Promise((_, reject) => setTimeout(() => reject('timeout'), 1000))
+        new Promise((_, reject) => setTimeout(() => reject("timeout"), 1000))
       ]);
       expect(true).toBe(true); // Click successful
     } catch (error) {
-      expect(error).not.toBe('timeout'); // Click failed
+      expect(error).not.toBe("timeout"); // Click failed
     }
   });
 });
@@ -106,10 +109,10 @@ test.describe("drag and drop functionality", () => {
     const d = await setup(page, "basic");
 
     await page.evaluate(() => {
-      const dropzone = document.querySelector('[data-file-upload-dropzone]');
+      const dropzone = document.querySelector("[data-file-upload-dropzone]");
 
       // Initialize DragEvent with DataTransfer
-      const dragEvent = new DragEvent('dragenter', {
+      const dragEvent = new DragEvent("dragenter", {
         bubbles: true,
         cancelable: true,
         dataTransfer: new DataTransfer()
@@ -119,13 +122,13 @@ test.describe("drag and drop functionality", () => {
       if (dragEvent.dataTransfer) {
         // Add test file to transfer
         const file = new File([""], "test.jpg", {
-          type: "image/jpeg",
+          type: "image/jpeg"
         });
         dragEvent.dataTransfer.items.add(file);
 
         // Set drag operation properties
-        dragEvent.dataTransfer.effectAllowed = 'all';
-        dragEvent.dataTransfer.dropEffect = 'copy';
+        dragEvent.dataTransfer.effectAllowed = "all";
+        dragEvent.dataTransfer.dropEffect = "copy";
       }
 
       // Dispatch drag event
@@ -146,30 +149,30 @@ test.describe("drag and drop functionality", () => {
 
     // Simulate drag enter
     await page.evaluate(() => {
-      const dropzone = document.querySelector('[data-file-upload-dropzone]');
-      const dragEvent = new Event('dragenter', { bubbles: true });
+      const dropzone = document.querySelector("[data-file-upload-dropzone]");
+      const dragEvent = new Event("dragenter", { bubbles: true });
       // @ts-ignore - Custom DataTransfer implementation
       dragEvent.dataTransfer = {
-        types: ['Files'],
-        items: [{ kind: 'file' }],
+        types: ["Files"],
+        items: [{ kind: "file" }],
         files: new DataTransfer().files,
-        effectAllowed: 'all',
-        dropEffect: 'copy'
+        effectAllowed: "all",
+        dropEffect: "copy"
       };
       dropzone?.dispatchEvent(dragEvent);
     });
 
     // Simulate drag leave
     await page.evaluate(() => {
-      const dropzone = document.querySelector('[data-file-upload-dropzone]');
-      const leaveEvent = new Event('dragleave', { bubbles: true });
+      const dropzone = document.querySelector("[data-file-upload-dropzone]");
+      const leaveEvent = new Event("dragleave", { bubbles: true });
       // @ts-ignore - Custom DataTransfer implementation
       leaveEvent.dataTransfer = {
-        types: ['Files'],
+        types: ["Files"],
         items: [],
         files: new DataTransfer().files,
-        effectAllowed: 'all',
-        dropEffect: 'none'
+        effectAllowed: "all",
+        dropEffect: "none"
       };
       dropzone?.dispatchEvent(leaveEvent);
     });
@@ -183,7 +186,7 @@ test.describe("drag and drop functionality", () => {
     const d = await setup(page, "basic");
 
     let processedFiles: any[] = [];
-    await page.exposeFunction('onFilesChange', (files: any[]) => {
+    await page.exposeFunction("onFilesChange", (files: any[]) => {
       processedFiles = files;
     });
 
@@ -192,51 +195,54 @@ test.describe("drag and drop functionality", () => {
 
     // Helper function to simulate file drop
     const attemptDrop = async () => {
-      await page.evaluate(async (fileData) => {
-        const dropzone = document.querySelector('[data-file-upload-dropzone]');
+      await page.evaluate(
+        async (fileData) => {
+          const dropzone = document.querySelector("[data-file-upload-dropzone]");
 
-        // Create file content as Blob
-        const blob = new Blob([new Uint8Array(fileData.content)], {
-          type: fileData.type
-        });
+          // Create file content as Blob
+          const blob = new Blob([new Uint8Array(fileData.content)], {
+            type: fileData.type
+          });
 
-        // Create File object
-        const file = new File([blob], fileData.name, {
-          type: fileData.type
-        });
+          // Create File object
+          const file = new File([blob], fileData.name, {
+            type: fileData.type
+          });
 
-        // Setup DataTransfer
-        const dt = new DataTransfer();
-        dt.items.add(file);
+          // Setup DataTransfer
+          const dt = new DataTransfer();
+          dt.items.add(file);
 
-        // Simulate complete drag and drop sequence
-        const events = [
-          new DragEvent('dragenter', {
-            bubbles: true,
-            cancelable: true,
-            dataTransfer: dt
-          }),
-          new DragEvent('dragover', {
-            bubbles: true,
-            cancelable: true,
-            dataTransfer: dt
-          }),
-          new DragEvent('drop', {
-            bubbles: true,
-            cancelable: true,
-            dataTransfer: dt
-          })
-        ];
+          // Simulate complete drag and drop sequence
+          const events = [
+            new DragEvent("dragenter", {
+              bubbles: true,
+              cancelable: true,
+              dataTransfer: dt
+            }),
+            new DragEvent("dragover", {
+              bubbles: true,
+              cancelable: true,
+              dataTransfer: dt
+            }),
+            new DragEvent("drop", {
+              bubbles: true,
+              cancelable: true,
+              dataTransfer: dt
+            })
+          ];
 
-        // Dispatch event sequence
-        for (const event of events) {
-          dropzone?.dispatchEvent(event);
+          // Dispatch event sequence
+          for (const event of events) {
+            dropzone?.dispatchEvent(event);
+          }
+        },
+        {
+          content: Array.from(fileContent),
+          name: testFiles.imageFile.name,
+          type: testFiles.imageFile.type
         }
-      }, {
-        content: Array.from(fileContent),
-        name: testFiles.imageFile.name,
-        type: testFiles.imageFile.type
-      });
+      );
     };
 
     // Initial drop attempt
@@ -244,7 +250,7 @@ test.describe("drag and drop functionality", () => {
 
     // Retry on failure
     if (processedFiles.length === 0) {
-      console.log('First drop attempt failed, retrying...');
+      console.log("First drop attempt failed, retrying...");
       await page.waitForTimeout(100); // Brief pause before retry
       await attemptDrop();
     }
@@ -253,7 +259,7 @@ test.describe("drag and drop functionality", () => {
     await page.waitForTimeout(100);
 
     // Verify file processing
-    expect(processedFiles.length, 'File should be processed after drop').toBe(1);
+    expect(processedFiles.length, "File should be processed after drop").toBe(1);
     if (processedFiles.length > 0) {
       expect(processedFiles[0].name).toBe(testFiles.imageFile.name);
       expect(processedFiles[0].type).toBe(testFiles.imageFile.type);
@@ -267,22 +273,22 @@ test.describe("drag and drop functionality", () => {
 
     // Simulate drag with invalid file type
     await page.evaluate(() => {
-      const dropzone = document.querySelector('[data-file-upload-dropzone]');
-      const dragEvent = new Event('dragenter', { bubbles: true });
+      const dropzone = document.querySelector("[data-file-upload-dropzone]");
+      const dragEvent = new Event("dragenter", { bubbles: true });
       // @ts-ignore - Custom DataTransfer implementation
       dragEvent.dataTransfer = {
-        types: ['Files'],
-        items: [{ kind: 'file', type: 'text/plain' }],
+        types: ["Files"],
+        items: [{ kind: "file", type: "text/plain" }],
         files: new DataTransfer().files,
-        effectAllowed: 'none',
-        dropEffect: 'none'
+        effectAllowed: "none",
+        dropEffect: "none"
       };
       dropzone?.dispatchEvent(dragEvent);
     });
 
     // Verify file rejection
     const dropzone = d.getDropzone();
-    await expect(dropzone).not.toHaveAttribute('data-dragging');
+    await expect(dropzone).not.toHaveAttribute("data-dragging");
   });
 });
 
@@ -295,8 +301,8 @@ test.describe("file handling", () => {
     let processedFiles: any[] = [];
 
     // Setup file processing callback
-    const filesProcessedPromise = new Promise<void>(resolve => {
-      page.exposeFunction('onFilesChange', (files: any[]) => {
+    const filesProcessedPromise = new Promise<void>((resolve) => {
+      page.exposeFunction("onFilesChange", (files: any[]) => {
         processedFiles = files;
         resolve();
       });
@@ -309,20 +315,20 @@ test.describe("file handling", () => {
     try {
       await Promise.race([
         filesProcessedPromise,
-        new Promise((_, reject) => setTimeout(() => reject('timeout'), 1000))
+        new Promise((_, reject) => setTimeout(() => reject("timeout"), 1000))
       ]);
     } catch (error) {
-      if (error === 'timeout') {
-        throw new Error('File processing timed out');
+      if (error === "timeout") {
+        throw new Error("File processing timed out");
       }
       throw error;
     }
 
     // Verify file processing results
-    expect(processedFiles.length, 'No files were processed').toBe(1);
-    expect(processedFiles[0].name, 'Wrong file name').toBe(testFiles.imageFile.name);
-    expect(processedFiles[0].type, 'Wrong file type').toBe(testFiles.imageFile.type);
-    expect(processedFiles[0].size, 'Wrong file size').toBe(testFiles.imageFile.size);
+    expect(processedFiles.length, "No files were processed").toBe(1);
+    expect(processedFiles[0].name, "Wrong file name").toBe(testFiles.imageFile.name);
+    expect(processedFiles[0].type, "Wrong file type").toBe(testFiles.imageFile.type);
+    expect(processedFiles[0].size, "Wrong file size").toBe(testFiles.imageFile.size);
   });
 
   test(`GIVEN a file upload component
@@ -331,9 +337,9 @@ test.describe("file handling", () => {
     const d = await setup(page, "basic");
 
     // Monitor input change event
-    const changePromise = d.getInput().evaluate(input => {
-      return new Promise<boolean>(resolve => {
-        input.addEventListener('change', () => resolve(true), { once: true });
+    const changePromise = d.getInput().evaluate((input) => {
+      return new Promise<boolean>((resolve) => {
+        input.addEventListener("change", () => resolve(true), { once: true });
 
         // Timeout if event doesn't fire
         setTimeout(() => resolve(false), 1000);
@@ -345,7 +351,7 @@ test.describe("file handling", () => {
 
     // Verify change event
     const changeOccurred = await changePromise;
-    expect(changeOccurred, 'Change event did not fire').toBe(true);
+    expect(changeOccurred, "Change event did not fire").toBe(true);
   });
 
   test(`GIVEN a file upload component with multiple=true
@@ -356,28 +362,25 @@ test.describe("file handling", () => {
     let processedFiles: any[] = [];
 
     // Setup file processing callback
-    const filesProcessedPromise = new Promise<void>(resolve => {
-      page.exposeFunction('onFilesChange', (files: any[]) => {
+    const filesProcessedPromise = new Promise<void>((resolve) => {
+      page.exposeFunction("onFilesChange", (files: any[]) => {
         processedFiles = files;
         resolve();
       });
     });
 
     // Select multiple files
-    await d.getInput().setInputFiles([
-      testFiles.imageFile.path,
-      testFiles.textFile.path
-    ]);
+    await d.getInput().setInputFiles([testFiles.imageFile.path, testFiles.textFile.path]);
 
     // Wait for file processing
     try {
       await Promise.race([
         filesProcessedPromise,
-        new Promise((_, reject) => setTimeout(() => reject('timeout'), 1000))
+        new Promise((_, reject) => setTimeout(() => reject("timeout"), 1000))
       ]);
     } catch (error) {
-      if (error === 'timeout') {
-        throw new Error('File processing timed out');
+      if (error === "timeout") {
+        throw new Error("File processing timed out");
       }
       throw error;
     }
@@ -401,10 +404,10 @@ test.describe("disabled state", () => {
 
     // Simulate drag event in disabled state
     await page.evaluate(() => {
-      const dropzone = document.querySelector('[data-file-upload-dropzone]');
+      const dropzone = document.querySelector("[data-file-upload-dropzone]");
 
       // Create DragEvent with DataTransfer
-      const dragEvent = new DragEvent('dragenter', {
+      const dragEvent = new DragEvent("dragenter", {
         bubbles: true,
         cancelable: true,
         dataTransfer: new DataTransfer()
@@ -413,7 +416,7 @@ test.describe("disabled state", () => {
       // Add test file to transfer
       if (dragEvent.dataTransfer) {
         const file = new File([""], "test.txt", {
-          type: "text/plain",
+          type: "text/plain"
         });
         dragEvent.dataTransfer.items.add(file);
       }
@@ -434,21 +437,21 @@ test.describe("file type filtering", () => {
     const d = await setup(page, "image-only");
 
     const input = d.getInput();
-    await expect(input).toHaveAttribute('accept', 'image/*');
+    await expect(input).toHaveAttribute("accept", "image/*");
 
     let processedFiles: any[] = [];
 
     // Register file processing callback
-    await page.exposeFunction('onFilesChange', (files: any[]) => {
+    await page.exposeFunction("onFilesChange", (files: any[]) => {
       processedFiles = files;
-      console.log('Files processed:', files); // Debug logging
+      console.log("Files processed:", files); // Debug logging
     });
 
     // Verify input availability
     await expect(input).toBeAttached();
 
     // Log pre-upload state
-    console.log('Setting input files:', testFiles.imageFile.path);
+    console.log("Setting input files:", testFiles.imageFile.path);
 
     try {
       // Upload image file
@@ -461,16 +464,15 @@ test.describe("file type filtering", () => {
       const filesSet = await input.evaluate((el: HTMLInputElement) => {
         return el.files?.length || 0;
       });
-      console.log('Files set in input:', filesSet);
+      console.log("Files set in input:", filesSet);
 
       // Verify image processing
-      expect(processedFiles.length, 'No files were processed').toBe(1);
+      expect(processedFiles.length, "No files were processed").toBe(1);
       if (processedFiles.length > 0) {
-        expect(processedFiles[0].type).toBe('image/jpeg');
+        expect(processedFiles[0].type).toBe("image/jpeg");
       }
-
     } catch (error) {
-      console.error('Error during file upload:', error);
+      console.error("Error during file upload:", error);
       throw error;
     }
   });

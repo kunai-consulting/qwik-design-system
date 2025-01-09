@@ -1,5 +1,5 @@
 import { component$, useStyles$ } from "@builder.io/qwik";
-import styles from './file-upload.css?inline';
+import styles from "./file-upload.css?inline";
 import { FileUpload } from "@kunai-consulting/qwik";
 
 export default component$(() => {
@@ -11,12 +11,12 @@ export default component$(() => {
       accept="image/*" // Accept only image files
       onFilesChange$={(files) => {
         // Process each uploaded file
-        files.forEach(fileInfo => {
+        files.forEach((fileInfo) => {
           // Create FormData for potential server upload
           const formData = new FormData();
           if (fileInfo.file) {
             // Append file to FormData
-            formData.append('file', fileInfo.file);
+            formData.append("file", fileInfo.file);
             // Server upload would go here
             // Example:
             // fetch('/api/upload', {
@@ -31,9 +31,7 @@ export default component$(() => {
       <FileUpload.Input />
       <FileUpload.Dropzone class="file-upload-dropzone">
         <div class="file-upload-content">
-          <p class="file-upload-text">
-            Drag and drop files here or
-          </p>
+          <p class="file-upload-text">Drag and drop files here or</p>
           <FileUpload.Trigger class="file-upload-trigger">
             Browse Files
           </FileUpload.Trigger>

@@ -1,4 +1,12 @@
-import { component$, useContext, $, Slot, PropsOf, noSerialize, useSignal } from "@builder.io/qwik";
+import {
+  component$,
+  useContext,
+  $,
+  Slot,
+  PropsOf,
+  noSerialize,
+  useSignal
+} from "@builder.io/qwik";
 import { FileInfo, fileUploadContextId } from "./file-upload-context";
 
 type DropzoneProps = PropsOf<"div">;
@@ -14,7 +22,7 @@ export const FileUploadDropzone = component$<DropzoneProps>((props) => {
     e.stopPropagation();
 
     if (e.dataTransfer) {
-      e.dataTransfer.dropEffect = 'copy';
+      e.dataTransfer.dropEffect = "copy";
     }
   });
 
@@ -37,8 +45,8 @@ export const FileUploadDropzone = component$<DropzoneProps>((props) => {
 
       if (dt) {
         // Set drag effect to show copy is allowed
-        dt.effectAllowed = 'all';
-        dt.dropEffect = 'copy';
+        dt.effectAllowed = "all";
+        dt.dropEffect = "copy";
       }
       isDragging.value = true;
       context.isDragging.value = true;
@@ -54,7 +62,7 @@ export const FileUploadDropzone = component$<DropzoneProps>((props) => {
 
     const dt = e.dataTransfer;
     if (dt) {
-      dt.dropEffect = 'copy';
+      dt.dropEffect = "copy";
     }
   });
 
@@ -114,8 +122,8 @@ export const FileUploadDropzone = component$<DropzoneProps>((props) => {
     else if (dt.items?.length) {
       // console.log('Using items API');
       const itemFiles = Array.from(dt.items)
-        .filter(item => item.kind === 'file')
-        .map(item => item.getAsFile())
+        .filter((item) => item.kind === "file")
+        .map((item) => item.getAsFile())
         .filter((file): file is File => file !== null);
 
       if (itemFiles.length) {
@@ -124,12 +132,12 @@ export const FileUploadDropzone = component$<DropzoneProps>((props) => {
     }
 
     if (!files.length) {
-      console.log('No valid files found');
+      console.log("No valid files found");
       return;
     }
 
     // Convert Files to FileInfo objects
-    const fileInfos: FileInfo[] = files.map(file => ({
+    const fileInfos: FileInfo[] = files.map((file) => ({
       name: file.name,
       size: file.size,
       type: file.type,
@@ -137,7 +145,10 @@ export const FileUploadDropzone = component$<DropzoneProps>((props) => {
       file: noSerialize(file)
     }));
 
-    console.log('Processing files:', fileInfos.map(f => f.name));
+    console.log(
+      "Processing files:",
+      fileInfos.map((f) => f.name)
+    );
 
     if (context.multiple) {
       context.files.value = [...context.files.value, ...fileInfos];

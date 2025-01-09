@@ -1,7 +1,7 @@
 import { component$, useContext, $, noSerialize, PropsOf } from "@builder.io/qwik";
 import { FileInfo, fileUploadContextId } from "./file-upload-context";
 
-type InputProps = PropsOf<'input'>;
+type InputProps = PropsOf<"input">;
 
 /**
  * Hidden file input component that handles file selection via system dialog
@@ -17,7 +17,7 @@ export const FileUploadInput = component$<InputProps>((props) => {
     const input = e.target as HTMLInputElement;
     if (!input.files) return;
 
-    const newFiles: FileInfo[] = Array.from(input.files).map(file => ({
+    const newFiles: FileInfo[] = Array.from(input.files).map((file) => ({
       name: file.name,
       size: file.size,
       type: file.type,
@@ -25,7 +25,10 @@ export const FileUploadInput = component$<InputProps>((props) => {
       file: noSerialize(file)
     }));
 
-    console.log('Processing files:', newFiles.map(f => f.name));
+    console.log(
+      "Processing files:",
+      newFiles.map((f) => f.name)
+    );
 
     if (context.multiple) {
       context.files.value = [...context.files.value, ...newFiles];

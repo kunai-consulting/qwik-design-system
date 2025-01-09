@@ -6,7 +6,7 @@ export default component$(() => {
     <FileUpload.Root
       disabled
       onFilesChange$={(files) => {
-        console.log('Files changed:', files);
+        console.log("Files changed:", files);
         // @ts-ignore - for tests
         window.onFilesChange?.(files);
       }}
@@ -14,9 +14,7 @@ export default component$(() => {
       <FileUpload.Input />
       <FileUpload.Dropzone>
         <p>Upload disabled</p>
-        <FileUpload.Trigger>
-          Browse Files
-        </FileUpload.Trigger>
+        <FileUpload.Trigger>Browse Files</FileUpload.Trigger>
       </FileUpload.Dropzone>
     </FileUpload.Root>
   );
