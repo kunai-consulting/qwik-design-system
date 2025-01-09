@@ -1,0 +1,188 @@
+{
+  "name": "@qwikest/icons",
+  "version": "0.0.13",
+  "description": "Include popular icons easily in your Qwik projects with `@qwikest/icons`. Includes lucide, octicons & more 🎁",
+  "license": "MIT",
+  "homepage": "https://github.com/qwikest/icons",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qwikest/icons.git"
+  },
+  "keywords": [
+    "qwik",
+    "icons",
+    "lucide",
+    "octicons",
+    "ionicons",
+    "heroicons"
+  ],
+  "types": "./lib/utils/index.d.ts",
+  "qwik": "./lib/entry.lib.qwik.mjs",
+  "exports": {
+    ".": {
+      "import": "./lib/entry.lib.qwik.mjs",
+      "require": "./lib/entry.lib.qwik.cjs",
+      "types": "./lib/entry.lib.d.ts"
+    },
+    "./bootstrap": {
+      "import": "./lib/bs.qwik.mjs",
+      "require": "./lib/bs.qwik.cjs",
+      "types": "./lib/icons/bs/bs.d.ts"
+    },
+    "./octicons": {
+      "import": "./lib/go.qwik.mjs",
+      "require": "./lib/go.qwik.cjs",
+      "types": "./lib/icons/go/go.d.ts"
+    },
+    "./flowbite": {
+      "import": "./lib/fl.qwik.mjs",
+      "require": "./lib/fl.qwik.cjs",
+      "types": "./lib/icons/fl/fl.d.ts"
+    },
+    "./font-awesome": {
+      "import": "./lib/fa.qwik.mjs",
+      "require": "./lib/fa.qwik.cjs",
+      "types": "./lib/icons/fa/fa.d.ts"
+    },
+    "./heroicons": {
+      "import": "./lib/hi.qwik.mjs",
+      "require": "./lib/hi.qwik.cjs",
+      "types": "./lib/icons/hi/hi.d.ts"
+    },
+    "./iconoir": {
+      "import": "./lib/in.qwik.mjs",
+      "require": "./lib/in.qwik.cjs",
+      "types": "./lib/icons/in/in.d.ts"
+    },
+    "./ionicons": {
+      "import": "./lib/io.qwik.mjs",
+      "require": "./lib/io.qwik.cjs",
+      "types": "./lib/icons/io/io.d.ts"
+    },
+    "./lucide": {
+      "import": "./lib/lu.qwik.mjs",
+      "require": "./lib/lu.qwik.cjs",
+      "types": "./lib/icons/lu/lu.d.ts"
+    },
+    "./material": {
+      "import": "./lib/mat.qwik.mjs",
+      "require": "./lib/mat.qwik.cjs",
+      "types": "./lib/icons/mat/mat.d.ts"
+    },
+    "./monoicons": {
+      "import": "./lib/mo.qwik.mjs",
+      "require": "./lib/mo.qwik.cjs",
+      "types": "./lib/icons/mo/mo.d.ts"
+    },
+    "./simpleicons": {
+      "import": "./lib/si.qwik.mjs",
+      "require": "./lib/si.qwik.cjs",
+      "types": "./lib/icons/si/si.d.ts"
+    },
+    "./tablericons": {
+      "import": "./lib/tb.qwik.mjs",
+      "require": "./lib/tb.qwik.cjs",
+      "types": "./lib/icons/tb/tb.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./lib/entry.lib.d.ts"
+      ],
+      "bootstrap": [
+        "./lib/icons/bs/bs.d.ts"
+      ],
+      "flowbite": [
+        "./lib/icons/fl/fl.d.ts"
+      ],
+      "font-awesome": [
+        "./lib/icons/fa/fa.d.ts"
+      ],
+      "octicons": [
+        "./lib/icons/go/go.d.ts"
+      ],
+      "heroicons": [
+        "./lib/icons/hi/hi.d.ts"
+      ],
+      "iconoir": [
+        "./lib/icons/in/in.d.ts"
+      ],
+      "ionicons": [
+        "./lib/icons/io/io.d.ts"
+      ],
+      "lucide": [
+        "./lib/icons/lu/lu.d.ts"
+      ],
+      "material": [
+        "./lib/icons/mat/mat.d.ts"
+      ],
+      "monoicons": [
+        "./lib/icons/mo/mo.d.ts"
+      ],
+      "simpleicons": [
+        "./lib/icons/si/si.d.ts"
+      ],
+      "tablericons": [
+        "./lib/icons/tb/tb.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "lib"
+  ],
+  "engines": {
+    "node": ">=15.0.0"
+  },
+  "private": false,
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "qwik build",
+    "build.lib": "pnpm build.lib.browser && pnpm build.lib.types",
+    "build.lib.browser": "vite build --mode lib",
+    "build.lib.types": "tsc -p tsconfig.lib.json",
+    "build.server": "vite build -c adapters/static/vite.config.ts",
+    "dev": "vite --mode ssr",
+    "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
+    "fmt": "prettier --write .",
+    "fmt.check": "prettier --check .",
+    "generate-5-icons": "export ICON_LIMIT=5 && pnpm tsm ./generate/generate-icons.ts",
+    "generate-50-icons": "export ICON_LIMIT=50 && pnpm tsm ./generate/generate-icons.ts",
+    "generate-icons": "pnpm tsm ./generate/generate-icons.ts",
+    "generate-license": "pnpm tsm ./generate/generate-license.ts",
+    "link.lib": "pnpm build.lib && pnpm link -g",
+    "lint": "eslint \"src/**/*.ts*\"",
+    "release": "pnpm generate-icons && pnpm generate-license && pnpm build.lib && pnpm build.lib.types && pnpm np --yolo",
+    "start": "vite --open --mode ssr",
+    "qwik": "qwik"
+  },
+  "devDependencies": {
+    "@primer/octicons": "^19.8.0",
+    "@types/node-fetch": "latest",
+    "@types/tar": "^6.1.4",
+    "bootstrap-icons": "^1.11.1",
+    "fast-glob": "^3.2.12",
+    "got": "^12.5.3",
+    "heroicons": "^2.0.18",
+    "ionicons": "^7.2.1",
+    "lucide-static": ">=0.288.0 <1.0.0",
+    "node-fetch": "3.3.0",
+    "node-stream-zip": "^1.15.0",
+    "np": "7.6.3",
+    "simple-icons": "^9.18.0",
+    "svgo": "^3.0.2",
+    "tar": "^6.1.13",
+    "ts-node": "^10.9.1",
+    "tsm": "^2.3.0",
+    "typescript": "4.9.5",
+    "undici": "5.20.0",
+    "vite": "4.1.4"
+  },
+  "peerDependencies": {
+    "@builder.io/qwik": ">=1.0.0"
+  },
+  "dependencies": {}
+}
