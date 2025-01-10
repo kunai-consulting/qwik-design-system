@@ -1,9 +1,9 @@
 import {
   $,
-  component$,
   type PropFunction,
   type PropsOf,
   Slot,
+  component$,
   useContext
 } from "@builder.io/qwik";
 import { scrollAreaContextId } from "./scroll-area-context";
@@ -49,7 +49,6 @@ export const ScrollAreaViewPort = component$<ViewPortProps>((props) => {
       data-scroll-area-viewport
       onScroll$={onScroll$}
       ref={context.viewportRef}
-      tabIndex={0}
       role="region"
       aria-label="Scrollable content"
     >

@@ -1,7 +1,7 @@
-import { createContextId, type Signal } from '@builder.io/qwik';
+import { type Signal, createContextId } from "@builder.io/qwik";
 
 export const radioGroupContextId = createContextId<RadioGroupContext>(
-  'qds-radio-group-context'
+  "qds-radio-group-context"
 );
 
 export type RadioGroupContext = {

@@ -1,10 +1,10 @@
 import {
-  component$,
+  type PropsOf,
   Slot,
+  component$,
   useContext,
   useSignal,
-  useTask$,
-  type PropsOf
+  useTask$
 } from "@builder.io/qwik";
 import { Checkbox } from "..";
 import { checklistContextId } from "./checklist-context";

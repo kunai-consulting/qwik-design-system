@@ -1,15 +1,15 @@
 import {
   $,
-  component$,
   type PropsOf,
   Slot,
+  component$,
   sync$,
   useComputed$,
-  useContext,
-} from '@builder.io/qwik';
-import { radioGroupContextId } from './radio-group-context';
+  useContext
+} from "@builder.io/qwik";
+import { radioGroupContextId } from "./radio-group-context";
 
-type RadioGroupControlProps = PropsOf<'button'>;
+type RadioGroupControlProps = PropsOf<"button">;
 
 export const RadioGroupTrigger = component$((props: RadioGroupControlProps) => {
   const context = useContext(radioGroupContextId);
@@ -25,7 +25,7 @@ export const RadioGroupTrigger = component$((props: RadioGroupControlProps) => {
     if (context.isErrorSig.value) {
       labels.push(errorId);
     }
-    return labels.join(' ') || undefined;
+    return labels.join(" ") || undefined;
   });
 
   const handleClick$ = $(() => {
@@ -33,7 +33,7 @@ export const RadioGroupTrigger = component$((props: RadioGroupControlProps) => {
   });
 
   const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
     }
   });
@@ -48,10 +48,10 @@ export const RadioGroupTrigger = component$((props: RadioGroupControlProps) => {
       aria-describedby={describedByLabels ? describedByLabels.value : undefined}
       aria-invalid={context.isErrorSig.value}
       disabled={context.isDisabledSig.value}
-      data-disabled={context.isDisabledSig.value ? '' : undefined}
+      data-disabled={context.isDisabledSig.value ? "" : undefined}
       onKeyDown$={[handleKeyDownSync$, props.onKeyDown$]}
       onClick$={[handleClick$, props.onClick$]}
-      data-checked={context.isCheckedSig.value ? '' : undefined}
+      data-checked={context.isCheckedSig.value ? "" : undefined}
       data-qds-radio-group-trigger
       {...props}
     >

@@ -1,10 +1,10 @@
 import {
   $,
-  component$,
   type PropsOf,
   type QRL,
   Slot,
-  useContext,
+  component$,
+  useContext
 } from "@builder.io/qwik";
 import { scrollAreaContextId } from "./scroll-area-context";
 
@@ -19,7 +19,7 @@ export const ScrollAreaScrollbar = component$<ScrollBarType>((props) => {
 
   const onTrackClick$ = $((e: MouseEvent) => {
     const target = e.target as HTMLElement;
-    const clickedOrientation = target.getAttribute('data-orientation');
+    const clickedOrientation = target.getAttribute("data-orientation");
     const scrollbar = context.scrollbarRef.value;
     if (!scrollbar) return;
 

@@ -1,15 +1,8 @@
-import {
-  $,
-  component$,
-  type PropsOf,
-  Slot,
-  sync$,
-  useContext,
-} from '@builder.io/qwik';
-import { radioGroupContextId } from './radio-group-context';
-import { Label } from '../label';
+import { $, type PropsOf, Slot, component$, sync$, useContext } from "@builder.io/qwik";
+import { Label } from "../label";
+import { radioGroupContextId } from "./radio-group-context";
 
-type CheckboxLabelProps = PropsOf<'label'>;
+type CheckboxLabelProps = PropsOf<"label">;
 
 export const RadioGroupLabel = component$((props: CheckboxLabelProps) => {
   const context = useContext(radioGroupContextId);

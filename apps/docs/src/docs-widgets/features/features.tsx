@@ -1,6 +1,6 @@
 import { component$ } from "@builder.io/qwik";
-import type { ComponentParts } from "../api-table/api-table";
 import { LuBadgeCheck } from "@qwikest/icons/lucide";
+import type { ComponentParts } from "../api-table/api-table";
 
 export const Features = component$<{ api: ComponentParts }>(({ api }) => {
   if (!api?.features?.length) return null;

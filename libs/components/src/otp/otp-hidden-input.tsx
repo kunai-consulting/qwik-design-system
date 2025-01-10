@@ -1,12 +1,12 @@
 import {
   $,
-  component$,
   type PropsOf,
+  component$,
+  sync$,
   useContext,
-  useSignal,
   useOnDocument,
-  useTask$,
-  sync$
+  useSignal,
+  useTask$
 } from "@builder.io/qwik";
 import { OTPContextId } from "./otp-context";
 

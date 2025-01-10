@@ -1,6 +1,6 @@
 import {
-  component$,
   type Signal,
+  component$,
   useComputed$,
   useSignal,
   useStyles$

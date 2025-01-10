@@ -1,5 +1,5 @@
 import { LinearClient } from "@linear/sdk";
-import { convertChangesetToMarkdown, changesetData } from "./changeset-md";
+import { changesetData, convertChangesetToMarkdown } from "./changeset-md";
 
 const linearClient = new LinearClient({
   apiKey: process.env.LINEAR_API_KEY

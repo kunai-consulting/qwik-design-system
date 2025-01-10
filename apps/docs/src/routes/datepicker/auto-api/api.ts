@@ -10,6 +10,10 @@ export const api = {
             "type": "string"
           },
           {
+            "name": "data-current",
+            "type": "string"
+          },
+          {
             "name": "data-value",
             "type": "string"
           }
@@ -17,14 +21,28 @@ export const api = {
       }
     },
     {
+      "Datepicker Header": {
+        "types": [],
+        "inheritsFrom": "header"
+      }
+    },
+    {
+      "Datepicker Next": {
+        "types": [],
+        "inheritsFrom": "svg"
+      }
+    },
+    {
+      "Datepicker Previous": {
+        "types": [],
+        "inheritsFrom": "svg"
+      }
+    },
+    {
       "Datepicker Root": {
         "types": [],
-        "inheritsFrom": "td",
+        "inheritsFrom": "div",
         "dataAttributes": [
-          {
-            "name": "data-qwik-date",
-            "type": "string"
-          },
           {
             "name": "data-theme",
             "type": "string"
@@ -33,9 +51,20 @@ export const api = {
       }
     },
     {
+      "Datepicker Title": {
+        "types": [],
+        "inheritsFrom": "div"
+      }
+    },
+    {
       "Icons": {
         "types": [],
         "inheritsFrom": "svg"
+      }
+    },
+    {
+      "Utils": {
+        "types": []
       }
     }
   ],
@@ -45,6 +74,18 @@ export const api = {
     },
     {
       "name": "Datepicker.Grid"
+    },
+    {
+      "name": "Datepicker.Header"
+    },
+    {
+      "name": "Datepicker.Previous"
+    },
+    {
+      "name": "Datepicker.Next"
+    },
+    {
+      "name": "Datepicker.Title"
     }
   ],
   "keyboardInteractions": [],

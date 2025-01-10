@@ -1,12 +1,12 @@
 import { qwikCity } from "@builder.io/qwik-city/vite";
 import { qwikVite } from "@builder.io/qwik/optimizer";
-import autoAPI from "./auto-api/auto-api";
 /**
  * This is the base config for vite.
  * When building, the adapter config is used which loads this file and extends it.
  */
 import { type UserConfig, defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+import autoAPI from "./auto-api/auto-api";
 import pkg from "./package.json";
 import { recmaProvideComponents } from "./src/mdx/recma-provide-comp";
 
