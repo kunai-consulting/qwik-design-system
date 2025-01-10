@@ -2,12 +2,12 @@ import { component$ } from "@builder.io/qwik";
 import {
   QwikCityProvider,
   RouterOutlet,
-  ServiceWorkerRegister
 } from "@builder.io/qwik-city";
 import { isDev } from "@builder.io/qwik/build";
 import { RouterHead } from "./docs-widgets/router-head/router-head";
 
 import "./global.css";
+import { ModulePreload } from "./components/module-preload";
 
 export default component$(() => {
   /**
@@ -28,7 +28,7 @@ export default component$(() => {
       </head>
       <body lang="en">
         <RouterOutlet />
-        <ServiceWorkerRegister />
+        <ModulePreload />
         <script
           dangerouslySetInnerHTML={`
             window.addEventListener('initPagefind', async () => {
