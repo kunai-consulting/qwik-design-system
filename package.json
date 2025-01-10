@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "pnpm --filter ./apps/docs dev",
     "dev.ct": "pnpm --filter ./apps/component-tests dev -- --port 6174",
-    "build": "pnpm --filter ./libs/hooks build && pnpm --filter ./libs/components build && pnpm --filter ./apps/docs build",
-    "search": "cp -r ./apps/docs/dist/pagefind ./apps/docs/public",
+    "build": "pnpm --filter ./libs/hooks build && pnpm --filter ./libs/components build && pnpm --filter ./apps/docs build && cp -r ./apps/docs/dist/pagefind ./apps/docs/public",
     "preview": "pnpm --filter ./apps/docs preview",
     "check": "biome ci .",
     "check.format": "biome format .",
