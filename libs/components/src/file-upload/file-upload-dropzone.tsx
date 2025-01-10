@@ -6,7 +6,10 @@ import {
   PropsOf,
   noSerialize,
   useSignal,
-  useOn
+  useOn,
+  sync$,
+  useOnWindow,
+  useId
 } from "@builder.io/qwik";
 import { FileInfo, fileUploadContextId } from "./file-upload-context";
 
@@ -16,6 +19,7 @@ export const FileUploadDropzone = component$<DropzoneProps>((props) => {
   const context = useContext(fileUploadContextId);
   const dropzoneRef = useSignal<HTMLDivElement>();
   const isDragging = useSignal(false);
+  const instanceId = useId();
 
   // Prevent default browser handling of file drops at window level
   const onWindowDragOver$ = $((e: DragEvent) => {
@@ -151,31 +155,15 @@ export const FileUploadDropzone = component$<DropzoneProps>((props) => {
   //   }
   // });
 
-  // you have access to fileInfos with e.detail.fileInfos, now add this to the context with the logic you had before in here
-  useOn('qdsFileDrop', $((e: CustomEvent) => {
-    console.log('Drop event', e);
-  }))
+  useOn('drop', sync$((e: DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-  const onDropScript = `
-    (function() {
-      const dropzone = document.querySelector('[data-file-upload-dropzone]');
-      if (!dropzone) return;
-
-      dropzone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-            const dt = e.dataTransfer;
-    // console.log('Drop event:', {
-    //   hasDataTransfer: !!dt,
-    //   types: dt?.types ? Array.from(dt.types) : [],
-    //   items: dt?.items?.length || 0,
-    //   files: dt?.files?.length || 0
-    // });
+    const dt = e.dataTransfer;
 
     if (!dt) return;
 
-    let files = [];
+    let files: File[] = [];
 
     // Try to get files using the Files API first
     if (dt.files?.length) {
@@ -202,20 +190,27 @@ export const FileUploadDropzone = component$<DropzoneProps>((props) => {
       fileInfos.map((f) => f.name)
     );
 
-        const event = new CustomEvent('qdsFileDrop', {
+    const event = new CustomEvent('qdsfiledrop', {
       detail: { fileInfos }
     });
-    dropzone.dispatchEvent(event);
-      
-    });
-    })()
-  `
+
+    console.log(e);
+
+    const dropzoneElement = (e.target as Element).closest('[data-file-upload-dropzone]');
+    dropzoneElement?.dispatchEvent(event);
+  }))
 
   return (
     <>
       <div
       {...props}
       ref={dropzoneRef}
+
+      // do your context stuff here now. access the state with e.detail
+      onQdsfiledrop$={$((e: CustomEvent) => {
+        console.log('Drop event', e);
+      })}
+
       // Prevent default file handling at window level
       window:onDragOver$={onWindowDragOver$}
       // Prevent default browser behavior for all drag events
@@ -233,7 +228,6 @@ export const FileUploadDropzone = component$<DropzoneProps>((props) => {
     >
       <Slot />
     </div>
-    <script dangerouslySetInnerHTML={onDropScript} />
     </>
   );
 });
