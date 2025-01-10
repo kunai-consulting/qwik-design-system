@@ -3,19 +3,27 @@ import {
   component$,
   type PropsOf,
   Slot,
-  sync$,
   useComputed$,
   useContext,
+  useStyles$,
 } from '@builder.io/qwik';
 import { radioGroupContextId } from './radio-group-context';
+import './radio-group.css';
+import styles from './radio-group.css?inline';
 
-type RadioGroupControlProps = PropsOf<'button'>;
+type RadioGroupControlProps = PropsOf<'button'> & {
+  value: string;
+  _index?: number;
+  name: string;
+};
 
 export const RadioGroupTrigger = component$((props: RadioGroupControlProps) => {
   const context = useContext(radioGroupContextId);
+  const _index = props._index;
   const triggerId = `${context.localId}-trigger`;
   const descriptionId = `${context.localId}-description`;
   const errorId = `${context.localId}-error`;
+  useStyles$(styles);
 
   const describedByLabels = useComputed$(() => {
     const labels = [];
@@ -29,30 +37,23 @@ export const RadioGroupTrigger = component$((props: RadioGroupControlProps) => {
   });
 
   const handleClick$ = $(() => {
-    context.isCheckedSig.value = !context.isCheckedSig.value;
-  });
-
-  const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-    }
+    context.selectedIndexSig.value = _index ?? null;
+    context.selectedValueSig.value = props.value;
   });
 
   return (
     <button
+      tabIndex={0}
       id={triggerId}
       ref={context.triggerRef}
-      type="button"
       role="radio"
-      aria-checked={`${context.isCheckedSig.value}`}
+      aria-checked={context.selectedIndexSig.value === _index}
       aria-describedby={describedByLabels ? describedByLabels.value : undefined}
       aria-invalid={context.isErrorSig.value}
-      disabled={context.isDisabledSig.value}
       data-disabled={context.isDisabledSig.value ? '' : undefined}
-      onKeyDown$={[handleKeyDownSync$, props.onKeyDown$]}
       onClick$={[handleClick$, props.onClick$]}
-      data-checked={context.isCheckedSig.value ? '' : undefined}
-      data-qds-checkbox-trigger
+      data-checked={context.selectedIndexSig.value === _index}
+      data-qds-radio-group-trigger
       {...props}
     >
       <Slot />

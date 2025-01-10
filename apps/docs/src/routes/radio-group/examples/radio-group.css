@@ -10,9 +10,11 @@
   gap: 8px;
 }
 
-.radrio-group-trigger {
-  width: 30px;
-  height: 30px;
+.radio-group-trigger {
+  width: 15px;
+  height: 15px;
+  align-items: center;
+  justify-content: center;
   border-radius: 8px;
   position: relative;
   background: gray;
@@ -20,24 +22,20 @@
 
 .radio-group-trigger:focus-visible {
   outline: 1px solid white;
-  /* outline-offset: 2px; */
+  outline-offset: 2px;
+  align-items: center;
+  justify-content: center;
 }
 
 .radio-group-trigger[data-disabled] {
   opacity: 0.5;
 }
 
-.radio-group-trigger[data-checked] [data-check-icon] {
-  display: block;
-}
-
 .radio-group-indicator {
-  display: flex;
+  width: 15px;
   align-items: center;
   justify-content: center;
-  /* position: absolute; */
   inset: 0;
-
   border-radius: 8px;
   background: #0a4d70;
 }

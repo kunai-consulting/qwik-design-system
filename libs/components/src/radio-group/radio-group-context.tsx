@@ -6,7 +6,7 @@ export const radioGroupContextId = createContextId<RadioGroupContext>(
 
 export type RadioGroupContext = {
   selectedValueSig: Signal<string | undefined>;
-  isCheckedSig: Signal<boolean>;
+  selectedIndexSig: Signal<number | null>;
   isDisabledSig: Signal<boolean | undefined>;
   isErrorSig: Signal<boolean | undefined>;
   localId: string;

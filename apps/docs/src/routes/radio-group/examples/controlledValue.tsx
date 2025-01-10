@@ -5,9 +5,10 @@ import { LuCircle } from '@qwikest/icons/lucide';
 export default component$(() => {
   useStyles$(styles);
   const items = Array.from({ length: 4 }, (_, i) => `Item ${i + 1}`);
+  const value = useSignal<string | undefined>('Item 2');
 
   return (
-    <RadioGroup.Root class="radio-group" name="hero">
+    <RadioGroup.Root class="radio-group" value={value.value}>
       <RadioGroup.Label class="radio-group__label">Items</RadioGroup.Label>
       {items.map((item, index) => (
         <RadioGroup.Item
