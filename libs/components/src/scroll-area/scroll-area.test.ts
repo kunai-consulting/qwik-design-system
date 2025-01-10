@@ -347,7 +347,34 @@ test.describe("a11y", () => {
     const shortcuts = ["PageDown", "PageUp", "Home", "End"];
     for (const key of shortcuts) {
       const initialScrollTop = await viewport.evaluate((el) => el.scrollTop);
-      await page.keyboard.press(key);
+
+      // Press key and wait for scroll event to complete
+      await Promise.all([
+        viewport.evaluate(() => {
+          return new Promise((resolve) => {
+            const el = document.querySelector("[data-scroll-area-viewport]");
+            if (!el) {
+              resolve(null);
+              return;
+            }
+
+            let timeoutId: number;
+            const onScroll = () => {
+              clearTimeout(timeoutId);
+              timeoutId = window.setTimeout(() => {
+                el.removeEventListener("scroll", onScroll);
+                resolve(null);
+              }, 50);
+            };
+
+            el.addEventListener("scroll", onScroll);
+            // Resolve anyway after some time in case no scroll occurs
+            setTimeout(resolve, 500);
+          });
+        }),
+        page.keyboard.press(key)
+      ]);
+
       const newScrollTop = await viewport.evaluate((el) => el.scrollTop);
 
       if (key === "PageDown" || key === "End") {

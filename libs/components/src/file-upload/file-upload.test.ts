@@ -103,10 +103,17 @@ test.describe("critical functionality", () => {
 });
 
 test.describe("drag and drop functionality", () => {
+  test.beforeEach(async ({ page }) => {
+    // Ensure clean state before each test
+    await page.reload();
+  });
   test(`GIVEN a file upload dropzone
-        WHEN dragging file over it
-        THEN it should show dragging state`, async ({ page }) => {
+      WHEN dragging file over it
+      THEN it should show dragging state`, async ({ page }) => {
     const d = await setup(page, "basic");
+
+    // Ensure dropzone is ready
+    await d.getDropzone().waitFor({ state: "attached" });
 
     await page.evaluate(() => {
       const dropzone = document.querySelector("[data-file-upload-dropzone]");
@@ -135,11 +142,11 @@ test.describe("drag and drop functionality", () => {
       dropzone?.dispatchEvent(dragEvent);
     });
 
-    // Allow event processing
-    await page.waitForTimeout(100);
-
-    // Verify drag state
-    expect(await d.isDragging()).toBe(true);
+    // Increase timeout and add retry logic
+    await expect(async () => {
+      const isDragging = await d.isDragging();
+      expect(isDragging).toBe(true);
+    }).toPass({ timeout: 2000 });
   });
 
   test(`GIVEN a file upload dropzone
@@ -185,85 +192,90 @@ test.describe("drag and drop functionality", () => {
       THEN it should process the file`, async ({ page, testFiles }) => {
     const d = await setup(page, "basic");
 
+    // Ensure dropzone is ready
+    await d.getDropzone().waitFor({ state: "attached" });
+
     let processedFiles: any[] = [];
-    await page.exposeFunction("onFilesChange", (files: any[]) => {
-      processedFiles = files;
+    const filesProcessedPromise = new Promise<void>((resolve) => {
+      page.exposeFunction("onFilesChange", (files: any[]) => {
+        processedFiles = files;
+        resolve();
+      });
     });
 
     // Read file content for simulation
     const fileContent = await fs.promises.readFile(testFiles.imageFile.path);
 
-    // Helper function to simulate file drop
-    const attemptDrop = async () => {
-      await page.evaluate(
-        async (fileData) => {
-          const dropzone = document.querySelector("[data-file-upload-dropzone]");
+    // Simulate file drop
+    await page.evaluate(
+      async (fileData) => {
+        const dropzone = document.querySelector("[data-file-upload-dropzone]");
+        if (!dropzone) throw new Error("Dropzone not found");
 
-          // Create file content as Blob
-          const blob = new Blob([new Uint8Array(fileData.content)], {
-            type: fileData.type
-          });
+        // Create file content as Blob
+        const blob = new Blob([new Uint8Array(fileData.content)], {
+          type: fileData.type
+        });
 
-          // Create File object
-          const file = new File([blob], fileData.name, {
-            type: fileData.type
-          });
+        // Create File object
+        const file = new File([blob], fileData.name, {
+          type: fileData.type
+        });
 
-          // Setup DataTransfer
-          const dt = new DataTransfer();
-          dt.items.add(file);
+        // Setup DataTransfer
+        const dt = new DataTransfer();
+        dt.items.add(file);
 
-          // Simulate complete drag and drop sequence
-          const events = [
-            new DragEvent("dragenter", {
-              bubbles: true,
-              cancelable: true,
-              dataTransfer: dt
-            }),
-            new DragEvent("dragover", {
-              bubbles: true,
-              cancelable: true,
-              dataTransfer: dt
-            }),
-            new DragEvent("drop", {
-              bubbles: true,
-              cancelable: true,
-              dataTransfer: dt
-            })
-          ];
+        // Simulate complete drag and drop sequence
+        const events = [
+          new DragEvent("dragenter", {
+            bubbles: true,
+            cancelable: true,
+            dataTransfer: dt
+          }),
+          new DragEvent("dragover", {
+            bubbles: true,
+            cancelable: true,
+            dataTransfer: dt
+          }),
+          new DragEvent("drop", {
+            bubbles: true,
+            cancelable: true,
+            dataTransfer: dt
+          })
+        ];
 
-          // Dispatch event sequence
-          for (const event of events) {
-            dropzone?.dispatchEvent(event);
-          }
-        },
-        {
-          content: Array.from(fileContent),
-          name: testFiles.imageFile.name,
-          type: testFiles.imageFile.type
+        // Dispatch event sequence
+        for (const event of events) {
+          dropzone.dispatchEvent(event);
+          // Add small delay between events
+          await new Promise((resolve) => setTimeout(resolve, 50));
         }
-      );
-    };
+      },
+      {
+        content: Array.from(fileContent),
+        name: testFiles.imageFile.name,
+        type: testFiles.imageFile.type
+      }
+    );
 
-    // Initial drop attempt
-    await attemptDrop();
-
-    // Retry on failure
-    if (processedFiles.length === 0) {
-      console.log("First drop attempt failed, retrying...");
-      await page.waitForTimeout(100); // Brief pause before retry
-      await attemptDrop();
+    // Wait for file processing with timeout
+    try {
+      await Promise.race([
+        filesProcessedPromise,
+        new Promise((_, reject) => setTimeout(() => reject("timeout"), 2000))
+      ]);
+    } catch (error) {
+      if (error === "timeout") {
+        throw new Error("File processing timed out");
+      }
+      throw error;
     }
-
-    // Allow event processing
-    await page.waitForTimeout(100);
 
     // Verify file processing
     expect(processedFiles.length, "File should be processed after drop").toBe(1);
-    if (processedFiles.length > 0) {
-      expect(processedFiles[0].name).toBe(testFiles.imageFile.name);
-      expect(processedFiles[0].type).toBe(testFiles.imageFile.type);
-    }
+    expect(processedFiles[0].name).toBe(testFiles.imageFile.name);
+    expect(processedFiles[0].type).toBe(testFiles.imageFile.type);
   });
 
   test(`GIVEN a file upload dropzone

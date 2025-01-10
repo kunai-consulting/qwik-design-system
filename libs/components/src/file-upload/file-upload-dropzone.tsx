@@ -8,12 +8,19 @@ import {
   useSignal,
   useOn,
   sync$,
-  useOnWindow,
   useId
 } from "@builder.io/qwik";
 import { FileInfo, fileUploadContextId } from "./file-upload-context";
 
 type DropzoneProps = PropsOf<"div">;
+
+interface RawFileInfo {
+  name: string;
+  size: number;
+  type: string;
+  lastModified: number;
+  file: File;
+}
 
 export const FileUploadDropzone = component$<DropzoneProps>((props) => {
   const context = useContext(fileUploadContextId);
@@ -95,139 +102,98 @@ export const FileUploadDropzone = component$<DropzoneProps>((props) => {
     }
   });
 
-  // Handle file drop event
-  // const onDrop$ = $(async (e: DragEvent) => {
-  //   e.preventDefault();
-  //   e.stopPropagation();
+  useOn(
+    "drop",
+    sync$((e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-  //   if (context.disabled) return;
+      const dt = e.dataTransfer;
 
-  //   // Reset dragging state
-  //   isDragging.value = false;
-  //   context.isDragging.value = false;
+      if (!dt) return;
 
-  //   const dt = e.dataTransfer;
-  //   // console.log('Drop event:', {
-  //   //   hasDataTransfer: !!dt,
-  //   //   types: dt?.types ? Array.from(dt.types) : [],
-  //   //   items: dt?.items?.length || 0,
-  //   //   files: dt?.files?.length || 0
-  //   // });
+      let files: File[] = [];
 
-  //   if (!dt) return;
+      // Try to get files using the Files API first
+      if (dt.files?.length) {
+        files = Array.from(dt.files);
+      }
 
-  //   let files: File[] = [];
+      if (!files.length) {
+        console.log("No valid files found");
+        return;
+      }
 
-  //   // Try to get files using the Files API first
-  //   if (dt.files?.length) {
-  //     // console.log('Using files API');
-  //     files = Array.from(dt.files);
-  //   }
+      // Convert Files to FileInfo objects
+      const fileInfos = files.map((file) => ({
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        lastModified: file.lastModified,
+        file
+      }));
 
-  //   if (!files.length) {
-  //     console.log("No valid files found");
-  //     return;
-  //   }
+      const event = new CustomEvent("qdsfiledrop", {
+        detail: { fileInfos }
+      });
 
-  //   // Convert Files to FileInfo objects
-  //   const fileInfos: FileInfo[] = files.map((file) => ({
-  //     name: file.name,
-  //     size: file.size,
-  //     type: file.type,
-  //     lastModified: file.lastModified,
-  //     file: noSerialize(file)
-  //   }));
-
-  //   console.log(
-  //     "Processing files:",
-  //     fileInfos.map((f) => f.name)
-  //   );
-
-  //   if (context.multiple) {
-  //     context.files.value = [...context.files.value, ...fileInfos];
-  //   } else {
-  //     context.files.value = fileInfos.slice(0, 1);
-  //   }
-
-  //   // Notify parent component about new files
-  //   if (context.onFilesChange$) {
-  //     context.onFilesChange$(context.files.value);
-  //   }
-  // });
-
-  useOn('drop', sync$((e: DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const dt = e.dataTransfer;
-
-    if (!dt) return;
-
-    let files: File[] = [];
-
-    // Try to get files using the Files API first
-    if (dt.files?.length) {
-      // console.log('Using files API');
-      files = Array.from(dt.files);
-    }
-
-    if (!files.length) {
-      console.log("No valid files found");
-      return;
-    }
-
-    // Convert Files to FileInfo objects
-    const fileInfos = files.map((file) => ({
-      name: file.name,
-      size: file.size,
-      type: file.type,
-      lastModified: file.lastModified,
-      file
-    }));
-
-    console.log(
-      "Processing files:",
-      fileInfos.map((f) => f.name)
-    );
-
-    const event = new CustomEvent('qdsfiledrop', {
-      detail: { fileInfos }
-    });
-
-    console.log(e);
-
-    const dropzoneElement = (e.target as Element).closest('[data-file-upload-dropzone]');
-    dropzoneElement?.dispatchEvent(event);
-  }))
+      const dropzoneElement = (e.target as Element).closest(
+        "[data-file-upload-dropzone]"
+      );
+      dropzoneElement?.dispatchEvent(event);
+    })
+  );
 
   return (
     <>
       <div
-      {...props}
-      ref={dropzoneRef}
+        {...props}
+        ref={dropzoneRef}
+        onQdsfiledrop$={$((e: CustomEvent<{ fileInfos: RawFileInfo[] }>) => {
+          if (context.disabled) return;
 
-      // do your context stuff here now. access the state with e.detail
-      onQdsfiledrop$={$((e: CustomEvent) => {
-        console.log('Drop event', e);
-      })}
+          // Reset dragging state
+          isDragging.value = false;
+          context.isDragging.value = false;
 
-      // Prevent default file handling at window level
-      window:onDragOver$={onWindowDragOver$}
-      // Prevent default browser behavior for all drag events
-      preventdefault:dragenter
-      preventdefault:dragover
-      preventdefault:dragleave
-      preventdefault:drop
-      // Attach drag and drop event handlers
-      onDragEnter$={onDragEnter$}
-      onDragOver$={onDragOver$}
-      onDragLeave$={onDragLeave$}
-      data-file-upload-dropzone
-      data-dragging={isDragging.value ? "" : undefined}
-      data-disabled={context.disabled ? "" : undefined}
-    >
-      <Slot />
-    </div>
+          const fileInfos = e.detail.fileInfos.map((fileInfo: RawFileInfo) => ({
+            ...fileInfo,
+            file: noSerialize(fileInfo.file)
+          }));
+
+          console.log(
+            "Processing files:",
+            fileInfos.map((f: FileInfo) => f.name)
+          );
+
+          if (context.multiple) {
+            context.files.value = [...context.files.value, ...fileInfos];
+          } else {
+            context.files.value = fileInfos.slice(0, 1);
+          }
+
+          // Notify parent component about new files
+          if (context.onFilesChange$) {
+            context.onFilesChange$(context.files.value);
+          }
+        })}
+        // Prevent default file handling at window level
+        window:onDragOver$={onWindowDragOver$}
+        // Prevent default browser behavior for all drag events
+        preventdefault:dragenter
+        preventdefault:dragover
+        preventdefault:dragleave
+        preventdefault:drop
+        // Attach drag and drop event handlers
+        onDragEnter$={onDragEnter$}
+        onDragOver$={onDragOver$}
+        onDragLeave$={onDragLeave$}
+        data-file-upload-dropzone
+        data-dragging={isDragging.value ? "" : undefined}
+        data-disabled={context.disabled ? "" : undefined}
+      >
+        <Slot />
+      </div>
     </>
   );
 });
