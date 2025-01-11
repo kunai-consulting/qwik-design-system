@@ -183,9 +183,9 @@ export const DatePickerGrid = component$<DatePickerGridProps>((props) => {
           }),
         ]}
       >
-        {context.datesArray.value.map((week) => {
+        {context.datesArray.value.map((week, index) => {
           return (
-            <tr key={week.toString()} data-qds-datepicker-grid-body-row class="">
+            <tr key={`${week.toString()}-${index}`} data-qds-datepicker-grid-body-row class="">
               {context.showWeekNumber && (
                 <td data-qds-datepicker-grid-body-week-number>
                   <span>
@@ -197,7 +197,7 @@ export const DatePickerGrid = component$<DatePickerGridProps>((props) => {
                   </span>
                 </td>
               )}
-              {week.map((day) => {
+              {week.map((day, dayIndex) => {
                 const label = day
                   ? dateFormatter(context.locale).format(new Date(`${day}T12:00:00`))
                   : undefined;
@@ -205,7 +205,7 @@ export const DatePickerGrid = component$<DatePickerGridProps>((props) => {
 
                 return (
                   <td
-                    key={`${week.toString()}-${day}`}
+                    key={`${week.toString()}-${day}-${dayIndex}`}
                     role="presentation"
                     aria-disabled={disabled}
                   >
