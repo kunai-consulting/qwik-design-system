@@ -7,3 +7,82 @@ title: Qwik Design System | Datepicker
 A control that enables users to select a date from a calendar.
 
 <Showcase name="hero" />
+
+## Features
+
+- Keyboard navigation support
+- Week numbers display (optional)
+- Full weeks display (optional)
+- Customizable icons
+- Internationalization support
+- ARIA-compliant accessibility
+
+## API Reference
+### Root
+
+The main container for the datepicker component.
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `locale` | `'en'` | `'en'` | The locale for the datepicker |
+| `defaultDate` | `string` | Current date | Initial date in 'YYYY-MM-DD' format |
+| `showWeekNumber` | `boolean` | `false` | Show week numbers |
+| `fullWeeks` | `boolean` | `false` | Show complete weeks including days from adjacent months |
+| `date` | `string` | - | Controlled date value |
+| `showDaysOfWeek` | `boolean` | `true` | Show weekday headers |
+| `onDateChange$` | `QRL<(date: string) => void>` | - | Callback when date changes |
+
+### Grid
+
+The calendar grid component displaying dates.
+
+#### Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `buttonProps` | `PropsOf<'button'>` | Props passed to date buttons |
+| `onDateChange$` | `QRL<(date: string) => void>` | Callback when date changes |
+
+### Header
+
+Container for navigation controls and title.
+
+### Previous
+
+Previous month navigation button.
+
+#### Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `icon` | `Component<PropsOf<'svg'>>` | Custom icon component |
+
+### Next
+
+Next month navigation button.
+
+#### Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `icon` | `Component<PropsOf<'svg'>>` | Custom icon component |
+
+### Title
+
+Displays current month and year.
+
+## Keyboard Navigation
+
+| Key | Action |
+|-----|--------|
+| `ArrowLeft` | Previous day |
+| `ArrowRight` | Next day |
+| `ArrowUp` | Previous week |
+| `ArrowDown` | Next week |
+| `Home` | First day of week |
+| `End` | Last day of week |
+| `PageUp` | Previous month |
+| `PageDown` | Next month |
+| `Enter`/`Space` | Select date |
