@@ -6,11 +6,11 @@ export const api = {
         "inheritsFrom": "button",
         "dataAttributes": [
           {
-            "name": "data-preselected",
+            "name": "data-current",
             "type": "string"
           },
           {
-            "name": "data-current",
+            "name": "data-selected",
             "type": "string"
           },
           {

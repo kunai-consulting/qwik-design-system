@@ -1,5 +1,5 @@
 import { type Signal, createContextId } from "@builder.io/qwik";
-import type { Locale, Month } from "./types";
+import type { Locale, Month, LocalDate } from "./types";
 
 export const datepickerContextId = createContextId<DatepickerContext>(
   "qds-datepicker-context"
@@ -7,9 +7,9 @@ export const datepickerContextId = createContextId<DatepickerContext>(
 
 export type DatepickerContext = {
   locale: Locale;
-  defaultDate: Signal<`${number}-${number}-${number}`>;
-  activeDate: Signal<`${number}-${number}-${number}` | null>;
-  dateToFocus: Signal<`${number}-${number}-${number}`>;
+  defaultDate: LocalDate;
+  activeDate: Signal<LocalDate | null>;
+  dateToFocus: Signal<LocalDate>;
   showWeekNumber: boolean;
   showDaysOfWeek: boolean;
   daysOfWeek: [
@@ -24,4 +24,5 @@ export type DatepickerContext = {
   datesArray: Signal<(string | null)[][]>;
   monthToRender: Signal<Month>;
   yearToRender: Signal<number>;
+  currentDate: LocalDate;
 };

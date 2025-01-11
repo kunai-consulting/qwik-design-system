@@ -20,10 +20,10 @@ import { daysArrGenerator } from "./utils";
 
 export type DatePickerRootProps = PropsOf<"div"> & {
   locale?: Locale;
+  defaultDate?: LocalDate;
   showWeekNumber?: boolean;
   fullWeeks?: boolean;
   date?: LocalDate;
-  "bind:date"?: Signal<LocalDate>;
   showDaysOfWeek?: boolean;
   onDateChange$?: QRL<(date: LocalDate) => void>;
 }
@@ -40,16 +40,16 @@ export const DatePickerRoot = component$<DatePickerRootProps>(
     onDateChange$,
     ...props
   }) => {
-    const date = new Date().toISOString().split("T")[0] as LocalDate;
     const labelStr = props["aria-label"] ?? ARIA_LABELS[locale].root;
     const daysOfWeek = WEEKDAYS[locale];
 
-    const dateSignal = useSignal<LocalDate>(dateProp ?? date);
-    const defaultDate = props["bind:date"] ?? dateSignal;
+    const date = new Date();
+    const currentDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}` as LocalDate;
+    const defaultDate = props.defaultDate ?? currentDate;
     const activeDate = useSignal<LocalDate | null>(null);
-    const monthToRender = useSignal<Month>(defaultDate.value.split("-")[1] as Month);
-    const yearToRender = useSignal<number>(+defaultDate.value.split("-")[0]);
-    const dateToFocus = useSignal<LocalDate>(defaultDate.value);
+    const monthToRender = useSignal<Month>(defaultDate.split("-")[1] as Month);
+    const yearToRender = useSignal<number>(+defaultDate.split("-")[0]);
+    const dateToFocus = useSignal<LocalDate>(defaultDate);
 
     const datesArray = useComputed$(() => {
       const dates = daysArrGenerator({
@@ -70,7 +70,8 @@ export const DatePickerRoot = component$<DatePickerRootProps>(
       yearToRender,
       defaultDate,
       activeDate,
-      dateToFocus
+      dateToFocus,
+      currentDate
     };
 
     useContextProvider(datepickerContextId, context);
@@ -82,7 +83,7 @@ export const DatePickerRoot = component$<DatePickerRootProps>(
       return `${labelStr} ${MONTHS_LG[locale][+month - 1]} ${year}`;
     });
 
-    if (!regex.test(defaultDate.value))
+    if (!regex.test(defaultDate))
       throw new Error("Invalid date format in Calendar. Please use YYYY-MM-DD format.");
 
     useVisibleTask$(({ track, cleanup }) => {

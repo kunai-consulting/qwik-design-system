@@ -3,16 +3,8 @@ import { datepickerContextId } from "./datepicker-context";
 import type { LocalDate, Locale, Month } from "./types";
 import { getWeekNumber } from "./utils";
 
-type DatePickerGridProps = {
-  calendarProps?: PropsOf<"table">;
-  cellProps?: PropsOf<"td">;
-  theadProps?: PropsOf<"thead">;
-  theadRowProps?: PropsOf<"tr">;
-  headerCellProps?: PropsOf<"th">;
-  tbodyProps?: PropsOf<"tbody">;
-  tbodyRowProps?: PropsOf<"tr">;
-  weekNumberProps?: PropsOf<"td">;
-  dayButtonProps?: PropsOf<"button">;
+type DatePickerGridProps = PropsOf<"table"> & {
+  buttonProps?: PropsOf<"button">;
   onDateChange$?: QRL<(date: LocalDate) => void>;
 };
 
@@ -63,28 +55,31 @@ export const DatePickerGrid = component$<DatePickerGridProps>((props) => {
   });
 
   const updateDateFocused = $((e: KeyboardEvent, tbody: HTMLTableSectionElement) => {
-    if (!ACTION_KEYS.includes(e.key.toLowerCase() as (typeof ACTION_KEYS)[number]))
-      return;
-
+    if (!ACTION_KEYS.includes(e.key.toLowerCase() as (typeof ACTION_KEYS)[number])) return;
     const elFocus = document.activeElement;
-
     if (elFocus?.tagName.toLowerCase() !== "button") return;
 
     const buttons = Array.from(tbody.getElementsByTagName("button"));
+    const idx = buttons.indexOf(elFocus as HTMLButtonElement);
+    const currentDate = elFocus?.getAttribute("data-value") as LocalDate;
+    const key = e.key.toLowerCase();
 
-    const getNewIndex = ({ currentIdx, step }: { currentIdx: number; step: number }) => {
-      const newIdx = currentIdx + step;
-
-      if (newIdx < 0 || newIdx >= buttons.length) return currentIdx;
-
-      const btn = buttons[newIdx];
-
-      if (btn.hasAttribute("disabled")) return currentIdx;
-
-      return newIdx;
+    const getNewIndex = (step: number) => {
+      const newIdx = idx + step;
+      if (newIdx < 0 || newIdx >= buttons.length) return idx;
+      return buttons[newIdx].hasAttribute("disabled") ? idx : newIdx;
     };
 
-    // Helper functions
+    const handleDateChange = (step: number, newIdx: number) => {
+      if (idx === newIdx) {
+        const newDate = adjustDate(currentDate, { days: step });
+        updateFocus(newIdx, newDate);
+        step < 0 ? decreaseDate() : increaseDate();
+      } else {
+        updateFocus(newIdx);
+      }
+    };
+
     const adjustDate = (
       date: string,
       adjustment: { days?: number; months?: number }
@@ -110,37 +105,18 @@ export const DatePickerGrid = component$<DatePickerGridProps>((props) => {
       }
     };
 
-    const idx = buttons.indexOf(elFocus as HTMLButtonElement);
-    const currentDate = elFocus?.getAttribute("data-value") as LocalDate;
-
-    switch (e.key.toLowerCase()) {
+    switch (key) {
       case "arrowup":
       case "arrowdown": {
-        const step = e.key.toLowerCase() === "arrowup" ? -7 : 7;
-        const newIdx = getNewIndex({ currentIdx: idx, step });
-
-        if (idx === newIdx) {
-          const newDate = adjustDate(currentDate, { days: step });
-          updateFocus(newIdx, newDate);
-          step < 0 ? decreaseDate() : increaseDate();
-        } else {
-          updateFocus(newIdx);
-        }
+        const step = key === "arrowup" ? -7 : 7;
+        handleDateChange(step, getNewIndex(step));
         break;
       }
 
       case "arrowleft":
       case "arrowright": {
-        const step = e.key.toLowerCase() === "arrowleft" ? -1 : 1;
-        const newIdx = getNewIndex({ currentIdx: idx, step });
-
-        if (idx === newIdx) {
-          const newDate = adjustDate(currentDate, { days: step });
-          updateFocus(newIdx, newDate);
-          step < 0 ? decreaseDate() : increaseDate();
-        } else {
-          updateFocus(newIdx);
-        }
+        const step = key === "arrowleft" ? -1 : 1;
+        handleDateChange(step, getNewIndex(step));
         break;
       }
 
@@ -152,7 +128,7 @@ export const DatePickerGrid = component$<DatePickerGridProps>((props) => {
 
       case "pageup":
       case "pagedown": {
-        const step = e.key.toLowerCase() === "pageup" ? -1 : 1;
+        const step = key === "pageup" ? -1 : 1;
         const newDate = adjustDate(currentDate, { months: step });
         updateFocus(idx, newDate);
         step < 0 ? decreaseDate() : increaseDate();
@@ -168,10 +144,7 @@ export const DatePickerGrid = component$<DatePickerGridProps>((props) => {
       }
 
       case "end": {
-        const rowEndIndex = Math.min(
-          Math.ceil((idx + 1) / 7) * 7 - 1,
-          buttons.length - 1
-        );
+        const rowEndIndex = Math.min(Math.ceil((idx + 1) / 7) * 7 - 1, buttons.length - 1);
         const newDate = buttons[rowEndIndex].getAttribute("data-value") as LocalDate;
         handleMonthChange(newDate, context.monthToRender.value);
         updateFocus(rowEndIndex, newDate);
@@ -180,14 +153,16 @@ export const DatePickerGrid = component$<DatePickerGridProps>((props) => {
     }
   });
 
+  const {buttonProps, onDateChange$, ...tableProps } = props;
+
   return (
-    <table data-qds-datepicker-grid role="grid">
+    <table data-qds-datepicker-grid role="grid" {...tableProps}>
       {context.showDaysOfWeek && (
-        <thead {...props.theadProps}>
-          <tr {...props.theadRowProps}>
+        <thead data-qds-datepicker-grid-header>
+          <tr data-qds-datepicker-grid-header-row>
             {context.showWeekNumber && <td />}
             {context.daysOfWeek.map((day) => (
-              <th key={day} scope="col" aria-label={day} {...props.headerCellProps}>
+              <th key={day} scope="col" aria-label={day} data-qds-datepicker-grid-header-cell>
                 {
                   day
                     .slice(0, 2)
@@ -200,20 +175,19 @@ export const DatePickerGrid = component$<DatePickerGridProps>((props) => {
         </thead>
       )}
       <tbody
-        {...props.tbodyProps}
+        data-qds-datepicker-grid-body
         preventdefault:keydown
         onKeyDown$={[
           $((e: KeyboardEvent, target: HTMLTableSectionElement) => {
             updateDateFocused(e, target);
           }),
-          props.tbodyProps?.onKeyDown$
         ]}
       >
         {context.datesArray.value.map((week) => {
           return (
-            <tr key={week.toString()} {...props.tbodyRowProps}>
+            <tr key={week.toString()} data-qds-datepicker-grid-body-row class="">
               {context.showWeekNumber && (
-                <td {...props.weekNumberProps}>
+                <td data-qds-datepicker-grid-body-week-number>
                   <span>
                     {week.find((day): day is string => day !== null)
                       ? getWeekNumber(
@@ -237,9 +211,10 @@ export const DatePickerGrid = component$<DatePickerGridProps>((props) => {
                   >
                     {day && (
                       <button
+                        {...buttonProps}
                         type="button"
-                        data-preselected={day === context.defaultDate.value}
-                        data-current={day === context.activeDate.value}
+                        data-current={day === context.currentDate}
+                        data-selected={day === context.activeDate.value}
                         aria-selected={
                           day === context.activeDate.value ? "true" : undefined
                         }
@@ -252,7 +227,6 @@ export const DatePickerGrid = component$<DatePickerGridProps>((props) => {
                             context.activeDate.value = day as LocalDate;
                             props.onDateChange$?.(day as LocalDate);
                           }),
-                          props.dayButtonProps?.onClick$
                         ]}
                       >
                         {day.split("-")[2]}
