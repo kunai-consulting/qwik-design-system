@@ -12,23 +12,10 @@ type RadioGroupItemProps = PropsOf<'div'> & { value: string; index: number };
 export const RadioGroupItem = component$<RadioGroupItemProps>(
   ({ value, index, ...props }) => {
     const context = useContext(radioGroupContextId);
-    const itemId = `${context.localId}-${value}`;
-
-    const handleClick$ = $(() => {
-      if (context.selectedIndexSig.value !== index) {
-        context.selectedIndexSig.value = index;
-      }
-    });
+    const itemId = `${context.localId}-$trigger`;
 
     return (
-      <div
-        id={itemId}
-        role="radio"
-        aria-checked={context.selectedIndexSig.value === index}
-        onClick$={handleClick$}
-        data-qds-radio-group-item
-        {...props}
-      >
+      <div id={itemId} data-qds-radio-group-item {...props}>
         <Slot />
       </div>
     );

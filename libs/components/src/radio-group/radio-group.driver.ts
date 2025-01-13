@@ -23,9 +23,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   };
 
   const getInputAt = (index: number) => {
-    return rootLocator
-      .locator('[data-qds-radio-group-trigger][name="hero"]')
-      .nth(index);
+    return rootLocator.locator('[data-qds-radio-group-trigger]').nth(index);
   };
 
   const getErrorMessage = () => {

@@ -23,7 +23,7 @@ export default component$(() => {
               class="radio-group-trigger"
               _index={index}
               value={item}
-              name="hero"
+              name="controlled"
             >
               <RadioGroup.Indicator class="radio-group-indicator" value={item}>
                 <LuCircle />

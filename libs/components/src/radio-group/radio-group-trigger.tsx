@@ -6,12 +6,13 @@ import {
   useComputed$,
   useContext,
   useStyles$,
+  useTask$,
 } from '@builder.io/qwik';
 import { radioGroupContextId } from './radio-group-context';
 import './radio-group.css';
 import styles from './radio-group.css?inline';
 
-type RadioGroupControlProps = PropsOf<'button'> & {
+type RadioGroupControlProps = PropsOf<'div'> & {
   value: string;
   _index?: number;
   name: string;
@@ -39,24 +40,42 @@ export const RadioGroupTrigger = component$((props: RadioGroupControlProps) => {
   const handleClick$ = $(() => {
     context.selectedIndexSig.value = _index ?? null;
     context.selectedValueSig.value = props.value;
+    context.isErrorSig.value = false;
+  });
+
+  const handleKeyDown$ = $((event: KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      handleClick$();
+    }
+  });
+
+  useTask$(({ track }) => {
+    track(() => context.selectedValueSig.value);
+    if (context.selectedValueSig.value) {
+      context.isErrorSig.value = false;
+    } else {
+      context.isErrorSig.value = true;
+    }
   });
 
   return (
-    <button
+    <div
       tabIndex={0}
       id={triggerId}
       ref={context.triggerRef}
       role="radio"
+      aria-label={`radioButton ${(_index ?? 0) + 1}`}
       aria-checked={context.selectedIndexSig.value === _index}
       aria-describedby={describedByLabels ? describedByLabels.value : undefined}
       aria-invalid={context.isErrorSig.value}
       data-disabled={context.isDisabledSig.value ? '' : undefined}
       onClick$={[handleClick$, props.onClick$]}
+      onKeyDown$={[handleKeyDown$, props.onKeyDown$]}
       data-checked={context.selectedIndexSig.value === _index}
       data-qds-radio-group-trigger
       {...props}
     >
       <Slot />
-    </button>
+    </div>
   );
 });
