@@ -1,6 +1,5 @@
-import { component$, type PropsOf, Slot, useContext, useTask$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
 import { Checkbox } from "..";
-import { checklistContextId } from "./checklist-context";
 
 export const ChecklistSelectAll = component$(
   (props: PropsOf<typeof Checkbox.Trigger>) => {

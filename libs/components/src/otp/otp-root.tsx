@@ -11,12 +11,12 @@ import {
   useStyles$,
   useTask$
 } from "@builder.io/qwik";
+import { useBoundSignal } from "../../utils/bound-signal";
 import { findComponent, processChildren } from "../../utils/inline-component";
+import { Render, type RenderProps } from "../render/render";
 import { OTPContextId } from "./otp-context";
 import { OtpItem } from "./otp-item";
 import styles from "./otp.css?inline";
-import { useBoundSignal } from "../../utils/bound-signal";
-import { Render, type RenderProps } from "../render/render";
 
 type PublicOtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   /** Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property */

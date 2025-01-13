@@ -1,6 +1,6 @@
 import { component$ } from "@builder.io/qwik";
-import type { ComponentParts } from "../api-table/api-table";
 import type { AnatomyItem } from "../../../auto-api/types";
+import type { ComponentParts } from "../api-table/api-table";
 
 export const AnatomyTable = component$<{ api: ComponentParts }>(({ api }) => {
   if (!api?.anatomy?.length) {

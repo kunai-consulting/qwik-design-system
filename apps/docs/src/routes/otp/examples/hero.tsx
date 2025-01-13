@@ -1,11 +1,5 @@
-import {
-  type PropsOf,
-  Slot,
-  component$,
-  useSignal,
-  useVisibleTask$
-} from "@builder.io/qwik";
-import { Otp, Checkbox } from "@kunai-consulting/qwik";
+import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { Checkbox, Otp } from "@kunai-consulting/qwik";
 import { LuCheck } from "@qwikest/icons/lucide";
 
 export const MyDiv = component$((props: PropsOf<"div">) => {
@@ -87,12 +81,12 @@ export const TrustedCheckbox = component$(() => {
       <Checkbox.HiddenInput />
       <div class="flex items-center gap-2">
         <Checkbox.Trigger
-          class="size-[25px] rounded-lg relative bg-gray-500 
+          class="size-[25px] rounded-lg relative bg-gray-500
                      focus-visible:outline focus-visible:outline-1 focus-visible:outline-white
                      disabled:opacity-50 bg-qwik-neutral-200 data-[checked]:bg-qwik-blue-800 focus-visible:ring-[3px] ring-qwik-blue-600"
         >
           <Checkbox.Indicator
-            class="data-[checked]:flex justify-center items-center absolute inset-0 
+            class="data-[checked]:flex justify-center items-center absolute inset-0
                       "
           >
             <LuCheck />

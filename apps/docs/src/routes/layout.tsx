@@ -8,15 +8,15 @@ import {
 } from "@builder.io/qwik";
 import {
   type ContentHeading,
-  useContent,
-  type RequestHandler
+  type RequestHandler,
+  useContent
 } from "@builder.io/qwik-city";
 import { SearchModal } from "~/components/search";
+import { Header } from "~/docs-widgets/header/header";
 import { Sidebar } from "~/docs-widgets/sidebar/sidebar";
 import { TOC } from "~/docs-widgets/toc/toc";
 import { components } from "~/mdx/components";
 import { MDXProvider } from "~/mdx/provider";
-import { Header } from "~/docs-widgets/header/header";
 
 type RootContext = {
   allHeadingsSig: Signal<ContentHeading[]>;
@@ -56,8 +56,8 @@ export default component$(() => {
           <div class="fixed h-[calc(100vh-64px)] w-full  overflow-auto">
             <TOC headings={headings || []} />
           </div>
-          </aside>
-        </div>
-      </MDXProvider>
+        </aside>
+      </div>
+    </MDXProvider>
   );
 });

@@ -1,4 +1,4 @@
-import { component$, Slot, type PropsOf } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
 import { Checkbox } from "..";
 
 export const ChecklistItemTrigger = component$(

@@ -1,10 +1,10 @@
+import fs from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { Anthropic } from "@anthropic-ai/sdk";
 import { component$, useSignal } from "@builder.io/qwik";
 import { server$, useLocation } from "@builder.io/qwik-city";
-import { Anthropic } from "@anthropic-ai/sdk";
 import { AIButton } from "./ai-button";
-import fs from "node:fs";
-import { resolve, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
 
 export const DocsAI = component$(() => {
   const isGenerating = useSignal(false);
@@ -62,7 +62,7 @@ export const DocsAI = component$(() => {
       ]
     });
   });
-  
+
   const generateStateDocs = server$(async (promptPrefix: string) => {
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
     return anthropic.messages.create({
@@ -178,7 +178,7 @@ export const DocsAI = component$(() => {
       ]
     });
   });
-  
+
   const generateConfigDocs = server$(async (promptPrefix: string) => {
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
     return anthropic.messages.create({
@@ -235,7 +235,7 @@ export const DocsAI = component$(() => {
       ]
     });
   });
-  
+
   const generateFormDocs = server$(async (promptPrefix: string) => {
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
     return anthropic.messages.create({
@@ -286,7 +286,7 @@ export const DocsAI = component$(() => {
       ]
     });
   });
-  
+
   const generateEnvDocs = server$(async (promptPrefix: string) => {
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
     return anthropic.messages.create({
@@ -326,12 +326,11 @@ export const DocsAI = component$(() => {
       ]
     });
   });
-  
-  const readFiles = server$(async (path: string) => {
 
+  const readFiles = server$(async (path: string) => {
     try {
       const stats = fs.statSync(path);
-  
+
       if (stats.isDirectory()) {
         const files = fs.readdirSync(path);
         const contents = files
@@ -346,7 +345,7 @@ export const DocsAI = component$(() => {
       return "";
     }
   });
-  
+
   const writeDocs = server$(async (mdxContent: string, route: string) => {
     try {
       const docsPath = resolve(process.cwd(), `src/routes/${route}/index.mdx`);
@@ -359,7 +358,7 @@ export const DocsAI = component$(() => {
       );
     }
   });
-  
+
   const getFilePaths = server$(async (route: string) => {
     return {
       examplesPath: resolve(process.cwd(), `src/routes/${route}/examples`),
@@ -367,13 +366,13 @@ export const DocsAI = component$(() => {
       componentPath: resolve(process.cwd(), `../../libs/components/src/${route}`)
     };
   });
-  
+
   const writeLogFile = server$(async (content: string) => {
-    try {  
+    try {
       if (!fileURLToPath) return;
       const currentFilePath = fileURLToPath(import.meta.url);
       const logPath = resolve(dirname(currentFilePath), "log.mdx");
-  
+
       console.log("Writing log to:", logPath);
       fs.appendFileSync(logPath, `${content}\n\n---\n\n`, "utf-8");
       return "Log updated successfully!";

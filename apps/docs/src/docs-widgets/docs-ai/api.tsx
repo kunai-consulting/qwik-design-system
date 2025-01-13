@@ -1,11 +1,11 @@
-import { isDev } from "@builder.io/qwik/build";
-import { component$, type PropsOf, Slot, $, useSignal } from "@builder.io/qwik";
-import { Anthropic } from "@anthropic-ai/sdk";
-import { server$, useLocation } from "@builder.io/qwik-city";
+import { execSync } from "node:child_process";
 import fs from "node:fs";
 import { resolve } from "node:path";
-import { execSync } from "node:child_process";
-import { transformPublicTypes, getSourceFile } from "../../../auto-api/utils";
+import { Anthropic } from "@anthropic-ai/sdk";
+import { component$, useSignal } from "@builder.io/qwik";
+import { server$, useLocation } from "@builder.io/qwik-city";
+import { isDev } from "@builder.io/qwik/build";
+import { getSourceFile, transformPublicTypes } from "../../../auto-api/utils";
 import { AIButton } from "./ai-button";
 
 const generateComponentDocs = server$(
@@ -359,7 +359,7 @@ export const APIReference = component$(() => {
       // Handle public type transformations
       for (const block of publicTypeAnalysis) {
         const filePath = resolve(componentPath, block.filename);
-        if (!isDev) return
+        if (!isDev) return;
         const sourceFile = getSourceFile(filePath);
         const transformedCode = transformPublicTypes(sourceFile, block.comments);
         fs.writeFileSync(filePath, transformedCode, "utf-8");

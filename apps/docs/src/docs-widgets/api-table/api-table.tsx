@@ -1,7 +1,7 @@
-import { component$, Fragment, useContext, useTask$ } from "@builder.io/qwik";
+import { component$, useContext, useTask$ } from "@builder.io/qwik";
 import { Popover } from "@qwik-ui/headless";
-import type { AnatomyItem, ComponentEntry, ParsedProps } from "../../../auto-api/types";
 import { rootContextId } from "~/routes/layout";
+import type { AnatomyItem, ComponentEntry, ParsedProps } from "../../../auto-api/types";
 import { MainHeading, SubHeading } from "../toc/toc";
 
 type DataAttribute = {

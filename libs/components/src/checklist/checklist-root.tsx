@@ -1,15 +1,14 @@
 import {
-  component$,
   type PropsOf,
   Slot,
+  component$,
   useContextProvider,
-  useSignal,
-  useTask$
+  useSignal
 } from "@builder.io/qwik";
-import { findComponent, processChildren } from "../../utils/inline-component";
-import { ChecklistItem } from "./checklist-item";
 import { Checkbox } from "..";
-import { ChecklistContext, checklistContextId } from "./checklist-context";
+import { findComponent, processChildren } from "../../utils/inline-component";
+import { type ChecklistContext, checklistContextId } from "./checklist-context";
+import { ChecklistItem } from "./checklist-item";
 type ChecklistRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   _numItems?: number;
 };

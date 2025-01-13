@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { type Page, expect, test } from "@playwright/test";
 import { createTestDriver } from "./scroll-area.driver";
 
 async function setup(page: Page, exampleName: string) {
@@ -145,7 +145,7 @@ test.describe("drag functionality", () => {
     const viewport = d.getViewport();
 
     // Get initial positions
-    const initialScrollTop = await viewport.evaluate(el => el.scrollTop);
+    const initialScrollTop = await viewport.evaluate((el) => el.scrollTop);
     const initialThumbBox = await thumb.boundingBox();
     if (!initialThumbBox) throw new Error("Could not get thumb position");
 
@@ -164,7 +164,7 @@ test.describe("drag functionality", () => {
     );
 
     // Get new positions
-    const newScrollTop = await viewport.evaluate(el => el.scrollTop);
+    const newScrollTop = await viewport.evaluate((el) => el.scrollTop);
     const newThumbBox = await thumb.boundingBox();
     if (!newThumbBox) throw new Error("Could not get new thumb position");
 
@@ -178,7 +178,9 @@ test.describe("drag functionality", () => {
 
     expect(newThumbBox.x).toBeCloseTo(initialThumbBox.x, 0); // X position shouldn't change
     expect(newThumbBox.y).toBeGreaterThanOrEqual(scrollbarBox.y); // Should stay within top bound
-    expect(newThumbBox.y + newThumbBox.height).toBeLessThanOrEqual(scrollbarBox.y + scrollbarBox.height); // Should stay within bottom bound
+    expect(newThumbBox.y + newThumbBox.height).toBeLessThanOrEqual(
+      scrollbarBox.y + scrollbarBox.height
+    ); // Should stay within bottom bound
 
     await page.mouse.up();
   });
@@ -191,7 +193,7 @@ test.describe("drag functionality", () => {
     const viewport = d.getViewport();
 
     // Get initial positions
-    const initialScrollLeft = await viewport.evaluate(el => el.scrollLeft);
+    const initialScrollLeft = await viewport.evaluate((el) => el.scrollLeft);
     const initialThumbBox = await thumb.boundingBox();
     if (!initialThumbBox) throw new Error("Could not get thumb position");
 
@@ -210,7 +212,7 @@ test.describe("drag functionality", () => {
     );
 
     // Get new positions
-    const newScrollLeft = await viewport.evaluate(el => el.scrollLeft);
+    const newScrollLeft = await viewport.evaluate((el) => el.scrollLeft);
     const newThumbBox = await thumb.boundingBox();
     if (!newThumbBox) throw new Error("Could not get new thumb position");
 
@@ -224,7 +226,9 @@ test.describe("drag functionality", () => {
 
     expect(newThumbBox.y).toBeCloseTo(initialThumbBox.y, 0); // Y position shouldn't change
     expect(newThumbBox.x).toBeGreaterThanOrEqual(scrollbarBox.x); // Should stay within left bound
-    expect(newThumbBox.x + newThumbBox.width).toBeLessThanOrEqual(scrollbarBox.x + scrollbarBox.width); // Should stay within right bound
+    expect(newThumbBox.x + newThumbBox.width).toBeLessThanOrEqual(
+      scrollbarBox.x + scrollbarBox.width
+    ); // Should stay within right bound
 
     await page.mouse.up();
   });
@@ -247,10 +251,7 @@ test.describe("drag functionality", () => {
     await page.mouse.down();
 
     // Move outside bounds
-    await page.mouse.move(
-      verticalThumbBox.x + 100,
-      verticalThumbBox.y + 100
-    );
+    await page.mouse.move(verticalThumbBox.x + 100, verticalThumbBox.y + 100);
 
     // Verify drag state maintained
     await expect(verticalThumb).toHaveAttribute("data-dragging", "");
@@ -268,10 +269,7 @@ test.describe("drag functionality", () => {
     await page.mouse.down();
 
     // Move outside bounds
-    await page.mouse.move(
-      horizontalThumbBox.x + 100,
-      horizontalThumbBox.y + 100
-    );
+    await page.mouse.move(horizontalThumbBox.x + 100, horizontalThumbBox.y + 100);
 
     // Verify drag state maintained
     await expect(horizontalThumb).toHaveAttribute("data-dragging", "");
@@ -380,7 +378,7 @@ test.describe("a11y", () => {
     await viewport.focus();
 
     // Check if viewport is focused
-    const isFocused = await viewport.evaluate(el => document.activeElement === el);
+    const isFocused = await viewport.evaluate((el) => document.activeElement === el);
     expect(isFocused).toBe(true);
   });
 
@@ -394,7 +392,7 @@ test.describe("a11y", () => {
     await page.keyboard.press("Tab");
 
     // Check if viewport becomes focused
-    const isFocused = await viewport.evaluate(el => document.activeElement === el);
+    const isFocused = await viewport.evaluate((el) => document.activeElement === el);
     expect(isFocused).toBe(true);
   });
 });

@@ -1,5 +1,5 @@
 import { component$ } from "@builder.io/qwik";
-import { useContent, Link, useLocation } from "@builder.io/qwik-city";
+import { useContent, useLocation } from "@builder.io/qwik-city";
 
 export const Sidebar = component$(() => {
   const { menu } = useContent();

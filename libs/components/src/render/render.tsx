@@ -1,11 +1,11 @@
 import {
-  component$,
   type FunctionComponent,
-  jsx,
   type JSXNode,
   type JSXOutput,
   type QwikIntrinsicElements,
-  Slot
+  Slot,
+  component$,
+  jsx
 } from "@builder.io/qwik";
 
 // keyof slows the type server a bunch, instead we use the most common fallbacks

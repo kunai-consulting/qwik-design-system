@@ -1,5 +1,5 @@
-import { component$, useStyles$ } from '@builder.io/qwik';
-import { RadioGroup } from '@kunai-consulting/qwik';
+import { component$, useStyles$ } from "@builder.io/qwik";
+import { RadioGroup } from "@kunai-consulting/qwik";
 
 export default component$(() => {
   useStyles$(styles);
@@ -15,6 +15,6 @@ export default component$(() => {
   );
 });
 
+import { LuCheck } from "@qwikest/icons/lucide";
 // example styles
-import styles from './radio-group.css?inline';
-import { LuCheck } from '@qwikest/icons/lucide';
+import styles from "./radio-group.css?inline";

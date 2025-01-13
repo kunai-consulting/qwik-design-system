@@ -1,12 +1,4 @@
-import {
-  component$,
-  type PropsOf,
-  Slot,
-  sync$,
-  useContext,
-  useOnWindow,
-  useTask$
-} from "@builder.io/qwik";
+import { type PropsOf, Slot, component$, useContext, useTask$ } from "@builder.io/qwik";
 import { checkboxContextId } from "./checkbox-context";
 type PublicCheckboxDescriptionProps = PropsOf<"div">;
 /** A component that renders the description text for a checkbox */

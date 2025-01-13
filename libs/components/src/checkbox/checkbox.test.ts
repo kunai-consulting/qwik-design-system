@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { type Page, expect, test } from "@playwright/test";
 import { createTestDriver } from "./checkbox.driver";
 async function setup(page: Page, exampleName: string) {
   await page.goto(`http://localhost:6174/checkbox/${exampleName}`);

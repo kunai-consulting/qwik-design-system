@@ -1,11 +1,11 @@
 import {
-  component$,
   $,
-  useSignal,
-  useOnDocument,
-  type Signal,
   type PropsOf,
-  useContext
+  type Signal,
+  component$,
+  useContext,
+  useOnDocument,
+  useSignal
 } from "@builder.io/qwik";
 import type { PropFunction } from "@builder.io/qwik";
 import { scrollAreaContextId } from "./scroll-area-context";

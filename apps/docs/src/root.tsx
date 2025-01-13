@@ -1,8 +1,5 @@
 import { component$ } from "@builder.io/qwik";
-import {
-  QwikCityProvider,
-  RouterOutlet,
-} from "@builder.io/qwik-city";
+import { QwikCityProvider, RouterOutlet } from "@builder.io/qwik-city";
 import { isDev } from "@builder.io/qwik/build";
 import { RouterHead } from "./docs-widgets/router-head/router-head";
 
@@ -37,7 +34,7 @@ export default component$(() => {
               window.pagefind = pagefind;
             });
           `}
-        ></script>
+        />
       </body>
     </QwikCityProvider>
   );

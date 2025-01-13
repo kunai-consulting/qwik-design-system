@@ -19,8 +19,8 @@ export default component$(() => {
         ellipsis="..."
       >
         <Pagination.Previous class="pagination-previous">Previous</Pagination.Previous>
-        {paginationItems.map((item, index) => (
-          <Pagination.Page class="pagination-page" key={`page-${index}-1`}>
+        {paginationItems.map((item) => (
+          <Pagination.Page class="pagination-page" key={`sibling-1-page-${item}`}>
             {item}
           </Pagination.Page>
         ))}
@@ -38,8 +38,8 @@ export default component$(() => {
         ellipsis="..."
       >
         <Pagination.Previous class="pagination-previous">Previous</Pagination.Previous>
-        {paginationItems.map((item, index) => (
-          <Pagination.Page class="pagination-page" key={`page-${index}-2`}>
+        {paginationItems.map((item) => (
+          <Pagination.Page class="pagination-page" key={`sibling-2-page-${item}`}>
             {item}
           </Pagination.Page>
         ))}

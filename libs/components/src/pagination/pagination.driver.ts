@@ -1,4 +1,4 @@
-import { type Locator, expect, type Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
 type OpenKeys = "Space" | "Enter";
 export type DriverLocator = Locator | Page;
 

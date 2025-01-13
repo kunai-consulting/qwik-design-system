@@ -1,11 +1,11 @@
 import {
-  component$,
+  $,
   Slot,
+  component$,
   useComputed$,
   useContext,
-  useTask$,
   useSignal,
-  $
+  useTask$
 } from "@builder.io/qwik";
 import type { QwikIntrinsicElements } from "@builder.io/qwik";
 import { paginationContextId } from "./pagination-context";
@@ -53,26 +53,30 @@ export const PaginationPage = component$(
       if (currentFocusedIndex === null) return;
 
       switch (e.key) {
-        case "ArrowRight":
+        case "ArrowRight": {
           e.preventDefault();
           if (currentFocusedIndex < context.pagesSig.value.length - 1) {
             context.focusedIndexSig.value = currentFocusedIndex + 1;
           }
           break;
-        case "ArrowLeft":
+        }
+        case "ArrowLeft": {
           e.preventDefault();
           if (currentFocusedIndex > 0) {
             context.focusedIndexSig.value = currentFocusedIndex - 1;
           }
           break;
-        case "Home":
+        }
+        case "Home": {
           e.preventDefault();
           context.focusedIndexSig.value = 0;
           break;
-        case "End":
+        }
+        case "End": {
           e.preventDefault();
           context.focusedIndexSig.value = context.pagesSig.value.length - 1;
           break;
+        }
       }
     });
 

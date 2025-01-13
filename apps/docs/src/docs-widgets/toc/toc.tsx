@@ -1,16 +1,16 @@
-import type { ContentHeading } from "@builder.io/qwik-city";
-import { cn } from "~/utils/cn";
 import {
-  component$,
-  useSignal,
   $,
-  useOnWindow,
-  useContext,
-  useTask$,
   type PropsOf,
-  Slot
+  Slot,
+  component$,
+  useContext,
+  useOnWindow,
+  useSignal,
+  useTask$
 } from "@builder.io/qwik";
+import type { ContentHeading } from "@builder.io/qwik-city";
 import { rootContextId } from "~/routes/layout";
+import { cn } from "~/utils/cn";
 
 export const MainHeading = component$((props: PropsOf<"h2">) => {
   return (

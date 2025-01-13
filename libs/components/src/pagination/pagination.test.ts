@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, type Page, test } from "@playwright/test";
+import { type Page, expect, test } from "@playwright/test";
 import { createTestDriver } from "./pagination.driver";
 
 async function setup(page: Page, exampleName: string) {

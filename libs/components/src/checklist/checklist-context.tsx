@@ -1,4 +1,4 @@
-import { createContextId, Signal } from "@builder.io/qwik";
+import { type Signal, createContextId } from "@builder.io/qwik";
 
 export type ChecklistContext = {
   isAllCheckedSig: Signal<boolean | "mixed">;

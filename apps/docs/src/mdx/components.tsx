@@ -1,12 +1,12 @@
 import type { Component, PropsOf } from "@builder.io/qwik";
 import { Slot, component$ } from "@builder.io/qwik";
 
+import { Features } from "~/docs-widgets/features/features";
 import { cn } from "~/utils/cn";
-import { Showcase } from "./showcase";
+import { AnatomyTable } from "../docs-widgets/anatomy-table/anatomy-table";
 import { APITable } from "../docs-widgets/api-table/api-table";
 import { MainHeading, SubHeading } from "../docs-widgets/toc/toc";
-import { AnatomyTable } from "../docs-widgets/anatomy-table/anatomy-table";
-import { Features } from "~/docs-widgets/features/features";
+import { Showcase } from "./showcase";
 
 export const components: Record<string, Component> = {
   p: component$<PropsOf<"p">>(({ ...props }) => {

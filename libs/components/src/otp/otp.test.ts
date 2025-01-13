@@ -1,4 +1,4 @@
-import { test, expect, type Page, type Locator } from "@playwright/test";
+import { type Locator, type Page, expect, test } from "@playwright/test";
 import { createTestDriver } from "./otp.driver";
 import { modifier } from "./utils/modifier";
 
