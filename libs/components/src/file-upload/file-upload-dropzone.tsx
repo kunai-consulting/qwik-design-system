@@ -7,8 +7,7 @@ import {
   noSerialize,
   useSignal,
   useOn,
-  sync$,
-  useId
+  sync$
 } from "@builder.io/qwik";
 import { FileInfo, fileUploadContextId } from "./file-upload-context";
 
@@ -26,7 +25,6 @@ export const FileUploadDropzone = component$<DropzoneProps>((props) => {
   const context = useContext(fileUploadContextId);
   const dropzoneRef = useSignal<HTMLDivElement>();
   const isDragging = useSignal(false);
-  const instanceId = useId();
 
   // Prevent default browser handling of file drops at window level
   const onWindowDragOver$ = $((e: DragEvent) => {
@@ -185,7 +183,7 @@ export const FileUploadDropzone = component$<DropzoneProps>((props) => {
         preventdefault:dragleave
         preventdefault:drop
         // Attach drag and drop event handlers
-        onDragEnter$={onDragEnter$}
+        onDragEnter$={[onDragEnter$, props.onDragEnter$]}
         onDragOver$={onDragOver$}
         onDragLeave$={onDragLeave$}
         data-file-upload-dropzone
