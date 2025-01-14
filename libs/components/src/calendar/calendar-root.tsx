@@ -13,12 +13,12 @@ import {
 } from "@builder.io/qwik";
 
 import { ARIA_LABELS, MONTHS_LG, WEEKDAYS } from "./constants";
-import type { DatepickerContext } from "./datepicker-context";
-import { datepickerContextId } from "./datepicker-context";
+import type { CalendarContext } from "./calendar-context";
+import { calendarContextId } from "./calendar-context";
 import type { LocalDate, Locale, Month } from "./types";
 import { daysArrGenerator } from "./utils";
 
-export type DatePickerRootProps = PropsOf<"div"> & {
+export type CalendarRootProps = PropsOf<"div"> & {
   locale?: Locale;
   defaultDate?: LocalDate;
   showWeekNumber?: boolean;
@@ -30,7 +30,7 @@ export type DatePickerRootProps = PropsOf<"div"> & {
 
 const regex = /^\d{4}-(0[1-9]|1[0-2])-\d{2}$/;
 
-export const DatePickerRoot = component$<DatePickerRootProps>(
+export const CalendarRoot = component$<CalendarRootProps>(
   ({
     date: dateProp,
     fullWeeks = false,
@@ -60,7 +60,7 @@ export const DatePickerRoot = component$<DatePickerRootProps>(
       return dates;
     });
 
-    const context: DatepickerContext = {
+    const context: CalendarContext = {
       showWeekNumber,
       showDaysOfWeek,
       daysOfWeek,
@@ -74,7 +74,7 @@ export const DatePickerRoot = component$<DatePickerRootProps>(
       currentDate
     };
 
-    useContextProvider(datepickerContextId, context);
+    useContextProvider(calendarContextId, context);
 
     const labelSignal = useComputed$(() => {
       if (!activeDate.value) return labelStr;

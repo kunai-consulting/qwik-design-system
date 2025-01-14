@@ -1,14 +1,14 @@
 import { $, Component, type PropsOf, component$, useContext } from "@builder.io/qwik";
 import { ARIA_LABELS } from "./constants";
-import { datepickerContextId } from "./datepicker-context";
+import { calendarContextId } from "./calendar-context";
 import type { Month } from "./types";
 
-type DatePickerPreviousProps = PropsOf<"button"> & {
+type CalendarPreviousProps = PropsOf<"button"> & {
     icon?: Component<PropsOf<'svg'>>
 }
 
-export const DatePickerPrevious = component$((props: DatePickerPreviousProps) => {
-  const context = useContext(datepickerContextId);
+export const CalendarPrevious = component$((props: CalendarPreviousProps) => {
+  const context = useContext(calendarContextId);
   const { monthToRender, yearToRender, dateToFocus, locale } = context;
   const decreaseDate = $(() => {
     if (monthToRender.value === "01") {

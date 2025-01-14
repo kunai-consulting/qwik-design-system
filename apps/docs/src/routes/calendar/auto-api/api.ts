@@ -1,7 +1,7 @@
 export const api = {
-  "datepicker": [
+  "calendar": [
     {
-      "Datepicker Grid": {
+      "Calendar Grid Day": {
         "types": [],
         "inheritsFrom": "button",
         "dataAttributes": [
@@ -21,25 +21,31 @@ export const api = {
       }
     },
     {
-      "Datepicker Header": {
+      "Calendar Grid": {
+        "types": [],
+        "inheritsFrom": "button"
+      }
+    },
+    {
+      "Calendar Header": {
         "types": [],
         "inheritsFrom": "header"
       }
     },
     {
-      "Datepicker Next": {
+      "Calendar Next": {
         "types": [],
         "inheritsFrom": "svg"
       }
     },
     {
-      "Datepicker Previous": {
+      "Calendar Previous": {
         "types": [],
         "inheritsFrom": "svg"
       }
     },
     {
-      "Datepicker Root": {
+      "Calendar Root": {
         "types": [],
         "inheritsFrom": "div",
         "dataAttributes": [
@@ -51,7 +57,7 @@ export const api = {
       }
     },
     {
-      "Datepicker Title": {
+      "Calendar Title": {
         "types": [],
         "inheritsFrom": "div"
       }
@@ -70,22 +76,25 @@ export const api = {
   ],
   "anatomy": [
     {
-      "name": "Datepicker.Root"
+      "name": "Calendar.Root"
     },
     {
-      "name": "Datepicker.Grid"
+      "name": "Calendar.Grid"
     },
     {
-      "name": "Datepicker.Header"
+      "name": "Calendar.Header"
     },
     {
-      "name": "Datepicker.Previous"
+      "name": "Calendar.Previous"
     },
     {
-      "name": "Datepicker.Next"
+      "name": "Calendar.Next"
     },
     {
-      "name": "Datepicker.Title"
+      "name": "Calendar.Title"
+    },
+    {
+      "name": "Calendar.GridDay"
     }
   ],
   "keyboardInteractions": [],

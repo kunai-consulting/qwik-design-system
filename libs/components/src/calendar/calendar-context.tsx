@@ -1,11 +1,11 @@
 import { type Signal, createContextId } from "@builder.io/qwik";
 import type { Locale, Month, LocalDate } from "./types";
 
-export const datepickerContextId = createContextId<DatepickerContext>(
-  "qds-datepicker-context"
+export const calendarContextId = createContextId<CalendarContext>(
+  "qds-calendar-context"
 );
 
-export type DatepickerContext = {
+export type CalendarContext = {
   locale: Locale;
   defaultDate: LocalDate;
   activeDate: Signal<LocalDate | null>;

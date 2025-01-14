@@ -1,9 +1,9 @@
-import { $, type PropsOf, type QRL, component$, useContext } from "@builder.io/qwik";
-import { datepickerContextId } from "./datepicker-context";
+import { $, type PropsOf, type QRL, Slot, component$, useContext } from "@builder.io/qwik";
+import { calendarContextId } from "./calendar-context";
 import type { LocalDate, Locale, Month } from "./types";
 import { getWeekNumber } from "./utils";
 
-type DatePickerGridProps = PropsOf<"table"> & {
+type CalendarGridProps = PropsOf<"table"> & {
   buttonProps?: PropsOf<"button">;
   onDateChange$?: QRL<(date: LocalDate) => void>;
 };
@@ -29,8 +29,8 @@ const dateFormatter = (locale: Locale) =>
     day: "numeric"
   });
 
-export const DatePickerGrid = component$<DatePickerGridProps>((props) => {
-  const context = useContext(datepickerContextId);
+export const CalendarGrid = component$<CalendarGridProps>((props) => {
+  const context = useContext(calendarContextId);
 
   const decreaseDate = $(() => {
     const currentMonth = Number.parseInt(context.monthToRender.value);
@@ -183,7 +183,7 @@ export const DatePickerGrid = component$<DatePickerGridProps>((props) => {
           }),
         ]}
       >
-        {context.datesArray.value.map((week, index) => {
+        {/* {context.datesArray.value.map((week, index) => {
           return (
             <tr key={`${week.toString()}-${index}`} data-qds-datepicker-grid-body-row class="">
               {context.showWeekNumber && (
@@ -237,7 +237,8 @@ export const DatePickerGrid = component$<DatePickerGridProps>((props) => {
               })}
             </tr>
           );
-        })}
+        })} */}
+        <Slot />
       </tbody>
     </table>
   );
