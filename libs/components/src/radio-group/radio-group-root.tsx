@@ -32,7 +32,6 @@ export const RadioGroupRoot = component$((props: RadioGroupRootProps) => {
     onClick$,
     onChange$,
     isDescription,
-    name,
     required,
     value,
     ...rest
@@ -52,7 +51,6 @@ export const RadioGroupRoot = component$((props: RadioGroupRootProps) => {
     isDisabledSig,
     localId,
     isDescription,
-    name,
     required,
     value,
     isErrorSig,

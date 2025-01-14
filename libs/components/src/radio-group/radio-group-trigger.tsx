@@ -12,14 +12,14 @@ import { radioGroupContextId } from './radio-group-context';
 import './radio-group.css';
 import styles from './radio-group.css?inline';
 
-type RadioGroupControlProps = PropsOf<'div'> & {
+type RadioGroupControlProps = PropsOf<'button'> & {
   value: string;
   _index?: number;
-  name: string;
 };
 
 export const RadioGroupTrigger = component$((props: RadioGroupControlProps) => {
   const context = useContext(radioGroupContextId);
+  const value = props.value;
   const _index = props._index;
   const triggerId = `${context.localId}-trigger`;
   const descriptionId = `${context.localId}-description`;
@@ -43,12 +43,6 @@ export const RadioGroupTrigger = component$((props: RadioGroupControlProps) => {
     context.isErrorSig.value = false;
   });
 
-  const handleKeyDown$ = $((event: KeyboardEvent) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      handleClick$();
-    }
-  });
-
   useTask$(({ track }) => {
     track(() => context.selectedValueSig.value);
     if (context.selectedValueSig.value) {
@@ -59,23 +53,22 @@ export const RadioGroupTrigger = component$((props: RadioGroupControlProps) => {
   });
 
   return (
-    <div
+    <button
       tabIndex={0}
       id={triggerId}
       ref={context.triggerRef}
       role="radio"
-      aria-label={`radioButton ${(_index ?? 0) + 1}`}
-      aria-checked={context.selectedIndexSig.value === _index}
+      aria-label={`radioButton ${value}`}
+      aria-checked={context.selectedValueSig.value === value}
       aria-describedby={describedByLabels ? describedByLabels.value : undefined}
       aria-invalid={context.isErrorSig.value}
       data-disabled={context.isDisabledSig.value ? '' : undefined}
       onClick$={[handleClick$, props.onClick$]}
-      onKeyDown$={[handleKeyDown$, props.onKeyDown$]}
-      data-checked={context.selectedIndexSig.value === _index}
+      data-checked={context.selectedValueSig.value === value}
       data-qds-radio-group-trigger
       {...props}
     >
       <Slot />
-    </div>
+    </button>
   );
 });

@@ -9,7 +9,7 @@ import { radioGroupContextId } from './radio-group-context';
 import './radio-group.css';
 import styles from './radio-group.css?inline';
 
-export interface RadioGroupIndicatorProps extends PropsOf<'div'> {
+export interface RadioGroupIndicatorProps extends PropsOf<'span'> {
   value: string;
 }
 
@@ -19,7 +19,7 @@ export const RadioGroupIndicator = component$<RadioGroupIndicatorProps>(
     const context = useContext(radioGroupContextId);
 
     return (
-      <div
+      <span
         {...props}
         data-hidden={context.selectedValueSig.value !== props.value}
         data-checked={context.selectedValueSig.value === props.value}
@@ -27,7 +27,7 @@ export const RadioGroupIndicator = component$<RadioGroupIndicatorProps>(
         aria-hidden={context.selectedValueSig.value !== props.value}
       >
         <Slot />
-      </div>
+      </span>
     );
   }
 );

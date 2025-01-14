@@ -9,22 +9,12 @@ export default component$(() => {
   return (
     <div class="flex justify-start">
       <RadioGroup.Root class="radio-group">
-        <RadioGroup.Label class="radio-group__label">Items</RadioGroup.Label>
+        <RadioGroup.Label class="radio-group-label">Items</RadioGroup.Label>
         {items.map((item, index) => (
-          <RadioGroup.Item
-            class="checkbox-root"
-            key={item}
-            value={item}
-            index={index}
-          >
+          <RadioGroup.Item class="radio-group-item" key={item} value={item}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <RadioGroup.Label>{item}</RadioGroup.Label>
-              <RadioGroup.Trigger
-                class="radio-group-trigger"
-                _index={index}
-                value={item}
-                name="error"
-              >
+              <RadioGroup.Trigger class="radio-group-trigger" value={item}>
                 <RadioGroup.Indicator
                   class="radio-group-indicator"
                   value={item}

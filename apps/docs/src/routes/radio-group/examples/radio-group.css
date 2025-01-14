@@ -11,6 +11,12 @@
   gap: 8px;
 }
 
+.radio-group-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .radio-group-trigger {
   width: 15px;
   height: 15px;
@@ -33,12 +39,15 @@
 }
 
 .radio-group-indicator {
+  display: inline-block;
   width: 15px;
-  align-items: flex-start;
   justify-content: center;
-  inset: 0;
   border-radius: 8px;
   background: #0a4d70;
+}
+
+.radio-group-indicator[data-hidden] {
+  display: none;
 }
 
 .error-message-container {
@@ -47,12 +56,12 @@
   width: 200px !important;
 }
 
-.error-message-container[data-visible='false'] {
+.error-message-container[data-hidden] {
   visibility: hidden;
   opacity: 0;
 }
 
-.error-message-container[data-visible='true'] {
+.error-message-container[data-visible] {
   visibility: visible;
   opacity: 1;
   color: white;

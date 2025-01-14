@@ -7,28 +7,16 @@ export default component$(() => {
   const items = Array.from({ length: 4 }, (_, i) => `Item ${i + 1}`);
 
   return (
-    <RadioGroup.Root class="radio-group" name="hero">
-      <RadioGroup.Label class="radio-group__label">Items</RadioGroup.Label>
+    <RadioGroup.Root class="radio-group">
+      <RadioGroup.Label class="radio-group-label">Items</RadioGroup.Label>
       {items.map((item, index) => (
-        <RadioGroup.Item
-          class="checkbox-root"
-          key={item}
-          value={item}
-          index={index}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <RadioGroup.Label>{item}</RadioGroup.Label>
-            <RadioGroup.Trigger
-              class="radio-group-trigger"
-              _index={index}
-              value={item}
-              name="hero"
-            >
-              <RadioGroup.Indicator class="radio-group-indicator" value={item}>
-                <LuCircle />
-              </RadioGroup.Indicator>
-            </RadioGroup.Trigger>
-          </div>
+        <RadioGroup.Item class="radio-group-item" key={item} value={item}>
+          <RadioGroup.Label>{item}</RadioGroup.Label>
+          <RadioGroup.Trigger class="radio-group-trigger" value={item}>
+            <RadioGroup.Indicator class="radio-group-indicator" value={item}>
+              <LuCircle />
+            </RadioGroup.Indicator>
+          </RadioGroup.Trigger>
         </RadioGroup.Item>
       ))}
     </RadioGroup.Root>

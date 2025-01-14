@@ -22,7 +22,6 @@ export const RadioGroupHiddenNativeInput = component$(
           tabIndex={-1}
           checked={context.selectedIndexSig.value === _index}
           data-qds-radio-group-hidden-input
-          name={context.name ?? props.name ?? undefined}
           required={context.required ?? props.required ?? undefined}
           value={context.value ?? props.value ?? undefined}
           onChange$={[handleChange$, props.onChange$]}
