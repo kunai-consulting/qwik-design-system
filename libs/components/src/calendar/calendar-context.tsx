@@ -25,4 +25,6 @@ export type CalendarContext = {
   monthToRender: Signal<Month>;
   yearToRender: Signal<number>;
   currentDate: LocalDate;
+  localId: string;
+  isPopoverOpenSig: Signal<boolean>;
 };

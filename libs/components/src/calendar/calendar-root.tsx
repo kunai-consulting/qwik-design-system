@@ -8,6 +8,7 @@ import {
   component$,
   useComputed$,
   useContextProvider,
+  useId,
   useSignal,
   useVisibleTask$
 } from "@builder.io/qwik";
@@ -17,6 +18,7 @@ import type { CalendarContext } from "./calendar-context";
 import { calendarContextId } from "./calendar-context";
 import type { LocalDate, Locale, Month } from "./types";
 import { daysArrGenerator } from "./utils";
+import { useBoundSignal } from "../../utils/bound-signal";
 
 export type CalendarRootProps = PropsOf<"div"> & {
   locale?: Locale;
@@ -26,6 +28,7 @@ export type CalendarRootProps = PropsOf<"div"> & {
   date?: LocalDate;
   showDaysOfWeek?: boolean;
   onDateChange$?: QRL<(date: LocalDate) => void>;
+  'bind:open'?: Signal<boolean>;
 }
 
 const regex = /^\d{4}-(0[1-9]|1[0-2])-\d{2}$/;
@@ -38,11 +41,12 @@ export const CalendarRoot = component$<CalendarRootProps>(
     showWeekNumber = false,
     showDaysOfWeek = true,
     onDateChange$,
+    "bind:open": givenOpenSig,
     ...props
   }) => {
     const labelStr = props["aria-label"] ?? ARIA_LABELS[locale].root;
     const daysOfWeek = WEEKDAYS[locale];
-
+    const isPopoverOpenSig = useBoundSignal(givenOpenSig, false);
     const date = new Date();
     const currentDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}` as LocalDate;
     const defaultDate = props.defaultDate ?? currentDate;
@@ -50,6 +54,7 @@ export const CalendarRoot = component$<CalendarRootProps>(
     const monthToRender = useSignal<Month>(defaultDate.split("-")[1] as Month);
     const yearToRender = useSignal<number>(+defaultDate.split("-")[0]);
     const dateToFocus = useSignal<LocalDate>(defaultDate);
+    const localId = useId();
 
     const datesArray = useComputed$(() => {
       const dates = daysArrGenerator({
@@ -71,7 +76,9 @@ export const CalendarRoot = component$<CalendarRootProps>(
       defaultDate,
       activeDate,
       dateToFocus,
-      currentDate
+      currentDate,
+      localId,
+      isPopoverOpenSig
     };
 
     useContextProvider(calendarContextId, context);

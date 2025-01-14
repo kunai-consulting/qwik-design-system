@@ -39,6 +39,11 @@ export const api = {
       }
     },
     {
+      "Calendar Popover": {
+        "types": []
+      }
+    },
+    {
       "Calendar Previous": {
         "types": [],
         "inheritsFrom": "svg"
