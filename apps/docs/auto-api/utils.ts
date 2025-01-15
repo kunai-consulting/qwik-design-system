@@ -1,13 +1,13 @@
-import ts from "typescript";
-import { resolve } from "node:path";
 import fs from "node:fs";
+import { resolve } from "node:path";
+import ts from "typescript";
 
 import type {
   AnatomyItem,
-  SubComponents,
+  ComponentEntry,
   PublicType,
   SubComponent,
-  ComponentEntry
+  SubComponents
 } from "./types";
 
 export function getSourceFile(path: string) {

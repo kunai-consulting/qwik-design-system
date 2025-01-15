@@ -34,7 +34,7 @@ export const RadioGroupTrigger = component$((props: RadioGroupControlProps) => {
     if (context.isErrorSig.value) {
       labels.push(errorId);
     }
-    return labels.join(' ') || undefined;
+    return labels.join(" ") || undefined;
   });
 
   const handleClick$ = $(() => {

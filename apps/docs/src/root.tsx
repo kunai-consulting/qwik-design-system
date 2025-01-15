@@ -37,7 +37,7 @@ export default component$(() => {
               window.pagefind = pagefind;
             });
           `}
-        ></script>
+        />
       </body>
     </QwikCityProvider>
   );

@@ -35,7 +35,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return {
       tabIndex: await viewport.getAttribute("tabindex"),
       role: await viewport.getAttribute("role"),
-      ariaLabel: await viewport.getAttribute("aria-label"),
+      ariaLabel: await viewport.getAttribute("aria-label")
     };
   };
 

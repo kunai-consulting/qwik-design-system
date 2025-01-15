@@ -1,7 +1,7 @@
 import fs from "node:fs";
+import { resolve } from "node:path";
 import type { AnatomyItem, ComponentParts, SubComponents } from "./types";
 import { parseComponentAnatomy, parseSingleComponentFromDir } from "./utils";
-import { resolve } from "node:path";
 
 export function loopOnAllChildFiles(filePath: string) {
   const childComponentMatch = /[\\/](\w[\w-]*)\.tsx$/.exec(filePath);

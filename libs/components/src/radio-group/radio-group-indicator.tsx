@@ -1,8 +1,8 @@
 import {
-  component$,
-  useContext,
   type PropsOf,
   Slot,
+  component$,
+  useContext,
   useStyles$,
 } from '@builder.io/qwik';
 import { radioGroupContextId } from './radio-group-context';
@@ -13,10 +13,9 @@ export interface RadioGroupIndicatorProps extends PropsOf<'span'> {
   value: string;
 }
 
-export const RadioGroupIndicator = component$<RadioGroupIndicatorProps>(
-  (props) => {
-    useStyles$(styles);
-    const context = useContext(radioGroupContextId);
+export const RadioGroupIndicator = component$<RadioGroupIndicatorProps>((props) => {
+  useStyles$(styles);
+  const context = useContext(radioGroupContextId);
 
     return (
       <span

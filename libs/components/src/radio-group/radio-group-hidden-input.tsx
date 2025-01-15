@@ -1,6 +1,6 @@
-import { $, component$, useContext, type PropsOf } from '@builder.io/qwik';
-import { VisuallyHidden } from '../visually-hidden/visually-hidden';
-import { radioGroupContextId } from './radio-group-context';
+import { $, type PropsOf, component$, useContext } from "@builder.io/qwik";
+import { VisuallyHidden } from "../visually-hidden/visually-hidden";
+import { radioGroupContextId } from "./radio-group-context";
 
 type RadioGroupHiddenNativeInputProps = PropsOf<'input'> & {
   _index?: number | null;

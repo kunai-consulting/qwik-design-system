@@ -1,7 +1,7 @@
 import {
-  component$,
   type PropsOf,
   Slot,
+  component$,
   sync$,
   useContext,
   useOnWindow,

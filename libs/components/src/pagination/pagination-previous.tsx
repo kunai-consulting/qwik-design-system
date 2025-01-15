@@ -1,11 +1,11 @@
 import {
+  $,
   type PropsOf,
   Slot,
   component$,
   useContext,
-  $,
-  useTask$,
-  useSignal
+  useSignal,
+  useTask$
 } from "@builder.io/qwik";
 import { paginationContextId } from "./pagination-context";
 
@@ -27,7 +27,7 @@ export const PaginationPrevious = component$(
       }
       if (selectedPageSig.value > 1) {
         if (selectedPageSig.value - 1 >= 1) {
-          selectedPageSig.value = selectedPageSig.value - 1;
+          selectedPageSig.value -= 1;
         } else {
           selectedPageSig.value = 1;
         }

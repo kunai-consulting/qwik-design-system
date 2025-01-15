@@ -1,8 +1,8 @@
-import { $, component$, useOnWindow, useSignal, useTask$ } from '@builder.io/qwik';
-import { isServer } from '@builder.io/qwik/build';
-import { Combobox, Modal } from '@qwik-ui/headless';
-import { LuSearch } from '@qwikest/icons/lucide';
-import { cn } from '~/utils/cn';
+import { $, component$, useOnWindow, useSignal, useTask$ } from "@builder.io/qwik";
+import { isServer } from "@builder.io/qwik/build";
+import { Combobox, Modal } from "@qwik-ui/headless";
+import { LuSearch } from "@qwikest/icons/lucide";
+import { cn } from "~/utils/cn";
 
 interface PagefindSearchResult {
   id: string;
@@ -42,12 +42,12 @@ export const SearchModal = component$(() => {
   const isOpen = useSignal(false);
 
   useOnWindow(
-    'keydown',
+    "keydown",
     $((event: KeyboardEvent) => {
-      if (event.key === 'k' && (event.metaKey || event.ctrlKey)) {
+      if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
         isOpen.value = !isOpen.value;
       }
-    }),
+    })
   );
 
   const isInitialized = useSignal(false);
@@ -58,18 +58,14 @@ export const SearchModal = component$(() => {
     if (isServer) return;
 
     if (isOpen.value && !isInitialized.value) {
-      window.dispatchEvent(new CustomEvent('initPagefind'));
+      window.dispatchEvent(new CustomEvent("initPagefind"));
       isInitialized.value = true;
     }
   });
 
   return (
     <Modal.Root bind:show={isOpen}>
-      <Modal.Trigger
-        class={cn(
-          'flex h-8 items-center gap-2 sm:h-10',
-        )}
-      >
+      <Modal.Trigger class={cn("flex h-8 items-center gap-2 sm:h-10")}>
         <LuSearch class="h-4 w-4" />
         <span class="hidden sm:block">Search</span>
       </Modal.Trigger>
@@ -103,9 +99,9 @@ export const Search = component$(() => {
           id: r.id,
           url: data.url,
           meta: data.meta,
-          excerpt: data.excerpt,
+          excerpt: data.excerpt
         };
-      }),
+      })
     );
 
     results.value = searchResults;

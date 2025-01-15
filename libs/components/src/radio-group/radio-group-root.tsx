@@ -1,14 +1,15 @@
 import {
-  component$,
+  JSXNode,
   type PropsOf,
-  Slot,
+  type QRL,
   type Signal,
+  Slot,
+  component$,
+  useComputed$,
   useContextProvider,
   useId,
-  useTask$,
   useSignal,
-  type QRL,
-  useComputed$,
+  useTask$,
 } from '@builder.io/qwik';
 import {
   type RadioGroupContext,
@@ -24,7 +25,7 @@ export type RadioGroupRootProps = {
   name?: string;
   required?: boolean;
   value?: string;
-} & PropsOf<'div'>;
+} & PropsOf<"div">;
 
 export const RadioGroupRoot = component$((props: RadioGroupRootProps) => {
   const {

@@ -1,31 +1,28 @@
 import {
+  $,
+  type JSXChildren,
+  type JSXNode,
   type PropsOf,
   type QRL,
+  type Signal,
   Slot,
   component$,
-  type JSXNode,
-  type JSXChildren,
-  useContextProvider,
-  useSignal,
-  useTask$,
-  type Signal,
   useComputed$,
+  useContextProvider,
   useId,
-  $,
-} from '@builder.io/qwik';
-import { findComponent, processChildren } from '../../utils/inline-component';
-import { PaginationPage } from './pagination-page';
-import {
-  type PaginationContext,
-  paginationContextId,
-} from './pagination-context';
-import { useBoundSignal } from '../../utils/bound-signal';
-import { getPaginationItems } from './utils';
+  useSignal,
+  useTask$
+} from "@builder.io/qwik";
+import { useBoundSignal } from "../../utils/bound-signal";
+import { findComponent, processChildren } from "../../utils/inline-component";
+import { type PaginationContext, paginationContextId } from "./pagination-context";
+import { PaginationPage } from "./pagination-page";
+import { getPaginationItems } from "./utils";
 
-export type PaginationRootProps = PropsOf<'div'> & {
+export type PaginationRootProps = PropsOf<"div"> & {
   totalPages: number;
   currentPage?: number;
-  'bind:page'?: Signal<number | 1>;
+  "bind:page"?: Signal<number | 1>;
   onPageChange$?: QRL<(page: number) => void>;
   disabled?: boolean;
   pages: number[];
@@ -48,7 +45,7 @@ export const PaginationRoot = (props: PaginationRootProps) => {
 
 export const PaginationBase = component$((props: PaginationRootProps) => {
   const {
-    'bind:page': givenPageSig,
+    "bind:page": givenPageSig,
     totalPages,
     onPageChange$,
     currentPage,
@@ -76,7 +73,7 @@ export const PaginationBase = component$((props: PaginationRootProps) => {
     selectedPageSig,
     ellipsisSig,
     ellipsis,
-    focusedIndexSig,
+    focusedIndexSig
   };
 
   useContextProvider(paginationContextId, context);
@@ -100,8 +97,8 @@ export const PaginationBase = component$((props: PaginationRootProps) => {
     <div
       {...rest}
       data-qds-pagination-root
-      data-disabled={context.isDisabledSig.value ? '' : undefined}
-      aria-disabled={context.isDisabledSig.value ? 'true' : 'false'}
+      data-disabled={context.isDisabledSig.value ? "" : undefined}
+      aria-disabled={context.isDisabledSig.value ? "true" : "false"}
     >
       <Slot />
     </div>
