@@ -5,12 +5,12 @@ export const radioGroupContextId = createContextId<RadioGroupContext>(
 );
 
 export type RadioGroupContext = {
-  isCheckedSig: Signal<boolean>;
+  selectedValueSig: Signal<string | undefined>;
+  selectedIndexSig: Signal<number | null>;
   isDisabledSig: Signal<boolean | undefined>;
   isErrorSig: Signal<boolean | undefined>;
   localId: string;
   isDescription: boolean | undefined;
-  name: string | undefined;
   required: boolean | undefined;
   value: string | undefined;
   triggerRef: Signal<HTMLButtonElement | undefined>;

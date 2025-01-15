@@ -1,24 +1,68 @@
 .radio-group-root {
   display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.radio-group-root {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.radio-group-item {
+  display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.radrio-group-trigger {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+.radio-group-trigger {
+  width: 15px;
+  height: 15px;
+  align-items: flex-start;
+  justify-content: center;
+  border-radius: 8px;
+  position: relative;
+  background: gray;
+}
+
+.radio-group-trigger:focus-visible {
+  outline: 1px solid white;
+  outline-offset: 2px;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.radio-group-trigger[data-disabled] {
+  opacity: 0.5;
 }
 
 .radio-group-indicator {
-  display: flex;
-  align-items: center;
+  display: inline-block;
+  width: 15px;
   justify-content: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background-color: #ccc;
+  border-radius: 8px;
+  background: #0a4d70;
+}
+
+.radio-group-indicator[data-hidden] {
+  display: none;
+}
+
+.error-message-container {
+  display: flex;
+  height: 20px;
+  width: 200px !important;
+}
+
+.error-message-container[data-hidden] {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.error-message-container[data-visible] {
+  visibility: visible;
+  opacity: 1;
+  color: white;
 }

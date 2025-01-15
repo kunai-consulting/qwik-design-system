@@ -9,15 +9,17 @@ import {
   useContextProvider,
   useId,
   useSignal,
-  useTask$
-} from "@builder.io/qwik";
-import { useBoundSignal } from "../../utils/bound-signal";
-import { type RadioGroupContext, radioGroupContextId } from "./radio-group-context";
+  useTask$,
+} from '@builder.io/qwik';
+import {
+  type RadioGroupContext,
+  radioGroupContextId,
+} from './radio-group-context';
 
-export type RadioGroupRootProps<T extends boolean> = {
-  "bind:checked"?: Signal<boolean>;
-  checked?: T;
-  onChange$?: QRL<(checked: T) => void>;
+export type RadioGroupRootProps = {
+  'bind:value'?: Signal<boolean>;
+  onChange$?: QRL<(checked: string) => void>;
+  defaultValue?: string;
   disabled?: boolean;
   isDescription?: boolean;
   name?: string;
@@ -25,20 +27,19 @@ export type RadioGroupRootProps<T extends boolean> = {
   value?: string;
 } & PropsOf<"div">;
 
-export const RadioGroupRoot = component$((props: RadioGroupRootProps<boolean>) => {
+export const RadioGroupRoot = component$((props: RadioGroupRootProps) => {
   const {
-    "bind:checked": givenCheckedSig,
-    checked,
+    'bind:value': givenCheckedSig,
     onClick$,
     onChange$,
     isDescription,
-    name,
     required,
     value,
     ...rest
   } = props;
 
-  const isCheckedSig = useBoundSignal<boolean>(givenCheckedSig, checked ?? false);
+  const selectedValueSig = useSignal<string | undefined>(undefined);
+  const selectedIndexSig = useSignal<number | null>(null);
   const isInitialLoadSig = useSignal(true);
   const isDisabledSig = useComputed$(() => props.disabled);
   const isErrorSig = useSignal(false);
@@ -46,27 +47,34 @@ export const RadioGroupRoot = component$((props: RadioGroupRootProps<boolean>) =
   const triggerRef = useSignal<HTMLButtonElement>();
 
   const context: RadioGroupContext = {
-    isCheckedSig,
+    selectedValueSig,
+    selectedIndexSig,
     isDisabledSig,
     localId,
     isDescription,
-    name,
     required,
     value,
     isErrorSig,
-    triggerRef
+    triggerRef,
   };
 
   useContextProvider(radioGroupContextId, context);
 
+  useTask$(({ track }) => {
+    track(() => value);
+    if (value !== undefined) {
+      selectedValueSig.value = value;
+    }
+  });
+
   useTask$(async function handleChange({ track }) {
-    track(() => isCheckedSig.value);
+    track(() => selectedValueSig.value);
 
     if (isInitialLoadSig.value) {
       return;
     }
 
-    await onChange$?.(isCheckedSig.value as boolean);
+    await onChange$?.(selectedValueSig.value as string);
   });
 
   useTask$(() => {
@@ -76,10 +84,13 @@ export const RadioGroupRoot = component$((props: RadioGroupRootProps<boolean>) =
   return (
     <div
       {...rest}
+      role="radiogroup"
       data-qds-radio-group-root
-      data-disabled={context.isDisabledSig.value ? "" : undefined}
-      aria-disabled={context.isDisabledSig.value ? "true" : "false"}
-      data-checked={context.isCheckedSig.value ? "" : undefined}
+      data-disabled={context.isDisabledSig.value ? '' : undefined}
+      aria-disabled={context.isDisabledSig.value ? 'true' : 'false'}
+      data-checked={
+        context.selectedValueSig.value === props.value ? 'true' : 'false'
+      }
     >
       <Slot />
     </div>
