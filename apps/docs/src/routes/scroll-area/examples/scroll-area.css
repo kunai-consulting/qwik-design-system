@@ -47,10 +47,18 @@
     left: 0;
 }
 
+.scroll-area-scrollbar[data-orientation='vertical'] .scroll-area-thumb {
+    height: 52px;
+    width: var(--thumb-size);
+}
+
+.scroll-area-scrollbar[data-orientation='horizontal'] .scroll-area-thumb {
+    width: 52px;
+    height: var(--thumb-size);
+}
+
 .scroll-area-thumb {
     position: relative;
-    height: var(--thumb-size);
-    width: var(--thumb-size);
     background: rgba(255, 255, 255, 0.4);
     border-radius: 9999px;
     transition: background 160ms ease-out;

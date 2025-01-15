@@ -12,7 +12,7 @@ type ViewPortProps = PropsOf<"div"> & {
   onScroll$?: PropFunction<(e: Event) => void>;
 };
 
-export const ScrollAreaViewPort = component$<ViewPortProps>((props) => {
+export const ScrollAreaViewport = component$<ViewPortProps>((props) => {
   const context = useContext(scrollAreaContextId);
   const onScroll$ = $((e: Event) => {
     const viewport = e.target as HTMLElement;

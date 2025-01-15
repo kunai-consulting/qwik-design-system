@@ -6,7 +6,7 @@ export default component$(() => {
   useStyles$(styles);
   return (
     <ScrollArea.Root class="scroll-area-root" style={{ height: "150px", width: "250px" }}>
-      <ScrollArea.ViewPort class="scroll-area-viewport">
+      <ScrollArea.Viewport class="scroll-area-viewport">
         {/* Content with fixed height to ensure scrolling */}
         <div>
           <p>
@@ -18,7 +18,7 @@ export default component$(() => {
             consequuntur dolorem hic quae corrupti autem? Dolorem, sit voluptatum.
           </p>
         </div>
-      </ScrollArea.ViewPort>
+      </ScrollArea.Viewport>
 
       <ScrollArea.Scrollbar orientation="vertical" class="scroll-area-scrollbar">
         <ScrollArea.Thumb class="scroll-area-thumb" />
