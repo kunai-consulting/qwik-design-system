@@ -11,6 +11,7 @@ import {
 import { radioGroupContextId } from './radio-group-context';
 import './radio-group.css';
 import styles from './radio-group.css?inline';
+import { radioGroupItemContextId } from './radio-group-item';
 
 type RadioGroupControlProps = PropsOf<'button'> & {
   value: string;
@@ -19,13 +20,13 @@ type RadioGroupControlProps = PropsOf<'button'> & {
 
 export const RadioGroupTrigger = component$((props: RadioGroupControlProps) => {
   const context = useContext(radioGroupContextId);
+  const itemContext = useContext(radioGroupItemContextId);
   const value = props.value;
   const _index = props._index;
   const triggerId = `${context.localId}-trigger`;
   const descriptionId = `${context.localId}-description`;
   const errorId = `${context.localId}-error`;
   useStyles$(styles);
-
   const describedByLabels = useComputed$(() => {
     const labels = [];
     if (context.isDescription) {
@@ -52,11 +53,40 @@ export const RadioGroupTrigger = component$((props: RadioGroupControlProps) => {
     }
   });
 
+  // Multiple instances of buttons, each one gets focus
+
+  // Each button should have an event for keyboard navigation
+
+  // Based off orientation
+
+  /**
+   *  If it is a horizontal radio group
+   * 
+   * GIVEN a horizontal radio group
+   * WHEN the user presses the right arrow key
+   * THEN the next button should be focused
+   * 
+   * GIVEN a vertical radio group
+   * WHEN the user presses the down arrow key
+   * THEN the next button should be focused
+   *  
+   * IF MY ITEM HAS FOCUS AND THEY PRESS THE NEXT NAVIGATION KEY, THE WE SHOULD FOCUS THE NEXT ITEM INDEX
+   * 
+   * COLLECT THE TRIGGER REFS IN AN ARRAY, focus next trigger ref in the array
+   *  
+   */
+
+  // const handleKeyDown$ = $((e: KeyboardEvent) => {
+  //   if (e.key === 'ArrowDown' && itemContext.index) { 
+  //     context.triggerRefs.value[itemContext.index + 1]?.focus();
+  //   }
+  // })
+
   return (
     <button
       tabIndex={0}
       id={triggerId}
-      ref={context.triggerRef}
+      ref={itemContext.triggerRef}
       role="radio"
       aria-label={`radioButton ${value}`}
       aria-checked={context.selectedValueSig.value === value}

@@ -13,5 +13,4 @@ export type RadioGroupContext = {
   isDescription: boolean | undefined;
   required: boolean | undefined;
   value: string | undefined;
-  triggerRef: Signal<HTMLButtonElement | undefined>;
 };

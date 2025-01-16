@@ -15,6 +15,8 @@ import {
   type RadioGroupContext,
   radioGroupContextId,
 } from './radio-group-context';
+import { findComponent, processChildren } from '../../utils/inline-component';
+import { RadioGroupItem } from './radio-group-item';
 
 export type RadioGroupRootProps = {
   'bind:value'?: Signal<boolean>;
@@ -27,7 +29,24 @@ export type RadioGroupRootProps = {
   value?: string;
 } & PropsOf<"div">;
 
-export const RadioGroupRoot = component$((props: RadioGroupRootProps) => {
+export const RadioGroupRoot = ({ children, ...props }: RadioGroupRootProps) => {
+  let currItemIndex = 0;
+
+  findComponent(RadioGroupItem, (itemProps) => {
+    itemProps._index = currItemIndex;
+    currItemIndex++;
+  });
+
+  processChildren(children);
+
+  return (
+    <RadioGroupBase {...props}>
+      {children}
+    </RadioGroupBase>
+  );
+};
+
+export const RadioGroupBase = component$((props: RadioGroupRootProps) => {
   const {
     'bind:value': givenCheckedSig,
     onClick$,
@@ -44,7 +63,6 @@ export const RadioGroupRoot = component$((props: RadioGroupRootProps) => {
   const isDisabledSig = useComputed$(() => props.disabled);
   const isErrorSig = useSignal(false);
   const localId = useId();
-  const triggerRef = useSignal<HTMLButtonElement>();
 
   const context: RadioGroupContext = {
     selectedValueSig,
@@ -55,7 +73,6 @@ export const RadioGroupRoot = component$((props: RadioGroupRootProps) => {
     required,
     value,
     isErrorSig,
-    triggerRef,
   };
 
   useContextProvider(radioGroupContextId, context);
