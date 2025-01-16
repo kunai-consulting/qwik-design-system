@@ -10,6 +10,7 @@
 - [Radio Group](/radio-group)
 - [Calendar](/calendar)
 - [File Upload](/file-upload)
+- [QR Code](/qr-code)
 
 ## Styled
 

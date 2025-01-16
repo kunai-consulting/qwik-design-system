@@ -6,3 +6,4 @@ export * as ScrollArea from "./scroll-area";
 export * as RadioGroup from "./radio-group";
 export * as Calendar from "./calendar";
 export * as FileUpload from "./file-upload";
+export * as QRCode from './qr-code';
