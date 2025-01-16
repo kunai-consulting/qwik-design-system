@@ -6,7 +6,7 @@ export default component$(() => {
   useStyles$(styles);
   return (
     <ScrollArea.Root class="!h-[200px] !w-[100px] rounded-md border p-4 scroll-area-root">
-      <ScrollArea.ViewPort class="scroll-area-viewport">
+      <ScrollArea.Viewport class="scroll-area-viewport">
         <div class="p-4">
           <p>
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dignissimos impedit
@@ -17,7 +17,7 @@ export default component$(() => {
             consequuntur dolorem hic quae corrupti autem? Dolorem, sit voluptatum.
           </p>
         </div>
-      </ScrollArea.ViewPort>
+      </ScrollArea.Viewport>
 
       <ScrollArea.Scrollbar orientation="horizontal" class="scroll-area-scrollbar">
         <ScrollArea.Thumb class="scroll-area-thumb" />
