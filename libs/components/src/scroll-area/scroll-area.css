@@ -1,0 +1,39 @@
+@layer qds {
+    [data-qds-scroll-area-root] {
+        position: relative;
+        overflow: hidden;
+    }
+
+    [data-qds-scroll-area-viewport] {
+        overflow: scroll;
+        position: relative;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+    }
+
+    /* Hide default scrollbars */
+    [data-qds-scroll-area-viewport]::-webkit-scrollbar {
+        display: none;
+    }
+
+    [data-qds-scroll-area-scrollbar] {
+        touch-action: none;
+        user-select: none;
+        position: absolute;
+    }
+
+    [data-qds-scroll-area-scrollbar][data-orientation='vertical'] {
+        height: 100%;
+        right: 0;
+        top: 0;
+    }
+
+    [data-qds-scroll-area-scrollbar][data-orientation='horizontal'] {
+        bottom: 0;
+        left: 0;
+    }
+
+    [data-qds-scroll-area-thumb] {
+        position: relative;
+    }
+}

@@ -16,26 +16,33 @@ export const ScrollAreaViewport = component$<ViewPortProps>((props) => {
   const context = useContext(scrollAreaContextId);
   const onScroll$ = $((e: Event) => {
     const viewport = e.target as HTMLElement;
-    const scrollbars = Array.from(
-      viewport.parentElement?.querySelectorAll("[data-scroll-area-scrollbar]") || []
-    );
+    const root = viewport.parentElement;
+    if (!root) return;
 
-    for (const scrollbar of scrollbars) {
-      const thumb = scrollbar.querySelector("[data-scroll-area-thumb]") as HTMLElement;
-      if (!thumb) return;
+    const verticalScrollbar = root.querySelector(
+      '[data-qds-scroll-area-scrollbar][data-orientation="vertical"]'
+    ) as HTMLElement;
+    const horizontalScrollbar = root.querySelector(
+      '[data-qds-scroll-area-scrollbar][data-orientation="horizontal"]'
+    ) as HTMLElement;
 
-      const isVertical = scrollbar.getAttribute("data-orientation") === "vertical";
-
-      if (isVertical) {
+    if (verticalScrollbar) {
+      const verticalThumb = verticalScrollbar.querySelector("[data-qds-scroll-area-thumb]") as HTMLElement;
+      if (verticalThumb) {
         const scrollRatio =
           viewport.scrollTop / (viewport.scrollHeight - viewport.clientHeight);
-        const maxTop = scrollbar.clientHeight - thumb.clientHeight;
-        thumb.style.transform = `translateY(${scrollRatio * maxTop}px)`;
-      } else {
+        const maxTop = verticalScrollbar.clientHeight - verticalThumb.clientHeight;
+        verticalThumb.style.transform = `translateY(${scrollRatio * maxTop}px)`;
+      }
+    }
+
+    if (horizontalScrollbar) {
+      const horizontalThumb = horizontalScrollbar.querySelector("[data-qds-scroll-area-thumb]") as HTMLElement;
+      if (horizontalThumb) {
         const scrollRatio =
           viewport.scrollLeft / (viewport.scrollWidth - viewport.clientWidth);
-        const maxLeft = scrollbar.clientWidth - thumb.clientWidth;
-        thumb.style.transform = `translateX(${scrollRatio * maxLeft}px)`;
+        const maxLeft = horizontalScrollbar.clientWidth - horizontalThumb.clientWidth;
+        horizontalThumb.style.transform = `translateX(${scrollRatio * maxLeft}px)`;
       }
     }
 
@@ -46,9 +53,10 @@ export const ScrollAreaViewport = component$<ViewPortProps>((props) => {
   return (
     <div
       {...props}
-      data-scroll-area-viewport
-      onScroll$={onScroll$}
+      data-qds-scroll-area-viewport
+      onScroll$={[onScroll$, props.onScroll$]}
       ref={context.viewportRef}
+      tabIndex={0} //don't remove this line; it's needed to avoid a11y issues
       role="region"
       aria-label="Scrollable content"
     >

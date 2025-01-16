@@ -350,7 +350,7 @@ test.describe("a11y", () => {
       await Promise.all([
         viewport.evaluate(() => {
           return new Promise((resolve) => {
-            const el = document.querySelector("[data-scroll-area-viewport]");
+            const el = document.querySelector("[data-qds-scroll-area-viewport]");
             if (!el) {
               resolve(null);
               return;

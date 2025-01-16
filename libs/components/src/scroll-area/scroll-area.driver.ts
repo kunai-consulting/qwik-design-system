@@ -3,31 +3,31 @@ export type DriverLocator = Locator | Page;
 
 export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   const getRoot = () => {
-    return rootLocator.locator("[data-scroll-area-root]");
+    return rootLocator.locator("[data-qds-scroll-area-root]");
   };
 
   const getViewport = () => {
-    return rootLocator.locator("[data-scroll-area-viewport]");
+    return rootLocator.locator("[data-qds-scroll-area-viewport]");
   };
 
   const getVerticalScrollbar = () => {
     return rootLocator.locator(
-      '[data-scroll-area-scrollbar][data-orientation="vertical"]'
+      '[data-qds-scroll-area-scrollbar][data-orientation="vertical"]'
     );
   };
 
   const getHorizontalScrollbar = () => {
     return rootLocator.locator(
-      '[data-scroll-area-scrollbar][data-orientation="horizontal"]'
+      '[data-qds-scroll-area-scrollbar][data-orientation="horizontal"]'
     );
   };
 
   const getVerticalThumb = () => {
-    return getVerticalScrollbar().locator("[data-scroll-area-thumb]");
+    return getVerticalScrollbar().locator("[data-qds-scroll-area-thumb]");
   };
 
   const getHorizontalThumb = () => {
-    return getHorizontalScrollbar().locator("[data-scroll-area-thumb]");
+    return getHorizontalScrollbar().locator("[data-qds-scroll-area-thumb]");
   };
 
   const getViewportAttributes = async () => {
