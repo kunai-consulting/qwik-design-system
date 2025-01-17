@@ -1,5 +1,12 @@
 # @kunai-consulting/qwik-headless
 
+## 0.0.2
+
+### Patch Changes
+
+- fe85765: File Upload component
+- 66f64a2: Clear headless scroll-area component.
+
 ## 0.0.1
 
 ### Patch Changes
