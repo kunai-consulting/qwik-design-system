@@ -54,7 +54,7 @@ export const ScrollAreaScrollbar = component$<ScrollBarType>((props) => {
     <div
       {...props}
       ref={context.scrollbarRef}
-      data-scroll-area-scrollbar
+      data-qds-scroll-area-scrollbar
       data-orientation={orientation}
       onClick$={onTrackClick$}
     >

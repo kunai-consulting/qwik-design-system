@@ -94,7 +94,7 @@ export const ScrollAreaThumb = component$<ScrollAreaThumb>((props) => {
     <div
       {...props}
       ref={context.thumbRef}
-      data-scroll-area-thumb
+      data-qds-scroll-area-thumb
       data-dragging={isDragging.value ? "" : undefined}
       onMouseDown$={onDragStart$}
     />
