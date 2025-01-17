@@ -20,7 +20,10 @@ export const ScrollAreaScrollbar = component$<ScrollBarType>((props) => {
   const onTrackClick$ = $((e: MouseEvent) => {
     const target = e.target as HTMLElement;
     const clickedOrientation = target.getAttribute("data-orientation");
-    const scrollbar = context.scrollbarRef.value;
+    const scrollbar = orientation === 'vertical'
+      ? context.verticalScrollbarRef.value
+      : context.horizontalScrollbarRef.value;
+
     if (!scrollbar) return;
 
     const viewport = context.viewportRef.value;
@@ -53,7 +56,7 @@ export const ScrollAreaScrollbar = component$<ScrollBarType>((props) => {
   return (
     <div
       {...props}
-      ref={context.scrollbarRef}
+      ref={orientation === 'vertical' ? context.verticalScrollbarRef : context.horizontalScrollbarRef}
       data-qds-scroll-area-scrollbar
       data-orientation={orientation}
       onClick$={onTrackClick$}

@@ -16,15 +16,9 @@ export const ScrollAreaViewport = component$<ViewPortProps>((props) => {
   const context = useContext(scrollAreaContextId);
   const onScroll$ = $((e: Event) => {
     const viewport = e.target as HTMLElement;
-    const root = viewport.parentElement;
-    if (!root) return;
 
-    const verticalScrollbar = root.querySelector(
-      '[data-qds-scroll-area-scrollbar][data-orientation="vertical"]'
-    ) as HTMLElement;
-    const horizontalScrollbar = root.querySelector(
-      '[data-qds-scroll-area-scrollbar][data-orientation="horizontal"]'
-    ) as HTMLElement;
+    const verticalScrollbar = context.verticalScrollbarRef.value;
+    const horizontalScrollbar = context.horizontalScrollbarRef.value;
 
     if (verticalScrollbar) {
       const verticalThumb = verticalScrollbar.querySelector("[data-qds-scroll-area-thumb]") as HTMLElement;
