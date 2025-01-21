@@ -1,4 +1,4 @@
-import { createContextId, type Signal } from "@builder.io/qwik";
+import { type Signal, createContextId } from "@builder.io/qwik";
 
 export interface QRCodeOverlay {
   image: string;
@@ -8,7 +8,7 @@ export interface QRCodeOverlay {
 export interface QRCodeContext {
   value: Signal<string>;
   size: Signal<number>;
-  level: Signal<'L' | 'M' | 'Q' | 'H'>;
+  level: Signal<"L" | "M" | "Q" | "H">;
   margin: Signal<number>;
   overlay: Signal<QRCodeOverlay | undefined>;
 }

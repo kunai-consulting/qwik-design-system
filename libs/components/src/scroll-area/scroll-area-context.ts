@@ -9,4 +9,3 @@ export interface ScrollAreaContext {
   verticalScrollbarRef: Signal<HTMLDivElement | undefined>;
   horizontalScrollbarRef: Signal<HTMLDivElement | undefined>;
 }
-

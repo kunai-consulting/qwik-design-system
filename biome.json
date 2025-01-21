@@ -92,7 +92,10 @@
       }
     },
     {
-      "include": ["apps/docs/src/root.tsx"],
+      "include": [
+        "apps/docs/src/root.tsx",
+        "libs/components/src/qr-code/qr-code-canvas.tsx"
+      ],
       "linter": {
         "rules": {
           "security": {
