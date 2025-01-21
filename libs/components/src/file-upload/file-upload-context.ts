@@ -1,8 +1,8 @@
 import {
-  createContextId,
+  type NoSerialize,
+  type PropFunction,
   type Signal,
-  NoSerialize,
-  PropFunction
+  createContextId
 } from "@builder.io/qwik";
 
 export interface FileInfo {

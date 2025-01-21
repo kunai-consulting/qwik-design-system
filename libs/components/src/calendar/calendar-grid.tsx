@@ -1,4 +1,11 @@
-import { $, type PropsOf, type QRL, Slot, component$, useContext } from "@builder.io/qwik";
+import {
+  $,
+  type PropsOf,
+  type QRL,
+  Slot,
+  component$,
+  useContext
+} from "@builder.io/qwik";
 import { calendarContextId } from "./calendar-context";
 import type { LocalDate, Locale, Month } from "./types";
 import { getWeekNumber } from "./utils";
@@ -55,7 +62,8 @@ export const CalendarGrid = component$<CalendarGridProps>((props) => {
   });
 
   const updateDateFocused = $((e: KeyboardEvent, tbody: HTMLTableSectionElement) => {
-    if (!ACTION_KEYS.includes(e.key.toLowerCase() as (typeof ACTION_KEYS)[number])) return;
+    if (!ACTION_KEYS.includes(e.key.toLowerCase() as (typeof ACTION_KEYS)[number]))
+      return;
     const elFocus = document.activeElement;
     if (elFocus?.tagName.toLowerCase() !== "button") return;
 
@@ -144,7 +152,10 @@ export const CalendarGrid = component$<CalendarGridProps>((props) => {
       }
 
       case "end": {
-        const rowEndIndex = Math.min(Math.ceil((idx + 1) / 7) * 7 - 1, buttons.length - 1);
+        const rowEndIndex = Math.min(
+          Math.ceil((idx + 1) / 7) * 7 - 1,
+          buttons.length - 1
+        );
         const newDate = buttons[rowEndIndex].getAttribute("data-value") as LocalDate;
         handleMonthChange(newDate, context.monthToRender.value);
         updateFocus(rowEndIndex, newDate);
@@ -153,7 +164,7 @@ export const CalendarGrid = component$<CalendarGridProps>((props) => {
     }
   });
 
-  const {buttonProps, onDateChange$, ...tableProps } = props;
+  const { buttonProps, onDateChange$, ...tableProps } = props;
 
   return (
     <table data-qds-datepicker-grid role="grid" {...tableProps}>
@@ -162,13 +173,13 @@ export const CalendarGrid = component$<CalendarGridProps>((props) => {
           <tr data-qds-datepicker-grid-header-row>
             {context.showWeekNumber && <td />}
             {context.daysOfWeek.map((day) => (
-              <th key={day} scope="col" aria-label={day} data-qds-datepicker-grid-header-cell>
-                {
-                  day
-                    .slice(0, 2)
-                    .normalize("NFD")
-                    .replace(/\p{M}/gu, "")
-                }
+              <th
+                key={day}
+                scope="col"
+                aria-label={day}
+                data-qds-datepicker-grid-header-cell
+              >
+                {day.slice(0, 2).normalize("NFD").replace(/\p{M}/gu, "")}
               </th>
             ))}
           </tr>
@@ -180,7 +191,7 @@ export const CalendarGrid = component$<CalendarGridProps>((props) => {
         onKeyDown$={[
           $((e: KeyboardEvent, target: HTMLTableSectionElement) => {
             updateDateFocused(e, target);
-          }),
+          })
         ]}
       >
         {/* {context.datesArray.value.map((week, index) => {

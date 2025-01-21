@@ -1,37 +1,39 @@
-import { $, component$, useContext, type PropsOf } from "@builder.io/qwik";
+import { $, type PropsOf, component$, useContext } from "@builder.io/qwik";
+import { calendarContextId } from "./calendar-context";
 import type { LocalDate, Locale } from "./types";
 import { getWeekNumber } from "./utils";
-import { calendarContextId } from "./calendar-context";
 
-type CalendarGridDayProps = PropsOf<"button"> & { // Replace with proper context type
+type CalendarGridDayProps = PropsOf<"button"> & {
   onDateChange$?: (date: LocalDate) => void;
 };
 
-export const CalendarGridDay = component$<CalendarGridDayProps>(({
-  onDateChange$, ...buttonProps
-}) => {
-  const context = useContext(calendarContextId);    
-  const dateFormatter = (locale: Locale) =>
-    new Intl.DateTimeFormat(locale, {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric"
-    });
+export const CalendarGridDay = component$<CalendarGridDayProps>(
+  ({ onDateChange$, ...buttonProps }) => {
+    const context = useContext(calendarContextId);
+    const dateFormatter = (locale: Locale) =>
+      new Intl.DateTimeFormat(locale, {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
 
-  return (
-    <>
-    {context.datesArray.value.map((week, index) => {
+    return (
+      <>
+        {context.datesArray.value.map((week, index) => {
           return (
-            <tr key={`${week.toString()}-${index}`} data-qds-datepicker-grid-body-row class="">
+            <tr
+              key={`${week.toString()}-${index}`}
+              data-qds-datepicker-grid-body-row
+              class=""
+            >
               {context.showWeekNumber && (
                 <td data-qds-datepicker-grid-body-week-number>
                   <span>
-                    {week.find((day): day is string => day !== null)
-                      ? getWeekNumber(
-                          week.find((day): day is string => day !== null)!
-                        ).toString()
-                      : ""}
+                    {(() => {
+                      const validDay = week.find((day): day is string => day !== null);
+                      return validDay ? getWeekNumber(validDay).toString() : "";
+                    })()}
                   </span>
                 </td>
               )}
@@ -59,12 +61,12 @@ export const CalendarGridDay = component$<CalendarGridDayProps>(({
                         data-value={day}
                         aria-label={label}
                         disabled={disabled}
-                        tabIndex={day === context.dateToFocus.value ? 0 : -1} 
+                        tabIndex={day === context.dateToFocus.value ? 0 : -1}
                         onClick$={[
                           $(() => {
                             context.activeDate.value = day as LocalDate;
                             onDateChange$?.(day as LocalDate);
-                          }),
+                          })
                         ]}
                       >
                         {day.split("-")[2]}
@@ -76,6 +78,7 @@ export const CalendarGridDay = component$<CalendarGridDayProps>(({
             </tr>
           );
         })}
-        </>
-  );
-});
+      </>
+    );
+  }
+);

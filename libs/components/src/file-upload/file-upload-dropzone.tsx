@@ -1,15 +1,15 @@
 import {
-  component$,
-  useContext,
   $,
+  type PropsOf,
   Slot,
-  PropsOf,
+  component$,
   noSerialize,
-  useSignal,
+  sync$,
+  useContext,
   useOn,
-  sync$
+  useSignal
 } from "@builder.io/qwik";
-import { FileInfo, fileUploadContextId } from "./file-upload-context";
+import { type FileInfo, fileUploadContextId } from "./file-upload-context";
 
 type DropzoneProps = PropsOf<"div">;
 

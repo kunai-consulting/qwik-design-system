@@ -1,8 +1,8 @@
-import { expect, test as base, type Page } from "@playwright/test";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { type Page, test as base, expect } from "@playwright/test";
 import { createTestDriver } from "./file-upload.driver";
-import fs from "fs";
-import path from "path";
-import os from "os";
 
 /**
  * Test fixtures interface for file upload testing
@@ -15,8 +15,15 @@ type TestFixtures = {
   };
 };
 
+interface ProcessedFile {
+  name: string;
+  type: string;
+  size: number;
+  file?: File;
+}
+
 const test = base.extend<TestFixtures>({
-  testFiles: async ({}, use) => {
+  testFiles: async ({ page: _ }, use) => {
     // Create temporary test directory
     const tmpDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "file-upload-test-"));
 
@@ -195,9 +202,9 @@ test.describe("drag and drop functionality", () => {
     // Ensure dropzone is ready
     await d.getDropzone().waitFor({ state: "attached" });
 
-    let processedFiles: any[] = [];
+    let processedFiles: ProcessedFile[] = [];
     const filesProcessedPromise = new Promise<void>((resolve) => {
-      page.exposeFunction("onFilesChange", (files: any[]) => {
+      page.exposeFunction("onFilesChange", (files: ProcessedFile[]) => {
         processedFiles = files;
         resolve();
       });
@@ -310,11 +317,11 @@ test.describe("file handling", () => {
         THEN it should process the file`, async ({ page, testFiles }) => {
     const d = await setup(page, "basic");
 
-    let processedFiles: any[] = [];
+    let processedFiles: ProcessedFile[] = [];
 
     // Setup file processing callback
     const filesProcessedPromise = new Promise<void>((resolve) => {
-      page.exposeFunction("onFilesChange", (files: any[]) => {
+      page.exposeFunction("onFilesChange", (files: ProcessedFile[]) => {
         processedFiles = files;
         resolve();
       });
@@ -371,11 +378,11 @@ test.describe("file handling", () => {
       THEN it should process all files`, async ({ page, testFiles }) => {
     const d = await setup(page, "multiple");
 
-    let processedFiles: any[] = [];
+    let processedFiles: ProcessedFile[] = [];
 
     // Setup file processing callback
     const filesProcessedPromise = new Promise<void>((resolve) => {
-      page.exposeFunction("onFilesChange", (files: any[]) => {
+      page.exposeFunction("onFilesChange", (files: ProcessedFile[]) => {
         processedFiles = files;
         resolve();
       });
@@ -451,10 +458,10 @@ test.describe("file type filtering", () => {
     const input = d.getInput();
     await expect(input).toHaveAttribute("accept", "image/*");
 
-    let processedFiles: any[] = [];
+    let processedFiles: ProcessedFile[] = [];
 
     // Register file processing callback
-    await page.exposeFunction("onFilesChange", (files: any[]) => {
+    await page.exposeFunction("onFilesChange", (files: ProcessedFile[]) => {
       processedFiles = files;
       console.log("Files processed:", files); // Debug logging
     });

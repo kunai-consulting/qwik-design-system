@@ -61,6 +61,6 @@ export function getPaginationItems(
   };
 
   return generatePaginationRange({ page, totalPages, siblingCount }).map((item) =>
-    item.type === "page" ? item.value! : "..."
+    item.type === "page" && item.value !== undefined ? item.value : "..."
   );
 }
