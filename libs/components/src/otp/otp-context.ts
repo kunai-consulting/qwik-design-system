@@ -10,6 +10,7 @@ export interface OTPContext {
   isDisabledSig: Signal<boolean | undefined>;
   selectionStartSig: Signal<number | null>;
   selectionEndSig: Signal<number | null>;
+  shiftPWManagers: boolean;
 }
 
 export const OTPContextId = createContextId<OTPContext>("OTPContext");

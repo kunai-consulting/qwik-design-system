@@ -1,10 +1,4 @@
-import {
-  type PropsOf,
-  Slot,
-  component$,
-  useSignal,
-  useVisibleTask$
-} from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
 import { Checkbox, Otp } from "@kunai-consulting/qwik";
 import { LuCheck } from "@qwikest/icons/lucide";
 
@@ -25,12 +19,15 @@ export default component$(() => {
         <InformationCircle class="*:stroke-qwik-blue-600" />
         <h2 class="py-4 text-lg font-semibold">Two-step verification</h2>
         <p class="text-sm">
-          A verification code has been sent to your email. Please enter the code below to
-          verify this device.
+          A verification code has been sent to your email. Please enter the code
+          below to verify this device.
         </p>
       </div>
 
-      <Otp.Root class="flex flex-col items-center justify-center" render={<MyDiv />}>
+      <Otp.Root
+        class="flex flex-col items-center justify-center"
+        render={<MyDiv />}
+      >
         <Otp.HiddenInput />
 
         <div class="otp-container flex flex-row justify-center gap-2">
@@ -41,7 +38,9 @@ export default component$(() => {
                 "h-9 w-10 border-2 text-center rounded data-[highlighted]:ring-qwik-blue-800 data-[highlighted]:ring-[3px] caret-blue-600"
               }
             >
-              <Otp.Caret class="text-blue-500 text-xl animate-blink-caret">|</Otp.Caret>
+              <Otp.Caret class="text-blue-500 text-xl animate-blink-caret">
+                |
+              </Otp.Caret>
             </Otp.Item>
           ))}
         </div>

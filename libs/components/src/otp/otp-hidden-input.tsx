@@ -6,7 +6,7 @@ import {
   useContext,
   useOnDocument,
   useSignal,
-  useTask$
+  useTask$,
 } from "@builder.io/qwik";
 import { OTPContextId } from "./otp-context";
 
@@ -24,7 +24,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
   const previousSelection = useSignal({
     inserting: false,
     start: null as number | null,
-    end: null as number | null
+    end: null as number | null,
   });
 
   const syncSelection = $(
@@ -32,7 +32,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       previousSelection.value = {
         inserting,
         start,
-        end
+        end,
       };
 
       if (start === null || end === null) {
@@ -175,7 +175,11 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
     previousValue.value = newValue;
 
     // backspacing and not at last filled position, move back
-    if (isBackspace && position > 0 && position !== previousValue.value.length) {
+    if (
+      isBackspace &&
+      position > 0 &&
+      position !== previousValue.value.length
+    ) {
       const newPos = position - 1;
       context.currIndexSig.value = newPos;
       context.selectionStartSig.value = newPos;
@@ -185,7 +189,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       previousSelection.value = {
         inserting: false,
         start: newPos,
-        end: newPos + 1
+        end: newPos + 1,
       };
     } else {
       context.currIndexSig.value = position;
@@ -196,7 +200,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       previousSelection.value = {
         inserting: false,
         start: position,
-        end: position + 1
+        end: position + 1,
       };
     }
   });
@@ -234,6 +238,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       maxLength={context.numItemsSig.value}
       // The identifier for the hidden input element that handles OTP input
       data-qds-otp-hidden-input
+      data-shift={context.shiftPWManagers ? "" : undefined}
       inputMode="numeric"
       onInput$={[handleInput, props.onInput$]}
       onKeyDown$={[handleKeyDownSync, handleKeyDown, props.onKeyDown$]}
