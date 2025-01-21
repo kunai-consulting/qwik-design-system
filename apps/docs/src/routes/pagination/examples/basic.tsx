@@ -15,8 +15,8 @@ export default component$(() => {
       siblingCount={1}
     >
       <Pagination.Previous class="pagination-previous">Prev</Pagination.Previous>
-      {paginationItems.map((item, index) => (
-        <Pagination.Page class="pagination-page" key={`page-${index}`}>
+      {paginationItems.map((item) => (
+        <Pagination.Page class="pagination-page" key={`page-${item}`}>
           {item}
         </Pagination.Page>
       ))}

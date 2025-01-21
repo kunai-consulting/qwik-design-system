@@ -39,10 +39,10 @@ export function processChildren(children: JSXChildren) {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: required for dynamic component registration
 const componentRegistry = new Map<any, ComponentProcessor>();
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: required for dynamic component registration
 export function findComponent(component: any, processor: ComponentProcessor) {
   componentRegistry.set(component, processor);
 }

@@ -1,29 +1,27 @@
-import { component$, sync$, useOnWindow } from '@builder.io/qwik';
+import { component$, sync$, useOnWindow } from "@builder.io/qwik";
 
 export const ModulePreload = component$(() => {
   useOnWindow(
-    'load',
+    "load",
     sync$(async () => {
       // for safari support
       if (!window.requestIdleCallback) {
-        window.requestIdleCallback = function (
+        window.requestIdleCallback = (
           callback: IdleRequestCallback,
-          options?: IdleRequestOptions,
-        ): number {
+          options?: IdleRequestOptions
+        ): number => {
           const opts = options || {};
           const relaxation = 1;
           const timeout = opts.timeout || relaxation;
           const start = performance.now();
-          return setTimeout(function () {
+          return setTimeout(() => {
             callback({
               get didTimeout() {
                 return opts.timeout
                   ? false
                   : performance.now() - start - relaxation > timeout;
               },
-              timeRemaining: function () {
-                return Math.max(0, relaxation + (performance.now() - start));
-              },
+              timeRemaining: () => Math.max(0, relaxation + (performance.now() - start))
             });
           }, relaxation) as unknown as number;
         };
@@ -33,16 +31,18 @@ export const ModulePreload = component$(() => {
         const qChunks = new Set<string>();
 
         // Check prefetch bundles
-        const prefetchScript = document.querySelector('script[q\\:type="prefetch-bundles"]');
+        const prefetchScript = document.querySelector(
+          'script[q\\:type="prefetch-bundles"]'
+        );
         if (prefetchScript?.textContent) {
           const content = prefetchScript.textContent;
           const match = content.match(/\["prefetch","\/build\/","(.*?)"\]/);
-          if (match && match[1]) {
-            match[1].split('","').forEach((chunk) => {
-              if (chunk.startsWith('q-')) {
+          if (match?.[1]) {
+            for (const chunk of match[1].split('","')) {
+              if (chunk.startsWith("q-")) {
                 qChunks.add(chunk);
               }
-            });
+            }
           }
         }
 
@@ -51,21 +51,23 @@ export const ModulePreload = component$(() => {
         if (qwikJson?.textContent) {
           const matches = qwikJson.textContent.match(/q-[A-Za-z0-9_-]+\.js/g);
           if (matches) {
-            matches.forEach(chunk => qChunks.add(chunk));
+            for (const chunk of matches) {
+              qChunks.add(chunk);
+            }
           }
         }
 
-        qChunks.forEach((chunk) => {
-          const link = document.createElement('link');
-          link.rel = 'modulepreload';
+        for (const chunk of qChunks) {
+          const link = document.createElement("link");
+          link.rel = "modulepreload";
           link.href = `/build/${chunk}`;
-          link.fetchPriority = 'low';
+          link.fetchPriority = "low";
           document.head.appendChild(link);
-        });
+        }
       };
 
       await requestIdleCallback(await startPreloading);
-    }),
+    })
   );
 
   return <></>;

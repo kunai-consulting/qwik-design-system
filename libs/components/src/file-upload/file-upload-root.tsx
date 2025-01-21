@@ -1,12 +1,12 @@
 import {
+  type PropFunction,
+  type PropsOf,
+  Slot,
   component$,
   useContextProvider,
-  useSignal,
-  type PropFunction,
-  Slot,
-  PropsOf
+  useSignal
 } from "@builder.io/qwik";
-import { FileInfo, fileUploadContextId } from "./file-upload-context";
+import { type FileInfo, fileUploadContextId } from "./file-upload-context";
 
 type HTMLDivProps = PropsOf<"div">;
 

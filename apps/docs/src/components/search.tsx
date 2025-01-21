@@ -76,6 +76,13 @@ export const SearchModal = component$(() => {
   );
 });
 
+const SearchExcerpt = component$<{ html: string | undefined }>(({ html }) => {
+  if (!html) return null;
+
+  // biome-ignore lint/security/noDangerouslySetInnerHtml: Required for rendering search result excerpts with highlights
+  return <div class="text-sm text-foreground" dangerouslySetInnerHTML={html} />;
+});
+
 export const Search = component$(() => {
   const results = useSignal<PagefindSearchResult[]>([]);
   const handleInput = $(async (e: InputEvent) => {
@@ -131,10 +138,7 @@ export const Search = component$(() => {
               <Combobox.ItemLabel class="text-lg font-bold text-foreground">
                 {result.meta.title}
               </Combobox.ItemLabel>
-              <div
-                class="text-sm text-foreground"
-                dangerouslySetInnerHTML={result.excerpt}
-              />
+              <SearchExcerpt html={result.excerpt} />
             </Combobox.Item>
           </a>
         ))}

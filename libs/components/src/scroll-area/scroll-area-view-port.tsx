@@ -14,6 +14,7 @@ type ViewPortProps = PropsOf<"div"> & {
 
 export const ScrollAreaViewport = component$<ViewPortProps>((props) => {
   const context = useContext(scrollAreaContextId);
+  const a11yTabIndex = 0;
   const onScroll$ = $((e: Event) => {
     const viewport = e.target as HTMLElement;
     const root = viewport.parentElement;
@@ -27,7 +28,9 @@ export const ScrollAreaViewport = component$<ViewPortProps>((props) => {
     ) as HTMLElement;
 
     if (verticalScrollbar) {
-      const verticalThumb = verticalScrollbar.querySelector("[data-qds-scroll-area-thumb]") as HTMLElement;
+      const verticalThumb = verticalScrollbar.querySelector(
+        "[data-qds-scroll-area-thumb]"
+      ) as HTMLElement;
       if (verticalThumb) {
         const scrollRatio =
           viewport.scrollTop / (viewport.scrollHeight - viewport.clientHeight);
@@ -37,7 +40,9 @@ export const ScrollAreaViewport = component$<ViewPortProps>((props) => {
     }
 
     if (horizontalScrollbar) {
-      const horizontalThumb = horizontalScrollbar.querySelector("[data-qds-scroll-area-thumb]") as HTMLElement;
+      const horizontalThumb = horizontalScrollbar.querySelector(
+        "[data-qds-scroll-area-thumb]"
+      ) as HTMLElement;
       if (horizontalThumb) {
         const scrollRatio =
           viewport.scrollLeft / (viewport.scrollWidth - viewport.clientWidth);
@@ -56,7 +61,7 @@ export const ScrollAreaViewport = component$<ViewPortProps>((props) => {
       data-qds-scroll-area-viewport
       onScroll$={[onScroll$, props.onScroll$]}
       ref={context.viewportRef}
-      tabIndex={0} //don't remove this line; it's needed to avoid a11y issues
+      tabIndex={a11yTabIndex} //don't remove this line; it's needed to avoid a11y issues
       role="region"
       aria-label="Scrollable content"
     >

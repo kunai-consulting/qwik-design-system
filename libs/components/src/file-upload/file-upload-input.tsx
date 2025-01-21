@@ -1,5 +1,5 @@
-import { component$, useContext, $, noSerialize, PropsOf } from "@builder.io/qwik";
-import { FileInfo, fileUploadContextId } from "./file-upload-context";
+import { $, type PropsOf, component$, noSerialize, useContext } from "@builder.io/qwik";
+import { type FileInfo, fileUploadContextId } from "./file-upload-context";
 
 type InputProps = PropsOf<"input">;
 

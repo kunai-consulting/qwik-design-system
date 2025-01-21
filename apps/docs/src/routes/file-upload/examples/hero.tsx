@@ -1,6 +1,6 @@
 import { component$, useStyles$ } from "@builder.io/qwik";
-import styles from "./file-upload.css?inline";
 import { FileUpload } from "@kunai-consulting/qwik";
+import styles from "./file-upload.css?inline";
 
 export default component$(() => {
   useStyles$(styles);
@@ -11,7 +11,7 @@ export default component$(() => {
       accept="image/*" // Accept only image files
       onFilesChange$={(files) => {
         // Process each uploaded file
-        files.forEach((fileInfo) => {
+        for (const fileInfo of files) {
           // Create FormData for potential server upload
           const formData = new FormData();
           if (fileInfo.file) {
@@ -24,7 +24,7 @@ export default component$(() => {
             //   body: formData
             // });
           }
-        });
+        }
       }}
       class="file-upload-root"
     >

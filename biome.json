@@ -1,7 +1,15 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
   "files": {
-    "ignore": [".git", "build", "dist", "node_modules", "server"]
+    "ignore": [
+      ".git",
+      "build",
+      "dist",
+      "node_modules",
+      "server",
+      "apps/docs/public/pagefind",
+      "lib-types"
+    ]
   },
 
   "formatter": {
@@ -63,6 +71,9 @@
         "noMisrefactoredShorthandAssign": "warn",
         "recommended": true,
         "noAssignInExpressions": "off"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "error"
       }
     }
   },
@@ -77,6 +88,16 @@
       "json": {
         "parser": {
           "allowComments": true
+        }
+      }
+    },
+    {
+      "include": ["apps/docs/src/root.tsx"],
+      "linter": {
+        "rules": {
+          "security": {
+            "noDangerouslySetInnerHtml": "off"
+          }
         }
       }
     }

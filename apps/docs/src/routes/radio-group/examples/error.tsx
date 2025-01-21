@@ -1,6 +1,6 @@
-import { component$, useStyles$, useSignal, $ } from '@builder.io/qwik';
-import { RadioGroup } from '@kunai-consulting/qwik';
-import { LuCircle } from '@qwikest/icons/lucide';
+import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
+import { RadioGroup } from "@kunai-consulting/qwik";
+import { LuCircle } from "@qwikest/icons/lucide";
 
 export default component$(() => {
   useStyles$(styles);
@@ -12,13 +12,10 @@ export default component$(() => {
         <RadioGroup.Label class="radio-group-label">Items</RadioGroup.Label>
         {items.map((item, index) => (
           <RadioGroup.Item class="radio-group-item" key={item} value={item}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <RadioGroup.Label>{item}</RadioGroup.Label>
               <RadioGroup.Trigger class="radio-group-trigger" value={item}>
-                <RadioGroup.Indicator
-                  class="radio-group-indicator"
-                  value={item}
-                >
+                <RadioGroup.Indicator class="radio-group-indicator" value={item}>
                   <LuCircle />
                 </RadioGroup.Indicator>
               </RadioGroup.Trigger>
@@ -34,4 +31,4 @@ export default component$(() => {
 });
 
 //  styles
-import styles from './radio-group.css?inline';
+import styles from "./radio-group.css?inline";

@@ -9,15 +9,12 @@ import {
   useContextProvider,
   useId,
   useSignal,
-  useTask$,
-} from '@builder.io/qwik';
-import {
-  type RadioGroupContext,
-  radioGroupContextId,
-} from './radio-group-context';
+  useTask$
+} from "@builder.io/qwik";
+import { type RadioGroupContext, radioGroupContextId } from "./radio-group-context";
 
 export type RadioGroupRootProps = {
-  'bind:value'?: Signal<boolean>;
+  "bind:value"?: Signal<boolean>;
   onChange$?: QRL<(checked: string) => void>;
   defaultValue?: string;
   disabled?: boolean;
@@ -29,7 +26,7 @@ export type RadioGroupRootProps = {
 
 export const RadioGroupRoot = component$((props: RadioGroupRootProps) => {
   const {
-    'bind:value': givenCheckedSig,
+    "bind:value": givenCheckedSig,
     onClick$,
     onChange$,
     isDescription,
@@ -55,7 +52,7 @@ export const RadioGroupRoot = component$((props: RadioGroupRootProps) => {
     required,
     value,
     isErrorSig,
-    triggerRef,
+    triggerRef
   };
 
   useContextProvider(radioGroupContextId, context);
@@ -86,11 +83,9 @@ export const RadioGroupRoot = component$((props: RadioGroupRootProps) => {
       {...rest}
       role="radiogroup"
       data-qds-radio-group-root
-      data-disabled={context.isDisabledSig.value ? '' : undefined}
-      aria-disabled={context.isDisabledSig.value ? 'true' : 'false'}
-      data-checked={
-        context.selectedValueSig.value === props.value ? 'true' : 'false'
-      }
+      data-disabled={context.isDisabledSig.value ? "" : undefined}
+      aria-disabled={context.isDisabledSig.value ? "true" : "false"}
+      data-checked={context.selectedValueSig.value === props.value ? "true" : "false"}
     >
       <Slot />
     </div>

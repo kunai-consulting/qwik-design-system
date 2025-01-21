@@ -13,12 +13,12 @@ import {
   useVisibleTask$
 } from "@builder.io/qwik";
 
-import { ARIA_LABELS, MONTHS_LG, WEEKDAYS } from "./constants";
+import { useBoundSignal } from "../../utils/bound-signal";
 import type { CalendarContext } from "./calendar-context";
 import { calendarContextId } from "./calendar-context";
+import { ARIA_LABELS, MONTHS_LG, WEEKDAYS } from "./constants";
 import type { LocalDate, Locale, Month } from "./types";
 import { daysArrGenerator } from "./utils";
-import { useBoundSignal } from "../../utils/bound-signal";
 
 export type CalendarRootProps = PropsOf<"div"> & {
   locale?: Locale;
@@ -28,8 +28,8 @@ export type CalendarRootProps = PropsOf<"div"> & {
   date?: LocalDate;
   showDaysOfWeek?: boolean;
   onDateChange$?: QRL<(date: LocalDate) => void>;
-  'bind:open'?: Signal<boolean>;
-}
+  "bind:open"?: Signal<boolean>;
+};
 
 const regex = /^\d{4}-(0[1-9]|1[0-2])-\d{2}$/;
 
@@ -48,7 +48,8 @@ export const CalendarRoot = component$<CalendarRootProps>(
     const daysOfWeek = WEEKDAYS[locale];
     const isPopoverOpenSig = useBoundSignal(givenOpenSig, false);
     const date = new Date();
-    const currentDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}` as LocalDate;
+    const currentDate =
+      `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}` as LocalDate;
     const defaultDate = props.defaultDate ?? currentDate;
     const activeDate = useSignal<LocalDate | null>(null);
     const monthToRender = useSignal<Month>(defaultDate.split("-")[1] as Month);

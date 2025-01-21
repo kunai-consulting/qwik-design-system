@@ -1,4 +1,4 @@
-import { component$, useContext, $, Slot, PropsOf } from "@builder.io/qwik";
+import { $, type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
 import { fileUploadContextId } from "./file-upload-context";
 
 type TriggerProps = PropsOf<"button">;

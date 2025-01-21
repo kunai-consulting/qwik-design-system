@@ -1,6 +1,6 @@
 import { type PropsOf, component$, useContext } from "@builder.io/qwik";
-import { MONTHS_LG } from "./constants";
 import { calendarContextId } from "./calendar-context";
+import { MONTHS_LG } from "./constants";
 
 export const CalendarTitle = component$((props: PropsOf<"div">) => {
   const context = useContext(calendarContextId);

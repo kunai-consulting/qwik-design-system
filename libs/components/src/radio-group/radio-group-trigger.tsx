@@ -1,18 +1,18 @@
 import {
   $,
-  component$,
   type PropsOf,
   Slot,
+  component$,
   useComputed$,
   useContext,
   useStyles$,
-  useTask$,
-} from '@builder.io/qwik';
-import { radioGroupContextId } from './radio-group-context';
-import './radio-group.css';
-import styles from './radio-group.css?inline';
+  useTask$
+} from "@builder.io/qwik";
+import { radioGroupContextId } from "./radio-group-context";
+import "./radio-group.css";
+import styles from "./radio-group.css?inline";
 
-type RadioGroupControlProps = PropsOf<'button'> & {
+type RadioGroupControlProps = PropsOf<"button"> & {
   value: string;
   _index?: number;
 };
@@ -62,7 +62,7 @@ export const RadioGroupTrigger = component$((props: RadioGroupControlProps) => {
       aria-checked={context.selectedValueSig.value === value}
       aria-describedby={describedByLabels ? describedByLabels.value : undefined}
       aria-invalid={context.isErrorSig.value}
-      data-disabled={context.isDisabledSig.value ? '' : undefined}
+      data-disabled={context.isDisabledSig.value ? "" : undefined}
       onClick$={[handleClick$, props.onClick$]}
       data-checked={context.selectedValueSig.value === value}
       data-qds-radio-group-trigger
