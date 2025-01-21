@@ -14,12 +14,14 @@ type RootProps = PropsOf<"div">;
 export const ScrollAreaRoot = component$<RootProps>((props) => {
   useStyles$(styles);
   const viewportRef = useSignal<HTMLDivElement>();
-  const scrollbarRef = useSignal<HTMLDivElement>();
+  const verticalScrollbarRef = useSignal<HTMLDivElement>();
+  const horizontalScrollbarRef = useSignal<HTMLDivElement>();
   const thumbRef = useSignal<HTMLDivElement>();
 
   const context = {
     viewportRef,
-    scrollbarRef,
+    verticalScrollbarRef,
+    horizontalScrollbarRef,
     thumbRef
   };
 
