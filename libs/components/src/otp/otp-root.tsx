@@ -9,7 +9,7 @@ import {
   useContextProvider,
   useSignal,
   useStyles$,
-  useTask$
+  useTask$,
 } from "@builder.io/qwik";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { findComponent, processChildren } from "../../utils/inline-component";
@@ -33,6 +33,8 @@ type PublicOtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   value?: string;
   /** Whether the OTP input is disabled */
   disabled?: boolean;
+  /** Whether password manager popups should shift to the right of the OTP. By default enabled */
+  shiftPWManagers?: boolean;
 } & RenderProps;
 
 /** Here's a comment for you! */
@@ -65,12 +67,16 @@ export const OtpBase = component$((props: PublicOtpRootProps) => {
     onComplete$,
     render: Comp,
     disabled = false,
+    shiftPWManagers = true,
     ...rest
   } = props;
 
   useStyles$(styles);
 
-  const inputValueSig = useBoundSignal<string>(givenValueSig, props.value || "");
+  const inputValueSig = useBoundSignal<string>(
+    givenValueSig,
+    props.value || ""
+  );
   const currIndexSig = useSignal(0);
   const nativeInputRef = useSignal<HTMLInputElement>();
   const numItemsSig = useComputed$(() => props._numItems || 0);
@@ -93,7 +99,8 @@ export const OtpBase = component$((props: PublicOtpRootProps) => {
     isFocusedSig,
     isDisabledSig,
     selectionStartSig,
-    selectionEndSig
+    selectionEndSig,
+    shiftPWManagers,
   };
 
   useTask$(async function handleChange({ track }) {
