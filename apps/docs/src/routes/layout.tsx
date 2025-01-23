@@ -11,6 +11,7 @@ import {
   type RequestHandler,
   useContent
 } from "@builder.io/qwik-city";
+import { ScrollArea } from "@kunai-consulting/qwik";
 import { SearchModal } from "~/components/search";
 import { Header } from "~/docs-widgets/header/header";
 import { Sidebar } from "~/docs-widgets/sidebar/sidebar";
@@ -53,9 +54,14 @@ export default component$(() => {
           <Slot />
         </main>
         <aside class="hidden w-60 xl:block">
-          <div class="fixed h-[calc(100vh-64px)] w-full  overflow-auto">
-            <TOC headings={headings || []} />
-          </div>
+          <ScrollArea.Root class="fixed h-[calc(100vh-240px)] w-60 overflow-hidden">
+            <ScrollArea.Viewport class="w-full h-full">
+              <TOC headings={headings || []} />
+            </ScrollArea.Viewport>
+            <ScrollArea.Scrollbar orientation="vertical" class="w-4 p-0.5 bg-[#FFFFFF1F] rounded-full">
+              <ScrollArea.Thumb class="h-12 w-3 bg-[#FFFFFF66] rounded-full transition-[background] duration-160 ease-out hover:bg-[#FFFFFF80]" />
+            </ScrollArea.Scrollbar>
+          </ScrollArea.Root>
         </aside>
       </div>
     </MDXProvider>
