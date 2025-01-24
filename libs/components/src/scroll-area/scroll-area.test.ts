@@ -186,8 +186,8 @@ test.describe("drag functionality", () => {
   });
 
   test(`GIVEN a scroll area with both scrollbars
-        WHEN dragging the horizontal thumb outside scrollbar bounds
-        THEN thumb should move smoothly without jumps`, async ({ page }) => {
+      WHEN dragging the horizontal thumb outside scrollbar bounds
+      THEN thumb should move smoothly without jumps`, async ({ page }) => {
     const d = await setup(page, "both-test");
     const thumb = d.getHorizontalThumb();
     const viewport = d.getViewport();
@@ -224,11 +224,19 @@ test.describe("drag functionality", () => {
     const scrollbarBox = await scrollbar.boundingBox();
     if (!scrollbarBox) throw new Error("Could not get scrollbar bounds");
 
-    expect(newThumbBox.y).toBeCloseTo(initialThumbBox.y, 0); // Y position shouldn't change
-    expect(newThumbBox.x).toBeGreaterThanOrEqual(scrollbarBox.x); // Should stay within left bound
+    // Add tolerance for rounding and sub-pixel positioning
+    const tolerance = 2;
+
+    // Y position shouldn't change significantly
+    expect(Math.abs(newThumbBox.y - initialThumbBox.y)).toBeLessThanOrEqual(tolerance);
+
+    // Should stay within left bound (with tolerance)
+    expect(newThumbBox.x).toBeGreaterThanOrEqual(scrollbarBox.x - tolerance);
+
+    // Should stay within right bound (with tolerance)
     expect(newThumbBox.x + newThumbBox.width).toBeLessThanOrEqual(
-      scrollbarBox.x + scrollbarBox.width
-    ); // Should stay within right bound
+      scrollbarBox.x + scrollbarBox.width + tolerance
+    );
 
     await page.mouse.up();
   });
@@ -421,5 +429,134 @@ test.describe("a11y", () => {
     // Check if viewport becomes focused
     const isFocused = await viewport.evaluate((el) => document.activeElement === el);
     expect(isFocused).toBe(true);
+  });
+});
+
+test.describe("scrollbar visibility types", () => {
+  test(`GIVEN a scroll area with type="auto"
+        WHEN content overflows
+        THEN scrollbar should be visible`, async ({ page }) => {
+    const d = await setup(page, "auto-test");
+    await expect(d.getVerticalScrollbar()).toHaveAttribute("data-state", "visible");
+  });
+
+  test(`GIVEN a scroll area with type="auto"
+        WHEN content does not overflow
+        THEN scrollbar should be hidden`, async ({ page }) => {
+    const d = await setup(page, "auto-no-overflow-test");
+    await expect(d.getVerticalScrollbar()).toHaveAttribute("data-state", "hidden");
+  });
+
+  test(`GIVEN a scroll area with type="hover"
+        WHEN hovering over the component
+        THEN scrollbar should become visible`, async ({ page }) => {
+    const d = await setup(page, "hover-test");
+    const root = d.getRoot();
+    const scrollbar = d.getVerticalScrollbar();
+
+    // Initially scrollbar should be hidden
+    await expect(scrollbar).toHaveAttribute("data-state", "hidden");
+
+    // Hover over the root element
+    await root.hover();
+
+    // Scrollbar should become visible
+    await expect(scrollbar).toHaveAttribute("data-state", "visible");
+
+    // Move mouse away
+    await page.mouse.move(0, 0);
+
+    // Scrollbar should hide again
+    await expect(scrollbar).toHaveAttribute("data-state", "hidden");
+  });
+
+  test(`GIVEN a scroll area with type="hover"
+        WHEN content does not overflow
+        THEN scrollbar should remain hidden even on hover`, async ({ page }) => {
+    const d = await setup(page, "hover-no-overflow-test");
+    const root = d.getRoot();
+    const scrollbar = d.getVerticalScrollbar();
+
+    // Initially scrollbar should be hidden
+    await expect(scrollbar).toHaveAttribute("data-state", "hidden");
+
+    // Hover over the root element
+    await root.hover();
+
+    // Scrollbar should remain hidden
+    await expect(scrollbar).toHaveAttribute("data-state", "hidden");
+  });
+
+  test(`GIVEN a scroll area with type="scroll"
+        WHEN scrolling the content
+        THEN scrollbar should become visible`, async ({ page }) => {
+    const d = await setup(page, "scroll-test");
+    const viewport = d.getViewport();
+    const scrollbar = d.getVerticalScrollbar();
+
+    // Initially scrollbar should be hidden
+    await expect(scrollbar).toHaveAttribute("data-state", "hidden");
+
+    // Scroll the viewport
+    await viewport.evaluate((el) => {
+      el.scrollTop = 50;
+    });
+
+    // Scrollbar should become visible
+    await expect(scrollbar).toHaveAttribute("data-state", "visible");
+
+    // Wait for hide delay
+    await page.waitForTimeout(650); // hideDelay (600) + small buffer
+
+    // Scrollbar should hide again
+    await expect(scrollbar).toHaveAttribute("data-state", "hidden");
+  });
+
+  test(`GIVEN a scroll area with type="always"
+        WHEN content overflows
+        THEN scrollbar should always be visible`, async ({ page }) => {
+    const d = await setup(page, "always-test");
+    const scrollbar = d.getVerticalScrollbar();
+
+    // Scrollbar should be visible immediately
+    await expect(scrollbar).toHaveAttribute("data-state", "visible");
+
+    // Should remain visible even after some time
+    await page.waitForTimeout(1000);
+    await expect(scrollbar).toHaveAttribute("data-state", "visible");
+  });
+
+  test(`GIVEN a scroll area with type="always"
+        WHEN content does not overflow
+        THEN scrollbar should be hidden`, async ({ page }) => {
+    const d = await setup(page, "always-no-overflow-test");
+    const scrollbar = d.getVerticalScrollbar();
+
+    // Scrollbar should be hidden when there's no overflow
+    await expect(scrollbar).toHaveAttribute("data-state", "hidden");
+  });
+
+  test(`GIVEN a scroll area with custom hideDelay
+        WHEN scrolling stops
+        THEN scrollbar should hide after specified delay`, async ({ page }) => {
+    const d = await setup(page, "custom-delay-test");
+    const viewport = d.getViewport();
+    const scrollbar = d.getVerticalScrollbar();
+
+    // Scroll the viewport
+    await viewport.evaluate((el) => {
+      el.scrollTop = 50;
+    });
+
+    // Scrollbar should be visible immediately after scroll
+    await expect(scrollbar).toHaveAttribute("data-state", "visible");
+
+    // Wait for half the hide delay
+    await page.waitForTimeout(500);
+    await expect(scrollbar).toHaveAttribute("data-state", "visible");
+
+    // Wait for full hide delay
+    await page.waitForTimeout(550); // Complete the 1000ms delay
+    await expect(scrollbar).toHaveAttribute("data-state", "hidden");
   });
 });

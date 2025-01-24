@@ -58,7 +58,10 @@ export default component$(() => {
             <ScrollArea.Viewport class="w-full h-full">
               <TOC headings={headings || []} />
             </ScrollArea.Viewport>
-            <ScrollArea.Scrollbar orientation="vertical" class="w-4 p-0.5 bg-[#FFFFFF1F] rounded-full">
+            <ScrollArea.Scrollbar
+              orientation="vertical"
+              class="w-4 p-0.5 bg-[#FFFFFF1F] rounded-full"
+            >
               <ScrollArea.Thumb class="h-12 w-3 bg-[#FFFFFF66] rounded-full transition-[background] duration-160 ease-out hover:bg-[#FFFFFF80]" />
             </ScrollArea.Scrollbar>
           </ScrollArea.Root>

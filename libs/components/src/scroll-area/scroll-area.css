@@ -40,9 +40,11 @@
         position: relative;
     }
 
-    [data-qds-scroll-area-root]:hover [data-qds-scroll-area-scrollbar] {
+    [data-qds-scroll-area-scrollbar][data-state="visible"] {
         opacity: 1;
-        transition-duration: 0.2s;
-        transition-delay: 0s;
+    }
+
+    [data-qds-scroll-area-root][data-has-overflow] [data-qds-scroll-area-scrollbar][data-state="visible"] {
+        opacity: 1;
     }
 }
