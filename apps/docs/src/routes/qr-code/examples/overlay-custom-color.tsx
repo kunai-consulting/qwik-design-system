@@ -10,6 +10,8 @@ export default component$(() => {
       level="H"
       margin={4}
       aria-label="Scan this QR code to visit our website"
+      background="yellow"
+      foreground="black"
     >
       <QRCode.Overlay
         image={qwikLogo}

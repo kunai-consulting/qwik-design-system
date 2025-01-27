@@ -13,6 +13,8 @@ type RootProps = PropsOf<"div"> & {
   level?: "L" | "M" | "Q" | "H";
   margin?: number;
   "aria-label"?: string;
+  background?: string;
+  foreground?: string;
 };
 
 export const QRCodeRoot = component$<RootProps>((props) => {
@@ -21,13 +23,17 @@ export const QRCodeRoot = component$<RootProps>((props) => {
   const level = useSignal(props.level || "L");
   const margin = useSignal(props.margin || 4);
   const overlay = useSignal<{ image: string; size?: number } | undefined>(undefined);
+  const background = useSignal(props.background || "white");
+  const foreground = useSignal(props.foreground || "black");
 
   const context = {
     value,
     size,
     level,
     margin,
-    overlay
+    overlay,
+    background,
+    foreground
   };
 
   useContextProvider(qrCodeContextId, context);

@@ -11,6 +11,8 @@ export interface QRCodeContext {
   level: Signal<"L" | "M" | "Q" | "H">;
   margin: Signal<number>;
   overlay: Signal<QRCodeOverlay | undefined>;
+  background: Signal<string>;
+  foreground: Signal<string>;
 }
 
 export const qrCodeContextId = createContextId<QRCodeContext>("qr-code-context");

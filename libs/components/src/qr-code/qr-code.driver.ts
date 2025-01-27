@@ -6,39 +6,34 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator("[data-qds-qr-code-root]");
   };
 
-  const getCanvas = () => {
-    return rootLocator.locator("[data-qds-qr-container] canvas").first();
+  const getSvg = () => {
+    return rootLocator.locator("[data-qds-qr-container]").first();
+  };
+
+  const getBackgroundRect = () => {
+    return rootLocator.locator("[data-qds-qr-container] rect").first();
+  };
+
+  const getQRCodeRects = () => {
+    return rootLocator.locator("[data-qds-qr-container] g rect");
   };
 
   const getOverlay = () => {
-    return rootLocator.locator("[data-qds-qr-overlay]").first();
+    return rootLocator.locator("[data-qds-qr-container] image").first();
   };
 
-  const getAllCanvases = () => {
-    return rootLocator.locator("[data-qds-qr-container] canvas");
-  };
-
-  const getCanvasPixelColor = async (x: number, y: number) => {
-    const canvas = getCanvas();
-    return await canvas.evaluate(
-      (el, coordinates) => {
-        const canvas = el as HTMLCanvasElement;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return null;
-        const pixel = ctx.getImageData(coordinates.x, coordinates.y, 1, 1).data;
-        return `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
-      },
-      { x, y }
-    );
+  const getAllSvgs = () => {
+    return rootLocator.locator("[data-qds-qr-container]");
   };
 
   return {
     ...rootLocator,
     locator: rootLocator,
     getRoot,
-    getCanvas,
+    getSvg,
+    getBackgroundRect,
+    getQRCodeRects,
     getOverlay,
-    getAllCanvases,
-    getCanvasPixelColor
+    getAllSvgs
   };
 }
