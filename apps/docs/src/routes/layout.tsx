@@ -54,7 +54,7 @@ export default component$(() => {
           <Slot />
         </main>
         <aside class="hidden w-60 xl:block">
-          <ScrollArea.Root class="fixed h-[calc(100vh-240px)] w-60 overflow-hidden">
+          <ScrollArea.Root class="fixed h-[calc(100vh-160px)] w-60 overflow-hidden">
             <ScrollArea.Viewport class="w-full h-full">
               <TOC headings={headings || []} />
             </ScrollArea.Viewport>

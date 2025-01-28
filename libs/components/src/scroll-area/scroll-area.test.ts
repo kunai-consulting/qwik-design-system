@@ -559,4 +559,57 @@ test.describe("scrollbar visibility types", () => {
     await page.waitForTimeout(550); // Complete the 1000ms delay
     await expect(scrollbar).toHaveAttribute("data-state", "hidden");
   });
+
+  test(`GIVEN a scroll area
+      WHEN page zoom changes
+      THEN overflow state should update accordingly`, async ({ page }) => {
+    const d = await setup(page, "auto-test");
+    const scrollbar = d.getVerticalScrollbar();
+
+    // Initial state - should have overflow
+    await expect(scrollbar).toHaveAttribute('data-state', 'visible');
+
+    // Simulate zoom out by increasing viewport size
+    await page.evaluate(() => {
+      const viewport = document.querySelector('[data-qds-scroll-area-viewport]') as HTMLElement;
+      const root = document.querySelector('[data-qds-scroll-area-root]') as HTMLElement;
+      if (viewport && root) {
+        console.log('Before resize:', {
+          viewportHeight: viewport.clientHeight,
+          viewportScrollHeight: viewport.scrollHeight,
+          hasOverflow: viewport.scrollHeight > viewport.clientHeight
+        });
+
+        root.style.height = '500px';
+        root.style.width = '500px';
+
+        const resizeEvent = new Event('resize');
+        window.dispatchEvent(resizeEvent);
+      }
+    });
+
+    // Wait for any animations/transitions
+    await page.waitForTimeout(100);
+
+    // After increasing size, content should not overflow anymore
+    await expect(scrollbar).toHaveAttribute('data-state', 'hidden');
+
+    // Reset sizes
+    await page.evaluate(() => {
+      const viewport = document.querySelector('[data-qds-scroll-area-viewport]') as HTMLElement;
+      const root = document.querySelector('[data-qds-scroll-area-root]') as HTMLElement;
+      if (viewport && root) {
+        root.style.height = '150px';
+        root.style.width = '250px';
+        const resizeEvent = new Event('resize');
+        window.dispatchEvent(resizeEvent);
+      }
+    });
+
+    // Wait for any animations/transitions
+    await page.waitForTimeout(100);
+
+    // Should return to visible state
+    await expect(scrollbar).toHaveAttribute('data-state', 'visible');
+  });
 });

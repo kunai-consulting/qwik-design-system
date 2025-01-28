@@ -7,6 +7,7 @@ export interface ScrollAreaContext {
   viewportRef: Signal<HTMLDivElement | undefined>;
   verticalScrollbarRef: Signal<HTMLDivElement | undefined>;
   horizontalScrollbarRef: Signal<HTMLDivElement | undefined>;
+  rootRef: Signal<HTMLDivElement | undefined>;
   type: ScrollbarVisibility;
   hideDelay: number;
   isScrolling: Signal<boolean>;

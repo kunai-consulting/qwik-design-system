@@ -82,10 +82,56 @@ export const ScrollAreaViewport = component$<ViewPortProps>((props) => {
     $((e) => {
       const viewport = context.viewportRef.value;
       if (viewport) {
-        updateOverflow(viewport);
+        setTimeout(() => {
+          updateOverflow(viewport);
+        }, 0);
       }
     })
   );
+
+  useOnDocument('DOMContentLoaded', $(() => {
+    const viewport = context.viewportRef.value;
+    const root = context.rootRef.value;
+
+    if (viewport && root) {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+            setTimeout(() => {
+              updateOverflow(viewport);
+            }, 0);
+          }
+        });
+      });
+
+      observer.observe(viewport, { attributes: true, attributeFilter: ['style'] });
+      observer.observe(root, { attributes: true, attributeFilter: ['style'] });
+
+      return () => observer.disconnect();
+    }
+  }));
+
+  useOnDocument('wheel', $((e: WheelEvent) => {
+    if (e.ctrlKey || e.metaKey) {
+      const viewport = context.viewportRef.value;
+      if (viewport) {
+        setTimeout(() => {
+          updateOverflow(viewport);
+        }, 0);
+      }
+    }
+  }));
+
+  useOnDocument('keydown', $((e: KeyboardEvent) => {
+    if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.key === '0')) {
+      const viewport = context.viewportRef.value;
+      if (viewport) {
+        setTimeout(() => {
+          updateOverflow(viewport);
+        }, 0);
+      }
+    }
+  }));
 
   return (
     <div

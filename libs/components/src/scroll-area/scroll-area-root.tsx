@@ -22,6 +22,7 @@ export const ScrollAreaRoot = component$<RootProps>((props) => {
   const viewportRef = useSignal<HTMLDivElement>();
   const verticalScrollbarRef = useSignal<HTMLDivElement>();
   const horizontalScrollbarRef = useSignal<HTMLDivElement>();
+  const rootRef = useSignal<HTMLDivElement>();
   const thumbRef = useSignal<HTMLDivElement>();
   const isScrolling = useSignal(false);
   const isHovering = useSignal(false);
@@ -47,6 +48,7 @@ export const ScrollAreaRoot = component$<RootProps>((props) => {
     verticalScrollbarRef,
     horizontalScrollbarRef,
     thumbRef,
+    rootRef,
     type,
     hideDelay,
     isScrolling,
@@ -60,6 +62,7 @@ export const ScrollAreaRoot = component$<RootProps>((props) => {
   return (
     <div
       {...restProps}
+      ref={rootRef}
       data-qds-scroll-area-root
       data-type={type}
       data-has-overflow={hasOverflow.value ? "" : undefined}
