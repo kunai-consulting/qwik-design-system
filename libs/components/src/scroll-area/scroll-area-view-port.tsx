@@ -5,7 +5,8 @@ import {
   Slot,
   component$,
   useContext,
-  useOnDocument
+  useOnDocument,
+  sync$
 } from "@builder.io/qwik";
 import { scrollAreaContextId } from "./scroll-area-context";
 
@@ -68,7 +69,7 @@ export const ScrollAreaViewport = component$<ViewPortProps>((props) => {
   });
 
   useOnDocument(
-    "load",
+    "resize",
     $((e) => {
       const viewport = context.viewportRef.value;
       if (viewport) {
@@ -77,58 +78,23 @@ export const ScrollAreaViewport = component$<ViewPortProps>((props) => {
     })
   );
 
-  useOnDocument(
-    "resize",
-    $((e) => {
-      const viewport = context.viewportRef.value;
-      if (viewport) {
-        setTimeout(() => {
-          updateOverflow(viewport);
-        }, 0);
-      }
-    })
-  );
-
-  useOnDocument('DOMContentLoaded', $(() => {
-    const viewport = context.viewportRef.value;
-    const root = context.rootRef.value;
-
-    if (viewport && root) {
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-            setTimeout(() => {
-              updateOverflow(viewport);
-            }, 0);
-          }
-        });
-      });
-
-      observer.observe(viewport, { attributes: true, attributeFilter: ['style'] });
-      observer.observe(root, { attributes: true, attributeFilter: ['style'] });
-
-      return () => observer.disconnect();
-    }
-  }));
-
   useOnDocument('wheel', $((e: WheelEvent) => {
     if (e.ctrlKey || e.metaKey) {
       const viewport = context.viewportRef.value;
       if (viewport) {
-        setTimeout(() => {
-          updateOverflow(viewport);
-        }, 0);
+        updateOverflow(viewport);
       }
     }
   }));
 
   useOnDocument('keydown', $((e: KeyboardEvent) => {
-    if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.key === '0')) {
+    if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '=' || e.key === '-' || e.key === '0')) {
       const viewport = context.viewportRef.value;
       if (viewport) {
+        const overflowEvent = new CustomEvent("qdsoverflowcheck");
         setTimeout(() => {
-          updateOverflow(viewport);
-        }, 0);
+          viewport.dispatchEvent(overflowEvent);
+        }, 50);
       }
     }
   }));
@@ -138,13 +104,26 @@ export const ScrollAreaViewport = component$<ViewPortProps>((props) => {
       {...props}
       data-qds-scroll-area-viewport
       onScroll$={[onScroll$, props.onScroll$]}
+      onQdsoverflowcheck$={$(() => {
+        const viewport = context.viewportRef.value;
+        if (viewport) {
+          updateOverflow(viewport);
+        }
+      })}
+      window:onLoad$={(context.type !== 'scroll') ? sync$(() => {
+      const viewport = document.querySelector('[data-qds-scroll-area-viewport]');
+      if (viewport) {
+        const event = new CustomEvent("qdsoverflowcheck");
+        viewport.dispatchEvent(event);
+      }
+    }) : undefined}
       ref={(el) => {
         context.viewportRef.value = el;
         if (el) {
           updateOverflow(el);
         }
       }}
-      tabIndex={a11yTabIndex} //don't remove this line; it's needed to avoid a11y issues
+      tabIndex={a11yTabIndex}
       role="region"
       aria-label="Scrollable content"
     >

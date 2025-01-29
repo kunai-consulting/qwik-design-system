@@ -585,6 +585,8 @@ test.describe("scrollbar visibility types", () => {
 
         const resizeEvent = new Event('resize');
         window.dispatchEvent(resizeEvent);
+        const overflowEvent = new CustomEvent("qdsoverflowcheck");
+        viewport.dispatchEvent(overflowEvent);
       }
     });
 
@@ -603,6 +605,8 @@ test.describe("scrollbar visibility types", () => {
         root.style.width = '250px';
         const resizeEvent = new Event('resize');
         window.dispatchEvent(resizeEvent);
+        const overflowEvent = new CustomEvent("qdsoverflowcheck");
+        viewport.dispatchEvent(overflowEvent);
       }
     });
 
