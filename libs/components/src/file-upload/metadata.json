@@ -1,0 +1,30 @@
+{
+  "keyboard": [
+    {
+      "key": "Space",
+      "comment": "When focus is on the trigger button, opens the native file selection dialog"
+    },
+    {
+      "key": "Enter",
+      "comment": "When focus is on the trigger button, opens the native file selection dialog"
+    },
+    {
+      "key": "Tab",
+      "comment": "Moves focus to and from the trigger button following the normal tab order"
+    }
+  ],
+  "features": [
+    "Drag and drop file upload support",
+    "Multiple file selection option",
+    "File type filtering and validation",
+    "Visual drag state indicators",
+    "Custom trigger button for file selection",
+    "Progressive file processing",
+    "Native file dialog integration",
+    "Disabled state handling",
+    "File change notifications",
+    "Cross-browser drag and drop compatibility",
+    "Prevents default browser file handling",
+    "Custom drop zone styling"
+  ]
+}

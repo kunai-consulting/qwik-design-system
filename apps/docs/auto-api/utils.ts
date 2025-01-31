@@ -242,50 +242,149 @@ export function parseSingleComponentFromDir(
 
 export function transformPublicTypes(
   sourceFile: ts.SourceFile,
-  publicTypes: Array<{ targetLine: string }>
+  publicTypes: Array<{ targetLine: string; dependencies?: string[] }>
 ) {
   const transformer = (
     context: ts.TransformationContext
   ): ts.Transformer<ts.SourceFile> => {
     return (rootNode: ts.SourceFile) => {
+      const typesToMakePublic = new Set<string>();
+      const typeMapping = new Map<string, string>();
+      const internalTypes = new Set<string>();
+
+      function isInternalType(
+        node: ts.InterfaceDeclaration | ts.TypeAliasDeclaration
+      ): boolean {
+        const isContext = node
+          .getSourceFile()
+          .text.includes(`createContextId<${node.name.getText()}>`);
+        if (isContext) {
+          return true;
+        }
+
+        if (ts.isInterfaceDeclaration(node)) {
+          const hasPrivateMembers = node.members.some((member) => {
+            if (ts.isPropertySignature(member) || ts.isMethodSignature(member)) {
+              const memberName = member.name.getText();
+              return memberName.startsWith("_");
+            }
+            return false;
+          });
+          if (hasPrivateMembers) {
+            return true;
+          }
+        }
+
+        let isUsedInProps = false;
+        let isUsedInternally = false;
+
+        function checkUsage(n: ts.Node) {
+          if (ts.isTypeReferenceNode(n)) {
+            const typeName = n.typeName.getText();
+            if (typeName === node.name.getText()) {
+              let current: ts.Node | undefined = n.parent;
+              while (current) {
+                if (
+                  ts.isParameter(current) &&
+                  current.parent &&
+                  ts.isFunctionDeclaration(current.parent)
+                ) {
+                  isUsedInternally = true;
+                  break;
+                }
+                if (
+                  ts.isPropertySignature(current) &&
+                  current.parent &&
+                  current.parent.parent &&
+                  ts.isInterfaceDeclaration(current.parent.parent) &&
+                  current.parent.parent.name.getText().includes("Props")
+                ) {
+                  isUsedInProps = true;
+                  break;
+                }
+                current = current.parent;
+              }
+            }
+          }
+          ts.forEachChild(n, checkUsage);
+        }
+
+        ts.forEachChild(sourceFile, checkUsage);
+        return !isUsedInProps && isUsedInternally;
+      }
+
+      function collectTypes(node: ts.Node) {
+        if (ts.isTypeAliasDeclaration(node) || ts.isInterfaceDeclaration(node)) {
+          const typeName = node.name.getText();
+          if (!typeName.startsWith("Public")) {
+            if (isInternalType(node)) {
+              internalTypes.add(typeName);
+            } else if (publicTypes.some((t) => t.targetLine.includes(typeName))) {
+              typesToMakePublic.add(typeName);
+              typeMapping.set(typeName, `Public${typeName}`);
+            }
+          }
+        }
+        ts.forEachChild(node, collectTypes);
+      }
+
+      collectTypes(rootNode);
+
       function visit(node: ts.Node): ts.Node {
         if (ts.isTypeAliasDeclaration(node) || ts.isInterfaceDeclaration(node)) {
-          // Skip if the type already has Public prefix
-          if (node.name.text.startsWith("Public")) {
+          const typeName = node.name.getText();
+          if (typeName.startsWith("Public") || internalTypes.has(typeName)) {
             return node;
           }
 
-          if (publicTypes.some((t) => node.getText().includes(t.targetLine))) {
+          if (typesToMakePublic.has(typeName)) {
             const factory = context.factory;
-            return ts.isTypeAliasDeclaration(node)
-              ? factory.updateTypeAliasDeclaration(
-                  node,
-                  node.modifiers,
-                  factory.createIdentifier(`Public${node.name.text}`),
-                  node.typeParameters,
-                  node.type
-                )
-              : factory.updateInterfaceDeclaration(
-                  node,
-                  node.modifiers,
-                  factory.createIdentifier(`Public${node.name.text}`),
-                  node.typeParameters,
-                  node.heritageClauses ?? [],
-                  node.members
+            if (ts.isTypeAliasDeclaration(node)) {
+              let newType = node.type;
+              if (ts.isIntersectionTypeNode(node.type)) {
+                newType = factory.createIntersectionTypeNode(
+                  node.type.types.map((t) => {
+                    if (ts.isTypeReferenceNode(t)) {
+                      const refName = t.typeName.getText();
+                      return factory.createTypeReferenceNode(
+                        typeMapping.get(refName) || refName,
+                        t.typeArguments
+                      );
+                    }
+                    return t;
+                  })
                 );
+              }
+
+              return factory.updateTypeAliasDeclaration(
+                node,
+                node.modifiers,
+                factory.createIdentifier(`Public${typeName}`),
+                node.typeParameters,
+                newType
+              );
+            } else {
+              return factory.updateInterfaceDeclaration(
+                node,
+                node.modifiers,
+                factory.createIdentifier(`Public${typeName}`),
+                node.typeParameters,
+                node.heritageClauses ?? [],
+                node.members
+              );
+            }
           }
         }
 
         if (ts.isTypeReferenceNode(node)) {
-          // Skip if the type reference already has Public prefix
-          if (node.typeName.getText().startsWith("Public")) {
+          const typeName = node.typeName.getText();
+          if (typeName.startsWith("Public") || internalTypes.has(typeName)) {
             return node;
           }
 
-          const typeName = node.typeName.getText();
-          if (publicTypes.some((t) => t.targetLine.includes(typeName))) {
+          if (typeMapping.has(typeName)) {
             return context.factory.createTypeReferenceNode(
-              `Public${typeName}`,
+              typeMapping.get(typeName)!,
               node.typeArguments
             );
           }

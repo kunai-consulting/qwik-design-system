@@ -9,7 +9,7 @@ export function loopOnAllChildFiles(filePath: string) {
     return;
   }
   const parentDir = filePath.replace(childComponentMatch[0], "");
-  const componentMatch = /[\\/](\w+)$/.exec(parentDir);
+  const componentMatch = /[\\/]src[\\/]([^/]+)/.exec(parentDir);
   if (!componentMatch) return;
   if (!fs.existsSync(parentDir)) return;
   const componentName = componentMatch[1];
@@ -61,12 +61,17 @@ export default function autoAPI() {
 
 function writeToDocs(fullPath: string, componentName: string, api: ComponentParts) {
   if (fullPath.includes("components")) {
-    const relDocPath = `../src/routes/${componentName}`;
+    const relDocPath = `../../../apps/docs/src/routes/${componentName}`;
     const fullDocPath = resolve(__dirname, relDocPath);
+
+    if (!fs.existsSync(fullDocPath)) {
+      fs.mkdirSync(fullDocPath, { recursive: true });
+    }
+
     const dirPath = resolve(fullDocPath, "auto-api");
 
     if (!fs.existsSync(dirPath)) {
-      fs.mkdirSync(dirPath);
+      fs.mkdirSync(dirPath, { recursive: true });
     }
 
     const json = JSON.stringify(api, null, 2);

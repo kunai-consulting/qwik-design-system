@@ -2,165 +2,129 @@ import { execSync } from "node:child_process";
 import fs from "node:fs";
 import { resolve } from "node:path";
 import { Anthropic } from "@anthropic-ai/sdk";
-import { $, type PropsOf, Slot, component$, useSignal } from "@builder.io/qwik";
+import { component$, useSignal } from "@builder.io/qwik";
 import { server$, useLocation } from "@builder.io/qwik-city";
 import { isDev } from "@builder.io/qwik/build";
 import { getSourceFile, transformPublicTypes } from "../../../auto-api/utils";
 import { AIButton } from "./ai-button";
 
+const generateWithClaude = async (prompt: string) => {
+  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  const response = await anthropic.messages.create({
+    model: "claude-3-5-sonnet-20241022",
+    max_tokens: 8192,
+    messages: [
+      {
+        role: "user",
+        content: prompt
+      }
+    ]
+  });
+  return response.content[0]?.type === "text" ? JSON.parse(response.content[0].text) : [];
+};
+
 const generateComponentDocs = server$(
   async (files: Array<{ name: string; content: string }>) => {
-    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-    const response = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
-      max_tokens: 8192,
-      messages: [
-        {
-          role: "user",
-          content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
-        Required output format: [{ "filename": "component.tsx", "comments": [{ "targetLine": "export const Button = component$", "comment": ["/** A button component */"] }] }]
+    return generateWithClaude(`You are a JSON-only API. Your response must be PURE JSON with no other text.
+      Required output format: [{ "filename": "component.tsx", "comments": [{ "targetLine": "export const Button = component$", "comment": ["/** A button component */"] }] }]
 
-        IMPORTANT: Return a direct array, not an object with a 'files' property.
-        
-        Only analyze component definitions (anything with component$ call). Example:
-        // The button that opens the popover panel when clicked
-        export const PopoverTrigger = component$((props: PropsOf<"button">) => {
-          return <button onClick$={...} {...props} />;
-        });
+      IMPORTANT: Return a direct array, not an object with a 'files' property.
+      
+      Only analyze component definitions (anything with component$ call). Example:
+      // The button that opens the popover panel when clicked
+      export const PopoverTrigger = component$((props: PropsOf<"button">) => {
+        return <button onClick$={...} {...props} />;
+      });
 
-        Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`
-        }
-      ]
-    });
-    const parsed =
-      response.content[0].type === "text" ? JSON.parse(response.content[0].text) : [];
-    // If we get an object with files property, return that array, otherwise return the direct array
-    return parsed.files || parsed;
+      Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`);
   }
 );
 
 const generateFeatureList = server$(
   async (files: Array<{ name: string; content: string }>) => {
-    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-    const response = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
-      max_tokens: 8192,
-      messages: [
-        {
-          role: "user",
-          content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
-        Required output format: { "features": ["Feature 1", "Feature 2", ...] }
+    return generateWithClaude(`You are a JSON-only API. Your response must be PURE JSON with no other text.
+      Required output format: { "features": ["Feature 1", "Feature 2", ...] }
 
-        Analyze the component implementation and return a list of features. Here are examples of good feature lists:
+      Analyze the component implementation and return a list of features.
+      
+      Combobox example features:
+      - "WAI ARIA Combobox design pattern"
+      - "Single and multiple selection"
+      - "Reactive and initial value changes"
+      - "Disabled items"
+      - "Tab key focus management"
+      - "Grouped items"
+      - "Looping"
+      - "Custom scroll behavior"
+      - "Popover UI above all"
+      - "Custom positioning (Popover)"
+      - "Typeahead item selection and focus"
+      - "Arrow key navigation and focus management"
+      - "Open/Close popover by typing, focus, or manually"
+      - "Custom filter function"
+      - "Closes on no matching items"
 
-        Combobox example features:
-        - "WAI ARIA Combobox design pattern"
-        - "Single and multiple selection"
-        - "Reactive and initial value changes"
-        - "Disabled items"
-        - "Tab key focus management"
-        - "Grouped items"
-        - "Looping"
-        - "Custom scroll behavior"
-        - "Popover UI above all"
-        - "Custom positioning (Popover)"
-        - "Typeahead item selection and focus"
-        - "Arrow key navigation and focus management"
-        - "Open/Close popover by typing, focus, or manually"
-        - "Custom filter function"
-        - "Closes on no matching items"
+      Modal example features:
+      - "WAI ARIA Dialog design pattern"
+      - "Focus trap within modal"
+      - "Return focus on close"
+      - "Escape to close"
+      - "Click outside to dismiss"
+      - "Prevents background scrolling"
+      - "Animated transitions"
+      - "Custom positioning"
+      - "Nested modal support"
+      - "Accessible descriptions"
+      - "Custom close triggers"
+      - "Backdrop customization"
+      - "Multiple modal stacking"
+      - "Responsive sizing"
+      - "Keyboard navigation"
+      
+      Rules:
+      - Minimum 5 features
+      - Focus on meaningful functionality that users care about
+      - Exclude obvious implementation details
+      - Don't list basic features that every component would have
 
-        Modal example features:
-        - "WAI ARIA Dialog design pattern"
-        - "Focus trap within modal"
-        - "Return focus on close"
-        - "Escape to close"
-        - "Click outside to dismiss"
-        - "Prevents background scrolling"
-        - "Animated transitions"
-        - "Custom positioning"
-        - "Nested modal support"
-        - "Accessible descriptions"
-        - "Custom close triggers"
-        - "Backdrop customization"
-        - "Multiple modal stacking"
-        - "Responsive sizing"
-        - "Keyboard navigation"
-
-        Rules:
-        - Minimum 5 features
-        - Focus on meaningful functionality that users care about
-        - Exclude obvious implementation details
-        - Don't list basic features that every component would have
-
-        Analyze the files and return a similar style list of features:
-        ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`
-        }
-      ]
-    });
-    const parsed =
-      response.content[0].type === "text"
-        ? JSON.parse(response.content[0].text)
-        : { features: [] };
-    return parsed.features;
+      Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`);
   }
 );
 
 const generateTypeDocs = server$(
   async (files: Array<{ name: string; content: string }>) => {
-    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-    const response = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
-      max_tokens: 8192,
-      messages: [
-        {
-          role: "user",
-          content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
-        Required output format: [{ "filename": "component.tsx", "comments": [{ "targetLine": "gap?: number;", "comment": ["/** The gap between slides */"] }] }]
-        
-        IMPORTANT: Return a direct array, not an object with a 'files' property.
-        
-        Only analyze properties within types/interfaces. Example:
-        export type PublicCarouselRootProps = PropsOf<'div'> & {
-          /** The gap between slides */
-          gap?: number;
-        };
+    return generateWithClaude(`You are a JSON-only API. Your response must be PURE JSON with no other text.
+      Required output format: [{ "filename": "component.tsx", "comments": [{ "targetLine": "gap?: number;", "comment": ["/** The gap between slides */"] }] }]
+      
+      IMPORTANT: Return a direct array, not an object with a 'files' property.
+      
+      Only analyze properties within types/interfaces. Example:
+      export type PublicCarouselRootProps = PropsOf<'div'> & {
+        /** The gap between slides */
+        gap?: number;
+      };
 
-        Documentation rules:
-        - bind:x properties = "Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property"
-        - if a property is x, with bind: removed, it is an initial value to set when the page loads
-        - regular properties = describe what the property does
-        - on$ properties = "Event handler for [event] events"
+      Documentation rules:
+      - bind:x properties = "Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property"
+      - if a property is x, with bind: removed, it is an initial value to set when the page loads
+      - regular properties = describe what the property does
+      - on$ properties = "Event handler for [event] events"
 
-        Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`
-        }
-      ]
-    });
-    const parsed =
-      response.content[0].type === "text" ? JSON.parse(response.content[0].text) : [];
-    // If we get an object with files property, return that array, otherwise return the direct array
-    return parsed.files || parsed;
+      Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`);
   }
 );
 
 const generateDataAttributeDocs = server$(
   async (files: Array<{ name: string; content: string }>) => {
-    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-    const response = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
-      max_tokens: 8192,
-      messages: [
-        {
-          role: "user",
-          content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
-        Required output format: [{ "filename": "component.tsx", "comments": [{ "targetLine": "data-qui-carousel-scroller", "comment": ["// The identifier for the container that enables scrolling and dragging in a carousel"] }] }]
-        
-        IMPORTANT: 
-        - Return a direct array, not an object with a 'files' property
-        - Each data-* attribute must have its own comment
-        - Comment should be placed directly above the line containing the data attribute
-        
-        Only analyze data attributes (format: "data-*"). Example:
+    return generateWithClaude(`You are a JSON-only API. Your response must be PURE JSON with no other text.
+      Required output format: [{ "filename": "component.tsx", "comments": [{ "targetLine": "data-qui-carousel-scroller", "comment": ["// The identifier for the container that enables scrolling and dragging in a carousel"] }] }]
+      
+      IMPORTANT: 
+      - Return a direct array, not an object with a 'files' property
+      - Each data-* attribute must have its own comment
+      - Comment should be placed directly above the line containing the data attribute
+      
+      Only analyze data attributes (format: "data-*"). Example:
         return <div {...props}
           // Indicates whether the element is currently disabled
           data-disabled={isDisabled ? '' : undefined}
@@ -169,93 +133,77 @@ const generateDataAttributeDocs = server$(
           // Indicates whether the element is in an indeterminate state
           data-mixed={isMixed ? '' : undefined} />;
 
-        Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`
-        }
-      ]
-    });
-    const parsed =
-      response.content[0].type === "text" ? JSON.parse(response.content[0].text) : [];
-    return parsed.files || parsed;
+      Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`);
   }
 );
 
 const analyzeTypesForPublic = server$(
   async (files: Array<{ name: string; content: string }>) => {
-    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-    const response = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
-      max_tokens: 8192,
-      messages: [
-        {
-          role: "user",
-          content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
-        Required output format: [{ "filename": "component.tsx", "comments": [{ "targetLine": "export type ButtonProps", "shouldBePublic": true, "reason": "Contains only public properties and is used for component props" }] }]
-        
-        IMPORTANT: 
-        - Return a direct array, not an object with a 'files' property
-        - IGNORE any types that already start with "Public" prefix
-        - Only analyze types that don't already have the Public prefix
-        
-        Analyze exported types/interfaces and determine if they should be public based on:
-        1. No properties with underscore prefix (_) or marked as @internal
-        2. Properties appear to be intended for public consumption
-        3. Type is used for component props or public API
-        
-        Example of public type:
-        export type ButtonProps = {
-          variant?: 'primary' | 'secondary';
-          size?: 'small' | 'medium' | 'large';
-        };
+    return generateWithClaude(`You are a JSON-only API. Your response must be PURE JSON with no other text.
+      Required output format: [{ 
+        "filename": "component.tsx", 
+        "comments": [{ 
+          "targetLine": "export type ButtonProps", 
+          "shouldBePublic": true, 
+          "reason": "Used as component props type",
+          "dependencies": ["ButtonState", "ButtonVariant"]
+        }] 
+      }]
+      
+      IMPORTANT: 
+      - Return a direct array, not an object with a 'files' property
+      - IGNORE any types that already start with "Public" prefix
+      - Include ALL dependent types that should also be made public
 
-        Example of internal type:
-        export type ButtonState = {
-          _isPressed: boolean;
-          _internalId: string;
-        };
+      Specifically for Qwik components, a type MUST be made public if:
+      1. It's used in component$<Type> definition
+      2. It's a props interface/type that extends PropsOf
+      3. It's used in exported component props
+      4. It's used in PropFunction types for callbacks
+      5. It's used across multiple components through imports
+      6. It's part of the component's public event system
+      
+      Examples of types that MUST be public:
+      - type Props = PropsOf<"div"> & { /* ... */ }
+      - interface ComponentProps { /* ... */ }
+      - export const Component = component$<Props>((props) => {})
+      - onEvent$?: PropFunction<(param: EventType) => void>
+      
+      Types should stay private if:
+      1. They're only used inside component implementation
+      2. They're used for internal state management
+      3. They're marked with @internal
+      4. They're prefixed with underscore
+      5. They're only used in event handlers or callbacks
+      
+      For each identified public type:
+      1. Find all types it depends on or references
+      2. Check if those types are used in public API
+      3. Include both the main type and its public dependencies
 
-        Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`
-        }
-      ]
-    });
-    const parsed =
-      response.content[0].type === "text" ? JSON.parse(response.content[0].text) : [];
-    return parsed.files || parsed;
+      Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`);
   }
 );
 
 const generateKeyboardDocs = server$(
   async (files: Array<{ name: string; content: string }>) => {
-    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-    const response = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
-      max_tokens: 8192,
-      messages: [
-        {
-          role: "user",
-          content: `You are a JSON-only API. Your response must be PURE JSON with no other text.
-          Required output format: [
-            { "key": "Enter", "comment": "When focus is on the input, selects the focused item" },
-            { "key": "Space", "comment": "When focus is on the input, selects the focused item" },
-            { "key": "ArrowDown", "comment": "When the combobox is closed, opens the combobox. When the combobox is open, moves focus to the next item" },
-            { "key": "ArrowUp", "comment": "When the combobox is closed, opens the combobox. When the combobox is open, moves focus to the previous item" },
-            { "key": "Home", "comment": "When the combobox is open, moves focus to the first item" },
-            { "key": "End", "comment": "When the combobox is open, moves focus to the last item" },
-            { "key": "Escape", "comment": "Closes the combobox" },
-            { "key": "Tab", "comment": "When the combobox is open, closes the combobox" },
-            { "key": "Any", "comment": "When the combobox is open and focus is on the input, types the character into the input" }
-          ]
-
-          Analyze the component files and provide keyboard interaction documentation.
-          Be specific about which part of the component is being interacted with.
-          
-          Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`
-        }
+    return generateWithClaude(`You are a JSON-only API. Your response must be PURE JSON with no other text.
+      Required output format: [
+        { "key": "Enter", "comment": "When focus is on the input, selects the focused item" }
+        { "key": "Space", "comment": "When focus is on the input, selects the focused item" },
+        { "key": "ArrowDown", "comment": "When the combobox is closed, opens the combobox. When the combobox is open, moves focus to the next item" },
+        { "key": "ArrowUp", "comment": "When the combobox is closed, opens the combobox. When the combobox is open, moves focus to the previous item" },
+        { "key": "Home", "comment": "When the combobox is open, moves focus to the first item" },
+        { "key": "End", "comment": "When the combobox is open, moves focus to the last item" },
+        { "key": "Escape", "comment": "Closes the combobox" },
+        { "key": "Tab", "comment": "When the combobox is open, closes the combobox" },
+        { "key": "Any", "comment": "When the combobox is open and focus is on the input, types the character into the input" }
       ]
-    });
 
-    return response.content[0].type === "text"
-      ? JSON.parse(response.content[0].text)
-      : [];
+      Analyze the component files and provide keyboard interaction documentation.
+      Be specific about which part of the component is being interacted with.
+      
+      Files to analyze: ${files.map((f) => `\n--- ${f.name} ---\n${f.content}`).join("\n")}`);
   }
 );
 
@@ -311,7 +259,7 @@ export const APIReference = component$(() => {
       // Update metadata.json with fresh data only
       const metadata = {
         keyboard: keyboardDocs,
-        features: featureList
+        features: featureList.features
       };
       fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
 
@@ -368,10 +316,7 @@ export const APIReference = component$(() => {
 
       // 2. Handle keyboard interactions separately
       updates.push("Updating API with keyboard interactions...");
-      const apiPath = resolve(
-        process.cwd(),
-        `apps/docs/src/routes/${route}/auto-api/api.ts`
-      );
+      const apiPath = resolve(process.cwd(), `src/routes/${route}/auto-api/api.ts`);
 
       const apiContent = fs.readFileSync(apiPath, "utf-8");
       const apiMatch = apiContent.match(/export const api = ({[\s\S]*});/);
@@ -379,7 +324,7 @@ export const APIReference = component$(() => {
         const api = JSON.parse(apiMatch[1]);
         // Only update keyboard interactions, don't touch types
         api.keyboardInteractions = keyboardDocs;
-        api.features = featureList;
+        api.features = featureList.features;
         fs.writeFileSync(
           apiPath,
           `export const api = ${JSON.stringify(api, null, 2)};`,
