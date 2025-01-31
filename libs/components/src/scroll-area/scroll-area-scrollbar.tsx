@@ -20,9 +20,10 @@ export const ScrollAreaScrollbar = component$<ScrollBarType>((props) => {
   const onTrackClick$ = $((e: MouseEvent) => {
     const target = e.target as HTMLElement;
     const clickedOrientation = target.getAttribute("data-orientation");
-    const scrollbar = orientation === 'vertical'
-      ? context.verticalScrollbarRef.value
-      : context.horizontalScrollbarRef.value;
+    const scrollbar =
+      orientation === "vertical"
+        ? context.verticalScrollbarRef.value
+        : context.horizontalScrollbarRef.value;
 
     if (!scrollbar) return;
 
@@ -53,12 +54,34 @@ export const ScrollAreaScrollbar = component$<ScrollBarType>((props) => {
     }
   });
 
+  const shouldShow = () => {
+    const hasOverflow = context.hasOverflow.value;
+
+    switch (context.type) {
+      case "always":
+        return hasOverflow;
+      case "hover":
+        return context.isHovering.value && hasOverflow;
+      case "scroll":
+        return context.isScrolling.value && hasOverflow;
+      case "auto":
+        return hasOverflow;
+      default:
+        return false;
+    }
+  };
+
   return (
     <div
       {...props}
-      ref={orientation === 'vertical' ? context.verticalScrollbarRef : context.horizontalScrollbarRef}
+      ref={
+        orientation === "vertical"
+          ? context.verticalScrollbarRef
+          : context.horizontalScrollbarRef
+      }
       data-qds-scroll-area-scrollbar
       data-orientation={orientation}
+      data-state={shouldShow() ? "visible" : "hidden"}
       onClick$={onTrackClick$}
     >
       <Slot />
