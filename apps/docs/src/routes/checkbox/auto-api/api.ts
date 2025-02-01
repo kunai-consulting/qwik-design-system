@@ -42,8 +42,7 @@ export const api = {
           {
             "name": "data-hidden",
             "type": "string",
-            "comment":
-              "Indicates whether the indicator should be hidden based on checkbox state"
+            "comment": "Indicates whether the indicator should be hidden based on checkbox state"
           },
           {
             "name": "data-checked",
@@ -75,8 +74,8 @@ export const api = {
             "PublicCheckboxRootProps": [
               {
                 "comment": "",
-                "prop": '"bind:checked"',
-                "type": 'Signal<boolean | "mixed">'
+                "prop": "\"bind:checked\"",
+                "type": "Signal<boolean | \"mixed\">"
               },
               {
                 "comment": "Initial checked state of the checkbox",
@@ -112,6 +111,11 @@ export const api = {
                 "comment": "Value attribute for the hidden input element",
                 "prop": "value",
                 "type": "string"
+              },
+              {
+                "comment": "",
+                "prop": "getChildren$",
+                "type": "QRL<() => JSXOutput>"
               }
             ]
           }
@@ -158,8 +162,7 @@ export const api = {
           {
             "name": "data-mixed",
             "type": "string | undefined",
-            "comment":
-              "Indicates whether the checkbox trigger is in an indeterminate state"
+            "comment": "Indicates whether the checkbox trigger is in an indeterminate state"
           }
         ]
       }
@@ -168,8 +171,7 @@ export const api = {
   "anatomy": [
     {
       "name": "Checkbox.Root",
-      "description":
-        "Root component that provides context and state management for the checkbox"
+      "description": "Root component that provides context and state management for the checkbox"
     },
     {
       "name": "Checkbox.Indicator",
@@ -199,18 +201,15 @@ export const api = {
   "keyboardInteractions": [
     {
       "key": "Space",
-      "comment":
-        "When focus is on the checkbox trigger, toggles the checkbox state between checked and unchecked"
+      "comment": "When focus is on the checkbox trigger, toggles the checkbox state between checked and unchecked"
     },
     {
       "key": "Enter",
-      "comment":
-        "When focus is on the checkbox trigger, toggles the checkbox state between checked and unchecked (default behavior prevented)"
+      "comment": "When focus is on the checkbox trigger, toggles the checkbox state between checked and unchecked (default behavior prevented)"
     },
     {
       "key": "Tab",
-      "comment":
-        "Moves focus to the checkbox trigger or away from it following the document tab sequence"
+      "comment": "Moves focus to the checkbox trigger or away from it following the document tab sequence"
     }
   ],
   "features": [
