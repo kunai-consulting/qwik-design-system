@@ -42,8 +42,9 @@ export const api = {
           {
             "PublicOtpRootProps": [
               {
-                "comment": "Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property",
-                "prop": "\"bind:value\"",
+                "comment":
+                  "Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property",
+                "prop": '"bind:value"',
                 "type": "Signal<string>"
               },
               {
@@ -78,7 +79,8 @@ export const api = {
                 "defaultValue": "false"
               },
               {
-                "comment": "Whether password manager popups should shift to the right of the OTP. By default enabled",
+                "comment":
+                  "Whether password manager popups should shift to the right of the OTP. By default enabled",
                 "prop": "shiftPWManagers",
                 "type": "boolean",
                 "defaultValue": "true"
@@ -108,7 +110,8 @@ export const api = {
     },
     {
       "name": "Otp.HiddenInput",
-      "description": "Hidden input component that handles OTP input interactions and validation"
+      "description":
+        "Hidden input component that handles OTP input interactions and validation"
     },
     {
       "name": "Otp.Caret",
