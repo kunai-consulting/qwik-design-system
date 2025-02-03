@@ -30,7 +30,9 @@ test.describe("critical functionality", () => {
 
   test(`GIVEN a QR code component
         WHEN checking the rendered QR code
-        THEN it should have correct background and foreground colors`, async ({ page }) => {
+        THEN it should have correct background and foreground colors`, async ({
+    page
+  }) => {
     const d = await setup(page, "base");
 
     const backgroundRect = d.getBackgroundRect();

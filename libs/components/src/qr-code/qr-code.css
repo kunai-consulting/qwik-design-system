@@ -1,0 +1,21 @@
+@layer qds {
+    [data-qds-qr-code-root] {
+        position: relative;
+    }
+
+    [data-qds-qr-overlay] {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    [data-qds-qr-code-frame] {
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+}

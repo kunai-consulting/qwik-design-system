@@ -1,20 +1,8 @@
-import { Slot, component$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
 
-export const QRCodeOverlay = component$(() => {
-
+export const QRCodeOverlay = component$((props: PropsOf<"div">) => {
   return (
-    <div
-      data-qds-qr-overlay
-      style={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-      }}
-    >
+    <div {...props} data-qds-qr-overlay>
       <Slot />
     </div>
   );

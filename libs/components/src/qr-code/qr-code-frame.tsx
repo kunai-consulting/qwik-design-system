@@ -1,13 +1,8 @@
-import { Slot, component$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
 
-export const QRCodeFrame = component$(() => {
+export const QRCodeFrame = component$((props: PropsOf<"div">) => {
   return (
-    <div data-qds-qr-code-frame
-         style={{
-           position: "relative",
-           width: "100%",
-           height: "100%"
-         }}>
+    <div data-qds-qr-code-frame {...props}>
       <Slot />
     </div>
   );

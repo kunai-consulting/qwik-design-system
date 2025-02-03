@@ -3,9 +3,11 @@ import {
   Slot,
   component$,
   useContextProvider,
-  useSignal
+  useSignal,
+  useStyles$
 } from "@builder.io/qwik";
 import { qrCodeContextId } from "./qr-code-context";
+import styles from "./qr-code.css?inline";
 
 type RootProps = PropsOf<"div"> & {
   value?: string;
@@ -18,6 +20,8 @@ type RootProps = PropsOf<"div"> & {
 };
 
 export const QRCodeRoot = component$<RootProps>((props) => {
+  useStyles$(styles);
+
   const value = useSignal(props.value || "");
   const size = useSignal(props.size || 200);
   const level = useSignal(props.level || "L");
@@ -42,9 +46,6 @@ export const QRCodeRoot = component$<RootProps>((props) => {
       data-qds-qr-code-root
       role="img"
       aria-label={props["aria-label"] || `QR code for ${value.value}`}
-      style={{
-        position: "relative"
-      }}
     >
       <Slot />
     </div>

@@ -21,6 +21,7 @@ export const QRCodePattern = component$(() => {
       height={context.size.value}
       viewBox={`0 0 ${context.size.value} ${context.size.value}`}
       data-qds-qr-pattern
+      aria-hidden="true"
     >
       <rect
         width={context.size.value}
@@ -33,6 +34,7 @@ export const QRCodePattern = component$(() => {
           row.map((isBlack, x) =>
             isBlack ? (
               <rect
+                // biome-ignore lint/suspicious/noArrayIndexKey: x and y unique
                 key={`${x}-${y}`}
                 x={offset + x * moduleSize}
                 y={offset + y * moduleSize}
