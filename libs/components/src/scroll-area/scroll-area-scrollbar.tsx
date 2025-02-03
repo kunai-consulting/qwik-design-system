@@ -54,6 +54,23 @@ export const ScrollAreaScrollbar = component$<ScrollBarType>((props) => {
     }
   });
 
+  const shouldShow = () => {
+    const hasOverflow = context.hasOverflow.value;
+
+    switch (context.type) {
+      case "always":
+        return hasOverflow;
+      case "hover":
+        return context.isHovering.value && hasOverflow;
+      case "scroll":
+        return context.isScrolling.value && hasOverflow;
+      case "auto":
+        return hasOverflow;
+      default:
+        return false;
+    }
+  };
+
   return (
     <div
       {...props}
@@ -64,6 +81,7 @@ export const ScrollAreaScrollbar = component$<ScrollBarType>((props) => {
       }
       data-qds-scroll-area-scrollbar
       data-orientation={orientation}
+      data-state={shouldShow() ? "visible" : "hidden"}
       onClick$={onTrackClick$}
     >
       <Slot />

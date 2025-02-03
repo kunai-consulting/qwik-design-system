@@ -2,4 +2,4 @@
 "@kunai-consulting/qwik": patch
 ---
 
-Avoid querySelector and parentElement.
+Add ScrollArea to the TOC

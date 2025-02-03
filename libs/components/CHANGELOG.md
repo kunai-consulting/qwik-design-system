@@ -1,5 +1,13 @@
 # @kunai-consulting/qwik-headless
 
+## 0.0.3
+
+### Patch Changes
+
+- e829802: Avoid querySelector and parentElement.
+- fd53127: Fix lint issues. The lint script can be used now.
+- 328f704: feat: adds support for pw managers
+
 ## 0.0.2
 
 ### Patch Changes
