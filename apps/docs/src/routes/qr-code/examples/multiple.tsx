@@ -6,12 +6,23 @@ export default component$(() => {
   return (
     <div>
       <QRCode.Root value="https://qwikui.com" size={200} level="L" margin={4}>
-        <QRCode.Canvas />
+        <QRCode.Frame>
+          <QRCode.Pattern />
+        </QRCode.Frame>
       </QRCode.Root>
 
       <QRCode.Root value="https://qwikui.com" size={200} level="H" margin={4}>
-        <QRCode.Canvas />
-        <QRCode.Overlay image={qwikLogo} size={35} />
+        <QRCode.Frame>
+          <QRCode.Pattern />
+        </QRCode.Frame>
+        <QRCode.Overlay>
+          <img
+            src={qwikLogo}
+            alt="Qwik Logo"
+            height={75}
+            width={75}
+          />
+        </QRCode.Overlay>
       </QRCode.Root>
     </div>
   );

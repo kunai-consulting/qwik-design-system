@@ -1,10 +1,8 @@
-import { component$, type PropsOf, useContext } from "@builder.io/qwik";
+import { component$, useContext } from "@builder.io/qwik";
 import { encode } from "uqr";
 import { qrCodeContextId } from "./qr-code-context";
 
-type CanvasProps = PropsOf<"svg">;
-
-export const QRCodeCanvas = component$<CanvasProps>((props) => {
+export const QRCodePattern = component$(() => {
   const context = useContext(qrCodeContextId);
 
   const qrResult = encode(context.value.value, {
@@ -19,11 +17,10 @@ export const QRCodeCanvas = component$<CanvasProps>((props) => {
 
   return (
     <svg
-      {...props}
       width={context.size.value}
       height={context.size.value}
       viewBox={`0 0 ${context.size.value} ${context.size.value}`}
-      data-qds-qr-container
+      data-qds-qr-pattern
     >
       <rect
         width={context.size.value}
@@ -47,16 +44,6 @@ export const QRCodeCanvas = component$<CanvasProps>((props) => {
           )
         )}
       </g>
-
-      {context.overlay.value && (
-        <image
-          x={(context.size.value - (context.overlay.value.size || context.size.value * 0.3)) / 2}
-          y={(context.size.value - (context.overlay.value.size || context.size.value * 0.3)) / 2}
-          width={context.overlay.value.size || context.size.value * 0.3}
-          height={context.overlay.value.size || context.size.value * 0.3}
-          href={context.overlay.value.image}
-        />
-      )}
     </svg>
   );
 });

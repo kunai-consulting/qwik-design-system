@@ -13,11 +13,17 @@ export default component$(() => {
       background="yellow"
       foreground="black"
     >
-      <QRCode.Overlay
-        image={qwikLogo}
-        size={35}
-      />
-      <QRCode.Canvas />
+      <QRCode.Frame>
+        <QRCode.Pattern />
+      </QRCode.Frame>
+      <QRCode.Overlay>
+        <img
+          src={qwikLogo}
+          alt="Qwik Logo"
+          height={75}
+          width={75}
+        />
+      </QRCode.Overlay>
     </QRCode.Root>
   );
 });

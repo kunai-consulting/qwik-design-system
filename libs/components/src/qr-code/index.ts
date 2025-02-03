@@ -1,3 +1,4 @@
 export { QRCodeRoot as Root } from "./qr-code-root";
-export { QRCodeCanvas as Canvas } from "./qr-code-canvas";
+export { QRCodeFrame as Frame } from "./qr-code-frame";
+export { QRCodePattern as Pattern } from "./qr-code-pattern";
 export { QRCodeOverlay as Overlay } from "./qr-code-overlay";

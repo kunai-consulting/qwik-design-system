@@ -51,16 +51,15 @@ test.describe("overlay functionality", () => {
     const overlay = d.getOverlay();
 
     await expect(overlay).toBeVisible();
-    await expect(overlay).toHaveAttribute("href");
+    await expect(overlay).toHaveAttribute("src");
   });
 
   test(`GIVEN a QR code with custom colors
         WHEN it is rendered
         THEN it should use the specified colors`, async ({ page }) => {
     const d = await setup(page, "overlay-custom-color");
-    const svg = d.getSvg();
-
-    await expect(svg.locator("rect").first()).toHaveAttribute("fill", "yellow");
+    const backgroundRect = d.getBackgroundRect();
+    await expect(backgroundRect).toHaveAttribute("fill", "yellow");
   });
 });
 

@@ -22,7 +22,6 @@ export const QRCodeRoot = component$<RootProps>((props) => {
   const size = useSignal(props.size || 200);
   const level = useSignal(props.level || "L");
   const margin = useSignal(props.margin || 4);
-  const overlay = useSignal<{ image: string; size?: number } | undefined>(undefined);
   const background = useSignal(props.background || "white");
   const foreground = useSignal(props.foreground || "black");
 
@@ -31,7 +30,6 @@ export const QRCodeRoot = component$<RootProps>((props) => {
     size,
     level,
     margin,
-    overlay,
     background,
     foreground
   };
@@ -44,6 +42,9 @@ export const QRCodeRoot = component$<RootProps>((props) => {
       data-qds-qr-code-root
       role="img"
       aria-label={props["aria-label"] || `QR code for ${value.value}`}
+      style={{
+        position: "relative"
+      }}
     >
       <Slot />
     </div>

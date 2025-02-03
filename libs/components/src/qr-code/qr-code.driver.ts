@@ -7,23 +7,23 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   };
 
   const getSvg = () => {
-    return rootLocator.locator("[data-qds-qr-container]").first();
+    return rootLocator.locator("[data-qds-qr-pattern]").first();
   };
 
   const getBackgroundRect = () => {
-    return rootLocator.locator("[data-qds-qr-container] rect").first();
+    return rootLocator.locator("[data-qds-qr-pattern] rect").first();
   };
 
   const getQRCodeRects = () => {
-    return rootLocator.locator("[data-qds-qr-container] g rect");
+    return rootLocator.locator("[data-qds-qr-pattern] g rect");
   };
 
   const getOverlay = () => {
-    return rootLocator.locator("[data-qds-qr-container] image").first();
+    return rootLocator.locator("[data-qds-qr-overlay] img").first();
   };
 
   const getAllSvgs = () => {
-    return rootLocator.locator("[data-qds-qr-container]");
+    return rootLocator.locator("[data-qds-qr-pattern]");
   };
 
   return {

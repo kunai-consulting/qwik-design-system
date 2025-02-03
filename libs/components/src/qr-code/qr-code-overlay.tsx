@@ -1,23 +1,21 @@
-import { component$, useContext, useTask$ } from "@builder.io/qwik";
-import { qrCodeContextId } from "./qr-code-context";
+import { Slot, component$ } from "@builder.io/qwik";
 
-export interface OverlayProps {
-  image: string;
-  size?: number;
-}
+export const QRCodeOverlay = component$(() => {
 
-export const QRCodeOverlay = component$<OverlayProps>((props) => {
-  const context = useContext(qrCodeContextId);
-
-  useTask$(({ track }) => {
-    track(() => props.image);
-    track(() => props.size);
-
-    context.overlay.value = {
-      image: props.image,
-      size: props.size
-    };
-  });
-
-  return null;
+  return (
+    <div
+      data-qds-qr-overlay
+      style={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }}
+    >
+      <Slot />
+    </div>
+  );
 });
