@@ -1,0 +1,32 @@
+{
+  "keyboard": [
+    {
+      "key": "Space",
+      "comment": "When focus is on a checkbox trigger, toggles the checked state"
+    },
+    {
+      "key": "Enter",
+      "comment": "When focus is on a checkbox trigger, toggles the checked state"
+    },
+    {
+      "key": "Tab",
+      "comment": "Moves focus to the next focusable checkbox trigger or item"
+    },
+    {
+      "key": "Shift+Tab",
+      "comment": "Moves focus to the previous focusable checkbox trigger or item"
+    }
+  ],
+  "features": [
+    "Select all items functionality",
+    "Individual item selection",
+    "Mixed state handling (indeterminate)",
+    "Form input integration",
+    "Group role accessibility",
+    "Synchronized state management between items",
+    "Nested checkbox hierarchy",
+    "Custom item descriptions",
+    "Error message support",
+    "Dynamic item indexing"
+  ]
+}
