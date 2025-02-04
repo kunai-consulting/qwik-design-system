@@ -6,16 +6,16 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator("[data-qds-qr-code-root]");
   };
 
+  const getFrame = () => {
+    return rootLocator.locator("[data-qds-qr-code-frame]");
+  };
+
   const getSvg = () => {
-    return rootLocator.locator("[data-qds-qr-pattern]").first();
+    return rootLocator.locator("[data-qds-qr-pattern-svg]").first();
   };
 
-  const getBackgroundRect = () => {
-    return rootLocator.locator("[data-qds-qr-pattern] rect").first();
-  };
-
-  const getQRCodeRects = () => {
-    return rootLocator.locator("[data-qds-qr-pattern] g rect");
+  const getPath = () => {
+    return rootLocator.locator("[data-qds-qr-pattern-path]").first();
   };
 
   const getOverlay = () => {
@@ -23,16 +23,16 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   };
 
   const getAllSvgs = () => {
-    return rootLocator.locator("[data-qds-qr-pattern]");
+    return rootLocator.locator("[data-qds-qr-pattern-svg]");
   };
 
   return {
     ...rootLocator,
     locator: rootLocator,
     getRoot,
+    getFrame,
     getSvg,
-    getBackgroundRect,
-    getQRCodeRects,
+    getPath,
     getOverlay,
     getAllSvgs
   };

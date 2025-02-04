@@ -1,0 +1,9 @@
+.qr-code-frame {
+    padding: 24px;
+    background: white;
+}
+
+.qr-code-custom-frame {
+    padding: 24px;
+    background: yellow;
+}

@@ -1,6 +1,13 @@
 @layer qds {
     [data-qds-qr-code-root] {
         position: relative;
+        display: inline-block;
+    }
+
+    [data-qds-qr-code-frame] {
+        position: relative;
+        width: 100%;
+        height: 100%;
     }
 
     [data-qds-qr-overlay] {
@@ -13,9 +20,9 @@
         justify-content: center;
     }
 
-    [data-qds-qr-code-frame] {
+    [data-qds-qr-pattern-svg] {
+        display: block;
         width: 100%;
         height: 100%;
-        position: relative;
     }
 }
