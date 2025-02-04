@@ -3,37 +3,42 @@ import {
   Slot,
   component$,
   useContextProvider,
-  useSignal
+  useSignal,
+  useTask$,
+  useStyles$
 } from "@builder.io/qwik";
+import { encode } from "uqr";
 import { qrCodeContextId } from "./qr-code-context";
+import styles from "./qr-code.css?inline";
 
 type RootProps = PropsOf<"div"> & {
   value?: string;
-  size?: number;
   level?: "L" | "M" | "Q" | "H";
-  margin?: number;
-  "aria-label"?: string;
-  background?: string;
-  foreground?: string;
 };
 
 export const QRCodeRoot = component$<RootProps>((props) => {
+  useStyles$(styles);
+
   const value = useSignal(props.value || "");
-  const size = useSignal(props.size || 200);
   const level = useSignal(props.level || "L");
-  const margin = useSignal(props.margin || 4);
-  const overlay = useSignal<{ image: string; size?: number } | undefined>(undefined);
-  const background = useSignal(props.background || "white");
-  const foreground = useSignal(props.foreground || "black");
+  const data = useSignal<boolean[][]>([]);
+
+  useTask$(({ track }) => {
+    track(() => value.value);
+    track(() => level.value);
+
+    const qrResult = encode(value.value, {
+      ecc: level.value,
+      border: 0
+    });
+
+    data.value = qrResult.data;
+  });
 
   const context = {
     value,
-    size,
     level,
-    margin,
-    overlay,
-    background,
-    foreground
+    data
   };
 
   useContextProvider(qrCodeContextId, context);

@@ -1,8 +1,8 @@
 import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
 
-export const QRCodeOverlay = component$((props: PropsOf<"div">) => {
+export const QRCodeFrame = component$((props: PropsOf<"div">) => {
   return (
-    <div {...props} data-qds-qr-overlay>
+    <div data-qds-qr-code-frame {...props}>
       <Slot />
     </div>
   );

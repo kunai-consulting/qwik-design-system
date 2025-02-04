@@ -22,24 +22,19 @@ test.describe("critical functionality", () => {
     const svg = d.getSvg();
 
     // Check if canvas size matches the specified size
-    const size = 200; // default size
-    const box = await svg.boundingBox();
-    expect(box?.width).toBe(size);
-    expect(box?.height).toBe(size);
+    await expect(svg).toHaveAttribute('width', '200');
+    await expect(svg).toHaveAttribute('height', '200');
   });
 
   test(`GIVEN a QR code component
         WHEN checking the rendered QR code
-        THEN it should have correct background and foreground colors`, async ({ page }) => {
+        THEN it should have path with QR code data`, async ({ page }) => {
     const d = await setup(page, "base");
 
-    const backgroundRect = d.getBackgroundRect();
-    await expect(backgroundRect).toHaveAttribute("fill", "white");
-
-    const qrCodeRects = d.getQRCodeRects();
-    await expect(qrCodeRects.first()).toHaveAttribute("fill", "black");
-
-    expect(await qrCodeRects.count()).toBeGreaterThan(0);
+    const path = d.getPath();
+    await expect(path).toBeVisible();
+    await expect(path).toHaveAttribute("d");
+    await expect(path).toHaveAttribute("fill", "black");
   });
 });
 
@@ -51,16 +46,21 @@ test.describe("overlay functionality", () => {
     const overlay = d.getOverlay();
 
     await expect(overlay).toBeVisible();
-    await expect(overlay).toHaveAttribute("href");
+    await expect(overlay).toHaveAttribute("src");
+    await expect(overlay).toHaveAttribute("width");
+    await expect(overlay).toHaveAttribute("height");
   });
 
   test(`GIVEN a QR code with custom colors
         WHEN it is rendered
         THEN it should use the specified colors`, async ({ page }) => {
     const d = await setup(page, "overlay-custom-color");
-    const svg = d.getSvg();
+    const frame = d.getFrame();
 
-    await expect(svg.locator("rect").first()).toHaveAttribute("fill", "yellow");
+    await expect(frame).toHaveCSS("background-color", "rgb(255, 255, 0)");
+
+    const path = d.getPath();
+    await expect(path).toHaveAttribute("fill", "blue");
   });
 });
 
@@ -90,11 +90,13 @@ test.describe("a11y", () => {
         THEN it should have proper ARIA attributes`, async ({ page }) => {
     const d = await setup(page, "base");
     const root = d.getRoot();
+    const svg = d.getSvg();
 
     // Check for proper ARIA role
     await expect(root).toHaveAttribute("role", "img");
 
     // Check for proper ARIA label
     await expect(root).toHaveAttribute("aria-label");
+    await expect(svg).toHaveAttribute("aria-hidden", "true");
   });
 });
