@@ -1,13 +1,171 @@
----
-title: Qwik Design System | QR Code
----
+import { api } from "./auto-api/api";
 
 # QR Code
 
-A component that generates a QR code based on the provided data.
+Generate scannable codes to encode text, URLs, and other data in a visual format.
 
-## Basic Usage
 <Showcase name="base" />
 
-## Overlay
-<Showcase name="overlay" />
+## Features
+
+<Features api={api} />
+
+## Anatomy
+
+<AnatomyTable api={api} />
+
+## Examples
+
+### Basic Usage
+
+The QR code component requires a value to encode and an error correction level. The `value` prop specifies the content to encode, while the `level` prop determines error correction strength.
+
+<Showcase name="base" />
+
+In this example, we use:
+- `QRCode.Root` with `value` and `level` props
+- `QRCode.Frame` for containing the QR code
+- `QRCode.PatternSvg` for setting dimensions
+- `QRCode.PatternPath` for rendering the actual QR code pattern
+
+### Visual Features
+
+You can customize the appearance of your QR code with overlays and custom colors.
+
+<Showcase name="overlay-custom-color" />
+
+This example demonstrates:
+- Custom fill color using the `fill` prop on `QRCode.PatternPath`
+- Custom background styling through CSS classes
+- Image overlay using `QRCode.Overlay` component
+
+### Advanced Usage
+
+Multiple QR codes can be rendered on the same page, each with unique values and styling.
+
+<Showcase name="multiple" />
+
+This example shows:
+- Multiple QR code instances with different values
+- Independent styling and overlay configuration
+- Proper spacing and layout management
+
+Each QR code maintains its own context and can be styled independently while preserving proper functionality.
+
+## Component State
+
+### Internal State Structure
+
+The QR code component maintains three core state values using Qwik's `useSignal`:
+
+```typescript
+const value = useSignal(props.value || "");
+const level = useSignal(props.level || "L");
+const data = useSignal<boolean[][]>([]);
+```
+
+- `value`: Stores the text to be encoded in the QR code
+- `level`: Controls the error correction level ("L", "M", "Q", "H")
+- `data`: Holds the generated QR code matrix as a 2D boolean array
+
+These values are managed by the `QRCode.Root` component and shared with child components through Qwik's context system:
+
+```typescript
+const context = {
+  value,
+  level,
+  data
+};
+useContextProvider(qrCodeContextId, context);
+```
+
+### State Updates
+
+The QR code updates automatically when either the `value` or `level` signals change. This is handled by a `useTask$` that tracks these dependencies:
+
+```typescript
+useTask$(({ track }) => {
+  track(() => value.value);
+  track(() => level.value);
+  const qrResult = encode(value.value, {
+    ecc: level.value,
+    border: 0
+  });
+  data.value = qrResult.data;
+});
+```
+
+As shown in the `base` example above, the QR code pattern updates reactively when the value changes. The pattern is rendered through the `QRCodePatternPath` component, which transforms the boolean matrix into SVG path data:
+
+```typescript
+const pathData = context.data.value.reduce((acc, row, y) => {
+  row.forEach((isBlack, x) => {
+    if (isBlack) {
+      acc += `M ${x} ${y} h 1 v 1 h -1 z `;
+    }
+  });
+  return acc;
+}, "");
+```
+
+The `multiple` example demonstrates how each QR code instance maintains its own independent state, allowing multiple QR codes with different values to coexist on the same page.
+
+The state management system ensures that:
+- Initial values can be provided through props
+- Changes to value or error correction level trigger immediate updates
+- The QR code matrix is automatically regenerated when needed
+- State is properly isolated between multiple instances
+
+Based on the provided implementation and examples, I'll document the QR code component's configuration options.
+
+## Core Configuration
+
+### QR Code Value and Error Correction
+
+The QR code content and error correction level can be configured through the `QRCode.Root` component's props:
+
+- `value`: The text or URL to encode (string)
+- `level`: Error correction level ("L", "M", "Q", "H")
+
+As shown in the `base` example above, you can set these properties to generate a basic QR code with default settings.
+
+```typescript
+type ErrorCorrectionLevel = "L" | "M" | "Q" | "H";
+// L = Low (7% recovery)
+// M = Medium (15% recovery)
+// Q = Quartile (25% recovery)
+// H = High (30% recovery)
+```
+
+> The default error correction level is "L" if not specified.
+
+### Dimensions and Scaling
+
+The QR code's size is controlled through the `width` and `height` props on the `QRCode.PatternSvg` component. As shown in all examples above, the default size is 200x200 pixels.
+
+The QR code pattern automatically scales to fit within these dimensions while maintaining its aspect ratio, thanks to the SVG viewBox calculation.
+
+## Advanced Configuration
+
+### Custom Pattern Rendering
+
+The QR code pattern can be customized using the `fill` attribute on `QRCode.PatternPath`. As shown in the `overlay-custom-color` example above, you can change the pattern color to any valid CSS color value.
+
+### Overlay Configuration
+
+The `QRCode.Overlay` component supports custom content positioning. As demonstrated in the `overlay` example above, it automatically centers the content over the QR code while maintaining code readability.
+
+> Important: When using overlays, it's recommended to use a higher error correction level ("H") to ensure the QR code remains scannable despite the overlay content.
+
+### Technical Constraints
+
+- The QR code is generated with zero borders by default
+- The pattern data is dynamically updated when either the `value` or `level` props change
+- The SVG pattern uses a path-based rendering approach for optimal performance and scaling
+- The component maintains a 1:1 aspect ratio regardless of container dimensions
+
+
+
+
+
+<APITable api={api} />

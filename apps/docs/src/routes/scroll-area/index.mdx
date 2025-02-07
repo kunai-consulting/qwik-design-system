@@ -1,60 +1,220 @@
----
-title: Qwik Design System | Scroll Area
----
+import { api } from "./auto-api/api";
 
 # Scroll Area
 
-A scrollable container that provides a custom-styled scrollbar with support for both vertical and horizontal scrolling.
+A customizable container that adds scrollbars when content overflows its boundaries.
 
-<Showcase name="vertical" />
+<Showcase name="both" />
 
-## Basic Usage
+## Features
 
-The Scroll Area component provides a customizable scrolling container that replaces the browser's default scrollbars with a more aesthetically pleasing design.
+<Features api={api} />
 
 ## Anatomy
 
-The Scroll Area component is composed of several parts:
+<AnatomyTable api={api} />
 
-```tsx
-<ScrollArea.Root>
-  <ScrollArea.Viewport>
-    {/* Your content */}
-  </ScrollArea.Viewport>
-  <ScrollArea.Scrollbar orientation="vertical">
-    <ScrollArea.Thumb />
-  </ScrollArea.Scrollbar>
-  <ScrollArea.Scrollbar orientation="horizontal">
-    <ScrollArea.Thumb />
-  </ScrollArea.Scrollbar>
-</ScrollArea.Root>
-```
+## Examples
 
-## Vertical Scrolling
-By default, Scroll Area supports vertical scrolling when content exceeds the container height.
+### Basic Usage
+
+The scroll area component can be configured with different scrollbar visibility behaviors using the `type` prop.
 
 <Showcase name="vertical" />
 
-## Horizontal Scrolling
-To enable horizontal scrolling, add the horizontal scrollbar component.
+This example demonstrates:
+- Using `ScrollArea.Root` with default `type="hover"` visibility
+- Vertical scrollbar appears when content overflows
+- The `ScrollArea.Viewport` wraps the content
+- `ScrollArea.Scrollbar` and `ScrollArea.Thumb` create the custom scrollbar
+
+### Visual Features
+
+#### Horizontal Scrolling
+
+For content that extends beyond the horizontal bounds, add a horizontal scrollbar.
+
 <Showcase name="horizontal" />
 
-## Both Directions
-Scroll Area supports both vertical and horizontal scrolling simultaneously.
+This example shows:
+- Setting `orientation="horizontal"` on `ScrollArea.Scrollbar`
+- Horizontal thumb moves as content scrolls left/right
+- Content container width controls when horizontal scrolling activates
+
+#### Both Scrollbars
+
+When content overflows in both directions, both scrollbars can be displayed simultaneously.
+
 <Showcase name="both" />
 
-## Custom Styling
-The Scroll Area component can be styled using CSS classes.
+This example demonstrates:
+- Multiple `ScrollArea.Scrollbar` components with different orientations
+- Automatic thumb sizing based on content dimensions
+- Smooth interaction between vertical and horizontal scrolling
 
-## Sizing
-The Scroll Area component adapts to its container size. You can control its dimensions using standard CSS properties.
+### Advanced Usage
 
-## Hidden Scrollbars
-The Scroll Area component automatically hides the native browser scrollbars while maintaining scroll functionality.
 
-## Scroll Thumb Behavior
-The scroll thumb responds to:
+This example shows:
+- Setting `type="always"` for persistent scrollbars
+- Scrollbars remain visible even when not actively scrolling
+- The `hideDelay` prop can be used with `type="scroll"` to control how long scrollbars remain visible after scrolling stops
 
-* Direct dragging
-* Click and drag interactions
-* Content scrolling
+## Component State
+
+The ScrollArea component maintains several internal state values to manage scrollbar visibility, dragging behavior, and overflow detection.
+
+1. Internal State Structure
+
+The core state is managed through the ScrollArea context:
+
+```typescript
+interface ScrollAreaContext {
+  // Element References
+  thumbRef: Signal<HTMLDivElement | undefined>;
+  viewportRef: Signal<HTMLDivElement | undefined>;
+  verticalScrollbarRef: Signal<HTMLDivElement | undefined>;
+  horizontalScrollbarRef: Signal<HTMLDivElement | undefined>;
+  rootRef: Signal<HTMLDivElement | undefined>;
+  
+  // Visibility Control
+  type: ScrollbarVisibility;
+  hideDelay: number;
+  
+  // State Flags
+  isScrolling: Signal<boolean>;
+  isHovering: Signal<boolean>;
+  scrollTimeout: Signal<number>;
+  hasOverflow: Signal<boolean>;
+}
+```
+
+2. State Updates
+
+The component handles state updates through several mechanisms:
+
+Scrollbar Visibility:
+```typescript
+const shouldShow = () => {
+  const hasOverflow = context.hasOverflow.value;
+  switch (context.type) {
+    case "always":
+      return hasOverflow;
+    case "hover":
+      return context.isHovering.value && hasOverflow;
+    case "scroll":
+      return context.isScrolling.value && hasOverflow;
+    case "auto":
+      return hasOverflow;
+    default:
+      return false;
+  }
+};
+```
+
+Drag State Management:
+```typescript
+const dragData = useSignal({
+  startClientY: 0,
+  startClientX: 0,
+  startScrollTop: 0,
+  startScrollLeft: 0,
+  activeThumb: null as HTMLElement | null,
+  activeScrollbar: null as HTMLElement | null
+});
+```
+
+Overflow Detection:
+```typescript
+const updateOverflow = $((viewport: HTMLElement) => {
+  const hasVerticalOverflow = viewport.scrollHeight > viewport.clientHeight;
+  const hasHorizontalOverflow = viewport.scrollWidth > viewport.clientWidth;
+  context.hasOverflow.value = hasVerticalOverflow || hasHorizontalOverflow;
+});
+```
+
+The state updates are triggered by:
+- Mouse events (enter/leave for hover state)
+- Scroll events (for scroll visibility)
+- Resize events (for overflow detection)
+- Zoom level changes (for overflow recalculation)
+- Drag operations (for thumb positioning)
+
+The ScrollArea maintains these states independently for both vertical and horizontal scrollbars, allowing for precise control over scrollbar behavior and visibility based on user interaction and content overflow conditions.
+
+Based on the provided implementation and examples, I'll document the ScrollArea configuration options:
+
+## Scrollbar Visibility
+
+### Visibility Modes
+
+The ScrollArea component supports four visibility modes controlled by the `type` prop on `ScrollArea.Root`:
+
+- `hover` (default): Shows scrollbars when hovering over the scroll area
+- `scroll`: Shows scrollbars during scrolling
+- `auto`: Always shows scrollbars when content overflows
+- `always`: Always shows scrollbars when content overflows
+
+As shown in the `hover-test` example above, scrollbars appear on hover and hide when the mouse leaves.
+
+### Hide Delay
+
+For the `scroll` visibility mode, you can customize how long scrollbars remain visible after scrolling stops using the `hideDelay` prop:
+
+```typescript
+type PublicRootProps = {
+  hideDelay?: number; // milliseconds
+}
+```
+
+The default delay is 600ms. As shown in the `custom-delay-test` example above, you can extend this delay for better visibility.
+
+## Scrollbar Configuration
+
+### Orientation
+
+ScrollArea supports both vertical and horizontal scrollbars through the `orientation` prop on `ScrollArea.Scrollbar`:
+
+```typescript
+type PublicScrollBarType = {
+  orientation?: "vertical" | "horizontal";
+}
+```
+
+As shown in the `both` example above, you can use both orientations simultaneously for content that overflows in both directions.
+
+### Overflow Detection
+
+The ScrollArea automatically detects content overflow and manages scrollbar visibility accordingly. This includes:
+
+- Automatic detection of viewport size changes
+- Handling of browser zoom levels
+- Response to content size changes
+
+The overflow state is exposed through the `data-has-overflow` attribute on the root element.
+
+## Technical Constraints
+
+1. Viewport Dimensions
+   - The ScrollArea requires explicit dimensions (height/width) on the root element
+   - Dimensions can be set via inline styles or CSS classes
+
+2. Performance Considerations
+   - Scrollbar visibility changes use CSS transitions for smooth animations
+   - Thumb position updates are optimized using transform translations
+   - Overflow detection is debounced during zoom operations
+
+3. Browser Support Requirements
+   - Requires browsers that support:
+     - ResizeObserver API
+     - CSS transforms
+     - Mouse event handling
+     - Wheel event normalization
+
+These technical aspects ensure smooth scrolling behavior while maintaining performance across different browsers and scenarios.
+
+
+
+
+
+<APITable api={api} />

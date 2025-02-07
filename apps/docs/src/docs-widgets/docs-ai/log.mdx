@@ -682,3 +682,649 @@ Therefore, I have no environment-specific documentation to write for this compon
 
 ---
 
+# File Upload
+
+A drag and drop interface for uploading files with support for filtering and multiple selections.
+
+<Showcase name="hero" />
+
+## Features
+
+<Features api={api} />
+
+## Anatomy
+
+<AnatomyTable api={api} />
+
+## Examples
+
+
+
+This example demonstrates core functionality using:
+- `FileUpload.Root` as the main container
+- `FileUpload.Input` for handling file selection
+- `FileUpload.Dropzone` for drag and drop functionality
+- `FileUpload.Trigger` for opening the system file dialog
+- `onFilesChange$` prop to handle uploaded files
+
+
+
+This example shows:
+- Custom styling applied to the dropzone and trigger
+- Visual feedback during drag operations using `data-dragging` attribute
+- File type filtering with `accept="image/*"` prop to only allow image files
+
+### Advanced Usage
+
+
+This implementation showcases:
+- `multiple` prop to allow selecting multiple files
+- Batch file processing through `onFilesChange$`
+- Custom handling for each uploaded file
+- FormData preparation for potential server uploads
+
+
+This example demonstrates:
+- `disabled` prop to prevent file uploads
+- Visual feedback for disabled state using `data-disabled` attribute
+- Blocked drag and drop interactions
+- Disabled trigger button## Component State
+
+### Internal State Structure
+
+The File Upload component maintains several key state values through Qwik's context system:
+
+```typescript
+// Core state values
+interface FileUploadContext {
+  inputRef: Signal<HTMLInputElement | undefined>;  // Reference to hidden file input
+  isDragging: Signal<boolean>;                     // Current drag state
+  files: Signal<FileInfo[]>;                       // Selected/dropped files
+  multiple: boolean;                               // Multiple file selection mode
+  accept?: string;                                 // Allowed file types
+  disabled?: boolean;                              // Disabled state
+  onFilesChange$?: PropFunction<(files: FileInfo[]) => void>; // Change callback
+}
+```
+
+The state is initialized in the `FileUploadRoot` component:
+
+```typescript
+const inputRef = useSignal<HTMLInputElement>();
+const isDragging = useSignal(false);
+const files = useSignal<FileInfo[]>([]);
+
+const context = {
+  inputRef,
+  isDragging,
+  files,
+  multiple: props.multiple ?? false,
+  accept: props.accept,
+  disabled: props.disabled,
+  onFilesChange$: props.onFilesChange$
+};
+```
+
+### State Updates
+
+The component handles state updates in two main scenarios:
+
+1. File Selection via Input:
+```typescript
+const onChange$ = $((e: Event) => {
+  const input = e.target as HTMLInputElement;
+  if (!input.files) return;
+  
+  const newFiles = Array.from(input.files).map(file => ({
+    name: file.name,
+    size: file.size,
+    type: file.type,
+    lastModified: file.lastModified,
+    file: noSerialize(file)
+  }));
+
+  if (context.multiple) {
+    context.files.value = [...context.files.value, ...newFiles];
+  } else {
+    context.files.value = newFiles.slice(0, 1);
+  }
+  
+  context.onFilesChange$?.(context.files.value);
+});
+```
+
+2. Drag and Drop State:
+```typescript
+// Drag enter updates
+const onDragEnter$ = $((e: DragEvent) => {
+  if (context.disabled) return;
+  if (!isDragging.value) {
+    isDragging.value = true;
+    context.isDragging.value = true;
+  }
+});
+
+// Drag leave updates
+const onDragLeave$ = $((e: DragEvent) => {
+  if (context.disabled) return;
+  isDragging.value = false;
+  context.isDragging.value = false;
+});
+```
+
+The state management ensures:
+- Files are properly processed whether selected via input or dropped
+- Multiple file selection is handled based on the `multiple` prop
+- Drag state provides visual feedback during drag operations
+- Disabled state prevents any state updates
+- Parent components are notified of file changes through the callback
+
+The state is shared across all child components through Qwik's context system, allowing coordinated updates and consistent UI feedback.Based on the provided examples and API documentation, I'll document the configuration options for the File Upload component.
+
+## Core Configuration
+
+### File Selection Mode
+
+The File Upload component supports both single and multiple file selection modes through the `multiple` prop on `FileUpload.Root`.
+
+As shown in the multiple files example above, enabling multiple file selection allows users to upload several files at once.
+
+> By default, `multiple` is set to `false`, allowing only single file selection.
+
+### File Type Filtering
+
+The component supports file type filtering through the `accept` prop on `FileUpload.Root`. 
+
+As shown in the image-only example above, you can restrict file types using MIME types or file extensions:
+
+```typescript
+// Common accept patterns
+accept="image/*"           // All image types
+accept=".pdf,.doc,.docx"   // Specific file extensions
+accept="video/*,audio/*"   // Multiple MIME types
+```
+
+> The `accept` prop is optional. When not specified, all file types are allowed.
+
+### Disabled State
+
+The component can be disabled entirely using the `disabled` prop on `FileUpload.Root`. 
+
+As shown in the disabled example above, when disabled:
+- The trigger button becomes non-interactive
+- Drag and drop functionality is disabled
+- File input becomes disabled
+
+### File Change Notifications
+
+The component provides file change notifications through the `onFilesChange$` prop on `FileUpload.Root`. The callback receives an array of `FileInfo` objects:
+
+```typescript
+interface FileInfo {
+  name: string;
+  size: number;
+  type: string;
+  lastModified: number;
+  file: NoSerialize<File>;
+}
+```
+
+> The `file` property is non-serializable and should be processed immediately if needed for uploads.
+
+## Technical Constraints
+
+### Browser Support
+
+The component requires modern browser features:
+- HTML5 File API
+- Drag and Drop API
+- DataTransfer API
+
+### File Size Limitations
+
+File size limits are determined by:
+- Browser memory constraints
+- Input element limitations
+- JavaScript heap size
+
+> It's recommended to implement server-side file size validation for production use.
+
+### Performance Considerations
+
+For optimal performance:
+- Process files in batches when handling multiple files
+- Use `URL.createObjectURL()` for image previews
+- Release object URLs when no longer neededLooking through the examples and implementation, I don't see any specific form-related examples or features that would warrant a Forms section in the documentation.
+
+The FileUpload component is primarily focused on handling file selection and upload functionality through drag & drop or file dialog interactions. While files could be part of a larger form, the component itself doesn't have specific form integration features like:
+
+- Form field validation
+- Form state integration 
+- Form submission handling
+- Native form element bindings
+
+The examples show file selection and handling through callbacks (`onFilesChange$`), but don't demonstrate form-specific functionality.
+
+If form integration examples were to be added in the future, they could demonstrate:
+
+- Using the component within a `<form>` element
+- Integration with form validation libraries
+- Form submission handling with FormData
+- Error state handling and validation messages
+
+But since these aren't currently implemented, I'll skip the Forms section to avoid documenting non-existent features.Based on the provided examples and component implementation, I don't see any specific environment-related examples or features that would warrant dedicated environment documentation.
+
+The FileUpload component works consistently across server and client environments without requiring special handling. The core functionality - drag and drop, file selection, and file processing - operates the same way regardless of the rendering environment.
+
+While the component does handle client-side interactions like drag events and file selection, these are fundamental to the component's functionality rather than environment-specific features.
+
+Since there are no examples demonstrating environment-specific behavior or implementation differences between server and client rendering, I'll leave this section empty to avoid creating unnecessary documentation.
+
+---
+
+# QR Code
+
+Generate scannable codes to encode text, URLs, and other data in a visual format.
+
+<Showcase name="base" />
+
+## Features
+
+<Features api={api} />
+
+## Anatomy
+
+<AnatomyTable api={api} />
+
+## Examples
+
+### Basic Usage
+
+The QR code component requires a value to encode and an error correction level. The `value` prop specifies the content to encode, while the `level` prop determines error correction strength.
+
+<Showcase name="base" />
+
+In this example, we use:
+- `QRCode.Root` with `value` and `level` props
+- `QRCode.Frame` for containing the QR code
+- `QRCode.PatternSvg` for setting dimensions
+- `QRCode.PatternPath` for rendering the actual QR code pattern
+
+### Visual Features
+
+You can customize the appearance of your QR code with overlays and custom colors.
+
+<Showcase name="overlay-custom-color" />
+
+This example demonstrates:
+- Custom fill color using the `fill` prop on `QRCode.PatternPath`
+- Custom background styling through CSS classes
+- Image overlay using `QRCode.Overlay` component
+
+### Advanced Usage
+
+Multiple QR codes can be rendered on the same page, each with unique values and styling.
+
+<Showcase name="multiple" />
+
+This example shows:
+- Multiple QR code instances with different values
+- Independent styling and overlay configuration
+- Proper spacing and layout management
+
+Each QR code maintains its own context and can be styled independently while preserving proper functionality.## Component State
+
+### Internal State Structure
+
+The QR code component maintains three core state values using Qwik's `useSignal`:
+
+```typescript
+const value = useSignal(props.value || "");
+const level = useSignal(props.level || "L");
+const data = useSignal<boolean[][]>([]);
+```
+
+- `value`: Stores the text to be encoded in the QR code
+- `level`: Controls the error correction level ("L", "M", "Q", "H")
+- `data`: Holds the generated QR code matrix as a 2D boolean array
+
+These values are managed by the `QRCode.Root` component and shared with child components through Qwik's context system:
+
+```typescript
+const context = {
+  value,
+  level,
+  data
+};
+useContextProvider(qrCodeContextId, context);
+```
+
+### State Updates
+
+The QR code updates automatically when either the `value` or `level` signals change. This is handled by a `useTask$` that tracks these dependencies:
+
+```typescript
+useTask$(({ track }) => {
+  track(() => value.value);
+  track(() => level.value);
+  const qrResult = encode(value.value, {
+    ecc: level.value,
+    border: 0
+  });
+  data.value = qrResult.data;
+});
+```
+
+As shown in the `base` example above, the QR code pattern updates reactively when the value changes. The pattern is rendered through the `QRCodePatternPath` component, which transforms the boolean matrix into SVG path data:
+
+```typescript
+const pathData = context.data.value.reduce((acc, row, y) => {
+  row.forEach((isBlack, x) => {
+    if (isBlack) {
+      acc += `M ${x} ${y} h 1 v 1 h -1 z `;
+    }
+  });
+  return acc;
+}, "");
+```
+
+The `multiple` example demonstrates how each QR code instance maintains its own independent state, allowing multiple QR codes with different values to coexist on the same page.
+
+The state management system ensures that:
+- Initial values can be provided through props
+- Changes to value or error correction level trigger immediate updates
+- The QR code matrix is automatically regenerated when needed
+- State is properly isolated between multiple instancesBased on the provided implementation and examples, I'll document the QR code component's configuration options.
+
+## Core Configuration
+
+### QR Code Value and Error Correction
+
+The QR code content and error correction level can be configured through the `QRCode.Root` component's props:
+
+- `value`: The text or URL to encode (string)
+- `level`: Error correction level ("L", "M", "Q", "H")
+
+As shown in the `base` example above, you can set these properties to generate a basic QR code with default settings.
+
+```typescript
+type ErrorCorrectionLevel = "L" | "M" | "Q" | "H";
+// L = Low (7% recovery)
+// M = Medium (15% recovery)
+// Q = Quartile (25% recovery)
+// H = High (30% recovery)
+```
+
+> The default error correction level is "L" if not specified.
+
+### Dimensions and Scaling
+
+The QR code's size is controlled through the `width` and `height` props on the `QRCode.PatternSvg` component. As shown in all examples above, the default size is 200x200 pixels.
+
+The QR code pattern automatically scales to fit within these dimensions while maintaining its aspect ratio, thanks to the SVG viewBox calculation.
+
+## Advanced Configuration
+
+### Custom Pattern Rendering
+
+The QR code pattern can be customized using the `fill` attribute on `QRCode.PatternPath`. As shown in the `overlay-custom-color` example above, you can change the pattern color to any valid CSS color value.
+
+### Overlay Configuration
+
+The `QRCode.Overlay` component supports custom content positioning. As demonstrated in the `overlay` example above, it automatically centers the content over the QR code while maintaining code readability.
+
+> Important: When using overlays, it's recommended to use a higher error correction level ("H") to ensure the QR code remains scannable despite the overlay content.
+
+### Technical Constraints
+
+- The QR code is generated with zero borders by default
+- The pattern data is dynamically updated when either the `value` or `level` props change
+- The SVG pattern uses a path-based rendering approach for optimal performance and scaling
+- The component maintains a 1:1 aspect ratio regardless of container dimensionsBased on the provided component implementation, examples, and APIs, I don't see any form-specific features or examples for the QR Code component. The component is primarily focused on displaying and customizing QR codes rather than form integration.
+
+The available examples (`base`, `multiple`, `overlay`, and `overlay-custom-color`) demonstrate visual customization and multiple instance usage, but none show form integration, validation, or submission handling.
+
+Since there are no form-specific features to document, this section can be skipped. The QR Code component is designed to be a display component rather than a form input component.
+
+If form integration becomes necessary in the future, features like:
+- Form field integration
+- Value validation
+- Form submission handling
+- Form state management
+
+would need to be implemented and documented.Based on the provided examples and implementation, I don't see any environment-specific examples or features that would warrant documentation about server vs. client rendering, platform-specific behavior, environmental dependencies, or special rendering cases.
+
+The examples provided (`base`, `multiple`, `overlay`, and `overlay-custom-color`) demonstrate basic usage patterns, styling variations, and component composition, but don't showcase any environment-specific functionality.
+
+The QR Code component appears to work consistently across different rendering environments without special considerations, so there's no need for environment-specific documentation in this case.
+
+If environment-specific examples or features are added in the future, this section should be updated accordingly.
+
+---
+
+# Scroll Area
+
+A customizable container that adds scrollbars when content overflows its boundaries.
+
+<Showcase name="both" />
+
+## Features
+
+<Features api={api} />
+
+## Anatomy
+
+<AnatomyTable api={api} />
+
+## Examples
+
+### Basic Usage
+
+The scroll area component can be configured with different scrollbar visibility behaviors using the `type` prop.
+
+<Showcase name="vertical" />
+
+This example demonstrates:
+- Using `ScrollArea.Root` with default `type="hover"` visibility
+- Vertical scrollbar appears when content overflows
+- The `ScrollArea.Viewport` wraps the content
+- `ScrollArea.Scrollbar` and `ScrollArea.Thumb` create the custom scrollbar
+
+### Visual Features
+
+#### Horizontal Scrolling
+
+For content that extends beyond the horizontal bounds, add a horizontal scrollbar.
+
+<Showcase name="horizontal" />
+
+This example shows:
+- Setting `orientation="horizontal"` on `ScrollArea.Scrollbar`
+- Horizontal thumb moves as content scrolls left/right
+- Content container width controls when horizontal scrolling activates
+
+#### Both Scrollbars
+
+When content overflows in both directions, both scrollbars can be displayed simultaneously.
+
+<Showcase name="both" />
+
+This example demonstrates:
+- Multiple `ScrollArea.Scrollbar` components with different orientations
+- Automatic thumb sizing based on content dimensions
+- Smooth interaction between vertical and horizontal scrolling
+
+### Advanced Usage
+
+
+This example shows:
+- Setting `type="always"` for persistent scrollbars
+- Scrollbars remain visible even when not actively scrolling
+- The `hideDelay` prop can be used with `type="scroll"` to control how long scrollbars remain visible after scrolling stops## Component State
+
+The ScrollArea component maintains several internal state values to manage scrollbar visibility, dragging behavior, and overflow detection.
+
+1. Internal State Structure
+
+The core state is managed through the ScrollArea context:
+
+```typescript
+interface ScrollAreaContext {
+  // Element References
+  thumbRef: Signal<HTMLDivElement | undefined>;
+  viewportRef: Signal<HTMLDivElement | undefined>;
+  verticalScrollbarRef: Signal<HTMLDivElement | undefined>;
+  horizontalScrollbarRef: Signal<HTMLDivElement | undefined>;
+  rootRef: Signal<HTMLDivElement | undefined>;
+  
+  // Visibility Control
+  type: ScrollbarVisibility;
+  hideDelay: number;
+  
+  // State Flags
+  isScrolling: Signal<boolean>;
+  isHovering: Signal<boolean>;
+  scrollTimeout: Signal<number>;
+  hasOverflow: Signal<boolean>;
+}
+```
+
+2. State Updates
+
+The component handles state updates through several mechanisms:
+
+Scrollbar Visibility:
+```typescript
+const shouldShow = () => {
+  const hasOverflow = context.hasOverflow.value;
+  switch (context.type) {
+    case "always":
+      return hasOverflow;
+    case "hover":
+      return context.isHovering.value && hasOverflow;
+    case "scroll":
+      return context.isScrolling.value && hasOverflow;
+    case "auto":
+      return hasOverflow;
+    default:
+      return false;
+  }
+};
+```
+
+Drag State Management:
+```typescript
+const dragData = useSignal({
+  startClientY: 0,
+  startClientX: 0,
+  startScrollTop: 0,
+  startScrollLeft: 0,
+  activeThumb: null as HTMLElement | null,
+  activeScrollbar: null as HTMLElement | null
+});
+```
+
+Overflow Detection:
+```typescript
+const updateOverflow = $((viewport: HTMLElement) => {
+  const hasVerticalOverflow = viewport.scrollHeight > viewport.clientHeight;
+  const hasHorizontalOverflow = viewport.scrollWidth > viewport.clientWidth;
+  context.hasOverflow.value = hasVerticalOverflow || hasHorizontalOverflow;
+});
+```
+
+The state updates are triggered by:
+- Mouse events (enter/leave for hover state)
+- Scroll events (for scroll visibility)
+- Resize events (for overflow detection)
+- Zoom level changes (for overflow recalculation)
+- Drag operations (for thumb positioning)
+
+The ScrollArea maintains these states independently for both vertical and horizontal scrollbars, allowing for precise control over scrollbar behavior and visibility based on user interaction and content overflow conditions.Based on the provided implementation and examples, I'll document the ScrollArea configuration options:
+
+## Scrollbar Visibility
+
+### Visibility Modes
+
+The ScrollArea component supports four visibility modes controlled by the `type` prop on `ScrollArea.Root`:
+
+- `hover` (default): Shows scrollbars when hovering over the scroll area
+- `scroll`: Shows scrollbars during scrolling
+- `auto`: Always shows scrollbars when content overflows
+- `always`: Always shows scrollbars when content overflows
+
+As shown in the `hover-test` example above, scrollbars appear on hover and hide when the mouse leaves.
+
+### Hide Delay
+
+For the `scroll` visibility mode, you can customize how long scrollbars remain visible after scrolling stops using the `hideDelay` prop:
+
+```typescript
+type PublicRootProps = {
+  hideDelay?: number; // milliseconds
+}
+```
+
+The default delay is 600ms. As shown in the `custom-delay-test` example above, you can extend this delay for better visibility.
+
+## Scrollbar Configuration
+
+### Orientation
+
+ScrollArea supports both vertical and horizontal scrollbars through the `orientation` prop on `ScrollArea.Scrollbar`:
+
+```typescript
+type PublicScrollBarType = {
+  orientation?: "vertical" | "horizontal";
+}
+```
+
+As shown in the `both` example above, you can use both orientations simultaneously for content that overflows in both directions.
+
+### Overflow Detection
+
+The ScrollArea automatically detects content overflow and manages scrollbar visibility accordingly. This includes:
+
+- Automatic detection of viewport size changes
+- Handling of browser zoom levels
+- Response to content size changes
+
+The overflow state is exposed through the `data-has-overflow` attribute on the root element.
+
+## Technical Constraints
+
+1. Viewport Dimensions
+   - The ScrollArea requires explicit dimensions (height/width) on the root element
+   - Dimensions can be set via inline styles or CSS classes
+
+2. Performance Considerations
+   - Scrollbar visibility changes use CSS transitions for smooth animations
+   - Thumb position updates are optimized using transform translations
+   - Overflow detection is debounced during zoom operations
+
+3. Browser Support Requirements
+   - Requires browsers that support:
+     - ResizeObserver API
+     - CSS transforms
+     - Mouse event handling
+     - Wheel event normalization
+
+These technical aspects ensure smooth scrolling behavior while maintaining performance across different browsers and scenarios.Based on the provided examples and API documentation, I don't see any form-specific examples or functionality in the ScrollArea component. The ScrollArea component is primarily focused on providing scrollable content areas with customizable scrollbars and does not include form-specific features such as:
+
+- Form integration
+- Form validation
+- Form submission
+- Form state handling
+
+The examples provided (`both`, `horizontal`, `vertical`) demonstrate the basic usage and layout functionality of the ScrollArea component, but none are related to form functionality.
+
+Therefore, there is no form-specific documentation to write for this component.Looking through the provided examples and implementation, I don't see any environment-specific examples (like CSR vs SSR) or features that would require special documentation about environmental concerns.
+
+The examples provided (`both`, `horizontal`, `vertical`) demonstrate basic usage patterns and different scrollbar orientations, but don't showcase any environment-specific behavior.
+
+The ScrollArea component appears to work consistently across server and client environments without any special considerations or limitations. It handles both initial server-side rendering and client-side hydration seamlessly through Qwik's default behavior.
+
+Since there are no environment-specific examples or features to document, this section should be empty to avoid creating unnecessary documentation.
+
+---
+

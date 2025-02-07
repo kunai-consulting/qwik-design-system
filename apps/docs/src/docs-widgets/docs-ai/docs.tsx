@@ -6,6 +6,54 @@ import { component$, useSignal } from "@builder.io/qwik";
 import { server$, useLocation } from "@builder.io/qwik-city";
 import { AIButton } from "./ai-button";
 
+const getExampleFiles = server$(async (route: string) => {
+  const examplesPath = resolve(process.cwd(), `src/routes/${route}/examples`);
+  return fs
+    .readdirSync(examplesPath)
+    .filter((file) => file.endsWith(".tsx") && !file.includes("-test"))
+    .map((file) => file.replace(".tsx", ""));
+});
+
+const validateShowcase = (content: string, availableExamples: string[]): string => {
+  const showcaseRegex = /<Showcase name="([^"]+)" \/>/g;
+  let validatedContent = content;
+  let match: RegExpExecArray | null;
+
+  while ((match = showcaseRegex.exec(content)) !== null) {
+    const exampleName = match[1];
+    if (!availableExamples.includes(exampleName)) {
+      const blockRegex = new RegExp(
+        `(###[^#]*?)?<Showcase name="${exampleName}" \/>[^#]*?(\n\n|$)`,
+        "g"
+      );
+      validatedContent = validatedContent.replace(blockRegex, "\n\n");
+    }
+  }
+
+  const lines = validatedContent.split("\n");
+  const validatedLines = lines.filter((line) => {
+    if (line.trim() === "#") return false;
+    return !/^#{1,6}\s*$/.test(line.trim());
+  });
+
+  let prevLevel = 1;
+  const fixedLines = validatedLines.map((line) => {
+    if (line.startsWith("#")) {
+      const headerMatch = line.match(/^#{1,6}/);
+      if (headerMatch) {
+        const level = headerMatch[0].length;
+        if (level > prevLevel + 1) {
+          return "#".repeat(prevLevel + 1) + line.slice(level);
+        }
+        prevLevel = level;
+      }
+    }
+    return line;
+  });
+
+  return fixedLines.join("\n");
+};
+
 export const DocsAI = component$(() => {
   const isGenerating = useSignal(false);
   const status = useSignal("");
@@ -14,6 +62,14 @@ export const DocsAI = component$(() => {
   const route = loc.url.pathname.split("/").filter(Boolean)[0];
 
   const generateInitialDocs = server$(async (promptPrefix: string) => {
+    const examplesPath = resolve(process.cwd(), `src/routes/${route}/examples`);
+    const exampleFiles = fs
+      .readdirSync(examplesPath)
+      .filter((file) => file.endsWith(".tsx") && !file.includes("-test"))
+      .map((file) => file.replace(".tsx", ""));
+
+    const heroExample = exampleFiles.includes("hero") ? "hero" : exampleFiles[0];
+
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
     return anthropic.messages.create({
       model: "claude-3-5-sonnet-20241022",
@@ -40,7 +96,7 @@ export const DocsAI = component$(() => {
   
           After the description, add the hero showcase component with:
   
-          <Showcase name="hero" />
+          <Showcase name="${heroExample}" />
   
           Then add the exact text:
   
@@ -51,10 +107,36 @@ export const DocsAI = component$(() => {
           ## Anatomy
   
           <AnatomyTable api={api} />
+          
+          Then write the Examples section using these rules:
+
+          ## Examples
   
-          Now add document any examples that are absolutely critical to the accessibility of the component, for example, adding an accessible label to a checkbox.
+          1. Basic Usage
+           - Show the simplest implementation with core props
+           - ONE example demonstrating basic setup
+           - Explain what each prop does
   
-          Group the examples with an h2 title, with the h3's being the examples. Otherwise, just add the h3's.
+          2. Visual Features (if applicable)
+           - Show styling and customization options
+           - ONE example per visual feature
+           - Group related visual features together
+           - Include overlay and color customization here
+  
+          3. Advanced Usage (if applicable)
+           - Show complex scenarios (like multiple instances)
+           - ONE example per advanced feature
+           - Explain unique aspects
+  
+          STRICT RULES:
+          1. Each example MUST appear only ONCE
+          2. Choose the most appropriate section for each example
+          3. When a feature has multiple aspects, document them all together
+          4. Do not include state management or configuration details
+          5. Use backticks for component and prop names
+          6. Do not create additional sections for styling or overlays
+          7. Group all visual customization under Visual Features
+          8. Group all advanced usage patterns under Advanced Usage
   
           This is NOT related to anything to do with the component state (initial, reactive, uncontrolled, controlled, events, disabled, etc.)
           `
@@ -80,10 +162,28 @@ export const DocsAI = component$(() => {
   
           Write an h2 with the text "Component State"
   
-          From there, look for examples that would fall under this category.
-  
-          Only write something if the state examples exist.
-  
+          From there, document state features in this order:
+          1. Internal State Structure
+           - Document the core state values
+           - Show how state is initialized
+           - Explain state relationships
+      
+          2. State Updates
+           - Show how state changes
+           - Explain update patterns
+           - Document state reactions
+      
+          STRICT RULES:
+          1. If an example was already shown in Examples section:
+           - Reference it: "As shown in the Basic Usage example above..."
+           - Do not show it again
+           - Only add new information about state management
+          2. Do not create new sections for features shown in Examples
+          3. Focus on HOW state works, not on WHAT it does
+          4. Use code blocks to show state implementation
+          5. Do not repeat visual or configuration aspects
+          6. Each feature should be documented exactly once  
+
           Do not write about:
   
           - Accessibility (label, description, etc.)
@@ -192,9 +292,35 @@ export const DocsAI = component$(() => {
   
           You are now writing the documentation specific to the configuration of the component.
   
-          Find and gather examples that are related to the configuration of the component. 
-  
-          Only write something if the configuration examples exist.
+          Write about configuration in this order:
+          1. Core Configuration
+           - Document essential settings and their values
+           - Explain technical constraints and limitations
+           - Describe default behaviors
+           - ALWAYS reference examples instead of showing them again 
+
+          2. Advanced Configuration (if applicable)
+           - Document complex configuration options
+           - Explain technical implications
+           - Describe any limitations or constraints
+           - Add new technical information not covered in Examples or State
+        
+          STRICT RULES:
+          1. DO NOT use code blocks for examples that were shown before
+          2. ALWAYS write "As shown in the X example above, ..." when referencing examples
+          3. Use code blocks ONLY for:
+           - New configuration options not shown in examples
+           - Technical specifications
+           - Type definitions
+          4. DO NOT repeat information from:
+           - Examples section
+           - State section
+           - Visual customization
+          5. Focus ONLY on:
+           - Technical configuration details
+           - Default values and constraints
+           - Performance considerations
+           - Browser support requirements
   
           Do not write about:
   
@@ -207,6 +333,8 @@ export const DocsAI = component$(() => {
           Determine the h2's and h3's that should be used to organize the examples.
   
           Only write something if the configuration examples exist.
+          
+          Skip this section entirely if all configuration options were already covered.
   
           Below are some configuration examples from a headless Combobox component:
   
@@ -248,7 +376,24 @@ export const DocsAI = component$(() => {
           content: `${promptPrefix}
   
           You are now writing the documentation specific to the configuration of the component.
-  
+          
+          STRICT RULES:
+          1. If a feature was shown in previous sections:
+           - Reference it: "As shown in the Basic Usage example above..."
+           - Do not repeat the example
+           - Only add form-specific information
+          2. Only document form-specific features
+          3. Do not repeat state or configuration details
+          4. Each form feature should be documented once
+          5. Group related form features together
+          6. Skip this section if no form features exist
+      
+          Focus ONLY on:
+          - Form integration
+          - Form validation
+          - Form submission
+          - Form state handling
+          
           Find and gather examples that are related to the configuration of the component. 
           
           This is NOT related to the state of the component. (e.g. initial, reactive, disabled, etc.)
@@ -299,6 +444,23 @@ export const DocsAI = component$(() => {
           content: `${promptPrefix}
   
           You are now writing the documentation specific to the environment of the component.
+          
+          STRICT RULES:
+          1. If a feature was shown in previous sections:
+           - Reference it: "As shown in the Basic Usage example above..."
+           - Do not repeat the example
+           - Only add environment-specific information
+          2. Only document environment-specific features
+          3. Do not repeat state, configuration, or form details
+          4. Each environment feature should be documented once
+          5. Skip this section entirely if no environment-specific features exist
+          6. Do not create sections for basic usage patterns
+      
+          Focus ONLY on:
+          - Server vs client rendering
+          - Platform-specific behavior
+          - Environmental dependencies
+          - Special rendering cases
   
           Find and gather examples that are related to the environment of the component. 
           
@@ -391,6 +553,7 @@ export const DocsAI = component$(() => {
         try {
           const paths = await getFilePaths(route);
 
+          const exampleFiles = await getExampleFiles(route);
           status.value = "Reading component files...";
           const [formattedExamples, formattedComponents, formattedAPI] =
             await Promise.all([
@@ -401,6 +564,10 @@ export const DocsAI = component$(() => {
 
           const promptPrefix = `
             ${currentDocs.value !== "" ? `Documentation written for this component so far: ${currentDocs.value}` : ""}
+            
+            Available examples: ${exampleFiles.join(", ")}
+            
+            IMPORTANT: Only use examples from this list. Do not reference any examples that are not in this list.
           
             Act as a professional documentation writer for a design system that uses Qwik.
 
@@ -431,31 +598,40 @@ export const DocsAI = component$(() => {
             Only output production ready documentation.
           `;
 
-          console.log("promptPrefix:", promptPrefix);
+          // console.log("promptPrefix:", promptPrefix);
 
           status.value = "Generating initial documentation...";
           const initialResponse = await generateInitialDocs(promptPrefix);
-          const initialDocs = getResponseText(initialResponse);
+          const initialDocs = validateShowcase(
+            getResponseText(initialResponse),
+            exampleFiles
+          );
           currentDocs.value += initialDocs;
 
           status.value = "Generating state documentation...";
           const stateResponse = await generateStateDocs(promptPrefix);
-          const stateDocs = getResponseText(stateResponse);
+          const stateDocs = validateShowcase(
+            getResponseText(stateResponse),
+            exampleFiles
+          );
           currentDocs.value += stateDocs;
 
           status.value = "Generating config documentation...";
           const configResponse = await generateConfigDocs(promptPrefix);
-          const configDocs = getResponseText(configResponse);
+          const configDocs = validateShowcase(
+            getResponseText(configResponse),
+            exampleFiles
+          );
           currentDocs.value += configDocs;
 
           status.value = "Generating form documentation...";
           const formResponse = await generateFormDocs(promptPrefix);
-          const formDocs = getResponseText(formResponse);
+          const formDocs = validateShowcase(getResponseText(formResponse), exampleFiles);
           currentDocs.value += formDocs;
 
           status.value = "Generating environment documentation...";
           const envResponse = await generateEnvDocs(promptPrefix);
-          const envDocs = getResponseText(envResponse);
+          const envDocs = validateShowcase(getResponseText(envResponse), exampleFiles);
           currentDocs.value += envDocs;
 
           const logResults = await writeDocs(currentDocs.value, route);

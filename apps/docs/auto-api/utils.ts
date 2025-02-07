@@ -35,8 +35,17 @@ export function parseComponentAnatomy(
 ): AnatomyItem[] {
   const sourceFile = getSourceFile(indexPath);
   const subComponents: AnatomyItem[] = [];
-  const capitalizedComponent =
-    componentName.charAt(0).toUpperCase() + componentName.slice(1);
+
+  const formattedComponentName = componentName
+    .split("-")
+    .map((part) => {
+      if (part.toUpperCase() === part) {
+        return part;
+      }
+      return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+    })
+    .join("");
+
   const parentDir = indexPath.replace(/index\.ts$/, "");
 
   function getComponentSource(propertyName: string) {
@@ -69,7 +78,7 @@ export function parseComponentAnatomy(
     if (!element.propertyName) return { name: "" }; // Should never happen due to earlier check
 
     const anatomyItem: AnatomyItem = {
-      name: `${capitalizedComponent}.${element.name.text}`
+      name: `${formattedComponentName}.${element.name.text}`
     };
 
     const componentSource = getComponentSource(element.propertyName.text);
@@ -206,7 +215,6 @@ export function parseSingleComponentFromDir(
       dataAttributes = [...dataAttributes, ...newDataAttrs];
     }
 
-    // Check for PropsOf in a type-safe way
     if (
       ts.isTypeReferenceNode(node) &&
       ts.isIdentifier(node.typeName) &&
