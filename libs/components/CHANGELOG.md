@@ -1,5 +1,15 @@
 # @kunai-consulting/qwik-headless
 
+## 0.0.4
+
+### Patch Changes
+
+- 3e2b105: QR Code component
+- 6d93576: Add ScrollArea to the TOC
+- 321e705: QRCode Overlay reworked.
+- 7754a25: Fixed the issue with auto-api/api.ts; resolved the incorrect renaming in Public.
+- c6337ba: fix: only preserve modules in prod
+
 ## 0.0.3
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@kunai-consulting/qwik",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Create a Qwik library",
   "main": "./lib/index.qwik.mjs",
   "qwik": "./lib/index.qwik.mjs",
