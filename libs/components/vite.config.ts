@@ -2,6 +2,7 @@ import { qwikVite } from "@builder.io/qwik/optimizer";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import pkg from "./package.json";
+import { isDev } from "@builder.io/qwik/build";
 
 type PackageJson = {
   dependencies?: Record<string, string>;
@@ -23,10 +24,14 @@ export default defineConfig(() => {
           `${entryName}.qwik.${format === "es" ? "mjs" : "cjs"}`
       },
       rollupOptions: {
-        output: {
-          preserveModules: true,
-          preserveModulesRoot: "src"
-        },
+        ...(!isDev
+          ? {
+              output: {
+                preserveModules: true,
+                preserveModulesRoot: "src"
+              }
+            }
+          : {}),
         // externalize deps that shouldn't be bundled into the library
         external: [
           /^node:.*/,
