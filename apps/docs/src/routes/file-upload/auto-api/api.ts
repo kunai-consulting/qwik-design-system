@@ -114,19 +114,19 @@ export const api = {
   ],
   "anatomy": [
     {
-      "name": "File-upload.Root",
+      "name": "FileUpload.Root",
       "description": "Root component for file upload functionality\n  Provides context and state management for child components"
     },
     {
-      "name": "File-upload.Dropzone",
+      "name": "FileUpload.Dropzone",
       "description": "Component that handles drag and drop file upload functionality"
     },
     {
-      "name": "File-upload.Input",
+      "name": "FileUpload.Input",
       "description": "Hidden file input component that handles file selection via system dialog"
     },
     {
-      "name": "File-upload.Trigger",
+      "name": "FileUpload.Trigger",
       "description": "Trigger component that opens the file selection dialog\n  Acts as a styled button that triggers the hidden file input"
     }
   ],

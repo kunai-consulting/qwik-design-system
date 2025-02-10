@@ -15,43 +15,57 @@ const getExampleFiles = server$(async (route: string) => {
 });
 
 const validateShowcase = (content: string, availableExamples: string[]): string => {
-  const showcaseRegex = /<Showcase name="([^"]+)" \/>/g;
-  let validatedContent = content;
-  let match: RegExpExecArray | null;
-
-  while ((match = showcaseRegex.exec(content)) !== null) {
-    const exampleName = match[1];
-    if (!availableExamples.includes(exampleName)) {
-      const blockRegex = new RegExp(
-        `(###[^#]*?)?<Showcase name="${exampleName}" \/>[^#]*?(\n\n|$)`,
-        "g"
-      );
-      validatedContent = validatedContent.replace(blockRegex, "\n\n");
-    }
-  }
-
-  const lines = validatedContent.split("\n");
-  const validatedLines = lines.filter((line) => {
-    if (line.trim() === "#") return false;
-    return !/^#{1,6}\s*$/.test(line.trim());
-  });
-
+  const lines = content.split('\n');
+  const validatedLines: string[] = [];
+  let skipUntilNextHeader = false;
   let prevLevel = 1;
-  const fixedLines = validatedLines.map((line) => {
-    if (line.startsWith("#")) {
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const showcaseMatch = line.match(/<Showcase name="([^"]+)"/);
+
+    if (showcaseMatch) {
+      const exampleName = showcaseMatch[1];
+
+      if (availableExamples.includes(exampleName)) {
+        validatedLines.push(line);
+        skipUntilNextHeader = false;
+      } else {
+        skipUntilNextHeader = true;
+      }
+    }
+    else if (line.startsWith('#')) {
       const headerMatch = line.match(/^#{1,6}/);
       if (headerMatch) {
         const level = headerMatch[0].length;
         if (level > prevLevel + 1) {
-          return "#".repeat(prevLevel + 1) + line.slice(level);
+          validatedLines.push('#'.repeat(prevLevel + 1) + line.slice(level));
+        } else {
+          validatedLines.push(line);
+          prevLevel = level;
         }
-        prevLevel = level;
       }
+      skipUntilNextHeader = false;
     }
-    return line;
-  });
 
-  return fixedLines.join("\n");
+    else if (!skipUntilNextHeader && line.trim()) {
+      validatedLines.push(line);
+    }
+  }
+
+  return cleanEmptyLines(validatedLines.join('\n'));
+};
+
+const cleanEmptyLines = (content: string): string => {
+  return content
+    .split('\n')
+    .reduce((acc, line, index, arr) => {
+      if (line.trim() || (arr[index - 1]?.trim() && arr[index + 1]?.trim())) {
+        acc.push(line);
+      }
+      return acc;
+    }, [] as string[])
+    .join('\n');
 };
 
 export const DocsAI = component$(() => {
@@ -69,6 +83,8 @@ export const DocsAI = component$(() => {
       .map((file) => file.replace(".tsx", ""));
 
     const heroExample = exampleFiles.includes("hero") ? "hero" : exampleFiles[0];
+
+    const showcaseExample = `<Showcase name="${heroExample}" />\n`;
 
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
     return anthropic.messages.create({
@@ -96,8 +112,7 @@ export const DocsAI = component$(() => {
   
           After the description, add the hero showcase component with:
   
-          <Showcase name="${heroExample}" />
-  
+          ${showcaseExample}
           Then add the exact text:
   
           ## Features

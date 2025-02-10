@@ -19,21 +19,27 @@ import { calendarContextId } from "./calendar-context";
 import { ARIA_LABELS, MONTHS_LG, WEEKDAYS } from "./constants";
 import type { LocalDate, Locale, Month } from "./types";
 import { daysArrGenerator } from "./utils";
-
-export type CalendarRootProps = PropsOf<"div"> & {
+export type PublicCalendarRootProps = PropsOf<"div"> & {
+  /** The locale used for formatting dates and text */
   locale?: Locale;
+  /** The initial date to display when the calendar first loads */
   defaultDate?: LocalDate;
+  /** Whether to show week numbers in the calendar */
   showWeekNumber?: boolean;
+  /** Whether to show complete weeks by including days from adjacent months */
   fullWeeks?: boolean;
+  /** The currently selected date */
   date?: LocalDate;
+  /** Whether to show the days of the week header */
   showDaysOfWeek?: boolean;
+  /** Event handler called when a date is selected */
   onDateChange$?: QRL<(date: LocalDate) => void>;
+  /** Reactive value to control the open state of the calendar popover */
   "bind:open"?: Signal<boolean>;
 };
-
 const regex = /^\d{4}-(0[1-9]|1[0-2])-\d{2}$/;
-
-export const CalendarRoot = component$<CalendarRootProps>(
+/** The root calendar component that manages state and provides context */
+export const CalendarRoot = component$<PublicCalendarRootProps>(
   ({
     date: dateProp,
     fullWeeks = false,
@@ -116,7 +122,9 @@ export const CalendarRoot = component$<CalendarRootProps>(
 
     return (
       <div
+        // The root container of the calendar component
         data-qds-datepicker-root
+        // Controls the visual theme of the calendar
         data-theme="light"
         aria-label={labelSignal.value}
         {...props}

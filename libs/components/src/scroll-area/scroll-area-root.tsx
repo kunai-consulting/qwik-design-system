@@ -12,7 +12,7 @@ import styles from "./scroll-area.css?inline";
 type PublicScrollbarVisibility = "hover" | "scroll" | "auto" | "always";
 type PublicRootProps = PropsOf<"div"> & {
   /** Controls when the scrollbars are visible: 'hover', 'scroll', 'auto', or 'always' */
-  type?: ScrollbarVisibility;
+  type?: PublicScrollbarVisibility;
   /** Delay in milliseconds before hiding the scrollbars when type is 'scroll' */
   hideDelay?: number;
 };

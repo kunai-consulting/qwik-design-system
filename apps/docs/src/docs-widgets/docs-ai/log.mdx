@@ -1328,3 +1328,584 @@ Since there are no environment-specific examples or features to document, this s
 
 ---
 
+# Calendar
+Select dates with an interactive grid that supports keyboard navigation and localization.
+<Showcase name="hero" />
+## Features
+<Features api={api} />
+## Anatomy 
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The calendar can be implemented with minimal configuration using the compound components pattern. The example below shows a basic calendar setup with navigation controls and date selection.
+<Showcase name="hero" />
+This example demonstrates:
+- `Calendar.Root` as the main container with `locale` and `showWeekNumber` props
+- `Calendar.Header` containing navigation controls and month/year display
+- `Calendar.Grid` rendering the date grid with `Calendar.GridDay` for individual dates
+- Date selection handling through `onDateChange$` prop on `Calendar.GridDay`
+Key API highlights:
+- `locale` prop for internationalization (defaults to "en")
+- `showWeekNumber` prop to display week numbers (defaults to false) 
+- `showDaysOfWeek` prop to show/hide weekday headers (defaults to true)
+- `onDateChange$` event handler for date selection
+- `data-selected` and `data-current` attributes for styling selected and current dates
+The calendar supports full keyboard navigation and follows WAI-ARIA calendar design patterns for accessibility.
+Note: Since only the "hero" example is available in the provided examples list, I've limited the documentation to this basic usage section. Additional sections for Visual Features and Advanced Usage would require more example implementations.## Component State
+### Internal State Structure
+The Calendar component maintains several key pieces of state through the `CalendarContext`:
+```typescript
+type CalendarContext = {
+  locale: Locale;
+  defaultDate: LocalDate;
+  activeDate: Signal<LocalDate | null>;
+  dateToFocus: Signal<LocalDate>;
+  showWeekNumber: boolean;
+  showDaysOfWeek: boolean;
+  daysOfWeek: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  datesArray: Signal<(string | null)[][]>;
+  monthToRender: Signal<Month>;
+  yearToRender: Signal<number>;
+  currentDate: LocalDate;
+  localId: string;
+  isPopoverOpenSig: Signal<boolean>;
+};
+```
+Core state values include:
+- `activeDate`: Tracks the currently selected date
+- `dateToFocus`: Manages keyboard focus within the calendar grid
+- `monthToRender` and `yearToRender`: Control which month/year is displayed
+- `datesArray`: Contains the matrix of dates to render in the grid
+The state is initialized in `CalendarRoot` with default values and optional props:
+```typescript
+const defaultDate = props.defaultDate ?? currentDate;
+const activeDate = useSignal<LocalDate | null>(null);
+const monthToRender = useSignal<Month>(defaultDate.split("-")[1] as Month);
+const yearToRender = useSignal<number>(+defaultDate.split("-")[0]);
+```
+### State Updates
+The calendar state updates through several patterns:
+1. Date Selection:
+```typescript
+onClick$={[
+  $(() => {
+    context.activeDate.value = day as LocalDate;
+    onDateChange$?.(day as LocalDate);
+  })
+]}
+```
+2. Month Navigation:
+```typescript
+// Previous month
+const decreaseDate = $(() => {
+  if (monthToRender.value === "01") {
+    monthToRender.value = "12";
+    yearToRender.value--;
+    return;
+  }
+  monthToRender.value = String(+monthToRender.value - 1).padStart(2, "0") as Month;
+});
+// Next month
+const increaseDate = $(() => {
+  if (monthToRender.value === "12") {
+    monthToRender.value = "01";
+    yearToRender.value++;
+    return;
+  }
+  monthToRender.value = String(+monthToRender.value + 1).padStart(2, "0") as Month;
+});
+```
+3. Focus Management:
+The calendar maintains focus state through the `dateToFocus` signal, which updates based on keyboard navigation:
+```typescript
+const updateFocus = (newIdx: number, newDate: LocalDate | null = null) => {
+  const dateToSet = newDate ?? (buttons[newIdx].getAttribute("data-value") as LocalDate);
+  context.dateToFocus.value = dateToSet;
+  elFocus?.setAttribute("tabindex", "-1");
+  buttons[newIdx].setAttribute("tabindex", "0");
+  buttons[newIdx].focus({ preventScroll: true });
+};
+```
+The state updates are reactive and trigger re-renders of the calendar grid while maintaining proper focus management and selection state.Based on the provided implementation and examples, I'll document the calendar configuration options:
+## Core Configuration
+### Locale and Date Format
+The calendar supports localization through the `locale` prop on `Calendar.Root`. Currently, it supports:
+- Default locale: `"en"`
+- Date format: `YYYY-MM-DD`
+As shown in the hero example above, the calendar uses the default English locale for month names, weekday labels, and date formatting.
+### Initial Display
+The calendar's initial display can be configured through these `Calendar.Root` props:
+```typescript
+{
+  // Initial date shown when calendar loads
+  defaultDate?: LocalDate;  
+  // Whether to show week numbers
+  showWeekNumber?: boolean; // default: false
+  // Whether to show days of week header
+  showDaysOfWeek?: boolean; // default: true
+  // Show complete weeks with days from adjacent months
+  fullWeeks?: boolean; // default: false
+}
+```
+### Grid Structure
+The calendar grid layout is controlled through `Calendar.Grid` and supports:
+- Week numbers display (optional)
+- Days of week header (optional) 
+- Full/partial week display
+- Responsive grid sizing
+> The grid automatically adjusts its layout based on the `showWeekNumber` and `showDaysOfWeek` props.
+## Advanced Configuration
+### Date Selection
+The calendar supports controlled and uncontrolled date selection through:
+```typescript
+{
+  // Currently selected date (controlled)
+  date?: LocalDate;
+  // Handler for date selection
+  onDateChange$?: (date: LocalDate) => void;
+}
+```
+### Date Constraints
+The calendar enforces these date format constraints:
+- Dates must be in `YYYY-MM-DD` format
+- Month values must be `01-12`
+- Day values must be valid for the given month
+- Invalid date formats will throw an error
+> The calendar validates date strings against the regex pattern: `/^\d{4}-(0[1-9]|1[0-2])-\d{2}$/`
+### Popover Integration
+When used with popover functionality, the calendar supports:
+```typescript
+{
+  // Control popover open state
+  "bind:open"?: Signal<boolean>;
+}
+```
+This enables integration with popover positioning and focus management systems.Based on the provided code and examples, there are no form-specific features or examples shown for the Calendar component. The component appears to be focused on date selection and display functionality rather than form integration.
+The example provided (`hero`) demonstrates basic date selection and display, but does not show any form-specific implementations such as:
+- Form field integration
+- Form validation
+- Form submission handling
+- Form state management
+Since there are no form-specific features to document, this section can be skipped. The Calendar component's primary purpose appears to be as a standalone date selection interface rather than a form input component.
+If form integration is needed, it would need to be implemented by capturing the selected date value (as shown in the hero example using `onDateChange$`) and manually integrating it into a form system.Based on the provided examples and implementation, I don't see any environment-specific examples (like CSR vs SSR) for the Calendar component. The only example provided shows basic usage of the calendar component.
+Since there are no environment-specific examples or features to document, I'll skip this section as per the rules. The Calendar component appears to work consistently across environments without any special considerations needed for server vs client rendering or platform-specific behavior.
+If environment-specific examples or features are added in the future, this section should be updated to document those specific cases.
+
+---
+
+# Checklist
+A group of selectable items that can be toggled individually or all at once.
+<Showcase name="hero" />
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+Create a simple checklist with multiple selectable items.
+<Showcase name="select-all" />
+This example demonstrates the core functionality of the checklist component:
+- `Checklist.Root` serves as the container for all checklist items
+- `Checklist.SelectAll` creates a master checkbox that controls all items
+- `Checklist.Item` represents individual checkable items
+- `Checklist.ItemTrigger` provides the interactive area for each item
+- `Checklist.ItemIndicator` displays the checked state
+- `Checklist.Label` and `Checklist.ItemLabel` provide accessible text labels
+The select-all functionality automatically manages the state of all items, including a mixed state when only some items are selected.
+Note: The available examples are limited to "hero" and "select-all". Additional examples would typically cover visual features and advanced usage patterns, but they are not included in the provided example list.## Component State
+### Internal State Structure
+The Checklist component maintains two primary state values through the `ChecklistContext`:
+```typescript
+type ChecklistContext = {
+  isAllCheckedSig: Signal<boolean | "mixed">;
+  checkedStatesSig: Signal<(boolean | "mixed")[]>;
+};
+```
+1. `isAllCheckedSig`: Tracks the state of the select-all checkbox
+   - `true`: All items are checked
+   - `false`: No items are checked 
+   - `"mixed"`: Some items are checked
+2. `checkedStatesSig`: Maintains an array of individual checkbox states
+The state is initialized when the `ChecklistRoot` component mounts:
+```typescript
+const isAllCheckedSig = useSignal(false);
+const checkedStatesSig = useSignal<(boolean | "mixed")[]>([]);
+```
+### State Updates
+The Checklist implements a bidirectional state management system:
+1. Select All → Individual Items
+```typescript
+useTask$(function checkAllManager({ track }) {
+  track(() => context.isAllCheckedSig.value);
+  if (context.isAllCheckedSig.value === true) {
+    isCheckedSig.value = true;
+  } else if (context.isAllCheckedSig.value === false) {
+    isCheckedSig.value = false;
+  }
+});
+```
+2. Individual Items → Select All
+```typescript
+useTask$(function checkItemsManager({ track }) {
+  track(() => isCheckedSig.value);
+  context.checkedStatesSig.value[index] = isCheckedSig.value;
+  if (context.checkedStatesSig.value.every((state) => state === true)) {
+    context.isAllCheckedSig.value = true;
+  } else if (context.checkedStatesSig.value.every((state) => state === false)) {
+    context.isAllCheckedSig.value = false;
+  } else {
+    context.isAllCheckedSig.value = "mixed";
+  }
+});
+```
+As shown in the "select-all" example above, when the select-all checkbox is toggled:
+- It updates `isAllCheckedSig`
+- The change propagates to all individual items
+- Each item updates its local state
+- The collective state is reflected back to determine if all/some/none are checked
+This creates a synchronized state system where:
+- Individual items can be toggled independently
+- The select-all checkbox reflects the aggregate state
+- Toggling select-all affects all items simultaneouslyBased on the provided implementation and examples, I'll document the configuration options for the Checklist component.
+## Core Configuration
+### Basic Structure
+The Checklist component requires a specific structure to function properly. The root component must contain individual checklist items, each with their own trigger and indicator components.
+As shown in the `hero` example above, the basic structure consists of:
+- `Checklist.Root` - The container component
+- `Checklist.Item` - Individual checkbox items
+- `Checklist.ItemTrigger` - The interactive trigger element
+- `Checklist.ItemIndicator` - Visual indicator for checked state
+### Select All Configuration
+The Checklist supports a "select all" functionality that can be implemented using dedicated components. As shown in the `select-all` example above, this requires:
+- `Checklist.SelectAll` - The select all trigger
+- `Checklist.SelectAllIndicator` - Visual indicator for the select all state
+- `Checklist.Label` - Label for the select all checkbox
+The select all functionality automatically manages three states:
+- Unchecked (when no items are selected)
+- Mixed (when some items are selected)
+- Checked (when all items are selected)
+### State Management
+The Checklist uses an internal context system to manage the state of all checkboxes. Key technical details:
+```typescript
+type ChecklistContext = {
+  isAllCheckedSig: Signal<boolean | "mixed">;
+  checkedStatesSig: Signal<(boolean | "mixed")[]>;
+};
+```
+> The context automatically synchronizes states between individual items and the select all checkbox. No additional configuration is required.
+### Item Tracking
+The Checklist internally tracks items using index positions. This is handled automatically, but you should be aware that:
+```typescript
+type PublicChecklistItemProps = {
+  _index?: number; // Automatically managed
+};
+type PublicChecklistRootProps = {
+  _numItems?: number; // Automatically managed
+};
+```
+> These internal props are managed by the component and should not be set manually.
+The component will throw an error if a Checklist Item is rendered without proper index tracking:
+```typescript
+if (props._index === undefined) {
+  throw new Error("Qwik Design System: Checklist Item must have an index");
+}
+```Based on the provided implementation and examples, I'll document the form-specific features of the Checklist component.
+## Forms
+The Checklist component provides form integration through the `<Checklist.HiddenInput>` component, which manages multiple checkbox form inputs. This allows the checklist to work within forms while maintaining its group functionality.
+<Showcase name="select-all" />
+In this example, the checklist demonstrates form integration with multiple selectable items. The `<Checklist.HiddenInput>` component manages the form state for all checkbox items within the checklist group.
+## Form State Management
+The checklist maintains synchronized state management between individual items and the select-all functionality. When used in forms:
+- Individual items can be selected/deselected independently
+- The select-all state automatically updates based on item selections:
+  - All items checked: select-all is checked
+  - No items checked: select-all is unchecked
+  - Some items checked: select-all shows a mixed state
+## Form Validation
+Form validation can be handled through the `<Checklist.ErrorMessage>` component. When rendered, it indicates an invalid state for the checklist group.
+The error message component integrates with the checklist's accessibility features and can be used with any form validation library.
+Note: The examples provided don't explicitly show form validation, but the component includes the necessary structure through `<Checklist.ErrorMessage>` to support validation scenarios.Based on the provided examples and implementation, I don't see any environment-specific examples (like CSR vs SSR) or environment-specific features that need to be documented separately.
+The examples provided ("hero" and "select-all") demonstrate basic usage patterns and state management, but don't showcase any environment-specific behaviors or rendering cases.
+Following the strict rules provided, I should not create documentation for basic usage patterns or features that have been covered in other sections. Since there are no environment-specific examples or features to document, this section should remain empty.
+
+---
+
+# Checklist
+A group of selectable items that can be toggled together or individually.
+<Showcase name="hero" />
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The basic checklist setup allows users to select multiple items independently.
+<Showcase name="hero" />
+This example demonstrates:
+- Using `Checklist.Root` as the container
+- Individual items created with `Checklist.Item`
+- Each item has a trigger, indicator, and label
+- Custom icon using `LuCheck` for the checked state
+### Advanced Usage
+The select-all pattern enables bulk selection of all checklist items.
+<Showcase name="select-all" />
+This example shows:
+- `Checklist.SelectAll` trigger for controlling all items
+- `Checklist.SelectAllIndicator` displaying mixed states with different icons
+- Nested items indented under the select-all control
+- Synchronized state between select-all and individual items
+- Mixed state indication when only some items are selected
+The select-all example demonstrates how the checklist manages group selection while maintaining individual item control. The mixed state is shown using a minus icon when some but not all items are selected.
+Note: Both examples use the same base styling for consistency, but the select-all pattern adds hierarchical structure through layout and indentation.## Component State
+### Internal State Structure
+The Checklist component manages state through a context-based system that coordinates between the select-all functionality and individual checklist items.
+Core state values:
+```typescript
+type ChecklistContext = {
+  isAllCheckedSig: Signal<boolean | "mixed">;
+  checkedStatesSig: Signal<(boolean | "mixed")[]>;
+};
+```
+- `isAllCheckedSig`: Controls the state of the select-all checkbox
+- `checkedStatesSig`: Tracks the checked state of each individual item
+The state is initialized in the `ChecklistRoot` component:
+```typescript
+const isAllCheckedSig = useSignal(false);
+const checkedStatesSig = useSignal<(boolean | "mixed")[]>([]);
+```
+### State Updates
+The state updates follow a bidirectional pattern:
+1. Select All → Individual Items:
+```typescript
+useTask$(function checkAllManager({ track }) {
+  track(() => context.isAllCheckedSig.value);
+  if (context.isAllCheckedSig.value === true) {
+    isCheckedSig.value = true;
+  } else if (context.isAllCheckedSig.value === false) {
+    isCheckedSig.value = false;
+  }
+});
+```
+2. Individual Items → Select All:
+```typescript
+useTask$(function checkItemsManager({ track }) {
+  track(() => isCheckedSig.value);
+  context.checkedStatesSig.value[index] = isCheckedSig.value;
+  // Update select all state based on item states
+  if (context.checkedStatesSig.value.every((state) => state === true)) {
+    context.isAllCheckedSig.value = true;
+  } else if (context.checkedStatesSig.value.every((state) => state === false)) {
+    context.isAllCheckedSig.value = false;
+  } else {
+    context.isAllCheckedSig.value = "mixed";
+  }
+});
+```
+As shown in the `select-all` example above, when individual items are checked/unchecked:
+- The select-all checkbox shows:
+  - Checked (✓) when all items are selected
+  - Mixed state (-) when some items are selected
+  - Unchecked when no items are selected
+- Toggling the select-all checkbox affects all individual item states
+The state management ensures consistent synchronization between the select-all functionality and individual checklist items through Qwik's reactive system.Based on the provided implementation and examples, I'll document the configuration options for the Checklist component.
+## Core Configuration
+### Basic Structure
+The Checklist component requires a specific structure to function properly. As shown in the `hero` example above, the basic configuration includes:
+- `<Checklist.Root />` as the main container
+- `<Checklist.Item />` for individual checkboxes
+- `<Checklist.ItemTrigger />` for the interactive element
+- `<Checklist.ItemIndicator />` for the visual state
+- `<Checklist.ItemLabel />` for the text label
+### Select All Configuration
+The Checklist supports a "select all" feature that can be configured using dedicated components. As demonstrated in the `select-all` example above, this requires:
+- `<Checklist.SelectAll />` for the main trigger
+- `<Checklist.SelectAllIndicator />` for the visual state
+- `<Checklist.Label />` for the select all label
+The select all functionality automatically manages the state of all child checkboxes:
+- When all items are checked, the select all checkbox is checked
+- When some items are checked, the select all checkbox shows a mixed state
+- When no items are checked, the select all checkbox is unchecked
+### State Management
+The Checklist uses an internal context system to manage state synchronization between the select all checkbox and individual items. This is handled automatically and requires no additional configuration.
+> Note: The Checklist maintains an array of checked states internally, so you don't need to manage individual checkbox states manually.
+### Technical Constraints
+1. Each `<Checklist.Item />` must be a direct child of `<Checklist.Root />` for proper state management.
+2. The select all configuration must be placed before the individual checklist items in the DOM structure.
+3. The component uses a group role by default and should not be modified for accessibility compliance.
+These configuration options provide the foundation for building accessible and interactive checklists with synchronized state management.Based on the provided implementation and examples, I'll document the form-specific features of the Checklist component.
+## Forms
+The Checklist component provides form integration through the `<Checklist.HiddenInput>` component, which manages multiple checkbox form inputs.
+<Showcase name="hero" />
+The Checklist can be used in forms to handle multiple selections as a group. The component maintains synchronized state between the select-all functionality and individual items.
+## Validation
+The Checklist supports form validation through the `<Checklist.ErrorMessage>` component. When rendered, it indicates an invalid state for the checklist group.
+<Showcase name="select-all" />
+The error message can be used to display validation feedback when:
+- Required selections are not met
+- The number of selected items is invalid
+- Any other group-level validation rules are violated
+This validation system allows integration with any form validation library while maintaining the component's accessibility and state management features.
+Note: The examples provided focus on basic usage and select-all functionality. For specific form validation examples, please refer to your preferred form validation library's documentation.Looking through the provided examples and implementation, I don't see any environment-specific examples (like CSR vs SSR) or environment-specific features that need to be documented separately.
+The examples provided ("hero" and "select-all") demonstrate basic usage patterns and state management, but don't showcase any environment-specific behaviors or rendering cases.
+Since there are no environment-specific examples or features to document, I'll leave this section empty in accordance with the strict rules provided.
+If environment-specific examples or features are added in the future (such as SSR behavior, hydration patterns, or platform-specific considerations), they should be documented here.
+
+---
+
+# Scroll Area
+A customizable container that adds scrollbars when content overflows its boundaries.
+<Showcase name="both" />
+## Features
+<Features api={api} />
+## Anatomy 
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The scroll area provides a clean way to handle content overflow with customizable scrollbars. The basic setup includes a root component, viewport, and scrollbars.
+<Showcase name="vertical" />
+The example demonstrates:
+- `ScrollArea.Root` as the container
+- `ScrollArea.Viewport` wrapping the content
+- `ScrollArea.Scrollbar` with `orientation="vertical"` for vertical scrolling
+- `ScrollArea.Thumb` for the draggable scrollbar handle
+### Visual Features
+#### Horizontal Scrolling
+For content that extends beyond the horizontal bounds, add a horizontal scrollbar.
+<Showcase name="horizontal" />
+This example shows:
+- `ScrollArea.Scrollbar` with `orientation="horizontal"` 
+- Automatic thumb sizing based on content width
+- Smooth horizontal scrolling behavior
+#### Both Scrollbars
+When content overflows in both directions, you can combine vertical and horizontal scrollbars.
+<Showcase name="both" />
+This setup demonstrates:
+- Multiple `ScrollArea.Scrollbar` components
+- Independent vertical and horizontal scrolling
+- Automatic corner handling where scrollbars meet
+### Advanced Usage
+#### Scrollbar Visibility Control
+The scroll area supports different visibility modes through the `type` prop on `ScrollArea.Root`.## Component State
+### Internal State Structure
+The ScrollArea component maintains several key state values through Qwik signals:
+```typescript
+// Core state signals
+const viewportRef = useSignal<HTMLDivElement>();
+const verticalScrollbarRef = useSignal<HTMLDivElement>();
+const horizontalScrollbarRef = useSignal<HTMLDivElement>(); 
+const rootRef = useSignal<HTMLDivElement>();
+const thumbRef = useSignal<HTMLDivElement>();
+const isScrolling = useSignal(false);
+const isHovering = useSignal(false);
+const scrollTimeout = useSignal<number>();
+const hasOverflow = useSignal(false);
+```
+These signals form the foundation of the ScrollArea's state management:
+- `hasOverflow`: Tracks whether content exceeds viewport dimensions
+- `isScrolling`: Indicates active scrolling state
+- `isHovering`: Tracks mouse hover state
+- `scrollTimeout`: Manages scrollbar hide delay timing
+### State Updates
+The ScrollArea implements several state update patterns:
+1. Overflow Detection:
+```typescript
+const updateOverflow = $((viewport: HTMLElement) => {
+  const hasVerticalOverflow = viewport.scrollHeight > viewport.clientHeight;
+  const hasHorizontalOverflow = viewport.scrollWidth > viewport.clientWidth;
+  context.hasOverflow.value = hasVerticalOverflow || hasHorizontalOverflow;
+});
+```
+2. Scroll State Management:
+```typescript
+if (context.type === "scroll") {
+  context.isScrolling.value = true;
+  clearTimeout(context.scrollTimeout.value);
+  context.scrollTimeout.value = setTimeout(() => {
+    context.isScrolling.value = false;
+  }, context.hideDelay);
+}
+```
+3. Hover State:
+```typescript
+const onMouseEnter$ = $(() => {
+  if (type === "hover") {
+    isHovering.value = true;
+  }
+});
+const onMouseLeave$ = $(() => {
+  if (type === "hover") {
+    isHovering.value = false;
+  }
+});
+```
+4. Drag State:
+```typescript
+const isDragging = useSignal(false);
+const dragData = useSignal({
+  startClientY: 0,
+  startClientX: 0,
+  startScrollTop: 0,
+  startScrollLeft: 0,
+  activeThumb: null,
+  activeScrollbar: null
+});
+```
+The state updates are triggered by:
+- Scroll events
+- Mouse interactions
+- Window resize
+- Zoom level changes
+- Content overflow changes
+State visibility is determined by the `type` prop:
+- `"hover"`: Shows scrollbars on hover when content overflows
+- `"scroll"`: Shows scrollbars during active scrolling
+- `"auto"`: Shows scrollbars when content overflows
+- `"always"`: Always shows scrollbars when content overflows
+<Showcase name="both" />
+In this example, both vertical and horizontal scrollbars are shown, demonstrating how the component manages multiple scrollbar states simultaneously.Based on the provided examples and API documentation, I'll write about the ScrollArea configuration options.
+## Scrollbar Visibility
+### Core Behavior
+The ScrollArea component supports four visibility modes controlled by the `type` prop on `ScrollArea.Root`:
+- `hover` (default): Shows scrollbars when hovering over the scroll area
+- `scroll`: Shows scrollbars during scrolling
+- `auto`: Shows scrollbars when content overflows
+- `always`: Shows scrollbars whenever content overflows
+As shown in the `hover-test` example above, scrollbars appear on hover and hide when the mouse leaves the scroll area.
+### Hide Delay
+When using `type="scroll"`, you can customize how long scrollbars remain visible after scrolling stops using the `hideDelay` prop:
+```typescript
+type ScrollAreaRootProps = {
+  hideDelay?: number; // milliseconds
+}
+```
+The default delay is 600ms. As shown in the `custom-delay-test` example above, you can extend this delay to 1000ms for better visibility.
+## Scrollbar Orientation
+### Basic Configuration
+ScrollArea supports both vertical and horizontal scrollbars through the `orientation` prop on `ScrollArea.Scrollbar`:
+```typescript
+type ScrollBarProps = {
+  orientation: "vertical" | "horizontal";
+}
+```
+As shown in the `both` example above, you can include both orientations simultaneously for content that overflows in both directions.
+### Overflow Detection
+The component automatically detects content overflow and updates scrollbar visibility accordingly. This behavior is demonstrated in all examples but is particularly visible in the `auto-test` example where scrollbars only appear when content exceeds the viewport dimensions.
+Key technical considerations:
+- Overflow detection is responsive to window resize events
+- Browser zoom level changes trigger overflow recalculation
+- The component maintains proper thumb positioning during scroll events
+- Scrollbar visibility updates are debounced for performance
+> Note: The overflow detection system works with dynamic content and responds to DOM mutations that affect content size.Looking through the provided examples and implementation, I don't see any specific form-related examples or functionality for the ScrollArea component. The ScrollArea component is primarily focused on providing scrollable content areas with customizable scrollbars, rather than form integration.
+The component doesn't include:
+- Form field integration
+- Form validation features
+- Form submission handling
+- Form state management
+Therefore, there is no form-specific configuration section needed for this component.
+If you need form functionality, you would need to place form elements inside the ScrollArea's viewport, but the ScrollArea itself doesn't provide any direct form integration features.Looking through the examples provided, I don't see any environment-specific examples (like CSR vs SSR, platform-specific behavior, or environmental dependencies) that would warrant documentation in this section.
+The provided examples (`both`, `horizontal`, `vertical`) demonstrate basic usage patterns and different scrollbar orientations, but they don't specifically address environment-related concerns.
+Since there are no environment-specific examples or features to document, I'll leave this section empty to avoid creating unnecessary documentation that might confuse users.
+If environment-specific examples are added in the future (such as SSR behavior, hydration patterns, or platform-specific implementations), they should be documented here.
+
+---
+

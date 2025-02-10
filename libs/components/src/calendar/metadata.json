@@ -1,0 +1,61 @@
+{
+  "keyboard": [
+    {
+      "key": "Enter",
+      "comment": "When focus is on a date button, selects that date"
+    },
+    {
+      "key": "Space",
+      "comment": "When focus is on a date button, selects that date"
+    },
+    {
+      "key": "ArrowDown",
+      "comment": "When focus is on a date button, moves focus to the date one week later"
+    },
+    {
+      "key": "ArrowUp",
+      "comment": "When focus is on a date button, moves focus to the date one week earlier"
+    },
+    {
+      "key": "ArrowLeft",
+      "comment": "When focus is on a date button, moves focus to the previous date"
+    },
+    {
+      "key": "ArrowRight",
+      "comment": "When focus is on a date button, moves focus to the next date"
+    },
+    {
+      "key": "Home",
+      "comment": "When focus is on a date button, moves focus to the first date of the current week"
+    },
+    {
+      "key": "End",
+      "comment": "When focus is on a date button, moves focus to the last date of the current week"
+    },
+    {
+      "key": "PageUp",
+      "comment": "When focus is on a date button, moves focus to the same date in the previous month"
+    },
+    {
+      "key": "PageDown",
+      "comment": "When focus is on a date button, moves focus to the same date in the next month"
+    }
+  ],
+  "features": [
+    "WAI ARIA Calendar design pattern implementation",
+    "Full keyboard navigation support (arrow keys, home/end, page up/down)",
+    "Month and year switching controls",
+    "Optional week numbers display",
+    "Localization support (dates, labels, formatting)",
+    "Full/partial week display options",
+    "Popover positioning and management",
+    "Date range selection controls",
+    "Current date highlighting",
+    "Selected date management",
+    "Focus management and trap within calendar",
+    "Custom date formatting",
+    "Screen reader announcements",
+    "Date validation and parsing",
+    "Responsive calendar grid layout"
+  ]
+}

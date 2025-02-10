@@ -1,15 +1,128 @@
----
-title: Qwik Design System | Checklist
----
+import { api } from "./auto-api/api";
 
 # Checklist
-
-Manage multiple items in a list format based on if something is checked.
-
+A group of selectable items that can be toggled together or individually.
 <Showcase name="hero" />
-
-## Checklist Select All
-
-The select all checkbox is a checkbox that is used to select all items in the checklist.
-
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The basic checklist setup allows users to select multiple items independently.
+<Showcase name="hero" />
+This example demonstrates:
+- Using `Checklist.Root` as the container
+- Individual items created with `Checklist.Item`
+- Each item has a trigger, indicator, and label
+- Custom icon using `LuCheck` for the checked state
+### Advanced Usage
+The select-all pattern enables bulk selection of all checklist items.
 <Showcase name="select-all" />
+This example shows:
+- `Checklist.SelectAll` trigger for controlling all items
+- `Checklist.SelectAllIndicator` displaying mixed states with different icons
+- Nested items indented under the select-all control
+- Synchronized state between select-all and individual items
+- Mixed state indication when only some items are selected
+The select-all example demonstrates how the checklist manages group selection while maintaining individual item control. The mixed state is shown using a minus icon when some but not all items are selected.
+Note: Both examples use the same base styling for consistency, but the select-all pattern adds hierarchical structure through layout and indentation.
+
+## Component State
+### Internal State Structure
+The Checklist component manages state through a context-based system that coordinates between the select-all functionality and individual checklist items.
+Core state values:
+```typescript
+type ChecklistContext = {
+  isAllCheckedSig: Signal<boolean | "mixed">;
+  checkedStatesSig: Signal<(boolean | "mixed")[]>;
+};
+```
+- `isAllCheckedSig`: Controls the state of the select-all checkbox
+- `checkedStatesSig`: Tracks the checked state of each individual item
+The state is initialized in the `ChecklistRoot` component:
+```typescript
+const isAllCheckedSig = useSignal(false);
+const checkedStatesSig = useSignal<(boolean | "mixed")[]>([]);
+```
+### State Updates
+The state updates follow a bidirectional pattern:
+1. Select All → Individual Items:
+```typescript
+useTask$(function checkAllManager({ track }) {
+  track(() => context.isAllCheckedSig.value);
+  if (context.isAllCheckedSig.value === true) {
+    isCheckedSig.value = true;
+  } else if (context.isAllCheckedSig.value === false) {
+    isCheckedSig.value = false;
+  }
+});
+```
+2. Individual Items → Select All:
+```typescript
+useTask$(function checkItemsManager({ track }) {
+  track(() => isCheckedSig.value);
+  context.checkedStatesSig.value[index] = isCheckedSig.value;
+  // Update select all state based on item states
+  if (context.checkedStatesSig.value.every((state) => state === true)) {
+    context.isAllCheckedSig.value = true;
+  } else if (context.checkedStatesSig.value.every((state) => state === false)) {
+    context.isAllCheckedSig.value = false;
+  } else {
+    context.isAllCheckedSig.value = "mixed";
+  }
+});
+```
+As shown in the `select-all` example above, when individual items are checked/unchecked:
+- The select-all checkbox shows:
+  - Checked (✓) when all items are selected
+  - Mixed state (-) when some items are selected
+  - Unchecked when no items are selected
+- Toggling the select-all checkbox affects all individual item states
+The state management ensures consistent synchronization between the select-all functionality and individual checklist items through Qwik's reactive system.
+
+Based on the provided implementation and examples, I'll document the configuration options for the Checklist component.
+## Core Configuration
+### Basic Structure
+The Checklist component requires a specific structure to function properly. As shown in the `hero` example above, the basic configuration includes:
+- `<Checklist.Root />` as the main container
+- `<Checklist.Item />` for individual checkboxes
+- `<Checklist.ItemTrigger />` for the interactive element
+- `<Checklist.ItemIndicator />` for the visual state
+- `<Checklist.ItemLabel />` for the text label
+### Select All Configuration
+The Checklist supports a "select all" feature that can be configured using dedicated components. As demonstrated in the `select-all` example above, this requires:
+- `<Checklist.SelectAll />` for the main trigger
+- `<Checklist.SelectAllIndicator />` for the visual state
+- `<Checklist.Label />` for the select all label
+The select all functionality automatically manages the state of all child checkboxes:
+- When all items are checked, the select all checkbox is checked
+- When some items are checked, the select all checkbox shows a mixed state
+- When no items are checked, the select all checkbox is unchecked
+### State Management
+The Checklist uses an internal context system to manage state synchronization between the select all checkbox and individual items. This is handled automatically and requires no additional configuration.
+> Note: The Checklist maintains an array of checked states internally, so you don't need to manage individual checkbox states manually.
+### Technical Constraints
+1. Each `<Checklist.Item />` must be a direct child of `<Checklist.Root />` for proper state management.
+2. The select all configuration must be placed before the individual checklist items in the DOM structure.
+3. The component uses a group role by default and should not be modified for accessibility compliance.
+These configuration options provide the foundation for building accessible and interactive checklists with synchronized state management.
+
+Based on the provided implementation and examples, I'll document the form-specific features of the Checklist component.
+## Forms
+The Checklist component provides form integration through the `<Checklist.HiddenInput>` component, which manages multiple checkbox form inputs.
+<Showcase name="hero" />
+The Checklist can be used in forms to handle multiple selections as a group. The component maintains synchronized state between the select-all functionality and individual items.
+## Validation
+The Checklist supports form validation through the `<Checklist.ErrorMessage>` component. When rendered, it indicates an invalid state for the checklist group.
+<Showcase name="select-all" />
+The error message can be used to display validation feedback when:
+- Required selections are not met
+- The number of selected items is invalid
+- Any other group-level validation rules are violated
+This validation system allows integration with any form validation library while maintaining the component's accessibility and state management features.
+Note: The examples provided focus on basic usage and select-all functionality. For specific form validation examples, please refer to your preferred form validation library's documentation.
+
+
+
+<APITable api={api} />

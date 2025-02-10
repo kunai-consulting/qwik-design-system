@@ -10,9 +10,10 @@ import { ARIA_LABELS } from "./constants";
 import type { Month } from "./types";
 
 type CalendarNextProps = PropsOf<"button"> & {
+  /** Custom icon component to use for the next button */
   icon?: Component<PropsOf<"svg">>;
 };
-
+/** A button component that handles navigation to the next month */
 export const CalendarNext = component$((props: CalendarNextProps) => {
   const context = useContext(calendarContextId);
   const { monthToRender, yearToRender, dateToFocus, locale } = context;
@@ -47,6 +48,7 @@ export const CalendarNext = component$((props: CalendarNextProps) => {
 
   return (
     <button
+      // The next month navigation button
       data-qds-datepicker-next
       type="button"
       {...props}

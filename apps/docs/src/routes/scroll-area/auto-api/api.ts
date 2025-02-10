@@ -11,7 +11,7 @@ export const api = {
               {
                 "comment": "Controls when the scrollbars are visible: 'hover', 'scroll', 'auto', or 'always'",
                 "prop": "type",
-                "type": "ScrollbarVisibility",
+                "type": "PublicScrollbarVisibility",
                 "defaultValue": "\"hover\""
               },
               {
@@ -128,18 +128,18 @@ export const api = {
   ],
   "anatomy": [
     {
-      "name": "Scroll-area.Root",
+      "name": "ScrollArea.Root",
       "description": "A root component for scrollable content areas with customizable scrollbar behavior"
     },
     {
-      "name": "Scroll-area.Viewport"
+      "name": "ScrollArea.Viewport"
     },
     {
-      "name": "Scroll-area.Scrollbar",
+      "name": "ScrollArea.Scrollbar",
       "description": "A scrollbar component that can be oriented vertically or horizontally"
     },
     {
-      "name": "Scroll-area.Thumb",
+      "name": "ScrollArea.Thumb",
       "description": "A draggable thumb component for the scrollbar that handles scroll position"
     }
   ],

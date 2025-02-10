@@ -237,14 +237,24 @@ export function parseSingleComponentFromDir(
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 
+  const hasTypes = parsed.length > 0;
+  const hasDataAttributes = dataAttributes.length > 0;
+  const hasInheritsFrom = inheritsFrom !== undefined;
+
+  if (!hasTypes && !hasDataAttributes && !hasInheritsFrom) {
+    return ref;
+  }
+
   const completeSubComponent: SubComponent = {
-    types: parsed,
-    ...(inheritsFrom && { inheritsFrom }),
-    ...(dataAttributes.length > 0 && { dataAttributes })
+    ...(hasTypes && { types: parsed }),
+    ...(hasInheritsFrom && { inheritsFrom }),
+    ...(hasDataAttributes && { dataAttributes })
   };
 
-  const componentEntry: ComponentEntry = { [transformedName]: completeSubComponent };
-  ref.push(componentEntry);
+  if (Object.keys(completeSubComponent).length > 0) {
+    const componentEntry: ComponentEntry = { [transformedName]: completeSubComponent };
+    ref.push(componentEntry);
+  }
   return ref;
 }
 

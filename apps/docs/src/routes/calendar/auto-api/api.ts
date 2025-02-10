@@ -2,106 +2,271 @@ export const api = {
   "calendar": [
     {
       "Calendar Grid Day": {
-        "types": [],
+        "types": [
+          {
+            "PublicCalendarGridDayProps": [
+              {
+                "comment": "Event handler called when a date is selected",
+                "prop": "onDateChange$",
+                "type": "(date: LocalDate) => void"
+              }
+            ]
+          }
+        ],
         "inheritsFrom": "button",
         "dataAttributes": [
           {
             "name": "data-current",
-            "type": "string"
+            "type": "string",
+            "comment": "Indicates if this date is the current date"
           },
           {
             "name": "data-selected",
-            "type": "string"
+            "type": "string",
+            "comment": "Indicates if this date is currently selected"
           },
           {
             "name": "data-value",
-            "type": "string"
+            "type": "string",
+            "comment": "Stores the date value for this calendar cell"
           }
         ]
       }
     },
     {
       "Calendar Grid": {
-        "types": [],
+        "types": [
+          {
+            "PublicCalendarGridProps": [
+              {
+                "comment": "Props to be spread onto each date button",
+                "prop": "buttonProps",
+                "type": "PropsOf<\"button\">"
+              },
+              {
+                "comment": "Event handler called when a date is selected",
+                "prop": "onDateChange$",
+                "type": "QRL<(date: LocalDate) => void>"
+              },
+              {
+                "comment": "",
+                "prop": "days",
+                "type": "number"
+              },
+              {
+                "comment": "",
+                "prop": "months",
+                "type": "number"
+              }
+            ]
+          }
+        ],
         "inheritsFrom": "button"
       }
     },
     {
       "Calendar Header": {
-        "types": [],
         "inheritsFrom": "header"
       }
     },
     {
       "Calendar Next": {
-        "types": [],
         "inheritsFrom": "svg"
       }
     },
     {
       "Calendar Popover": {
-        "types": []
+        "types": [
+          {
+            "PublicPopoverProps": [
+              {
+                "comment": "",
+                "prop": "floating",
+                "type": "boolean | TPlacement"
+              }
+            ]
+          }
+        ],
+        "inheritsFrom": "div",
+        "dataAttributes": [
+          {
+            "name": "data-open",
+            "type": "string | undefined",
+            "comment": "Indicates if the popover is currently open"
+          },
+          {
+            "name": "data-closed",
+            "type": "string | undefined",
+            "comment": "Indicates if the popover is currently closed"
+          }
+        ]
       }
     },
     {
       "Calendar Previous": {
-        "types": [],
         "inheritsFrom": "svg"
       }
     },
     {
       "Calendar Root": {
-        "types": [],
+        "types": [
+          {
+            "PublicCalendarRootProps": [
+              {
+                "comment": "The locale used for formatting dates and text",
+                "prop": "locale",
+                "type": "Locale",
+                "defaultValue": "\"en\""
+              },
+              {
+                "comment": "The initial date to display when the calendar first loads",
+                "prop": "defaultDate",
+                "type": "LocalDate"
+              },
+              {
+                "comment": "Whether to show week numbers in the calendar",
+                "prop": "showWeekNumber",
+                "type": "boolean",
+                "defaultValue": "false"
+              },
+              {
+                "comment": "Whether to show complete weeks by including days from adjacent months",
+                "prop": "fullWeeks",
+                "type": "boolean",
+                "defaultValue": "false"
+              },
+              {
+                "comment": "The currently selected date",
+                "prop": "date",
+                "type": "LocalDate"
+              },
+              {
+                "comment": "Whether to show the days of the week header",
+                "prop": "showDaysOfWeek",
+                "type": "boolean",
+                "defaultValue": "true"
+              },
+              {
+                "comment": "Event handler called when a date is selected",
+                "prop": "onDateChange$",
+                "type": "QRL<(date: LocalDate) => void>"
+              },
+              {
+                "comment": "Reactive value to control the open state of the calendar popover",
+                "prop": "\"bind:open\"",
+                "type": "Signal<boolean>"
+              }
+            ]
+          }
+        ],
         "inheritsFrom": "div",
         "dataAttributes": [
           {
             "name": "data-theme",
-            "type": "string"
+            "type": "string",
+            "comment": "Controls the visual theme of the calendar"
           }
         ]
       }
     },
     {
       "Calendar Title": {
-        "types": [],
         "inheritsFrom": "div"
       }
     },
     {
       "Icons": {
-        "types": [],
         "inheritsFrom": "svg"
-      }
-    },
-    {
-      "Utils": {
-        "types": []
       }
     }
   ],
   "anatomy": [
     {
-      "name": "Calendar.Root"
+      "name": "Calendar.Root",
+      "description": "The root calendar component that manages state and provides context"
     },
     {
-      "name": "Calendar.Grid"
+      "name": "Calendar.Grid",
+      "description": "A component that renders the main calendar grid structure"
     },
     {
-      "name": "Calendar.Header"
+      "name": "Calendar.Header",
+      "description": "A component that renders the calendar header section"
     },
     {
-      "name": "Calendar.Previous"
+      "name": "Calendar.Previous",
+      "description": "A button component that handles navigation to the previous month"
     },
     {
-      "name": "Calendar.Next"
+      "name": "Calendar.Next",
+      "description": "A button component that handles navigation to the next month"
     },
     {
-      "name": "Calendar.Title"
+      "name": "Calendar.Title",
+      "description": "A component that displays the current month and year"
     },
     {
-      "name": "Calendar.GridDay"
+      "name": "Calendar.GridDay",
+      "description": "A component that renders a single day cell in the calendar grid"
     }
   ],
-  "keyboardInteractions": [],
-  "features": []
+  "keyboardInteractions": [
+    {
+      "key": "Enter",
+      "comment": "When focus is on a date button, selects that date"
+    },
+    {
+      "key": "Space",
+      "comment": "When focus is on a date button, selects that date"
+    },
+    {
+      "key": "ArrowDown",
+      "comment": "When focus is on a date button, moves focus to the date one week later"
+    },
+    {
+      "key": "ArrowUp",
+      "comment": "When focus is on a date button, moves focus to the date one week earlier"
+    },
+    {
+      "key": "ArrowLeft",
+      "comment": "When focus is on a date button, moves focus to the previous date"
+    },
+    {
+      "key": "ArrowRight",
+      "comment": "When focus is on a date button, moves focus to the next date"
+    },
+    {
+      "key": "Home",
+      "comment": "When focus is on a date button, moves focus to the first date of the current week"
+    },
+    {
+      "key": "End",
+      "comment": "When focus is on a date button, moves focus to the last date of the current week"
+    },
+    {
+      "key": "PageUp",
+      "comment": "When focus is on a date button, moves focus to the same date in the previous month"
+    },
+    {
+      "key": "PageDown",
+      "comment": "When focus is on a date button, moves focus to the same date in the next month"
+    }
+  ],
+  "features": [
+    "WAI ARIA Calendar design pattern implementation",
+    "Full keyboard navigation support (arrow keys, home/end, page up/down)",
+    "Month and year switching controls",
+    "Optional week numbers display",
+    "Localization support (dates, labels, formatting)",
+    "Full/partial week display options",
+    "Popover positioning and management",
+    "Date range selection controls",
+    "Current date highlighting",
+    "Selected date management",
+    "Focus management and trap within calendar",
+    "Custom date formatting",
+    "Screen reader announcements",
+    "Date validation and parsing",
+    "Responsive calendar grid layout"
+  ]
 };
