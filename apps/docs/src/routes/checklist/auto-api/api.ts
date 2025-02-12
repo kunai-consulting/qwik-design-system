@@ -72,7 +72,8 @@ export const api = {
   "keyboardInteractions": [
     {
       "key": "Space",
-      "comment": "When focus is on a checkbox trigger, toggles the checked state of that checkbox"
+      "comment":
+        "When focus is on a checkbox trigger, toggles the checked state of that checkbox"
     },
     {
       "key": "Tab",
@@ -84,7 +85,8 @@ export const api = {
     },
     {
       "key": "Enter",
-      "comment": "When focus is on a checkbox trigger, toggles the checked state of that checkbox"
+      "comment":
+        "When focus is on a checkbox trigger, toggles the checked state of that checkbox"
     }
   ],
   "features": [

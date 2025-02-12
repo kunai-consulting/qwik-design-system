@@ -1,186 +1,94 @@
 import { api } from "./auto-api/api";
 
 # File Upload
-
 A drag and drop interface for uploading files with support for filtering and multiple selections.
-
 <Showcase name="hero" />
-
 ## Features
-
 <Features api={api} />
-
 ## Anatomy
-
 <AnatomyTable api={api} />
-
 ## Examples
-
-
-
-This example demonstrates core functionality using:
-- `FileUpload.Root` as the main container
-- `FileUpload.Input` for handling file selection
-- `FileUpload.Dropzone` for drag and drop functionality
-- `FileUpload.Trigger` for opening the system file dialog
-- `onFilesChange$` prop to handle uploaded files
-
-
-
-This example shows:
-- Custom styling applied to the dropzone and trigger
-- Visual feedback during drag operations using `data-dragging` attribute
-- File type filtering with `accept="image/*"` prop to only allow image files
-
+### Basic Usage
+The most basic implementation allows users to upload files through drag and drop or button click.
+### Visual Features
+The file upload can be styled to match your application's design system.
 ### Advanced Usage
-
-
-This implementation showcases:
-- `multiple` prop to allow selecting multiple files
-- Batch file processing through `onFilesChange$`
-- Custom handling for each uploaded file
-- FormData preparation for potential server uploads
-
-
-This example demonstrates:
-- `disabled` prop to prevent file uploads
-- Visual feedback for disabled state using `data-disabled` attribute
-- Blocked drag and drop interactions
-- Disabled trigger button
+#### Multiple File Upload
+Enable multiple file selection and handle batch uploads.
+#### Disabled State
+Control the interactive state of the upload component.
 
 ## Component State
-
-### Internal State Structure
-
-The File Upload component maintains several key state values through Qwik's context system:
-
+### Using Component State
+The File Upload component's state can be controlled through several props on the `FileUpload.Root` component:
+1. **Multiple File Selection**
+- Control whether multiple files can be selected using the `multiple` prop
+- When `multiple` is `true`, users can select or drop multiple files at once
+- When `false` (default), only one file can be selected at a time
+2. **File Type Filtering**
+- Restrict allowed file types using the `accept` prop
+- Accepts standard MIME types or file extensions
+- As shown in the Image Upload example above, use `accept="image/*"` to allow only image files
+3. **Disabled State**
+- Disable all file upload interactions using the `disabled` prop
+- When disabled, the component prevents:
+  - File selection via the trigger button
+  - Drag and drop operations
+  - File input interactions
+### State Interactions
+The component provides a callback to handle file changes:
+1. **File Change Handler**
 ```typescript
-// Core state values
-interface FileUploadContext {
-  inputRef: Signal<HTMLInputElement | undefined>;  // Reference to hidden file input
-  isDragging: Signal<boolean>;                     // Current drag state
-  files: Signal<FileInfo[]>;                       // Selected/dropped files
-  multiple: boolean;                               // Multiple file selection mode
-  accept?: string;                                 // Allowed file types
-  disabled?: boolean;                              // Disabled state
-  onFilesChange$?: PropFunction<(files: FileInfo[]) => void>; // Change callback
-}
+<FileUpload.Root
+  onFilesChange$={(files) => {
+    // files is an array of FileInfo objects
+    files.forEach(file => {
+      console.log(file.name, file.size, file.type);
+    });
+  }}
+>
 ```
-
-The state is initialized in the `FileUploadRoot` component:
-
-```typescript
-const inputRef = useSignal<HTMLInputElement>();
-const isDragging = useSignal(false);
-const files = useSignal<FileInfo[]>([]);
-
-const context = {
-  inputRef,
-  isDragging,
-  files,
-  multiple: props.multiple ?? false,
-  accept: props.accept,
-  disabled: props.disabled,
-  onFilesChange$: props.onFilesChange$
-};
-```
-
-### State Updates
-
-The component handles state updates in two main scenarios:
-
-1. File Selection via Input:
-```typescript
-const onChange$ = $((e: Event) => {
-  const input = e.target as HTMLInputElement;
-  if (!input.files) return;
-  
-  const newFiles = Array.from(input.files).map(file => ({
-    name: file.name,
-    size: file.size,
-    type: file.type,
-    lastModified: file.lastModified,
-    file: noSerialize(file)
-  }));
-
-  if (context.multiple) {
-    context.files.value = [...context.files.value, ...newFiles];
-  } else {
-    context.files.value = newFiles.slice(0, 1);
-  }
-  
-  context.onFilesChange$?.(context.files.value);
-});
-```
-
-2. Drag and Drop State:
-```typescript
-// Drag enter updates
-const onDragEnter$ = $((e: DragEvent) => {
-  if (context.disabled) return;
-  if (!isDragging.value) {
-    isDragging.value = true;
-    context.isDragging.value = true;
-  }
-});
-
-// Drag leave updates
-const onDragLeave$ = $((e: DragEvent) => {
-  if (context.disabled) return;
-  isDragging.value = false;
-  context.isDragging.value = false;
-});
-```
-
-The state management ensures:
-- Files are properly processed whether selected via input or dropped
-- Multiple file selection is handled based on the `multiple` prop
-- Drag state provides visual feedback during drag operations
-- Disabled state prevents any state updates
-- Parent components are notified of file changes through the callback
-
-The state is shared across all child components through Qwik's context system, allowing coordinated updates and consistent UI feedback.
+The `onFilesChange$` prop receives an array of `FileInfo` objects containing:
+- `name`: File name
+- `size`: File size in bytes
+- `type`: MIME type
+- `lastModified`: Last modification timestamp
+- `file`: The actual File object (if available)
+2. **Drag State**
+The component automatically manages drag states:
+- Visual feedback when files are dragged over the dropzone
+- Drag state is cleared when:
+  - Files are dropped
+  - Cursor leaves the dropzone
+  - Component is disabled
+3. **Processing State**
+- Files are processed immediately after selection or drop
+- The component handles both single and multiple file selections based on the `multiple` prop
+- Invalid file types are automatically rejected when using the `accept` prop
+The state management is designed to be simple and declarative, allowing you to focus on handling the files rather than managing the upload interface state.
 
 Based on the provided examples and API documentation, I'll document the configuration options for the File Upload component.
-
 ## Core Configuration
-
 ### File Selection Mode
-
 The File Upload component supports both single and multiple file selection modes through the `multiple` prop on `FileUpload.Root`.
-
-As shown in the multiple files example above, enabling multiple file selection allows users to upload several files at once.
-
-> By default, `multiple` is set to `false`, allowing only single file selection.
-
+As shown in the hero example above, by default, the component operates in single file mode. To enable multiple file selection, add the `multiple` prop to `FileUpload.Root`.
+> The `multiple` prop is `false` by default, allowing only single file selection.
 ### File Type Filtering
-
-The component supports file type filtering through the `accept` prop on `FileUpload.Root`. 
-
-As shown in the image-only example above, you can restrict file types using MIME types or file extensions:
-
-```typescript
-// Common accept patterns
-accept="image/*"           // All image types
-accept=".pdf,.doc,.docx"   // Specific file extensions
-accept="video/*,audio/*"   // Multiple MIME types
-```
-
-> The `accept` prop is optional. When not specified, all file types are allowed.
-
+The component supports file type filtering through the `accept` prop on `FileUpload.Root`. This allows you to restrict which file types users can select.
+As shown in the hero example above, you can use MIME types or file extensions to filter files:
+> Common accept values:
+> - `"image/*"` - All image types
+> - `".pdf,.doc,.docx"` - Specific file extensions
+> - `"video/*,audio/*"` - Multiple MIME types
 ### Disabled State
-
-The component can be disabled entirely using the `disabled` prop on `FileUpload.Root`. 
-
-As shown in the disabled example above, when disabled:
-- The trigger button becomes non-interactive
-- Drag and drop functionality is disabled
-- File input becomes disabled
-
-### File Change Notifications
-
-The component provides file change notifications through the `onFilesChange$` prop on `FileUpload.Root`. The callback receives an array of `FileInfo` objects:
-
+The File Upload component can be disabled entirely using the `disabled` prop on `FileUpload.Root`. When disabled:
+- The trigger button becomes unclickable
+- The file input is disabled
+- Drag and drop functionality is prevented
+- Visual feedback indicates the disabled state
+## Advanced Configuration
+### File Change Handling
+The component provides detailed file information through the `onFilesChange$` callback prop on `FileUpload.Root`. The callback receives an array of `FileInfo` objects with the following structure:
 ```typescript
 interface FileInfo {
   name: string;
@@ -190,33 +98,16 @@ interface FileInfo {
   file: NoSerialize<File>;
 }
 ```
-
-> The `file` property is non-serializable and should be processed immediately if needed for uploads.
-
-## Technical Constraints
-
-### Browser Support
-
-The component requires modern browser features:
-- HTML5 File API
-- Drag and Drop API
-- DataTransfer API
-
-### File Size Limitations
-
-File size limits are determined by:
-- Browser memory constraints
-- Input element limitations
-- JavaScript heap size
-
-> It's recommended to implement server-side file size validation for production use.
-
-### Performance Considerations
-
-For optimal performance:
-- Process files in batches when handling multiple files
-- Use `URL.createObjectURL()` for image previews
-- Release object URLs when no longer needed
+> The `file` property is wrapped in `NoSerialize` to prevent serialization issues in Qwik's resumability model.
+### Drag and Drop Configuration
+The component automatically handles drag and drop events and provides visual feedback through data attributes:
+```typescript
+interface DropzoneAttributes {
+  "data-dragging": string | undefined;  // Present when files are being dragged
+  "data-disabled": string | undefined;  // Present when dropzone is disabled
+}
+```
+These attributes can be used for styling and state management in more complex implementations.
 
 
 

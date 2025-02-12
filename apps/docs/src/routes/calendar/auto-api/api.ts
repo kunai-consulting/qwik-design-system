@@ -41,7 +41,7 @@ export const api = {
               {
                 "comment": "Props to be spread onto each date button",
                 "prop": "buttonProps",
-                "type": "PropsOf<\"button\">"
+                "type": 'PropsOf<"button">'
               },
               {
                 "comment": "Event handler called when a date is selected",
@@ -116,7 +116,7 @@ export const api = {
                 "comment": "The locale used for formatting dates and text",
                 "prop": "locale",
                 "type": "Locale",
-                "defaultValue": "\"en\""
+                "defaultValue": '"en"'
               },
               {
                 "comment": "The initial date to display when the calendar first loads",
@@ -130,7 +130,8 @@ export const api = {
                 "defaultValue": "false"
               },
               {
-                "comment": "Whether to show complete weeks by including days from adjacent months",
+                "comment":
+                  "Whether to show complete weeks by including days from adjacent months",
                 "prop": "fullWeeks",
                 "type": "boolean",
                 "defaultValue": "false"
@@ -152,8 +153,9 @@ export const api = {
                 "type": "QRL<(date: LocalDate) => void>"
               },
               {
-                "comment": "Reactive value to control the open state of the calendar popover",
-                "prop": "\"bind:open\"",
+                "comment":
+                  "Reactive value to control the open state of the calendar popover",
+                "prop": '"bind:open"',
                 "type": "Signal<boolean>"
               }
             ]
@@ -225,7 +227,8 @@ export const api = {
     },
     {
       "key": "ArrowUp",
-      "comment": "When focus is on a date button, moves focus to the date one week earlier"
+      "comment":
+        "When focus is on a date button, moves focus to the date one week earlier"
     },
     {
       "key": "ArrowLeft",
@@ -237,19 +240,23 @@ export const api = {
     },
     {
       "key": "Home",
-      "comment": "When focus is on a date button, moves focus to the first date of the current week"
+      "comment":
+        "When focus is on a date button, moves focus to the first date of the current week"
     },
     {
       "key": "End",
-      "comment": "When focus is on a date button, moves focus to the last date of the current week"
+      "comment":
+        "When focus is on a date button, moves focus to the last date of the current week"
     },
     {
       "key": "PageUp",
-      "comment": "When focus is on a date button, moves focus to the same date in the previous month"
+      "comment":
+        "When focus is on a date button, moves focus to the same date in the previous month"
     },
     {
       "key": "PageDown",
-      "comment": "When focus is on a date button, moves focus to the same date in the next month"
+      "comment":
+        "When focus is on a date button, moves focus to the same date in the next month"
     }
   ],
   "features": [

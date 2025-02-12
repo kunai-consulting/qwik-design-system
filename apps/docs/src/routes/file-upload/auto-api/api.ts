@@ -47,7 +47,8 @@ export const api = {
           {
             "name": "data-dragging",
             "type": "string | undefined",
-            "comment": "Indicates whether files are currently being dragged over the dropzone"
+            "comment":
+              "Indicates whether files are currently being dragged over the dropzone"
           },
           {
             "name": "data-disabled",
@@ -115,7 +116,8 @@ export const api = {
   "anatomy": [
     {
       "name": "FileUpload.Root",
-      "description": "Root component for file upload functionality\n  Provides context and state management for child components"
+      "description":
+        "Root component for file upload functionality\n  Provides context and state management for child components"
     },
     {
       "name": "FileUpload.Dropzone",
@@ -123,11 +125,13 @@ export const api = {
     },
     {
       "name": "FileUpload.Input",
-      "description": "Hidden file input component that handles file selection via system dialog"
+      "description":
+        "Hidden file input component that handles file selection via system dialog"
     },
     {
       "name": "FileUpload.Trigger",
-      "description": "Trigger component that opens the file selection dialog\n  Acts as a styled button that triggers the hidden file input"
+      "description":
+        "Trigger component that opens the file selection dialog\n  Acts as a styled button that triggers the hidden file input"
     }
   ],
   "keyboardInteractions": [
@@ -141,11 +145,13 @@ export const api = {
     },
     {
       "key": "Tab",
-      "comment": "Moves focus to the trigger button or other interactive elements within the component"
+      "comment":
+        "Moves focus to the trigger button or other interactive elements within the component"
     },
     {
       "key": "Escape",
-      "comment": "When the file selection dialog is open, closes the dialog without selecting files"
+      "comment":
+        "When the file selection dialog is open, closes the dialog without selecting files"
     }
   ],
   "features": [

@@ -1909,3 +1909,1645 @@ If environment-specific examples are added in the future (such as SSR behavior, 
 
 ---
 
+# Scroll Area
+A customizable container that adds scrollbars when content overflows its boundaries.
+<Showcase name="both" />
+## Features
+<Features api={api} />
+## Anatomy 
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The scroll area component provides a customizable scrolling experience with different visibility modes for the scrollbars.
+<Showcase name="vertical" />
+The `type` prop controls when scrollbars are visible:
+- `"hover"` (default): Shows scrollbars when hovering over the content
+- `"scroll"`: Shows scrollbars during scrolling
+- `"auto"`: Shows scrollbars when content overflows
+- `"always"`: Shows scrollbars whenever content overflows
+The `hideDelay` prop (default: 600ms) determines how long scrollbars remain visible after scrolling stops when `type="scroll"`.
+### Visual Features
+#### Horizontal Scrolling
+For content that overflows horizontally, use the `orientation="horizontal"` prop on `ScrollArea.Scrollbar`.
+<Showcase name="horizontal" />
+#### Both Axes Scrolling
+When content overflows in both directions, you can include both vertical and horizontal scrollbars.
+<Showcase name="both" />
+### Advanced Usage
+#### Custom Hide Delay
+You can customize how long scrollbars remain visible after scrolling by adjusting the `hideDelay` prop.## Component State
+Let's explore how the ScrollArea component manages its internal state and updates.
+### Internal State Structure
+The ScrollArea uses several key state values managed through Qwik signals:
+```typescript
+// Core state signals
+const viewportRef = useSignal<HTMLDivElement>();
+const verticalScrollbarRef = useSignal<HTMLDivElement>();
+const horizontalScrollbarRef = useSignal<HTMLDivElement>();
+const rootRef = useSignal<HTMLDivElement>();
+const thumbRef = useSignal<HTMLDivElement>();
+const isScrolling = useSignal(false);
+const isHovering = useSignal(false);
+const scrollTimeout = useSignal<number>();
+const hasOverflow = useSignal(false);
+```
+These signals form the foundation of the ScrollArea's state management:
+- `hasOverflow`: Tracks whether content exceeds viewport dimensions
+- `isScrolling`: Indicates active scrolling state
+- `isHovering`: Manages hover state for scrollbar visibility
+- Element refs: Store references to DOM elements for position calculations
+### State Updates
+The ScrollArea implements several state update patterns:
+1. **Overflow Detection**
+```typescript
+const updateOverflow = $((viewport: HTMLElement) => {
+  const hasVerticalOverflow = viewport.scrollHeight > viewport.clientHeight;
+  const hasHorizontalOverflow = viewport.scrollWidth > viewport.clientWidth;
+  context.hasOverflow.value = hasVerticalOverflow || hasHorizontalOverflow;
+});
+```
+2. **Scrollbar Visibility Logic**
+```typescript
+const shouldShow = () => {
+  const hasOverflow = context.hasOverflow.value;
+  switch (context.type) {
+    case "always":
+      return hasOverflow;
+    case "hover":
+      return context.isHovering.value && hasOverflow;
+    case "scroll":
+      return context.isScrolling.value && hasOverflow;
+    case "auto":
+      return hasOverflow;
+    default:
+      return false;
+  }
+};
+```
+3. **Scroll State Management**
+For `type="scroll"` mode, the component manages scroll visibility with a timer:
+```typescript
+if (context.type === "scroll") {
+  context.isScrolling.value = true;
+  clearTimeout(context.scrollTimeout.value);
+  context.scrollTimeout.value = setTimeout(() => {
+    context.isScrolling.value = false;
+  }, context.hideDelay);
+}
+```
+4. **Thumb Position Updates**
+The thumb position is updated in response to scroll events:
+```typescript
+const scrollRatio = viewport.scrollTop / (viewport.scrollHeight - viewport.clientHeight);
+const maxTop = verticalScrollbar.clientHeight - verticalThumb.clientHeight;
+verticalThumb.style.transform = `translateY(${scrollRatio * maxTop}px)`;
+```
+5. **Drag State**
+The thumb maintains drag state during user interaction:
+```typescript
+const isDragging = useSignal(false);
+const dragData = useSignal({
+  startClientY: 0,
+  startClientX: 0,
+  startScrollTop: 0,
+  startScrollLeft: 0,
+  activeThumb: null,
+  activeScrollbar: null
+});
+```
+This state structure enables smooth scrolling behavior while maintaining proper scroll thumb positioning and visibility states based on user interaction and content overflow conditions.Based on the provided implementation and examples, I'll document the ScrollArea configuration options:
+## Scrollbar Visibility
+### Visibility Modes
+The ScrollArea component supports four visibility modes controlled by the `type` prop on `ScrollArea.Root`:
+- `hover` (default): Shows scrollbars when hovering over the scroll area
+- `scroll`: Displays scrollbars during scrolling, hiding after `hideDelay`
+- `auto`: Always shows scrollbars when content overflows
+- `always`: Permanently displays scrollbars when content overflows
+As shown in the `hover-test` example above, the scrollbars appear on hover and hide when the mouse leaves.
+### Hide Delay Configuration
+When using `type="scroll"`, you can customize how long scrollbars remain visible after scrolling stops using the `hideDelay` prop:
+```typescript
+type ScrollAreaRootProps = {
+  hideDelay?: number; // milliseconds, defaults to 600
+}
+```
+As shown in the `custom-delay-test` example above, setting a longer delay keeps the scrollbars visible for an extended period.
+## Scrollbar Orientation
+### Two-Axis Scrolling
+The ScrollArea supports both vertical and horizontal scrollbars simultaneously. As shown in the `both` example above, you can include both orientations by adding two `ScrollArea.Scrollbar` components with different `orientation` props.
+### Single Axis Configuration
+For content that only needs one scrollbar:
+- Vertical scrolling: As shown in the `vertical` example above
+- Horizontal scrolling: As shown in the `horizontal` example above
+The orientation is controlled through the `orientation` prop on `ScrollArea.Scrollbar`:
+```typescript
+type ScrollbarOrientation = {
+  orientation?: "vertical" | "horizontal"; // defaults to "vertical"
+}
+```
+## Technical Constraints
+### Overflow Detection
+The ScrollArea automatically detects content overflow and updates scrollbar visibility accordingly. This includes:
+- Initial mount
+- Window resize
+- Zoom level changes
+- Dynamic content updates
+### Browser Support
+The component handles various browser-specific behaviors:
+- Cross-browser zoom detection using ctrl/cmd + +/- shortcuts
+- Responsive to window resize events
+- Maintains scroll position during thumb dragging across browsers
+### Performance Considerations
+- Scrollbar visibility updates are debounced during scroll events
+- Thumb position calculations are optimized for smooth scrolling
+- DOM updates are batched for better performanceBased on the provided examples and API documentation, there are no form-specific features or examples for the ScrollArea component. The component is focused on providing scrollable content areas with customizable scrollbar behavior, but does not include any form integration, validation, or submission functionality.
+The examples provided (`both`, `horizontal`, `vertical`) demonstrate the basic usage and layout configurations of the ScrollArea component, but none are related to form functionality.
+Since there are no form-specific features to document, this section can be skipped.Looking through the provided examples and implementation, I don't see any specific environment-related examples (like CSR vs SSR) or environment-specific features that need to be documented separately.
+The ScrollArea component appears to work consistently across environments, with its core functionality of handling scrollable content and custom scrollbars being environment-agnostic. The examples provided (`both`, `horizontal`, `vertical`) demonstrate basic usage patterns rather than environment-specific behaviors.
+The component handles client-side interactions like scrolling, dragging, and overflow detection through standard browser APIs, but these are fundamental to the component's functionality rather than environment-specific features.
+Since there are no distinct environment-specific examples or features to document, this section can be omitted to avoid redundancy with the basic usage documentation.
+
+---
+
+# Scroll Area
+A customizable container that adds scrollbars when content overflows its boundaries.
+<Showcase name="both" />
+## Features
+<Features api={api} />
+## Anatomy 
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The scroll area component provides a customizable scrolling experience with different visibility modes for the scrollbars.
+The `type` prop controls when scrollbars are visible:
+- `"hover"` (default): Shows scrollbars on hover
+- `"scroll"`: Shows scrollbars during scrolling
+- `"auto"`: Shows scrollbars when content overflows
+- `"always"`: Shows scrollbars whenever there's overflow
+<Showcase name="vertical" />
+### Visual Features
+#### Horizontal Scrolling
+For content that extends beyond the horizontal bounds, use the `orientation="horizontal"` prop on `ScrollArea.Scrollbar`.
+<Showcase name="horizontal" />
+#### Both Axes Scrolling
+When content overflows in both directions, you can include both vertical and horizontal scrollbars.
+<Showcase name="both" />
+### Advanced Usage
+#### Custom Hide Delay
+For scroll-triggered visibility (`type="scroll"`), customize how long scrollbars remain visible after scrolling stops using the `hideDelay` prop (in milliseconds).
+<Showcase name="both" />
+Note: The examples demonstrate the core functionality of the scroll area component. The `hideDelay` prop (default: 600ms) determines how long scrollbars remain visible after scrolling stops when using `type="scroll"`.## Component State
+The ScrollArea component offers several ways to control its scrollbar visibility and behavior through state management.
+### Using Component State
+#### Scrollbar Visibility Types
+The ScrollArea provides four visibility modes controlled through the `type` prop on `ScrollArea.Root`:
+1. **Auto Mode**
+Shows scrollbars when content overflows and hides them when it doesn't.
+<Showcase name="both" />
+2. **Always Mode**
+Keeps scrollbars visible whenever content overflows, regardless of user interaction.
+3. **Hover Mode**
+Shows scrollbars only when the user hovers over the scroll area.
+4. **Scroll Mode**
+Displays scrollbars only during active scrolling.
+#### Hide Delay Configuration
+When using the "scroll" visibility type, you can customize how long the scrollbars remain visible after scrolling stops using the `hideDelay` prop:
+```tsx
+<ScrollArea.Root type="scroll" hideDelay={1000}>
+  {/* Content */}
+</ScrollArea.Root>
+```
+### State Interactions
+#### Overflow Detection
+The ScrollArea automatically detects content overflow and updates its state accordingly. This state is reflected through the `data-has-overflow` attribute on the root element.
+#### Scrollbar State
+Scrollbars expose their current visibility state through the `data-state` attribute, which can be either "visible" or "hidden". This state updates automatically based on:
+- The chosen visibility type
+- Content overflow status
+- User interactions (hover, scroll)
+- Window resize events
+- Zoom level changes
+#### Thumb Position
+The thumb position automatically updates to reflect the current scroll position. You can programmatically control the scroll position through the viewport:
+```tsx
+const viewport = document.querySelector('[data-qds-scroll-area-viewport]');
+if (viewport) {
+  viewport.scrollTop = 100; // Scroll vertically
+  viewport.scrollLeft = 50; // Scroll horizontally
+}
+```
+#### Drag State
+During thumb dragging, the thumb element receives a `data-dragging` attribute that can be used for styling:
+```css
+[data-qds-scroll-area-thumb][data-dragging] {
+  /* Styles for dragging state */
+}
+```
+The ScrollArea maintains the scroll position relative to the drag position, ensuring smooth scrolling even when the cursor moves outside the scrollbar bounds.Based on the provided implementation and examples, I'll document the ScrollArea configuration options:
+## Scrollbar Visibility
+### Core Behavior
+The ScrollArea component supports four visibility modes controlled by the `type` prop on `ScrollArea.Root`:
+- `hover` (default): Shows scrollbars when hovering over the scroll area
+- `scroll`: Displays scrollbars during scrolling, then hides after delay
+- `auto`: Always shows scrollbars when content overflows
+- `always`: Permanently displays scrollbars when content overflows
+As shown in the `hover-test` example above, the hover mode provides a clean interface that reveals scrollbars only when needed.
+### Hide Delay
+For the `scroll` type, you can customize how long scrollbars remain visible after scrolling stops using the `hideDelay` prop:
+```typescript
+type ScrollAreaRootProps = {
+  hideDelay?: number; // milliseconds, defaults to 600
+}
+```
+As shown in the `custom-delay-test` example above, this allows fine-tuning of the scrollbar fade-out timing.
+## Scrollbar Configuration
+### Orientation Support
+ScrollArea supports both vertical and horizontal scrollbars through the `orientation` prop on `ScrollArea.Scrollbar`:
+```typescript
+type ScrollbarOrientation = "vertical" | "horizontal";
+```
+As shown in the `both` example above, you can include both orientations simultaneously for content that overflows in both directions.
+### Technical Constraints
+- Scrollbar visibility is automatically managed based on content overflow
+- Thumb size and position are dynamically calculated based on viewport and content dimensions
+- Scrollbars maintain position during window resize and zoom operations
+- Custom scroll behavior is preserved across browser zoom levels (25% to 500%)
+### Performance Considerations
+The ScrollArea implements several optimizations:
+- Throttled resize handling to prevent excessive recalculation
+- Efficient thumb position updates using transform
+- Minimal DOM updates during scroll operations
+- Lazy initialization of overflow detection
+These ensure smooth scrolling performance even with large content areas and frequent updates.Based on the provided examples and API documentation, I don't see any form-specific examples or functionality in the ScrollArea component. The component is focused on providing scrollable content areas with customizable scrollbars, but does not include any form integration features.
+The examples provided (`both`, `horizontal`, `vertical`) demonstrate the basic usage and layout configurations of the ScrollArea component, but none of them show form-specific implementations.
+Since there are no form-related features or examples to document, this section can be skipped.
+The ScrollArea component is primarily used for:
+- Content overflow management
+- Custom scrollbar visualization
+- Scroll behavior control
+- Viewport management
+But it does not include form-specific functionality like:
+- Form field integration
+- Form validation
+- Form submission handling
+- Form state managementLooking through the provided examples and implementation, I don't see any environment-specific examples (like CSR vs SSR) or features that would require special documentation about the environment.
+The examples provided (`both`, `horizontal`, `vertical`) demonstrate different scrollbar orientations and basic usage patterns, but don't showcase any environment-specific behavior.
+The ScrollArea component appears to work consistently across different rendering environments without requiring special consideration for server vs client rendering or platform-specific behavior.
+Therefore, I'll skip this section as per rule #5: "Skip this section entirely if no environment-specific features exist."
+If you'd like to document environment-specific features, you would need examples that demonstrate:
+- Server-side rendering specific behavior
+- Client-side rendering specific behavior
+- Platform-specific implementations
+- Special rendering cases
+
+---
+
+# Calendar
+A customizable date picker that helps users select dates through an intuitive grid interface.
+<Showcase name="hero" />
+## Features
+<Features api={api} />
+## Anatomy 
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The calendar component provides a simple way to implement date selection functionality. The example below shows the basic setup with core components and date change handling.
+<Showcase name="hero" />
+This example demonstrates:
+- Using `Calendar.Root` as the main container with `locale` set to "en" by default
+- `Calendar.Header` containing navigation buttons and month/year display
+- `Calendar.Grid` for the calendar layout with `Calendar.GridDay` for individual date cells
+- Date selection handling through `onDateChange$` prop
+- Visual feedback for selected dates using `data-selected` and current date with `data-current`
+Key props used:
+- `onDateChange$`: Callback fired when a date is selected
+- `data-selected`: Indicates the currently selected date
+- `data-current`: Highlights the current date
+- `class`: Custom styling applied to various components
+The calendar supports full keyboard navigation and follows WAI-ARIA calendar design patterns for accessibility.
+Note: Since there are no additional examples available in the provided list, I cannot document other sections like Visual Features or Advanced Usage. The documentation is limited to the basic usage example shown in the hero showcase.## Component State
+### Using Component State
+The Calendar component's state can be controlled through several props on the `Calendar.Root` component:
+1. **Default Date**
+Set the initial date to display when the calendar loads using the `defaultDate` prop:
+```tsx
+<Calendar.Root defaultDate="2024-03-15">
+  {/* Calendar content */}
+</Calendar.Root>
+```
+2. **Selected Date**
+Track the currently selected date using the `date` prop:
+```tsx
+<Calendar.Root date={selectedDate}>
+  {/* Calendar content */}
+</Calendar.Root>
+```
+3. **Display Options**
+Control what information is shown in the calendar:
+```tsx
+<Calendar.Root 
+  showWeekNumber={true}  // Show week numbers
+  showDaysOfWeek={true}  // Show day names header
+  fullWeeks={true}       // Show complete weeks including adjacent month days
+>
+  {/* Calendar content */}
+</Calendar.Root>
+```
+### State Interactions
+The Calendar provides ways to respond to date selection through event handlers:
+1. **Date Selection**
+Listen for date changes using the `onDateChange$` prop on either the `Calendar.Root` or `Calendar.GridDay` components:
+```tsx
+<Calendar.Root
+  onDateChange$={(date) => {
+    console.log('Selected date:', date);
+  }}
+>
+  {/* Calendar content */}
+</Calendar.Root>
+```
+As shown in the hero example, you can track the selected date in your application state:
+```tsx
+const selectedDate = useSignal<LocalDate>();
+<Calendar.GridDay
+  onDateChange$={$((date) => {
+    selectedDate.value = date;
+  })}
+/>
+```
+2. **Popover State**
+Control the calendar popover's open state using the `bind:open` prop:
+```tsx
+const isOpen = useSignal(false);
+<Calendar.Root bind:open={isOpen}>
+  {/* Calendar content */}
+</Calendar.Root>
+```
+The calendar component maintains its own internal state for:
+- Current month/year being displayed
+- Date currently in focus
+- Navigation between months
+- Keyboard navigation within the calendar grid
+These aspects are handled automatically by the component and don't require manual management.Based on the provided implementation and examples, I'll document the Calendar component's configuration options.
+## Core Configuration
+### Locale and Date Format
+The Calendar component supports localization through the `locale` prop on `Calendar.Root`. Currently, it supports:
+- Default locale: `"en"`
+- Date format: `YYYY-MM-DD`
+As shown in the hero example above, the calendar uses the default English locale for month names, weekday labels, and date formatting.
+### Initial Date Selection
+The calendar can be configured with:
+- `defaultDate`: Sets the initial focused date (defaults to current date)
+- `date`: Controls the currently selected date
+- `showDaysOfWeek`: Controls visibility of weekday headers (defaults to `true`)
+- `showWeekNumber`: Enables week number display (defaults to `false`)
+### Week Display
+The calendar provides two week display modes controlled by the `fullWeeks` prop:
+```typescript
+type WeekDisplayProps = {
+  // When true, shows complete weeks including days from adjacent months
+  fullWeeks?: boolean; // default: false
+}
+```
+## Advanced Configuration
+### Date Change Handling
+The calendar supports date selection handling through:
+```typescript
+type DateChangeProps = {
+  onDateChange$?: (date: LocalDate) => void;
+}
+```
+Where `LocalDate` is typed as:
+```typescript
+type LocalDate = `${number}-${number}-${number}`;
+```
+### Grid Customization
+The calendar grid can be customized through:
+- `buttonProps`: Props to be spread onto each date button
+- Custom day cell rendering through `Calendar.GridDay`
+### Technical Constraints
+1. Date Format Validation
+   - Dates must follow the `YYYY-MM-DD` format
+   - Invalid formats will throw an error during initialization
+2. Month Navigation
+   - Month navigation is handled internally
+   - Year boundaries are automatically managed when navigating between December and January
+3. Focus Management
+   - Focus is automatically managed within the calendar grid
+   - Only one date cell is focusable at a time (tabIndex management)
+   - Focus is preserved during month navigation
+The calendar maintains internal state for:
+- Current month/year being displayed
+- Selected date
+- Focused date
+- Week number calculations (when enabled)Based on the provided examples and API documentation, I don't see any form-specific examples or functionality for the Calendar component. The only example provided (`hero`) demonstrates basic date selection functionality but does not show form integration, validation, or submission.
+The Calendar component appears to be focused on date selection and navigation rather than form functionality. While it does emit selected dates through the `onDateChange$` handler, there are no specific form integration features shown in the examples or API documentation.
+If form integration examples are added in the future, they should be documented here to explain how the Calendar component can be used within forms, including:
+- Form field integration
+- Validation states
+- Form submission handling
+- Integration with form libraries
+For now, this section can be skipped as there are no form-specific features to document.Based on the provided examples and component implementation, I don't see any environment-specific examples (like CSR vs SSR) or features that would require special documentation about the component's environment.
+The example provided (`hero`) demonstrates basic calendar functionality but doesn't showcase any environment-specific behavior.
+Since there are no environment-specific examples or features to document, this section should be omitted to maintain documentation clarity and avoid redundancy.
+If future examples demonstrate environment-specific behaviors like:
+- Server vs client rendering differences
+- Platform-specific behaviors
+- Environmental dependencies
+- Special rendering cases
+Then this section should be updated accordingly.
+
+---
+
+# Checklist
+A group of selectable items that can be toggled individually or all at once.
+<Showcase name="hero" />
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The basic checklist setup allows users to select multiple items independently.
+<Showcase name="select-all" />
+This example demonstrates:
+- `Checklist.Root` as the container for all checklist items
+- `Checklist.Item` for individual selectable items
+- `Checklist.ItemTrigger` and `Checklist.ItemIndicator` for the checkbox interaction
+- `Checklist.ItemLabel` for item text
+- `Checklist.SelectAll` for the parent checkbox that controls all items
+- `Checklist.SelectAllIndicator` showing the mixed state with both check and minus icons
+- `Checklist.Label` for the select all text
+The select-all functionality automatically manages three states:
+- Unchecked when no items are selected
+- Mixed state when some items are selected
+- Checked when all items are selected
+Each item maintains its own state while staying synchronized with the select-all checkbox.
+Note: The example uses Lucide icons (`LuCheck` and `LuMinus`) to display the checkbox states, but you can customize these with your own icons or indicators.## Component State
+### Using Component State
+The Checklist component provides a powerful way to manage multiple checkbox selections with a "select all" capability. Let's look at how to implement and control the checklist state.
+The basic checklist state is demonstrated in the hero example:
+<Showcase name="hero" />
+For more advanced state management, including a "select all" feature:
+<Showcase name="select-all" />
+This example demonstrates:
+- Individual item selection state
+- Select all functionality
+- Mixed state when only some items are selected
+### State Interactions
+The checklist maintains three main states:
+- Unchecked: No items selected
+- Mixed: Some items selected
+- Checked: All items selected
+The select-all checkbox automatically updates based on the state of individual items:
+- Shows unchecked when no items are selected
+- Shows a mixed state when some items are selected
+- Shows checked when all items are selected
+To respond to state changes, the checklist items and select-all checkbox are automatically synchronized:
+1. When clicking the select-all checkbox:
+   - If unchecked: All items become checked
+   - If checked or mixed: All items become unchecked
+2. When clicking individual items:
+   - Updates the select-all checkbox state based on overall selection
+   - Maintains the mixed state when appropriate
+The state management is handled automatically by the component, requiring no additional configuration from the user. Simply structure your checklist with the appropriate components and the state synchronization works out of the box.Based on the provided implementation and examples, I'll document the configuration options for the Checklist component.
+## Core Configuration
+### Select All Behavior
+The Checklist component supports a "select all" functionality that manages the state of all child checkboxes. As shown in the `select-all` example above, this requires configuring both the select all trigger and individual items.
+The select all state automatically manages three possible values:
+- `false` - No items checked
+- `true` - All items checked  
+- `"mixed"` - Some items checked
+### Item Management
+Items must be direct children of `Checklist.Root` to be properly tracked. The component internally manages indices for state synchronization.
+> Each `Checklist.Item` requires a unique key when mapping over items to maintain proper state tracking.
+### Group Configuration
+The Checklist is configured as a checkbox group by default with the following characteristics:
+```typescript
+type ChecklistContext = {
+  isAllCheckedSig: Signal<boolean | "mixed">;
+  checkedStatesSig: Signal<(boolean | "mixed")[]>;
+};
+```
+The context manages:
+- Overall checked state (`isAllCheckedSig`)
+- Individual item states (`checkedStatesSig`)
+### Form Integration
+The Checklist can be integrated with forms through the `HiddenInput` component. As shown in the `hero` example above, this manages the form submission state for all checkboxes in the group.
+## Advanced Configuration
+### State Synchronization
+The Checklist implements a bi-directional state synchronization:
+1. Select All → Items:
+- When select all is toggled, all items update to match
+- Mixed state is preserved when partially selected
+2. Items → Select All:
+- Select all updates based on collective item state
+- Automatically switches to mixed state when appropriate
+### Custom Layouts
+While the component handles state management, the layout is fully customizable. As shown in the `select-all` example above, items can be nested and grouped with custom spacing and hierarchies.
+> Note: The internal state tracking works regardless of DOM structure, but items must remain direct children of `Checklist.Root` in the component tree.Based on the provided implementation and examples, I'll document the form-specific features of the Checklist component.
+## Forms
+The Checklist component provides form integration through the `<Checklist.HiddenInput>` component, which manages multiple checkbox form inputs.
+The component follows a group pattern where the select-all functionality can control multiple checkbox states simultaneously.
+<Showcase name="select-all" />
+In this example, the select-all checkbox controls the state of all child checkboxes, maintaining form state synchronization. When some items are selected, the select-all checkbox displays a mixed state, indicated by the minus icon.
+The form state is managed through the `ChecklistContext`, which tracks:
+- The overall checked state (`isAllCheckedSig`)
+- Individual item states (`checkedStatesSig`)
+The `<Checklist.Root>` component acts as a form group container with the appropriate `role="group"` attribute, ensuring proper form semantics and accessibility.
+Note: The current implementation doesn't show explicit form validation examples, but the component structure includes `<Checklist.ErrorMessage>` for handling validation states when needed.Looking through the provided examples and implementation, I don't see any environment-specific examples (like CSR vs SSR) or environment-specific features that need to be documented separately.
+The examples provided ("hero" and "select-all") demonstrate basic usage patterns and state management functionality, but don't showcase any environment-specific behaviors or rendering cases.
+Since there are no environment-specific examples or features to document, I'll leave this section empty to avoid duplicating information that belongs in other sections of the documentation.
+
+---
+
+# File Upload
+A drag and drop interface for uploading files with support for filtering and multiple selections.
+<Showcase name="hero" />
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The most basic implementation allows users to upload files through drag and drop or button click.
+### Visual Features
+The file upload component can be styled to match your application's design.
+### Advanced Usage
+#### Multiple File Upload
+Enable multiple file selection and handle batch uploads.
+#### Disabled State
+The file upload can be disabled to prevent user interaction.## Component State
+### Using Component State
+The File Upload component's state can be controlled through several key props on the `FileUpload.Root` component:
+1. **Multiple File Selection**
+Enable multiple file selection using the `multiple` prop:
+```tsx
+<FileUpload.Root 
+  multiple 
+  onFilesChange$={(files) => {
+    // Handle multiple files
+  }}
+>
+```
+2. **File Type Filtering**
+Restrict file types using the `accept` prop:
+```tsx
+<FileUpload.Root 
+  accept="image/*" 
+  onFilesChange$={(files) => {
+    // Handle image files only
+  }}
+>
+```
+3. **Disabled State**
+Disable the entire upload functionality using the `disabled` prop:
+```tsx
+<FileUpload.Root disabled>
+  {/* All child components will be disabled */}
+</FileUpload.Root>
+```
+### State Interactions
+The File Upload component provides a comprehensive callback system to handle file changes:
+1. **File Change Events**
+The `onFilesChange$` prop allows you to respond to file selections:
+```tsx
+<FileUpload.Root
+  onFilesChange$={(files) => {
+    // files is an array of FileInfo objects:
+    // {
+    //   name: string;
+    //   size: number;
+    //   type: string;
+    //   lastModified: number;
+    //   file: File;
+    // }
+    // Process files
+    files.forEach(fileInfo => {
+      const formData = new FormData();
+      if (fileInfo.file) {
+        formData.append('file', fileInfo.file);
+        // Upload to server
+      }
+    });
+  }}
+>
+```
+2. **Drag State**
+The component automatically manages drag states and provides visual feedback through data attributes:
+- `data-dragging`: Present when files are being dragged over the dropzone
+- `data-disabled`: Present when the component is disabled
+These attributes can be used for styling:
+```css
+[data-file-upload-dropzone][data-dragging] {
+  border-color: blue;
+}
+[data-file-upload-dropzone][data-disabled] {
+  opacity: 0.5;
+}
+```
+The state management is demonstrated in the examples:
+- Basic file upload with single file selection: <Showcase name="hero" />Based on the provided examples and API documentation, I'll document the configuration options for the File Upload component.
+## Core Configuration
+### File Selection Mode
+The File Upload component supports both single and multiple file selection modes through the `multiple` prop on `FileUpload.Root`.
+As shown in the hero example above, by default, the component operates in single file mode. To enable multiple file selection, add the `multiple` prop to `FileUpload.Root`.
+> The `multiple` prop is `false` by default, allowing only single file selection.
+### File Type Filtering
+The component supports file type filtering through the `accept` prop on `FileUpload.Root`. This allows you to restrict which file types users can select.
+As shown in the hero example above, you can use MIME types or file extensions to filter files:
+> Common accept values:
+> - `"image/*"` - All image types
+> - `".pdf,.doc,.docx"` - Specific file extensions
+> - `"video/*,audio/*"` - Multiple MIME types
+### Disabled State
+The File Upload component can be disabled entirely using the `disabled` prop on `FileUpload.Root`. When disabled:
+- The trigger button becomes unclickable
+- The file input is disabled
+- Drag and drop functionality is prevented
+- Visual feedback indicates the disabled state
+## Advanced Configuration
+### File Change Handling
+The component provides detailed file information through the `onFilesChange$` callback prop on `FileUpload.Root`. The callback receives an array of `FileInfo` objects with the following structure:
+```typescript
+interface FileInfo {
+  name: string;
+  size: number;
+  type: string;
+  lastModified: number;
+  file: NoSerialize<File>;
+}
+```
+> The `file` property is wrapped in `NoSerialize` to prevent serialization issues in Qwik's resumability model.
+### Drag and Drop Behavior
+The component automatically handles drag and drop events and provides visual feedback through data attributes:
+```typescript
+interface DropzoneAttributes {
+  "data-dragging": string | undefined;  // Present when files are being dragged over
+  "data-disabled": string | undefined;  // Present when the dropzone is disabled
+}
+```
+These attributes can be used for styling and state management in more complex implementations.Looking through the examples and implementation, I can see this is a file upload component that can be integrated with forms. Let me document the form-specific features:
+## Forms
+The FileUpload component can be integrated with forms by handling the uploaded files in the `onFilesChange$` callback. This allows you to process files and submit them using `FormData`.
+<Showcase name="hero" />
+The callback provides an array of `FileInfo` objects containing the file metadata and the actual `File` object that can be used with `FormData` for form submission.
+```tsx
+// Example form submission
+const formData = new FormData();
+if (fileInfo.file) {
+  formData.append("file", fileInfo.file);
+  // Submit form data
+  fetch('/api/upload', {
+    method: 'POST', 
+    body: formData
+  });
+}
+```
+## Validation
+The FileUpload component provides built-in file type validation through the `accept` prop on `FileUpload.Root`. This allows you to restrict which file types can be uploaded.
+```tsx
+// Only allow image files
+<FileUpload.Root accept="image/*">
+```
+The component also supports custom validation through the `onFilesChange$` callback where you can implement additional validation logic:
+```tsx
+<FileUpload.Root
+  onFilesChange$={(files) => {
+    // Custom validation
+    const validFiles = files.filter(file => {
+      return file.size < 5000000; // < 5MB
+    });
+  }}
+>
+```
+When files are invalid, you can prevent them from being processed and provide feedback to the user through your own UI components.
+The disabled state can also be used to prevent file uploads entirely when form conditions are not met:
+```tsx
+<FileUpload.Root disabled={!isValid}>
+```
+This provides flexibility in implementing form validation while maintaining a consistent user experience.Looking through the provided examples and implementation, I don't see any environment-specific examples or features that would warrant documentation in this section.
+The FileUpload component works consistently across server and client environments without any special considerations. The examples provided focus on basic usage patterns, state management (disabled, multiple files), and styling - none of which are environment-specific concerns.
+The component handles:
+- File selection via system dialog
+- Drag and drop functionality 
+- File processing
+- State management
+- Event handling
+But these behaviors are consistent regardless of the rendering environment.
+Since there are no environment-specific examples or features to document, this section should be skipped to avoid redundant or irrelevant documentation.
+
+---
+
+# QR Code
+Generate scannable codes to share links and information instantly.
+<Showcase name="base" />
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The QR code component provides a simple way to generate scannable codes. The `value` prop specifies the content to encode, while the `level` prop determines error correction strength.
+<Showcase name="base" />
+Key features demonstrated:
+- `value` prop to set the QR code content
+- `level="H"` for high error correction
+- Basic structure with `Root`, `Frame`, `PatternSvg`, and `PatternPath` components
+### Visual Features
+#### Custom Colors and Overlay
+You can customize the QR code appearance with different colors and add an overlay image in the center.
+<Showcase name="overlay-custom-color" />
+Key features demonstrated:
+- Custom fill color using the `fill` prop on `PatternPath`
+- Background styling through CSS classes
+- Center overlay with the `Overlay` component
+- Custom `aria-label` for accessibility
+### Advanced Usage
+#### Multiple QR Codes
+Display multiple QR codes side by side, each with unique content and styling.
+<Showcase name="multiple" />
+Key features demonstrated:
+- Independent QR codes with different values
+- Consistent styling across instances
+- Optional overlay support per instance
+- Flexible layout arrangement## Component State
+### Using Component State
+The QR Code component's state can be controlled through two main props on the `QRCode.Root` component:
+1. `value` - Sets the text content to be encoded in the QR code
+2. `level` - Controls the error correction level ("L", "M", "Q", "H")
+Here's how to use these props:
+<Showcase name="base" />
+In this example, we set:
+- `value` prop to "https://qwikui.com" to encode a URL
+- `level` prop to "H" for high error correction
+### Multiple QR Codes
+You can render multiple QR codes with different values on the same page:
+<Showcase name="multiple" />
+This example demonstrates:
+- Creating two QR codes with the same value but different presentations
+- One basic QR code and one with an overlay
+- Both using high ("H") error correction level
+### Custom Styling
+The QR code's appearance can be customized through props:
+<Showcase name="overlay-custom-color" />
+This example shows:
+- Setting custom fill color using the `fill` prop on `QRCode.PatternPath`
+- Adding custom frame styling through CSS classes
+- Including an overlay image while maintaining QR code functionality
+The QR code component automatically updates whenever the `value` or `level` props change, ensuring the displayed code always matches the current state.
+Note: The component handles all state updates internally - you only need to provide the desired value and error correction level through props.Based on the provided implementation and examples, I'll document the QR code component's configuration options.
+## Core Configuration
+### QR Code Value and Error Correction
+The QR code can be configured through two essential props on the `QRCode.Root` component:
+- `value`: The text or URL to encode (string)
+- `level`: Error correction level ("L" | "M" | "Q" | "H")
+As shown in the `base` example above, these props control the core functionality of the QR code generation.
+> The default error correction level is "L" (Low) if not specified.
+### Dimensions
+The QR code size is controlled through the `width` and `height` attributes on the `QRCode.PatternSvg` component. As demonstrated in all examples above, the standard size is 200x200 pixels.
+The QR code automatically adjusts its internal grid size based on:
+- Content length
+- Error correction level
+- Border settings (fixed at 0)
+## Advanced Configuration
+### Custom Styling
+The QR code supports custom colors and styling through two main approaches:
+1. Pattern Color: As shown in the `overlay-custom-color` example above, the `fill` attribute on `QRCode.PatternPath` controls the QR code color.
+2. Background Color: The `QRCode.Frame` component accepts CSS classes for styling the background and container.
+### Overlay Configuration
+The `QRCode.Overlay` component supports custom content positioning. As demonstrated in the `overlay` example above, it's commonly used with images but can contain any content.
+Technical constraints for overlays:
+```typescript
+// Recommended overlay image size ratio
+const maxOverlaySize = qrCodeSize * 0.375; // 37.5% of QR code size
+```
+> When using overlays, it's recommended to use a higher error correction level ("H") to ensure readability despite the overlay covering part of the code.
+### Multiple Instances
+As shown in the `multiple` example above, multiple QR codes can be rendered on the same page. Each instance maintains its own context and state, allowing for different configurations and values.
+Technical considerations:
+- Each QR code instance creates its own context
+- Memory usage scales linearly with the number of instances
+- Pattern generation is performed independently for each instanceBased on the provided component implementation and examples, I don't see any form-specific features or examples for the QR Code component. The component is primarily focused on displaying and customizing QR codes rather than form integration.
+The available examples (`base`, `multiple`, `overlay-custom-color`, and `overlay`) demonstrate visual customization and display features, but none show form integration, validation, or submission functionality.
+Since there are no form-specific features to document, this section can be skipped. The QR Code component is designed to be a display component rather than a form input component.
+If form integration becomes a requirement in the future, features like:
+- Form field integration
+- Value validation
+- Form submission handling
+- Form state management
+would need to be implemented and documented accordingly.Based on the provided examples and implementation, I don't see any environment-specific examples or features that would warrant documentation about server vs. client rendering, platform-specific behavior, environmental dependencies, or special rendering cases.
+The examples provided (`base`, `multiple`, `overlay`, and `overlay-custom-color`) demonstrate basic usage patterns, styling variations, and component composition, but don't showcase any environment-specific functionality.
+The QR Code component appears to work consistently across environments without any special considerations needed for server-side rendering (SSR) or client-side rendering (CSR).
+Therefore, following the strict rules provided, I'll skip this section as no environment-specific features exist in the current implementation.
+
+---
+
+# QR Code
+Generate scannable codes to share links and information instantly.
+<Showcase name="base" />
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The QR code component provides a simple way to generate scannable codes. The basic setup requires a `value` prop for the encoded content and an optional `level` prop for error correction.
+<Showcase name="base" />
+The `value` prop accepts any string to be encoded, while the `level` prop can be set to `"L"`, `"M"`, `"Q"`, or `"H"` for different error correction levels.
+### Visual Features
+#### Custom Colors and Overlay
+You can customize the appearance of your QR code with custom colors and add an overlay image in the center.
+<Showcase name="overlay-custom-color" />
+The `fill` prop on `QRCode.PatternPath` controls the color of the QR code pattern, while the `QRCode.Overlay` component allows you to place an image or any content on top of the code.
+### Advanced Usage
+#### Multiple QR Codes
+You can render multiple QR codes on the same page, each with unique values and styling.
+<Showcase name="multiple" />
+Each QR code maintains its own independent state and styling, making it perfect for displaying different encoded values simultaneously.## Component State
+### Using Component State
+The QR Code component's state can be controlled through two main props on the `QRCode.Root` component:
+1. `value` - Sets the text content to be encoded in the QR code
+2. `level` - Controls the error correction level ("L", "M", "Q", "H")
+Here's how to use these props:
+<Showcase name="base" />
+In this example, we set:
+- `value` prop to "https://qwikui.com" to generate a QR code for the website URL
+- `level` prop to "H" for high error correction
+### Multiple QR Codes
+You can render multiple QR codes with different values on the same page:
+<Showcase name="multiple" />
+This example demonstrates:
+- Creating two QR codes with different values
+- Each QR code maintains its own independent state
+- Both QR codes can use different error correction levels if needed
+### Custom Styling
+The QR code's appearance can be customized through props:
+<Showcase name="overlay-custom-color" />
+This example shows:
+- Setting custom colors using the `fill` prop on `QRCode.PatternPath`
+- Adding custom styling to the frame through CSS classes
+- Maintaining the QR code's functionality while changing its appearance
+Note: When customizing colors, ensure sufficient contrast between the QR code pattern and background for reliable scanning.
+The state management in the QR code component is designed to be simple and declarative, with changes to the `value` or `level` props automatically updating the rendered QR code pattern.Based on the provided implementation and examples, I'll document the QR code component's configuration options.
+## Core Configuration
+### Basic Setup
+The QR code component requires two essential configurations: `value` and `level` props on the `QRCode.Root` component.
+As shown in the `base` example above, the minimal configuration includes:
+- `value`: The text or URL to encode
+- `level`: Error correction level (`"L"`, `"M"`, `"Q"`, or `"H"`)
+> The default error correction level is "L" (Low) if not specified.
+### Pattern Size
+The QR code pattern size is controlled through the `width` and `height` attributes on the `QRCode.PatternSvg` component. As shown in all examples above, the recommended size is 200x200 pixels for optimal scanning.
+> The SVG viewBox is automatically calculated based on the QR code data matrix size.
+## Advanced Configuration
+### Error Correction Levels
+The `level` prop supports four values with different data redundancy capabilities:
+```typescript
+type ErrorCorrectionLevel = "L" | "M" | "Q" | "H";
+```
+- `"L"`: Low (7% recovery)
+- `"M"`: Medium (15% recovery)
+- `"Q"`: Quartile (25% recovery)
+- `"H"`: High (30% recovery)
+> When using overlays, it's recommended to use `"H"` level as shown in the `overlay` example above to ensure reliable scanning.
+### Pattern Customization
+The QR code pattern is rendered using SVG paths, allowing for various customizations:
+- Zero-border output by default
+- Vector-based scaling without quality loss
+- Dynamic updates when value changes
+- Path-based rendering for better performance
+> The component automatically recalculates the pattern when either the `value` or `level` props change.
+Technical constraints:
+- Minimum QR code version is determined by data length
+- Maximum supported data capacity varies by error correction level
+- Pattern must maintain sufficient contrast for scanningBased on the provided component implementation and examples, I don't see any form-specific features or examples for the QR Code component. The component is primarily focused on displaying and customizing QR codes rather than form integration.
+The available examples (`base`, `multiple`, `overlay-custom-color`, and `overlay`) demonstrate visual customization and display features, but none show form integration, validation, or submission functionality.
+Since there are no form-specific features to document, this section can be skipped. The QR Code component is designed to be a display component rather than a form input component.
+If form integration becomes a requirement in the future, features like:
+- Form field integration
+- Value validation
+- Form submission handling
+- Form state management
+would need to be implemented and documented.Based on the provided examples and implementation, I don't see any environment-specific examples or features that would warrant documentation about server vs. client rendering, platform-specific behavior, environmental dependencies, or special rendering cases.
+The examples provided (`base`, `multiple`, `overlay`, and `overlay-custom-color`) demonstrate basic usage patterns, styling variations, and component composition, but don't showcase any environment-specific functionality.
+The QR Code component appears to work consistently across environments without any special considerations needed for server-side rendering (SSR) or client-side rendering (CSR).
+Therefore, following the strict rules provided, I'll skip this section as no environment-specific features exist in the current implementation.
+
+---
+
+# QR Code
+Generate scannable codes to share links and information instantly.
+<Showcase name="base" />
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The QR code component provides a simple way to generate scannable codes. The basic setup requires a `value` prop for the encoded content and an optional `level` prop for error correction.
+<Showcase name="base" />
+The `value` prop accepts any string content, while `level` can be set to `"L"` (Low), `"M"` (Medium), `"Q"` (Quartile), or `"H"` (High) for different levels of error correction.
+### Visual Features
+#### Custom Colors and Overlay
+You can customize the QR code's appearance with custom colors and add an overlay image in the center.
+<Showcase name="overlay-custom-color" />
+The `fill` prop on `QRCode.PatternPath` controls the QR code color, while `QRCode.Overlay` allows placing an image or content on top of the code. The frame can be styled using CSS classes.
+### Advanced Usage
+#### Multiple QR Codes
+Multiple QR codes can be rendered on the same page, each with unique values and styling.
+<Showcase name="multiple" />
+Each QR code maintains its own context and can have different values, error correction levels, and visual customizations while coexisting on the same page.## Component State
+### Using Component State
+The QR code component's state can be controlled through two main props on the `QRCode.Root` component:
+1. `value` - Sets the text content to be encoded in the QR code
+2. `level` - Controls the error correction level ("L", "M", "Q", "H")
+Here's how to use these props:
+<Showcase name="base" />
+In this example, we set:
+- `value` prop to "https://qwikui.com" to encode a URL
+- `level` prop to "H" for high error correction
+### Multiple QR Codes
+You can render multiple QR codes with different values on the same page:
+<Showcase name="multiple" />
+This example demonstrates:
+- Creating two QR codes with the same value but different presentations
+- One basic QR code and one with an overlay
+- Both using high ("H") error correction level
+### Custom Styling
+The QR code's appearance can be customized through props:
+<Showcase name="overlay-custom-color" />
+This example shows:
+- Setting custom fill color through the `fill` prop on `QRCode.PatternPath`
+- Using custom CSS classes for styling the frame
+- Adding an overlay image while maintaining QR code functionality
+The component maintains its functionality while allowing visual customization through standard HTML/CSS properties and the component's built-in styling props.
+Note: The QR code will automatically update whenever the `value` or `level` props change, ensuring the displayed code always matches the current props.Based on the provided implementation and examples, I'll document the QR code component's configuration options.
+## Core Configuration
+### Basic Setup
+The QR code component requires two essential configurations: `value` and `level` props on the `QRCode.Root` component.
+As shown in the `base` example above, the minimal configuration includes:
+- `value`: The text or URL to encode
+- `level`: Error correction level ("L", "M", "Q", "H")
+> The default error correction level is "L" (Low) if not specified.
+### Dimensions
+The QR code size is controlled through the `width` and `height` props on the `QRCode.PatternSvg` component. As shown in all examples above, the recommended size is 200x200 pixels for optimal scanning.
+> The QR code maintains its aspect ratio regardless of the container size.
+## Advanced Configuration
+### Error Correction Levels
+The `level` prop supports four values with different data redundancy capabilities:
+```typescript
+type ErrorCorrectionLevel = "L" | "M" | "Q" | "H";
+```
+- L (Low): 7% of data can be restored
+- M (Medium): 15% of data can be restored
+- Q (Quartile): 25% of data can be restored
+- H (High): 30% of data can be restored
+As shown in the `overlay` and `overlay-custom-color` examples above, using level "H" is recommended when adding an overlay to ensure reliable scanning.
+### Pattern Customization
+The QR code pattern is rendered using SVG paths, allowing for color customization through the `fill` attribute on `QRCode.PatternPath`. As demonstrated in the `overlay-custom-color` example above, you can modify the pattern color to match your design requirements.
+> The QR code maintains functionality regardless of color choice, but ensure sufficient contrast for reliable scanning.
+### Technical Constraints
+- The QR code is generated with zero borders by default
+- The pattern data is dynamically updated when either `value` or `level` props change
+- The SVG viewBox is automatically calculated based on the QR code matrix size
+- The component uses the uqr library for encoding, which supports UTF-8 charactersBased on the provided component implementation and examples, I don't see any form-specific features or examples for the QR Code component. The component is primarily focused on displaying and customizing QR codes rather than form integration.
+The available examples (`base`, `multiple`, `overlay`, and `overlay-custom-color`) demonstrate visual customization and multiple instance usage, but none of them show form-related functionality.
+Since there are no form-specific features such as:
+- Form integration
+- Form validation
+- Form submission
+- Form state handling
+I'll skip writing the form configuration section for this component as it would not be applicable to its core functionality.
+The QR Code component is designed to be a display component rather than a form input component.Based on the provided examples and implementation, I don't see any environment-specific examples or features that would warrant documentation about server vs. client rendering, platform-specific behavior, environmental dependencies, or special rendering cases.
+The examples provided (`base`, `multiple`, `overlay`, and `overlay-custom-color`) demonstrate basic usage patterns, styling variations, and component composition, but don't showcase any environment-specific functionality.
+The QR Code component appears to work consistently across environments without any special considerations needed for server-side rendering (SSR) or client-side rendering (CSR).
+Therefore, following the strict rules provided, I'll skip this section as no environment-specific features exist in the current implementation.
+
+---
+
+# QR Code
+Generate scannable codes to share links and information instantly.
+<Showcase name="base" />
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The QR code component provides a simple way to generate scannable codes. The basic setup requires a `value` prop for the encoded content and an optional `level` prop for error correction.
+<Showcase name="base" />
+The `value` prop accepts any string to be encoded, while `level` determines error correction strength ("L", "M", "Q", "H").
+### Visual Features
+#### Custom Overlay and Colors
+You can customize the QR code appearance with overlays and custom colors. The `QRCode.Overlay` component allows placing images or content on top of the code.
+<Showcase name="overlay-custom-color" />
+The example demonstrates:
+- Custom fill color using the `fill` prop on `QRCode.PatternPath`
+- Background styling through CSS classes on `QRCode.Frame`
+- Centered overlay image using `QRCode.Overlay`
+### Advanced Usage
+#### Multiple QR Codes
+Multiple QR codes can be rendered on the same page, each with unique values and styling.
+<Showcase name="multiple" />
+This example shows:
+- Independent QR codes with different values
+- Separate styling for each instance
+- Optional overlay on specific instances
+- Flexible layout arrangement using CSS
+Each QR code maintains its own context and can be styled independently while remaining scannable.## Component State
+### Using Component State
+The QR Code component's state can be controlled through two main props on the `QRCode.Root` component:
+1. `value` prop - Sets the text content to be encoded in the QR code
+2. `level` prop - Controls the error correction level of the QR code
+The base example demonstrates the fundamental state usage:
+<Showcase name="base" />
+In this example, we set:
+- `value="https://qwikui.com"` to encode a URL
+- `level="H"` for high error correction
+### State Interactions
+The QR code updates automatically when its props change. You can see this in action with multiple QR codes rendering different values:
+<Showcase name="multiple" />
+The example above shows two QR codes with different values rendered simultaneously, demonstrating how each instance maintains its own independent state.
+For custom styling based on state, you can combine the QR code with custom colors:
+<Showcase name="overlay-custom-color" />
+This example shows how to:
+- Customize the QR code appearance using the `fill` prop on `QRCode.PatternPath`
+- Add visual elements using `QRCode.Overlay`
+- Maintain the QR code's functionality while applying custom styling
+The QR code component is designed to be declarative - simply update the `value` or `level` props, and the component will automatically regenerate the QR code pattern with the new settings.
+Note: The QR code supports four error correction levels:
+- `"L"` - Low (7% recovery)
+- `"M"` - Medium (15% recovery)
+- `"Q"` - Quartile (25% recovery)
+- `"H"` - High (30% recovery)
+Higher error correction levels make the QR code more resistant to damage or obstruction, which is especially important when using overlays or in situations where the code might get partially obscured.Based on the provided implementation and examples, I'll document the QR code component's configuration options.
+## Core Configuration
+### Basic Setup
+The QR code component requires two essential configurations: `value` and `level` props on the `QRCode.Root` component.
+As shown in the `base` example above, the minimal configuration includes:
+- `value`: The text or URL to encode
+- `level`: Error correction level (`"L"`, `"M"`, `"Q"`, or `"H"`)
+> The default error correction level is "L" (Low) if not specified.
+### Pattern Size
+The QR code pattern size is controlled through the `width` and `height` attributes on the `QRCode.PatternSvg` component. As shown in all examples above, the recommended size is 200x200 pixels for optimal scanning.
+> The SVG viewBox is automatically calculated based on the QR code data matrix size.
+## Advanced Configuration
+### Error Correction Levels
+The `level` prop supports four values with different data redundancy capabilities:
+```typescript
+type ErrorCorrectionLevel = "L" | "M" | "Q" | "H";
+```
+- `"L"`: Low (7% of data can be restored)
+- `"M"`: Medium (15% of data can be restored)
+- `"Q"`: Quartile (25% of data can be restored)
+- `"H"`: High (30% of data can be restored)
+As shown in the `overlay` example above, using `"H"` level is recommended when adding an overlay to ensure reliable scanning.
+### Pattern Customization
+The QR code pattern can be customized through the `PatternPath` component. As shown in the `overlay-custom-color` example above, you can modify the pattern color using the `fill` attribute.
+> The QR code maintains its functionality regardless of color, as long as there's sufficient contrast between the pattern and background.
+### Technical Constraints
+1. Border: The component generates QR codes with zero border padding
+2. Data Capacity: Maximum capacity depends on:
+   - Error correction level
+   - Character encoding
+   - QR code version (automatically selected)
+> The component automatically selects the optimal QR code version based on the input data and error correction level.Based on the provided component implementation and examples, I don't see any form-specific features or examples for the QR Code component. The component is primarily focused on displaying and customizing QR codes rather than form integration.
+The available examples (`base`, `multiple`, `overlay-custom-color`, and `overlay`) demonstrate visual customization and display features, but none show form integration, validation, or submission functionality.
+Since there are no form-specific features to document, this section can be skipped. The QR Code component is designed to be a display component rather than a form input component.
+If form integration becomes a requirement in the future, features like:
+- Form field integration
+- Value validation
+- Form submission handling
+- Form state management
+would need to be implemented and documented.Based on the provided examples and implementation, I don't see any environment-specific examples or features that would warrant documentation about server vs. client rendering, platform-specific behavior, environmental dependencies, or special rendering cases.
+The examples provided (`base`, `multiple`, `overlay`, and `overlay-custom-color`) demonstrate basic usage patterns, styling variations, and component composition, but don't showcase any environment-specific functionality.
+The QR Code component appears to work consistently across environments without any special considerations needed for server-side rendering (SSR) or client-side rendering (CSR).
+Therefore, following the strict rules provided, I'll skip this section as no environment-specific features exist in the current implementation.
+
+---
+
+# QR Code
+Generate scannable codes to share links and information instantly.
+<Showcase name="base" />
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The QR code component provides a simple way to generate scannable codes. The basic setup requires a `value` prop for the encoded content and an optional `level` prop for error correction.
+<Showcase name="base" />
+The `value` prop accepts any string to be encoded, while `level` determines error correction strength ("L", "M", "Q", "H"). The example uses `level="H"` for maximum error correction.
+### Visual Features
+#### Custom Colors and Overlay
+You can customize the QR code's appearance with custom colors and add an overlay image in the center.
+<Showcase name="overlay-custom-color" />
+The example demonstrates:
+- Custom fill color using the `fill` prop on `QRCode.PatternPath`
+- Background styling through CSS classes on `QRCode.Frame`
+- Center overlay image using `QRCode.Overlay`
+### Advanced Usage
+#### Multiple QR Codes
+You can render multiple QR codes on the same page, each with unique values and styling.
+<Showcase name="multiple" />
+This example shows:
+- Independent QR codes with different values
+- One basic QR code and one with an overlay
+- Proper spacing and layout for multiple instances## Component State
+### Using Component State
+The QR code component's state can be controlled through two main props on the `QRCode.Root` component:
+1. `value` - Sets the text content to be encoded in the QR code
+2. `level` - Controls the error correction level ("L", "M", "Q", "H")
+Here's how to use these props:
+<Showcase name="base" />
+In this example, we set:
+- `value` prop to "https://qwikui.com" to encode a URL
+- `level` prop to "H" for high error correction
+### Multiple QR Codes
+You can render multiple QR codes with different values on the same page:
+<Showcase name="multiple" />
+This example demonstrates:
+- Creating two QR codes with the same value but different presentations
+- One basic QR code and one with an overlay
+- Both using high ("H") error correction level
+### Custom Styling
+The QR code's appearance can be customized through props:
+<Showcase name="overlay-custom-color" />
+This example shows:
+- Setting custom fill color using the `fill` prop on `QRCode.PatternPath`
+- Adding custom frame styling through CSS classes
+- Including an overlay image while maintaining QR code functionality
+The component maintains its functionality regardless of styling changes, ensuring the QR code remains scannable while allowing for visual customization.
+Note: The component automatically updates the QR code pattern whenever the `value` or `level` props change, ensuring the displayed code always matches the current props.Based on the provided implementation and examples, I'll document the QR code component's configuration options.
+## Core Configuration
+### QR Code Value and Error Correction
+The QR code can be configured through two essential props on the `QRCode.Root` component:
+- `value`: The text or URL to encode (string)
+- `level`: Error correction level ("L" | "M" | "Q" | "H")
+As shown in the `base` example above, these props determine the QR code's content and reliability:
+> The default error correction level is "L" (Low). Higher levels provide better error correction but increase code density.
+### Dimensions
+The QR code's size is controlled through the `width` and `height` props on the `QRCode.PatternSvg` component. As demonstrated in all examples above, the standard size is 200x200 pixels.
+> The SVG viewBox is automatically calculated based on the QR code's data matrix size, ensuring proper scaling regardless of dimensions.
+## Advanced Configuration
+### Pattern Customization
+The QR code pattern can be customized through the `fill` attribute on `QRCode.PatternPath`. As shown in the `overlay-custom-color` example above, you can specify any valid color value.
+### Overlay System
+The `QRCode.Overlay` component provides a layering system for placing content on top of the QR code. As demonstrated in the `overlay` example above, this is commonly used for logos or branding elements.
+Technical considerations for overlays:
+```typescript
+// Recommended overlay image size constraints
+const maxOverlaySize = qrCodeSize * 0.3; // 30% of QR code size
+const minOverlaySize = qrCodeSize * 0.1; // 10% of QR code size
+```
+> When using overlays, ensure the error correction level is set to "H" to maintain readability despite the covered pattern areas.
+### Multiple Instances
+The component supports multiple QR codes on the same page, as shown in the `multiple` example above. Each instance maintains its own isolated context and state.
+Technical constraints:
+- Each QR code requires unique DOM IDs if specified
+- Memory usage scales linearly with the number of instances
+- Pattern calculation is performed independently for each instanceBased on the provided component implementation and examples, I don't see any form-specific features or examples for the QR Code component. The component is primarily focused on displaying and customizing QR codes rather than form integration.
+The available examples (`base`, `multiple`, `overlay-custom-color`, and `overlay`) demonstrate visual customization and display features, but none show form integration, validation, or submission functionality.
+Since there are no form-specific features to document, this section can be skipped. The QR Code component is designed to be a display component rather than a form input component.
+If form integration becomes necessary in future versions, features like:
+- Form field integration
+- Value validation
+- Form submission handling
+- Form state management
+would need to be implemented and documented accordingly.Based on the provided examples and implementation, I don't see any environment-specific examples or features that would warrant documentation about server vs. client rendering, platform-specific behavior, environmental dependencies, or special rendering cases.
+The examples provided (`base`, `multiple`, `overlay`, and `overlay-custom-color`) demonstrate basic usage patterns, styling variations, and component composition, but don't showcase any environment-specific functionality.
+The QR Code component appears to work consistently across environments without any special considerations needed for server-side rendering (SSR) or client-side rendering (CSR).
+Therefore, following the strict rules provided, I'll skip this section as no environment-specific features exist in the current implementation.
+
+---
+
+# QR Code
+Generate scannable codes to share links and information instantly.
+<Showcase name="base" />
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The QR code component provides a simple way to generate scannable codes. The `value` prop specifies the content to encode, while the `level` prop determines error correction strength.
+<Showcase name="base" />
+Key features demonstrated:
+- `value` prop sets the QR code content
+- `level="H"` provides high error correction
+- `QRCode.PatternSvg` with specified dimensions (200x200)
+- `QRCode.PatternPath` with black fill color
+### Visual Features
+#### Custom Colors and Overlay
+You can customize the QR code appearance with different colors and add an overlay image in the center.
+<Showcase name="overlay-custom-color" />
+Key features demonstrated:
+- Custom blue fill color for `QRCode.PatternPath`
+- Custom background color through CSS
+- Centered logo overlay using `QRCode.Overlay`
+- Custom `aria-label` for accessibility
+### Advanced Usage
+#### Multiple QR Codes
+Multiple QR codes can be rendered on the same page, each with unique values and styling.
+<Showcase name="multiple" />
+Key features demonstrated:
+- Independent QR codes with different content
+- Flexible layout with CSS
+- One code with overlay, one without
+- Consistent sizing across instances## Component State
+### Using Component State
+The QR code component's state can be controlled through two main props on the `QRCode.Root` component:
+1. `value` - Sets the text content to be encoded in the QR code
+2. `level` - Controls the error correction level ("L", "M", "Q", "H")
+Here's how to use these state-related props:
+```typescript
+<QRCode.Root 
+  value="https://qwikui.com"  // The text to encode
+  level="H"                   // High error correction
+>
+  {/* ... */}
+</QRCode.Root>
+```
+The base example demonstrates the basic usage of these state props:
+<Showcase name="base" />
+In this example, we're using:
+- `value` prop to specify the URL to encode
+- `level` prop set to "H" for high error correction
+### Multiple QR Codes
+You can render multiple QR codes with different states on the same page:
+<Showcase name="multiple" />
+This example shows how each QR code maintains its own independent state, allowing you to:
+- Generate different QR codes with unique values
+- Set different error correction levels per instance
+- Apply different styling to each instance
+### Custom Styling State
+The QR code's visual state can be customized through standard CSS and props:
+<Showcase name="overlay-custom-color" />
+This example demonstrates:
+- Setting custom colors for the QR code pattern using the `fill` prop on `QRCode.PatternPath`
+- Applying custom background colors through CSS classes
+- Adding an overlay while maintaining QR code functionality
+The component will automatically update its visual representation whenever the `value` or `level` props change, ensuring the QR code always reflects the current state.
+Note: The component handles all state updates internally - you only need to provide the desired values through props. There's no need to manually manage or sync state.Based on the provided implementation and examples, I'll document the QR code component's configuration options.
+## Core Configuration
+### QR Code Value and Error Correction
+The QR code can be configured through two essential props on the `QRCode.Root` component:
+- `value`: The text or URL to encode (string)
+- `level`: Error correction level ("L" | "M" | "Q" | "H")
+As shown in the `base` example above, these props control the core functionality of the QR code generation.
+> The default error correction level is "L" (Low) if not specified.
+### Dimensions
+The QR code size is controlled through the `width` and `height` props on the `QRCode.PatternSvg` component. As demonstrated in all examples above, the standard size is 200x200 pixels.
+> The SVG viewBox is automatically calculated based on the QR code matrix size, ensuring proper scaling regardless of dimensions.
+## Advanced Configuration
+### Pattern Customization
+The QR code pattern can be customized through the `fill` attribute on `QRCode.PatternPath`. As shown in the `overlay-custom-color` example above, you can specify any valid color value.
+### Overlay Configuration
+The `QRCode.Overlay` component supports any content, typically used with images. The overlay is automatically centered and positioned above the QR code pattern. As demonstrated in the `overlay` example above, this is commonly used to add logos or branding elements.
+Technical considerations for overlays:
+```typescript
+// Recommended overlay image dimensions
+const maxOverlaySize = qrCodeSize * 0.3; // 30% of QR code size
+const minOverlaySize = qrCodeSize * 0.1; // 10% of QR code size
+```
+> To maintain QR code readability, overlay images should not exceed 30% of the QR code's total area.
+### Frame Container
+The `QRCode.Frame` component serves as a wrapper for styling and positioning. While it accepts all standard div props, it's recommended to use CSS classes for styling to maintain consistency across different states and variations.Based on the provided component implementation and examples, I don't see any form-specific features or examples for the QR Code component. The component is primarily focused on displaying and customizing QR codes rather than form integration.
+The available examples (`base`, `multiple`, `overlay-custom-color`, and `overlay`) demonstrate visual customization and display features, but none show form integration, validation, or submission functionality.
+Since there are no form-specific features to document, this section can be skipped. The QR Code component is designed to be a display component rather than a form input component.
+If form integration becomes a feature in the future, this section should be updated to document those capabilities.Based on the provided examples and implementation, I don't see any environment-specific examples or features that would warrant documentation about server vs. client rendering, platform-specific behavior, environmental dependencies, or special rendering cases.
+The examples provided (`base`, `multiple`, `overlay`, and `overlay-custom-color`) demonstrate basic usage patterns, styling variations, and component composition, but don't showcase any environment-specific functionality.
+The QR Code component appears to work consistently across environments without any special considerations needed for server-side rendering (SSR) or client-side rendering (CSR).
+Therefore, following the strict rules provided, I'll skip this section as no environment-specific features exist in the current implementation.
+
+---
+
+# QR Code
+Generate scannable codes to share links and information instantly.
+<Showcase name="base" />
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The QR code component provides a simple way to generate scannable codes. The basic setup requires a `value` prop for the encoded content and an optional `level` prop for error correction.
+<Showcase name="base" />
+The `value` prop accepts any string to be encoded, while the `level` prop can be set to `"L"`, `"M"`, `"Q"`, or `"H"` for different error correction levels.
+### Visual Features
+#### Custom Colors and Overlay
+You can customize the QR code's appearance with custom colors and add an overlay image in the center.
+<Showcase name="overlay-custom-color" />
+The `fill` prop on `QRCode.PatternPath` controls the QR code color, while `QRCode.Overlay` allows placing an image or content on top of the code.
+### Advanced Usage
+#### Multiple QR Codes
+Multiple QR codes can be rendered on the same page, each with unique values and styling.
+<Showcase name="multiple" />
+Each QR code maintains its own context and can have different values, styles, and overlays while coexisting on the same page.## Component State
+### Using Component State
+The QR code component's state can be controlled through two main props on the `QRCode.Root` component:
+1. `value` - Sets the text content to be encoded in the QR code
+2. `level` - Controls the error correction level ("L", "M", "Q", "H")
+Here's how to use these state-related props:
+<Showcase name="base" />
+In this example, we set:
+- `value` prop to "https://qwikui.com" to encode a URL
+- `level` prop to "H" for high error correction
+### Multiple QR Codes
+You can render multiple QR codes with different states on the same page:
+<Showcase name="multiple" />
+This example demonstrates:
+- Independent state management for each QR code instance
+- Different values can be encoded simultaneously
+- Each QR code maintains its own error correction level
+### Custom Styling State
+The QR code's visual state can be customized through styling props:
+<Showcase name="overlay-custom-color" />
+This example shows:
+- Setting custom fill color through the `fill` prop on `QRCode.PatternPath`
+- Custom frame styling through CSS classes
+- Adding an overlay while maintaining QR code functionality
+The component maintains its functionality regardless of styling changes, ensuring the QR code remains scannable even with custom colors and overlays.
+Note: When customizing colors, ensure sufficient contrast between the pattern and background for reliable scanning.Based on the provided implementation and examples, I'll document the QR code component's configuration options.
+## Core Configuration
+### QR Code Value and Error Correction
+The QR code content and error correction level can be configured through the `QRCode.Root` component's props:
+```typescript
+type QRCodeProps = {
+  value?: string;
+  level?: "L" | "M" | "Q" | "H";
+}
+```
+- `value`: The text or URL to encode in the QR code
+- `level`: Error correction level
+  - `L`: Low (7% recovery)
+  - `M`: Medium (15% recovery)
+  - `Q`: Quartile (25% recovery)
+  - `H`: High (30% recovery)
+As shown in the `base` example above, the default configuration uses level `"H"` for maximum error correction, which is recommended when using overlays.
+### Dimensions
+The QR code size is controlled through the `width` and `height` props on the `QRCode.PatternSvg` component. As shown in all examples above, a common size is 200x200 pixels, but this can be adjusted based on your needs.
+> The QR code maintains its readability at different sizes due to the SVG-based rendering.
+## Advanced Configuration
+### Pattern Customization
+The QR code pattern can be customized through the `QRCode.PatternPath` component. As shown in the `overlay-custom-color` example above, you can modify the `fill` attribute to change the QR code color.
+### Multiple Instances
+As demonstrated in the `multiple` example above, you can render multiple QR codes on the same page with different configurations. Each instance maintains its own state and context, allowing for independent:
+- Values
+- Error correction levels
+- Styling
+- Overlays
+> When using multiple instances, ensure each QR code has a unique value to prevent confusion during scanning.
+### Zero Border Output
+The QR code is generated with zero border padding by default. This allows for precise control over spacing through the container elements rather than the QR code itself.
+```typescript
+const qrResult = encode(value, {
+  ecc: level,
+  border: 0
+});
+```
+This configuration cannot be modified as it's integral to the component's layout system.Based on the provided component implementation and examples, I don't see any form-specific features or examples for the QR Code component. The component is primarily focused on displaying and customizing QR codes rather than form integration.
+The available examples (`base`, `multiple`, `overlay-custom-color`, and `overlay`) demonstrate visual customization and display features, but none show form integration, validation, or submission functionality.
+Since there are no form-specific features to document, this section can be skipped. The QR Code component is designed to be a display component rather than a form input component.
+If form integration becomes a requirement in the future, features like:
+- Form field integration
+- Value validation
+- Form submission handling
+- Form state management
+would need to be implemented and documented.Based on the provided examples and implementation, I don't see any environment-specific examples or features that would warrant documentation about server vs. client rendering, platform-specific behavior, or environmental dependencies.
+The examples provided (`base`, `multiple`, `overlay`, and `overlay-custom-color`) all demonstrate standard usage patterns, styling variations, and component composition rather than environment-specific concerns.
+The QR code component appears to work consistently across environments without any special considerations needed for server-side rendering (SSR) or client-side rendering (CSR).
+Since there are no environment-specific examples or features to document, this section should be omitted to maintain clear and focused documentation.
+
+---
+
+# QR Code
+Generate scannable codes to share links and information instantly.
+<Showcase name="base" />
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The QR code component provides a simple way to generate scannable codes. The `value` prop specifies the content to encode, while the `level` prop determines error correction strength.
+<Showcase name="base" />
+Key features demonstrated:
+- `value` prop to set the QR code content
+- `level="H"` for high error correction
+- Basic structure with `Root`, `Frame`, `PatternSvg`, and `PatternPath` components
+### Visual Features
+#### Custom Colors and Overlay
+You can customize the QR code appearance with custom colors and add an overlay image in the center.
+<Showcase name="overlay-custom-color" />
+Key features demonstrated:
+- Custom fill color using the `fill` prop on `PatternPath`
+- Background styling through CSS classes
+- Center overlay with the `Overlay` component
+- Custom `aria-label` for accessibility
+### Advanced Usage
+#### Multiple QR Codes
+Display multiple QR codes side by side, each with unique content and styling.
+<Showcase name="multiple" />
+Key features demonstrated:
+- Independent QR codes with different values
+- Consistent styling across instances
+- Optional overlay support per instance
+- Flexible layout arrangement## Component State
+### Using Component State
+The QR code component's state is primarily controlled through two main props on the `QRCode.Root` component:
+1. `value` - Sets the text content to be encoded in the QR code
+2. `level` - Controls the error correction level ("L", "M", "Q", "H")
+As shown in the base example above, you can set these props directly:
+```typescript
+<QRCode.Root 
+  value="https://qwikui.com" 
+  level="H"
+>
+  {/* ... */}
+</QRCode.Root>
+```
+The QR code will automatically update whenever these props change. This allows you to dynamically update the QR code content in response to user interactions or other state changes in your application.
+### State Interactions
+The QR code component is primarily a display component, so it doesn't expose any direct event handlers. However, you can wrap it in your own event handling logic to update its state:
+```typescript
+<button onClick$={() => updateQRValue("new value")}>
+  Update QR Code
+</button>
+<QRCode.Root value={qrValue}>
+  {/* ... */}
+</QRCode.Root>
+```
+As shown in the multiple example above, you can have multiple QR codes on the same page, each with its own independent state. This is useful when you need to display different QR codes that update independently.
+The error correction level can be adjusted based on your needs:
+- "L" (Low) - 7% of data can be restored
+- "M" (Medium) - 15% of data can be restored
+- "Q" (Quartile) - 25% of data can be restored
+- "H" (High) - 30% of data can be restored
+Higher error correction levels make the QR code more resistant to damage or poor scanning conditions, but also make the pattern more complex.Based on the provided implementation and examples, I'll document the QR code component's configuration options.
+## Core Configuration
+### Basic Setup
+The QR code component requires two essential configurations: `value` and `level` props on the `QRCode.Root` component.
+As shown in the `base` example above, the minimal configuration includes:
+- `value`: The text or URL to encode
+- `level`: Error correction level ("L", "M", "Q", "H")
+> The default error correction level is "L" (Low) if not specified.
+### Dimensions
+The QR code size is controlled through the `width` and `height` attributes on the `QRCode.PatternSvg` component. As shown in all examples above, the recommended size is 200x200 pixels for optimal scanning.
+> The QR code maintains its aspect ratio regardless of the container size.
+## Advanced Configuration
+### Error Correction Levels
+The `level` prop supports four values with different data redundancy:
+```typescript
+type ErrorCorrectionLevel = "L" | "M" | "Q" | "H"
+```
+- L (Low): 7% of data can be restored
+- M (Medium): 15% of data can be restored
+- Q (Quartile): 25% of data can be restored
+- H (High): 30% of data can be restored
+As shown in the `overlay` and `overlay-custom-color` examples above, using level "H" is recommended when adding an overlay to ensure reliable scanning.
+### Pattern Customization
+The QR code pattern is rendered using SVG paths, allowing for color customization through the `fill` attribute on `QRCode.PatternPath`. As demonstrated in the `overlay-custom-color` example above, you can modify the pattern color to match your design requirements.
+> The QR code maintains functionality regardless of color choice, but ensure sufficient contrast for reliable scanning.
+### Technical Constraints
+1. Border: The component generates QR codes with zero border padding
+2. Size: The minimum recommended size is 200x200 pixels for reliable scanning
+3. Overlay: When using overlays, the QR code must maintain sufficient pattern visibility
+4. SVG Rendering: The pattern uses path-based rendering for optimal scaling
+These technical specifications ensure the QR code remains functional while providing flexibility for customization.Based on the provided component implementation and examples, I don't see any form-specific features or examples for the QR Code component. The component is primarily focused on displaying and customizing QR codes rather than form integration.
+The available examples (`base`, `multiple`, `overlay-custom-color`, and `overlay`) demonstrate visual customization and display features, but none show form integration, validation, or submission functionality.
+Since there are no form-specific features to document, this section can be skipped. The QR Code component is designed to be a display component rather than a form input component.
+If form integration becomes a requirement in the future, features like:
+- Form field integration
+- Value validation
+- Form submission handling
+- Form state management
+would need to be implemented and documented.Based on the provided examples and implementation, I don't see any environment-specific examples or features that would warrant documentation about server vs. client rendering, platform-specific behavior, environmental dependencies, or special rendering cases.
+The examples provided (`base`, `multiple`, `overlay`, and `overlay-custom-color`) demonstrate basic usage patterns, styling variations, and component composition, but don't showcase any environment-specific functionality.
+The QR Code component appears to work consistently across environments without any special considerations needed for server-side rendering (SSR) or client-side rendering (CSR).
+Therefore, following the strict rules provided, I'll skip this section as no environment-specific features exist in the current implementation.
+
+---
+
+# File Upload
+A drag and drop interface for uploading files with support for filtering and multiple selections.
+<Showcase name="hero" />
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The most basic implementation allows users to upload files through drag and drop or button click.
+### Visual Features
+The file upload can be styled to match your application's design system.
+### Advanced Usage
+#### Multiple File Upload
+Enable multiple file selection and handle batch uploads.
+#### Disabled State
+Control the interactive state of the upload component.## Component State
+### Using Component State
+The File Upload component's state can be controlled through several props on the `FileUpload.Root` component:
+1. **Multiple File Selection**
+- Control whether multiple files can be selected using the `multiple` prop
+- When `multiple` is `true`, users can select or drop multiple files at once
+- When `false` (default), only one file can be selected at a time
+2. **File Type Filtering**
+- Restrict allowed file types using the `accept` prop
+- Accepts standard MIME types or file extensions
+- As shown in the Image Upload example above, use `accept="image/*"` to allow only image files
+3. **Disabled State**
+- Disable all file upload interactions using the `disabled` prop
+- When disabled, the component prevents:
+  - File selection via the trigger button
+  - Drag and drop operations
+  - File input interactions
+### State Interactions
+The component provides a callback to handle file changes:
+1. **File Change Handler**
+```typescript
+<FileUpload.Root
+  onFilesChange$={(files) => {
+    // files is an array of FileInfo objects
+    files.forEach(file => {
+      console.log(file.name, file.size, file.type);
+    });
+  }}
+>
+```
+The `onFilesChange$` prop receives an array of `FileInfo` objects containing:
+- `name`: File name
+- `size`: File size in bytes
+- `type`: MIME type
+- `lastModified`: Last modification timestamp
+- `file`: The actual File object (if available)
+2. **Drag State**
+The component automatically manages drag states:
+- Visual feedback when files are dragged over the dropzone
+- Drag state is cleared when:
+  - Files are dropped
+  - Cursor leaves the dropzone
+  - Component is disabled
+3. **Processing State**
+- Files are processed immediately after selection or drop
+- The component handles both single and multiple file selections based on the `multiple` prop
+- Invalid file types are automatically rejected when using the `accept` prop
+The state management is designed to be simple and declarative, allowing you to focus on handling the files rather than managing the upload interface state.Based on the provided examples and API documentation, I'll document the configuration options for the File Upload component.
+## Core Configuration
+### File Selection Mode
+The File Upload component supports both single and multiple file selection modes through the `multiple` prop on `FileUpload.Root`.
+As shown in the hero example above, by default, the component operates in single file mode. To enable multiple file selection, add the `multiple` prop to `FileUpload.Root`.
+> The `multiple` prop is `false` by default, allowing only single file selection.
+### File Type Filtering
+The component supports file type filtering through the `accept` prop on `FileUpload.Root`. This allows you to restrict which file types users can select.
+As shown in the hero example above, you can use MIME types or file extensions to filter files:
+> Common accept values:
+> - `"image/*"` - All image types
+> - `".pdf,.doc,.docx"` - Specific file extensions
+> - `"video/*,audio/*"` - Multiple MIME types
+### Disabled State
+The File Upload component can be disabled entirely using the `disabled` prop on `FileUpload.Root`. When disabled:
+- The trigger button becomes unclickable
+- The file input is disabled
+- Drag and drop functionality is prevented
+- Visual feedback indicates the disabled state
+## Advanced Configuration
+### File Change Handling
+The component provides detailed file information through the `onFilesChange$` callback prop on `FileUpload.Root`. The callback receives an array of `FileInfo` objects with the following structure:
+```typescript
+interface FileInfo {
+  name: string;
+  size: number;
+  type: string;
+  lastModified: number;
+  file: NoSerialize<File>;
+}
+```
+> The `file` property is wrapped in `NoSerialize` to prevent serialization issues in Qwik's resumability model.
+### Drag and Drop Configuration
+The component automatically handles drag and drop events and provides visual feedback through data attributes:
+```typescript
+interface DropzoneAttributes {
+  "data-dragging": string | undefined;  // Present when files are being dragged
+  "data-disabled": string | undefined;  // Present when dropzone is disabled
+}
+```
+These attributes can be used for styling and state management in more complex implementations.Looking through the provided examples and implementation, I don't see any specific form-related examples or features that would warrant a Forms section in the documentation.
+The FileUpload component is primarily focused on handling file selection and drag-and-drop functionality, rather than form integration. While files could be used as part of a larger form submission, the component itself doesn't have specific form features like:
+- Form field integration
+- Built-in validation
+- Form state management
+- Form submission handling
+The examples show file handling and callbacks that could be used to implement form functionality, but these would be application-specific implementations rather than built-in form features of the component.
+If form integration is needed, developers would need to:
+1. Wrap the FileUpload component in their own form component
+2. Handle the `onFilesChange$` callback to manage form state
+3. Implement their own validation and submission logic
+Since there are no specific form-related examples or built-in form features, I'll skip writing this section to avoid providing incomplete or misleading documentation.Looking through the provided examples and implementation, I don't see any specific environment-related examples or features that would warrant dedicated environment documentation.
+The FileUpload component works consistently across server and client environments without any special considerations needed. The core functionality of drag-and-drop, file selection, and file processing remains the same regardless of rendering context.
+While the component does handle browser-specific file APIs (like File, FileReader, and DataTransfer), these are standard web APIs that work the same way in both server-side and client-side rendered contexts.
+Since there are no environment-specific examples or features to document, I'll leave this section empty rather than create artificial distinctions or repeat basic usage patterns.
+
+---
+

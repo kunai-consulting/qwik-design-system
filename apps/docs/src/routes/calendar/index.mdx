@@ -1,7 +1,7 @@
 import { api } from "./auto-api/api";
 
 # Calendar
-Select dates with an interactive grid that supports keyboard navigation and localization.
+A customizable date picker that helps users select dates through an intuitive grid interface.
 <Showcase name="hero" />
 ## Features
 <Features api={api} />
@@ -9,154 +9,140 @@ Select dates with an interactive grid that supports keyboard navigation and loca
 <AnatomyTable api={api} />
 ## Examples
 ### Basic Usage
-The calendar can be implemented with minimal configuration using the compound components pattern. The example below shows a basic calendar setup with navigation controls and date selection.
+The calendar component provides a simple way to implement date selection functionality. The example below shows the basic setup with core components and date change handling.
 <Showcase name="hero" />
 This example demonstrates:
-- `Calendar.Root` as the main container with `locale` and `showWeekNumber` props
-- `Calendar.Header` containing navigation controls and month/year display
-- `Calendar.Grid` rendering the date grid with `Calendar.GridDay` for individual dates
-- Date selection handling through `onDateChange$` prop on `Calendar.GridDay`
-Key API highlights:
-- `locale` prop for internationalization (defaults to "en")
-- `showWeekNumber` prop to display week numbers (defaults to false) 
-- `showDaysOfWeek` prop to show/hide weekday headers (defaults to true)
-- `onDateChange$` event handler for date selection
-- `data-selected` and `data-current` attributes for styling selected and current dates
+- Using `Calendar.Root` as the main container with `locale` set to "en" by default
+- `Calendar.Header` containing navigation buttons and month/year display
+- `Calendar.Grid` for the calendar layout with `Calendar.GridDay` for individual date cells
+- Date selection handling through `onDateChange$` prop
+- Visual feedback for selected dates using `data-selected` and current date with `data-current`
+Key props used:
+- `onDateChange$`: Callback fired when a date is selected
+- `data-selected`: Indicates the currently selected date
+- `data-current`: Highlights the current date
+- `class`: Custom styling applied to various components
 The calendar supports full keyboard navigation and follows WAI-ARIA calendar design patterns for accessibility.
-Note: Since only the "hero" example is available in the provided examples list, I've limited the documentation to this basic usage section. Additional sections for Visual Features and Advanced Usage would require more example implementations.
+Note: Since there are no additional examples available in the provided list, I cannot document other sections like Visual Features or Advanced Usage. The documentation is limited to the basic usage example shown in the hero showcase.
 
 ## Component State
-### Internal State Structure
-The Calendar component maintains several key pieces of state through the `CalendarContext`:
-```typescript
-type CalendarContext = {
-  locale: Locale;
-  defaultDate: LocalDate;
-  activeDate: Signal<LocalDate | null>;
-  dateToFocus: Signal<LocalDate>;
-  showWeekNumber: boolean;
-  showDaysOfWeek: boolean;
-  daysOfWeek: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  datesArray: Signal<(string | null)[][]>;
-  monthToRender: Signal<Month>;
-  yearToRender: Signal<number>;
-  currentDate: LocalDate;
-  localId: string;
-  isPopoverOpenSig: Signal<boolean>;
-};
+### Using Component State
+The Calendar component's state can be controlled through several props on the `Calendar.Root` component:
+1. **Default Date**
+Set the initial date to display when the calendar loads using the `defaultDate` prop:
+```tsx
+<Calendar.Root defaultDate="2024-03-15">
+  {/* Calendar content */}
+</Calendar.Root>
 ```
-Core state values include:
-- `activeDate`: Tracks the currently selected date
-- `dateToFocus`: Manages keyboard focus within the calendar grid
-- `monthToRender` and `yearToRender`: Control which month/year is displayed
-- `datesArray`: Contains the matrix of dates to render in the grid
-The state is initialized in `CalendarRoot` with default values and optional props:
-```typescript
-const defaultDate = props.defaultDate ?? currentDate;
-const activeDate = useSignal<LocalDate | null>(null);
-const monthToRender = useSignal<Month>(defaultDate.split("-")[1] as Month);
-const yearToRender = useSignal<number>(+defaultDate.split("-")[0]);
+2. **Selected Date**
+Track the currently selected date using the `date` prop:
+```tsx
+<Calendar.Root date={selectedDate}>
+  {/* Calendar content */}
+</Calendar.Root>
 ```
-### State Updates
-The calendar state updates through several patterns:
-1. Date Selection:
-```typescript
-onClick$={[
-  $(() => {
-    context.activeDate.value = day as LocalDate;
-    onDateChange$?.(day as LocalDate);
-  })
-]}
+3. **Display Options**
+Control what information is shown in the calendar:
+```tsx
+<Calendar.Root 
+  showWeekNumber={true}  // Show week numbers
+  showDaysOfWeek={true}  // Show day names header
+  fullWeeks={true}       // Show complete weeks including adjacent month days
+>
+  {/* Calendar content */}
+</Calendar.Root>
 ```
-2. Month Navigation:
-```typescript
-// Previous month
-const decreaseDate = $(() => {
-  if (monthToRender.value === "01") {
-    monthToRender.value = "12";
-    yearToRender.value--;
-    return;
-  }
-  monthToRender.value = String(+monthToRender.value - 1).padStart(2, "0") as Month;
-});
-// Next month
-const increaseDate = $(() => {
-  if (monthToRender.value === "12") {
-    monthToRender.value = "01";
-    yearToRender.value++;
-    return;
-  }
-  monthToRender.value = String(+monthToRender.value + 1).padStart(2, "0") as Month;
-});
+### State Interactions
+The Calendar provides ways to respond to date selection through event handlers:
+1. **Date Selection**
+Listen for date changes using the `onDateChange$` prop on either the `Calendar.Root` or `Calendar.GridDay` components:
+```tsx
+<Calendar.Root
+  onDateChange$={(date) => {
+    console.log('Selected date:', date);
+  }}
+>
+  {/* Calendar content */}
+</Calendar.Root>
 ```
-3. Focus Management:
-The calendar maintains focus state through the `dateToFocus` signal, which updates based on keyboard navigation:
-```typescript
-const updateFocus = (newIdx: number, newDate: LocalDate | null = null) => {
-  const dateToSet = newDate ?? (buttons[newIdx].getAttribute("data-value") as LocalDate);
-  context.dateToFocus.value = dateToSet;
-  elFocus?.setAttribute("tabindex", "-1");
-  buttons[newIdx].setAttribute("tabindex", "0");
-  buttons[newIdx].focus({ preventScroll: true });
-};
+As shown in the hero example, you can track the selected date in your application state:
+```tsx
+const selectedDate = useSignal<LocalDate>();
+<Calendar.GridDay
+  onDateChange$={$((date) => {
+    selectedDate.value = date;
+  })}
+/>
 ```
-The state updates are reactive and trigger re-renders of the calendar grid while maintaining proper focus management and selection state.
+2. **Popover State**
+Control the calendar popover's open state using the `bind:open` prop:
+```tsx
+const isOpen = useSignal(false);
+<Calendar.Root bind:open={isOpen}>
+  {/* Calendar content */}
+</Calendar.Root>
+```
+The calendar component maintains its own internal state for:
+- Current month/year being displayed
+- Date currently in focus
+- Navigation between months
+- Keyboard navigation within the calendar grid
+These aspects are handled automatically by the component and don't require manual management.
 
-Based on the provided implementation and examples, I'll document the calendar configuration options:
+Based on the provided implementation and examples, I'll document the Calendar component's configuration options.
 ## Core Configuration
 ### Locale and Date Format
-The calendar supports localization through the `locale` prop on `Calendar.Root`. Currently, it supports:
+The Calendar component supports localization through the `locale` prop on `Calendar.Root`. Currently, it supports:
 - Default locale: `"en"`
 - Date format: `YYYY-MM-DD`
 As shown in the hero example above, the calendar uses the default English locale for month names, weekday labels, and date formatting.
-### Initial Display
-The calendar's initial display can be configured through these `Calendar.Root` props:
+### Initial Date Selection
+The calendar can be configured with:
+- `defaultDate`: Sets the initial focused date (defaults to current date)
+- `date`: Controls the currently selected date
+- `showDaysOfWeek`: Controls visibility of weekday headers (defaults to `true`)
+- `showWeekNumber`: Enables week number display (defaults to `false`)
+### Week Display
+The calendar provides two week display modes controlled by the `fullWeeks` prop:
 ```typescript
-{
-  // Initial date shown when calendar loads
-  defaultDate?: LocalDate;  
-  // Whether to show week numbers
-  showWeekNumber?: boolean; // default: false
-  // Whether to show days of week header
-  showDaysOfWeek?: boolean; // default: true
-  // Show complete weeks with days from adjacent months
+type WeekDisplayProps = {
+  // When true, shows complete weeks including days from adjacent months
   fullWeeks?: boolean; // default: false
 }
 ```
-### Grid Structure
-The calendar grid layout is controlled through `Calendar.Grid` and supports:
-- Week numbers display (optional)
-- Days of week header (optional) 
-- Full/partial week display
-- Responsive grid sizing
-> The grid automatically adjusts its layout based on the `showWeekNumber` and `showDaysOfWeek` props.
 ## Advanced Configuration
-### Date Selection
-The calendar supports controlled and uncontrolled date selection through:
+### Date Change Handling
+The calendar supports date selection handling through:
 ```typescript
-{
-  // Currently selected date (controlled)
-  date?: LocalDate;
-  // Handler for date selection
+type DateChangeProps = {
   onDateChange$?: (date: LocalDate) => void;
 }
 ```
-### Date Constraints
-The calendar enforces these date format constraints:
-- Dates must be in `YYYY-MM-DD` format
-- Month values must be `01-12`
-- Day values must be valid for the given month
-- Invalid date formats will throw an error
-> The calendar validates date strings against the regex pattern: `/^\d{4}-(0[1-9]|1[0-2])-\d{2}$/`
-### Popover Integration
-When used with popover functionality, the calendar supports:
+Where `LocalDate` is typed as:
 ```typescript
-{
-  // Control popover open state
-  "bind:open"?: Signal<boolean>;
-}
+type LocalDate = `${number}-${number}-${number}`;
 ```
-This enables integration with popover positioning and focus management systems.
+### Grid Customization
+The calendar grid can be customized through:
+- `buttonProps`: Props to be spread onto each date button
+- Custom day cell rendering through `Calendar.GridDay`
+### Technical Constraints
+1. Date Format Validation
+   - Dates must follow the `YYYY-MM-DD` format
+   - Invalid formats will throw an error during initialization
+2. Month Navigation
+   - Month navigation is handled internally
+   - Year boundaries are automatically managed when navigating between December and January
+3. Focus Management
+   - Focus is automatically managed within the calendar grid
+   - Only one date cell is focusable at a time (tabIndex management)
+   - Focus is preserved during month navigation
+The calendar maintains internal state for:
+- Current month/year being displayed
+- Selected date
+- Focused date
+- Week number calculations (when enabled)
 
 
 

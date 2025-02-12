@@ -1,168 +1,103 @@
 import { api } from "./auto-api/api";
 
 # QR Code
-
-Generate scannable codes to encode text, URLs, and other data in a visual format.
-
+Generate scannable codes to share links and information instantly.
 <Showcase name="base" />
-
 ## Features
-
 <Features api={api} />
-
 ## Anatomy
-
 <AnatomyTable api={api} />
-
 ## Examples
-
 ### Basic Usage
-
-The QR code component requires a value to encode and an error correction level. The `value` prop specifies the content to encode, while the `level` prop determines error correction strength.
-
+The QR code component provides a simple way to generate scannable codes. The `value` prop specifies the content to encode, while the `level` prop determines error correction strength.
 <Showcase name="base" />
-
-In this example, we use:
-- `QRCode.Root` with `value` and `level` props
-- `QRCode.Frame` for containing the QR code
-- `QRCode.PatternSvg` for setting dimensions
-- `QRCode.PatternPath` for rendering the actual QR code pattern
-
+Key features demonstrated:
+- `value` prop to set the QR code content
+- `level="H"` for high error correction
+- Basic structure with `Root`, `Frame`, `PatternSvg`, and `PatternPath` components
 ### Visual Features
-
-You can customize the appearance of your QR code with overlays and custom colors.
-
+#### Custom Colors and Overlay
+You can customize the QR code appearance with custom colors and add an overlay image in the center.
 <Showcase name="overlay-custom-color" />
-
-This example demonstrates:
-- Custom fill color using the `fill` prop on `QRCode.PatternPath`
-- Custom background styling through CSS classes
-- Image overlay using `QRCode.Overlay` component
-
+Key features demonstrated:
+- Custom fill color using the `fill` prop on `PatternPath`
+- Background styling through CSS classes
+- Center overlay with the `Overlay` component
+- Custom `aria-label` for accessibility
 ### Advanced Usage
-
-Multiple QR codes can be rendered on the same page, each with unique values and styling.
-
+#### Multiple QR Codes
+Display multiple QR codes side by side, each with unique content and styling.
 <Showcase name="multiple" />
-
-This example shows:
-- Multiple QR code instances with different values
-- Independent styling and overlay configuration
-- Proper spacing and layout management
-
-Each QR code maintains its own context and can be styled independently while preserving proper functionality.
+Key features demonstrated:
+- Independent QR codes with different values
+- Consistent styling across instances
+- Optional overlay support per instance
+- Flexible layout arrangement
 
 ## Component State
-
-### Internal State Structure
-
-The QR code component maintains three core state values using Qwik's `useSignal`:
-
+### Using Component State
+The QR code component's state is primarily controlled through two main props on the `QRCode.Root` component:
+1. `value` - Sets the text content to be encoded in the QR code
+2. `level` - Controls the error correction level ("L", "M", "Q", "H")
+As shown in the base example above, you can set these props directly:
 ```typescript
-const value = useSignal(props.value || "");
-const level = useSignal(props.level || "L");
-const data = useSignal<boolean[][]>([]);
+<QRCode.Root 
+  value="https://qwikui.com" 
+  level="H"
+>
+  {/* ... */}
+</QRCode.Root>
 ```
-
-- `value`: Stores the text to be encoded in the QR code
-- `level`: Controls the error correction level ("L", "M", "Q", "H")
-- `data`: Holds the generated QR code matrix as a 2D boolean array
-
-These values are managed by the `QRCode.Root` component and shared with child components through Qwik's context system:
-
+The QR code will automatically update whenever these props change. This allows you to dynamically update the QR code content in response to user interactions or other state changes in your application.
+### State Interactions
+The QR code component is primarily a display component, so it doesn't expose any direct event handlers. However, you can wrap it in your own event handling logic to update its state:
 ```typescript
-const context = {
-  value,
-  level,
-  data
-};
-useContextProvider(qrCodeContextId, context);
+<button onClick$={() => updateQRValue("new value")}>
+  Update QR Code
+</button>
+<QRCode.Root value={qrValue}>
+  {/* ... */}
+</QRCode.Root>
 ```
-
-### State Updates
-
-The QR code updates automatically when either the `value` or `level` signals change. This is handled by a `useTask$` that tracks these dependencies:
-
-```typescript
-useTask$(({ track }) => {
-  track(() => value.value);
-  track(() => level.value);
-  const qrResult = encode(value.value, {
-    ecc: level.value,
-    border: 0
-  });
-  data.value = qrResult.data;
-});
-```
-
-As shown in the `base` example above, the QR code pattern updates reactively when the value changes. The pattern is rendered through the `QRCodePatternPath` component, which transforms the boolean matrix into SVG path data:
-
-```typescript
-const pathData = context.data.value.reduce((acc, row, y) => {
-  row.forEach((isBlack, x) => {
-    if (isBlack) {
-      acc += `M ${x} ${y} h 1 v 1 h -1 z `;
-    }
-  });
-  return acc;
-}, "");
-```
-
-The `multiple` example demonstrates how each QR code instance maintains its own independent state, allowing multiple QR codes with different values to coexist on the same page.
-
-The state management system ensures that:
-- Initial values can be provided through props
-- Changes to value or error correction level trigger immediate updates
-- The QR code matrix is automatically regenerated when needed
-- State is properly isolated between multiple instances
+As shown in the multiple example above, you can have multiple QR codes on the same page, each with its own independent state. This is useful when you need to display different QR codes that update independently.
+The error correction level can be adjusted based on your needs:
+- "L" (Low) - 7% of data can be restored
+- "M" (Medium) - 15% of data can be restored
+- "Q" (Quartile) - 25% of data can be restored
+- "H" (High) - 30% of data can be restored
+Higher error correction levels make the QR code more resistant to damage or poor scanning conditions, but also make the pattern more complex.
 
 Based on the provided implementation and examples, I'll document the QR code component's configuration options.
-
 ## Core Configuration
-
-### QR Code Value and Error Correction
-
-The QR code content and error correction level can be configured through the `QRCode.Root` component's props:
-
-- `value`: The text or URL to encode (string)
+### Basic Setup
+The QR code component requires two essential configurations: `value` and `level` props on the `QRCode.Root` component.
+As shown in the `base` example above, the minimal configuration includes:
+- `value`: The text or URL to encode
 - `level`: Error correction level ("L", "M", "Q", "H")
-
-As shown in the `base` example above, you can set these properties to generate a basic QR code with default settings.
-
-```typescript
-type ErrorCorrectionLevel = "L" | "M" | "Q" | "H";
-// L = Low (7% recovery)
-// M = Medium (15% recovery)
-// Q = Quartile (25% recovery)
-// H = High (30% recovery)
-```
-
-> The default error correction level is "L" if not specified.
-
-### Dimensions and Scaling
-
-The QR code's size is controlled through the `width` and `height` props on the `QRCode.PatternSvg` component. As shown in all examples above, the default size is 200x200 pixels.
-
-The QR code pattern automatically scales to fit within these dimensions while maintaining its aspect ratio, thanks to the SVG viewBox calculation.
-
+> The default error correction level is "L" (Low) if not specified.
+### Dimensions
+The QR code size is controlled through the `width` and `height` attributes on the `QRCode.PatternSvg` component. As shown in all examples above, the recommended size is 200x200 pixels for optimal scanning.
+> The QR code maintains its aspect ratio regardless of the container size.
 ## Advanced Configuration
-
-### Custom Pattern Rendering
-
-The QR code pattern can be customized using the `fill` attribute on `QRCode.PatternPath`. As shown in the `overlay-custom-color` example above, you can change the pattern color to any valid CSS color value.
-
-### Overlay Configuration
-
-The `QRCode.Overlay` component supports custom content positioning. As demonstrated in the `overlay` example above, it automatically centers the content over the QR code while maintaining code readability.
-
-> Important: When using overlays, it's recommended to use a higher error correction level ("H") to ensure the QR code remains scannable despite the overlay content.
-
+### Error Correction Levels
+The `level` prop supports four values with different data redundancy:
+```typescript
+type ErrorCorrectionLevel = "L" | "M" | "Q" | "H"
+```
+- L (Low): 7% of data can be restored
+- M (Medium): 15% of data can be restored
+- Q (Quartile): 25% of data can be restored
+- H (High): 30% of data can be restored
+As shown in the `overlay` and `overlay-custom-color` examples above, using level "H" is recommended when adding an overlay to ensure reliable scanning.
+### Pattern Customization
+The QR code pattern is rendered using SVG paths, allowing for color customization through the `fill` attribute on `QRCode.PatternPath`. As demonstrated in the `overlay-custom-color` example above, you can modify the pattern color to match your design requirements.
+> The QR code maintains functionality regardless of color choice, but ensure sufficient contrast for reliable scanning.
 ### Technical Constraints
-
-- The QR code is generated with zero borders by default
-- The pattern data is dynamically updated when either the `value` or `level` props change
-- The SVG pattern uses a path-based rendering approach for optimal performance and scaling
-- The component maintains a 1:1 aspect ratio regardless of container dimensions
+1. Border: The component generates QR codes with zero border padding
+2. Size: The minimum recommended size is 200x200 pixels for reliable scanning
+3. Overlay: When using overlays, the QR code must maintain sufficient pattern visibility
+4. SVG Rendering: The pattern uses path-based rendering for optimal scaling
+These technical specifications ensure the QR code remains functional while providing flexibility for customization.
 
 
 

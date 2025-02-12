@@ -15,7 +15,7 @@ const getExampleFiles = server$(async (route: string) => {
 });
 
 const validateShowcase = (content: string, availableExamples: string[]): string => {
-  const lines = content.split('\n');
+  const lines = content.split("\n");
   const validatedLines: string[] = [];
   let skipUntilNextHeader = false;
   let prevLevel = 1;
@@ -33,39 +33,25 @@ const validateShowcase = (content: string, availableExamples: string[]): string 
       } else {
         skipUntilNextHeader = true;
       }
-    }
-    else if (line.startsWith('#')) {
+    } else if (line.startsWith("#")) {
       const headerMatch = line.match(/^#{1,6}/);
       if (headerMatch) {
         const level = headerMatch[0].length;
         if (level > prevLevel + 1) {
-          validatedLines.push('#'.repeat(prevLevel + 1) + line.slice(level));
+          validatedLines.push("#".repeat(prevLevel + 1) + line.slice(level));
         } else {
           validatedLines.push(line);
           prevLevel = level;
         }
       }
       skipUntilNextHeader = false;
-    }
-
-    else if (!skipUntilNextHeader && line.trim()) {
+    } else if (!skipUntilNextHeader && line.trim()) {
       validatedLines.push(line);
     }
   }
 
-  return cleanEmptyLines(validatedLines.join('\n'));
-};
-
-const cleanEmptyLines = (content: string): string => {
-  return content
-    .split('\n')
-    .reduce((acc, line, index, arr) => {
-      if (line.trim() || (arr[index - 1]?.trim() && arr[index + 1]?.trim())) {
-        acc.push(line);
-      }
-      return acc;
-    }, [] as string[])
-    .join('\n');
+  const result = validatedLines.join("\n");
+  return result.replace(/\n{2,}/g, "\n\n");
 };
 
 export const DocsAI = component$(() => {
@@ -177,27 +163,45 @@ export const DocsAI = component$(() => {
   
           Write an h2 with the text "Component State"
   
-          From there, document state features in this order:
-          1. Internal State Structure
-           - Document the core state values
-           - Show how state is initialized
-           - Explain state relationships
+          Document how to use the component's state features in this order:
+          1. Using Component State
+           - Show how to control component through props
+           - Demonstrate state-related props usage
+           - Reference existing examples instead of showing them again
       
-          2. State Updates
-           - Show how state changes
-           - Explain update patterns
-           - Document state reactions
+          2. State Interactions
+           - Show how to respond to state changes
+           - Demonstrate event handling
+           - Show common use cases
       
           STRICT RULES:
-          1. If an example was already shown in Examples section:
-           - Reference it: "As shown in the Basic Usage example above..."
-           - Do not show it again
-           - Only add new information about state management
-          2. Do not create new sections for features shown in Examples
-          3. Focus on HOW state works, not on WHAT it does
-          4. Use code blocks to show state implementation
-          5. Do not repeat visual or configuration aspects
-          6. Each feature should be documented exactly once  
+          1. DO NOT document internal implementation details
+          2. DO NOT mention signals, context, or other internal mechanisms
+          3. Focus ONLY on the public API that users will interact with
+          4. When describing features that were shown in the Examples section:
+             - Write "As shown in the [section name] example above..."
+             - Reference the specific example by name
+             - Add only new information about state management
+             - DO NOT include the <Showcase /> component again
+          5. Only show new examples that weren't covered in the Examples section
+          6. Each feature should be documented exactly once
+          
+          Example of good documentation:
+          ### Using Component State
+          As shown in the Basic Usage example above, you can control the dropdown's state through the \`open\` prop.
+          Here are additional ways to interact with the state:
+          \`\`\`typescript
+          // New example that wasn't shown before
+          <Dropdown.Root open={isOpen}>
+            <Dropdown.Trigger>Click me</Dropdown.Trigger>
+            <Dropdown.Content>Content shows when open</Dropdown.Content>
+          </Dropdown.Root>
+          \`\`\`
+          
+          Example of bad documentation:
+          ### Using Component State
+          Control the dropdown's open state:
+          <Showcase name="base" />  // Bad: This example was already shown
 
           Do not write about:
   
@@ -249,14 +253,6 @@ export const DocsAI = component$(() => {
           DO NOT write about anything that mentions or is relatively considered to be part of a component's state. (e.g. initial, reactive, disabled, etc.), this also cover's the exposed component state
   
           Do not repeat content from the previous sections!
-  
-          Do not write about:
-  
-          - Accessibility (label, description, etc.)
-          - Environment examples (CSR, SSR, etc.)
-          - State examples (initial, reactive, disabled, etc.)
-          - Configuration examples (filter, loop, etc.)
-          - Form examples (form, validation, etc.)
   
           ### Empty UI
   

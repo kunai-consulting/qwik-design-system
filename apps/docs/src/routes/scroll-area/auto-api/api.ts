@@ -146,51 +146,61 @@ export const api = {
   "keyboardInteractions": [
     {
       "key": "ArrowDown",
-      "comment": "When focus is on the viewport, scrolls the content vertically downward"
+      "comment": "Scrolls the viewport content vertically downward when focus is on the viewport"
     },
     {
       "key": "ArrowUp",
-      "comment": "When focus is on the viewport, scrolls the content vertically upward"
+      "comment": "Scrolls the viewport content vertically upward when focus is on the viewport"
     },
     {
       "key": "ArrowRight",
-      "comment": "When focus is on the viewport, scrolls the content horizontally to the right"
+      "comment": "Scrolls the viewport content horizontally to the right when focus is on the viewport"
     },
     {
       "key": "ArrowLeft",
-      "comment": "When focus is on the viewport, scrolls the content horizontally to the left"
+      "comment": "Scrolls the viewport content horizontally to the left when focus is on the viewport"
     },
     {
       "key": "PageDown",
-      "comment": "When focus is on the viewport, scrolls the content down by a larger increment"
+      "comment": "Scrolls the viewport content down by a larger increment when focus is on the viewport"
     },
     {
       "key": "PageUp",
-      "comment": "When focus is on the viewport, scrolls the content up by a larger increment"
+      "comment": "Scrolls the viewport content up by a larger increment when focus is on the viewport"
     },
     {
       "key": "Home",
-      "comment": "When focus is on the viewport, scrolls to the top of the content"
+      "comment": "Scrolls to the top of the viewport content when focus is on the viewport"
     },
     {
       "key": "End",
-      "comment": "When focus is on the viewport, scrolls to the bottom of the content"
+      "comment": "Scrolls to the bottom of the viewport content when focus is on the viewport"
     },
     {
-      "key": "Tab",
-      "comment": "Moves focus to the scrollable viewport region"
+      "key": "Ctrl/Cmd + 0",
+      "comment": "Triggers overflow check when zooming to default level"
+    },
+    {
+      "key": "Ctrl/Cmd + +/=",
+      "comment": "Triggers overflow check when zooming in"
+    },
+    {
+      "key": "Ctrl/Cmd + -",
+      "comment": "Triggers overflow check when zooming out"
     }
   ],
   "features": [
     "Custom scrollbar visibility modes (hover, scroll, auto, always)",
-    "Drag and drop thumb scrolling",
-    "Click-to-scroll on track",
-    "Responsive overflow detection",
-    "Automatic thumb size and position updates",
-    "Horizontal and vertical scrolling support",
-    "Keyboard zoom level handling",
-    "Customizable hide delay for scrollbars",
+    "Draggable thumb with smooth scroll tracking",
+    "Two-axis scrolling support (vertical and horizontal)",
+    "Overflow detection and automatic scrollbar display",
+    "Click-to-scroll on track functionality",
+    "Zoom level detection and overflow adjustment",
     "WAI-ARIA compliant scrollable region",
-    "Smooth thumb position animations"
+    "Scroll position memory during thumb dragging",
+    "Configurable scrollbar hide delay",
+    "Responsive to window resize events",
+    "Cross-browser zoom handling",
+    "Dynamic thumb size based on content"
   ]
 };
