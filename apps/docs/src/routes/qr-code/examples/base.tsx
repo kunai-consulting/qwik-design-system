@@ -7,10 +7,7 @@ export default component$(() => {
   return (
     <QRCode.Root value="https://qwikui.com" level="H">
       <QRCode.Frame class="qr-code-frame">
-        <QRCode.PatternSvg
-          width="200"
-          height="200"
-        >
+        <QRCode.PatternSvg width="200" height="200">
           <QRCode.PatternPath fill="black" />
         </QRCode.PatternSvg>
       </QRCode.Frame>

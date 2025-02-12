@@ -2,51 +2,61 @@
   "keyboard": [
     {
       "key": "ArrowDown",
-      "comment": "When focus is on the viewport, scrolls the content down"
+      "comment": "Scrolls the viewport content vertically downward when focus is on the viewport"
     },
     {
       "key": "ArrowUp",
-      "comment": "When focus is on the viewport, scrolls the content up"
-    },
-    {
-      "key": "ArrowLeft",
-      "comment": "When focus is on the viewport, scrolls the content left"
+      "comment": "Scrolls the viewport content vertically upward when focus is on the viewport"
     },
     {
       "key": "ArrowRight",
-      "comment": "When focus is on the viewport, scrolls the content right"
+      "comment": "Scrolls the viewport content horizontally to the right when focus is on the viewport"
+    },
+    {
+      "key": "ArrowLeft",
+      "comment": "Scrolls the viewport content horizontally to the left when focus is on the viewport"
     },
     {
       "key": "PageDown",
-      "comment": "When focus is on the viewport, scrolls down by viewport height"
+      "comment": "Scrolls the viewport content down by a larger increment when focus is on the viewport"
     },
     {
       "key": "PageUp",
-      "comment": "When focus is on the viewport, scrolls up by viewport height"
+      "comment": "Scrolls the viewport content up by a larger increment when focus is on the viewport"
     },
     {
       "key": "Home",
-      "comment": "When focus is on the viewport, scrolls to the top of content"
+      "comment": "Scrolls to the top of the viewport content when focus is on the viewport"
     },
     {
       "key": "End",
-      "comment": "When focus is on the viewport, scrolls to the bottom of content"
+      "comment": "Scrolls to the bottom of the viewport content when focus is on the viewport"
     },
     {
-      "key": "Tab",
-      "comment": "Moves focus to the viewport region when tabbing through the page"
+      "key": "Ctrl/Cmd + 0",
+      "comment": "Triggers overflow check when zooming to default level"
+    },
+    {
+      "key": "Ctrl/Cmd + +/=",
+      "comment": "Triggers overflow check when zooming in"
+    },
+    {
+      "key": "Ctrl/Cmd + -",
+      "comment": "Triggers overflow check when zooming out"
     }
   ],
   "features": [
-    "Custom scrollbars with draggable thumbs",
-    "Horizontal and vertical scrolling support",
-    "Accessible keyboard navigation and focus management",
+    "Custom scrollbar visibility modes (hover, scroll, auto, always)",
+    "Draggable thumb with smooth scroll tracking",
+    "Two-axis scrolling support (vertical and horizontal)",
+    "Overflow detection and automatic scrollbar display",
     "Click-to-scroll on track functionality",
-    "Smooth thumb position updates during scrolling",
-    "ARIA roles and labels for accessibility",
-    "Drag and drop scrollbar thumb interaction",
-    "Independent scroll tracking for both axes",
-    "Proportional thumb sizing based on content",
-    "Dynamic scroll ratio calculations"
+    "Zoom level detection and overflow adjustment",
+    "WAI-ARIA compliant scrollable region",
+    "Scroll position memory during thumb dragging",
+    "Configurable scrollbar hide delay",
+    "Responsive to window resize events",
+    "Cross-browser zoom handling",
+    "Dynamic thumb size based on content"
   ]
 }

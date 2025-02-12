@@ -22,8 +22,8 @@ test.describe("critical functionality", () => {
     const svg = d.getSvg();
 
     // Check if canvas size matches the specified size
-    await expect(svg).toHaveAttribute('width', '200');
-    await expect(svg).toHaveAttribute('height', '200');
+    await expect(svg).toHaveAttribute("width", "200");
+    await expect(svg).toHaveAttribute("height", "200");
   });
 
   test(`GIVEN a QR code component

@@ -8,12 +8,12 @@ import {
 } from "@builder.io/qwik";
 import { Checkbox } from "..";
 import { checklistContextId } from "./checklist-context";
-
-type ChecklistItemProps = PropsOf<typeof Checkbox.Root> & {
+type PublicChecklistItemProps = PropsOf<typeof Checkbox.Root> & {
+  /** Internal prop for tracking item position in checklist */
   _index?: number;
 };
-
-export const ChecklistItem = component$((props: ChecklistItemProps) => {
+/** Internal prop for tracking item position in checklist */
+export const ChecklistItem = component$((props: PublicChecklistItemProps) => {
   console.log(props._index);
   const context = useContext(checklistContextId);
 

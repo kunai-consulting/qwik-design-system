@@ -2,12 +2,12 @@ import { $, type PropsOf, component$, useContext } from "@builder.io/qwik";
 import { calendarContextId } from "./calendar-context";
 import type { LocalDate, Locale } from "./types";
 import { getWeekNumber } from "./utils";
-
-type CalendarGridDayProps = PropsOf<"button"> & {
+type PublicCalendarGridDayProps = PropsOf<"button"> & {
+  /** Event handler called when a date is selected */
   onDateChange$?: (date: LocalDate) => void;
 };
-
-export const CalendarGridDay = component$<CalendarGridDayProps>(
+/** A component that renders a single day cell in the calendar grid */
+export const CalendarGridDay = component$<PublicCalendarGridDayProps>(
   ({ onDateChange$, ...buttonProps }) => {
     const context = useContext(calendarContextId);
     const dateFormatter = (locale: Locale) =>
@@ -24,10 +24,12 @@ export const CalendarGridDay = component$<CalendarGridDayProps>(
           return (
             <tr
               key={`${week.toString()}-${index}`}
+              // Identifies a row in the calendar grid body
               data-qds-datepicker-grid-body-row
               class=""
             >
               {context.showWeekNumber && (
+                // Displays the week number in the calendar grid
                 <td data-qds-datepicker-grid-body-week-number>
                   <span>
                     {(() => {
@@ -53,11 +55,14 @@ export const CalendarGridDay = component$<CalendarGridDayProps>(
                       <button
                         {...buttonProps}
                         type="button"
+                        // Indicates if this date is the current date
                         data-current={day === context.currentDate}
+                        // Indicates if this date is currently selected
                         data-selected={day === context.activeDate.value}
                         aria-selected={
                           day === context.activeDate.value ? "true" : undefined
                         }
+                        // Stores the date value for this calendar cell
                         data-value={day}
                         aria-label={label}
                         disabled={disabled}

@@ -9,10 +9,7 @@ export default component$(() => {
     <div style={{ display: "flex", gap: "20px" }}>
       <QRCode.Root value="https://qwikui.com" level="H">
         <QRCode.Frame class="qr-code-frame">
-          <QRCode.PatternSvg
-            width="200"
-            height="200"
-          >
+          <QRCode.PatternSvg width="200" height="200">
             <QRCode.PatternPath fill="black" />
           </QRCode.PatternSvg>
         </QRCode.Frame>
@@ -20,20 +17,12 @@ export default component$(() => {
 
       <QRCode.Root value="https://qwikui.com" level="H">
         <QRCode.Frame class="qr-code-frame">
-          <QRCode.PatternSvg
-            width="200"
-            height="200"
-          >
+          <QRCode.PatternSvg width="200" height="200">
             <QRCode.PatternPath fill="black" />
           </QRCode.PatternSvg>
         </QRCode.Frame>
         <QRCode.Overlay>
-          <img
-            src={qwikLogo}
-            alt="Qwik Logo"
-            height={75}
-            width={75}
-          />
+          <img src={qwikLogo} alt="Qwik Logo" height={75} width={75} />
         </QRCode.Overlay>
       </QRCode.Root>
     </div>

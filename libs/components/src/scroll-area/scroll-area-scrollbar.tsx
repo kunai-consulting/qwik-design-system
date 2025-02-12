@@ -7,34 +7,30 @@ import {
   useContext
 } from "@builder.io/qwik";
 import { scrollAreaContextId } from "./scroll-area-context";
-
-type ScrollBarType = PropsOf<"div"> & {
+type PublicScrollBarType = PropsOf<"div"> & {
+  /** The orientation of the scrollbar */
   orientation?: "vertical" | "horizontal";
+  /** Event handler for scroll events */
   onScroll$?: QRL<(e: Event) => void>;
 };
-
-export const ScrollAreaScrollbar = component$<ScrollBarType>((props) => {
+/** A scrollbar component that can be oriented vertically or horizontally */
+export const ScrollAreaScrollbar = component$<PublicScrollBarType>((props) => {
   const context = useContext(scrollAreaContextId);
   const { orientation = "vertical" } = props;
-
   const onTrackClick$ = $((e: MouseEvent) => {
     const target = e.target as HTMLElement;
+    // Specifies the scrollbar orientation (vertical or horizontal)
     const clickedOrientation = target.getAttribute("data-orientation");
     const scrollbar =
       orientation === "vertical"
         ? context.verticalScrollbarRef.value
         : context.horizontalScrollbarRef.value;
-
     if (!scrollbar) return;
-
     const viewport = context.viewportRef.value;
     const thumb = context.thumbRef.value;
-
     if (!thumb || e.target === thumb) return;
     if (!viewport) return;
-
     const rect = target.getBoundingClientRect();
-
     if (clickedOrientation === "vertical") {
       const clickPos = e.clientY - rect.top;
       // Calculate click position as a ratio of the scrollbar height
@@ -53,10 +49,8 @@ export const ScrollAreaScrollbar = component$<ScrollBarType>((props) => {
       viewport.scrollLeft = scrollRatio * maxScroll;
     }
   });
-
   const shouldShow = () => {
     const hasOverflow = context.hasOverflow.value;
-
     switch (context.type) {
       case "always":
         return hasOverflow;
@@ -70,7 +64,6 @@ export const ScrollAreaScrollbar = component$<ScrollBarType>((props) => {
         return false;
     }
   };
-
   return (
     <div
       {...props}
@@ -79,8 +72,10 @@ export const ScrollAreaScrollbar = component$<ScrollBarType>((props) => {
           ? context.verticalScrollbarRef
           : context.horizontalScrollbarRef
       }
+      // The container element for the scrollbar
       data-qds-scroll-area-scrollbar
       data-orientation={orientation}
+      // Indicates the visibility state of the scrollbar (visible or hidden)
       data-state={shouldShow() ? "visible" : "hidden"}
       onClick$={onTrackClick$}
     >

@@ -2,7 +2,42 @@ export const api = {
   "file-upload": [
     {
       "File Upload Dropzone": {
-        "types": [],
+        "types": [
+          {
+            "PublicDropzoneProps": [
+              {
+                "comment": "",
+                "prop": "name",
+                "type": "string"
+              },
+              {
+                "comment": "",
+                "prop": "size",
+                "type": "number"
+              },
+              {
+                "comment": "",
+                "prop": "type",
+                "type": "string"
+              },
+              {
+                "comment": "",
+                "prop": "lastModified",
+                "type": "number"
+              },
+              {
+                "comment": "",
+                "prop": "file",
+                "type": "File"
+              },
+              {
+                "comment": "",
+                "prop": "fileInfos",
+                "type": "PublicRawFileInfo[]"
+              }
+            ]
+          }
+        ],
         "inheritsFrom": "div",
         "dataAttributes": [
           {
@@ -11,30 +46,42 @@ export const api = {
           },
           {
             "name": "data-dragging",
-            "type": "string | undefined"
+            "type": "string | undefined",
+            "comment":
+              "Indicates whether files are currently being dragged over the dropzone"
           },
           {
             "name": "data-disabled",
-            "type": "string | undefined"
+            "type": "string | undefined",
+            "comment": "Indicates whether the dropzone is currently disabled"
           }
         ]
       }
     },
     {
       "File Upload Input": {
-        "types": [],
+        "types": [
+          {
+            "PublicInputProps": []
+          }
+        ],
         "inheritsFrom": "input",
         "dataAttributes": [
           {
             "name": "data-file-upload-input",
-            "type": "string"
+            "type": "string",
+            "comment": "The hidden file input element that handles native file selection"
           }
         ]
       }
     },
     {
       "File Upload Root": {
-        "types": [],
+        "types": [
+          {
+            "PublicRootProps": []
+          }
+        ],
         "inheritsFrom": "div",
         "dataAttributes": [
           {
@@ -50,12 +97,17 @@ export const api = {
     },
     {
       "File Upload Trigger": {
-        "types": [],
+        "types": [
+          {
+            "PublicTriggerProps": []
+          }
+        ],
         "inheritsFrom": "button",
         "dataAttributes": [
           {
             "name": "data-file-upload-trigger",
-            "type": "string"
+            "type": "string",
+            "comment": "The button element that triggers the file selection dialog"
           }
         ]
       }
@@ -63,47 +115,55 @@ export const api = {
   ],
   "anatomy": [
     {
-      "name": "File-upload.Root",
-      "description": "Root component for file upload functionality\n  Provides context and state management for child components"
+      "name": "FileUpload.Root",
+      "description":
+        "Root component for file upload functionality\n  Provides context and state management for child components"
     },
     {
-      "name": "File-upload.Dropzone"
+      "name": "FileUpload.Dropzone",
+      "description": "Component that handles drag and drop file upload functionality"
     },
     {
-      "name": "File-upload.Input",
-      "description": "Hidden file input component that handles file selection via system dialog"
+      "name": "FileUpload.Input",
+      "description":
+        "Hidden file input component that handles file selection via system dialog"
     },
     {
-      "name": "File-upload.Trigger",
-      "description": "Trigger component that opens the file selection dialog\n  Acts as a styled button that triggers the hidden file input"
+      "name": "FileUpload.Trigger",
+      "description":
+        "Trigger component that opens the file selection dialog\n  Acts as a styled button that triggers the hidden file input"
     }
   ],
   "keyboardInteractions": [
     {
       "key": "Space",
-      "comment": "When focus is on the trigger button, opens the native file selection dialog"
+      "comment": "When focus is on the trigger button, opens the file selection dialog"
     },
     {
       "key": "Enter",
-      "comment": "When focus is on the trigger button, opens the native file selection dialog"
+      "comment": "When focus is on the trigger button, opens the file selection dialog"
     },
     {
       "key": "Tab",
-      "comment": "Moves focus to and from the trigger button following the normal tab order"
+      "comment":
+        "Moves focus to the trigger button or other interactive elements within the component"
+    },
+    {
+      "key": "Escape",
+      "comment":
+        "When the file selection dialog is open, closes the dialog without selecting files"
     }
   ],
   "features": [
     "Drag and drop file upload support",
     "Multiple file selection option",
-    "File type filtering and validation",
-    "Visual drag state indicators",
-    "Custom trigger button for file selection",
-    "Progressive file processing",
-    "Native file dialog integration",
+    "File type filtering/validation",
+    "Visual drag state feedback",
+    "Button trigger for system file dialog",
     "Disabled state handling",
-    "File change notifications",
+    "File change notifications via callbacks",
+    "Copy effect indicators during drag",
     "Cross-browser drag and drop compatibility",
-    "Prevents default browser file handling",
-    "Custom drop zone styling"
+    "Compound component architecture"
   ]
 };

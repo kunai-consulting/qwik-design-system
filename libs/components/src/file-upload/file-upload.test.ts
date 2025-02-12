@@ -67,7 +67,7 @@ test.describe("critical functionality", () => {
   test(`GIVEN a file upload component
         WHEN initialized
         THEN all required elements should be present`, async ({ page }) => {
-    const d = await setup(page, "basic");
+    const d = await setup(page, "basic-test");
 
     await expect(d.getRoot()).toBeVisible();
     await expect(d.getDropzone()).toBeVisible();
@@ -78,7 +78,7 @@ test.describe("critical functionality", () => {
   test(`GIVEN a file upload component
       WHEN clicking the trigger button
       THEN file input should be clicked`, async ({ page }) => {
-    const d = await setup(page, "basic");
+    const d = await setup(page, "basic-test");
 
     // Create promise that resolves on input click
     const clickPromise = d
@@ -117,7 +117,7 @@ test.describe("drag and drop functionality", () => {
   test(`GIVEN a file upload dropzone
       WHEN dragging file over it
       THEN it should show dragging state`, async ({ page }) => {
-    const d = await setup(page, "basic");
+    const d = await setup(page, "basic-test");
 
     // Ensure dropzone is ready
     await d.getDropzone().waitFor({ state: "attached" });
@@ -159,7 +159,7 @@ test.describe("drag and drop functionality", () => {
   test(`GIVEN a file upload dropzone
         WHEN dragging file out
         THEN dragging state should be removed`, async ({ page }) => {
-    const d = await setup(page, "basic");
+    const d = await setup(page, "basic-test");
 
     // Simulate drag enter
     await page.evaluate(() => {
@@ -197,7 +197,7 @@ test.describe("drag and drop functionality", () => {
   test(`GIVEN a file upload dropzone
       WHEN dropping a file
       THEN it should process the file`, async ({ page, testFiles }) => {
-    const d = await setup(page, "basic");
+    const d = await setup(page, "basic-test");
 
     // Ensure dropzone is ready
     await d.getDropzone().waitFor({ state: "attached" });
@@ -288,7 +288,7 @@ test.describe("drag and drop functionality", () => {
   test(`GIVEN a file upload dropzone
         WHEN dragging over with invalid file type
         THEN it should not accept the file`, async ({ page }) => {
-    const d = await setup(page, "image-only");
+    const d = await setup(page, "image-only-test");
 
     // Simulate drag with invalid file type
     await page.evaluate(() => {
@@ -315,7 +315,7 @@ test.describe("file handling", () => {
   test(`GIVEN a file upload component
         WHEN selecting single file
         THEN it should process the file`, async ({ page, testFiles }) => {
-    const d = await setup(page, "basic");
+    const d = await setup(page, "basic-test");
 
     let processedFiles: ProcessedFile[] = [];
 
@@ -353,7 +353,7 @@ test.describe("file handling", () => {
   test(`GIVEN a file upload component
         WHEN selecting a file
         THEN change event should fire`, async ({ page, testFiles }) => {
-    const d = await setup(page, "basic");
+    const d = await setup(page, "basic-test");
 
     // Monitor input change event
     const changePromise = d.getInput().evaluate((input) => {
@@ -376,7 +376,7 @@ test.describe("file handling", () => {
   test(`GIVEN a file upload component with multiple=true
       WHEN selecting multiple files
       THEN it should process all files`, async ({ page, testFiles }) => {
-    const d = await setup(page, "multiple");
+    const d = await setup(page, "multiple-test");
 
     let processedFiles: ProcessedFile[] = [];
 
@@ -415,7 +415,7 @@ test.describe("disabled state", () => {
   test(`GIVEN a disabled file upload component
       WHEN trying to interact
       THEN all interactions should be blocked`, async ({ page }) => {
-    const d = await setup(page, "disabled");
+    const d = await setup(page, "disabled-test");
 
     expect(await d.isDisabled()).toBe(true);
     await expect(d.getTrigger()).toBeDisabled();
@@ -453,7 +453,7 @@ test.describe("file type filtering", () => {
   test(`GIVEN a file upload with accept="image/*"
       WHEN selecting files
       THEN only images should be accepted`, async ({ page, testFiles }) => {
-    const d = await setup(page, "image-only");
+    const d = await setup(page, "image-only-test");
 
     const input = d.getInput();
     await expect(input).toHaveAttribute("accept", "image/*");

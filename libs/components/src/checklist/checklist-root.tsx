@@ -10,11 +10,11 @@ import { Checkbox } from "..";
 import { findComponent, processChildren } from "../../utils/inline-component";
 import { type ChecklistContext, checklistContextId } from "./checklist-context";
 import { ChecklistItem } from "./checklist-item";
-type ChecklistRootProps = Omit<PropsOf<"div">, "onChange$"> & {
+type PublicChecklistRootProps = Omit<PropsOf<"div">, "onChange$"> & {
+  /** Internal prop for tracking number of checklist items */
   _numItems?: number;
 };
-
-export const ChecklistRoot = ({ children, ...props }: ChecklistRootProps) => {
+export const ChecklistRoot = ({ children, ...props }: PublicChecklistRootProps) => {
   let currItemIndex = 0;
   let numItems = 0;
 
@@ -32,8 +32,7 @@ export const ChecklistRoot = ({ children, ...props }: ChecklistRootProps) => {
     </ChecklistBase>
   );
 };
-
-export const ChecklistBase = component$((props: ChecklistRootProps) => {
+export const ChecklistBase = component$((props: PublicChecklistRootProps) => {
   const isAllCheckedSig = useSignal(false);
   const checkedStatesSig = useSignal<(boolean | "mixed")[]>([]);
 
@@ -49,6 +48,7 @@ export const ChecklistBase = component$((props: ChecklistRootProps) => {
     <Checkbox.Root
       role="group"
       bind:checked={isAllCheckedSig}
+      // Identifies the root container element of the checklist component
       data-qds-checklist-root
       {...props}
     >

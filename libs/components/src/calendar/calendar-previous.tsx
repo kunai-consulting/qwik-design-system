@@ -10,9 +10,11 @@ import { ARIA_LABELS } from "./constants";
 import type { Month } from "./types";
 
 type CalendarPreviousProps = PropsOf<"button"> & {
+  /** Custom icon component to use for the previous button */
   icon?: Component<PropsOf<"svg">>;
 };
 
+/** A button component that handles navigation to the previous month */
 export const CalendarPrevious = component$((props: CalendarPreviousProps) => {
   const context = useContext(calendarContextId);
   const { monthToRender, yearToRender, dateToFocus, locale } = context;
@@ -47,6 +49,7 @@ export const CalendarPrevious = component$((props: CalendarPreviousProps) => {
 
   return (
     <button
+      // The previous month navigation button
       data-qds-datepicker-previous
       type="button"
       onClick$={[

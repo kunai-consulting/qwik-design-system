@@ -12,20 +12,12 @@ export default component$(() => {
       aria-label="Scan this QR code to visit our website"
     >
       <QRCode.Frame class="qr-code-custom-frame">
-        <QRCode.PatternSvg
-          width="200"
-          height="200"
-        >
+        <QRCode.PatternSvg width="200" height="200">
           <QRCode.PatternPath fill="blue" />
         </QRCode.PatternSvg>
       </QRCode.Frame>
       <QRCode.Overlay>
-        <img
-          src={qwikLogo}
-          alt="Qwik Logo"
-          height={75}
-          width={75}
-        />
+        <img src={qwikLogo} alt="Qwik Logo" height={75} width={75} />
       </QRCode.Overlay>
     </QRCode.Root>
   );

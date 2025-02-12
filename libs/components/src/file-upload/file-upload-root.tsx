@@ -7,30 +7,28 @@ import {
   useSignal
 } from "@builder.io/qwik";
 import { type FileInfo, fileUploadContextId } from "./file-upload-context";
-
 type HTMLDivProps = PropsOf<"div">;
-
 /**
  * Props specific to file upload functionality
  */
-interface FileUploadProps {
+interface PublicFileUploadProps {
+  /** Whether multiple files can be selected or uploaded at once */
   multiple?: boolean; // Allow multiple file selection
   accept?: string; // File type filter (e.g. "image/*")
   disabled?: boolean; // Disable file upload
   onFilesChange$?: PropFunction<(files: FileInfo[]) => void>; // File change callback
 }
-
-type RootProps = HTMLDivProps & FileUploadProps;
-
+type PublicRootProps = HTMLDivProps & PublicFileUploadProps;
 /**
  * Root component for file upload functionality
  * Provides context and state management for child components
  */
-export const FileUploadRoot = component$<RootProps>((props) => {
+/** Root component for file upload functionality
+ * Provides context and state management for child components */
+export const FileUploadRoot = component$<PublicRootProps>((props) => {
   const inputRef = useSignal<HTMLInputElement>();
   const isDragging = useSignal(false);
   const files = useSignal<FileInfo[]>([]);
-
   const context = {
     inputRef,
     isDragging,
@@ -40,12 +38,10 @@ export const FileUploadRoot = component$<RootProps>((props) => {
     disabled: props.disabled,
     onFilesChange$: props.onFilesChange$
   };
-
   useContextProvider(fileUploadContextId, context);
-
   const { multiple, accept, disabled, onFilesChange$, ...htmlProps } = props;
-
   return (
+    // The root container element for the entire file upload component
     <div {...htmlProps} data-file-upload-root data-disabled={disabled ? "" : undefined}>
       <Slot />
     </div>
