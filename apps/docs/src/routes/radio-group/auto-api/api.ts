@@ -113,11 +113,13 @@ export const api = {
   "keyboardInteractions": [
     {
       "key": "Tab",
-      "comment": "When focus is outside the radio group, moves focus to the first radio button. When focus is on a radio button, moves focus to the next radio button"
+      "comment":
+        "When focus is outside the radio group, moves focus to the first radio button. When focus is on a radio button, moves focus to the next radio button"
     },
     {
       "key": "Shift+Tab",
-      "comment": "When focus is on a radio button, moves focus to the previous radio button"
+      "comment":
+        "When focus is on a radio button, moves focus to the previous radio button"
     },
     {
       "key": "Space",

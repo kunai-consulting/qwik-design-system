@@ -1,6 +1,7 @@
 import { type PropsOf, component$, useContext } from "@builder.io/qwik";
 import { qrCodeContextId } from "./qr-code-context";
 
+/** Renders the QR code pattern as an SVG path */
 export const QRCodePatternPath = component$((props: PropsOf<"path">) => {
   const context = useContext(qrCodeContextId);
 
@@ -13,11 +14,6 @@ export const QRCodePatternPath = component$((props: PropsOf<"path">) => {
     return acc;
   }, "");
 
-  return (
-    <path
-      {...props}
-      d={pathData}
-      data-qds-qr-pattern-path
-    />
-  );
+  // SVG path element that renders the QR code pattern
+  return <path {...props} d={pathData} data-qds-qr-pattern-path />;
 });

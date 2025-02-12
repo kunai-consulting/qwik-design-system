@@ -9,9 +9,10 @@ import {
 import { calendarContextId } from "./calendar-context";
 import type { LocalDate, Locale, Month } from "./types";
 import { getWeekNumber } from "./utils";
-
-type CalendarGridProps = PropsOf<"table"> & {
+type PublicCalendarGridProps = PropsOf<"table"> & {
+  /** Props to be spread onto each date button */
   buttonProps?: PropsOf<"button">;
+  /** Event handler called when a date is selected */
   onDateChange$?: QRL<(date: LocalDate) => void>;
 };
 
@@ -35,8 +36,8 @@ const dateFormatter = (locale: Locale) =>
     month: "long",
     day: "numeric"
   });
-
-export const CalendarGrid = component$<CalendarGridProps>((props) => {
+/** A component that renders the main calendar grid structure */
+export const CalendarGrid = component$<PublicCalendarGridProps>((props) => {
   const context = useContext(calendarContextId);
 
   const decreaseDate = $(() => {
@@ -90,7 +91,10 @@ export const CalendarGrid = component$<CalendarGridProps>((props) => {
 
     const adjustDate = (
       date: string,
-      adjustment: { days?: number; months?: number }
+      adjustment: {
+        days?: number;
+        months?: number;
+      }
     ): LocalDate => {
       const d = new Date(date);
       if (adjustment.days) d.setDate(d.getDate() + adjustment.days);
@@ -167,8 +171,10 @@ export const CalendarGrid = component$<CalendarGridProps>((props) => {
   const { buttonProps, onDateChange$, ...tableProps } = props;
 
   return (
+    // The main calendar grid container
     <table data-qds-datepicker-grid role="grid" {...tableProps}>
       {context.showDaysOfWeek && (
+        // The header section of the calendar grid
         <thead data-qds-datepicker-grid-header>
           <tr data-qds-datepicker-grid-header-row>
             {context.showWeekNumber && <td />}
@@ -177,6 +183,7 @@ export const CalendarGrid = component$<CalendarGridProps>((props) => {
                 key={day}
                 scope="col"
                 aria-label={day}
+                // A cell in the calendar grid header
                 data-qds-datepicker-grid-header-cell
               >
                 {day.slice(0, 2).normalize("NFD").replace(/\p{M}/gu, "")}
@@ -186,6 +193,7 @@ export const CalendarGrid = component$<CalendarGridProps>((props) => {
         </thead>
       )}
       <tbody
+        // The body section of the calendar grid
         data-qds-datepicker-grid-body
         preventdefault:keydown
         onKeyDown$={[
@@ -232,7 +240,7 @@ export const CalendarGrid = component$<CalendarGridProps>((props) => {
                         data-value={day}
                         aria-label={label}
                         disabled={disabled}
-                        tabIndex={day === context.dateToFocus.value ? 0 : -1} 
+                        tabIndex={day === context.dateToFocus.value ? 0 : -1}
                         onClick$={[
                           $(() => {
                             context.activeDate.value = day as LocalDate;

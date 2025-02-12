@@ -13,14 +13,19 @@ import { Popover, usePopover } from "@qwik-ui/headless";
 import { calendarContextId } from "./calendar-context";
 
 export type PopoverRootProps = {
+  /** Controls whether the popover opens automatically or manually */
   popover?: "manual" | "auto";
+  /** Whether the popover should be manually controlled */
   manual?: boolean;
   ref?: Signal<HTMLElement | undefined>;
+  /** Enable floating positioning with optional placement */
   floating?: boolean | TPlacement;
   /** @deprecated Use the tooltip instead, which adheres to the WAI-ARIA design pattern. */
   hover?: boolean;
   id?: string;
+  /** Reactive reference to the anchor element */
   "bind:anchor"?: Signal<HTMLElement | undefined>;
+  /** Reactive reference to the panel element */
   "bind:panel"?: Signal<HTMLElement | undefined>;
 };
 
@@ -53,13 +58,11 @@ export type TPlacement =
   | "left"
   | "left-start"
   | "left-end";
-
-export type PopoverProps = PopoverRootProps & {
+export type PublicPopoverProps = PopoverRootProps & {
   floating?: boolean | TPlacement;
 } & FloatingProps &
   PropsOf<"div">;
-
-export const CalendarPopover = component$((props: PopoverProps) => {
+export const CalendarPopover = component$((props: PublicPopoverProps) => {
   const context = useContext(calendarContextId);
   const { showPopover, hidePopover } = usePopover(context.localId);
   const initialLoadSig = useSignal<boolean>(true);
@@ -136,7 +139,9 @@ export const CalendarPopover = component$((props: PopoverProps) => {
     >
       <Popover.Panel
         id={listboxId}
+        // Indicates if the popover is currently open
         data-open={context.isPopoverOpenSig.value ? "" : undefined}
+        // Indicates if the popover is currently closed
         data-closed={!context.isPopoverOpenSig.value ? "" : undefined}
         role="listbox"
         aria-expanded={context.isPopoverOpenSig.value ? "true" : "false"}
