@@ -9,13 +9,11 @@ import {
   useTask$
 } from "@builder.io/qwik";
 import { OTPContextId } from "./otp-context";
-
-type OtpNativeInputProps = PropsOf<"input"> & {
+type PublicOtpNativeInputProps = PropsOf<"input"> & {
   pattern?: string | null;
 };
-
 /** Hidden input component that handles OTP input interactions and validation */
-export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
+export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
   const context = useContext(OTPContextId);
   const previousValue = useSignal<string>("");
   const shiftKeyDown = useSignal(false);
@@ -234,6 +232,7 @@ export const OtpHiddenInput = component$((props: OtpNativeInputProps) => {
       maxLength={context.numItemsSig.value}
       // The identifier for the hidden input element that handles OTP input
       data-qds-otp-hidden-input
+      // Indicates whether password manager suggestions should be shifted
       data-shift={context.shiftPWManagers ? "" : undefined}
       inputMode="numeric"
       onInput$={[handleInput, props.onInput$]}

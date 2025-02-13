@@ -72,33 +72,31 @@ export const api = {
   "keyboardInteractions": [
     {
       "key": "Space",
-      "comment":
-        "When focus is on a checkbox trigger, toggles the checked state of that checkbox"
-    },
-    {
-      "key": "Tab",
-      "comment": "Moves focus between the checklist items in sequential order"
-    },
-    {
-      "key": "Shift+Tab",
-      "comment": "Moves focus between the checklist items in reverse order"
+      "comment": "When focus is on a checkbox trigger (ChecklistItemTrigger or ChecklistSelectAll), toggles the checked state"
     },
     {
       "key": "Enter",
-      "comment":
-        "When focus is on a checkbox trigger, toggles the checked state of that checkbox"
+      "comment": "When focus is on a checkbox trigger (ChecklistItemTrigger or ChecklistSelectAll), toggles the checked state"
+    },
+    {
+      "key": "Tab",
+      "comment": "Moves focus to the next checkbox trigger"
+    },
+    {
+      "key": "Shift+Tab",
+      "comment": "Moves focus to the previous checkbox trigger"
     }
   ],
   "features": [
-    "Select all items functionality",
-    "Individual item selection",
-    "Mixed state support when some items selected",
-    "WAI ARIA Checkbox group pattern",
-    "Synchronized state management across items",
-    "Reactive updates between select all and individual items",
+    "Select all/unselect all functionality",
+    "Mixed state handling for partial selections",
+    "Individual item selection tracking",
+    "WAI-ARIA checkbox list pattern",
     "Form input integration",
-    "Accessible labeling and descriptions",
-    "Item state tracking and indexing",
-    "Nested component structure support"
+    "Dynamic item state synchronization",
+    "Nested accessibility descriptions per item",
+    "Independent item state management",
+    "Automated item indexing",
+    "Context-based state propagation"
   ]
 };

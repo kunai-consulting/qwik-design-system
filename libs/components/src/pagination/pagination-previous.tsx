@@ -9,6 +9,7 @@ import {
 } from "@builder.io/qwik";
 import { paginationContextId } from "./pagination-context";
 
+/** Previous page navigation button component */
 export const PaginationPrevious = component$(
   ({ type, ...props }: PropsOf<"button"> & { isFirst?: boolean }) => {
     const context = useContext(paginationContextId);
@@ -36,6 +37,7 @@ export const PaginationPrevious = component$(
 
     return (
       <button
+        // Identifies the pagination previous button element
         data-qds-pagination-previous
         type={type ?? "button"}
         {...props}

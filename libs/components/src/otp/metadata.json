@@ -1,0 +1,49 @@
+{
+  "keyboard": [
+    {
+      "key": "ArrowLeft",
+      "comment": "When focus is on the hidden input, moves focus to the previous OTP item. Prevents skipping over filled slots when moving from empty slots"
+    },
+    {
+      "key": "ArrowRight",
+      "comment": "When focus is on the hidden input, moves focus to the next OTP item"
+    },
+    {
+      "key": "Backspace",
+      "comment": "When focus is on the hidden input, deletes the previous character and moves focus backwards"
+    },
+    {
+      "key": "0-9",
+      "comment": "When focus is on the hidden input, enters a numeric digit and moves focus to the next item"
+    },
+    {
+      "key": "Shift",
+      "comment": "When held down, allows range selection of multiple OTP items using arrow keys"
+    },
+    {
+      "key": "Tab",
+      "comment": "Moves focus into and out of the OTP input component"
+    },
+    {
+      "key": "Any non-numeric",
+      "comment": "When focus is on the hidden input, input is prevented if it doesn't match the pattern (defaults to numbers only)"
+    }
+  ],
+  "features": [
+    "One-Time Password (OTP) input pattern",
+    "Auto-advance through fields when typing",
+    "Keyboard navigation with arrow keys",
+    "Selection management across multiple fields",
+    "Backspace navigation between fields",
+    "Input validation with custom patterns",
+    "Password manager compatibility",
+    "Focus and caret indication",
+    "Custom numeric input mode",
+    "Range selection support",
+    "Completion event handling",
+    "Value binding and control",
+    "Reactive disabled state",
+    "Individual item customization",
+    "Visual highlight state management"
+  ]
+}

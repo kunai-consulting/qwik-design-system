@@ -2,25 +2,21 @@ export const api = {
   "qr-code": [
     {
       "Qr Code Frame": {
-        "types": [],
         "inheritsFrom": "div"
       }
     },
     {
       "Qr Code Overlay": {
-        "types": [],
         "inheritsFrom": "div"
       }
     },
     {
       "Qr Code Pattern Path": {
-        "types": [],
         "inheritsFrom": "path"
       }
     },
     {
       "Qr Code Pattern Svg": {
-        "types": [],
         "inheritsFrom": "svg"
       }
     },

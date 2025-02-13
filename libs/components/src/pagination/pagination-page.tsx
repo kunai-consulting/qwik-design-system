@@ -9,17 +9,19 @@ import {
 } from "@builder.io/qwik";
 import type { QwikIntrinsicElements } from "@builder.io/qwik";
 import { paginationContextId } from "./pagination-context";
-
-type AllowedElements = "button" | "a" | "div" | "span";
-
-type PaginationPageProps = {
+type PublicAllowedElements = "button" | "a" | "div" | "span";
+type PublicPaginationPageProps = {
+  /** Internal index of the page item */
   _index?: number;
+  /** Whether this page item is disabled */
   isDisabled?: boolean;
 };
-
+/** Individual page number button component */
 export const PaginationPage = component$(
-  <C extends AllowedElements = "button">(
-    props: QwikIntrinsicElements[C] & { as?: C } & PaginationPageProps
+  <C extends PublicAllowedElements = "button">(
+    props: QwikIntrinsicElements[C] & {
+      as?: C;
+    } & PublicPaginationPageProps
   ) => {
     const { as, _index, isDisabled, ...rest } = props;
     const Comp = as ?? "button";
@@ -85,8 +87,11 @@ export const PaginationPage = component$(
         {/* @ts-expect-error annoying polymorphism */}
         <Comp
           ref={pageRef}
+          // Identifies a pagination page element
           data-qds-pagination-page
+          // Specifies the index of the pagination page
           data-index={_index}
+          // Indicates if this is the currently selected page
           data-current={isCurrentPage.value}
           aria-current={isCurrentPage.value ? "page" : undefined}
           aria-label={`Page ${_index + 1}`}

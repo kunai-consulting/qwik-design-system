@@ -42,8 +42,7 @@ export const api = {
           {
             "name": "data-hidden",
             "type": "string",
-            "comment":
-              "Indicates whether the indicator should be hidden based on checkbox state"
+            "comment": "Indicates whether the indicator should be hidden based on checkbox state"
           },
           {
             "name": "data-checked",
@@ -75,8 +74,8 @@ export const api = {
             "PublicCheckboxRootProps": [
               {
                 "comment": "",
-                "prop": '"bind:checked"',
-                "type": 'Signal<boolean | "mixed">'
+                "prop": "\"bind:checked\"",
+                "type": "Signal<boolean | \"mixed\">"
               },
               {
                 "comment": "Initial checked state of the checkbox",
@@ -158,8 +157,7 @@ export const api = {
           {
             "name": "data-mixed",
             "type": "string | undefined",
-            "comment":
-              "Indicates whether the checkbox trigger is in an indeterminate state"
+            "comment": "Indicates whether the checkbox trigger is in an indeterminate state"
           }
         ]
       }
@@ -168,8 +166,7 @@ export const api = {
   "anatomy": [
     {
       "name": "Checkbox.Root",
-      "description":
-        "Root component that provides context and state management for the checkbox"
+      "description": "Root component that provides context and state management for the checkbox"
     },
     {
       "name": "Checkbox.Indicator",
@@ -199,34 +196,27 @@ export const api = {
   "keyboardInteractions": [
     {
       "key": "Space",
-      "comment":
-        "When focus is on the checkbox trigger, toggles the checkbox state between checked and unchecked"
+      "comment": "When focus is on the checkbox trigger, toggles the checkbox state between checked/unchecked/mixed"
     },
     {
       "key": "Enter",
-      "comment":
-        "When focus is on the checkbox trigger, toggles the checkbox state between checked and unchecked (default behavior prevented)"
+      "comment": "When focus is on the checkbox trigger, toggles the checkbox state between checked/unchecked/mixed (default behavior prevented)"
     },
     {
       "key": "Tab",
-      "comment":
-        "Moves focus to the checkbox trigger or away from it following the document tab sequence"
+      "comment": "Moves focus to the checkbox trigger and follows the natural tab order"
     }
   ],
   "features": [
     "WAI ARIA Checkbox design pattern",
-    "Indeterminate state support",
-    "Form binding with hidden native input",
+    "Indeterminate state support (tri-state)",
+    "Form integration with hidden native input",
     "Error message handling and validation",
-    "Custom description text with screenreader support",
-    "Reactive state management with signals",
-    "Keyboard navigation with Enter key handling",
-    "Accessible labeling system",
-    "Disabled state management",
-    "Two-way data binding with bind:checked prop",
-    "Custom onChange event handling",
-    "Automatic ARIA state management",
-    "Visual indicator customization",
-    "Compound component architecture"
+    "Custom descriptions with ARIA support",
+    "Keyboard navigation and accessibility",
+    "Controllable checked state (controlled/uncontrolled)",
+    "Focus management with ref tracking",
+    "Disabled state handling",
+    "Enter key prevention for form submissions"
   ]
 };

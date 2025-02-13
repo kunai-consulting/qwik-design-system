@@ -9,6 +9,7 @@ import {
 } from "@builder.io/qwik";
 import { paginationContextId } from "./pagination-context";
 
+/** Next page navigation button component */
 export const PaginationNext = component$(
   ({ type, ...props }: PropsOf<"button"> & { isLast?: boolean }) => {
     const context = useContext(paginationContextId);
@@ -37,6 +38,7 @@ export const PaginationNext = component$(
 
     return (
       <button
+        // Identifies the pagination next button element
         data-qds-pagination-next
         type={type ?? "button"}
         {...props}

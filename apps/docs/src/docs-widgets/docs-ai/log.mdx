@@ -3551,3 +3551,547 @@ Since there are no environment-specific examples or features to document, I'll l
 
 ---
 
+# Pagination
+Navigate through large sets of data with numbered pages and controls.
+<Showcase name="hero" />
+## Features
+<Features api={api} />
+## Anatomy 
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The most basic pagination setup requires `totalPages` and `pages` props to define the range of pages available.
+<Showcase name="basic" />
+The `totalPages` prop determines the total number of pages, while the `pages` array provides the actual page numbers to display. The `currentPage` prop sets which page is initially active.
+### Visual Features
+#### Disabled State
+Pages can be disabled to prevent interaction when at boundaries or based on conditions.
+<Showcase name="disabled" />
+The `isDisabled` prop on `Pagination.Page` disables individual pages, while the `disabled` prop on `Pagination.Root` disables the entire pagination component.
+#### Ellipsis Display
+Customize how page gaps are displayed using ellipsis.
+<Showcase name="ellipsis" />
+The `ellipsis` prop on `Pagination.Root` allows customization of the gap indicator between page numbers.
+#### First and Last Navigation
+Add quick navigation to the start and end of the pagination range.
+<Showcase name="first-last" />
+The `isFirst` and `isLast` props on `Pagination.Previous` and `Pagination.Next` respectively enable first/last page navigation.
+### Advanced Usage
+#### Keyboard Navigation
+Enable full keyboard control for accessibility.
+<Showcase name="keyboard" />
+Arrow keys navigate between pages, while Home/End keys jump to first/last pages. The component handles focus management automatically.
+#### Custom Page Length
+Control how many pages are displayed at once.
+<Showcase name="length" />
+The `totalPages` prop determines the overall number of pages, while `siblingCount` controls how many adjacent pages are shown.
+#### Sibling Count
+Adjust how many pages appear on either side of the current page.
+<Showcase name="siblings" />
+The `siblingCount` prop determines how many page numbers are visible before and after the current page.## Component State
+### Using Component State
+The Pagination component offers several ways to control its state through props and events:
+1. **Current Page Control**
+As shown in the `page` example above, you can set the initial page using the `currentPage` prop on `Pagination.Root`. For reactive control, use the `bind:page` prop which accepts a signal.
+2. **Total Pages**
+The `totalPages` prop determines the total number of pages available for navigation, as demonstrated in the `length` example above.
+3. **Disabled State**
+As shown in the `disabled` example above, the entire pagination can be disabled by setting the `disabled` prop on `Pagination.Root`. This will prevent all user interactions with the component.
+### State Interactions
+1. **Page Change Events**
+The component provides an `onPageChange$` prop to handle page navigation events:
+```typescript
+<Pagination.Root
+  totalPages={10}
+  onPageChange$={(page: number) => {
+    // Handle page change
+    console.log(`Navigated to page ${page}`);
+  }}
+>
+  {/* ... */}
+</Pagination.Root>
+```
+2. **Navigation Controls**
+As demonstrated in the `first-last` example above, you can control navigation behavior using the `isFirst` and `isLast` props on the `Previous` and `Next` components respectively.
+3. **Sibling Pages**
+The `siblingCount` prop controls how many page numbers are shown on either side of the current page, as shown in the `siblings` example above. This helps manage the pagination's visual state when dealing with large numbers of pages.
+4. **Custom Ellipsis**
+As shown in the `ellipsis` example above, you can customize the appearance of truncated pages using the `ellipsis` prop on `Pagination.Root`.
+The pagination state is automatically managed to ensure:
+- Previous/Next buttons are disabled at boundaries
+- Current page is highlighted
+- Correct page range is displayed based on current selection
+- Proper ellipsis placement for large page countsBased on the provided implementation and examples, I'll document the configuration options for the Pagination component.
+## Core Configuration
+### Page Management
+The Pagination component requires essential configuration for managing page counts and navigation:
+- `totalPages`: Required number that sets the total available pages
+- `currentPage`: Optional initial page number (defaults to 1)
+- `pages`: Required array of page numbers to display
+As shown in the `basic` example above, these props work together to create the foundation of the pagination:
+> The `currentPage` will automatically be constrained between 1 and `totalPages`
+### Sibling Pages
+The component supports configurable sibling pages through the `siblingCount` prop:
+- Controls how many page numbers appear on each side of the current page
+- Defaults to 1 if not specified
+- Must be a non-negative number
+As shown in the `siblings` example above, increasing `siblingCount` displays more adjacent page numbers.
+### Ellipsis Display
+The ellipsis configuration determines how page gaps are displayed:
+- `ellipsis`: Optional custom element to replace the default "..." display
+- Automatically appears when there are too many pages to display
+- Intelligently positioned based on current page location
+As shown in the `ellipsis` example above, you can customize the ellipsis display.
+## Advanced Configuration
+### Controlled State
+The component supports controlled state management through:
+- `bind:page`: Signal to control the current page externally
+- `onPageChange$`: Event handler called when page changes
+As shown in the `page` example above, these props enable external state control.
+### Navigation Controls
+Additional navigation options can be configured:
+- `isFirst`: Boolean prop on `<Pagination.Previous />` to jump to first page
+- `isLast`: Boolean prop on `<Pagination.Next />` to jump to last page
+As shown in the `first-last` example above, these enable quick navigation to boundaries.
+### Disabled State
+The pagination supports complete disabling:
+- `disabled`: Boolean prop to disable all pagination interactions
+- Automatically disables boundary navigation when at first/last page
+As shown in the `disabled` example above, this controls the interactive state of the entire component.
+> When disabled, all interactive elements receive the `disabled` attribute and appropriate ARIA statesLooking through the provided examples and implementation, I don't see any specific form-related examples or functionality for the Pagination component. The Pagination component appears to be focused on navigation and page selection rather than form integration.
+The component doesn't include:
+- Form field integration
+- Form validation features
+- Form submission handling
+- Form state management
+- Hidden input elements for form submission
+Therefore, there is no form-specific configuration section needed for this component's documentation.
+The component's primary purpose is to provide pagination controls for navigating through pages of content, rather than collecting form data. If form integration is needed, it would need to be implemented separately from this component.Looking through the provided examples and implementation, I don't see any environment-specific examples or features that would warrant documentation about server vs client rendering, platform-specific behavior, environmental dependencies, or special rendering cases.
+The examples provided (`basic`, `disabled`, `ellipsis`, `first-last`, `hero`, `keyboard`, `length`, `navigation`, `page`, `per-page`, `siblings`) all demonstrate standard usage patterns, state management, and configuration options rather than environment-specific concerns.
+Since there are no environment-specific examples or features to document, I'll leave this section empty to avoid creating unnecessary documentation about basic usage patterns or repeating information that belongs in other sections.
+
+---
+
+# One-Time Password Input
+Securely collect and validate numeric codes with automatic field navigation and keyboard support.
+<Showcase name="hero" />
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The OTP input can be initialized with a default value using the `value` prop.
+<Showcase name="initial" />
+This example demonstrates:
+- Using `value` prop to set an initial uncontrolled value
+- Default numeric validation pattern
+- Automatic field navigation
+### Visual Features
+The OTP input can be disabled to prevent user interaction.
+<Showcase name="disabled" />
+This example shows:
+- Using the `disabled` prop to control input state
+- Visual feedback for disabled state via `data-disabled` attribute
+### Advanced Usage
+#### Controlled Input
+The OTP input can be controlled using signals with `bind:value`.
+<Showcase name="reactive" />
+This example demonstrates:
+- Two-way binding with `bind:value` prop
+- Programmatic value updates
+- Reactive state management
+#### Event Handling
+The OTP input supports completion and change events.
+<Showcase name="complete" />
+This example shows:
+- Using `onComplete$` to handle filled state
+- Using `onChange$` for value updates
+- Automatic validation and field progression
+#### Change Events
+Monitor input changes with the `onChange$` handler.
+<Showcase name="change" />
+This example demonstrates:
+- Real-time value change detection
+- Event handling for input modifications
+- Integration with external state## Component State
+### Using Component State
+The OTP component provides several ways to control its state through props:
+1. Initial Value
+As shown in the `initial` example above, you can set an initial uncontrolled value using the `value` prop on `<Otp.Root />`:
+```tsx
+<Otp.Root value="1234">
+  {/* OTP items */}
+</Otp.Root>
+```
+2. Controlled Value
+For controlled state management, use the `bind:value` prop as demonstrated in the `reactive` example above. This allows you to programmatically update the OTP value.
+3. Disabled State 
+The `disabled` example shows how to disable the entire OTP input using the `disabled` prop:
+```tsx
+<Otp.Root disabled={true}>
+  {/* OTP items */}
+</Otp.Root>
+```
+### State Interactions
+1. Change Events
+As shown in the `change` example, use the `onChange$` prop to listen for value changes:
+```tsx
+<Otp.Root 
+  onChange$={(value) => {
+    // Handle value change
+  }}
+>
+  {/* OTP items */}
+</Otp.Root>
+```
+2. Completion Events
+The `complete` example demonstrates using `onComplete$` to handle when all OTP digits are filled:
+```tsx
+<Otp.Root
+  onComplete$={() => {
+    // Handle OTP completion
+  }}
+>
+  {/* OTP items */}
+</Otp.Root>
+```
+3. Password Manager Integration
+Control password manager suggestion positioning with the `shiftPWManagers` prop (enabled by default):
+```tsx
+<Otp.Root shiftPWManagers={false}>
+  {/* OTP items */}
+</Otp.Root>
+```
+The component maintains internal state for:
+- Current input value
+- Focus state
+- Selection range
+- Current input position
+- Validation state
+These states are automatically managed based on user interaction and the provided props.Based on the provided examples and API documentation, I'll document the configuration options for the OTP component.
+## Core Configuration
+### Input Pattern
+By default, the OTP component only accepts numeric input (0-9). You can customize the input validation pattern through the `pattern` prop on `<Otp.HiddenInput />`. The default pattern is `^[0-9]*$`.
+### Initial Value
+The OTP component supports setting an initial uncontrolled value. As shown in the `initial` example above, you can pass the `value` prop to `<Otp.Root />` to set the initial value.
+### Password Manager Integration
+The OTP component includes built-in support for password managers. By default, password manager suggestions are shifted to the right of the OTP input. This behavior can be controlled via the `shiftPWManagers` prop on `<Otp.Root />`:
+```typescript
+<Otp.Root shiftPWManagers={false}>
+  {/* ... */}
+</Otp.Root>
+```
+### Input Length
+The number of OTP digits is determined by the number of `<Otp.Item />` components rendered. The component automatically manages the maximum input length based on this count.
+## Advanced Configuration
+### Value Binding
+For reactive control over the OTP value, the component supports value binding through the `bind:value` prop. As shown in the `reactive` example above, this allows two-way binding with a signal.
+### Completion Handling
+The component provides completion detection through the `onComplete$` prop. As demonstrated in the `complete` example above, this handler is called when all OTP digits are filled.
+### Change Detection
+For granular control over value changes, use the `onChange$` prop. As shown in the `change` example above, this handler is called on every value change, receiving the current OTP value as an argument.
+### Disabled State
+The entire OTP input can be disabled through the `disabled` prop on `<Otp.Root />`. As shown in the `disabled` example above, this affects all child components and prevents user interaction.
+> Note: The disabled state is reflected through the `data-disabled` attribute on both root and individual items, allowing for consistent styling across states.Looking through the provided examples and API documentation, I don't see any specific form-related examples or features for the OTP component. While the component does have an input element, the examples focus on:
+- Basic usage and styling (`hero` example)
+- State management (`initial`, `reactive`, `disabled` examples)
+- Event handling (`change`, `complete` examples)
+There are no examples demonstrating:
+- Form integration
+- Form validation
+- Form submission
+- Form state handling
+Therefore, I'll skip writing the Forms section since it would not provide any meaningful documentation about form-specific features. The OTP component appears to be focused on handling one-time password input functionality rather than form integration specifically.
+If form features are added in the future, this section should be updated to document those capabilities.Based on the provided examples and API documentation, I don't see any environment-specific examples (like CSR vs SSR, platform-specific behavior, or environmental dependencies) for the OTP component.
+The examples provided (`hero`, `complete`, `disabled`, `initial`, `reactive`, `change`) all demonstrate state management, configuration, and basic usage patterns rather than environment-specific features.
+Therefore, I will not create any environment-specific documentation sections as it would not be appropriate for this component's current implementation.
+
+---
+
+# Radio Group
+Select a single option from a list of choices with keyboard navigation and accessibility support.
+<Showcase name="hero" />
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The most basic radio group implementation requires a `RadioGroup.Root` component containing `RadioGroup.Item` components with their associated values.
+<Showcase name="controlledValue" />
+This example demonstrates:
+- Using `value` prop on `RadioGroup.Root` to set the selected option
+- `RadioGroup.Label` for group identification
+- `RadioGroup.Trigger` and `RadioGroup.Indicator` for selection interaction
+- Individual `RadioGroup.Item` components with unique values
+### Error Handling
+Radio groups can display error messages when validation fails, such as when no option is selected.
+<Showcase name="error" />
+This example shows:
+- `RadioGroup.ErrorMessage` component for displaying validation feedback
+- Error state automatically managed through the `isErrorSig` context
+- Error message visibility controlled by `data-visible` attribute
+- ARIA attributes automatically updated for accessibility
+The error message appears when no option is selected and disappears when a selection is made, providing clear feedback to users.
+Note: The examples available demonstrate core functionality like controlled values and error handling. Additional examples for visual features and advanced usage would typically be included but are not available in the provided example set.## Component State
+### Using Component State
+The Radio Group component provides several ways to manage its state through props on the `RadioGroup.Root` component.
+1. **Controlled Value**
+As shown in the `controlledValue` example above, you can control the selected value using the `value` prop:
+```typescript
+const value = useSignal<string>("Item 2");
+<RadioGroup.Root value={value.value}>
+  // Radio items
+</RadioGroup.Root>
+```
+2. **Uncontrolled Value**
+You can set an initial uncontrolled value using the `defaultValue` prop:
+```typescript
+<RadioGroup.Root defaultValue="Item 1">
+  // Radio items
+</RadioGroup.Root>
+```
+3. **Required State**
+Make the radio group required by setting the `required` prop:
+```typescript
+<RadioGroup.Root required>
+  // Radio items
+</RadioGroup.Root>
+```
+4. **Disabled State**
+Disable the entire radio group using the `disabled` prop:
+```typescript
+<RadioGroup.Root disabled>
+  // Radio items
+</RadioGroup.Root>
+```
+### State Interactions
+1. **Handling Selection Changes**
+Listen for selection changes using the `onChange$` prop:
+```typescript
+<RadioGroup.Root 
+  onChange$={(value) => {
+    // Handle the new selected value
+    console.log('Selected:', value);
+  }}
+>
+  // Radio items
+</RadioGroup.Root>
+```
+2. **Error State**
+As shown in the `error` example above, the Radio Group automatically manages error states when validation fails. The error state is cleared when a valid selection is made.
+3. **Description State**
+Enable description support by setting the `isDescription` prop:
+```typescript
+<RadioGroup.Root isDescription>
+  <RadioGroup.Description>
+    Additional context about the radio group
+  </RadioGroup.Description>
+  // Radio items
+</RadioGroup.Root>
+```
+The state management in Radio Group is designed to handle common use cases while maintaining accessibility and providing clear feedback to users through visual indicators and ARIA attributes.Based on the provided implementation and examples, I'll document the core configuration options for the Radio Group component.
+## Core Configuration
+### Value Management
+The Radio Group can be configured in both controlled and uncontrolled modes. The value can be managed through the `value` prop on `RadioGroup.Root`.
+As shown in the `controlledValue` example above, you can control the selected value by passing a value prop:
+> The `value` prop accepts a string and determines which radio option is currently selected.
+### Required Validation
+The Radio Group supports required field validation through the `required` prop on `RadioGroup.Root`. When enabled, it enforces selection before form submission.
+As shown in the `error` example above, the component displays an error message when no option is selected and the field is required.
+### Description Support
+The Radio Group can be configured to display additional descriptive text through the `isDescription` prop on `RadioGroup.Root`. 
+> When `isDescription` is true but no description is provided, a warning will be logged to the console.
+### Disabled State
+The entire Radio Group can be disabled using the `disabled` prop on `RadioGroup.Root`. When disabled:
+```typescript
+type DisabledConfig = {
+  disabled?: boolean; // Disables all radio options when true
+}
+```
+### Event Handling
+The Radio Group supports change event handling through the `onChange$` prop:
+```typescript
+type ChangeHandler = {
+  onChange$?: QRL<(checked: string) => void>;
+}
+```
+This handler is called whenever a radio option is selected, receiving the new value as an argument.
+### Hidden Input Configuration
+For form submission, the component includes a hidden native radio input that can be configured with:
+```typescript
+type HiddenInputConfig = {
+  name?: string;      // Form field name
+  required?: boolean; // Required field validation
+  value?: string;     // Current value
+}
+```
+These configurations ensure proper form integration while maintaining accessibility and native form behavior.## Forms
+The Radio Group component includes form integration features through the `RadioGroup.HiddenNativeInput` component and built-in validation support.
+### Form Validation
+The Radio Group provides built-in validation with error handling through the `RadioGroup.ErrorMessage` component.
+<Showcase name="error" />
+In this example, the following form-specific features are demonstrated:
+- `RadioGroup.ErrorMessage` displays validation feedback when no option is selected
+- The error message is automatically shown/hidden based on selection state
+- The `data-visible` attribute on `RadioGroup.ErrorMessage` controls visibility
+- Form validation state is managed internally by the component
+### Form Integration 
+The component includes a hidden native radio input through `RadioGroup.HiddenNativeInput` that enables form submission and browser-native validation.
+Key form integration features:
+- The `required` prop can be passed to `RadioGroup.Root` to make selection mandatory
+- The `name` prop on `RadioGroup.Root` sets the form field name
+- The `value` prop determines the submitted form value
+- Native form validation is supported through the hidden input
+The error example above demonstrates these form capabilities working together to provide a complete form field solution.
+Note: The `controlledValue` example shows controlled form state management but since it was covered in the state management section, it is not repeated here.Based on the provided examples and implementation, I don't see any environment-specific examples (like CSR vs SSR) or environment-specific features that need to be documented separately.
+The examples provided (`controlledValue`, `error`, and `hero`) demonstrate basic usage patterns, state management, and error handling - but don't showcase any environment-specific behaviors or rendering cases.
+Since there are no environment-specific examples or features to document, this section should be skipped to avoid redundancy and maintain focus on the core component functionality that has been covered in other sections.
+
+---
+
+# Checkbox
+A clickable input that lets users make binary choices or select multiple options.
+<Showcase name="hero" />
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The most basic checkbox implementation requires a `Checkbox.Root` component with a `Checkbox.Trigger` and `Checkbox.Indicator` nested inside.
+<Showcase name="initial" />
+The `checked` prop on `Checkbox.Root` sets the initial checked state. When checked, the `Checkbox.Indicator` becomes visible.
+### Visual Features
+#### Labels and Descriptions
+Add descriptive text with `Checkbox.Label` and `Checkbox.Description` components. The `isDescription` prop on `Checkbox.Root` enables description support.
+<Showcase name="description" />
+#### Mixed State
+Checkboxes support an indeterminate state using the `"mixed"` value. This is useful for parent/child checkbox relationships.
+<Showcase name="mixed-initial" />
+### Advanced Usage
+#### Form Integration
+For form submissions, add `Checkbox.HiddenInput` to create a native checkbox input. Use `name` and `value` props to control form data.
+<Showcase name="form" />
+The `required` prop enforces validation:
+<Showcase name="validation" />
+You can customize the submitted value using the `value` prop:
+<Showcase name="value" />
+#### Error Handling
+Display error messages using the `Checkbox.ErrorMessage` component. This automatically sets the appropriate ARIA attributes.
+<Showcase name="validation" />
+#### Mixed State Management
+For complex selection scenarios, use the `bind:checked` prop to handle mixed states programmatically.
+<Showcase name="mixed-reactive" />
+The checkbox cycles through mixed → checked → unchecked states when clicked.## Component State
+### Using Component State
+The checkbox component provides several ways to control its state:
+1. **Initial State**
+As shown in the Initial example, you can set the initial checked state using the `checked` prop on `Checkbox.Root`:
+```tsx
+<Checkbox.Root checked>
+  <Checkbox.Trigger>
+    <Checkbox.Indicator />
+  </Checkbox.Trigger>
+</Checkbox.Root>
+```
+2. **Controlled State**
+For controlled state management, use the `bind:checked` prop as demonstrated in the Reactive example. This allows you to bind the checkbox state to your application's state.
+3. **Indeterminate State**
+The checkbox supports a third "mixed" or indeterminate state, as shown in the Mixed Initial example. This is useful for representing partially selected states, like in a tree structure or bulk selection interface.
+### State Interactions
+1. **Change Events**
+As shown in the Change example, use the `onChange$` prop to handle state changes:
+```tsx
+<Checkbox.Root 
+  onChange$={(checked) => {
+    // Handle the new checked state
+  }}
+>
+```
+2. **Disabled State**
+The Disabled example demonstrates how to disable the checkbox using the `disabled` prop. When disabled:
+- The checkbox cannot be interacted with
+- The visual state reflects the disabled status
+- All interactions are prevented
+3. **Programmatic Control**
+As shown in the Programmatic example, you can programmatically control the checkbox state from outside the component:
+```tsx
+<button onClick$={() => {
+  // Update the bound checked state
+  isChecked.value = true;
+}}>
+  Check the checkbox
+</button>
+```
+4. **Mixed State Transitions**
+When in a mixed state, clicking the checkbox will first transition to a checked state, then follow the normal checked/unchecked cycle on subsequent clicks, as demonstrated in the Mixed Reactive example.
+The checkbox maintains a predictable state transition flow:
+- mixed → checked
+- checked → unchecked
+- unchecked → checkedBased on the examples and API documentation provided, I'll document the configuration options for the Checkbox component.
+## Core Configuration
+### Initial State
+The checkbox can be configured with an initial state using the `checked` prop on `Checkbox.Root`. As shown in the `initial` example above, this sets an uncontrolled initial value.
+> The default value is `false` if not specified.
+### Value Configuration
+The checkbox supports three states:
+- `false` (unchecked)
+- `true` (checked) 
+- `"mixed"` (indeterminate)
+As shown in the `mixed-initial` example above, the indeterminate state can be set initially.
+### Form Integration
+The checkbox can be configured for form submission with these props:
+- `name` - Form field name
+- `value` - Custom value for form submission (defaults to "on")
+- `required` - Makes the field required
+As shown in the `value` example above, you can customize the submitted value.
+## Advanced Configuration
+### State Management
+The checkbox supports both controlled and uncontrolled state management:
+```typescript
+// Uncontrolled
+<Checkbox.Root checked={true} />
+// Controlled
+<Checkbox.Root bind:checked={isCheckedSignal} />
+```
+### Description Configuration
+When using `Checkbox.Description`, you must set `isDescription` prop on `Checkbox.Root`:
+```typescript
+<Checkbox.Root isDescription>
+  <Checkbox.Description>...</Checkbox.Description>
+</Checkbox.Root>
+```
+> Failing to set `isDescription` will trigger a console warning.
+### Technical Constraints
+1. The `bind:checked` signal must be of type `Signal<boolean | "mixed">`
+2. The `onChange$` handler receives the new state as its only argument
+3. When in `mixed` state, the first click will set the state to `true`
+These behaviors can be observed in the `mixed-reactive` example above.## Forms
+The Checkbox component provides form integration through the `<Checkbox.HiddenInput>` component, which renders a native checkbox input that's visually hidden but still accessible for form submission.
+<Showcase name="form" />
+The following props can be used to configure the form behavior:
+- `name`: Sets the name of the form field
+- `value`: Sets a custom value for the checkbox (defaults to "on")
+- `required`: Makes the checkbox a required form field
+<Showcase name="value" />
+## Form Validation
+The Checkbox supports form validation through the `<Checkbox.ErrorMessage>` component. When rendered, it automatically puts the checkbox in an invalid state and connects it with the error message via ARIA.
+<Showcase name="validation" />
+The error message is displayed when form validation fails, and the checkbox trigger receives the appropriate ARIA attributes:
+- `aria-invalid="true"`
+- `aria-describedby` pointing to the error message
+## Mixed State in Forms
+For complex form scenarios, the checkbox supports a mixed (indeterminate) state that can be used when a form field represents a partial selection.
+<Showcase name="form-mixed" />
+The mixed state is reflected in the hidden input's `indeterminate` property, ensuring proper form submission behavior.I've reviewed all the examples and component implementations, and I don't find any environment-specific examples or features that would warrant documentation in this section. The examples provided (`hero`, `initial`, `reactive`, `programmatic`, `disabled`, `label`, `description`, `form`, `form-mixed`, `validation`, `value`, `mixed-initial`, `mixed-reactive`, `change`) all demonstrate state management, accessibility, form integration, and configuration patterns rather than environment-specific behaviors.
+The Checkbox component appears to work consistently across server and client environments without any special considerations or limitations. There are no examples demonstrating environment-specific features such as:
+- Server vs client rendering differences
+- Platform-specific behaviors
+- Environmental dependencies
+- Special rendering cases
+Therefore, this section should be skipped as per the strict rules provided.
+
+---
+
