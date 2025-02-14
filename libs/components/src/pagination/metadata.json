@@ -2,39 +2,43 @@
   "keyboard": [
     {
       "key": "ArrowRight",
-      "comment": "When focus is on a page number, moves focus to the next page number"
+      "comment": "When focus is on a pagination page, moves focus to the next page"
     },
     {
       "key": "ArrowLeft",
-      "comment": "When focus is on a page number, moves focus to the previous page number"
+      "comment": "When focus is on a pagination page, moves focus to the previous page"
     },
     {
       "key": "Home",
-      "comment": "When focus is on a page number, moves focus to the first page number"
+      "comment": "When focus is on a pagination page, moves focus to the first page"
     },
     {
       "key": "End",
-      "comment": "When focus is on a page number, moves focus to the last page number"
+      "comment": "When focus is on a pagination page, moves focus to the last page"
     },
     {
       "key": "Enter",
-      "comment": "When focus is on a page number, selects that page"
+      "comment": "When focus is on a pagination page, selects that page"
     },
     {
       "key": "Space",
-      "comment": "When focus is on a page number, selects that page"
+      "comment": "When focus is on a pagination page, selects that page"
+    },
+    {
+      "key": "Tab",
+      "comment": "Moves focus to the next focusable element in the pagination component"
     }
   ],
   "features": [
-    "WAI ARIA compliant pagination navigation",
-    "Dynamic page range calculation with ellipsis",
-    "Configurable sibling count around current page",
-    "Keyboard navigation with arrow keys, Home and End",
+    "Dynamic page range calculation with sibling pages",
+    "Smart ellipsis placement for large page counts",
+    "Keyboard navigation with arrow keys and Home/End",
+    "Aria-compliant pagination controls",
+    "Bound signal synchronization for page changes",
     "First/Last page quick navigation",
-    "Controlled and uncontrolled page state management",
-    "Disabled state support",
-    "Custom page change event handling",
-    "Automatic focus management",
-    "Responsive pagination layout"
+    "Disabled state handling for boundary pages",
+    "Customizable ellipsis display",
+    "Controlled and uncontrolled page state",
+    "Page change event handling"
   ]
 }

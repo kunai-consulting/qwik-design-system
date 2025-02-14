@@ -11,13 +11,12 @@ import {
 import { radioGroupContextId } from "./radio-group-context";
 import "./radio-group.css";
 import styles from "./radio-group.css?inline";
-
-type RadioGroupControlProps = PropsOf<"button"> & {
+type PublicRadioGroupControlProps = PropsOf<"button"> & {
   value: string;
   _index?: number;
 };
-
-export const RadioGroupTrigger = component$((props: RadioGroupControlProps) => {
+/** Interactive trigger component that handles radio option selection */
+export const RadioGroupTrigger = component$((props: PublicRadioGroupControlProps) => {
   const context = useContext(radioGroupContextId);
   const value = props.value;
   const _index = props._index;
@@ -62,9 +61,12 @@ export const RadioGroupTrigger = component$((props: RadioGroupControlProps) => {
       aria-checked={context.selectedValueSig.value === value}
       aria-describedby={describedByLabels ? describedByLabels.value : undefined}
       aria-invalid={context.isErrorSig.value}
+      // Indicates whether this radio trigger is disabled
       data-disabled={context.isDisabledSig.value ? "" : undefined}
       onClick$={[handleClick$, props.onClick$]}
+      // Indicates whether this radio trigger is checked
       data-checked={context.selectedValueSig.value === value}
+      // Identifier for the radio group trigger button
       data-qds-radio-group-trigger
       {...props}
     >

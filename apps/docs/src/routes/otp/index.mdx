@@ -1,93 +1,134 @@
----
-title: Qwik Design System | OTP Input
----
+import { api } from "./auto-api/api";
 
-import { api } from './auto-api/api';
-
-# OTP Input
-
-A control that enables users to enter one-time passwords or verification codes with individual character inputs.
-
+# One-Time Password Input
+Securely collect and validate numeric codes with automatic field navigation and keyboard support.
 <Showcase name="hero" />
-
-## Initially Setting an OTP
-
-To configure an initial state for the OTP, use either the "value" prop or the "bind:value" prop if you already have a signal.
-
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The OTP input can be initialized with a default value using the `value` prop.
 <Showcase name="initial" />
-
-## Reactive State
-
-Make the OTP reactive by binding its value to a signal. Any changes to that signal will be reflected, and user input will also update the signal.
-
-<Showcase name="reactive" />
-
-## Disabled
-
-Disable user interaction by passing the "disabled" prop to the root component. This will disable the hidden native input and prevent further user input.
-
+This example demonstrates:
+- Using `value` prop to set an initial uncontrolled value
+- Default numeric validation pattern
+- Automatic field navigation
+### Visual Features
+The OTP input can be disabled to prevent user interaction.
 <Showcase name="disabled" />
-
-## onChange$
-
-Use the "onChange$" prop on the root to listen for changes as the user types. This is called for each keystroke or edit.
-
-<Showcase name="change" />
-
-## onComplete$
-
-When the user has filled in all required characters, the OTP is considered "complete." The "onComplete$" prop can be used to trigger any final logic (e.g., auto-submitting).
-
+This example shows:
+- Using the `disabled` prop to control input state
+- Visual feedback for disabled state via `data-disabled` attribute
+### Advanced Usage
+#### Controlled Input
+The OTP input can be controlled using signals with `bind:value`.
+<Showcase name="reactive" />
+This example demonstrates:
+- Two-way binding with `bind:value` prop
+- Programmatic value updates
+- Reactive state management
+#### Event Handling
+The OTP input supports completion and change events.
 <Showcase name="complete" />
+This example shows:
+- Using `onComplete$` to handle filled state
+- Using `onChange$` for value updates
+- Automatic validation and field progression
+#### Change Events
+Monitor input changes with the `onChange$` handler.
+<Showcase name="change" />
+This example demonstrates:
+- Real-time value change detection
+- Event handling for input modifications
+- Integration with external state
 
-## Adding a Caret
+## Component State
+### Using Component State
+The OTP component provides several ways to control its state through props:
+1. Initial Value
+As shown in the `initial` example above, you can set an initial uncontrolled value using the `value` prop on `<Otp.Root />`:
+```tsx
+<Otp.Root value="1234">
+  {/* OTP items */}
+</Otp.Root>
+```
+2. Controlled Value
+For controlled state management, use the `bind:value` prop as demonstrated in the `reactive` example above. This allows you to programmatically update the OTP value.
+3. Disabled State 
+The `disabled` example shows how to disable the entire OTP input using the `disabled` prop:
+```tsx
+<Otp.Root disabled={true}>
+  {/* OTP items */}
+</Otp.Root>
+```
+### State Interactions
+1. Change Events
+As shown in the `change` example, use the `onChange$` prop to listen for value changes:
+```tsx
+<Otp.Root 
+  onChange$={(value) => {
+    // Handle value change
+  }}
+>
+  {/* OTP items */}
+</Otp.Root>
+```
+2. Completion Events
+The `complete` example demonstrates using `onComplete$` to handle when all OTP digits are filled:
+```tsx
+<Otp.Root
+  onComplete$={() => {
+    // Handle OTP completion
+  }}
+>
+  {/* OTP items */}
+</Otp.Root>
+```
+3. Password Manager Integration
+Control password manager suggestion positioning with the `shiftPWManagers` prop (enabled by default):
+```tsx
+<Otp.Root shiftPWManagers={false}>
+  {/* OTP items */}
+</Otp.Root>
+```
+The component maintains internal state for:
+- Current input value
+- Focus state
+- Selection range
+- Current input position
+- Validation state
+These states are automatically managed based on user interaction and the provided props.
 
-To show a caret (like a blinking cursor) on the active input position, include the Otp.Caret component inside each Otp.Item. The caret appears only on the focused, empty position.
+Based on the provided examples and API documentation, I'll document the configuration options for the OTP component.
+## Core Configuration
+### Input Pattern
+By default, the OTP component only accepts numeric input (0-9). You can customize the input validation pattern through the `pattern` prop on `<Otp.HiddenInput />`. The default pattern is `^[0-9]*$`.
+### Initial Value
+The OTP component supports setting an initial uncontrolled value. As shown in the `initial` example above, you can pass the `value` prop to `<Otp.Root />` to set the initial value.
+### Password Manager Integration
+The OTP component includes built-in support for password managers. By default, password manager suggestions are shifted to the right of the OTP input. This behavior can be controlled via the `shiftPWManagers` prop on `<Otp.Root />`:
+```typescript
+<Otp.Root shiftPWManagers={false}>
+  {/* ... */}
+</Otp.Root>
+```
+### Input Length
+The number of OTP digits is determined by the number of `<Otp.Item />` components rendered. The component automatically manages the maximum input length based on this count.
+## Advanced Configuration
+### Value Binding
+For reactive control over the OTP value, the component supports value binding through the `bind:value` prop. As shown in the `reactive` example above, this allows two-way binding with a signal.
+### Completion Handling
+The component provides completion detection through the `onComplete$` prop. As demonstrated in the `complete` example above, this handler is called when all OTP digits are filled.
+### Change Detection
+For granular control over value changes, use the `onChange$` prop. As shown in the `change` example above, this handler is called on every value change, receiving the current OTP value as an argument.
+### Disabled State
+The entire OTP input can be disabled through the `disabled` prop on `<Otp.Root />`. As shown in the `disabled` example above, this affects all child components and prevents user interaction.
+> Note: The disabled state is reflected through the `data-disabled` attribute on both root and individual items, allowing for consistent styling across states.
 
-{/* <Showcase name="caret" /> */}
 
-## Hidden Native Input
 
-The OTP input features a hidden native input for accessibility and mobile keyboards. Ensure you include it by placing Otp.HiddenInput inside your Otp.Root.
 
-{/* <Showcase name="native" /> */}
-
-## Numeric Input
-
-By default, the hidden input is configured to accept numbers (inputMode="numeric" and pattern="[0-9]*"). This prompts numeric keyboards on mobile devices. You can override this if you need alphanumeric codes.
-
-{/* <Showcase name="numeric" /> */}
-
-## Custom Length
-
-The length of the OTP is determined by the number of Otp.Item components. Add or remove items to change the length.
-
-{/* <Showcase name="length" /> */}
-
-## Focus Management
-
-The component automatically manages focus. Clicking any Otp.Item focuses the hidden input, and the caret or highlight will track the currently active position.
-
-{/* <Showcase name="focus" /> */}
-
-## Full Entry State
-
-When all characters are filled, the component enters a "full" state. You can use this for styling or to trigger further logic, such as validation or auto-submission.
-
-{/* <Showcase name="full" /> */}
-
-## Inside a Form
-
-When using the OTP within a form, include the Otp.HiddenInput with a "name" prop. This links the collected code to form submissions.
-
-{/* <Showcase name="form" /> */}
-
-## Accessibility
-
-• A hidden native input helps ensure screen readers announce the OTP properly.  
-• Default aria-label of "Enter your OTP" is used (customizable through props).  
-• Keyboard interactions are preserved, including arrow keys, Shift+arrow range selection, and pasting.  
-• Disabled state is exposed with proper attributes for assistive technologies.
 
 <APITable api={api} />
-

@@ -14,7 +14,7 @@ type PublicChecklistItemProps = PropsOf<typeof Checkbox.Root> & {
 };
 /** Internal prop for tracking item position in checklist */
 export const ChecklistItem = component$((props: PublicChecklistItemProps) => {
-  console.log(props._index);
+  // console.log(props._index);
   const context = useContext(checklistContextId);
 
   if (props._index === undefined) {

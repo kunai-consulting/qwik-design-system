@@ -11,6 +11,7 @@ import { radioGroupContextId } from "./radio-group-context";
 
 type RadioGroupDescriptionProps = PropsOf<"div">;
 
+/** A description component for the radio group that provides additional context */
 export const RadioGroupDescription = component$((props: RadioGroupDescriptionProps) => {
   const context = useContext(radioGroupContextId);
   const descriptionId = `${context.localId}-description`;
@@ -24,6 +25,7 @@ export const RadioGroupDescription = component$((props: RadioGroupDescriptionPro
   });
 
   return (
+    // Identifier for the radio group description element
     <div id={descriptionId} data-qds-checkbox-description {...props}>
       <Slot />
     </div>

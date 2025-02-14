@@ -12,19 +12,25 @@ import {
   useTask$
 } from "@builder.io/qwik";
 import { type RadioGroupContext, radioGroupContextId } from "./radio-group-context";
-
-export type RadioGroupRootProps = {
+export type PublicRadioGroupRootProps = {
   "bind:value"?: Signal<boolean>;
+  /** Event handler for when the radio group selection changes */
   onChange$?: QRL<(checked: string) => void>;
+  /** Initial value of the radio group when first rendered */
   defaultValue?: string;
+  /** Whether the radio group is disabled */
   disabled?: boolean;
+  /** Whether the radio group has a description */
   isDescription?: boolean;
+  /** Name attribute for the hidden radio input */
   name?: string;
+  /** Whether the radio group is required */
   required?: boolean;
+  /** The current value of the radio group */
   value?: string;
 } & PropsOf<"div">;
-
-export const RadioGroupRoot = component$((props: RadioGroupRootProps) => {
+/** Root component that manages the radio group's state and behavior */
+export const RadioGroupRoot = component$((props: PublicRadioGroupRootProps) => {
   const {
     "bind:value": givenCheckedSig,
     onClick$,
@@ -82,9 +88,12 @@ export const RadioGroupRoot = component$((props: RadioGroupRootProps) => {
     <div
       {...rest}
       role="radiogroup"
+      // Identifier for the root radio group container
       data-qds-radio-group-root
+      // Indicates whether the radio group is disabled
       data-disabled={context.isDisabledSig.value ? "" : undefined}
       aria-disabled={context.isDisabledSig.value ? "true" : "false"}
+      // Indicates whether the radio group has a selected value
       data-checked={context.selectedValueSig.value === props.value ? "true" : "false"}
     >
       <Slot />

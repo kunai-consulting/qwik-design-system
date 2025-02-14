@@ -1,44 +1,52 @@
 {
   "keyboard": [
     {
-      "key": "Tab",
-      "comment": "When focus is outside the radio group, moves focus to the first radio button. When focus is on a radio button, moves focus to the next radio button"
-    },
-    {
-      "key": "Shift+Tab",
-      "comment": "When focus is on a radio button, moves focus to the previous radio button"
-    },
-    {
       "key": "Space",
-      "comment": "When focus is on a radio button, selects the focused radio button"
+      "comment": "When focus is on a radio button trigger, selects that radio option"
+    },
+    {
+      "key": "Enter",
+      "comment": "When focus is on a radio button trigger, selects that radio option"
     },
     {
       "key": "ArrowDown",
-      "comment": "Moves focus to the next radio button and selects it"
+      "comment": "Moves focus to the next radio button trigger in the group"
     },
     {
       "key": "ArrowRight",
-      "comment": "Moves focus to the next radio button and selects it"
+      "comment": "Moves focus to the next radio button trigger in the group"
     },
     {
       "key": "ArrowUp",
-      "comment": "Moves focus to the previous radio button and selects it"
+      "comment": "Moves focus to the previous radio button trigger in the group"
     },
     {
       "key": "ArrowLeft",
-      "comment": "Moves focus to the previous radio button and selects it"
+      "comment": "Moves focus to the previous radio button trigger in the group"
+    },
+    {
+      "key": "Tab",
+      "comment": "Moves focus to the next focusable element outside the radio group"
+    },
+    {
+      "key": "Shift+Tab",
+      "comment": "Moves focus to the previous focusable element outside the radio group"
     }
   ],
   "features": [
-    "WAI ARIA Radio Group design pattern",
-    "Single selection with value binding",
-    "Error state handling with error messages",
-    "Accessible descriptions support",
-    "Custom visual indicators",
-    "Required field validation",
-    "Keyboard navigation and focus management",
+    "WAI ARIA RadioGroup design pattern",
+    "Single selection from multiple options",
+    "Error state handling and validation",
+    "Custom error messages with aria-invalid",
+    "Optional description text support",
+    "Visual and screen reader feedback",
+    "Controlled and uncontrolled value management",
+    "Custom accessible labels and descriptions",
     "Disabled state support",
-    "Form integration with hidden native inputs",
-    "Controlled and uncontrolled value modes"
+    "Focus management with tab navigation",
+    "Hidden native radio inputs for form submission",
+    "Visual indicators for selected state",
+    "Keyboard navigation support",
+    "Required field validation"
   ]
 }

@@ -9,14 +9,14 @@ import {
   useSignal
 } from "@builder.io/qwik";
 import { OTPContextId } from "./otp-context";
-
-type OTPProps = {
+type PublicOTPProps = {
   _index?: number;
 } & PropsOf<"div">;
-
-export const itemContextId = createContextId<{ index: number }>("qd-otp-item");
+export const itemContextId = createContextId<{
+  index: number;
+}>("qd-otp-item");
 /** Individual item component for displaying a single OTP digit */
-export const OtpItem = component$(({ _index = 0, ...props }: OTPProps) => {
+export const OtpItem = component$(({ _index = 0, ...props }: PublicOTPProps) => {
   const context = useContext(OTPContextId);
   const itemRef = useSignal<HTMLInputElement>();
   useContextProvider(itemContextId, { index: _index });
