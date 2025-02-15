@@ -9,13 +9,15 @@ import {
 import { CheckboxContext, checkboxContextId } from "./checkbox-context";
 import "./checkbox.css";
 import styles from "./checkbox.css?inline";
+import { AsChild } from "../as-child/as-child";
 export type PublicCheckboxIndicatorProps = PropsOf<"span">;
 /** Visual indicator component showing the checkbox state */
 export const CheckboxIndicator = component$<PublicCheckboxIndicatorProps>((props) => {
   useStyles$(styles);
   const context = useContext(checkboxContextId);
+
   return (
-    <span
+    <AsChild
       {...props}
       // Indicates whether the indicator should be hidden based on checkbox state
       data-hidden={!context.isCheckedSig.value}
@@ -26,8 +28,10 @@ export const CheckboxIndicator = component$<PublicCheckboxIndicatorProps>((props
       // Identifier for the checkbox indicator element
       data-qds-indicator
       aria-hidden="true"
+      fallback="div"
+      asChild={true}
     >
       <Slot />
-    </span>
+    </AsChild>
   );
 });
