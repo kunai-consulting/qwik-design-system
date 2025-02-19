@@ -139,7 +139,18 @@ export const api = {
       "Checkbox Trigger": {
         "types": [
           {
-            "PublicCheckboxControlProps": []
+            "PublicCheckboxControlProps": [
+              {
+                "comment": "",
+                "prop": "allProps",
+                "type": "unknown"
+              },
+              {
+                "comment": "",
+                "prop": "jsxType",
+                "type": "Component | string"
+              }
+            ]
           }
         ],
         "inheritsFrom": "button",

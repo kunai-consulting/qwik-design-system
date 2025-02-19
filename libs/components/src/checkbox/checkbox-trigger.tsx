@@ -1,8 +1,11 @@
 import {
   $,
+  Component,
+  JSXNode,
   type PropsOf,
   Slot,
   component$,
+  noSerialize,
   sync$,
   useComputed$,
   useContext,
@@ -10,14 +13,15 @@ import {
   useTask$,
 } from "@builder.io/qwik";
 import { checkboxContextId } from "./checkbox-context";
-type PublicCheckboxControlProps = PropsOf<"button">;
+type PublicCheckboxControlProps = PropsOf<"button"> & {
+  allProps: unknown;
+  jsxType: Component | string;
+};
 
 export function CheckboxTrigger(props: PublicCheckboxControlProps) {
-  globalThis.type = props.children.type;
+  let jsxType;
 
   console.log("props: ", props.children);
-
-  console.log(globalThis.type);
 
   const { children, ...allProps } = {
     ...props.children.props,
@@ -26,8 +30,22 @@ export function CheckboxTrigger(props: PublicCheckboxControlProps) {
 
   console.log("all props: ", allProps);
 
+  console.log("jsx type: ", props.children.type);
+
+  console.log("is true: ", props.children.type.name === "QwikComponent");
+
+  if (props.children.type.name === "QwikComponent") {
+    jsxType = props.children.type;
+  } else {
+    jsxType = noSerialize(props.children.type);
+  }
+
   return (
-    <CheckboxTriggerBase allProps={allProps} {...props}>
+    <CheckboxTriggerBase
+      {...props}
+      jsxType={props.children.type}
+      allProps={allProps}
+    >
       {props.children.children ?? props.children.props?.children}
     </CheckboxTriggerBase>
   );
@@ -36,8 +54,7 @@ export function CheckboxTrigger(props: PublicCheckboxControlProps) {
 /** Interactive trigger component that handles checkbox toggling */
 export const CheckboxTriggerBase = component$(
   (props: PublicCheckboxControlProps) => {
-    const Comp = globalThis.type ?? "button";
-    console.log("type: ", globalThis.type);
+    const Comp = props.jsxType ?? "button";
     const allPropsSig = useSignal();
 
     useTask$(({ track }) => {
