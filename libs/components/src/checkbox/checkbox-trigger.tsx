@@ -9,11 +9,11 @@ import {
   useComputed$,
   useContext,
   JSXNode,
-  JSX,
   FunctionComponent,
   JSXChildren,
 } from "@builder.io/qwik";
 import { checkboxContextId } from "./checkbox-context";
+import { Render } from "../render/render";
 type PublicCheckboxControlProps = PropsOf<"button"> & {
   _allProps?: object;
   _jsxType?: Component | string;
@@ -63,8 +63,6 @@ export function CheckboxTrigger(props: PublicCheckboxControlProps) {
 /** Interactive trigger component that handles checkbox toggling */
 export const CheckboxTriggerBase = component$(
   (props: PublicCheckboxControlProps) => {
-    const Comp = props._jsxType ?? "button";
-
     const context = useContext(checkboxContextId);
     const triggerId = `${context.localId}-trigger`;
     const descriptionId = `${context.localId}-description`;
@@ -93,11 +91,12 @@ export const CheckboxTriggerBase = component$(
     });
 
     return (
-      <Comp
+      <Render
         id={triggerId}
         ref={context.triggerRef}
         type="button"
         role="checkbox"
+        fallback="button"
         aria-checked={`${context.isCheckedSig.value}`}
         aria-describedby={
           describedByLabels ? describedByLabels.value : undefined
@@ -122,7 +121,7 @@ export const CheckboxTriggerBase = component$(
         {...props._allProps}
       >
         <Slot />
-      </Comp>
+      </Render>
     );
   }
 );

@@ -1,11 +1,11 @@
 import {
-  type FunctionComponent,
+  Component,
   type JSXNode,
   type JSXOutput,
   type QwikIntrinsicElements,
   Slot,
   component$,
-  jsx
+  jsx,
 } from "@builder.io/qwik";
 
 // keyof slows the type server a bunch, instead we use the most common fallbacks
@@ -16,12 +16,19 @@ export type RenderProps = {
   render?: JSXNode | JSXOutput;
 };
 
+type AsChildProps = {
+  _allProps?: object;
+  _jsxType?: Component | string;
+  asChild?: boolean;
+};
+
 type RenderInternalProps<T extends AllowedFallbacks = "div"> = {
   /** What gets passed to the jsx transform, pass in props.render */
   component: JSXNode | JSXOutput | undefined;
   /** The default element and types if a render prop is not provided */
   fallback: T;
-} & QwikIntrinsicElements[T];
+} & QwikIntrinsicElements[T] &
+  AsChildProps;
 
 /**
  * Render component enables flexible composition by allowing a component to be rendered with a fallback
@@ -35,16 +42,16 @@ type RenderInternalProps<T extends AllowedFallbacks = "div"> = {
  */
 export const Render = component$(
   <T extends AllowedFallbacks = "div">(props: RenderInternalProps<T>) => {
-    const { fallback, component: rawComponent, ...rest } = props;
-    const component = rawComponent as {
-      type: string | FunctionComponent;
-      props: Record<string, unknown>;
-    };
+    const { fallback, _jsxType, _allProps, asChild, ...rest } = props;
 
-    return jsx(component?.type ?? fallback, {
-      ...component?.props,
-      ...rest,
-      children: <Slot />
-    });
+    const Comp = props._jsxType ?? props.fallback;
+
+    console.log("fallback: ", props.fallback);
+
+    return (
+      <Comp {..._allProps} {...rest}>
+        <Slot />
+      </Comp>
+    );
   }
 );

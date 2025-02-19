@@ -9,7 +9,7 @@ import {
   useContextProvider,
   useSignal,
   useStyles$,
-  useTask$
+  useTask$,
 } from "@builder.io/qwik";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { findComponent, processChildren } from "../../utils/inline-component";
@@ -73,7 +73,10 @@ export const OtpBase = component$((props: PublicOtpRootProps) => {
 
   useStyles$(styles);
 
-  const inputValueSig = useBoundSignal<string>(givenValueSig, props.value || "");
+  const inputValueSig = useBoundSignal<string>(
+    givenValueSig,
+    props.value || ""
+  );
   const currIndexSig = useSignal(0);
   const nativeInputRef = useSignal<HTMLInputElement>();
   const numItemsSig = useComputed$(() => props._numItems || 0);
@@ -97,7 +100,7 @@ export const OtpBase = component$((props: PublicOtpRootProps) => {
     isDisabledSig,
     selectionStartSig,
     selectionEndSig,
-    shiftPWManagers
+    shiftPWManagers,
   };
 
   useTask$(async function handleChange({ track }) {
@@ -117,9 +120,7 @@ export const OtpBase = component$((props: PublicOtpRootProps) => {
   useContextProvider(OTPContextId, context);
 
   return (
-    <Render
-      component={Comp}
-      fallback="div"
+    <div
       // The identifier for the root OTP input container
       data-qds-otp-root
       // Indicates if the entire OTP input is disabled
@@ -127,6 +128,6 @@ export const OtpBase = component$((props: PublicOtpRootProps) => {
       {...rest}
     >
       <Slot />
-    </Render>
+    </div>
   );
 });
