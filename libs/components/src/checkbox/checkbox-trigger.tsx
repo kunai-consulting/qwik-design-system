@@ -11,8 +11,8 @@ import {
 } from "@builder.io/qwik";
 import { checkboxContextId } from "./checkbox-context";
 type PublicCheckboxControlProps = PropsOf<"button"> & {
-  allProps?: unknown;
-  jsxType?: Component | string;
+  _allProps?: unknown;
+  _jsxType?: Component | string;
   asChild?: boolean;
 };
 
@@ -27,12 +27,12 @@ export function CheckboxTrigger(props: PublicCheckboxControlProps) {
 
   console.log("props: ", props.children);
 
-  const { children, ...allProps } = {
+  const { children, ..._allProps } = {
     ...props.children.props,
     ...props.children.immutableProps,
   };
 
-  console.log("all props: ", allProps);
+  console.log("all props: ", _allProps);
 
   console.log("jsx type: ", props.children.type);
 
@@ -47,8 +47,8 @@ export function CheckboxTrigger(props: PublicCheckboxControlProps) {
   return (
     <CheckboxTriggerBase
       {...props}
-      jsxType={props.children.type}
-      allProps={allProps}
+      _jsxType={props.children.type}
+      _allProps={_allProps}
     >
       {props.children.children ?? props.children.props?.children}
     </CheckboxTriggerBase>
@@ -58,7 +58,7 @@ export function CheckboxTrigger(props: PublicCheckboxControlProps) {
 /** Interactive trigger component that handles checkbox toggling */
 export const CheckboxTriggerBase = component$(
   (props: PublicCheckboxControlProps) => {
-    const Comp = props.jsxType ?? "button";
+    const Comp = props._jsxType ?? "button";
 
     const context = useContext(checkboxContextId);
     const triggerId = `${context.localId}-trigger`;
@@ -114,7 +114,7 @@ export const CheckboxTriggerBase = component$(
         // Identifier for the checkbox trigger element
         data-qds-checkbox-trigger
         {...props}
-        {...props.allProps}
+        {...props._allProps}
       >
         <Slot />
       </Comp>

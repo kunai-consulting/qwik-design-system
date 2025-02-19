@@ -142,12 +142,12 @@ export const api = {
             "PublicCheckboxControlProps": [
               {
                 "comment": "",
-                "prop": "allProps",
+                "prop": "_allProps",
                 "type": "unknown"
               },
               {
                 "comment": "",
-                "prop": "jsxType",
+                "prop": "_jsxType",
                 "type": "Component | string"
               },
               {
