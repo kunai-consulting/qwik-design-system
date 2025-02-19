@@ -15,6 +15,12 @@ export function withAsChild<T>(BaseComponent: Component<T>) {
       return <BaseComponent {...(props as any)}>{children}</BaseComponent>;
     }
 
+    if (children.length > 1) {
+      throw new Error(
+        "Qwik Design System: When using asChild, there can only be one descendant or children JSX Node. Look for the asChild prop and see where two nodes are."
+      );
+    }
+
     const { children: childrenProp, ..._allProps } = {
       ...children.props,
       ...children.immutableProps,

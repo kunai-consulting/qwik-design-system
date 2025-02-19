@@ -28,7 +28,7 @@ export default component$(() => {
 
   return (
     <Checkbox.Root>
-      <Checkbox.Trigger asChild class="checkbox-trigger">
+      <Checkbox.Trigger class="checkbox-trigger" asChild>
         <MyComp>
           <Checkbox.Indicator class="checkbox-indicator">
             <LuCheck />
