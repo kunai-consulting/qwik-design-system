@@ -22,9 +22,7 @@ type AsChildProps = {
   asChild?: boolean;
 };
 
-type RenderInternalProps<T extends AllowedFallbacks = "div"> = {
-  /** What gets passed to the jsx transform, pass in props.render */
-  component: JSXNode | JSXOutput | undefined;
+type RenderInternalProps<T extends AllowedFallbacks> = {
   /** The default element and types if a render prop is not provided */
   fallback: T;
 } & QwikIntrinsicElements[T] &
@@ -41,12 +39,10 @@ type RenderInternalProps<T extends AllowedFallbacks = "div"> = {
  * accessibility.
  */
 export const Render = component$(
-  <T extends AllowedFallbacks = "div">(props: RenderInternalProps<T>) => {
+  <T extends AllowedFallbacks>(props: RenderInternalProps<T>) => {
     const { fallback, _jsxType, _allProps, asChild, ...rest } = props;
 
-    const Comp = props._jsxType ?? props.fallback;
-
-    console.log("fallback: ", props.fallback);
+    const Comp = _jsxType ?? fallback;
 
     return (
       <Comp {..._allProps} {...rest}>
@@ -54,4 +50,6 @@ export const Render = component$(
       </Comp>
     );
   }
-);
+) as {
+  <T extends AllowedFallbacks>(props: RenderInternalProps<T>): JSXOutput;
+};
