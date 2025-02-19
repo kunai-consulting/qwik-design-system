@@ -13,44 +13,41 @@ import {
   JSXChildren,
 } from "@builder.io/qwik";
 import { checkboxContextId } from "./checkbox-context";
-import { Render } from "../render/render";
+import { AsChildProps, Render } from "../render/render";
 type PublicCheckboxControlProps = PropsOf<"button"> & {
   _allProps?: object;
   _jsxType?: Component | string;
   asChild?: boolean;
 };
 
-export function CheckboxTrigger(props: PublicCheckboxControlProps) {
-  const children = props.children as JSXNode;
+export function withAsChild<T>(BaseComponent: Component<T>) {
+  return function AsChildWrapper(props: T & AsChildProps) {
+    const children = props.children as JSXNode;
 
-  if (!props.asChild) {
-    return <CheckboxTriggerBase {...props}>{children}</CheckboxTriggerBase>;
-  }
+    if (!props.asChild) {
+      return <BaseComponent {...props}>{children}</BaseComponent>;
+    }
 
-  let jsxType;
+    const { children: childrenProp, ..._allProps } = {
+      ...children.props,
+      ...children.immutableProps,
+    };
 
-  const { children: childrenProp, ..._allProps } = {
-    ...children.props,
-    ...children.immutableProps,
+    const name = (children.type as { name: string }).name;
+    let jsxType;
+
+    if (name === "QwikComponent" || typeof children.type === "string") {
+      jsxType = children.type;
+    } else {
+      jsxType = noSerialize(children.type as FunctionComponent);
+    }
+
+    return (
+      <BaseComponent {...props} _jsxType={jsxType} _allProps={_allProps}>
+        {(children.children ?? children.props?.children) as JSXChildren}
+      </BaseComponent>
+    );
   };
-
-  const name = (children.type as { name: string }).name;
-
-  if (name === "QwikComponent" || typeof children.type === "string") {
-    jsxType = children.type;
-  } else {
-    jsxType = noSerialize(children.type as FunctionComponent);
-  }
-
-  return (
-    <CheckboxTriggerBase
-      {...props}
-      _jsxType={children.type as string | Component | undefined}
-      _allProps={_allProps}
-    >
-      {(children.children ?? children.props?.children) as JSXChildren}
-    </CheckboxTriggerBase>
-  );
 }
 
 /** Interactive trigger component that handles checkbox toggling */
@@ -117,3 +114,5 @@ export const CheckboxTriggerBase = component$(
     );
   }
 );
+
+export const CheckboxTrigger = withAsChild(CheckboxTriggerBase);

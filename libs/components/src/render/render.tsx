@@ -16,7 +16,7 @@ export type RenderProps = {
   render?: JSXNode | JSXOutput;
 };
 
-type AsChildProps = {
+export type AsChildProps = {
   _allProps?: object;
   _jsxType?: Component | string;
   asChild?: boolean;

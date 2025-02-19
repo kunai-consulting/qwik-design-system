@@ -29,11 +29,11 @@ export default component$(() => {
   return (
     <Checkbox.Root>
       <Checkbox.Trigger asChild class="checkbox-trigger">
-        <div>
+        <MyComp>
           <Checkbox.Indicator class="checkbox-indicator">
             <LuCheck />
           </Checkbox.Indicator>
-        </div>
+        </MyComp>
       </Checkbox.Trigger>
     </Checkbox.Root>
   );
