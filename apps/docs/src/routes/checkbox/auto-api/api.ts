@@ -143,7 +143,7 @@ export const api = {
               {
                 "comment": "",
                 "prop": "_allProps",
-                "type": "unknown"
+                "type": "object"
               },
               {
                 "comment": "",
@@ -154,6 +154,16 @@ export const api = {
                 "comment": "",
                 "prop": "asChild",
                 "type": "boolean"
+              },
+              {
+                "comment": "",
+                "prop": "name",
+                "type": "string"
+              },
+              {
+                "comment": "",
+                "prop": "name",
+                "type": "string"
               }
             ]
           }

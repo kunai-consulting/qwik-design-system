@@ -8,49 +8,54 @@ import {
   sync$,
   useComputed$,
   useContext,
+  JSXNode,
+  JSX,
+  FunctionComponent,
+  JSXChildren,
 } from "@builder.io/qwik";
 import { checkboxContextId } from "./checkbox-context";
 type PublicCheckboxControlProps = PropsOf<"button"> & {
-  _allProps?: unknown;
+  _allProps?: object;
   _jsxType?: Component | string;
   asChild?: boolean;
 };
 
 export function CheckboxTrigger(props: PublicCheckboxControlProps) {
+  const children = props.children as JSXNode;
+
   if (!props.asChild) {
-    return (
-      <CheckboxTriggerBase {...props}>{props.children}</CheckboxTriggerBase>
-    );
+    return <CheckboxTriggerBase {...props}>{children}</CheckboxTriggerBase>;
   }
 
   let jsxType;
 
-  console.log("props: ", props.children);
+  console.log("props: ", children);
 
-  const { children, ..._allProps } = {
-    ...props.children.props,
-    ...props.children.immutableProps,
+  const { children: childrenProp, ..._allProps } = {
+    ...children.props,
+    ...children.immutableProps,
   };
 
   console.log("all props: ", _allProps);
+  console.log("jsx type: ", children.type);
+  console.log(
+    "is true: ",
+    (children.type as { name: string }).name === "QwikComponent"
+  );
 
-  console.log("jsx type: ", props.children.type);
-
-  console.log("is true: ", props.children.type.name === "QwikComponent");
-
-  if (props.children.type.name === "QwikComponent") {
-    jsxType = props.children.type;
+  if ((children.type as { name: string }).name === "QwikComponent") {
+    jsxType = children.type;
   } else {
-    jsxType = noSerialize(props.children.type);
+    jsxType = noSerialize(children.type as FunctionComponent);
   }
 
   return (
     <CheckboxTriggerBase
       {...props}
-      _jsxType={props.children.type}
+      _jsxType={children.type as string | Component | undefined}
       _allProps={_allProps}
     >
-      {props.children.children ?? props.children.props?.children}
+      {(children.children ?? children.props?.children) as JSXChildren}
     </CheckboxTriggerBase>
   );
 }
