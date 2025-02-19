@@ -29,21 +29,14 @@ export function CheckboxTrigger(props: PublicCheckboxControlProps) {
 
   let jsxType;
 
-  console.log("props: ", children);
-
   const { children: childrenProp, ..._allProps } = {
     ...children.props,
     ...children.immutableProps,
   };
 
-  console.log("all props: ", _allProps);
-  console.log("jsx type: ", children.type);
-  console.log(
-    "is true: ",
-    (children.type as { name: string }).name === "QwikComponent"
-  );
+  const name = (children.type as { name: string }).name;
 
-  if ((children.type as { name: string }).name === "QwikComponent") {
+  if (name === "QwikComponent" || typeof children.type === "string") {
     jsxType = children.type;
   } else {
     jsxType = noSerialize(children.type as FunctionComponent);
@@ -118,7 +111,6 @@ export const CheckboxTriggerBase = component$(
         // Identifier for the checkbox trigger element
         data-qds-checkbox-trigger
         {...props}
-        {...props._allProps}
       >
         <Slot />
       </Render>

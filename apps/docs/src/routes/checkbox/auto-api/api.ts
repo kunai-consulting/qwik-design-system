@@ -159,11 +159,6 @@ export const api = {
                 "comment": "",
                 "prop": "name",
                 "type": "string"
-              },
-              {
-                "comment": "",
-                "prop": "name",
-                "type": "string"
               }
             ]
           }
