@@ -32,10 +32,10 @@ type RenderInternalProps<T extends AllowedFallbacks> = {
  * Render component enables flexible composition by allowing a component to be rendered with a fallback
  * element type.
  *
- * It accepts a component prop for custom rendering, and falls back to a specified HTML element
+ * It accepts a _jsxType prop for custom rendering, and falls back to a specified HTML element
  * (div, span, a, button) if no component is provided.
  *
- * This allows components and JSX nodes to be composed while maintaining proper typing and
+ * This allows components and JSX nodes to be composed with asChild while maintaining proper typing and
  * accessibility.
  */
 export const Render = component$(
