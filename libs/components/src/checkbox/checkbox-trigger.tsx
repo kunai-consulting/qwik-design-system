@@ -1,7 +1,6 @@
 import {
   $,
   Component,
-  JSXNode,
   type PropsOf,
   Slot,
   component$,
@@ -9,13 +8,12 @@ import {
   sync$,
   useComputed$,
   useContext,
-  useSignal,
-  useTask$,
 } from "@builder.io/qwik";
 import { checkboxContextId } from "./checkbox-context";
 type PublicCheckboxControlProps = PropsOf<"button"> & {
-  allProps: unknown;
-  jsxType: Component | string;
+  allProps?: unknown;
+  jsxType?: Component | string;
+  asChild?: boolean;
 };
 
 export function CheckboxTrigger(props: PublicCheckboxControlProps) {
@@ -55,12 +53,6 @@ export function CheckboxTrigger(props: PublicCheckboxControlProps) {
 export const CheckboxTriggerBase = component$(
   (props: PublicCheckboxControlProps) => {
     const Comp = props.jsxType ?? "button";
-    const allPropsSig = useSignal();
-
-    useTask$(({ track }) => {
-      allPropsSig.value = track(() => allPropsSig.value);
-      console.log("all props sig", allPropsSig.value);
-    });
 
     const context = useContext(checkboxContextId);
     const triggerId = `${context.localId}-trigger`;

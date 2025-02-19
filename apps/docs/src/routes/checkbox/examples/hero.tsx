@@ -1,5 +1,6 @@
 import {
   component$,
+  PropsOf,
   Slot,
   useSignal,
   useStyles$,
@@ -7,7 +8,7 @@ import {
 } from "@builder.io/qwik";
 import { Checkbox } from "@kunai-consulting/qwik";
 
-export const MyComp = component$((props) => {
+export const MyComp = component$((props: PropsOf<"div">) => {
   return (
     <div data-some-attr {...props}>
       <Slot />

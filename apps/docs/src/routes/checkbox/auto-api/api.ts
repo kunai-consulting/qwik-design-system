@@ -149,6 +149,11 @@ export const api = {
                 "comment": "",
                 "prop": "jsxType",
                 "type": "Component | string"
+              },
+              {
+                "comment": "",
+                "prop": "asChild",
+                "type": "boolean"
               }
             ]
           }
