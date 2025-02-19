@@ -7,6 +7,7 @@ import {
   component$,
   jsx,
 } from "@builder.io/qwik";
+import { AsChildProps } from "../as-child/as-child";
 
 // keyof slows the type server a bunch, instead we use the most common fallbacks
 type AllowedFallbacks = "div" | "span" | "a" | "button";
@@ -14,12 +15,6 @@ type AllowedFallbacks = "div" | "span" | "a" | "button";
 export type RenderProps = {
   /** Add in your own component or JSX node */
   render?: JSXNode | JSXOutput;
-};
-
-export type AsChildProps = {
-  _allProps?: object;
-  _jsxType?: Component | string;
-  asChild?: boolean;
 };
 
 type RenderInternalProps<T extends AllowedFallbacks> = {
