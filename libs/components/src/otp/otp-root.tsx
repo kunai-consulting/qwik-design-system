@@ -13,7 +13,6 @@ import {
 } from "@builder.io/qwik";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { findComponent, processChildren } from "../../utils/inline-component";
-import { Render, type RenderProps } from "../render/render";
 import { OTPContextId } from "./otp-context";
 import { OtpItem } from "./otp-item";
 import styles from "./otp.css?inline";
@@ -35,7 +34,7 @@ type PublicOtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   disabled?: boolean;
   /** Whether password manager popups should shift to the right of the OTP. By default enabled */
   shiftPWManagers?: boolean;
-} & RenderProps;
+};
 
 /** Here's a comment for you! */
 /** Root component for OTP input that manages multiple input items */
@@ -65,7 +64,6 @@ export const OtpBase = component$((props: PublicOtpRootProps) => {
     "bind:value": givenValueSig,
     onChange$,
     onComplete$,
-    render: Comp,
     disabled = false,
     shiftPWManagers = true,
     ...rest

@@ -12,11 +12,6 @@ import { AsChildProps } from "../as-child/as-child";
 // keyof slows the type server a bunch, instead we use the most common fallbacks
 type AllowedFallbacks = "div" | "span" | "a" | "button";
 
-export type RenderProps = {
-  /** Add in your own component or JSX node */
-  render?: JSXNode | JSXOutput;
-};
-
 type RenderInternalProps<T extends AllowedFallbacks> = {
   /** The default element and types if a render prop is not provided */
   fallback: T;
@@ -37,10 +32,13 @@ export const Render = component$(
   <T extends AllowedFallbacks>(props: RenderInternalProps<T>): JSXOutput => {
     const { fallback, _jsxType, _allProps, asChild, ...rest } = props;
 
-    const Comp = _jsxType ?? fallback;
+    fallback;
+    _jsxType;
+
+    const Comp = props._jsxType ?? props.fallback;
 
     return (
-      <Comp {..._allProps} {...rest}>
+      <Comp {...rest} {...props._allProps}>
         <Slot />
       </Comp>
     );
