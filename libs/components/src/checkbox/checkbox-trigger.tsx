@@ -22,10 +22,10 @@ type PublicCheckboxControlProps = PropsOf<"button"> & {
 
 export function withAsChild<T>(BaseComponent: Component<T>) {
   return function AsChildWrapper(props: T & AsChildProps) {
-    const children = props.children as JSXNode;
+    const children = (props as any).children;
 
     if (!props.asChild) {
-      return <BaseComponent {...props}>{children}</BaseComponent>;
+      return <BaseComponent {...(props as any)}>{children}</BaseComponent>;
     }
 
     const { children: childrenProp, ..._allProps } = {
@@ -43,7 +43,11 @@ export function withAsChild<T>(BaseComponent: Component<T>) {
     }
 
     return (
-      <BaseComponent {...props} _jsxType={jsxType} _allProps={_allProps}>
+      <BaseComponent
+        {...(props as any)}
+        _jsxType={jsxType}
+        _allProps={_allProps}
+      >
         {(children.children ?? children.props?.children) as JSXChildren}
       </BaseComponent>
     );
