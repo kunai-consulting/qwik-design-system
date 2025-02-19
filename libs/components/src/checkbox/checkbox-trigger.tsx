@@ -17,6 +17,12 @@ type PublicCheckboxControlProps = PropsOf<"button"> & {
 };
 
 export function CheckboxTrigger(props: PublicCheckboxControlProps) {
+  if (!props.asChild) {
+    return (
+      <CheckboxTriggerBase {...props}>{props.children}</CheckboxTriggerBase>
+    );
+  }
+
   let jsxType;
 
   console.log("props: ", props.children);
