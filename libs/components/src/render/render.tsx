@@ -39,7 +39,7 @@ type RenderInternalProps<T extends AllowedFallbacks> = {
  * accessibility.
  */
 export const Render = component$(
-  <T extends AllowedFallbacks>(props: RenderInternalProps<T>) => {
+  <T extends AllowedFallbacks>(props: RenderInternalProps<T>): JSXOutput => {
     const { fallback, _jsxType, _allProps, asChild, ...rest } = props;
 
     const Comp = _jsxType ?? fallback;
@@ -50,6 +50,4 @@ export const Render = component$(
       </Comp>
     );
   }
-) as {
-  <T extends AllowedFallbacks>(props: RenderInternalProps<T>): JSXOutput;
-};
+);
