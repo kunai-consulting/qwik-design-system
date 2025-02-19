@@ -1,15 +1,38 @@
-import { component$, useStyles$ } from "@builder.io/qwik";
+import {
+  component$,
+  Slot,
+  useSignal,
+  useStyles$,
+  useTask$,
+} from "@builder.io/qwik";
 import { Checkbox } from "@kunai-consulting/qwik";
+
+export const MyComp = component$((props) => {
+  return (
+    <div data-some-attr {...props}>
+      <Slot />
+    </div>
+  );
+});
 
 export default component$(() => {
   useStyles$(styles);
+  const testSig = useSignal(false);
+
+  useTask$(({ track }) => {
+    track(() => testSig.value);
+
+    console.log("test sig: ", testSig.value);
+  });
 
   return (
     <Checkbox.Root>
-      <Checkbox.Trigger class="checkbox-trigger">
-        <Checkbox.Indicator class="checkbox-indicator">
-          <LuCheck />
-        </Checkbox.Indicator>
+      <Checkbox.Trigger asChild class="checkbox-trigger">
+        <MyComp data-yo>
+          <Checkbox.Indicator class="checkbox-indicator">
+            <LuCheck />
+          </Checkbox.Indicator>
+        </MyComp>
       </Checkbox.Trigger>
     </Checkbox.Root>
   );
