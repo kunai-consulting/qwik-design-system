@@ -1,4 +1,4 @@
-import { Component, noSerialize, JSXChildren } from "@builder.io/qwik";
+import { Component, noSerialize, JSXChildren, sync$ } from "@builder.io/qwik";
 import { FunctionComponent } from "@builder.io/qwik/jsx-runtime";
 
 export type AsChildProps = {
@@ -6,6 +6,12 @@ export type AsChildProps = {
   _jsxType?: Component | string;
   asChild?: boolean;
 };
+
+export function syncFixedInV2<T extends Function>(fn: T) {
+  // in v1, there is a very obscure bug with container state and context
+  // that is fixed with the new serialization system in v2
+  return noSerialize(fn);
+}
 
 export function withAsChild<T>(BaseComponent: Component<T>) {
   return function AsChildWrapper(props: T & AsChildProps) {

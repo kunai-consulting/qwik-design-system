@@ -4,13 +4,14 @@ import {
   type PropsOf,
   Slot,
   component$,
+  noSerialize,
   sync$,
   useComputed$,
   useContext,
 } from "@builder.io/qwik";
 import { checkboxContextId } from "./checkbox-context";
 import { Render } from "../render/render";
-import { withAsChild } from "../as-child/as-child";
+import { syncFixedInV2, withAsChild } from "../as-child/as-child";
 type PublicCheckboxControlProps = PropsOf<"button">;
 
 /** Interactive trigger component that handles checkbox toggling */
@@ -37,11 +38,14 @@ export const CheckboxTriggerBase = component$(
         context.isCheckedSig.value = !context.isCheckedSig.value;
       }
     });
-    const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-      }
-    });
+
+    const handleKeyDownSync$ = syncFixedInV2(
+      sync$((e: KeyboardEvent) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+        }
+      })
+    );
 
     return (
       <Render
@@ -58,16 +62,10 @@ export const CheckboxTriggerBase = component$(
         disabled={context.isDisabledSig.value}
         // Indicates whether the checkbox trigger is disabled
         data-disabled={context.isDisabledSig.value ? "" : undefined}
-        onKeyDown$={[props.onKeyDown$]}
+        onKeyDown$={[handleKeyDownSync$, props.onKeyDown$]}
         onClick$={[handleClick$, props.onClick$]}
         // Indicates whether the checkbox trigger is checked
-        data-checked={
-          context.isCheckedSig.value && context.isCheckedSig.value !== "mixed"
-            ? ""
-            : undefined
-        }
         // Indicates whether the checkbox trigger is in an indeterminate state
-        data-mixed={context.isCheckedSig.value === "mixed" ? "" : undefined}
         // Identifier for the checkbox trigger element
         data-qds-checkbox-trigger
         {...props}

@@ -8,11 +8,11 @@ import {
 } from "@builder.io/qwik";
 import { Checkbox } from "@kunai-consulting/qwik";
 
-export const MyComp = component$((props: PropsOf<"div">) => {
+export const MyComp = component$((props: PropsOf<"button">) => {
   return (
-    <div data-some-attr {...props}>
+    <button data-some-attr {...props}>
       <Slot />
-    </div>
+    </button>
   );
 });
 
