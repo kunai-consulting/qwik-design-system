@@ -7,10 +7,10 @@ export default component$(() => {
 
   return (
     <>
-      <button id="toast1-trigger" onClick$={() => isOpen1.value = true}>
+      <button id="toast1-trigger" onClick$={() => (isOpen1.value = true)}>
         Show Toast 1
       </button>
-      <button id="toast2-trigger" onClick$={() => isOpen2.value = true}>
+      <button id="toast2-trigger" onClick$={() => (isOpen2.value = true)}>
         Show Toast 2
       </button>
 
