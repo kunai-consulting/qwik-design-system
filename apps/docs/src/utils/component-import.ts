@@ -1,4 +1,4 @@
-import { isDev } from "@builder.io/qwik/build";
+import { isDev } from "@qwik.dev/core/build";
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const metaGlobComponents: Record<string, any> = import.meta.glob(

@@ -47,7 +47,7 @@ import {
   createContextId,
   useContext,
   useContextProvider,
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { cn } from "~/utils/cn";
 import { type VariantProps, cva } from "class-variance-authority";
 
@@ -173,7 +173,7 @@ export const Avatar = {
 4. Copy the Feed block:
 
 ```tsx
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
 import { cn } from "~/utils/cn";
 
 type RootProps = PropsOf<"div">;
@@ -233,7 +233,7 @@ npm i -D @qwikest/icons
 5. Copy the consumer code:
 
 ```tsx
-import { component$, Slot } from "@builder.io/qwik";
+import { component$, Slot } from "@qwik.dev/core";
 import { Avatar, type AvatarContext } from "~/components/avatar/avatar";
 import { Feed } from "~/components/feed/feed";
 import { LuTag } from "@qwikest/icons/lucide";

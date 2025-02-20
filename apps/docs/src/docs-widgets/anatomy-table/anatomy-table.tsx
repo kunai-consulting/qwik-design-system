@@ -1,4 +1,4 @@
-import { component$ } from "@builder.io/qwik";
+import { component$ } from "@qwik.dev/core";
 import type { AnatomyItem } from "../../../auto-api/types";
 import type { ComponentParts } from "../api-table/api-table";
 

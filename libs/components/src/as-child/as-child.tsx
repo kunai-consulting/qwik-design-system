@@ -1,5 +1,5 @@
-import { Component, noSerialize, JSXChildren } from "@builder.io/qwik";
-import { FunctionComponent } from "@builder.io/qwik/jsx-runtime";
+import { Component, noSerialize, JSXChildren } from "@qwik.dev/core";
+import { FunctionComponent } from "@qwik.dev/core/jsx-runtime";
 
 export type AsChildProps = {
   _allProps?: object;

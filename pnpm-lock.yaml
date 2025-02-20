@@ -13,7 +13,7 @@ importers:
         version: 0.33.1
       '@qwik-ui/headless':
         specifier: 0.6.4
-        version: 0.6.4(@builder.io/qwik@1.9.0(@types/node@20.14.11))
+        version: 0.6.4(@builder.io/qwik@1.12.0(vite@5.4.9(@types/node@20.14.11)))
       pagefind:
         specifier: 1.2.0
         version: 1.2.0
@@ -76,21 +76,21 @@ importers:
         specifier: ^2.5.0
         version: 2.5.0
     devDependencies:
-      '@builder.io/qwik':
-        specifier: ^1.9
-        version: 1.9.0(@types/node@20.14.11)
-      '@builder.io/qwik-city':
-        specifier: ^1.9
-        version: 1.9.0(@types/node@20.14.11)(rollup@4.20.0)(typescript@5.4.5)
       '@kunai-consulting/qwik':
         specifier: workspace:*
         version: link:../../libs/components
       '@qwik-ui/headless':
         specifier: ^0.6.4
-        version: 0.6.4(@builder.io/qwik@1.9.0(@types/node@20.14.11))
+        version: 0.6.4(@builder.io/qwik@1.12.0(vite@5.4.8(@types/node@20.14.11)))
+      '@qwik.dev/core':
+        specifier: 2.0.0-alpha.6
+        version: 2.0.0-alpha.6(prettier@2.8.8)(vite@5.4.8(@types/node@20.14.11))
+      '@qwik.dev/router':
+        specifier: 2.0.0-alpha.6
+        version: 2.0.0-alpha.6(rollup@4.20.0)(typescript@5.4.5)(vite@5.4.8(@types/node@20.14.11))
       '@qwikest/icons':
         specifier: ^0.0.13
-        version: 0.0.13(@builder.io/qwik@1.9.0(@types/node@20.14.11))
+        version: 0.0.13(@builder.io/qwik@1.12.0(vite@5.4.8(@types/node@20.14.11)))
       '@types/estree-jsx':
         specifier: 1.0.5
         version: 1.0.5
@@ -133,9 +133,9 @@ importers:
       '@axe-core/playwright':
         specifier: ^4.9.1
         version: 4.10.0(playwright-core@1.46.0)
-      '@builder.io/qwik':
-        specifier: ^1.9
-        version: 1.9.0(@types/node@20.14.11)
+      '@qwik.dev/core':
+        specifier: 2.0.0-alpha.6
+        version: 2.0.0-alpha.6(prettier@2.8.8)(vite@5.4.8(@types/node@20.14.11))
       '@types/node':
         specifier: 20.14.11
         version: 20.14.11
@@ -229,6 +229,13 @@ packages:
   '@builder.io/qwik-city@1.9.0':
     resolution: {integrity: sha512-N+TARxsrVMNpIQQ+cnTN+c/gCdI5PlUGPFaRnWT4dw3ug+bizoaldksFvdATarWVYUMkoK7tTpop3cORKN9tAg==}
     engines: {node: '>=16.8.0 <18.0.0 || >=18.11'}
+
+  '@builder.io/qwik@1.12.0':
+    resolution: {integrity: sha512-j4TRqEIRoZrqklgWIXM+ioAdEu53t+Rp0nP9sGpdagOaB5KRTN5jZCykZQT+5/HOvE2ZIRf34WIe0bhr/EFQRg==}
+    engines: {node: '>=16.8.0 <18.0.0 || >=18.11'}
+    hasBin: true
+    peerDependencies:
+      vite: ^5
 
   '@builder.io/qwik@1.9.0':
     resolution: {integrity: sha512-E4EFXOaUz4A6D48lw1CwKR4CLZCPquetuMPrRoAPZjBueL/R1oBzXdRt5zVemS6lAoTSjXBsnxXo2kGYKCI7pA==}
@@ -834,6 +841,26 @@ packages:
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@builder.io/qwik': '>=1.3.1'
+
+  '@qwik.dev/core@2.0.0-alpha.6':
+    resolution: {integrity: sha512-yw3DjAAfg5zOyQ8G2jMGu8xjSafFsJjDEFYjvGBMCdNpiF+I5JotKe8V8jaTSswFABZ2+ePOVIjauf7QMSz1Dw==}
+    engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
+    hasBin: true
+    peerDependencies:
+      prettier: '*'
+      vite: ^5
+      vitest: ^2
+    peerDependenciesMeta:
+      prettier:
+        optional: true
+      vitest:
+        optional: true
+
+  '@qwik.dev/router@2.0.0-alpha.6':
+    resolution: {integrity: sha512-5gYFuk6TRm/6NGY2v3YLF2vt2KdO8CGNaNCA+/8Sp565t6xpGDGgpCf3fJuZojiQCdM3IhMAdowF/qioxEufWw==}
+    engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
+    peerDependencies:
+      vite: ^5
 
   '@qwikest/icons@0.0.13':
     resolution: {integrity: sha512-e0wY8vmx0nDSUiuCATlk+ojTvdBV4txIGHHWjZW5SRkv4XB8H9+3WSDcLPz0ItUdRyzcrohE9k2jtQI/98aRPA==}
@@ -2411,6 +2438,9 @@ packages:
   vfile@6.0.1:
     resolution: {integrity: sha512-1bYqc7pt6NIADBJ98UiG0Bn/CHIVOoZ/IyEkqIruLg0mE1BKzkOXY2D6CSqQIcKqgadppE5lrxgWXJmXd7zZJw==}
 
+  vfile@6.0.2:
+    resolution: {integrity: sha512-zND7NlS8rJYb/sPqkb13ZvbbUoExdbi4w3SfRrMq6R3FvnLQmmfpajJNITuuYm6AZ5uao9vy4BAos3EXBPf2rg==}
+
   vite-imagetools@7.0.4:
     resolution: {integrity: sha512-C9C7b2p/8/TCN2g26tE9haoer2i8K4x0v2RXUiHsIjiz221vQuKItCQ+VyiVCsUMPXfJC/tlZsmCZVBz5jh7uA==}
     engines: {node: '>=18.0.0'}
@@ -2659,6 +2689,16 @@ snapshots:
       - supports-color
       - terser
       - typescript
+
+  '@builder.io/qwik@1.12.0(vite@5.4.8(@types/node@20.14.11))':
+    dependencies:
+      csstype: 3.1.3
+      vite: 5.4.8(@types/node@20.14.11)
+
+  '@builder.io/qwik@1.12.0(vite@5.4.9(@types/node@20.14.11))':
+    dependencies:
+      csstype: 3.1.3
+      vite: 5.4.9(@types/node@20.14.11)
 
   '@builder.io/qwik@1.9.0(@types/node@20.14.11)':
     dependencies:
@@ -3214,18 +3254,51 @@ snapshots:
     dependencies:
       playwright: 1.46.0
 
-  '@qwik-ui/headless@0.6.4(@builder.io/qwik@1.9.0(@types/node@20.14.11))':
+  '@qwik-ui/headless@0.6.4(@builder.io/qwik@1.12.0(vite@5.4.8(@types/node@20.14.11)))':
     dependencies:
-      '@builder.io/qwik': 1.9.0(@types/node@20.14.11)
+      '@builder.io/qwik': 1.12.0(vite@5.4.8(@types/node@20.14.11))
       '@floating-ui/core': 1.6.7
       '@floating-ui/dom': 1.6.10
       '@oddbird/popover-polyfill': 0.4.3
       body-scroll-lock-upgrade: 1.1.0
       focus-trap: 7.5.4
 
-  '@qwikest/icons@0.0.13(@builder.io/qwik@1.9.0(@types/node@20.14.11))':
+  '@qwik-ui/headless@0.6.4(@builder.io/qwik@1.12.0(vite@5.4.9(@types/node@20.14.11)))':
     dependencies:
-      '@builder.io/qwik': 1.9.0(@types/node@20.14.11)
+      '@builder.io/qwik': 1.12.0(vite@5.4.9(@types/node@20.14.11))
+      '@floating-ui/core': 1.6.7
+      '@floating-ui/dom': 1.6.10
+      '@oddbird/popover-polyfill': 0.4.3
+      body-scroll-lock-upgrade: 1.1.0
+      focus-trap: 7.5.4
+
+  '@qwik.dev/core@2.0.0-alpha.6(prettier@2.8.8)(vite@5.4.8(@types/node@20.14.11))':
+    dependencies:
+      csstype: 3.1.3
+      vite: 5.4.8(@types/node@20.14.11)
+    optionalDependencies:
+      prettier: 2.8.8
+
+  '@qwik.dev/router@2.0.0-alpha.6(rollup@4.20.0)(typescript@5.4.5)(vite@5.4.8(@types/node@20.14.11))':
+    dependencies:
+      '@mdx-js/mdx': 3.0.1
+      '@types/mdx': 2.0.13
+      source-map: 0.7.4
+      svgo: 3.3.2
+      undici: 6.19.7
+      valibot: 0.42.1(typescript@5.4.5)
+      vfile: 6.0.2
+      vite: 5.4.8(@types/node@20.14.11)
+      vite-imagetools: 7.0.4(rollup@4.20.0)
+      zod: 3.22.4
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+      - typescript
+
+  '@qwikest/icons@0.0.13(@builder.io/qwik@1.12.0(vite@5.4.8(@types/node@20.14.11)))':
+    dependencies:
+      '@builder.io/qwik': 1.12.0(vite@5.4.8(@types/node@20.14.11))
 
   '@rollup/pluginutils@5.1.0(rollup@4.20.0)':
     dependencies:
@@ -4897,7 +4970,7 @@ snapshots:
       css-tree: 2.3.1
       css-what: 6.1.0
       csso: 5.0.5
-      picocolors: 1.0.1
+      picocolors: 1.1.0
 
   tabbable@6.2.0: {}
 
@@ -5055,6 +5128,12 @@ snapshots:
       unist-util-stringify-position: 4.0.0
 
   vfile@6.0.1:
+    dependencies:
+      '@types/unist': 3.0.2
+      unist-util-stringify-position: 4.0.0
+      vfile-message: 4.0.2
+
+  vfile@6.0.2:
     dependencies:
       '@types/unist': 3.0.2
       unist-util-stringify-position: 4.0.0

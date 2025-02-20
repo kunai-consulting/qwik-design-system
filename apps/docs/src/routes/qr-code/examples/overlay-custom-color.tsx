@@ -1,4 +1,4 @@
-import { component$, useStyles$ } from "@builder.io/qwik";
+import { component$, useStyles$ } from "@qwik.dev/core";
 import { QRCode } from "@kunai-consulting/qwik";
 import qwikLogo from "./qwik-ui.svg";
 import styles from "./qr-code.css?inline";

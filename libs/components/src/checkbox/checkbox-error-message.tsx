@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$, useContext, useTask$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$, useContext, useTask$ } from "@qwik.dev/core";
 import { checkboxContextId } from "./checkbox-context";
 type PublicCheckboxErrorMessageProps = PropsOf<"div">;
 /** A component that displays error messages for a checkbox */

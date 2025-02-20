@@ -7,10 +7,12 @@ import {
   sync$,
   useComputed$,
   useContext,
-} from "@builder.io/qwik";
+  useVisibleTask$,
+} from "@qwik.dev/core";
 import { checkboxContextId } from "./checkbox-context";
 import { Render } from "../render/render";
 import { withAsChild } from "../as-child/as-child";
+import { useBoundSignal } from "../../utils/bound-signal";
 type PublicCheckboxControlProps = PropsOf<"button">;
 
 /** Interactive trigger component that handles checkbox toggling */
@@ -58,7 +60,7 @@ export const CheckboxTriggerBase = component$(
         disabled={context.isDisabledSig.value}
         // Indicates whether the checkbox trigger is disabled
         data-disabled={context.isDisabledSig.value ? "" : undefined}
-        onKeyDown$={[props.onKeyDown$]}
+        onKeyDown$={[props.onKeyDown$, handleKeyDownSync$]}
         onClick$={[handleClick$, props.onClick$]}
         // Indicates whether the checkbox trigger is checked
         data-checked={

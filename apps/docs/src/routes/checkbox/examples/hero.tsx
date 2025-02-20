@@ -1,39 +1,22 @@
-import {
-  component$,
-  PropsOf,
-  Slot,
-  useSignal,
-  useStyles$,
-  useTask$,
-} from "@builder.io/qwik";
+import { component$, PropsOf, Slot, useStyles$ } from "@qwik.dev/core";
 import { Checkbox } from "@kunai-consulting/qwik";
 
 export const MyComp = component$((props: PropsOf<"div">) => {
   return (
-    <div data-some-attr {...props}>
+    <span {...props} data-some-attr>
       <Slot />
-    </div>
+    </span>
   );
 });
 
 export default component$(() => {
   useStyles$(styles);
-  const testSig = useSignal(false);
-
-  useTask$(({ track }) => {
-    track(() => testSig.value);
-
-    console.log("test sig: ", testSig.value);
-  });
-
   return (
     <Checkbox.Root>
-      <Checkbox.Trigger class="checkbox-trigger" asChild>
-        <MyComp>
-          <Checkbox.Indicator class="checkbox-indicator">
-            <LuCheck />
-          </Checkbox.Indicator>
-        </MyComp>
+      <Checkbox.Trigger class="checkbox-trigger">
+        <Checkbox.Indicator class="checkbox-indicator">
+          <LuCheck />
+        </Checkbox.Indicator>
       </Checkbox.Trigger>
     </Checkbox.Root>
   );

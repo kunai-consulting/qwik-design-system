@@ -12,7 +12,10 @@
       "types": "./lib-types/index.d.ts"
     }
   },
-  "files": ["lib", "lib-types"],
+  "files": [
+    "lib",
+    "lib-types"
+  ],
   "engines": {
     "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
   },
@@ -29,13 +32,14 @@
     "qwik": "qwik"
   },
   "devDependencies": {
-    "@builder.io/qwik": "^1.9",
     "@types/node": "20.14.11",
     "typescript": "5.4.5",
     "undici": "*",
     "vite": "^5.4",
     "vite-tsconfig-paths": "^4.2.1",
     "@axe-core/playwright": "^4.9.1",
-    "uqr": "^0.1.2"
-  }
+    "uqr": "^0.1.2",
+    "@qwik.dev/core": "2.0.0-alpha.6"
+  },
+  "dependencies": {}
 }

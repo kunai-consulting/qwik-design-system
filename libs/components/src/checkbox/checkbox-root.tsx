@@ -9,8 +9,9 @@ import {
   useContextProvider,
   useId,
   useSignal,
-  useTask$
-} from "@builder.io/qwik";
+  useTask$,
+  useVisibleTask$,
+} from "@qwik.dev/core";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
 export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
@@ -48,10 +49,10 @@ export const CheckboxRoot = component$((props: PublicCheckboxRootProps) => {
     checked ?? false
   );
   const isInitialLoadSig = useSignal(true);
+  const triggerRef = useSignal<HTMLButtonElement>();
   const isDisabledSig = useComputed$(() => props.disabled);
   const isErrorSig = useSignal(false);
   const localId = useId();
-  const triggerRef = useSignal<HTMLButtonElement>();
   const context: CheckboxContext = {
     isCheckedSig,
     isDisabledSig,
@@ -61,7 +62,7 @@ export const CheckboxRoot = component$((props: PublicCheckboxRootProps) => {
     required,
     value,
     isErrorSig,
-    triggerRef
+    triggerRef,
   };
   useContextProvider(checkboxContextId, context);
   useTask$(async function handleChange({ track }) {
@@ -71,9 +72,7 @@ export const CheckboxRoot = component$((props: PublicCheckboxRootProps) => {
     }
     await onChange$?.(isCheckedSig.value as boolean);
   });
-  useTask$(() => {
-    isInitialLoadSig.value = false;
-  });
+
   return (
     <div
       {...rest}

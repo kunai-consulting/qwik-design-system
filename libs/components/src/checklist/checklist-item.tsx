@@ -5,7 +5,7 @@ import {
   useContext,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { Checkbox } from "..";
 import { checklistContextId } from "./checklist-context";
 type PublicChecklistItemProps = PropsOf<typeof Checkbox.Root> & {

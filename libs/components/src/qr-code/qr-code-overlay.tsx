@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
 
 /** A component for overlaying content on top of the QR code */
 export const QRCodeOverlay = component$((props: PropsOf<"div">) => {

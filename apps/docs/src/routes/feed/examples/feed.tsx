@@ -1,6 +1,6 @@
 import { Avatar, type AvatarContext } from "@/styled/avatar";
 import { Feed } from "@/styled/feed";
-import { Slot, component$ } from "@builder.io/qwik";
+import { Slot, component$ } from "@qwik.dev/core";
 import { LuTag } from "@qwikest/icons/lucide";
 
 const ticketData = {

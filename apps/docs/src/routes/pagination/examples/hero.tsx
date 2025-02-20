@@ -1,4 +1,4 @@
-import { $, component$, useSignal, useStyles$, useTask$ } from "@builder.io/qwik";
+import { $, component$, useSignal, useStyles$, useTask$ } from "@qwik.dev/core";
 import { Pagination } from "@kunai-consulting/qwik";
 
 export default component$(() => {

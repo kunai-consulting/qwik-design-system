@@ -1,4 +1,4 @@
-import { component$ } from "@builder.io/qwik";
+import { component$ } from "@qwik.dev/core";
 import { LuBadgeCheck } from "@qwikest/icons/lucide";
 import type { ComponentParts } from "../api-table/api-table";
 

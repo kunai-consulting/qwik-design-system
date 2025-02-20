@@ -2,9 +2,9 @@ import { execSync } from "node:child_process";
 import fs from "node:fs";
 import { resolve } from "node:path";
 import { Anthropic } from "@anthropic-ai/sdk";
-import { component$, useSignal } from "@builder.io/qwik";
-import { server$, useLocation } from "@builder.io/qwik-city";
-import { isDev } from "@builder.io/qwik/build";
+import { component$, useSignal } from "@qwik.dev/core";
+import { server$, useLocation } from "@qwik.dev/router";
+import { isDev } from "@qwik.dev/core/build";
 import { getSourceFile, transformPublicTypes } from "../../../auto-api/utils";
 import { AIButton } from "./ai-button";
 

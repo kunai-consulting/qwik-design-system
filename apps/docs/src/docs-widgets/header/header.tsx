@@ -1,5 +1,5 @@
-import { component$ } from "@builder.io/qwik";
-import { isDev } from "@builder.io/qwik/build";
+import { component$ } from "@qwik.dev/core";
+import { isDev } from "@qwik.dev/core/build";
 import { APIReference } from "../docs-ai/api";
 import { DocsAI } from "../docs-ai/docs";
 

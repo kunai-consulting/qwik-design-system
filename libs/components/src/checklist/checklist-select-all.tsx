@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$, useContext, useTask$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$, useContext, useTask$ } from "@qwik.dev/core";
 import { Checkbox } from "..";
 import { checklistContextId } from "./checklist-context";
 

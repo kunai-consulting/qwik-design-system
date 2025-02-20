@@ -4,13 +4,13 @@ import {
   component$,
   createContextId,
   useContextProvider,
-  useSignal
-} from "@builder.io/qwik";
+  useSignal,
+} from "@qwik.dev/core";
 import {
   type ContentHeading,
   type RequestHandler,
-  useContent
-} from "@builder.io/qwik-city";
+  useContent,
+} from "@qwik.dev/router";
 import { ScrollArea } from "@kunai-consulting/qwik";
 import { SearchModal } from "~/components/search";
 import { Header } from "~/docs-widgets/header/header";
@@ -32,7 +32,7 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
     // Always serve a cached response by default, up to a week stale
     staleWhileRevalidate: 60 * 60 * 24 * 7,
     // Max once every 5 seconds, revalidate on the server to get a fresh version of this page
-    maxAge: 5
+    maxAge: 5,
   });
 };
 
@@ -41,32 +41,12 @@ export default component$(() => {
   const { headings } = useContent();
 
   useContextProvider(rootContextId, {
-    allHeadingsSig
+    allHeadingsSig,
   });
 
   return (
-    <MDXProvider components={components}>
-      <Header />
-      <SearchModal />
-      <div class="flex gap-4">
-        <Sidebar />
-        <main data-pagefind-body class="mx-auto max-w-screen-md">
-          <Slot />
-        </main>
-        <aside class="hidden w-60 xl:block">
-          <ScrollArea.Root class="fixed h-[calc(100vh-160px)] w-60 overflow-hidden">
-            <ScrollArea.Viewport class="w-full h-full">
-              <TOC headings={headings || []} />
-            </ScrollArea.Viewport>
-            <ScrollArea.Scrollbar
-              orientation="vertical"
-              class="w-4 p-0.5 bg-[#FFFFFF1F] rounded-full"
-            >
-              <ScrollArea.Thumb class="h-12 w-3 bg-[#FFFFFF66] rounded-full transition-[background] duration-160 ease-out hover:bg-[#FFFFFF80]" />
-            </ScrollArea.Scrollbar>
-          </ScrollArea.Root>
-        </aside>
-      </div>
-    </MDXProvider>
+    <main data-pagefind-body class="mx-auto max-w-screen-md">
+      <Slot />
+    </main>
   );
 });

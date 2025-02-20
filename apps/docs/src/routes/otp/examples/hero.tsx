@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
 import { Checkbox, Otp } from "@kunai-consulting/qwik";
 import { LuCheck } from "@qwikest/icons/lucide";
 

@@ -6,7 +6,7 @@ import {
   useContext,
   useOnWindow,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { radioGroupContextId } from "./radio-group-context";
 
 type RadioGroupDescriptionProps = PropsOf<"div">;

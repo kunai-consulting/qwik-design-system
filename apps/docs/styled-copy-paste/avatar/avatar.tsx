@@ -6,7 +6,7 @@ import {
   createContextId,
   useContext,
   useContextProvider
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { type VariantProps, cva } from "class-variance-authority";
 import { cn } from "../../src/utils/cn";
 

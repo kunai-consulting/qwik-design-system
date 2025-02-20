@@ -5,7 +5,7 @@ import {
   useContextProvider,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { Checkbox } from "..";
 import { findComponent, processChildren } from "../../utils/inline-component";
 import { type ChecklistContext, checklistContextId } from "./checklist-context";

@@ -10,7 +10,7 @@ import {
   useId,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { type RadioGroupContext, radioGroupContextId } from "./radio-group-context";
 export type PublicRadioGroupRootProps = {
   "bind:value"?: Signal<boolean>;

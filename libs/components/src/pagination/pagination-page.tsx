@@ -6,8 +6,8 @@ import {
   useContext,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
-import type { QwikIntrinsicElements } from "@builder.io/qwik";
+} from "@qwik.dev/core";
+import type { QwikIntrinsicElements } from "@qwik.dev/core";
 import { paginationContextId } from "./pagination-context";
 type PublicAllowedElements = "button" | "a" | "div" | "span";
 type PublicPaginationPageProps = {

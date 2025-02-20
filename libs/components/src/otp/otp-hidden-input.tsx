@@ -7,7 +7,7 @@ import {
   useOnDocument,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { OTPContextId } from "./otp-context";
 type PublicOtpNativeInputProps = PropsOf<"input"> & {
   pattern?: string | null;

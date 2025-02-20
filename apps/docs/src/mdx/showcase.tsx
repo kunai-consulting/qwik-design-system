@@ -4,11 +4,11 @@ import {
   component$,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { Carousel } from "@qwik-ui/headless";
 import { metaGlobComponents, rawComponents } from "~/utils/component-import";
 
-import { useLocation } from "@builder.io/qwik-city";
+import { useLocation } from "@qwik.dev/router";
 import { Highlight } from "./highlight";
 
 type ShowcaseProps = PropsOf<"div"> & {

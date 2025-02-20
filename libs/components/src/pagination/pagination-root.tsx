@@ -12,7 +12,7 @@ import {
   useId,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { findComponent, processChildren } from "../../utils/inline-component";
 import { type PaginationContext, paginationContextId } from "./pagination-context";

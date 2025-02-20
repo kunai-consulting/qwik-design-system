@@ -1,5 +1,5 @@
-import type { Component, PropsOf } from "@builder.io/qwik";
-import { Slot, component$ } from "@builder.io/qwik";
+import type { Component, PropsOf } from "@qwik.dev/core";
+import { Slot, component$ } from "@qwik.dev/core";
 
 import { Features } from "~/docs-widgets/features/features";
 import { cn } from "~/utils/cn";

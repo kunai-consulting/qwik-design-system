@@ -1,5 +1,5 @@
 // custom-delay-test.tsx
-import { component$, useStyles$ } from "@builder.io/qwik";
+import { component$, useStyles$ } from "@qwik.dev/core";
 import { ScrollArea } from "@kunai-consulting/qwik";
 import styles from "./scroll-area.css?inline";
 

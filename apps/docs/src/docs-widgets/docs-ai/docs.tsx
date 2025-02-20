@@ -2,8 +2,8 @@ import fs from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Anthropic } from "@anthropic-ai/sdk";
-import { component$, useSignal } from "@builder.io/qwik";
-import { server$, useLocation } from "@builder.io/qwik-city";
+import { component$, useSignal } from "@qwik.dev/core";
+import { server$, useLocation } from "@qwik.dev/router";
 import { AIButton } from "./ai-button";
 
 const getExampleFiles = server$(async (route: string) => {

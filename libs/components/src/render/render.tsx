@@ -6,7 +6,10 @@ import {
   Slot,
   component$,
   jsx,
-} from "@builder.io/qwik";
+  useSignal,
+  useTask$,
+  useVisibleTask$,
+} from "@qwik.dev/core";
 import { AsChildProps } from "../as-child/as-child";
 
 // keyof slows the type server a bunch, instead we use the most common fallbacks
