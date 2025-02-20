@@ -1,0 +1,120 @@
+export const api = {
+  "toast": [
+    {
+      "Toast Content": {
+        "types": [
+          {
+            "PublicContentProps": []
+          }
+        ],
+        "inheritsFrom": "div",
+        "dataAttributes": [
+          {
+            "name": "data-state",
+            "type": "string | undefined",
+            "comment": "Indicates the visibility state of the toast content (visible or hidden)"
+          }
+        ]
+      }
+    },
+    {
+      "Toast Root": {
+        "types": [
+          {
+            "PublicToastDataAttributes": [
+              {
+                "comment": "The identifier for the root toast container",
+                "prop": "\"data-qds-toast-root\"",
+                "type": "boolean"
+              },
+              {
+                "comment": "Specifies the position of the toast on the screen",
+                "prop": "\"data-position\"",
+                "type": "ToastPosition"
+              },
+              {
+                "comment": "Indicates the visibility state of the toast (visible or hidden)",
+                "prop": "\"data-state\"",
+                "type": "\"visible\" | \"hidden\""
+              }
+            ]
+          },
+          {
+            "PublicRootProps": [
+              {
+                "comment": "Position of the toast on the screen",
+                "prop": "position",
+                "type": "ToastPosition",
+                "defaultValue": "\"bottom-right\""
+              },
+              {
+                "comment": "Time in milliseconds before the toast automatically closes",
+                "prop": "duration",
+                "type": "number",
+                "defaultValue": "5000"
+              },
+              {
+                "comment": "Initial open state of the toast",
+                "prop": "open",
+                "type": "boolean"
+              },
+              {
+                "comment": "Reactive value that can be controlled via signal. Controls the open state of the toast",
+                "prop": "\"bind:open\"",
+                "type": "Signal<boolean>"
+              },
+              {
+                "comment": "Unique identifier for the toast",
+                "prop": "id",
+                "type": "string"
+              }
+            ]
+          }
+        ],
+        "inheritsFrom": "div",
+        "dataAttributes": [
+          {
+            "name": "data-position",
+            "type": "string"
+          },
+          {
+            "name": "data-state",
+            "type": "string | undefined"
+          }
+        ]
+      }
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Toast.Root",
+      "description": "A root component that manages toast state, positioning, and duration"
+    },
+    {
+      "name": "Toast.Content",
+      "description": "A content component that displays the toast message or elements"
+    }
+  ],
+  "keyboardInteractions": [
+    {
+      "key": "Tab",
+      "comment": "When the toast is open, moves focus to the next focusable element within the toast"
+    },
+    {
+      "key": "Shift+Tab",
+      "comment": "When the toast is open, moves focus to the previous focusable element within the toast"
+    }
+  ],
+  "features": [
+    "Multiple toast positioning options",
+    "Configurable auto-dismiss duration",
+    "Controlled & uncontrolled state management",
+    "Animation states (visible/hidden)",
+    "Multiple simultaneous toasts support",
+    "Custom styling per position",
+    "Manual or automatic toast dismissal",
+    "Unique toast identification",
+    "Signal-based state binding",
+    "Automatic timeout cleanup"
+  ]
+};
