@@ -9,6 +9,14 @@ import {
 import { Checkbox } from "@kunai-consulting/qwik";
 
 export const MyComp = component$((props: PropsOf<"button">) => {
+  const testSig = useSignal(false);
+
+  useTask$(({ track }) => {
+    track(() => testSig.value);
+
+    console.log("test sig: ", testSig.value);
+  });
+
   return (
     <button data-some-attr {...props}>
       <Slot />
@@ -18,13 +26,6 @@ export const MyComp = component$((props: PropsOf<"button">) => {
 
 export default component$(() => {
   useStyles$(styles);
-  const testSig = useSignal(false);
-
-  useTask$(({ track }) => {
-    track(() => testSig.value);
-
-    console.log("test sig: ", testSig.value);
-  });
 
   return (
     <Checkbox.Root>
