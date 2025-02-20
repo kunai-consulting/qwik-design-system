@@ -148,16 +148,6 @@ export const api = {
             "name": "data-disabled",
             "type": "string | undefined",
             "comment": "Indicates whether the checkbox trigger is disabled"
-          },
-          {
-            "name": "data-checked",
-            "type": "string | undefined",
-            "comment": "Indicates whether the checkbox trigger is checked"
-          },
-          {
-            "name": "data-mixed",
-            "type": "string | undefined",
-            "comment": "Indicates whether the checkbox trigger is in an indeterminate state"
           }
         ]
       }
