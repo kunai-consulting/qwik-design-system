@@ -27,10 +27,11 @@ export function withAsChild<T>(BaseComponent: Component<T>) {
       );
     }
 
-    const { children: childrenProp, ..._allProps } = {
+    const allProps = {
       ...children.props,
       ...children.immutableProps,
     };
+    const { children: _, ...restProps } = allProps;
 
     const name = (children.type as { name: string }).name;
     let jsxType;
@@ -45,7 +46,7 @@ export function withAsChild<T>(BaseComponent: Component<T>) {
       <BaseComponent
         {...(props as any)}
         _jsxType={jsxType}
-        _allProps={_allProps}
+        _allProps={restProps}
       >
         {(children.children ?? children.props?.children) as JSXChildren}
       </BaseComponent>
