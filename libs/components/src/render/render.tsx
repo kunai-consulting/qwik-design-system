@@ -1,13 +1,11 @@
 import {
-  Component,
   type JSXNode,
   type JSXOutput,
   type QwikIntrinsicElements,
   Slot,
-  component$,
-  jsx,
+  component$
 } from "@builder.io/qwik";
-import { AsChildProps } from "../as-child/as-child";
+import type { AsChildProps } from "../as-child/as-child";
 
 // keyof slows the type server a bunch, instead we use the most common fallbacks
 type AllowedFallbacks = "div" | "span" | "a" | "button";
