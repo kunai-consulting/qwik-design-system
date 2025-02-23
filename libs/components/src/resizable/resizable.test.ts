@@ -16,7 +16,7 @@ test.describe("critical functionality", () => {
     await d.getHandle().dragTo(d.getHandle(), {
       targetPosition: { x: 100, y: 0 },
     });
-    await expect(d.getPanel()).toHaveCSS("width", "300px");
+    await expect(d.getPanelAt(0)).toHaveCSS("width", "300px");
   });
 
   test(`GIVEN a resizable panel with vertical orientation
@@ -27,7 +27,7 @@ test.describe("critical functionality", () => {
     await d.getHandle().dragTo(d.getHandle(), {
       targetPosition: { x: 0, y: 100 },
     });
-    await expect(d.getPanel()).toHaveCSS("height", "300px");
+    await expect(d.getPanelAt(0)).toHaveCSS("height", "300px");
   });
 
   test(`GIVEN a resizable panel with min width
@@ -38,7 +38,7 @@ test.describe("critical functionality", () => {
     await d.getHandle().dragTo(d.getHandle(), {
       targetPosition: { x: -500, y: 0 },
     });
-    await expect(d.getPanel()).toHaveCSS("width", "100px");
+    await expect(d.getPanelAt(0)).toHaveCSS("width", "100px");
   });
 
   test(`GIVEN a resizable panel with max width
@@ -49,7 +49,28 @@ test.describe("critical functionality", () => {
     await d.getHandle().dragTo(d.getHandle(), {
       targetPosition: { x: 500, y: 0 },
     });
-    await expect(d.getPanel()).toHaveCSS("width", "500px");
+    await expect(d.getPanelAt(0)).toHaveCSS("width", "500px");
+  });
+
+  test(`GIVEN a panel with text content
+        WHEN dragging the handle
+        THEN text should not be selected`, async ({ page }) => {
+    const d = await setup(page, "with-text");
+
+    const initialSelection = await page.evaluate(
+      () => window.getSelection()?.toString() || ""
+    );
+
+    await d.getHandle().dragTo(d.getHandle(), {
+      targetPosition: { x: 100, y: 0 },
+    });
+
+    const finalSelection = await page.evaluate(
+      () => window.getSelection()?.toString() || ""
+    );
+
+    expect(initialSelection).toBe("");
+    expect(finalSelection).toBe("");
   });
 });
 
@@ -58,7 +79,7 @@ test.describe("state", () => {
         WHEN rendered
         THEN it should have the correct initial size`, async ({ page }) => {
     const d = await setup(page, "initial");
-    await expect(d.getPanel()).toHaveCSS("width", "200px");
+    await expect(d.getPanelAt(0)).toHaveCSS("width", "200px");
   });
 
   test(`GIVEN a resizable panel with onChange$
@@ -98,7 +119,23 @@ test.describe("state", () => {
     await d.getHandle().dragTo(d.getHandle(), {
       targetPosition: { x: -500, y: 0 },
     });
-    await expect(d.getPanel()).toHaveCSS("width", "0px");
+    await expect(d.getPanelAt(0)).toHaveCSS("width", "0px");
+  });
+
+  test(`GIVEN a collapsed panel
+        WHEN dragged beyond expand threshold
+        THEN panel should expand`, async ({ page }) => {
+    const d = await setup(page, "collapsible");
+
+    await d.getHandle().dragTo(d.getHandle(), {
+      targetPosition: { x: -500, y: 0 },
+    });
+    await expect(d.getPanelAt(0)).toHaveCSS("width", "0px");
+
+    await d.getHandle().dragTo(d.getHandle(), {
+      targetPosition: { x: 200, y: 0 },
+    });
+    await expect(d.getPanelAt(0)).toHaveCSS("width", "200px");
   });
 
   test(`GIVEN a collapsible panel
@@ -125,13 +162,13 @@ test.describe("state", () => {
         THEN panel size should not change`, async ({ page }) => {
     const d = await setup(page, "disabled");
     const initialWidth = await d
-      .getPanel()
+      .getPanelAt(0)
       .evaluate((el) => window.getComputedStyle(el).width);
 
     await d.getHandle().dragTo(d.getHandle(), {
       targetPosition: { x: 100, y: 0 },
     });
-    await expect(d.getPanel()).toHaveCSS("width", initialWidth);
+    await expect(d.getPanelAt(0)).toHaveCSS("width", initialWidth);
   });
 
   test(`GIVEN a resizable panel with snap points
@@ -142,7 +179,45 @@ test.describe("state", () => {
     await d.getHandle().dragTo(d.getHandle(), {
       targetPosition: { x: 95, y: 0 },
     });
-    await expect(d.getPanel()).toHaveCSS("width", "300px");
+    await expect(d.getPanelAt(0)).toHaveCSS("width", "300px");
+  });
+
+  test.describe("nested resizables", () => {
+    test(`GIVEN nested horizontal and vertical resizables
+          WHEN dragging the intersection point
+          THEN both panels should resize correctly`, async ({ page }) => {
+      const d = await setup(page, "nested");
+
+      const innerHandle = d.getHandleAt(1);
+
+      // Initial sizes
+      await expect(d.getPanelAt(0)).toHaveCSS("height", "200px");
+      await expect(d.getPanelAt(1)).toHaveCSS("width", "200px");
+
+      await innerHandle.dragTo(innerHandle, {
+        targetPosition: { x: 100, y: 100 },
+      });
+
+      await expect(d.getPanelAt(0)).toHaveCSS("height", "300px");
+      await expect(d.getPanelAt(1)).toHaveCSS("width", "300px");
+    });
+
+    test(`GIVEN nested resizables
+          WHEN dragging inner handle
+          THEN outer resizable should not be affected`, async ({ page }) => {
+      const d = await setup(page, "nested");
+
+      const outerInitialHeight = await d
+        .getPanelAt(0)
+        .evaluate((el) => window.getComputedStyle(el).height);
+
+      await d.getHandleAt(1).dragTo(d.getHandleAt(1), {
+        targetPosition: { x: 100, y: 0 },
+      });
+
+      await expect(d.getPanelAt(0)).toHaveCSS("height", outerInitialHeight);
+      await expect(d.getPanelAt(1)).toHaveCSS("width", "300px");
+    });
   });
 });
 
@@ -167,7 +242,7 @@ test.describe("a11y", () => {
     await d.getHandle().press("ArrowRight");
     await d.getHandle().press("ArrowRight");
     await d.getHandle().press("ArrowLeft");
-    await expect(d.getPanel()).toHaveCSS("width", "210px");
+    await expect(d.getPanelAt(0)).toHaveCSS("width", "210px");
   });
 
   test(`GIVEN a vertical resizable panel
@@ -179,7 +254,7 @@ test.describe("a11y", () => {
     await d.getHandle().press("ArrowDown");
     await d.getHandle().press("ArrowDown");
     await d.getHandle().press("ArrowUp");
-    await expect(d.getPanel()).toHaveCSS("height", "210px");
+    await expect(d.getPanelAt(0)).toHaveCSS("height", "210px");
   });
 
   test(`GIVEN a resizable panel
@@ -189,6 +264,74 @@ test.describe("a11y", () => {
 
     await d.getHandle().focus();
     await d.getHandle().press("Shift+ArrowRight");
-    await expect(d.getPanel()).toHaveCSS("width", "250px");
+    await expect(d.getPanelAt(0)).toHaveCSS("width", "250px");
+  });
+});
+
+test.describe("persistence", () => {
+  test(`GIVEN a resizable panel with persistence="localStorage"
+        WHEN resized and page is reloaded
+        THEN size should persist from localStorage`, async ({ page }) => {
+    const d = await setup(page, "persistent");
+
+    await d.getHandle().dragTo(d.getHandle(), {
+      targetPosition: { x: 100, y: 0 },
+    });
+    await expect(d.getPanelAt(0)).toHaveCSS("width", "300px");
+
+    const storedSize = await page.evaluate(() =>
+      window.localStorage.getItem("resizable-panel-size")
+    );
+    expect(JSON.parse(storedSize!)).toBe(300);
+
+    await page.reload();
+    await expect(d.getPanelAt(0)).toHaveCSS("width", "300px");
+  });
+
+  test(`GIVEN a resizable panel with persistence="cookie"
+        WHEN resized
+        THEN server should persist the size`, async ({ page, context }) => {
+    const d = await setup(page, "persistent-cookie");
+
+    await d.getHandle().dragTo(d.getHandle(), {
+      targetPosition: { x: 100, y: 0 },
+    });
+
+    const cookies = await context.cookies();
+    const sizeCookie = cookies.find((c) => c.name === "resizable-panel-size");
+    expect(sizeCookie).toBeTruthy();
+    expect(JSON.parse(sizeCookie!.value)).toBe(300);
+
+    await page.reload();
+    await expect(d.getPanelAt(0)).toHaveCSS("width", "300px");
+  });
+
+  test(`GIVEN a resizable panel with persistence="auto"
+          WHEN the resizable is created in browser
+          THEN should use localStorage`, async ({ page }) => {
+    const d = await setup(page, "persistent-auto");
+
+    await d.getHandle().dragTo(d.getHandle(), {
+      targetPosition: { x: 100, y: 0 },
+    });
+
+    const storedSize = await page.evaluate(() =>
+      window.localStorage.getItem("resizable-panel-size")
+    );
+    expect(JSON.parse(storedSize!)).toBe(300);
+  });
+
+  test(`GIVEN a resizable panel with persistence={false}
+          WHEN resized and page is reloaded
+          THEN size should reset to default`, async ({ page }) => {
+    const d = await setup(page, "non-persistent");
+
+    await d.getHandle().dragTo(d.getHandle(), {
+      targetPosition: { x: 100, y: 0 },
+    });
+    await expect(d.getPanelAt(0)).toHaveCSS("width", "300px");
+
+    await page.reload();
+    await expect(d.getPanelAt(0)).toHaveCSS("width", "200px");
   });
 });
