@@ -1,5 +1,7 @@
 import { qwikCity } from "@builder.io/qwik-city/vite";
 import { qwikVite } from "@builder.io/qwik/optimizer";
+import tailwindcss from "@tailwindcss/vite";
+
 /**
  * This is the base config for vite.
  * When building, the adapter config is used which loads this file and extends it.
@@ -25,21 +27,22 @@ errorOnDuplicatesPkgDeps(devDependencies, dependencies);
 export default defineConfig(({ command, mode }): UserConfig => {
   return {
     plugins: [
+      tailwindcss(),
       autoAPI(),
       qwikCity({
         mdx: {
           providerImportSource: "~/mdx/provider",
-          recmaPlugins: [recmaProvideComponents]
-        }
+          recmaPlugins: [recmaProvideComponents],
+        },
       }),
       qwikVite({ lint: false }),
-      tsconfigPaths()
+      tsconfigPaths(),
     ],
     // This tells Vite which dependencies to pre-build in dev mode.
     optimizeDeps: {
       // Put problematic deps that break bundling here, mostly those with binaries.
       // For example ['better-sqlite3'] if you use that in server functions.
-      exclude: []
+      exclude: [],
     },
     ssr:
       command === "build" && mode === "production"
@@ -51,25 +54,25 @@ export default defineConfig(({ command, mode }): UserConfig => {
             // If a dep-of-dep needs to be external, add it here
             // For example, if something uses `bcrypt` but you don't have it as a dep, you can write
             // external: [...Object.keys(dependencies), 'bcrypt']
-            external: Object.keys(dependencies)
+            external: Object.keys(dependencies),
           }
         : undefined,
 
     server: {
       headers: {
         // Don't cache the server response in dev mode
-        "Cache-Control": "public, max-age=0"
+        "Cache-Control": "public, max-age=0",
       },
       fs: {
-        allow: ["../.."]
-      }
+        allow: ["../.."],
+      },
     },
     preview: {
       headers: {
         // Do cache the server response in preview (non-adapter production build)
-        "Cache-Control": "public, max-age=600"
-      }
-    }
+        "Cache-Control": "public, max-age=600",
+      },
+    },
   };
 });
 
@@ -80,14 +83,21 @@ export default defineConfig(({ command, mode }): UserConfig => {
  * @param {Object} devDependencies - List of development dependencies
  * @param {Object} dependencies - List of production dependencies
  */
-function errorOnDuplicatesPkgDeps(devDependencies: PkgDep, dependencies: PkgDep) {
+function errorOnDuplicatesPkgDeps(
+  devDependencies: PkgDep,
+  dependencies: PkgDep
+) {
   let msg = "";
   // Create an array 'duplicateDeps' by filtering devDependencies.
   // If a dependency also exists in dependencies, it is considered a duplicate.
-  const duplicateDeps = Object.keys(devDependencies).filter((dep) => dependencies[dep]);
+  const duplicateDeps = Object.keys(devDependencies).filter(
+    (dep) => dependencies[dep]
+  );
 
   // include any known qwik packages
-  const qwikPkg = Object.keys(dependencies).filter((value) => /qwik/i.test(value));
+  const qwikPkg = Object.keys(dependencies).filter((value) =>
+    /qwik/i.test(value)
+  );
 
   // any errors for missing "qwik-city-plan"
   // [PLUGIN_ERROR]: Invalid module "@qwik-city-plan" is not a valid package
@@ -100,7 +110,9 @@ function errorOnDuplicatesPkgDeps(devDependencies: PkgDep, dependencies: PkgDep)
   // Format the error message with the duplicates list.
   // The `join` function is used to represent the elements of the 'duplicateDeps' array as a comma-separated string.
   msg = `
-    Warning: The dependency "${duplicateDeps.join(", ")}" is listed in both "devDependencies" and "dependencies".
+    Warning: The dependency "${duplicateDeps.join(
+      ", "
+    )}" is listed in both "devDependencies" and "dependencies".
     Please move the duplicated dependencies to "devDependencies" only and remove it from "dependencies"
   `;
 
