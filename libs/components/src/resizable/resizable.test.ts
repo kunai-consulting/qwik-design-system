@@ -100,6 +100,50 @@ test.describe("state", () => {
     });
     await expect(d.getPanel()).toHaveCSS("width", "0px");
   });
+
+  test(`GIVEN a collapsible panel
+        WHEN onCollapseChange$ is provided
+        THEN it should fire when panel collapses`, async ({ page }) => {
+    const d = await setup(page, "collapsible");
+    const collapseStateDisplay = page.locator("[data-test-collapse-state]");
+
+    await d.getHandle().dragTo(d.getHandle(), {
+      targetPosition: { x: -500, y: 0 },
+    });
+    await expect(collapseStateDisplay).toHaveText("collapsed");
+  });
+
+  test(`GIVEN a resizable root with orientation="vertical"
+        WHEN rendered
+        THEN panels should stack vertically`, async ({ page }) => {
+    const d = await setup(page, "vertical");
+    await expect(d.getRoot()).toHaveCSS("flex-direction", "column");
+  });
+
+  test(`GIVEN a disabled resizable root
+        WHEN attempting to resize
+        THEN panel size should not change`, async ({ page }) => {
+    const d = await setup(page, "disabled");
+    const initialWidth = await d
+      .getPanel()
+      .evaluate((el) => window.getComputedStyle(el).width);
+
+    await d.getHandle().dragTo(d.getHandle(), {
+      targetPosition: { x: 100, y: 0 },
+    });
+    await expect(d.getPanel()).toHaveCSS("width", initialWidth);
+  });
+
+  test(`GIVEN a resizable panel with snap points
+        WHEN dragged near a snap point
+        THEN it should snap to the nearest point`, async ({ page }) => {
+    const d = await setup(page, "snap");
+
+    await d.getHandle().dragTo(d.getHandle(), {
+      targetPosition: { x: 95, y: 0 },
+    });
+    await expect(d.getPanel()).toHaveCSS("width", "300px");
+  });
 });
 
 test.describe("a11y", () => {
@@ -121,7 +165,21 @@ test.describe("a11y", () => {
 
     await d.getHandle().focus();
     await d.getHandle().press("ArrowRight");
+    await d.getHandle().press("ArrowRight");
+    await d.getHandle().press("ArrowLeft");
     await expect(d.getPanel()).toHaveCSS("width", "210px");
+  });
+
+  test(`GIVEN a vertical resizable panel
+        WHEN using keyboard controls
+        THEN size should adjust accordingly`, async ({ page }) => {
+    const d = await setup(page, "vertical");
+
+    await d.getHandle().focus();
+    await d.getHandle().press("ArrowDown");
+    await d.getHandle().press("ArrowDown");
+    await d.getHandle().press("ArrowUp");
+    await expect(d.getPanel()).toHaveCSS("height", "210px");
   });
 
   test(`GIVEN a resizable panel
