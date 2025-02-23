@@ -1,50 +1,44 @@
 import {
-  type FunctionComponent,
   type JSXNode,
   type JSXOutput,
   type QwikIntrinsicElements,
   Slot,
-  component$,
-  jsx
+  component$
 } from "@builder.io/qwik";
+import type { AsChildProps } from "../as-child/as-child";
 
 // keyof slows the type server a bunch, instead we use the most common fallbacks
 type AllowedFallbacks = "div" | "span" | "a" | "button";
 
-export type RenderProps = {
-  /** Add in your own component or JSX node */
-  render?: JSXNode | JSXOutput;
-};
-
-type RenderInternalProps<T extends AllowedFallbacks = "div"> = {
-  /** What gets passed to the jsx transform, pass in props.render */
-  component: JSXNode | JSXOutput | undefined;
+type RenderInternalProps<T extends AllowedFallbacks> = {
   /** The default element and types if a render prop is not provided */
   fallback: T;
-} & QwikIntrinsicElements[T];
+} & QwikIntrinsicElements[T] &
+  AsChildProps;
 
 /**
  * Render component enables flexible composition by allowing a component to be rendered with a fallback
  * element type.
  *
- * It accepts a component prop for custom rendering, and falls back to a specified HTML element
+ * It accepts a _jsxType prop for custom rendering, and falls back to a specified HTML element
  * (div, span, a, button) if no component is provided.
  *
- * This allows components and JSX nodes to be composed while maintaining proper typing and
+ * This allows components and JSX nodes to be composed with asChild while maintaining proper typing and
  * accessibility.
  */
 export const Render = component$(
-  <T extends AllowedFallbacks = "div">(props: RenderInternalProps<T>) => {
-    const { fallback, component: rawComponent, ...rest } = props;
-    const component = rawComponent as {
-      type: string | FunctionComponent;
-      props: Record<string, unknown>;
-    };
+  <T extends AllowedFallbacks>(props: RenderInternalProps<T>): JSXOutput => {
+    const { fallback, _jsxType, _allProps, asChild, ...rest } = props;
 
-    return jsx(component?.type ?? fallback, {
-      ...component?.props,
-      ...rest,
-      children: <Slot />
-    });
+    fallback;
+    _jsxType;
+
+    const Comp = props._jsxType ?? props.fallback;
+
+    return (
+      <Comp {...rest} {...props._allProps}>
+        <Slot />
+      </Comp>
+    );
   }
 );
