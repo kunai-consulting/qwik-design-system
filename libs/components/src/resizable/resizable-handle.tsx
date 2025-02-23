@@ -4,7 +4,7 @@ import { withAsChild } from "../as-child/as-child";
 
 export const ResizableHandleBase = component$<PropsOf<"button">>((props) => {
   return (
-    <Render fallback="button" {...props} data-qds-handle>
+    <Render fallback="button" {...props} data-qds-resizable-handle>
       <Slot />
     </Render>
   );
