@@ -32,7 +32,7 @@
     "qwik": "qwik"
   },
   "devDependencies": {
-    "@builder.io/qwik": "^1.12.1",
+    "@builder.io/qwik": "https://pkg.pr.new/@builder.io/qwik@7362",
     "@types/node": "20.14.11",
     "typescript": "5.4.5",
     "undici": "*",

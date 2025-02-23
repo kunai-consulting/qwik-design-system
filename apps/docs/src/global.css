@@ -1,6 +1,7 @@
 @layer qwik-ui, popover-polyfill, qds, theme, base, components, utilities;
 
-@import "tailwindcss";
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
 
 body {
   @apply max-w-screen-2xl mx-auto my-20 font-sans px-6;
@@ -80,6 +81,12 @@ body {
   --color-qwik-neutral-950: #202a2c;
 
   --animate-blink-caret: blink-caret 1.25s ease-out infinite;
+
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
 
   @keyframes blink-caret {
     0%,
