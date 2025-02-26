@@ -1,10 +1,6 @@
-/**
- * Tailwind CSS imports
- * View the full documentation at https://tailwindcss.com
- */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer qwik-ui, popover-polyfill, qds, theme, base, components, utilities;
+
+@import "tailwindcss";
 
 body {
   @apply max-w-screen-2xl mx-auto my-20 font-sans px-6;
@@ -15,26 +11,16 @@ body {
   font-family: "Monaspace";
   src: url("./assets/fonts/syntax-highlight.woff2") format("woff2");
 }
-
 @font-palette-values --kung-fury {
   font-family: "Monaspace";
-  override-colors: 
-    0 theme('colors.qwik.neutral.400') /* curlies and tags */,
-    1 theme('colors.qwik.neutral.300') /* punctuation */,
-    2 theme('colors.qwik.blue.300') /* function */,
-    3 theme('colors.qwik.neutral.200') /* operators */,
-    4 theme('colors.qwik.neutral.300') /* parentheses */,
-    5 theme('colors.qwik.blue.100') /* property name */,
-    6 theme('colors.qwik.neutral.200') /* misc syntax */,
-    7 theme('colors.qwik.purple.200') /* numbers */,
-    8 theme('colors.qwik.neutral.300') /* angle brackets */,
-    9 theme('colors.qwik.purple.300') /* keywords */,
-    10 theme('colors.qwik.blue.200') /* strings */,
-    11 theme('colors.qwik.neutral.400') /* comments */,
-    12 theme('colors.qwik.purple.100') /* decorators */,
-    13 theme('colors.qwik.blue.400') /* special characters */,
-    14 theme('colors.qwik.neutral.100') /* doc strings */,
-    15 theme('colors.qwik.blue.300') /* class names */;
+  override-colors: 0 #749c9c /* curlies and tags */, 1 #a2bebe /* punctuation */,
+    2 #7ad6ff /* function */, 3 #c8d9d9 /* operators */,
+    4 #a2bebe /* parentheses */, 5 #dff3ff /* property name */,
+    6 #c8d9d9 /* misc syntax */, 7 #e5d7fd /* numbers */,
+    8 #a2bebe /* angle brackets */, 9 #d1b8fa /* keywords */,
+    10 #b9e7fe /* strings */, 11 #749c9c /* comments */,
+    12 #f1e9fe /* decorators */, 13 #34c2fc /* special characters */,
+    14 #e2ebeb /* doc strings */, 15 #7ad6ff /* class names */;
 }
 
 pre > code {
@@ -51,6 +37,65 @@ pre {
 
 body {
   @apply bg-[#1c1e1f] text-qwik-blue-100;
-  font-family: Seravek, Avenir, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+  font-family: Seravek, Avenir, Corbel, "URW Gothic", source-sans-pro,
+    sans-serif;
   scrollbar-gutter: stable;
+}
+
+@theme {
+  --color-qwik-purple-50: #f9f6fe;
+  --color-qwik-purple-100: #f1e9fe;
+  --color-qwik-purple-200: #e5d7fd;
+  --color-qwik-purple-300: #d1b8fa;
+  --color-qwik-purple-400: #ac7ef4;
+  --color-qwik-purple-500: #985eee;
+  --color-qwik-purple-600: #803edf;
+  --color-qwik-purple-700: #6c2cc4;
+  --color-qwik-purple-800: #5d29a0;
+  --color-qwik-purple-900: #4d2281;
+  --color-qwik-purple-950: #310c5f;
+
+  --color-qwik-blue-50: #f0f9ff;
+  --color-qwik-blue-100: #dff3ff;
+  --color-qwik-blue-200: #b9e7fe;
+  --color-qwik-blue-300: #7ad6ff;
+  --color-qwik-blue-400: #34c2fc;
+  --color-qwik-blue-500: #19b5f6;
+  --color-qwik-blue-600: #0088cb;
+  --color-qwik-blue-700: #006da4;
+  --color-qwik-blue-800: #045c88;
+  --color-qwik-blue-900: #0a4d70;
+  --color-qwik-blue-950: #07304a;
+
+  --color-qwik-neutral-50: #f4f7f7;
+  --color-qwik-neutral-100: #e2ebeb;
+  --color-qwik-neutral-200: #c8d9d9;
+  --color-qwik-neutral-300: #a2bebe;
+  --color-qwik-neutral-400: #749c9c;
+  --color-qwik-neutral-500: #598081;
+  --color-qwik-neutral-600: #4c6b6e;
+  --color-qwik-neutral-700: #42595c;
+  --color-qwik-neutral-800: #3b4c4f;
+  --color-qwik-neutral-900: #2d383a;
+  --color-qwik-neutral-950: #202a2c;
+
+  --animate-blink-caret: blink-caret 1.25s ease-out infinite;
+
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  @keyframes blink-caret {
+    0%,
+    70%,
+    100% {
+      opacity: 1;
+    }
+    20%,
+    50% {
+      opacity: 0;
+    }
+  }
 }

@@ -1,0 +1,99 @@
+Features
+
+- [ ] Horizontal resizing
+- [ ] Vertical resizing
+- [ ] Panel size management (min/max sizes)
+- [ ] Collapsible panel
+- [ ] SSR
+- [ ] CSR
+- [ ] Layout persistence (new primitive?)
+- [ ] Nested handles (Dashboard layouts)
+- [ ] Bound state (access to internal state)
+- [ ] asChild
+
+Pieces:
+
+- Root
+- Panel
+- Handle
+
+Keyboard interactions
+
+- Left / Right for horizontal
+- Up / Down for Vertical
+- Shift + Arrow for collapsible
+- Resizing with Alt key
+- Home key to collapse preceding panels
+- End key to expand preceding panels
+- Enter to toggle collapse/expand (for collapsible panels)
+
+Attributes:
+
+role="separator"
+
+- aria-valuemin
+- aria-value-max
+- aria-valuenow
+
+potential ones:
+
+- aria-controls
+
+Use cases:
+
+- Code Sandboxes
+- Before and after widgets
+
+Important CSS:
+
+cursor: row-resize
+
+API's
+
+Root:
+
+orientation
+
+onChange$ -> fires when one of the handles is moved
+
+disabled -> disable resizing
+
+Panel:
+
+width or height prop, and that affects their styles in css.
+
+CSS determines layout allocation
+
+maxWidth -> max size
+minWidth -> min size
+
+collapseTo -> size when collapsed
+collapseAt -> when to collapse
+
+onCollapseChange$ -> fired when collapse changes
+
+Handle:
+
+step -> how far each handle or resize should go
+
+onResizeStart$ -> starts moving
+
+onResize$ -> called when handle is moved
+
+onResizeEnd$ -> stopped moving
+
+asChild on all
+
+snap -> rather than dragging, it snaps to a certain size
+
+Known issues in other libs:
+
+- Preventing text selection
+
+https://github.com/RyoSogawa/react-resizable-layout/issues/38
+
+Questions:
+
+What's a collapsible panel?
+
+https://react-resizable-panels-git-panelgroup-layout-val-2424f0-bvaughn.vercel.app/examples/collapsible

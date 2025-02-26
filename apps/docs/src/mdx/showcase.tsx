@@ -3,7 +3,7 @@ import {
   type PropsOf,
   component$,
   useSignal,
-  useTask$
+  useTask$,
 } from "@builder.io/qwik";
 import { Carousel } from "@qwik-ui/headless";
 import { metaGlobComponents, rawComponents } from "~/utils/component-import";
@@ -32,12 +32,6 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
     }
   });
 
-  // components that need a dark background in the example
-  const darkBgComponents = ["feed"];
-  const previewBgColor = darkBgComponents.some((c) => componentPath.includes(c))
-    ? "bg-slate-950"
-    : "bg-white";
-
   return (
     <Carousel.Root class="my-4">
       <Carousel.Pagination data-pagefind-ignore class="flex gap-2 py-4">
@@ -50,7 +44,7 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
       </Carousel.Pagination>
 
       <Carousel.Slide class="border border-qwik-neutral-900 rounded-md">
-        <section class={`${previewBgColor} flex flex-col items-center py-12 px-6`}>
+        <section class={`flex flex-col items-center py-12 px-6`}>
           {MetaGlobComponentSig.value && <MetaGlobComponentSig.value />}
         </section>
       </Carousel.Slide>

@@ -1,0 +1,15 @@
+@layer qds {
+  [data-qds-resizable-root] {
+    display: flex;
+  }
+
+  [data-qds-resizable-handle] {
+    width: 2px;
+    height: 40px;
+    background-color: red;
+  }
+
+  [data-qds-resizable-panel] {
+    flex: 1;
+  }
+}
