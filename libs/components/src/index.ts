@@ -8,3 +8,4 @@ export * as Calendar from "./calendar";
 export * as FileUpload from "./file-upload";
 export * as QRCode from "./qr-code";
 export * as Slider from "./slider";
+export * as Resizable from "./resizable";
