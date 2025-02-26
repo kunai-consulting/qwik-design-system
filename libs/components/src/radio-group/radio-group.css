@@ -1,4 +1,4 @@
-@layer qds-radio-group {
+@layer qds {
   [data-qds-indicator] {
     user-select: none;
   }
