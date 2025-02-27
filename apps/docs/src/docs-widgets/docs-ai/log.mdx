@@ -4095,3 +4095,133 @@ Therefore, this section should be skipped as per the strict rules provided.
 
 ---
 
+# Slider
+A customizable input that allows users to select numeric values by dragging along a track.
+<Showcase name="hero" />
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
+## Examples
+### Basic Usage
+The basic slider implementation allows users to select a single value within a defined range. The `min`, `max`, and `step` props control the value boundaries and increments.
+<Showcase name="hero" />
+In this example, we use:
+- `<Slider.Root>` with `mode="single"` for basic slider functionality
+- `<Slider.Track>` to create the sliding area
+- `<Slider.Range>` to show the filled portion
+- `<Slider.Thumb>` for the draggable handle
+- `<Slider.Tooltip>` to display the current value
+### Visual Features
+#### Marks and Labels
+Add visual indicators and labels along the track to help users understand value ranges.
+<Showcase name="marks" />
+This example demonstrates:
+- Using `marks` prop to define labeled points along the track
+- `<Slider.Marks>` component with custom styling for indicators and labels
+- Custom step intervals with `step={20}` to align with mark positions
+### Advanced Usage
+#### Range Selection
+Create a range slider that allows users to select a minimum and maximum value.
+<Showcase name="range" />
+The range mode features:
+- `mode="range"` to enable dual thumb selection
+- Two `<Slider.Thumb>` components with `type="start"` and `type="end"`
+- `value` prop accepting an array of two numbers for start and end values
+- Tooltips positioned differently for each thumb
+#### Range with Custom Marks
+Combine range selection with custom marks for precise value selection.
+<Showcase name="range-marks" />
+This example shows:
+- Range mode with percentage-based marks
+- Custom step intervals aligned with mark positions
+- Value change callbacks for both continuous updates and final selection## Component State
+### Using Component State
+The Slider component supports both single and range modes, with state controlled through the `value` prop on `Slider.Root`. 
+For single mode, pass a number:
+```typescript
+<Slider.Root value={50} />
+```
+For range mode, pass an array of two numbers:
+```typescript
+<Slider.Root mode="range" value={[25, 75]} />
+```
+Additional state-related props include:
+- `min`: Sets the minimum allowed value (default: 0)
+- `max`: Sets the maximum allowed value (default: 100) 
+- `step`: Controls the granularity of values (default: 1)
+- `disabled`: Disables all interactions when true
+As shown in the hero example above, these props can be combined to create a basic slider with controlled bounds and step size.
+### State Interactions
+The Slider provides two callbacks for responding to value changes:
+- `onValueChange$`: Fires continuously as the value changes during interaction
+- `onValueChangeEnd$`: Fires once when the interaction ends (mouse up, key up, etc.)
+Both callbacks receive the current value(s) as their argument - a single number for single mode, or a tuple of numbers for range mode.
+As shown in the range-marks example above, you can use these callbacks to track both continuous changes and final values:
+```typescript
+<Slider.Root
+  onValueChange$={(values) => {
+    // Called continuously during drag
+    console.log("Values changed:", values);
+  }}
+  onValueChangeEnd$={(values) => {
+    // Called once when interaction ends
+    console.log("Final values:", values);
+  }}
+/>
+```
+The component maintains its own internal state to ensure:
+- Range mode values stay ordered (start ≤ end)
+- Values remain within min/max bounds
+- Values snap to the nearest step
+- Keyboard interactions respect step sizes
+This state management happens automatically - you only need to handle the value changes through the callbacks.Based on the provided examples and API information, I'll document the configuration options for the Slider component.
+## Core Configuration
+### Mode and Value Range
+The Slider supports two modes: `single` and `range`. The mode is configured through the `mode` prop on `Slider.Root`.
+As shown in the "hero" example above, single mode accepts a numeric value:
+```typescript
+type SingleValue = number;
+```
+For range mode, as demonstrated in the "range" example, the value is a tuple of numbers:
+```typescript
+type RangeValue = [number, number];
+```
+The slider enforces value constraints between `min` and `max` props (defaults to 0 and 100 respectively). The `step` prop controls value increments (defaults to 1).
+### Step Configuration
+The step value determines the granularity of the slider. As shown in the "marks" example above, larger step values (20) create discrete stops, while smaller values (as in the "hero" example) allow for smoother sliding.
+When using the Shift key with arrow keys, the step value is multiplied by 10 for faster navigation.
+### Marks Configuration
+Marks can be configured using the `marks` prop on `Slider.Root`, which accepts an array of objects with the following type:
+```typescript
+interface Mark {
+  value: number;
+  label?: string;
+}
+```
+As shown in the "range-marks" example above, marks can include both values and optional labels for better visual feedback.
+## Advanced Configuration
+### Tooltip Placement
+The `Slider.Tooltip` component supports four placement options:
+```typescript
+type PublicTooltipPlacement = "top" | "bottom" | "left" | "right";
+```
+As demonstrated across the examples above, tooltip placement can be customized to avoid overlapping with other UI elements or to improve visibility based on slider orientation.
+### Value Change Callbacks
+The slider provides two callback props for tracking value changes:
+- `onValueChange$`: Fires continuously during thumb movement
+- `onValueChangeEnd$`: Fires when interaction ends (mouse up, key up)
+Both callbacks receive either a single number (in single mode) or a tuple of numbers (in range mode).
+These callbacks can be used for controlled state management or for triggering side effects, as shown in the "hero" example above.Looking through the provided examples and implementation, I don't see any specific form-related examples or functionality in the Slider component. The examples provided (`hero`, `marks`, `range-marks`, `range`) demonstrate basic usage, marks/indicators, and range selection functionality, but none show form integration, validation, or submission handling.
+The component implementation also doesn't show any specific form-related features or integration points. While the Slider could potentially be used within a form context, there are no dedicated form examples or form-specific APIs shown in the provided code.
+Therefore, I'll skip the Forms section since there isn't enough form-specific content to document. The component's primary focus appears to be on value selection and range control rather than form integration.
+If form integration examples are added in the future, this section should be updated to document those features.Based on the provided examples and implementation, I don't see any environment-specific examples or features that would warrant documentation in this section. The examples provided (`hero`, `marks`, `range-marks`, and `range`) demonstrate basic usage patterns, state management, and configuration options, but don't specifically address:
+- Server vs client rendering scenarios
+- Platform-specific behaviors
+- Environmental dependencies
+- Special rendering cases
+The Slider component appears to work consistently across environments without any special considerations needed for server-side rendering (SSR) or client-side rendering (CSR).
+Therefore, this section can be omitted from the documentation as there are no environment-specific features to document.
+
+---
+

@@ -20,14 +20,14 @@ export default component$(() => {
         { value: 100, label: "100%" }
       ]}
       onValueChange$={(values) => {
-        console.log('Values changed:', values);
+        console.log("Values changed:", values);
       }}
       onValueChangeEnd$={(values) => {
-        console.log('Final values:', values);
+        console.log("Final values:", values);
       }}
     >
       <Slider.Track class="slider-track">
-        <Slider.Range class="slider-range"/>
+        <Slider.Range class="slider-range" />
         <Slider.Thumb type="start" class="slider-thumb">
           <Slider.Tooltip class="slider-tooltip" placement="top" />
         </Slider.Thumb>
@@ -35,9 +35,11 @@ export default component$(() => {
           <Slider.Tooltip class="slider-tooltip" placement="top" />
         </Slider.Thumb>
       </Slider.Track>
-      <Slider.Marks class="slider-marks"
-                    indicatorClass="slider-mark-indicator"
-                    labelClass="slider-mark-label"/>
+      <Slider.Marks
+        class="slider-marks"
+        indicatorClass="slider-mark-indicator"
+        labelClass="slider-mark-label"
+      />
     </Slider.Root>
   );
 });

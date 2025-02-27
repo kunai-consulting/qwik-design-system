@@ -14,14 +14,14 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator("[data-qds-slider-range]");
   };
 
-  const getThumb = (type?: 'start' | 'end') => {
+  const getThumb = (type?: "start" | "end") => {
     if (type) {
       return rootLocator.locator(`[data-qds-slider-thumb][data-thumb-type="${type}"]`);
     }
     return rootLocator.locator("[data-qds-slider-thumb]").first();
   };
 
-  const getTooltip = (type?: 'start' | 'end') => {
+  const getTooltip = (type?: "start" | "end") => {
     if (type) {
       return rootLocator
         .locator(`[data-qds-slider-thumb][data-thumb-type="${type}"]`)

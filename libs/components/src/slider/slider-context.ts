@@ -5,8 +5,8 @@ export interface Mark {
   label?: string;
 }
 
-export type SliderMode = 'single' | 'range';
-export type ThumbType = 'start' | 'end';
+export type SliderMode = "single" | "range";
+export type ThumbType = "start" | "end";
 
 export interface SliderContext {
   mode: Signal<SliderMode>;

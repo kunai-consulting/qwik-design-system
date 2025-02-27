@@ -12,54 +12,53 @@ export const useSliderUtils = (context: SliderContext) => {
       newValue = Math.round(newValue / context.step.value) * context.step.value;
     }
 
-    return Math.max(
-      context.min.value,
-      Math.min(context.max.value, newValue)
-    );
+    return Math.max(context.min.value, Math.min(context.max.value, newValue));
   });
 
-  const setValue = $(async (newValue: number, type?: 'start' | 'end', isEnd: boolean = false) => {
-    if (context.mode.value === 'single') {
-      const valueChanged = context.value.value !== newValue;
-      context.value.value = newValue;
+  const setValue = $(
+    async (newValue: number, type?: "start" | "end", isEnd: boolean = false) => {
+      if (context.mode.value === "single") {
+        const valueChanged = context.value.value !== newValue;
+        context.value.value = newValue;
 
-      if (valueChanged && context.onValueChange$) {
-        await context.onValueChange$(newValue);
-      }
-      if (isEnd && context.onValueChangeEnd$) {
-        await context.onValueChangeEnd$(newValue);
-      }
-    } else {
-      const currentStart = context.startValue.value;
-      const currentEnd = context.endValue.value;
-
-      if (type === 'start') {
-        if (newValue <= currentEnd) {
-          const valueChanged = currentStart !== newValue;
-          context.startValue.value = newValue;
-
-          if (valueChanged && context.onValueChange$) {
-            await context.onValueChange$([newValue, currentEnd]);
-          }
-          if (isEnd && context.onValueChangeEnd$) {
-            await context.onValueChangeEnd$([newValue, currentEnd]);
-          }
+        if (valueChanged && context.onValueChange$) {
+          await context.onValueChange$(newValue);
         }
-      } else if (type === 'end') {
-        if (newValue >= currentStart) {
-          const valueChanged = currentEnd !== newValue;
-          context.endValue.value = newValue;
+        if (isEnd && context.onValueChangeEnd$) {
+          await context.onValueChangeEnd$(newValue);
+        }
+      } else {
+        const currentStart = context.startValue.value;
+        const currentEnd = context.endValue.value;
 
-          if (valueChanged && context.onValueChange$) {
-            await context.onValueChange$([currentStart, newValue]);
+        if (type === "start") {
+          if (newValue <= currentEnd) {
+            const valueChanged = currentStart !== newValue;
+            context.startValue.value = newValue;
+
+            if (valueChanged && context.onValueChange$) {
+              await context.onValueChange$([newValue, currentEnd]);
+            }
+            if (isEnd && context.onValueChangeEnd$) {
+              await context.onValueChangeEnd$([newValue, currentEnd]);
+            }
           }
-          if (isEnd && context.onValueChangeEnd$) {
-            await context.onValueChangeEnd$([currentStart, newValue]);
+        } else if (type === "end") {
+          if (newValue >= currentStart) {
+            const valueChanged = currentEnd !== newValue;
+            context.endValue.value = newValue;
+
+            if (valueChanged && context.onValueChange$) {
+              await context.onValueChange$([currentStart, newValue]);
+            }
+            if (isEnd && context.onValueChangeEnd$) {
+              await context.onValueChangeEnd$([currentStart, newValue]);
+            }
           }
         }
       }
     }
-  });
+  );
 
   return {
     calculateValue,

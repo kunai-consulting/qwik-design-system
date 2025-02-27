@@ -1,4 +1,4 @@
-import {component$, useStyles$} from "@builder.io/qwik";
+import { component$, useStyles$ } from "@builder.io/qwik";
 import { Slider } from "@kunai-consulting/qwik";
 import styles from "./slider-custom.css?inline";
 
@@ -22,14 +22,16 @@ export default component$(() => {
       ]}
     >
       <Slider.Track class="slider-track">
-        <Slider.Range class="slider-range"/>
+        <Slider.Range class="slider-range" />
         <Slider.Thumb class="slider-thumb">
           <Slider.Tooltip class="slider-tooltip" placement="right" />
         </Slider.Thumb>
       </Slider.Track>
-      <Slider.Marks class="slider-marks"
-                    indicatorClass="slider-mark-indicator"
-                    labelClass="slider-mark-label"/>
+      <Slider.Marks
+        class="slider-marks"
+        indicatorClass="slider-mark-indicator"
+        labelClass="slider-mark-label"
+      />
     </Slider.Root>
   );
 });

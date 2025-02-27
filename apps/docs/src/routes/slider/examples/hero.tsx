@@ -13,14 +13,14 @@ export default component$(() => {
       max={100}
       step={1}
       onValueChange$={(value) => {
-        console.log('Value changed:', value);
+        console.log("Value changed:", value);
       }}
       onValueChangeEnd$={(value) => {
-        console.log('Final value:', value);
+        console.log("Final value:", value);
       }}
     >
       <Slider.Track class="slider-track">
-        <Slider.Range class="slider-range"/>
+        <Slider.Range class="slider-range" />
         <Slider.Thumb class="slider-thumb">
           <Slider.Tooltip class="slider-tooltip" placement="bottom" />
         </Slider.Thumb>

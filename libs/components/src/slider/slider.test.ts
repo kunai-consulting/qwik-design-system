@@ -24,8 +24,8 @@ test.describe("critical functionality", () => {
     const d = await setup(page, "range");
     const thumbs = d.getAllThumbs();
     await expect(thumbs).toHaveCount(2);
-    await expect(d.getThumb('start')).toBeVisible();
-    await expect(d.getThumb('end')).toBeVisible();
+    await expect(d.getThumb("start")).toBeVisible();
+    await expect(d.getThumb("end")).toBeVisible();
   });
 
   test(`GIVEN a Slider in single mode
@@ -86,17 +86,17 @@ test.describe("keyboard navigation", () => {
 
     const messages: { type: string; value: number }[] = [];
 
-    page.on('console', msg => {
+    page.on("console", (msg) => {
       const text = msg.text();
-      if (text.startsWith('Value changed:')) {
+      if (text.startsWith("Value changed:")) {
         messages.push({
-          type: 'change',
-          value: Number(text.split(':')[1].trim())
+          type: "change",
+          value: Number(text.split(":")[1].trim())
         });
       }
     });
 
-    const initialValue = Number(await thumb.getAttribute('aria-valuenow'));
+    const initialValue = Number(await thumb.getAttribute("aria-valuenow"));
     expect(initialValue).toBe(50);
 
     await thumb.focus();
@@ -109,13 +109,13 @@ test.describe("keyboard navigation", () => {
     const lastValue = messages[messages.length - 1].value;
     expect(lastValue).toBe(initialValue + 1);
 
-    await expect(thumb).toHaveAttribute('aria-valuenow', String(lastValue));
+    await expect(thumb).toHaveAttribute("aria-valuenow", String(lastValue));
 
     messages.length = 0;
     await page.keyboard.press("ArrowLeft");
     await page.waitForTimeout(100);
 
-    const finalMessages = messages.filter(m => m.type === 'change');
+    const finalMessages = messages.filter((m) => m.type === "change");
     expect(finalMessages.length).toBeGreaterThan(0);
     expect(finalMessages[finalMessages.length - 1].value).toBe(initialValue);
   });
@@ -127,13 +127,13 @@ test.describe("keyboard navigation", () => {
     const thumb = d.getThumb();
 
     await thumb.focus();
-    const valueBefore = Number(await thumb.getAttribute('aria-valuenow'));
+    const valueBefore = Number(await thumb.getAttribute("aria-valuenow"));
 
-    await page.keyboard.down('Shift');
+    await page.keyboard.down("Shift");
     await page.keyboard.press("ArrowRight");
-    await page.keyboard.up('Shift');
+    await page.keyboard.up("Shift");
 
-    await expect(thumb).toHaveAttribute('aria-valuenow', String(valueBefore + 10));
+    await expect(thumb).toHaveAttribute("aria-valuenow", String(valueBefore + 10));
   });
 
   test(`GIVEN a Slider
@@ -145,12 +145,11 @@ test.describe("keyboard navigation", () => {
     await thumb.focus();
 
     await page.keyboard.press("End");
-    await expect(thumb).toHaveAttribute('aria-valuenow', '100');
+    await expect(thumb).toHaveAttribute("aria-valuenow", "100");
 
     await page.keyboard.press("Home");
-    await expect(thumb).toHaveAttribute('aria-valuenow', '0');
+    await expect(thumb).toHaveAttribute("aria-valuenow", "0");
   });
-
 });
 
 test.describe("a11y", () => {
@@ -177,18 +176,18 @@ test.describe("callbacks", () => {
 
     const messages: { type: string; value: number }[] = [];
 
-    page.on('console', msg => {
+    page.on("console", (msg) => {
       const text = msg.text();
-      if (text.startsWith('Value changed:')) {
+      if (text.startsWith("Value changed:")) {
         messages.push({
-          type: 'change',
-          value: Number(text.split(':')[1].trim())
+          type: "change",
+          value: Number(text.split(":")[1].trim())
         });
       }
-      if (text.startsWith('Final value:')) {
+      if (text.startsWith("Final value:")) {
         messages.push({
-          type: 'end',
-          value: Number(text.split(':')[1].trim())
+          type: "end",
+          value: Number(text.split(":")[1].trim())
         });
       }
     });
@@ -203,8 +202,8 @@ test.describe("callbacks", () => {
 
     await page.waitForTimeout(100);
 
-    const changeMessages = messages.filter(m => m.type === 'change');
-    const endMessages = messages.filter(m => m.type === 'end');
+    const changeMessages = messages.filter((m) => m.type === "change");
+    const endMessages = messages.filter((m) => m.type === "end");
 
     expect(changeMessages).toHaveLength(1);
     expect(endMessages).toHaveLength(1);
@@ -214,24 +213,26 @@ test.describe("callbacks", () => {
 
   test(`GIVEN a Slider
       WHEN dragging thumb
-      THEN onValueChange should fire multiple times and onValueChangeEnd once`, async ({ page }) => {
+      THEN onValueChange should fire multiple times and onValueChangeEnd once`, async ({
+    page
+  }) => {
     const d = await setup(page, "hero");
     const thumb = d.getThumb();
 
     const messages: { type: string; value: number }[] = [];
 
-    page.on('console', msg => {
+    page.on("console", (msg) => {
       const text = msg.text();
-      if (text.startsWith('Value changed:')) {
+      if (text.startsWith("Value changed:")) {
         messages.push({
-          type: 'change',
-          value: Number(text.split(':')[1].trim())
+          type: "change",
+          value: Number(text.split(":")[1].trim())
         });
       }
-      if (text.startsWith('Final value:')) {
+      if (text.startsWith("Final value:")) {
         messages.push({
-          type: 'end',
-          value: Number(text.split(':')[1].trim())
+          type: "end",
+          value: Number(text.split(":")[1].trim())
         });
       }
     });
@@ -247,7 +248,7 @@ test.describe("callbacks", () => {
 
     for (let i = 1; i <= 3; i++) {
       await page.mouse.move(
-        thumbBounds.x + (i * 30),
+        thumbBounds.x + i * 30,
         thumbBounds.y + thumbBounds.height / 2,
         { steps: 5 }
       );
@@ -258,13 +259,15 @@ test.describe("callbacks", () => {
 
     await page.waitForTimeout(100);
 
-    const changeMessages = messages.filter(m => m.type === 'change');
-    const endMessages = messages.filter(m => m.type === 'end');
+    const changeMessages = messages.filter((m) => m.type === "change");
+    const endMessages = messages.filter((m) => m.type === "end");
 
     expect(changeMessages.length).toBeGreaterThan(1);
     expect(endMessages).toHaveLength(1);
 
-    expect(changeMessages[0].value).not.toBe(changeMessages[changeMessages.length - 1].value);
+    expect(changeMessages[0].value).not.toBe(
+      changeMessages[changeMessages.length - 1].value
+    );
     expect(endMessages[0].value).toBe(changeMessages[changeMessages.length - 1].value);
   });
 
@@ -276,18 +279,18 @@ test.describe("callbacks", () => {
 
     const messages: { type: string; value: number }[] = [];
 
-    page.on('console', msg => {
+    page.on("console", (msg) => {
       const text = msg.text();
-      if (text.startsWith('Value changed:')) {
+      if (text.startsWith("Value changed:")) {
         messages.push({
-          type: 'change',
-          value: Number(text.split(':')[1].trim())
+          type: "change",
+          value: Number(text.split(":")[1].trim())
         });
       }
-      if (text.startsWith('Final value:')) {
+      if (text.startsWith("Final value:")) {
         messages.push({
-          type: 'end',
-          value: Number(text.split(':')[1].trim())
+          type: "end",
+          value: Number(text.split(":")[1].trim())
         });
       }
     });
@@ -297,8 +300,8 @@ test.describe("callbacks", () => {
 
     await page.waitForTimeout(100);
 
-    const changeMessages = messages.filter(m => m.type === 'change');
-    const endMessages = messages.filter(m => m.type === 'end');
+    const changeMessages = messages.filter((m) => m.type === "change");
+    const endMessages = messages.filter((m) => m.type === "end");
 
     expect(changeMessages).toHaveLength(1);
     expect(endMessages).toHaveLength(1);
@@ -312,48 +315,50 @@ test.describe("callbacks", () => {
 test.describe("range mode", () => {
   test(`GIVEN a Range Slider
         WHEN rendered
-        THEN both thumbs should be visible with correct initial positions`, async ({ page }) => {
+        THEN both thumbs should be visible with correct initial positions`, async ({
+    page
+  }) => {
     const d = await setup(page, "range");
-    const startThumb = d.getThumb('start');
-    const endThumb = d.getThumb('end');
+    const startThumb = d.getThumb("start");
+    const endThumb = d.getThumb("end");
 
     await expect(startThumb).toBeVisible();
     await expect(endThumb).toBeVisible();
 
-    await expect(startThumb).toHaveAttribute('aria-valuenow', '30');
-    await expect(endThumb).toHaveAttribute('aria-valuenow', '70');
+    await expect(startThumb).toHaveAttribute("aria-valuenow", "30");
+    await expect(endThumb).toHaveAttribute("aria-valuenow", "70");
   });
 
   test(`GIVEN a Range Slider
         WHEN moving start thumb towards end thumb
         THEN it should not exceed end value`, async ({ page }) => {
     const d = await setup(page, "range-marks");
-    const startThumb = d.getThumb('start');
-    const endThumb = d.getThumb('end');
+    const startThumb = d.getThumb("start");
+    const endThumb = d.getThumb("end");
 
     const messages: { type: string; values: number[] }[] = [];
-    page.on('console', msg => {
+    page.on("console", (msg) => {
       const text = msg.text();
-      if (text.startsWith('Value changed:')) {
-        const values = JSON.parse(text.split(':')[1].trim());
-        messages.push({ type: 'change', values });
+      if (text.startsWith("Value changed:")) {
+        const values = JSON.parse(text.split(":")[1].trim());
+        messages.push({ type: "change", values });
       }
     });
 
     // Trying to move the start slider past the end slider.
     await startThumb.focus();
     for (let i = 0; i < 10; i++) {
-      await page.keyboard.press('ArrowRight');
+      await page.keyboard.press("ArrowRight");
     }
     await page.waitForTimeout(100);
 
     // Checking that the start value does not exceed the end value.
-    const startValue = Number(await startThumb.getAttribute('aria-valuenow'));
-    const endValue = Number(await endThumb.getAttribute('aria-valuenow'));
+    const startValue = Number(await startThumb.getAttribute("aria-valuenow"));
+    const endValue = Number(await endThumb.getAttribute("aria-valuenow"));
     expect(startValue).toBeLessThanOrEqual(endValue);
 
     // Checking that in all changes, start <= end.
-    messages.forEach(msg => {
+    messages.forEach((msg) => {
       expect(msg.values[0]).toBeLessThanOrEqual(msg.values[1]);
     });
   });
@@ -362,32 +367,32 @@ test.describe("range mode", () => {
         WHEN moving end thumb towards start thumb
         THEN it should not go below start value`, async ({ page }) => {
     const d = await setup(page, "range-marks");
-    const startThumb = d.getThumb('start');
-    const endThumb = d.getThumb('end');
+    const startThumb = d.getThumb("start");
+    const endThumb = d.getThumb("end");
 
     const messages: { type: string; values: number[] }[] = [];
-    page.on('console', msg => {
+    page.on("console", (msg) => {
       const text = msg.text();
-      if (text.startsWith('Value changed:')) {
-        const values = JSON.parse(text.split(':')[1].trim());
-        messages.push({ type: 'change', values });
+      if (text.startsWith("Value changed:")) {
+        const values = JSON.parse(text.split(":")[1].trim());
+        messages.push({ type: "change", values });
       }
     });
 
     // Trying to move the end slider past the start slider.
     await endThumb.focus();
     for (let i = 0; i < 10; i++) {
-      await page.keyboard.press('ArrowLeft');
+      await page.keyboard.press("ArrowLeft");
     }
     await page.waitForTimeout(100);
 
     // Checking that the end value does not exceed the start value.
-    const startValue = Number(await startThumb.getAttribute('aria-valuenow'));
-    const endValue = Number(await endThumb.getAttribute('aria-valuenow'));
+    const startValue = Number(await startThumb.getAttribute("aria-valuenow"));
+    const endValue = Number(await endThumb.getAttribute("aria-valuenow"));
     expect(endValue).toBeGreaterThanOrEqual(startValue);
 
     // Checking that in all changes, start <= end.
-    messages.forEach(msg => {
+    messages.forEach((msg) => {
       expect(msg.values[0]).toBeLessThanOrEqual(msg.values[1]);
     });
   });
@@ -396,25 +401,23 @@ test.describe("range mode", () => {
         WHEN using keyboard navigation
         THEN values should respect min/max bounds`, async ({ page }) => {
     const d = await setup(page, "range");
-    const startThumb = d.getThumb('start');
-    const endThumb = d.getThumb('end');
+    const startThumb = d.getThumb("start");
+    const endThumb = d.getThumb("end");
 
     await startThumb.focus();
-    await page.keyboard.press('Home');
-    await expect(startThumb).toHaveAttribute('aria-valuenow', '0');
+    await page.keyboard.press("Home");
+    await expect(startThumb).toHaveAttribute("aria-valuenow", "0");
 
-    await page.keyboard.press('End');
-    const endValue = await endThumb.getAttribute('aria-valuenow');
-    await expect(startThumb).toHaveAttribute('aria-valuenow', String(endValue));
+    await page.keyboard.press("End");
+    const endValue = await endThumb.getAttribute("aria-valuenow");
+    await expect(startThumb).toHaveAttribute("aria-valuenow", String(endValue));
 
     await endThumb.focus();
-    await page.keyboard.press('End');
-    await expect(endThumb).toHaveAttribute('aria-valuenow', '100');
+    await page.keyboard.press("End");
+    await expect(endThumb).toHaveAttribute("aria-valuenow", "100");
 
-    await page.keyboard.press('Home');
-    const startValue = await startThumb.getAttribute('aria-valuenow');
-    await expect(endThumb).toHaveAttribute('aria-valuenow', String(startValue));
+    await page.keyboard.press("Home");
+    const startValue = await startThumb.getAttribute("aria-valuenow");
+    await expect(endThumb).toHaveAttribute("aria-valuenow", String(startValue));
   });
 });
-
-
