@@ -1,13 +1,14 @@
-import { component$, PropsOf, Slot } from "@builder.io/qwik";
+import { component$, type PropsOf, Slot, type Component } from "@builder.io/qwik";
 import { Render } from "../render/render";
 import { withAsChild } from "../as-child/as-child";
+import { Collapsible } from "@qwik-ui/headless";
 
-export const TreeGroupBase = component$((props: PropsOf<'div'>) => {
+export const TreeGroup: Component<PropsOf<typeof Collapsible.Root>> = component$(
+  (props) => {
     return (
-        <Render role="group" fallback="div" {...props}>
-               <Slot />
-        </Render>
-    )
-})
-
-export const TreeGroup = withAsChild(TreeGroupBase);
+      <Collapsible.Root {...props}>
+        <Slot />
+      </Collapsible.Root>
+    );
+  }
+);

@@ -38,8 +38,12 @@ function renderTreeItem(item: TreeItemType) {
   if (item.children && item.children.length > 0) {
     return (
       <Tree.Group key={item.id}>
-        <Tree.GroupLabel>{item.label}</Tree.GroupLabel>
-        {item.children.map(child => renderTreeItem(child))}
+        <Tree.GroupTrigger>
+          <Tree.GroupLabel>{item.label}</Tree.GroupLabel>
+        </Tree.GroupTrigger>
+        <Tree.GroupContent>
+          {item.children.map(child => renderTreeItem(child))}
+        </Tree.GroupContent>
       </Tree.Group>
     );
   }
