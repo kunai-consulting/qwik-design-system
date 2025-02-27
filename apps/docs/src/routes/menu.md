@@ -13,7 +13,6 @@
 - [QR Code](/qr-code)
 - [Resizable](/resizable)
 
-## Styled
+## Contributing
 
-- [Feed](/feed)
-- [Avatar](/avatar)
+- [Intro](/intro)

@@ -1,0 +1,243 @@
+# Contributing to Qwik Design System
+
+Qwik Design System provides headless UI components for building design systems at scale with Qwik.
+
+## Principle 1: Headless
+
+A headless UI library is just the brains without the beauty - all the smart functionality with [zero styling](https://www.smashingmagazine.com/2022/05/you-dont-need-ui-framework/).
+
+- You get the complex behaviors (keyboard navigation, accessibility)
+- You add your own styles (colors, spacing, animations)
+
+Think of it as LEGO instructions without dictating what colors to use! 🧩
+
+## Principle 2: Composability
+
+Composability means building complex UIs from simple, reusable pieces that work well together.
+
+For example, instead of a single `<Tooltip>` component with many props, you get:
+
+```jsx
+<Tooltip.Root>
+  <Tooltip.Trigger>Hover me</Tooltip.Trigger>
+  <Tooltip.Content>I appear on hover!</Tooltip.Content>
+</Tooltip.Root>
+```
+
+This approach gives you more control and flexibility.
+
+Without composability, you face "prop armageddon":
+
+```jsx
+<Tooltip
+  content="I appear on hover!"
+  triggerText="Hover me"
+  triggerProps={{ className: "btn", disabled: false }}
+  triggerClass="text-blue"
+  contentBackgroundColor="#333"
+  contentClass="p-2 rounded"
+  position="top"
+  arrow={true}
+  arrowSize={8}
+  delay={200}
+  // ...and 20 more props
+/>
+```
+
+This pattern is better for those consuming the library, but not for those building it.
+
+### Composing by abstraction
+
+The purpose of these primitives is for consumers to abstract the complexity of the component, so you can focus on building your app.
+
+```jsx
+export const HelpTip = component$(({ trigger }) => {
+  return (
+    <Tooltip.Root>
+      <Tooltip.Trigger asChild>
+        {trigger}
+      </Tooltip.Trigger>
+      <Tooltip.Content class="help-bubble">
+        <Slot />
+      </Tooltip.Content>
+    </Tooltip.Root>
+  );
+});
+
+<form>
+  <label>
+    Username
+    <HelpTip trigger={<Icon name="question-circle" />}>
+      Choose a username between 3-20 characters
+    </HelpTip>
+  </label>
+  <input name="username" />
+</form>
+```
+
+### Composing with your own elements
+
+With the `asChild` prop, you can even replace our default elements with your own:
+
+```jsx
+<Tooltip.Root>
+  <Tooltip.Trigger asChild>
+    <button class="my-custom-button"> 
+      Hover me <Icon name="info" />
+    </button>
+  </Tooltip.Trigger>
+  <Tooltip.Content>I appear on hover!</Tooltip.Content>
+</Tooltip.Root>
+```
+
+> For more on composability, see [this article](https://atomicdesign.bradfrost.com/chapter-2/).
+
+This lets you maintain your component structure while still getting all the built-in behavior.
+
+## Initial component setup
+
+1. Create a new component folder in the `libs/components/src` directory.
+2. Create a new route folder in the `apps/docs/src/routes/` directory.
+3. Export the component from the `libs/components/src/index.ts` file.
+4. Add the component to the sidebar menu in the `apps/docs/src/routes/menu.md` file.
+
+## Adding docs examples
+
+Every routes folder contains a `examples` folder. This is the place to add new examples for the component.
+
+To add a new example, create a new file in the `examples` folder, and create a Qwik component that does a default export.
+
+```tsx
+import { component$ } from "@builder.io/qwik";
+
+export default component$(() => {
+    return <div>Hello World</div>;
+});
+```
+
+Then, consume this in the mdx file with the file name as the name of the example.
+
+File tree:
+
+```shell
+apps/docs/src/routes/tree/examples/hero.tsx
+```
+
+How it looks in MDX:
+
+```mdx
+<Showcase name="hero" />
+```
+
+## When is a component ready?
+
+A component is ready when it has:
+
+- Research
+- Documentation
+- Examples
+- Tests
+
+### Research
+
+Each folder should have a file called `research.md` or `research.mdx` that outlines the research that went into the component. This should include:
+
+A comprehensive research document should cover the following areas:
+
+#### 
+
+#### Features
+
+List all the features the component should support, using a checklist format:
+
+```md
+- [ ] Feature 1
+- [ ] Feature 2
+- [ ] Feature 3
+```
+
+#### Component Structure
+
+Define the composition pieces of the component:
+
+```md
+Pieces:
+- Root
+- Panel
+- Handle
+```
+
+#### Keyboard Interactions
+
+Document all keyboard interactions the component should support for accessibility:
+
+```md
+- Arrow keys for navigation
+- Enter/Space for activation
+- Escape for dismissal
+```
+
+#### ARIA Attributes
+
+List all the ARIA attributes needed for accessibility:
+
+```md
+role="dialog"
+- aria-labelledby
+- aria-describedby
+```
+
+#### Use Cases
+
+Document common use cases for the component:
+
+```md
+- Forms
+- Navigation
+- Data visualization
+```
+
+#### CSS Considerations
+
+Note any important CSS properties or techniques:
+
+```md
+Important CSS:
+- position: absolute
+- position-anchor: top-left
+- overflow: hidden
+```
+
+#### API Design
+
+Document the proposed API for each component part:
+
+```md
+Root:
+- prop1 -> description
+- prop2 -> description
+
+Panel:
+- propA -> description
+- propB -> description
+```
+
+#### Known Issues
+
+Document any known issues or challenges from similar implementations:
+
+```md
+- Edge case handling
+- Browser inconsistencies
+```
+
+#### Questions
+
+List any open questions that need resolution:
+
+```md
+- How should X behavior work?
+- Should we support Y feature?
+```
+
+See the [resizable component research](libs/components/src/resizable/research.mdx) for an example.
