@@ -98,7 +98,7 @@ export const components: Record<string, Component> = {
       <blockquote
         {...props}
         class={cn(
-          "mt-6 border-l-2 border-cool-300 pl-6 italic text-cool-700 [&>*]:text-cool-600",
+          "mt-6 border-l-2 border-neutral-400 bg-neutral-800 p-2 pl-6 italic [&>*]:text-neutral-400",
           props.class
         )}
       >
