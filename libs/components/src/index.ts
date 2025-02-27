@@ -7,4 +7,5 @@ export * as RadioGroup from "./radio-group";
 export * as Calendar from "./calendar";
 export * as FileUpload from "./file-upload";
 export * as QRCode from "./qr-code";
+export * as Toast from "./toast";
 export * as Resizable from "./resizable";
