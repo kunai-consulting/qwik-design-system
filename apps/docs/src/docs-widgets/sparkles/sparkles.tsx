@@ -11,13 +11,13 @@ import sparkleStyles from "./sparkles.css?inline";
 import { random, useRandomInterval } from "~/utils/use-random-internal";
 
 // Default color is a bright yellow
-const DEFAULT_COLOR = "#ac7ef4";
+const DEFAULT_COLOR = "#34c2fc";
 const generateSparkle = (color = DEFAULT_COLOR) => {
   return {
     id: String(random(10000, 99999)),
     createdAt: Date.now(),
     color,
-    size: random(10, 20),
+    size: random(13, 15),
     style: {
       top: `${random(10, 50)}%`,
       left: `${random(20, 80)}%`,
@@ -70,7 +70,7 @@ export const Sparkles = component$(() => {
     $(() => {
       sparkles.value = [generateSparkle()];
     }),
-    900,
+    600,
     3000
   );
 
