@@ -65,7 +65,7 @@ export const components: Record<string, Component> = {
       <a
         {...props}
         class={cn(
-          "font-medium text-cool-700 underline underline-offset-4 text-white",
+          "font-medium text-cool-700 underline underline-offset-4 text-white hover:text-qwik-blue-300 transition-colors",
           props.class
         )}
         target="_blank"
