@@ -3,6 +3,8 @@ import { Render } from "../render/render";
 import { withAsChild } from "../as-child/as-child";
 
 export const TreeItemBase = component$((props: PropsOf<"div">) => {
+  console.log("PROPS: ", props);
+
   return (
     <Render role="treeitem" fallback="div" {...props}>
       <Slot />
@@ -10,4 +12,4 @@ export const TreeItemBase = component$((props: PropsOf<"div">) => {
   );
 });
 
-export const TreeItem = withAsChild(TreeItemBase);
+export const TreeItem = withAsChild(TreeItemBase, true);

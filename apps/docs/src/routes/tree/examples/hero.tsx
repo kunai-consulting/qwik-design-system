@@ -21,17 +21,13 @@ export default component$(() => {
       id: "item-2",
       label: "Downloads"
     },
-    { 
-      id: "item-3", 
-      label: "Desktop" 
+    {
+      id: "item-3",
+      label: "Desktop"
     }
   ];
 
-  return (
-    <Tree.Root>
-      {treeData.map(item => renderTreeItem(item))}
-    </Tree.Root>
-  );
+  return <Tree.Root>{treeData.map((item) => renderTreeItem(item))}</Tree.Root>;
 });
 
 function renderTreeItem(item: TreeItemType) {
@@ -42,12 +38,12 @@ function renderTreeItem(item: TreeItemType) {
           <Tree.GroupLabel>{item.label}</Tree.GroupLabel>
         </Tree.GroupTrigger>
         <Tree.GroupContent>
-          {item.children.map(child => renderTreeItem(child))}
+          {item.children.map((child) => renderTreeItem(child))}
         </Tree.GroupContent>
       </Tree.Group>
     );
   }
-  
+
   return (
     <Tree.Item key={item.id}>
       <Tree.ItemIndicator>🔹</Tree.ItemIndicator>

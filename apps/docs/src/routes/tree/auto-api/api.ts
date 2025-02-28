@@ -21,6 +21,11 @@ export const api = {
       }
     },
     {
+      "Tree Label": {
+        "inheritsFrom": "span"
+      }
+    },
+    {
       "Tree Root": {
         "inheritsFrom": "div"
       }
@@ -28,10 +33,22 @@ export const api = {
   ],
   "anatomy": [
     {
+      "name": "Tree.Root"
+    },
+    {
+      "name": "Tree.Label"
+    },
+    {
       "name": "Tree.Group"
     },
     {
       "name": "Tree.GroupLabel"
+    },
+    {
+      "name": "Tree.GroupContent"
+    },
+    {
+      "name": "Tree.GroupTrigger"
     },
     {
       "name": "Tree.Item"
@@ -41,9 +58,6 @@ export const api = {
     },
     {
       "name": "Tree.ItemLabel"
-    },
-    {
-      "name": "Tree.Root"
     }
   ],
   "keyboardInteractions": [],
