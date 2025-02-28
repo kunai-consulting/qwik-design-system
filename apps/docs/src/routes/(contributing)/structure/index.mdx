@@ -1,10 +1,20 @@
+import structure from '~/assets/docs/structure/structure.png';
+
 # Structure
 
-## Understanding Compound Components
+## The Spectrum of Components
 
-QDS uses a pattern called "compound components" to create composable, flexible UI elements. This approach allows developers to have more control over their components while maintaining a clean API.
+When building a design system, it's helpful to understand that components exist on a spectrum:
 
-## How Compound Components Work
+- **Low-level components**: Generic, highly reusable "LEGO brick" components like `Button` or `Input`
+- **Mid-level components**: Combinations of low-level components with added functionality, like `SearchInput` or `NavMenu`
+- **High-level components**: Application-specific components that implement business logic, like `UserProfileCard` or `CheckoutForm`
+
+In QDS, we focus primarily on creating low-level components that are highly reusable across different applications and use cases. However, we structure them in a way that makes it easy to compose them into mid-level and high-level components.
+
+## Compound Components
+
+To achieve both flexibility and simplicity, QDS uses a pattern called "compound components." This approach allows developers to have precise control over each part of a component while maintaining a clean, organized API.
 
 In QDS, compound components are structured as a collection of related components that share a common namespace. The component name itself serves as the namespace (like `Dropdown`), and within that namespace, we have different pieces including a `Root` component. These components work together to create a cohesive UI element, but each has a specific role.
 
@@ -68,29 +78,31 @@ This enables developers to use the component like this:
 </Dropdown.Root>
 ```
 
-## Named Exports vs. Nested Properties
+## Benefits of Compound Components
 
-In QDS, we've made a deliberate choice to use **named exports** rather than the nested property approach. This has several advantages:
+Using compound components solves several problems:
 
-1. **Better IDE support** - Autocomplete works more reliably with named exports
-2. **Tree-shaking friendly** - Unused components can be omitted from the final bundle
-3. **Clearer imports** - Developers can see exactly which components they're importing
-4. **Better compatibility** with build tools and frameworks
+1. **Avoids "prop explosion"** - Instead of dozens of configuration props, each piece has its own focused API
+2. **Provides flexibility** - Developers can compose the pieces how they need
+3. **Maintains separation of concerns** - Each piece has a clear, single responsibility
+4. **Enables better abstractions** - Developers can build their own higher-level components from the primitives
+5. **Type safety** - When consuming the namespace, the IDE can provide autocompletion for the available pieces
 
-So, in QDS you would typically import and use components like this:
+For example, a developer might create a specialized dropdown for user actions:
 
 ```tsx
-import { Dropdown } from '@qwik-design-system/components';
-
-// In your component:
-<Dropdown.Root>
-  <Dropdown.Toggle>Actions</Dropdown.Toggle>
-  <Dropdown.Menu>
-    <Dropdown.Item href="/profile">Profile</Dropdown.Item>
-    <Dropdown.Item href="/settings">Settings</Dropdown.Item>
-    <Dropdown.Item href="/logout">Logout</Dropdown.Item>
-  </Dropdown.Menu>
-</Dropdown.Root>
+export const UserActionsDropdown = component$(({ user }) => {
+  return (
+    <Dropdown.Root>
+      <Dropdown.Toggle>User Actions</Dropdown.Toggle>
+      <Dropdown.Menu>
+        <Dropdown.Item href={`/user/${user.id}/profile`}>Profile</Dropdown.Item>
+        <Dropdown.Item href={`/user/${user.id}/settings`}>Settings</Dropdown.Item>
+        <Dropdown.Item href="/logout">Logout</Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown.Root>
+  );
+});
 ```
 
 ## Organizing Component Files
