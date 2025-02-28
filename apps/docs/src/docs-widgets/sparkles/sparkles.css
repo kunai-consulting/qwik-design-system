@@ -1,0 +1,28 @@
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(180deg);
+      }
+}
+
+@keyframes growAndShrink {
+    0% {
+        transform: scale(0);
+      }
+      50% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(0);
+      }
+}
+
+.sparkle-wrapper {
+    animation: growAndShrink 600ms ease-in-out forwards;
+}
+
+.sparkle {
+    animation: spin 600ms linear forwards;
+}

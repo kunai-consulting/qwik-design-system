@@ -185,6 +185,13 @@ export const components: Record<string, Component> = {
       />
     );
   }),
+  em: component$<PropsOf<"em">>(({ ...props }) => {
+    return (
+      <em {...props} class={cn("font-medium text-qwik-blue-300 not-italic", props.class)}>
+        <Slot />
+      </em>
+    );
+  }),
   Showcase,
   APITable,
   AnatomyTable,
