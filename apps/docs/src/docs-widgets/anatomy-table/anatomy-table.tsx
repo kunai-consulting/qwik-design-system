@@ -25,7 +25,7 @@ export const AnatomyTable = component$<{ api: ComponentParts }>(({ api }) => {
                 key={item.name}
                 class="border-b last-of-type:border-b-0 border-qwik-neutral-900"
               >
-                <td class="py-4 px-4 font-mono text-sm">
+                <td class="py-4 px-4 text-sm">
                   <span class="bg-qwik-neutral-950 rounded-sm block p-1 px-2 w-fit">
                     <span class="text-qwik-neutral-400">{"<"}</span>
                     <span class="text-white">{item.name.split(".")[0]}</span>

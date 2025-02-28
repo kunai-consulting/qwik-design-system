@@ -1,4 +1,4 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, useTask$ } from "@builder.io/qwik";
 import { Link, useContent, useLocation } from "@builder.io/qwik-city";
 
 export const Sidebar = component$(() => {
@@ -12,8 +12,8 @@ export const Sidebar = component$(() => {
           <h5 class="mb-2 font-bold text-xl text-white">{section.text}</h5>
           <ul class="flex flex-col">
             {section.items?.map((item) => (
-              <li key={item.href} class="hover:bg-[#303d49] transition-colors">
-                <a
+              <li key={item.href} class="hover:bg-neutral-interactive transition-colors">
+                <Link
                   href={item.href}
                   class={`w-full h-full p-1 px-2 block ${
                     loc.url.pathname === item.href
@@ -22,7 +22,7 @@ export const Sidebar = component$(() => {
                   }`}
                 >
                   {item.text}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

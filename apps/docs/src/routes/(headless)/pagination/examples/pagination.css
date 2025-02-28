@@ -5,8 +5,8 @@
 
 .pagination-page {
     border-width: 1px;
-    width: 32px;
-    height: 32px;
+    width: 44px;
+    height: 44px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,9 +14,9 @@
 }
 
 .pagination-page[data-current] {
-    background-color: red;
+    background-color: #006da4;
     color: white;
-    border-color: red;  /* It is applied here */
+    border-color: #006da4;  /* It is applied here */
 }
 
 .pagination-page:disabled {
@@ -26,11 +26,11 @@
 .pagination-previous {
     color: white;
     border: 2px dashed white;
-    padding: 2px;
+    padding: 0.5rem;
 }   
 
 .pagination-next {
     color: white;
     border: 2px dashed white;
-    padding: 2px;
+    padding: 0.5rem;
 }   

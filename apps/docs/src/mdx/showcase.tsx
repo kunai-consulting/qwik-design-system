@@ -38,7 +38,7 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
         <Carousel.Bullet class="data-[active]:bg-qwik-blue-800 data-[active]:!text-[#fff] p-2 hover:bg-qwik-blue-200 hover:text-qwik-neutral-700 transition-colors outline-qwik-blue-500">
           Preview
         </Carousel.Bullet>
-        <Carousel.Bullet class="data-[active]:bg-qwik-blue-800 data-[active]:!text-[#fff] p-2 hover:bg-neutral-background transition-colors outline-qwik-blue-500">
+        <Carousel.Bullet class="data-[active]:bg-qwik-blue-800 data-[active]:!text-[#fff] p-2 hover:bg-qwik-blue-200 hover:text-qwik-neutral-700 transition-colors outline-qwik-blue-500">
           Code
         </Carousel.Bullet>
       </Carousel.Pagination>

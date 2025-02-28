@@ -144,11 +144,9 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
                           key={prop.prop}
                           class="border-b last-of-type:border-b-0 border-qwik-neutral-900"
                         >
-                          <td class="py-4 px-4 font-mono text-sm">{prop.prop}</td>
-                          <td class="py-4 px-4 font-mono text-sm">{prop.type}</td>
-                          <td class="py-4 px-4 font-mono text-sm">
-                            {prop.defaultValue || "-"}
-                          </td>
+                          <td class="py-4 px-4 text-sm">{prop.prop}</td>
+                          <td class="py-4 px-4 text-sm">{prop.type}</td>
+                          <td class="py-4 px-4 text-sm">{prop.defaultValue || "-"}</td>
                           <td class="py-4 px-4">
                             {prop.comment && (
                               <Popover.Root>
@@ -187,7 +185,7 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
                           key={attr.name}
                           class="border-b last-of-type:border-b-0 border-qwik-neutral-900"
                         >
-                          <td class="py-4 px-4 font-mono text-sm text-qwik-blue-200">
+                          <td class="py-4 px-4 text-sm text-qwik-blue-200">
                             {attr.name}
                           </td>
                           <td class="py-4 px-4">{attr.comment}</td>
@@ -223,7 +221,7 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
                     key={interaction.key}
                     class="border-b last-of-type:border-b-0 border-qwik-neutral-900"
                   >
-                    <td class="py-4 px-4 font-mono text-sm flex items-center">
+                    <td class="py-4 px-4 text-sm flex items-center">
                       <span class="bg-qwik-neutral-800 px-3 py-1 rounded-md border-b-2 border-qwik-neutral-900">
                         {interaction.key}
                       </span>

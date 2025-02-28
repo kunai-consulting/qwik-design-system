@@ -63,6 +63,7 @@ pre > code {
   font-size: 0.875rem;
   font-family: monospace;
   color: white;
+  font-family: "Yusei Magic", "Adjusted Tahoma Fallback" !important;
 }
 
 pre {
@@ -86,6 +87,7 @@ blockquote a {
   --color-neutral-accent: #0f1317;
   --color-neutral-primary: #14191f;
   --color-neutral-secondary: #060708;
+  --color-neutral-interactive: #303d49;
 
   --color-qwik-purple-50: #f9f6fe;
   --color-qwik-purple-100: #f1e9fe;
