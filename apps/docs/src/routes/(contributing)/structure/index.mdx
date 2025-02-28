@@ -1,0 +1,135 @@
+# Structure
+
+## Understanding Compound Components
+
+QDS uses a pattern called "compound components" to create composable, flexible UI elements. This approach allows developers to have more control over their components while maintaining a clean API.
+
+## How Compound Components Work
+
+In QDS, compound components are structured as a collection of related components that share a common namespace. The component name itself serves as the namespace (like `Dropdown`), and within that namespace, we have different pieces including a `Root` component. These components work together to create a cohesive UI element, but each has a specific role.
+
+For example, a Dropdown component might be structured like this:
+
+```tsx
+import { component$, Slot } from '@builder.io/qwik';
+
+// The component pieces
+export const DropdownRoot = component$(() => {
+  return (
+    <div class="dropdown">
+      <Slot />
+    </div>
+  );
+});
+
+export const DropdownToggle = component$(() => {
+  return (
+    <button class="dropdown-toggle">
+      <Slot />
+    </button>
+  );
+});
+
+export const DropdownMenu = component$(() => {
+  return (
+    <div class="dropdown-menu">
+      <Slot />
+    </div>
+  );
+});
+
+export const DropdownItem = component$(({ href }: { href: string }) => {
+  return (
+    <a class="dropdown-item" href={href}>
+      <Slot />
+    </a>
+  );
+});
+
+// Creating the namespace with pieces
+export const Dropdown = {
+  Root: DropdownRoot,
+  Toggle: DropdownToggle,
+  Menu: DropdownMenu,
+  Item: DropdownItem
+};
+```
+
+This enables developers to use the component like this:
+
+```tsx
+<Dropdown.Root>
+  <Dropdown.Toggle>Actions</Dropdown.Toggle>
+  <Dropdown.Menu>
+    <Dropdown.Item href="/profile">Profile</Dropdown.Item>
+    <Dropdown.Item href="/settings">Settings</Dropdown.Item>
+    <Dropdown.Item href="/logout">Logout</Dropdown.Item>
+  </Dropdown.Menu>
+</Dropdown.Root>
+```
+
+## Named Exports vs. Nested Properties
+
+In QDS, we've made a deliberate choice to use **named exports** rather than the nested property approach. This has several advantages:
+
+1. **Better IDE support** - Autocomplete works more reliably with named exports
+2. **Tree-shaking friendly** - Unused components can be omitted from the final bundle
+3. **Clearer imports** - Developers can see exactly which components they're importing
+4. **Better compatibility** with build tools and frameworks
+
+So, in QDS you would typically import and use components like this:
+
+```tsx
+import { Dropdown } from '@qwik-design-system/components';
+
+// In your component:
+<Dropdown.Root>
+  <Dropdown.Toggle>Actions</Dropdown.Toggle>
+  <Dropdown.Menu>
+    <Dropdown.Item href="/profile">Profile</Dropdown.Item>
+    <Dropdown.Item href="/settings">Settings</Dropdown.Item>
+    <Dropdown.Item href="/logout">Logout</Dropdown.Item>
+  </Dropdown.Menu>
+</Dropdown.Root>
+```
+
+## Organizing Component Files
+
+When creating a new compound component for QDS, follow this file structure:
+
+```
+libs/components/src/dropdown/
+├── index.ts           # Main export file that creates the namespace
+├── root.tsx           # Root component piece
+├── toggle.tsx         # Toggle component piece
+├── menu.tsx           # Menu component piece
+├── item.tsx           # Item component piece
+└── research.mdx       # Research and documentation
+```
+
+The `index.ts` file creates and exports the namespace:
+
+```tsx
+import { DropdownRoot } from './root';
+import { DropdownToggle } from './toggle';
+import { DropdownMenu } from './menu';
+import { DropdownItem } from './item';
+
+export const Dropdown = {
+  Root: DropdownRoot,
+  Toggle: DropdownToggle,
+  Menu: DropdownMenu,
+  Item: DropdownItem
+};
+```
+
+## Benefits of This Structure
+
+Organizing components this way provides several benefits:
+
+1. **Maintainability** - Each component piece has its own file, making it easier to maintain
+2. **Testability** - Component pieces can be tested individually
+3. **Documentation** - Each piece can have its own documentation
+4. **Flexibility** - Developers can import only the namespace and use the pieces they need
+
+By following this structure, we create components that are both powerful and easy to use, balancing flexibility with developer experience. 

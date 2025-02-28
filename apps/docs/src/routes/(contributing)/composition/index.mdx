@@ -1,1 +1,33 @@
 # Composition
+
+## What is Composability?
+
+Composability is a design principle where complex UI components are built from simple, reusable pieces that work well together. In QDS, components are designed to be composed rather than configured through numerous props.
+
+For example, instead of a monolithic component with many configuration options, QDS provides component parts that you can combine:
+
+```jsx
+<Tooltip.Root>
+  <Tooltip.Trigger>Hover me</Tooltip.Trigger>
+  <Tooltip.Content>I appear on hover!</Tooltip.Content>
+</Tooltip.Root>
+```
+
+This approach gives you more flexibility and control over your UI components.
+
+[Learn more about composability in our intro guide](../intro#principle-2-composability).
+
+## One Component, One Markup Element
+
+A key principle in QDS is that each component typically corresponds to ONE piece of markup. With few exceptions, components are responsible for rendering and controlling a single element in the DOM.
+
+This principle:
+
+- Keeps components focused on a single responsibility
+- Makes the relationship between components and DOM clearer
+- Simplifies styling and accessibility implementations
+- Avoids "div soup" and unnecessary nesting
+
+The exceptions to this rule are primarily composite components that need to manage multiple elements as a cohesive unit, like dialogs with backdrops or components that need to manage focus traps.
+
+By following these composition principles, QDS aims to provide a flexible foundation that can be adapted to any design system needs while maintaining accessibility and performance.
