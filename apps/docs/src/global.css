@@ -11,6 +11,33 @@ body {
   font-family: "Monaspace";
   src: url("./assets/fonts/syntax-highlight.woff2") format("woff2");
 }
+
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: "Yusei Magic";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../src/assets/fonts/yuseiMagic/yusei-magic.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+@font-face {
+  font-family: "Adjusted Tahoma Fallback";
+  src: local(Tahoma);
+  size-adjust: 104%;
+  ascent-override: 95%;
+  descent-override: normal;
+  line-gap-override: 30%;
+}
+
+@font-face {
+  font-family: "Adjusted Trebuchet MS Fallback";
+  src: local(Trebuchet MS);
+  size-adjust: 104%;
+  ascent-override: normal;
+  descent-override: 32%;
+  line-gap-override: 0%;
+}
+
 @font-palette-values --kung-fury {
   font-family: "Monaspace";
   override-colors: 0 #b8c1cc /* curlies and tags */, 1 #a2bebe /* punctuation */,
@@ -46,9 +73,7 @@ pre {
 
 body {
   @apply bg-[#030405] text-white;
-  font-family: Seravek, Avenir, Corbel, "URW Gothic", source-sans-pro,
-    sans-serif;
-  scrollbar-gutter: stable;
+  font-family: "Yusei Magic", "Adjusted Tahoma Fallback" !important;
 }
 
 blockquote a {
