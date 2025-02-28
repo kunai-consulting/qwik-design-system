@@ -12,11 +12,15 @@ When building a design system, it's helpful to understand that components exist 
 
 In QDS, we focus primarily on creating low-level components that are highly reusable across different applications and use cases. However, we structure them in a way that makes it easy to compose them into mid-level and high-level components.
 
+<Image src={structure} alt="Structure" />
+
 ## Compound Components
 
-To achieve both flexibility and simplicity, QDS uses a pattern called "compound components." This approach allows developers to have precise control over each part of a component while maintaining a clean, organized API.
+To achieve both flexibility and simplicity, QDS uses a pattern called *compound components*. This approach allows developers to have precise control over each part of a component while maintaining a clean, organized API.
 
-In QDS, compound components are structured as a collection of related components that share a common namespace. The component name itself serves as the namespace (like `Dropdown`), and within that namespace, we have different pieces including a `Root` component. These components work together to create a cohesive UI element, but each has a specific role.
+In QDS, compound components are structured as a collection of related components that share a **common namespace**. 
+
+The component name itself serves as the namespace (like `Dropdown`), and within that namespace, we have different pieces including a `Root` component. These components work together to create a cohesive UI element, but each has a specific role.
 
 For example, a Dropdown component might be structured like this:
 
@@ -32,9 +36,9 @@ export const DropdownRoot = component$(() => {
   );
 });
 
-export const DropdownToggle = component$(() => {
+export const DropdownTrigger = component$(() => {
   return (
-    <button class="dropdown-toggle">
+    <button class="dropdown-trigger">
       <Slot />
     </button>
   );
@@ -59,7 +63,7 @@ export const DropdownItem = component$(({ href }: { href: string }) => {
 // Creating the namespace with pieces
 export const Dropdown = {
   Root: DropdownRoot,
-  Toggle: DropdownToggle,
+  Trigger: DropdownTrigger,
   Menu: DropdownMenu,
   Item: DropdownItem
 };
@@ -69,7 +73,7 @@ This enables developers to use the component like this:
 
 ```tsx
 <Dropdown.Root>
-  <Dropdown.Toggle>Actions</Dropdown.Toggle>
+  <Dropdown.Trigger>Actions</Dropdown.Trigger>
   <Dropdown.Menu>
     <Dropdown.Item href="/profile">Profile</Dropdown.Item>
     <Dropdown.Item href="/settings">Settings</Dropdown.Item>
@@ -94,7 +98,7 @@ For example, a developer might create a specialized dropdown for user actions:
 export const UserActionsDropdown = component$(({ user }) => {
   return (
     <Dropdown.Root>
-      <Dropdown.Toggle>User Actions</Dropdown.Toggle>
+      <Dropdown.Trigger>User Actions</Dropdown.Trigger>
       <Dropdown.Menu>
         <Dropdown.Item href={`/user/${user.id}/profile`}>Profile</Dropdown.Item>
         <Dropdown.Item href={`/user/${user.id}/settings`}>Settings</Dropdown.Item>
@@ -113,7 +117,7 @@ When creating a new compound component for QDS, follow this file structure:
 libs/components/src/dropdown/
 ├── index.ts           # Main export file that creates the namespace
 ├── root.tsx           # Root component piece
-├── toggle.tsx         # Toggle component piece
+├── trigger.tsx         # Trigger component piece
 ├── menu.tsx           # Menu component piece
 ├── item.tsx           # Item component piece
 └── research.mdx       # Research and documentation
@@ -123,13 +127,13 @@ The `index.ts` file creates and exports the namespace:
 
 ```tsx
 import { DropdownRoot } from './root';
-import { DropdownToggle } from './toggle';
+import { DropdownTrigger } from './trigger';
 import { DropdownMenu } from './menu';
 import { DropdownItem } from './item';
 
 export const Dropdown = {
   Root: DropdownRoot,
-  Toggle: DropdownToggle,
+  Trigger: DropdownTrigger,
   Menu: DropdownMenu,
   Item: DropdownItem
 };

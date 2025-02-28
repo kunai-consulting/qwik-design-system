@@ -7,7 +7,7 @@ import { AnatomyTable } from "../docs-widgets/anatomy-table/anatomy-table";
 import { APITable } from "../docs-widgets/api-table/api-table";
 import { MainHeading, SubHeading } from "../docs-widgets/toc/toc";
 import { Showcase } from "./showcase";
-
+import { Image } from "../docs-widgets/image/image";
 export const components: Record<string, Component> = {
   p: component$<PropsOf<"p">>(({ ...props }) => {
     return (
@@ -198,5 +198,6 @@ export const components: Record<string, Component> = {
   Showcase,
   APITable,
   AnatomyTable,
-  Features
+  Features,
+  Image
 };
