@@ -84,7 +84,7 @@ export const Sparkles = component$(() => {
           style={sparkle.style}
         />
       ))}
-      <strong class="relative z-1 bold">
+      <strong class="relative z-1 bold text-white">
         <Slot />
       </strong>
     </span>

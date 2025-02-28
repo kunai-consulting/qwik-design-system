@@ -38,7 +38,7 @@ export const AnatomyTable = component$<{ api: ComponentParts }>(({ api }) => {
                     <span class="text-qwik-neutral-400">{">"}</span>
                   </span>
                 </td>
-                <td class="py-4 px-4">{item.description || "—"}</td>
+                <td class="py-4 px-4 text-[#b8c1cc]">{item.description || "—"}</td>
               </tr>
             ))}
           </tbody>

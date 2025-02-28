@@ -13,12 +13,12 @@ body {
 }
 @font-palette-values --kung-fury {
   font-family: "Monaspace";
-  override-colors: 0 #749c9c /* curlies and tags */, 1 #a2bebe /* punctuation */,
+  override-colors: 0 #b8c1cc /* curlies and tags */, 1 #a2bebe /* punctuation */,
     2 #7ad6ff /* function */, 3 #c8d9d9 /* operators */,
     4 #a2bebe /* parentheses */, 5 #dff3ff /* property name */,
-    6 #c8d9d9 /* misc syntax */, 7 #e5d7fd /* numbers */,
-    8 #a2bebe /* angle brackets */, 9 #d1b8fa /* keywords */,
-    10 #b9e7fe /* strings */, 11 #749c9c /* comments */,
+    6 #b8c1cc /* misc syntax */, 7 #e5d7fd /* numbers */,
+    8 #b9e7fe /* angle brackets */, 9 #d1b8fa /* keywords */,
+    10 #b9e7fe /* strings */, 11 #3b4c4f /* comments */,
     12 #f1e9fe /* decorators */, 13 #34c2fc /* special characters */,
     14 #e2ebeb /* doc strings */, 15 #7ad6ff /* class names */;
 }
@@ -29,13 +29,13 @@ pre > code {
   line-height: 1.6;
 }
 
-code:not(pre > code) {
+:not(pre) > code {
   background-color: var(--color-qwik-neutral-950);
   padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
   font-size: 0.875rem;
   font-family: monospace;
-  color: var(--color-qwik-blue-300);
+  color: white;
 }
 
 pre {
@@ -45,13 +45,23 @@ pre {
 }
 
 body {
-  @apply bg-[#1c1e1f] text-qwik-blue-100;
+  @apply bg-[#030405] text-white;
   font-family: Seravek, Avenir, Corbel, "URW Gothic", source-sans-pro,
     sans-serif;
   scrollbar-gutter: stable;
 }
 
+blockquote a {
+  padding-inline: 4px;
+}
+
 @theme {
+  --color-neutral-background: #060708;
+  --color-neutral-foreground: #b8c1cc;
+  --color-neutral-accent: #0f1317;
+  --color-neutral-primary: #14191f;
+  --color-neutral-secondary: #060708;
+
   --color-qwik-purple-50: #f9f6fe;
   --color-qwik-purple-100: #f1e9fe;
   --color-qwik-purple-200: #e5d7fd;

@@ -17,7 +17,7 @@ export const MainHeading = component$((props: PropsOf<"h2">) => {
     <h2
       {...props}
       class={cn(
-        "mt-16 scroll-m-20 border-b border-b-qwik-neutral-900 pb-1 text-3xl font-semibold tracking-tight text-cool-700 first:mt-0",
+        "mt-16 scroll-m-20 border-b border-b-neutral-primary pb-1 text-3xl font-semibold tracking-tight text-cool-700 first:mt-0",
         props.class
       )}
     >
@@ -31,7 +31,7 @@ export const SubHeading = component$((props: PropsOf<"h3">) => {
     <h3
       {...props}
       class={cn(
-        "mt-8 scroll-m-20 text-2xl font-semibold tracking-tight text-cool-700",
+        "mt-16 scroll-m-20 text-2xl font-semibold tracking-tight text-cool-700",
         props.class
       )}
     >
@@ -225,7 +225,7 @@ const Anchor = component$<AnchorProps>(({ node, activeItem }) => {
         node.level > 2 && "ml-2",
         node.level === 1 && "mb-4 font-bold",
         "inline-block no-underline transition-colors hover:text-qwik-blue-200",
-        isActive ? "font-medium text-qwik-blue-500" : ""
+        isActive ? "font-medium text-qwik-blue-300" : ""
       )}
     >
       {node.text}

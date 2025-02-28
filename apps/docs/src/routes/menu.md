@@ -16,3 +16,4 @@
 ## Contributing
 
 - [Intro](/intro)
+- [Structure](/structure)

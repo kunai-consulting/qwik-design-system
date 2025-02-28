@@ -13,7 +13,7 @@ export const components: Record<string, Component> = {
     return (
       <p
         {...props}
-        class={cn("leading-7 text-cool-700 [&:not(:first-child)]:mt-6", props.class)}
+        class={cn("leading-7 [&:not(:first-child)]:mt-6 text-[#b8c1cc]", props.class)}
       >
         <Slot />
       </p>
@@ -64,7 +64,10 @@ export const components: Record<string, Component> = {
     return (
       <a
         {...props}
-        class={cn("font-medium text-cool-700 underline underline-offset-4", props.class)}
+        class={cn(
+          "font-medium text-cool-700 underline underline-offset-4 text-white",
+          props.class
+        )}
         target="_blank"
         rel="noreferrer"
       >
@@ -88,7 +91,7 @@ export const components: Record<string, Component> = {
   }),
   li: component$<PropsOf<"li">>(({ ...props }) => {
     return (
-      <li {...props} class={cn("mt-2 text-cool-700", props.class)}>
+      <li {...props} class={cn("mt-2 text-[#b8c1cc]", props.class)}>
         <Slot />
       </li>
     );
@@ -98,7 +101,7 @@ export const components: Record<string, Component> = {
       <blockquote
         {...props}
         class={cn(
-          "mt-6 border-l-2 border-neutral-400 bg-neutral-800 p-2 pl-6 italic [&>*]:text-neutral-400",
+          "mt-6 border-l-2 border-[#7a8799] bg-[#0e0f12] p-2 pl-6 italic [&>*]:text-[#7a8799]",
           props.class
         )}
       >
@@ -110,20 +113,14 @@ export const components: Record<string, Component> = {
     return <hr {...props} class={cn("my-6 border-cool-200 md:my-8", props.class)} />;
   }),
   img: component$<PropsOf<"img">>(({ alt, ...props }) => {
-    return (
-      <img
-        {...props}
-        alt={alt}
-        class={cn("rounded-md border border-cool-200", props.class)}
-      />
-    );
+    return <img {...props} alt={alt} class={cn("border border-cool-200", props.class)} />;
   }),
   pre: component$<PropsOf<"pre">>(({ ...props }) => {
     return (
       <pre
         {...props}
         class={cn(
-          "border border-qwik-neutral-900 rounded-md overflow-clip text-sm bg-[#181e20]",
+          "border border-[#303d49] overflow-clip text-sm bg-[#0e0f12] mt-6",
           props.class
         )}
       >
@@ -187,12 +184,16 @@ export const components: Record<string, Component> = {
   }),
   em: component$<PropsOf<"em">>(({ ...props }) => {
     return (
-      <em
-        {...props}
-        class={cn("font-medium text-qwik-purple-400 not-italic", props.class)}
-      >
+      <em {...props} class={cn("font-medium text-white", props.class)}>
         <Slot />
       </em>
+    );
+  }),
+  strong: component$<PropsOf<"strong">>(({ ...props }) => {
+    return (
+      <strong {...props} class={cn("text-white", props.class)}>
+        <Slot />
+      </strong>
     );
   }),
   Showcase,
