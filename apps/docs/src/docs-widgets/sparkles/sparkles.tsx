@@ -4,13 +4,14 @@ import {
   type PropsOf,
   Slot,
   useSignal,
-  useStyles$
+  useStyles$,
+  useVisibleTask$
 } from "@builder.io/qwik";
 import sparkleStyles from "./sparkles.css?inline";
 import { random, useRandomInterval } from "~/utils/use-random-internal";
 
 // Default color is a bright yellow
-const DEFAULT_COLOR = "hsl(50deg, 100%, 50%)";
+const DEFAULT_COLOR = "#ac7ef4";
 const generateSparkle = (color = DEFAULT_COLOR) => {
   return {
     id: String(random(10000, 99999)),
@@ -18,9 +19,10 @@ const generateSparkle = (color = DEFAULT_COLOR) => {
     color,
     size: random(10, 20),
     style: {
-      top: `${random(0, 100)}%`,
-      left: `${random(0, 100)}%`,
-      zIndex: 2
+      top: `${random(10, 50)}%`,
+      left: `${random(20, 80)}%`,
+      zIndex: 2,
+      transform: `rotate(${random(0, 360)}deg)`
     }
   };
 };
@@ -32,38 +34,18 @@ type SparkleInstanceProps = {
 
 type Sparkle = ReturnType<typeof generateSparkle>;
 
+// SparkleInstance should render a single sparkle only
 export const SparkleInstance = component$(
-  ({ color, size, ...rest }: SparkleInstanceProps) => {
-    const sparkles = useSignal<Sparkle[]>([]);
+  ({ color, size, style, ...rest }: SparkleInstanceProps) => {
     useStyles$(sparkleStyles);
-
-    useRandomInterval(
-      $(() => {
-        const now = Date.now();
-
-        const sparkle = generateSparkle();
-
-        const nextSparkles = sparkles.value.filter((sparkle) => {
-          const delta = now - sparkle.createdAt;
-          return delta < 1000;
-        });
-
-        nextSparkles.push(sparkle);
-
-        sparkles.value = nextSparkles;
-      }),
-      50,
-      500
-    );
-
     return (
-      <span class="absolute pointer-events-none sparkle-wrapper">
+      <div class="absolute pointer-events-none sparkle-wrapper" style={style}>
         <svg
           width={size}
           height={size}
           viewBox="0 0 160 160"
           fill="none"
-          class="absolute pointer-events-none z-2 sparkle"
+          class="absolute pointer-events-none z-2 sparkle top-0"
           aria-hidden="true"
           {...rest}
         >
@@ -72,16 +54,36 @@ export const SparkleInstance = component$(
             fill={color}
           />
         </svg>
-      </span>
+      </div>
     );
   }
 );
 
 export const Sparkles = component$(() => {
-  const sparkle = generateSparkle();
+  const sparkles = useSignal<Sparkle[]>([]);
+
+  useVisibleTask$(() => {
+    sparkles.value = [generateSparkle()];
+  });
+
+  useRandomInterval(
+    $(() => {
+      sparkles.value = [generateSparkle()];
+    }),
+    900,
+    3000
+  );
+
   return (
     <span class="relative inline-block">
-      <SparkleInstance color={sparkle.color} size={sparkle.size} style={sparkle.style} />
+      {sparkles.value.map((sparkle) => (
+        <SparkleInstance
+          key={sparkle.id}
+          color={sparkle.color}
+          size={sparkle.size}
+          style={sparkle.style}
+        />
+      ))}
       <strong class="relative z-1 bold">
         <Slot />
       </strong>

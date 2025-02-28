@@ -7,22 +7,23 @@
       }
 }
 
-@keyframes growAndShrink {
-    0% {
-        transform: scale(0);
-      }
-      50% {
-        transform: scale(1);
-      }
-      100% {
-        transform: scale(0);
-      }
-}
-
-.sparkle-wrapper {
-    animation: growAndShrink 600ms ease-in-out forwards;
-}
-
 .sparkle {
-    animation: spin 600ms linear forwards;
+    position: absolute;
+    transform-origin: center center;
+    animation: scale-up-down 900ms cubic-bezier(0.66, 0, 0.34, 1) forwards;
+}
+
+@keyframes scale-up-down {
+    0% { 
+        opacity: 0;
+        transform: scale(0); 
+    }
+    50% { 
+        opacity: 1;
+        transform: scale(1); 
+    }
+    100% { 
+        opacity: 0;
+        transform: scale(0); 
+    }
 }
