@@ -1,4 +1,11 @@
-import { component$, type PropsOf, Slot, useSignal, useStyles$ } from "@builder.io/qwik";
+import {
+  $,
+  component$,
+  type PropsOf,
+  Slot,
+  useSignal,
+  useStyles$
+} from "@builder.io/qwik";
 import sparkleStyles from "./sparkles.css?inline";
 import { random, useRandomInterval } from "~/utils/use-random-internal";
 
@@ -31,7 +38,7 @@ export const SparkleInstance = component$(
     useStyles$(sparkleStyles);
 
     useRandomInterval(
-      () => {
+      $(() => {
         const now = Date.now();
 
         const sparkle = generateSparkle();
@@ -44,13 +51,13 @@ export const SparkleInstance = component$(
         nextSparkles.push(sparkle);
 
         sparkles.value = nextSparkles;
-      },
+      }),
       50,
       500
     );
 
     return (
-      <div class="absolute pointer-events-none sparkle-wrapper">
+      <span class="absolute pointer-events-none sparkle-wrapper">
         <svg
           width={size}
           height={size}
@@ -65,7 +72,7 @@ export const SparkleInstance = component$(
             fill={color}
           />
         </svg>
-      </div>
+      </span>
     );
   }
 );
