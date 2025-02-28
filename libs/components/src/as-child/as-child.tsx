@@ -18,8 +18,7 @@ export function syncFixedInV2<T extends (...args: unknown[]) => unknown>(fn: T) 
   return noSerialize(fn);
 }
 
-export function withAsChild<T>(BaseComponent: Component<T>, isIndexed?: boolean) {
-  // Counter to track component instances
+export function withAsChild<T>(BaseComponent: Component<T>, trackInstances?: boolean) {
   let count = 0;
 
   return function AsChildWrapper(props: T & AsChildProps) {
@@ -28,7 +27,7 @@ export function withAsChild<T>(BaseComponent: Component<T>, isIndexed?: boolean)
 
     let indexCount: number | undefined;
 
-    if (isIndexed === true) {
+    if (trackInstances === true) {
       indexCount = count++;
     }
 
