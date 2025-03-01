@@ -4,7 +4,8 @@ import {
   component$,
   createContextId,
   useContextProvider,
-  useSignal
+  useSignal,
+  useStyles$
 } from "@builder.io/qwik";
 import {
   type ContentHeading,
@@ -18,7 +19,7 @@ import { Sidebar } from "~/docs-widgets/sidebar/sidebar";
 import { TOC } from "~/docs-widgets/toc/toc";
 import { components } from "~/mdx/components";
 import { MDXProvider } from "~/mdx/provider";
-
+import styles from "./layout.css?inline";
 type RootContext = {
   allHeadingsSig: Signal<ContentHeading[]>;
 };
@@ -37,6 +38,7 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 };
 
 export default component$(() => {
+  useStyles$(styles);
   const allHeadingsSig = useSignal<ContentHeading[]>([]);
   const { headings } = useContent();
 
@@ -48,6 +50,8 @@ export default component$(() => {
     <MDXProvider components={components}>
       <Header />
       <SearchModal />
+      <div class="svg-bg w-full h-full top-0 left-0 absolute z-[-2]" />
+      <div class="w-full h-full top-0 left-0 absolute bg-gradient z-[-1]" />
       <div class="flex gap-4">
         <Sidebar />
         <main data-pagefind-body class="mx-auto max-w-screen-md">
