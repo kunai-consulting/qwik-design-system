@@ -49,7 +49,6 @@ export default component$(() => {
 
   return (
     <MDXProvider components={components}>
-      <Header />
       <NavFooter />
       <SearchModal />
       <div class="svg-bg w-full h-full top-0 left-0 absolute z-[-2]" />

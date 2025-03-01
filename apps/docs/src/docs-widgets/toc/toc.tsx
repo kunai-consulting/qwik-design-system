@@ -58,7 +58,7 @@ export const TOC = component$(({ headings }: { headings: ContentHeading[] }) => 
           target="_blank"
           rel="noreferrer"
           href={`https://github.com/kunai-consulting/qwik-design-system/tree/main/apps/docs/src/routes${loc.url.pathname}index.mdx`}
-          class="hover:text-qwik-blue-200 transition-colors"
+          class="hover:text-qwik-blue-200 text-neutral-foreground transition-colors text-sm"
         >
           Edit this page
         </a>

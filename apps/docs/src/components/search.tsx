@@ -1,4 +1,4 @@
-import { $, component$, useOnWindow, useSignal, useTask$ } from "@builder.io/qwik";
+import { $, component$, Slot, useOnWindow, useSignal, useTask$ } from "@builder.io/qwik";
 import { isServer } from "@builder.io/qwik/build";
 import { Combobox, Modal } from "@qwik-ui/headless";
 import { LuSearch } from "@qwikest/icons/lucide";
@@ -65,11 +65,10 @@ export const SearchModal = component$(() => {
 
   return (
     <Modal.Root bind:show={isOpen}>
-      <Modal.Trigger class={cn("flex h-8 items-center gap-2 sm:h-10")}>
-        <LuSearch class="h-4 w-4" />
-        <span class="hidden sm:block">Search</span>
+      <Modal.Trigger class={cn("flex h-8 items-center gap-2 sm:h-10 cursor-pointer")}>
+        <Slot />
       </Modal.Trigger>
-      <Modal.Panel class="fixed top-[10%] my-0 w-[min(100%,768px)] rounded-[8px] bg-background shadow-lg backdrop:backdrop-brightness-[60%] dark:bg-muted dark:shadow-2xl">
+      <Modal.Panel class="fixed top-[10%] my-0 w-[min(100%,768px)] rounded-[8px] bg-background shadow-lg backdrop:backdrop-brightness-[60%] dark:bg-muted dark:shadow-2xl mx-auto bg-neutral-accent">
         <Search />
       </Modal.Panel>
     </Modal.Root>
@@ -124,16 +123,16 @@ export const Search = component$(() => {
       }}
     >
       <Combobox.Input
-        class="min-h-[48px] w-full rounded-[8px] bg-muted px-4 text-foreground text-black outline-ring"
+        class="min-h-[48px] w-full rounded-t-[8px] bg-muted px-4 text-foreground outline-ring text-white bg-neutral-background/30 outline-qwik-blue-300"
         onInput$={handleInput}
         data-id="search"
       />
-      <Combobox.Inline class="flex flex-col">
+      <Combobox.Inline class="flex flex-col text-neutral-foreground">
         {results.value.map((result) => (
           <a href={result.url} key={result.url}>
             <Combobox.Item
               value={result.url}
-              class="border-b border-foreground/10 px-2 py-4 data-[highlighted]:bg-foreground/10"
+              class="border-b border-foreground/10 px-2 py-4 data-highlighted:bg-qwik-blue-600 data-highlighted:text-white"
             >
               <Combobox.ItemLabel class="text-lg font-bold text-foreground">
                 {result.meta.title}
