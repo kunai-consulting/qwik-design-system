@@ -2,7 +2,7 @@ import { type Page, expect, test } from "@playwright/test";
 import { createTestDriver } from "./label.driver";
 
 async function setup(page: Page, exampleName: string) {
-  await page.goto(`/headless/label/${exampleName}`);
+  await page.goto(`http://localhost:6174/base/label/${exampleName}`);
   const driver = createTestDriver(page);
 
   return { driver };

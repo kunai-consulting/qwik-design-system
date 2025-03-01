@@ -53,6 +53,14 @@ export const TOC = component$(({ headings }: { headings: ContentHeading[] }) => 
   return (
     <div class="space-y-2">
       <TableOfContents headings={context.allHeadingsSig.value} />
+      <div class="mt-8 text-sm">
+        <a
+          href="https://github.com/kunai-project/qwik-design-system/edit/main/apps/docs/src/routes/content.md"
+          class="text-cool-500 hover:text-qwik-blue-200 transition-colors"
+        >
+          Edit this page
+        </a>
+      </div>
     </div>
   );
 });
@@ -148,16 +156,18 @@ type RecursiveListProps = {
 const RecursiveList = component$<RecursiveListProps>(
   ({ tree, activeItem, limit = 3 }) => {
     return tree?.children?.length && tree.level < limit ? (
-      <ul class={cn("m-0 list-none", { "pl-4": tree.level !== 1 })}>
-        {tree.children.map((childNode) => (
-          <li key={childNode.id} class="mt-0 list-none pt-2">
-            <Anchor node={childNode} activeItem={activeItem} />
-            {childNode.children.length > 0 && (
-              <RecursiveList tree={childNode} activeItem={activeItem} />
-            )}
-          </li>
-        ))}
-      </ul>
+      <>
+        <ul class={cn("m-0 list-none", { "pl-4": tree.level !== 1 })}>
+          {tree.children.map((childNode) => (
+            <li key={childNode.id} class="mt-0 list-none pt-2">
+              <Anchor node={childNode} activeItem={activeItem} />
+              {childNode.children.length > 0 && (
+                <RecursiveList tree={childNode} activeItem={activeItem} />
+              )}
+            </li>
+          ))}
+        </ul>
+      </>
     ) : null;
   }
 );

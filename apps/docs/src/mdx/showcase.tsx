@@ -17,7 +17,7 @@ type ShowcaseProps = PropsOf<"div"> & {
 
 export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
   const location = useLocation();
-  const componentPath = `/src/routes/(headless)${location.url.pathname}examples/${name}.tsx`;
+  const componentPath = `/src/routes${location.url.pathname}examples/${name}.tsx`;
 
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const MetaGlobComponentSig = useSignal<Component<any>>();

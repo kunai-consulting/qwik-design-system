@@ -2,18 +2,18 @@
 
 ## Base
 
-- [Checkbox](/checkbox)
-- [Checklist](/checklist)
-- [Pagination](/pagination)
-- [OTP](/otp)
-- [Scroll Area](/scroll-area)
-- [Radio Group](/radio-group)
-- [Calendar](/calendar)
-- [File Upload](/file-upload)
-- [QR Code](/qr-code)
-- [Resizable](/resizable)
+- [Checkbox](/base/checkbox)
+- [Checklist](/base/checklist)
+- [Pagination](/base/pagination)
+- [OTP](/base/otp)
+- [Scroll Area](/base/scroll-area)
+- [Radio Group](/base/radio-group)
+- [Calendar](/base/calendar)
+- [File Upload](/base/file-upload)
+- [QR Code](/base/qr-code)
+- [Resizable](/base/resizable)
 
 ## Contributing
 
-- [Intro](/intro)
-- [Structure](/structure)
+- [Intro](/contributing/intro)
+- [Structure](/contributing/structure)

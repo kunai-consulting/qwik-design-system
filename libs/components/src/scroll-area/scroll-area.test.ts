@@ -2,7 +2,7 @@ import { type Page, expect, test } from "@playwright/test";
 import { createTestDriver } from "./scroll-area.driver";
 
 async function setup(page: Page, exampleName: string) {
-  await page.goto(`http://localhost:6174/scroll-area/${exampleName}`);
+  await page.goto(`http://localhost:6174/base/scroll-area/${exampleName}`);
 
   const driver = createTestDriver(page);
 
