@@ -123,6 +123,7 @@ export const components: Record<string, Component> = {
           "border border-neutral-primary overflow-clip text-sm bg-[#0e0f12] mt-6",
           props.class
         )}
+        data-pagefind-ignore
       >
         <Slot />
       </pre>
