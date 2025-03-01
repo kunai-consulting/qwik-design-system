@@ -8,7 +8,7 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import type { ContentHeading } from "@builder.io/qwik-city";
+import { useLocation, type ContentHeading } from "@builder.io/qwik-city";
 import { rootContextId } from "~/routes/layout";
 import { cn } from "~/utils/cn";
 
@@ -42,6 +42,7 @@ export const SubHeading = component$((props: PropsOf<"h3">) => {
 
 export const TOC = component$(({ headings }: { headings: ContentHeading[] }) => {
   const context = useContext(rootContextId);
+  const loc = useLocation();
 
   useTask$(() => {
     context.allHeadingsSig.value = [...headings, ...context.allHeadingsSig.value];
@@ -55,7 +56,7 @@ export const TOC = component$(({ headings }: { headings: ContentHeading[] }) => 
       <TableOfContents headings={context.allHeadingsSig.value} />
       <div class="mt-8 text-sm">
         <a
-          href="https://github.com/kunai-project/qwik-design-system/edit/main/apps/docs/src/routes/content.md"
+          href={`https://github.com/kunai-consulting/qwik-design-system/tree/main/apps/docs/src/routes${loc.url.pathname}index.mdx`}
           class="text-cool-500 hover:text-qwik-blue-200 transition-colors"
         >
           Edit this page
