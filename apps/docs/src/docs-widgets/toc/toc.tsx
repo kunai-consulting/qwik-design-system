@@ -53,17 +53,17 @@ export const TOC = component$(({ headings }: { headings: ContentHeading[] }) => 
   }
   return (
     <div class="space-y-2">
-      <TableOfContents headings={context.allHeadingsSig.value} />
-      <div class="mt-8 text-sm">
+      <div class="mb-4 text-sm">
         <a
           target="_blank"
           rel="noreferrer"
           href={`https://github.com/kunai-consulting/qwik-design-system/tree/main/apps/docs/src/routes${loc.url.pathname}index.mdx`}
-          class="text-cool-500 hover:text-qwik-blue-200 transition-colors"
+          class="hover:text-qwik-blue-200 transition-colors"
         >
           Edit this page
         </a>
       </div>
+      <TableOfContents headings={context.allHeadingsSig.value} />
     </div>
   );
 });

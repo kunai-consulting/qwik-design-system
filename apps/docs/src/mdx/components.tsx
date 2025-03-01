@@ -120,7 +120,7 @@ export const components: Record<string, Component> = {
       <pre
         {...props}
         class={cn(
-          "border border-[#303d49] overflow-clip text-sm bg-[#0e0f12] mt-6",
+          "border border-neutral-primary overflow-clip text-sm bg-[#0e0f12] mt-6",
           props.class
         )}
       >
