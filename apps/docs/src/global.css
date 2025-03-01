@@ -126,12 +126,12 @@ blockquote a {
   --color-qwik-neutral-950: #202a2c;
 
   --animate-blink-caret: blink-caret 1.25s ease-out infinite;
-
-  --breakpoint-sm: 640px;
-  --breakpoint-md: 768px;
-  --breakpoint-lg: 1024px;
-  --breakpoint-xl: 1280px;
-  --breakpoint-2xl: 1536px;
+  
+  /* New animation variables */
+  --animate-fade-in: fade-in 0.3s ease-out forwards;
+  --animate-fade-out: fade-out 0.3s ease-out forwards;
+  --animate-slide-in-from-right: slide-in-from-right 0.3s ease-out forwards;
+  --animate-slide-out-to-right: slide-out-to-right 0.3s ease-out forwards;
 
   @keyframes blink-caret {
     0%,
@@ -143,5 +143,46 @@ blockquote a {
     50% {
       opacity: 0;
     }
+  }
+
+  /* New keyframe animations */
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fade-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  @keyframes slide-in-from-right {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+
+  @keyframes slide-out-to-right {
+    from { transform: translateX(0); }
+    to { transform: translateX(100%); }
+  }
+}
+
+/* Add utility classes for the animations */
+@layer utilities {
+  .animate-in {
+    animation: var(--animate-fade-in);
+    opacity: 0;
+  }
+  
+  .animate-out {
+    animation: var(--animate-fade-out);
+  }
+  
+  .slide-in-from-right {
+    animation: var(--animate-slide-in-from-right);
+  }
+  
+  .slide-out-to-right {
+    animation: var(--animate-slide-out-to-right);
   }
 }
