@@ -10,8 +10,6 @@ export const Header = component$(() => {
       {isDev && (
         <>
           <AIDrawer />
-          <APIReference />
-          <DocsAI />
           <a href="https://github.com/kunai-consulting/qwik-design-system">GitHub</a>
         </>
       )}
