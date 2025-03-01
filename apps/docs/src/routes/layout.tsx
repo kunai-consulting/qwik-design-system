@@ -20,6 +20,7 @@ import { TOC } from "~/docs-widgets/toc/toc";
 import { components } from "~/mdx/components";
 import { MDXProvider } from "~/mdx/provider";
 import styles from "./layout.css?inline";
+import { NavFooter } from "~/docs-widgets/nav-footer/nav-footer";
 type RootContext = {
   allHeadingsSig: Signal<ContentHeading[]>;
 };
@@ -49,6 +50,7 @@ export default component$(() => {
   return (
     <MDXProvider components={components}>
       <Header />
+      <NavFooter />
       <SearchModal />
       <div class="svg-bg w-full h-full top-0 left-0 absolute z-[-2]" />
       <div class="w-full h-full top-0 left-0 absolute bg-gradient z-[-1]" />
