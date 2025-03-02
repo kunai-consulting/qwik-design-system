@@ -17,3 +17,4 @@
 
 - [Intro](/contributing/intro)
 - [Structure](/contributing/structure)
+- [Composition](/contributing/composition)
