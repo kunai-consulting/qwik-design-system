@@ -7,7 +7,10 @@ import { Sparkles } from "../sparkles/sparkles";
 export const AIDrawer = component$(() => {
   return (
     <Modal.Root class="group">
-      <Modal.Trigger class="flex items-center justify-center cursor-pointer">
+      <Modal.Trigger
+        class="flex items-center justify-center cursor-pointer"
+        data-footer-trigger
+      >
         <Slot />
       </Modal.Trigger>
       <Modal.Panel class=" ml-auto data-open:translate-x-0 translate-x-[100%] duration-300 h-full w-[300px] data-open:backdrop:backdrop-brightness-20 data-open:backdrop:animate-fade-in data-closing:backdrop:animate-fade-out  border-l border-neutral-800 bg-neutral-accent data-open:flex flex-col gap-4 px-4 pt-4">

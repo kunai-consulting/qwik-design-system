@@ -52,7 +52,7 @@ export default component$(() => {
       <SearchModal />
       <div class="svg-bg w-full h-full top-0 left-0 absolute z-[-2]" />
       <div class="w-full h-full top-0 left-0 absolute bg-gradient z-[-1]" />
-      <div class="flex gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-[200px_1fr] xl:grid-cols-[225px_1fr_225px] gap-4">
         <Sidebar />
         <main data-pagefind-body class="mx-auto max-w-screen-md">
           <Slot />
@@ -64,9 +64,9 @@ export default component$(() => {
             </ScrollArea.Viewport>
             <ScrollArea.Scrollbar
               orientation="vertical"
-              class="w-4 p-0.5 bg-[#FFFFFF1F] rounded-full"
+              class="w-4 p-0.5 bg-neutral-primary rounded-full"
             >
-              <ScrollArea.Thumb class="h-12 w-3 bg-[#FFFFFF66] rounded-full transition-[background] duration-160 ease-out hover:bg-[#FFFFFF80]" />
+              <ScrollArea.Thumb class="h-12 w-3 bg-neutral-foreground rounded-full transition-[background] duration-160 ease-out hover:bg-[#FFFFFF80]" />
             </ScrollArea.Scrollbar>
           </ScrollArea.Root>
         </aside>

@@ -133,7 +133,7 @@ export const components: Record<string, Component> = {
     return (
       <code
         {...props}
-        class={cn("max-h-[31.25rem] max-w-full overflow-auto", props.class)}
+        class={cn("max-h-[31.25rem] whitespace-pre-wrap break-all", props.class)}
       >
         <Slot />
       </code>

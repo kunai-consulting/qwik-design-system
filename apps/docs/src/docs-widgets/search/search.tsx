@@ -65,7 +65,10 @@ export const SearchModal = component$(() => {
 
   return (
     <Modal.Root bind:show={isOpen}>
-      <Modal.Trigger class={cn("flex h-8 items-center gap-2 sm:h-10 cursor-pointer")}>
+      <Modal.Trigger
+        class={cn("flex h-8 items-center gap-2 sm:h-10 cursor-pointer")}
+        data-footer-trigger
+      >
         <Slot />
       </Modal.Trigger>
       <Modal.Panel class="fixed top-[10%] my-0 w-[min(100%,768px)] rounded-[8px] bg-background shadow-lg backdrop:backdrop-brightness-[60%] dark:bg-muted dark:shadow-2xl mx-auto bg-neutral-accent data-open:opacity-100 data-closing:opacity-0 opacity-0 transition-all duration-150 scale-75 data-open:scale-100 data-closing:duration-[100ms]">
