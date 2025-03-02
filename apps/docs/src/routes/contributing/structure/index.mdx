@@ -24,48 +24,86 @@ The component name itself serves as the namespace (like `Dropdown`), and within 
 
 For example, a Dropdown component might be structured like this:
 
+A Root component that provides the context and state for the child pieces.
+
 ```tsx
 import { component$, Slot } from '@builder.io/qwik';
 
+export const dropdownContextId = createContextId<DropdownContext>('qds-dropdown');
+
 // The component pieces
-export const DropdownRoot = component$(() => {
+export const DropdownRoot = component$((props) => {
+  const isPopoverOpenSig = useSignal(false);
+ 
+  const context = {
+    isPopoverOpenSig,
+    // ...
+  }
+
+  useContextProvider(dropdownContextId, context);
+
   return (
-    <div class="dropdown">
+    <div {...props}>
       <Slot />
     </div>
   );
 });
+```
 
-export const DropdownTrigger = component$(() => {
+```tsx
+export const DropdownTrigger = component$((props) => {
+
+  const handleClick$ = $(() => { 
+    context.isPopoverOpenSig.value = !context.isPopoverOpenSig.value;
+  });
+
   return (
-    <button class="dropdown-trigger">
+    <button onClick$={[handleClick$, props.onClick$]} {...props}>
       <Slot />
     </button>
   );
 });
+```
 
-export const DropdownMenu = component$(() => {
+The Dropdown builds on top of the Popover component, another composable primitive.
+
+```tsx
+export const DropdownPopover = component$((props) => {
+  const context = useContext(dropdownContextId);
+
+  useTask$(() => {
+    track(() => context.isPopoverOpenSig.value);
+
+    // this task allows us to do Dropdown specific logic
+    // when the popover opens or closes
+  })
+
   return (
-    <div class="dropdown-menu">
+    <Popover.Panel {...props}>
       <Slot />
-    </div>
+    </Popover.Panel>
   );
 });
+```
 
-export const DropdownItem = component$(({ href }: { href: string }) => {
+```tsx
+export const DropdownItem = component$((props) => {
   return (
-    <a class="dropdown-item" href={href}>
+    <a {...props}>
       <Slot />
     </a>
   );
 });
+```
 
-// Creating the namespace with pieces
+Creating the namespace with pieces in `index.ts`
+
+```tsx
 export const Dropdown = {
   Root: DropdownRoot,
   Trigger: DropdownTrigger,
-  Menu: DropdownMenu,
-  Item: DropdownItem
+  Item: DropdownItem,
+  Popover: DropdownPopover
 };
 ```
 
@@ -74,11 +112,11 @@ This enables developers to use the component like this:
 ```tsx
 <Dropdown.Root>
   <Dropdown.Trigger>Actions</Dropdown.Trigger>
-  <Dropdown.Menu>
+  <Dropdown.Popover>
     <Dropdown.Item href="/profile">Profile</Dropdown.Item>
     <Dropdown.Item href="/settings">Settings</Dropdown.Item>
     <Dropdown.Item href="/logout">Logout</Dropdown.Item>
-  </Dropdown.Menu>
+  </Dropdown.Popover>
 </Dropdown.Root>
 ```
 
