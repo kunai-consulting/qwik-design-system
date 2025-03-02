@@ -149,7 +149,11 @@ export const UserActionsDropdown = component$(({ user }) => {
 
 ## Organizing Component Files
 
-When creating a new compound component for QDS, follow this file structure:
+Each component should have a root, which is the top level component that provides the context and state for the child pieces.
+
+The other pieces can be named anything, but should be related to the component.
+
+Ideally, they should be declarative and intuitively explain the purpose of the piece.
 
 ```
 libs/components/src/dropdown/
@@ -161,20 +165,28 @@ libs/components/src/dropdown/
 └── research.mdx       # Research and documentation
 ```
 
-The `index.ts` file creates and exports the namespace:
+The component folder's `index.ts` file exports the pieces:
 
 ```tsx
-import { DropdownRoot } from './root';
-import { DropdownTrigger } from './trigger';
-import { DropdownMenu } from './menu';
-import { DropdownItem } from './item';
+export { DropdownRoot as Root } from './root';
+export { DropdownTrigger as Trigger } from './trigger';
+export { DropdownMenu as Menu } from './menu';
+export { DropdownItem as Item } from './item';
+```
 
-export const Dropdown = {
-  Root: DropdownRoot,
-  Trigger: DropdownTrigger,
-  Menu: DropdownMenu,
-  Item: DropdownItem
-};
+Then, the `lib/components/src/index.ts` file exports the namespace:
+
+```tsx
+export * as Otp from "./otp";
+export * as Checkbox from "./checkbox";
+export * as Checklist from "./checklist";
+export * as Pagination from "./pagination";
+export * as ScrollArea from "./scroll-area";
+export * as RadioGroup from "./radio-group";
+export * as Calendar from "./calendar";
+export * as FileUpload from "./file-upload";
+export * as QRCode from "./qr-code";
+export * as Resizable from "./resizable";
 ```
 
 ## Benefits of This Structure
