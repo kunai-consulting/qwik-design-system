@@ -1,0 +1,110 @@
+# Research
+
+Each component folder should have a file called `research.md` or `research.mdx` that outlines the research that went into the component. This should include:
+
+A comprehensive research document should cover the following areas:
+
+## Features
+
+List all the features the component should support, using a checklist format:
+
+```md
+- [ ] Feature 1
+- [ ] Feature 2
+- [ ] Feature 3
+```
+
+As you add features, make sure to update the research document to reflect the latest changes.
+
+## Component Structure
+
+Define the composition pieces of the component:
+
+```md
+Pieces:
+- Root
+- Panel
+- Handle
+```
+
+## Keyboard Interactions
+
+Document all keyboard interactions the component should support for accessibility:
+
+```md
+- Arrow keys for navigation
+- Enter/Space for activation
+- Escape for dismissal
+```
+
+## ARIA Attributes
+
+List all the ARIA attributes needed for accessibility:
+
+```md
+role="dialog"
+- aria-labelledby
+- aria-describedby
+```
+
+## Use Cases
+
+Document common use cases for the component:
+
+```md
+- Forms
+- Navigation
+- Data visualization
+```
+
+Provide links to the example use cases.
+
+For example, here's some use case links of the slider component:
+
+- [Image Reveal slider](https://examples.motion.dev/js/image-reveal-slider)
+- [iOS Slider](https://examples.motion.dev/js/ios-slider)
+
+## CSS Considerations
+
+Note any important CSS properties or techniques:
+
+```md
+Important CSS:
+- position: absolute
+- position-anchor: top-left
+- overflow: hidden
+```
+
+## API Design
+
+Document the proposed API for each component part:
+
+```md
+Root:
+- prop1 -> description
+- prop2 -> description
+
+Panel:
+- propA -> description
+- propB -> description
+```
+
+## Known Issues
+
+Document any known issues or challenges from similar implementations:
+
+```md
+- Edge case handling
+- Browser inconsistencies
+```
+
+## Questions
+
+List any open questions that need resolution:
+
+```md
+- How should X behavior work?
+- Should we support Y feature?
+```
+
+See the [resizable component research](https://github.com/kunai-consulting/qwik-design-system/blob/main/libs/components/src/resizable/research.mdx) for an example.

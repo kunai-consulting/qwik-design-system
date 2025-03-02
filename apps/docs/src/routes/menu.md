@@ -20,3 +20,4 @@
 - [Component Structure](/contributing/component-structure)
 - [Composition](/contributing/composition)
 - [State](/contributing/state)
+- [Research](/contributing/research)

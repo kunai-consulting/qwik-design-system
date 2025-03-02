@@ -85,9 +85,6 @@ importers:
       '@fontsource/proza-libre':
         specifier: ^5.0.12
         version: 5.1.1
-      '@fontsource/sriracha':
-        specifier: ^5.0.19
-        version: 5.1.1
       '@kunai-consulting/qwik':
         specifier: workspace:*
         version: link:../../libs/components
@@ -644,9 +641,6 @@ packages:
 
   '@fontsource/proza-libre@5.1.1':
     resolution: {integrity: sha512-D42CrxaArGmQt6o2hkVfEHbqcpCUNtdgytN6YnrqayTS3XeA7psJMbFilF5Zbg+9TInYUbIOV5YQgJ8kWlRsCg==}
-
-  '@fontsource/sriracha@5.1.1':
-    resolution: {integrity: sha512-QZIYxBYPDcBb25VvwimMufo3a6lKAKjTp+Q+ahJdzPcm+lj8gRpBLKTWu4SVBGXiL6op1g0QI/XWr+MZGI21Zg==}
 
   '@graphql-typed-document-node/core@3.2.0':
     resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
@@ -2919,8 +2913,6 @@ snapshots:
   '@floating-ui/utils@0.2.7': {}
 
   '@fontsource/proza-libre@5.1.1': {}
-
-  '@fontsource/sriracha@5.1.1': {}
 
   '@graphql-typed-document-node/core@3.2.0(graphql@15.9.0)':
     dependencies:
