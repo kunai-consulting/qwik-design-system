@@ -13,8 +13,7 @@ import {
   useContent
 } from "@builder.io/qwik-city";
 import { ScrollArea } from "@kunai-consulting/qwik";
-import { SearchModal } from "~/components/search";
-import { Header } from "~/docs-widgets/header/header";
+import { SearchModal } from "~/docs-widgets/search/search";
 import { Sidebar } from "~/docs-widgets/sidebar/sidebar";
 import { TOC } from "~/docs-widgets/toc/toc";
 import { components } from "~/mdx/components";

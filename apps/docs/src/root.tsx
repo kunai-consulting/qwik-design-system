@@ -4,7 +4,7 @@ import { isDev } from "@builder.io/qwik/build";
 import { RouterHead } from "./docs-widgets/router-head/router-head";
 
 import "./global.css";
-import { ModulePreload } from "./components/module-preload";
+import { ModulePreload } from "./docs-widgets/module-preload/module-preload";
 
 export default component$(() => {
   /**

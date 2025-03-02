@@ -2,7 +2,7 @@ import { component$, isDev, Slot, useStyles$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import styles from "./nav-footer.css?inline";
 import { AIDrawer } from "../header/ai-drawer";
-import { SearchModal } from "~/components/search";
+import { SearchModal } from "~/docs-widgets/search/search";
 
 export const NavFooter = component$(() => {
   useStyles$(styles);
