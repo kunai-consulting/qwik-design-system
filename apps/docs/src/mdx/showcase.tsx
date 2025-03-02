@@ -44,7 +44,7 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
       </Carousel.Pagination>
 
       <Carousel.Slide class="border border-neutral-primary">
-        <section class={"flex flex-col items-center py-12 px-6"}>
+        <section class={"flex flex-col items-center py-12 px-6 *:flex-wrap"}>
           {MetaGlobComponentSig.value && <MetaGlobComponentSig.value />}
         </section>
       </Carousel.Slide>

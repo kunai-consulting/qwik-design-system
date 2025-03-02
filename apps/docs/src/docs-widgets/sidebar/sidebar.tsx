@@ -6,7 +6,7 @@ export const Sidebar = component$(() => {
   const loc = useLocation();
 
   return (
-    <nav class="flex-col gap-4 sticky top-20 h-full hidden md:flex">
+    <nav class="flex-col gap-4 sticky top-20 hidden md:flex h-[calc(100vh-160px)]">
       {menu?.items?.map((section) => (
         <div key={section.text}>
           <h5 class="mb-2 font-bold text-xl text-white">{section.text}</h5>

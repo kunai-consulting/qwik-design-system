@@ -54,7 +54,7 @@ export default component$(() => {
       <div class="w-full h-full top-0 left-0 absolute bg-gradient z-[-1]" />
       <div class="grid grid-cols-1 md:grid-cols-[200px_1fr] xl:grid-cols-[225px_1fr_225px] gap-4">
         <Sidebar />
-        <main data-pagefind-body class="mx-auto max-w-screen-md">
+        <main data-pagefind-body class="w-full mx-auto max-w-screen-md">
           <Slot />
         </main>
         <aside class="hidden w-60 xl:block">

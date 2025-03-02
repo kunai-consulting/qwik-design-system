@@ -75,6 +75,7 @@ pre {
 body {
   @apply bg-[#030405] text-white;
   font-family: "Yusei Magic", "Adjusted Tahoma Fallback" !important;
+  scrollbar-gutter: stable;
 }
 
 blockquote a {
