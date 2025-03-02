@@ -16,5 +16,7 @@
 ## Contributing
 
 - [Intro](/contributing/intro)
-- [Structure](/contributing/structure)
+- [New Components](/contributing/new-component)
+- [Component Structure](/contributing/component-structure)
 - [Composition](/contributing/composition)
+- [State](/contributing/state)

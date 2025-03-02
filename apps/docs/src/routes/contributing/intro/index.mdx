@@ -57,50 +57,6 @@ A headless UI library is just the brains without the beauty - all the smart func
 
 Think of it as LEGO instructions without dictating what colors to use! 🧩
 
-## Initial component setup
-
-1. Create a new component folder in the `libs/components/src` directory.
-2. Create a new route folder in the `apps/docs/src/routes/` directory.
-3. Export the component from the `libs/components/src/index.ts` file.
-4. Add the component to the sidebar menu in the `apps/docs/src/routes/menu.md` file.
-
-## Adding docs examples
-
-Every routes folder contains a `examples` folder. This is the place to add new examples for the component.
-
-To add a new example, create a new file in the `examples` folder, and create a Qwik component that does a default export.
-
-```tsx
-import { component$ } from "@builder.io/qwik";
-
-export default component$(() => {
-    return <div>Hello World</div>;
-});
-```
-
-Then, consume this in the mdx file with the file name as the name of the example.
-
-File tree:
-
-```shell
-apps/docs/src/routes/tree/examples/hero.tsx
-```
-
-How it looks in MDX:
-
-```mdx
-<Showcase name="hero" />
-```
-
-## When is a component ready?
-
-A component is ready when it has:
-
-- Research
-- Documentation
-- Examples
-- Tests
-
 ### Research
 
 Each folder should have a file called `research.md` or `research.mdx` that outlines the research that went into the component. This should include:

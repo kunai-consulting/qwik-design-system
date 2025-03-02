@@ -2,7 +2,7 @@
 
 ## What is Composability?
 
-Composability is a design principle where complex UI components are built from simple, reusable pieces that work well together. In QDS, components are designed to be composed rather than configured through numerous props.
+Composability means building complex UIs from simple, reusable pieces that work well together. In QDS, components are designed to be composed rather than configured through numerous props.
 
 For example, instead of a monolithic component with many configuration options, QDS provides component parts that you can combine:
 
@@ -13,13 +13,19 @@ For example, instead of a monolithic component with many configuration options, 
 </Tooltip.Root>
 ```
 
-This approach gives you more flexibility and control over your UI components.
-
-[Learn more about composability in our intro guide](../intro#principle-2-composability).
-
 ## One Component, One Markup Element
 
 A key principle in QDS is that each component typically corresponds to ONE piece of markup. With few exceptions, components are responsible for rendering and controlling a single element in the DOM.
+
+```tsx
+export const CheckboxTrigger = component$((props) => {
+  return (
+    <button {...props}>
+      <Slot />
+    </button>
+  );
+});
+```
 
 This principle:
 
@@ -27,8 +33,6 @@ This principle:
 - Makes the relationship between components and DOM clearer
 - Simplifies styling and accessibility implementations
 - Avoids "div soup" and unnecessary nesting
-
-The exceptions to this rule are primarily composite components that need to manage multiple elements as a cohesive unit, like dialogs with backdrops or components that need to manage focus traps.
 
 By following these composition principles, QDS aims to provide a flexible foundation that can be adapted to any design system needs while maintaining accessibility and performance.
 
@@ -63,13 +67,15 @@ Without composability, you face "prop armageddon":
 />
 ```
 
-This pattern is better for those consuming the library, but not for those building it.
+This pattern is ok for those consuming the library, but not for those building it.
 
 ### Composing by abstraction
 
-The purpose of these primitives is for consumers to abstract the complexity of the component, so you can focus on building your app.
+The purpose of these primitives is for consumers to combine the pieces of the component, so you can focus on building your app.
 
 ```jsx
+import { Tooltip } from "@kunai-consulting/qwik";
+
 export const HelpTip = component$(({ trigger }) => {
   return (
     <Tooltip.Root>
@@ -83,20 +89,24 @@ export const HelpTip = component$(({ trigger }) => {
   );
 });
 
-<form>
-  <label>
-    Username
-    <HelpTip trigger={<Icon name="question-circle" />}>
-      Choose a username between 3-20 characters
-    </HelpTip>
-  </label>
-  <input name="username" />
-</form>
+export default component$(() => {
+  return (
+      <form>
+        <label>
+          Username
+          <HelpTip trigger={<Icon name="question-circle" />}>
+            Choose a username between 3-20 characters
+          </HelpTip>
+        </label>
+        <input name="username" />
+      </form>
+  )
+})
 ```
 
 ### Composing with your own elements
 
-With the `asChild` prop, you can even replace our default elements with your own:
+With the `asChild` prop, consumers can even replace our default elements with their own JSX or components:
 
 ```jsx
 <Tooltip.Root>

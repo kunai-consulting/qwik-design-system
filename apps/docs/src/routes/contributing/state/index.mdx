@@ -1,0 +1,54 @@
+# State
+
+QDS components have two types of state:
+
+1. Signal based
+2. Value based
+
+## Signal based (two-way binding)
+
+Consumers can pass a signal directly to the component to manage the component's state.
+
+```tsx
+export const ExampleComp = component$(() => {
+    const selectedValueSig = signal(null);
+
+    return (
+        <Select.Root bind:value={selectedValueSig}>
+            {...}
+        </Select.Root>
+    )
+})
+```
+
+`bind:value` under the hood is a really just a prop. The convention is to use `bind:` for signals, to stay consistent with Qwik's convention.
+
+> In Qwik, you can use `bind:value` or `bind:checked` to pass your own signal state to inputs for example.
+
+When using this pattern, its expected that both the internal state of the component and the consumer's signal are in sync.
+
+### useBoundSignal
+
+Qwik Design System provides a hook to combine signals to one source of truth.
+
+```tsx
+export const SelectRoot = component$((props: SelectRootProps) => {
+    const {
+        "bind:value": givenSelectedValueSig,
+        value,
+        ...rest
+    } = props;
+
+    const selectedValueSig = useBoundSignal(givenSelectedValueSig, "Jim");
+
+    return (
+        <div>
+            <Slot />
+        </div>
+    )
+})
+```
+
+The first argument is the **signal that the consumer passed in**. The second argument is the **initial value** of the signal.
+
+In this case we've provided the initial value of `"Jim"` to the signal, but it could be an initial value from a prop passed by the consumer as well from value based state.

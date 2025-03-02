@@ -1,6 +1,6 @@
 import structure from '~/assets/docs/structure/structure.png';
 
-# Structure
+# Component Structure
 
 ## The Spectrum of Components
 
@@ -137,11 +137,11 @@ export const UserActionsDropdown = component$(({ user }) => {
   return (
     <Dropdown.Root>
       <Dropdown.Trigger>User Actions</Dropdown.Trigger>
-      <Dropdown.Menu>
+      <Dropdown.Popover>
         <Dropdown.Item href={`/user/${user.id}/profile`}>Profile</Dropdown.Item>
         <Dropdown.Item href={`/user/${user.id}/settings`}>Settings</Dropdown.Item>
         <Dropdown.Item href="/logout">Logout</Dropdown.Item>
-      </Dropdown.Menu>
+      </Dropdown.Popover>
     </Dropdown.Root>
   );
 });
