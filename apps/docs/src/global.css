@@ -72,6 +72,29 @@ pre {
   padding: 2ch;
 }
 
+*::-webkit-scrollbar {
+  background-color: transparent;
+  width: 1rem;
+  height: 1rem;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-neutral-primary);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-neutral-interactive);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--color-neutral-secondary);
+  border-left: 0;
+}
+
 body {
   @apply bg-[#030405] text-white;
   font-family: "Yusei Magic", "Adjusted Tahoma Fallback" !important;
