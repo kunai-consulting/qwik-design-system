@@ -17,7 +17,7 @@ export const Features = component$<{ api: ComponentParts }>(({ api }) => {
             <span>
               <LuBadgeCheck class="text-qwik-blue-400" />
             </span>
-            <span>{feature}</span>
+            <span class="text-neutral-foreground">{feature}</span>
           </li>
         ))}
       </ul>

@@ -2,7 +2,7 @@ import { type Page, expect, test } from "@playwright/test";
 import { createTestDriver } from "./qr-code.driver";
 
 async function setup(page: Page, exampleName: string) {
-  await page.goto(`http://localhost:6174/qr-code/${exampleName}`);
+  await page.goto(`http://localhost:6174/base/qr-code/${exampleName}`);
   const driver = createTestDriver(page);
   return driver;
 }

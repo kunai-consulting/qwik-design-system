@@ -1,0 +1,28 @@
+@media (prefers-reduced-motion: no-preference) {
+    .nav-footer-animation {
+        transform: translateY(200px);
+        animation-delay: 1s !important;
+        animation: pop-up 2.5s linear(0, 0.03 1.5%, 0.121 3.2%, 0.851 13%, 0.99 16.4%, 1.063 20.2%, 1.076 22.3%, 1.075 24.8%, 1.013 35.9%, 0.995 43.4%, 1) forwards;
+    }
+}
+
+.nav-footer-animation > a, [data-footer-trigger] {
+    transition: transform 0.3s linear(0, 0.402 7.4%, 0.711 15.3%, 0.929 23.7%, 1.008 28.2%, 1.067 33%, 1.099 36.9%, 1.12 41%, 1.13 45.4%, 1.13 50.1%, 1.111 58.5%, 1.019 83.2%, 1.004 91.3%, 1);
+}
+
+.nav-footer-animation > a:hover {
+    transform: scale(1.15);
+}
+
+[data-footer-trigger]:hover {
+    transform: scale(1.15);
+}
+
+@keyframes pop-up {
+    from {
+        transform: translateY(200px);
+    }
+    to {
+        transform: translateY(0);
+    }
+}

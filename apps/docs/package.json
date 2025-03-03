@@ -6,9 +6,7 @@
   },
   "engines-annotation": "Mostly required by sharp which needs a Node-API v9 compatible runtime",
   "private": true,
-  "trustedDependencies": [
-    "sharp"
-  ],
+  "trustedDependencies": ["sharp"],
   "trustedDependencies-annotation": "Needed for bun to allow running install scripts",
   "type": "module",
   "scripts": {
@@ -42,7 +40,8 @@
     "unified": "^11.0.4",
     "vite": "^5.4",
     "vite-tsconfig-paths": "^4.2.1",
-    "wrangler": "^3.0.0"
+    "wrangler": "^3.0.0",
+    "@fontsource/proza-libre": "^5.0.12"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.0",

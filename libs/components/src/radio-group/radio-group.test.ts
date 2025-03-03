@@ -2,7 +2,7 @@ import { type Page, expect, test } from "@playwright/test";
 import { createTestDriver } from "./radio-group.driver";
 
 async function setup(page: Page, exampleName: string) {
-  await page.goto(`http://localhost:6174/radio-group/${exampleName}`);
+  await page.goto(`http://localhost:6174/base/radio-group/${exampleName}`);
   const rootLocator = createTestDriver(page);
   return rootLocator;
 }
