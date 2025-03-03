@@ -13,6 +13,7 @@
 - [QR Code](/qr-code)
 - [Toast](/toast)
 - [Resizable](/resizable)
+- [Tree](/tree)
 
 ## Styled
 

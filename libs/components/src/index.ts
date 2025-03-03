@@ -9,3 +9,4 @@ export * as FileUpload from "./file-upload";
 export * as QRCode from "./qr-code";
 export * as Toast from "./toast";
 export * as Resizable from "./resizable";
+export * as Tree from "./tree";
