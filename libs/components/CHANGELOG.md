@@ -1,5 +1,13 @@
 # @kunai-consulting/qwik-headless
 
+## 0.0.5
+
+### Patch Changes
+
+- 1c62fff: Added missing documents
+- c767656: Work on the DocsAI generation.
+- 844a5cc: Work on the toast component
+
 ## 0.0.4
 
 ### Patch Changes
