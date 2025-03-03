@@ -11,6 +11,7 @@
 - [Calendar](/calendar)
 - [File Upload](/file-upload)
 - [QR Code](/qr-code)
+- [Toast](/toast)
 - [Resizable](/resizable)
 
 ## Styled
