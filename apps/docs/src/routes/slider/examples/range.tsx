@@ -7,7 +7,7 @@ export default component$(() => {
   return (
     <Slider.Root
       class="slider-root"
-      mode="range"
+      isRange
       value={[30, 70]}
       min={0}
       max={100}

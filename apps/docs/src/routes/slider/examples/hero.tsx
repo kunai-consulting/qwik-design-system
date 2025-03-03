@@ -1,4 +1,4 @@
-import { component$, useStyles$ } from "@builder.io/qwik";
+import {component$, useSignal, useStyles$} from "@builder.io/qwik";
 import { Slider } from "@kunai-consulting/qwik";
 import styles from "./slider-custom.css?inline";
 
@@ -7,15 +7,14 @@ export default component$(() => {
   return (
     <Slider.Root
       class="slider-root"
-      mode="single"
       value={50}
       min={0}
       max={100}
       step={1}
-      onValueChange$={(value) => {
+      onChange$={(value: number | [number, number]) => {
         console.log("Value changed:", value);
       }}
-      onValueChangeEnd$={(value) => {
+      onChangeEnd$={(value) => {
         console.log("Final value:", value);
       }}
     >

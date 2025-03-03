@@ -1,6 +1,11 @@
 export const api = {
   "slider": [
     {
+      "Slider Marker Group": {
+        "inheritsFrom": "div"
+      }
+    },
+    {
       "Slider Range": {
         "inheritsFrom": "div"
       }
@@ -73,8 +78,10 @@ export const api = {
       "description": "Draggable thumb component that users interact with to change slider values"
     },
     {
-      "name": "Slider.Marks",
-      "description": "Component that renders marksindicators along the slider track"
+      "name": "Slider.MarkerGroup"
+    },
+    {
+      "name": "Slider.Marker"
     },
     {
       "name": "Slider.Tooltip",

@@ -1,26 +1,23 @@
-import { type Signal, type PropFunction, createContextId } from "@builder.io/qwik";
+import {type Signal, type PropFunction, createContextId, QRL} from "@builder.io/qwik";
 
-export interface Mark {
-  value: number;
-  label?: string;
-}
-
-export type SliderMode = "single" | "range";
 export type ThumbType = "start" | "end";
+export type SliderValue = number | [number, number];
 
 export interface SliderContext {
-  mode: Signal<SliderMode>;
-  value: Signal<number>;
+  isRange: Signal<boolean>;
+  value: Signal<SliderValue>;  // для signal-based подхода
   startValue: Signal<number>;
   endValue: Signal<number>;
   min: Signal<number>;
   max: Signal<number>;
   step: Signal<number>;
   disabled: Signal<boolean>;
-  marks: Signal<Mark[]>;
+  isDragEnded: Signal<boolean>;
+  setValue: QRL<(newValue: number, type?: ThumbType) => void>;
+  calculateValue: QRL<(clientX: number, rect: DOMRect) => number>;
   thumbType: Signal<ThumbType | undefined>;
-  onValueChange$?: PropFunction<(value: number | [number, number]) => void>;
-  onValueChangeEnd$?: PropFunction<(value: number | [number, number]) => void>;
+  onChange$?: PropFunction<(value: SliderValue) => void>;
+  onChangeEnd$?: PropFunction<(value: SliderValue) => void>;
 }
 
 export const sliderContextId = createContextId<SliderContext>("slider-context");

@@ -6,10 +6,9 @@ import {
   useSignal,
   useVisibleTask$,
   useContextProvider,
-  Slot
+  Slot, useComputed$, sync$
 } from "@builder.io/qwik";
 import { type ThumbType, sliderContextId, SliderContext } from "./slider-context";
-import { useSliderUtils } from "./use-slider-utils";
 interface PublicThumbProps extends PropsOf<"div"> {
   /** The type of thumb - either 'start' or 'end' for range sliders */
   type?: ThumbType;
@@ -17,123 +16,170 @@ interface PublicThumbProps extends PropsOf<"div"> {
 /** Draggable thumb component that users interact with to change slider values */
 export const SliderThumb = component$((props: PublicThumbProps) => {
   const { type, ...rest } = props;
-  const parentContext = useContext(sliderContextId);
+  const context = useContext(sliderContextId);
   const isDragging = useSignal(false);
   const thumbRef = useSignal<HTMLDivElement>();
   const trackRef = useSignal<HTMLDivElement>();
   const thumbType = useSignal<ThumbType | undefined>(type);
-  const { calculateValue, setValue } = useSliderUtils(parentContext);
-  const context: SliderContext = {
-    ...parentContext,
+  const extendedContext: SliderContext = {
+    ...context,
     thumbType
   };
-  useContextProvider(sliderContextId, context);
-  const percentage =
-    parentContext.mode.value === "single"
-      ? ((parentContext.value.value - parentContext.min.value) /
-          (parentContext.max.value - parentContext.min.value)) *
-        100
-      : ((type === "start"
-          ? parentContext.startValue.value
-          : parentContext.endValue.value - parentContext.min.value) /
-          (parentContext.max.value - parentContext.min.value)) *
-        100;
-  useVisibleTask$(() => {
+
+  const ariaValueMin = useComputed$(() =>
+    context.isRange.value && type === "start"
+      ? context.min.value
+      : context.startValue.value
+  );
+
+  const ariaValueMax = useComputed$(() =>
+    context.isRange.value && type === "end"
+      ? context.max.value
+      : context.endValue.value
+  );
+
+  const ariaValueNow = useComputed$(() => {
+    const value = !context.isRange.value
+      ? context.value.value
+      : type === "start"
+        ? context.startValue.value
+        : context.endValue.value;
+
+    return typeof value === 'number' ? value : undefined;
+  });
+
+  useContextProvider(sliderContextId, extendedContext);
+
+  const percentage = useComputed$(() => {
+    const range = context.max.value - context.min.value;
+    if (range === 0) return 0;
+
+    if (!context.isRange.value) {
+      const value = context.value.value as number;
+      return Math.min(100, Math.max(0, ((value - context.min.value) / range) * 100));
+    }
+
+    const value = type === "start"
+      ? context.startValue.value
+      : context.endValue.value;
+
+    return Math.min(100, Math.max(0, ((value - context.min.value) / range) * 100));
+  });
+
+  useVisibleTask$(({ track }) => {
+    const currentPercentage = track(() => percentage.value);
+
     if (thumbRef.value) {
+      thumbRef.value.style.left = `${currentPercentage}%`;
       trackRef.value = thumbRef.value.parentElement as HTMLDivElement;
     }
   });
+
   const onPointerDown$ = $(async (event: PointerEvent) => {
-    if (parentContext.disabled.value || !thumbRef.value) return;
-    event.preventDefault();
-    event.stopPropagation();
+    if (context.disabled.value || !thumbRef.value) return;
     thumbRef.value.setPointerCapture(event.pointerId);
     isDragging.value = true;
     const rect = trackRef.value?.getBoundingClientRect();
     if (rect) {
-      const newValue = await calculateValue(event.clientX, rect);
-      await setValue(newValue, parentContext.mode.value === "range" ? type : undefined);
+      const newValue = await context.calculateValue(event.clientX, rect);
+      await context.setValue(newValue, type);
     }
   });
+
   const onPointerMove$ = $(async (event: PointerEvent) => {
     if (!isDragging.value) return;
-    if (parentContext.disabled.value || !thumbRef.value) return;
-    event.preventDefault();
-    event.stopPropagation();
+    if (context.disabled.value) return;
     const rect = trackRef.value?.getBoundingClientRect();
     if (rect) {
-      const newValue = await calculateValue(event.clientX, rect);
-      await setValue(newValue, parentContext.mode.value === "range" ? type : undefined);
+      const newValue = await context.calculateValue(event.clientX, rect);
+      await context.setValue(newValue, type);
     }
   });
+
   const onPointerUp$ = $(async (event: PointerEvent) => {
     if (!isDragging.value || !thumbRef.value) return;
-    event.stopPropagation();
     isDragging.value = false;
     thumbRef.value.releasePointerCapture(event.pointerId);
     const rect = trackRef.value?.getBoundingClientRect();
     if (rect) {
-      const newValue = await calculateValue(event.clientX, rect);
-      await setValue(
-        newValue,
-        parentContext.mode.value === "range" ? type : undefined,
-        true
-      );
+      const newValue = await context.calculateValue(event.clientX, rect);
+      await context.setValue(newValue, type);
+      context.isDragEnded.value = true;
     }
   });
-  const onKeyDown$ = $(async (event: KeyboardEvent) => {
-    if (parentContext.disabled.value) return;
-    event.preventDefault();
-    const step = event.shiftKey
-      ? parentContext.step.value * 10
-      : parentContext.step.value;
-    let newValue: number;
-    if (parentContext.mode.value === "single") {
-      newValue = parentContext.value.value;
-    } else {
-      newValue =
-        type === "start" ? parentContext.startValue.value : parentContext.endValue.value;
+
+  type MinMaxValues = {
+    min: number;
+    max: number;
+  };
+
+  const getMinMaxValues = $((thumbType: ThumbType | undefined): MinMaxValues => {
+    if (!context.isRange.value) {
+      return {
+        min: context.min.value,
+        max: context.max.value
+      };
     }
+    return thumbType === "start"
+      ? {
+        min: context.min.value,
+        max: context.endValue.value
+      }
+      : {
+        min: context.startValue.value,
+        max: context.max.value
+      };
+  });
+
+  const onKeyDown$ = $(async (event: KeyboardEvent) => {
+    if (context.disabled.value) return;
+
+    const step = event.shiftKey ? context.step.value * 10 : context.step.value;
+    let newValue = !context.isRange.value
+      ? context.value.value as number
+      : type === "start"
+        ? context.startValue.value
+        : context.endValue.value;
+
+    const { min: minValue, max: maxValue } = await getMinMaxValues(type);
+
     switch (event.key) {
       case "ArrowRight":
-      case "ArrowUp": {
-        const maxValue =
-          parentContext.mode.value === "range" && type === "start"
-            ? parentContext.endValue.value
-            : parentContext.max.value;
+      case "ArrowUp":
         newValue = Math.min(maxValue, newValue + step);
         break;
-      }
       case "ArrowLeft":
-      case "ArrowDown": {
-        const minValue =
-          parentContext.mode.value === "range" && type === "end"
-            ? parentContext.startValue.value
-            : parentContext.min.value;
+      case "ArrowDown":
         newValue = Math.max(minValue, newValue - step);
         break;
-      }
       case "Home":
-        newValue =
-          parentContext.mode.value === "range" && type === "end"
-            ? parentContext.startValue.value
-            : parentContext.min.value;
+        newValue = minValue;
         break;
       case "End":
-        newValue =
-          parentContext.mode.value === "range" && type === "start"
-            ? parentContext.endValue.value
-            : parentContext.max.value;
+        newValue = maxValue;
         break;
       default:
         return;
     }
-    await setValue(
-      newValue,
-      parentContext.mode.value === "range" ? type : undefined,
-      true
-    );
+
+    await context.setValue(newValue, type);
+    context.isDragEnded.value = true;
   });
+
+  const preventKeyDown = sync$((event: KeyboardEvent) => {
+    const preventKeys = [
+      'ArrowRight',
+      'ArrowLeft',
+      'ArrowUp',
+      'ArrowDown',
+      'Home',
+      'End'
+    ];
+    if (preventKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  });
+
   return (
     <div
       {...rest}
@@ -141,32 +187,21 @@ export const SliderThumb = component$((props: PublicThumbProps) => {
       // Draggable thumb element used to select values on the slider
       data-qds-slider-thumb
       // Identifies whether the thumb is for the start or end value in range mode
-      data-thumb-type={parentContext.mode.value === "range" ? type : undefined}
+      data-thumb-type={context.isRange.value ? type : undefined}
       style={{ left: `${percentage}%` }}
-      onPointerDown$={onPointerDown$}
+      preventdefault:pointerdown
+      preventdefault:pointermove
+      preventdefault:pointerup
+      onPointerDown$={[onPointerDown$, props.onPointerDown$]}
       onPointerUp$={onPointerUp$}
       document:onPointerMove$={onPointerMove$}
-      onKeyDown$={onKeyDown$}
+      onKeyDown$={[preventKeyDown, onKeyDown$]}
       role="slider"
-      tabIndex={parentContext.disabled.value ? -1 : 0}
-      aria-valuemin={
-        parentContext.mode.value === "range" && type === "start"
-          ? parentContext.min.value
-          : parentContext.startValue.value
-      }
-      aria-valuemax={
-        parentContext.mode.value === "range" && type === "end"
-          ? parentContext.max.value
-          : parentContext.endValue.value
-      }
-      aria-valuenow={
-        parentContext.mode.value === "single"
-          ? parentContext.value.value
-          : type === "start"
-            ? parentContext.startValue.value
-            : parentContext.endValue.value
-      }
-      aria-disabled={parentContext.disabled.value}
+      tabIndex={context.disabled.value ? -1 : 0}
+      aria-valuemin={ariaValueMin.value}
+      aria-valuemax={ariaValueMax.value}
+      aria-valuenow={ariaValueNow.value}
+      aria-disabled={context.disabled.value}
     >
       <Slot />
     </div>

@@ -1,4 +1,4 @@
-import { type PropsOf, component$, useContext } from "@builder.io/qwik";
+import { type PropsOf, component$, useContext, useComputed$ } from "@builder.io/qwik";
 import { sliderContextId } from "./slider-context";
 type PublicTooltipPlacement = "top" | "bottom" | "left" | "right";
 interface PublicTooltipProps extends PropsOf<"div"> {
@@ -9,15 +9,15 @@ interface PublicTooltipProps extends PropsOf<"div"> {
 export const SliderTooltip = component$((props: PublicTooltipProps) => {
   const context = useContext(sliderContextId);
   const { placement = "top", ...rest } = props;
-  const getValue = () => {
-    if (context.mode.value === "single") {
+  const tooltipValue = useComputed$(() => {
+    if (!context.isRange.value) {
       return context.value.value;
-    } else {
-      return context.thumbType?.value === "start"
-        ? context.startValue.value
-        : context.endValue.value;
     }
-  };
+    return context.thumbType?.value === "start"
+      ? context.startValue.value
+      : context.endValue.value;
+  });
+
   return (
     <div
       {...rest}
@@ -27,7 +27,7 @@ export const SliderTooltip = component$((props: PublicTooltipProps) => {
       data-placement={placement}
       role="tooltip"
     >
-      {getValue()}
+      {tooltipValue.value}
     </div>
   );
 });

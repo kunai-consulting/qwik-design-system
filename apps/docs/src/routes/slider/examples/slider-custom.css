@@ -47,6 +47,22 @@
     background-color: #1e293b;
 }
 
+.slider-tooltip[data-placement="top"] {
+    margin-bottom: 10px;
+}
+
+.slider-tooltip[data-placement="bottom"] {
+    margin-top: 10px;
+}
+
+.slider-tooltip[data-placement="left"] {
+    margin-right: 10px;
+}
+
+.slider-tooltip[data-placement="right"] {
+    margin-left: 10px;
+}
+
 .slider-tooltip[data-placement="top"]::after {
     top: 100%;
     left: 50%;
@@ -75,19 +91,24 @@
     margin-right: -4px;
 }
 
-.slider-marks {
+.slider-marker-group {
+    width: 100%;
+    position: absolute;
     top: 100%;
     margin-top: 8px;
 }
 
-.slider-mark-indicator {
+.slider-marker {
     width: 2px;
     height: 8px;
     background-color: #e2e8f0;
+    display: flex;
+    justify-content: center;
 }
 
 .slider-mark-label {
     font-size: 12px;
     color: #64748b;
-    margin-top: 4px;
+    white-space: nowrap;
+    margin-top: 8px;
 }

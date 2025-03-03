@@ -7,22 +7,15 @@ export default component$(() => {
   return (
     <Slider.Root
       class="slider-root"
-      mode="range"
+      isRange
       value={[25, 75]}
       min={0}
       max={100}
       step={25}
-      marks={[
-        { value: 0, label: "0%" },
-        { value: 25, label: "25%" },
-        { value: 50, label: "50%" },
-        { value: 75, label: "75%" },
-        { value: 100, label: "100%" }
-      ]}
-      onValueChange$={(values) => {
+      onChange$={(values: number | [number, number]) => {
         console.log("Values changed:", values);
       }}
-      onValueChangeEnd$={(values) => {
+      onChangeEnd$={(values) => {
         console.log("Final values:", values);
       }}
     >
@@ -35,11 +28,13 @@ export default component$(() => {
           <Slider.Tooltip class="slider-tooltip" placement="top" />
         </Slider.Thumb>
       </Slider.Track>
-      <Slider.Marks
-        class="slider-marks"
-        indicatorClass="slider-mark-indicator"
-        labelClass="slider-mark-label"
-      />
+      <Slider.MarkerGroup class="slider-marker-group">
+        <Slider.Marker value={0}>0%</Slider.Marker>
+        <Slider.Marker value={25}>25%</Slider.Marker>
+        <Slider.Marker value={50}>50%</Slider.Marker>
+        <Slider.Marker value={75}>75%</Slider.Marker>
+        <Slider.Marker value={100}>100%</Slider.Marker>
+      </Slider.MarkerGroup>
     </Slider.Root>
   );
 });

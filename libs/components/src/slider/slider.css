@@ -40,28 +40,24 @@
         bottom: 100%;
         left: 50%;
         transform: translateX(-50%);
-        margin-bottom: 10px;
     }
 
     [data-qds-slider-tooltip][data-placement="bottom"] {
         top: 100%;
         left: 50%;
         transform: translateX(-50%);
-        margin-top: 10px;
     }
 
     [data-qds-slider-tooltip][data-placement="left"] {
         right: 100%;
         top: 50%;
         transform: translateY(-50%);
-        margin-right: 10px;
     }
 
     [data-qds-slider-tooltip][data-placement="right"] {
         left: 100%;
         top: 50%;
         transform: translateY(-50%);
-        margin-left: 10px;
     }
 
     [data-qds-slider-thumb]:hover [data-qds-slider-tooltip],
@@ -70,23 +66,8 @@
         opacity: 1;
     }
 
-    [data-qds-slider-marks] {
-        position: absolute;
-        width: 100%;
-        left: 0;
-    }
-
-    [data-qds-slider-mark] {
+    [data-qds-slider-marker] {
         position: absolute;
         transform: translateX(-50%);
-    }
-
-    [data-qds-slider-mark-indicator] {
-        margin: 0 auto;
-    }
-
-    [data-qds-slider-mark-label] {
-        text-align: center;
-        white-space: nowrap;
     }
 }
