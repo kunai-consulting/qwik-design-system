@@ -1,10 +1,76 @@
 # Research
 
+Research is a critical step in the development of any component. It helps us understand the problem we're solving and the best way to solve it.
+
+## Inspiration 
+
+As OSS library authors, we want to create solutions that are not only useful, but also a *joy to use*. Existing projects can give us insight into how to make our components better, figure out limitations and edge cases, and come up with intuitive API design.
+
+### Existing Headless libraries
+
+Take a look at the following projects and see if you can find any inspiration. This will help with the **Research** step of the component development process.
+
+- [Ark UI](https://ark-ui.com/)
+- [Kobalte](https://kobalte.dev/)
+- [Corvu](https://corvu.dev/)
+- [Radix UI](https://www.radix-ui.com/primitives)
+- [React Aria](https://react-spectrum.adobe.com/react-aria/index.html)
+- [Melt UI](https://next.melt-ui.com/guides/installation)
+- [Ariakit](https://ariakit.org/)
+- [Headless UI](https://headlessui.com/)
+- [Base UI](https://base-ui.com/)
+- [Dice UI](https://www.diceui.com/)
+
+#### Not headless but interesting
+
+- [Shadcn UI](https://ui.shadcn.com/)
+- [Flux UI](https://fluxui.dev/)
+
+> If you find something cool and think it fits, add it to the list!
+
+
+### What is common across all these projects?
+
+
+For each component you work on, find what is common across all the projects.
+
+Ex: Do all the Accordion implementations have a `Panel` or `Content` component?
+
+Ex: Do most date pickers have props to select a min and max date?
+
+Ex: Do certain DOM elements have an exact or similar role / attribute?
+
+### What is unique about these projects?
+
+Is there an API that is very different from the rest? If you were going to use this component, what would you like to see in the API?
+
+### What is the best part of these projects?
+
+Is there an API that stands out and seems to be a better design? If you were going to use this component, what would you like to see in the API?
+
+
+
+
+
+## Research Process
+
 Each component folder should have a file called `research.md` or `research.mdx` that outlines the research that went into the component. This should include:
 
 A comprehensive research document should cover the following areas:
 
-## Features
+### Research Links
+
+```md
+- Ark UI (https://ark-ui.com/react/docs/components/tree-view)
+
+- Material UI (https://mui.com/x/react-tree-view/?srsltid=AfmBOor5Lu38zUPxWS633qeArjpzz9IK_DuLrAtQxqsjy33VUa5EyI3l)
+
+- React Headless Tree (https://headless-tree.lukasbach.com/storybook/react/index.html?path=/story/react-async-data-loading--async-data-loading)
+
+- React Arborist (https://github.com/brimdata/react-arborist)
+```
+
+### Features
 
 List all the features the component should support, using a checklist format:
 
@@ -16,7 +82,7 @@ List all the features the component should support, using a checklist format:
 
 As you add features, make sure to update the research document to reflect the latest changes.
 
-## Component Structure
+### Component Structure
 
 Define the composition pieces of the component:
 
@@ -27,7 +93,7 @@ Pieces:
 - Handle
 ```
 
-## Keyboard Interactions
+### Keyboard Interactions
 
 Document all keyboard interactions the component should support for accessibility:
 
@@ -37,7 +103,7 @@ Document all keyboard interactions the component should support for accessibilit
 - Escape for dismissal
 ```
 
-## Attributes
+### Attributes
 
 List all the attributes needed for the component to work or be accessible:
 
@@ -47,7 +113,7 @@ role="dialog"
 - aria-describedby
 ```
 
-## Use Cases
+### Use Cases
 
 Document common use cases for the component:
 
@@ -64,7 +130,7 @@ For example, here's some use case links of the slider component:
 - [Image Reveal slider](https://examples.motion.dev/js/image-reveal-slider)
 - [iOS Slider](https://examples.motion.dev/js/ios-slider)
 
-## CSS Considerations
+### CSS Considerations
 
 Note any important CSS properties or techniques:
 
@@ -75,7 +141,7 @@ Important CSS:
 - overflow: hidden
 ```
 
-## API Design
+### API Design
 
 Document the proposed API for each component part:
 
@@ -89,7 +155,7 @@ Panel:
 - propB -> description
 ```
 
-## Known Issues
+### Known Issues
 
 Document any known issues or challenges from similar implementations:
 
@@ -98,7 +164,7 @@ Document any known issues or challenges from similar implementations:
 - Browser inconsistencies
 ```
 
-## Questions
+### Questions
 
 List any open questions that need resolution:
 
