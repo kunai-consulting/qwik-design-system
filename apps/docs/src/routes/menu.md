@@ -22,3 +22,4 @@
 - [Research](/contributing/research)
 - [State](/contributing/state)
 - [Philosophy](/contributing/philosophy)
+- [Conventions](/contributing/conventions)
