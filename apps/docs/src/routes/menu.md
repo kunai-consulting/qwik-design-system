@@ -16,6 +16,7 @@
 ## Contributing
 
 - [Intro](/contributing/intro)
+- [Growth Mindset](/contributing/growth-mindset)
 - [New Components](/contributing/new-component)
 - [Component Structure](/contributing/component-structure)
 - [Composition](/contributing/composition)
