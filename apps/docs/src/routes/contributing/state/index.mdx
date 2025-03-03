@@ -2,12 +2,12 @@
 
 QDS components have two types of state:
 
-1. Signal based
-2. Value based
+1. **Signal based (two-way binding)**
+2. **Value based (one-way binding)**
 
-Signal based state is the default and recommended way for consumers to manage state, however value based state is available as well.
+Signal based state is the default and **recommended** way for consumers to manage state, however consumers of the library may find value based more intuitive.
 
-## Signal based (two-way binding)
+## Signal based (reactive state)
 
 Consumers can pass a signal directly to the component to manage the component's state.
 
@@ -23,7 +23,7 @@ export const ExampleComp = component$(() => {
 })
 ```
 
-`bind:value` under the hood is a really just a prop. The convention is to use `bind:` for signals, to stay consistent with Qwik's convention.
+`bind:value` under the hood is a really just a prop. The convention is to use `bind:` for signals, to stay consistent with Qwik's API (which was inspired by frameworks like Svelte and Angular).
 
 
 ### Binds in Qwik
@@ -32,7 +32,7 @@ In Qwik, you can use `bind:value` or `bind:checked` to pass your own signal stat
 
 <Showcase name="two-way" />
 
-This is two way data binding, however thanks to signals it is quite efficient. 
+This is [two-way data binding](https://www.geeksforgeeks.org/two-way-data-binding-in-javascript/). Unlike traditional two-way binding that can be performance-heavy in other frameworks, Qwik's signals make it efficient by updating **only what needs to change**, with no unnecessary re-renders.
 
 #### useBoundSignal
 
@@ -42,8 +42,6 @@ Qwik Design System provides a hook to combine signals to one source of truth.
 export const SelectRoot = component$((props: SelectRootProps) => {
     const {
         "bind:value": givenSelectedValueSig,
-        value,
-        ...rest
     } = props;
 
     const selectedValueSig = useBoundSignal(givenSelectedValueSig, "Jim");
@@ -74,8 +72,113 @@ Stores can also be two-way bound, in this case we use the `useStoreSignal` hook 
 
 Now the store property is updated whenever the internal signal is updated and vice versa. This can be useful if you want to use the store as a source of truth for the component's state.
 
-## Value based (one-way binding)
+## Value based
 
-Value based state is the alternative to signal based state.
+Value based state is when the value is **passed directly** to the component as a prop.
+
+For example, the `Select.Root` component has a `value` prop that can be used to set the selected value of the select.
+
+```tsx
+export const UserSelect = component$((props: UserSelectProps) => {
+
+    return (
+        <Select.Root value="Jim">
+            {...}
+        </Select.Root>
+    )
+})
+```
+
+
+### Types of value based state
+
+Value based state can accept literal values, signal reads, stores, and anything under the sun that resolves to a value.
+
+Literal value:
+
+```tsx
+<Select.Root value="Jim">
+    {...}
+</Select.Root>
+```
+
+Signal read:
+
+```tsx
+<Select.Root value={selectedValueSig.value}>
+    {...}
+</Select.Root>
+```
+
+Store read:
+
+```tsx
+<Select.Root value={myStore.property}>
+    {...}
+</Select.Root>
+```
+
+### Understanding reactivity
+
+Keep in mind, that value based state is **not reactive**. This means that the component receiving the value has no idea that you're using a signal read or store property.
+
+This is especially evident when you're passing state through context, where consumers expect to be able to update the state and see the changes.
+
+<Showcase name="value-and-context" />
+
+In the example above, notice how the button doesn't update when we toggle the state. This is because context values are not reactive - they're just snapshots at render time.
+
+> Qwik does not re-render components when reactive values change, only the functions that depend on the reactive values run again.
+
+#### Getting the latest values
+
+To get the latest values from context, you need to turn value based state into **reactive state**.
+
+We can do this by tracking whenever the specific property changes on the props object.
+
+<Showcase name="signal-and-context" />
+
+Another example:
+
+```tsx
+export const SelectRoot = component$((props: SelectRootProps) => {
+    const isDisabledSig = useSignal(props.disabled);
+
+    const context: ExampleContext = {
+        isDisabledSig
+    }
+
+    useContextProvider(exampleContextId, context);
+
+    return {...}
+})
+
+export const SelectTrigger = component$((props: SelectTriggerProps) => {
+    const context = useContext(exampleContextId);
+
+    return <button disabled={context.isDisabledSig.value}>
+        <Slot />
+    </button>
+})
+```
+
+### Why useComputed$?
+
+`useComputed$` will automatically track any reactive values (or props) that are used inside of it. The returned signal is a read-only signal that will update whenever the tracked reactive values change.
+
+It is the equivalent of:
+
+```tsx
+const isDisabledSig = useSignal(props.disabled);
+
+useTask$(({ track }) => {
+    isDisabledSig.value = track(() => props.disabled);
+})
+```
+
+You specifically need to track the property on the props object, similar to how you would track a store property.
+
+> Qwik tracks reactivity through proxies. Props are reactive when used directly, but when values (not signals) are passed through context (or destructured), this reactive connection is lost. Always pass reactive state through context or explicitly track prop changes to maintain reactivity across context consumers.
+
 
 
