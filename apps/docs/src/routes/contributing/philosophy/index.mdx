@@ -20,6 +20,24 @@ QDS components are designed to be **optimized for the environment** they're runn
 
 ## Thinking in terms of interactions
 
+To users, components don't exist. All they see is a button they can click. Code should execute in response to those interactions.
+
+When that click happens, the *only* code that actually runs is the **event handler**.
+
+Even visible tasks are events, under the hood it is an internal event called `qvisible`. The event code runs when the parent element is visible in the user's viewport.
+
+### Delay the execution of code until it's needed
+
+Going back to our janky site example, 
+
+
+
+
+
+
+
+
+
 
 
 
