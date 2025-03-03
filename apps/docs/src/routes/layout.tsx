@@ -64,9 +64,9 @@ export default component$(() => {
             </ScrollArea.Viewport>
             <ScrollArea.Scrollbar
               orientation="vertical"
-              class="w-4 p-0.5 bg-neutral-primary rounded-full"
+              class="w-4 p-0.5 bg-neutral-primary"
             >
-              <ScrollArea.Thumb class="h-12 w-3 bg-neutral-foreground rounded-full transition-[background] duration-160 ease-out hover:bg-[#FFFFFF80]" />
+              <ScrollArea.Thumb class="h-12 w-3 bg-neutral-foreground transition-[background] duration-160 ease-out hover:bg-[#FFFFFF80]" />
             </ScrollArea.Scrollbar>
           </ScrollArea.Root>
         </aside>

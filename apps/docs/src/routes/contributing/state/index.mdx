@@ -67,3 +67,15 @@ Above is an example of a component that uses the `useBoundSignal` hook to combin
 > Notice that whenever toggling the checkbox or programmatically changing the signal, the **signal value** of the checkbox is updated both **internally and externally**.
 
 ### Two-way store properties
+
+Stores can also be two-way bound, in this case we use the `useStoreSignal` hook to create a signal from the store.
+
+<Showcase name="store-signal" />
+
+Now the store property is updated whenever the internal signal is updated and vice versa. This can be useful if you want to use the store as a source of truth for the component's state.
+
+## Value based (one-way binding)
+
+Value based state is the alternative to signal based state.
+
+
