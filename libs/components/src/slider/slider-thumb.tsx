@@ -6,7 +6,7 @@ import {
   useSignal,
   useVisibleTask$,
   useContextProvider,
-  Slot, useComputed$, sync$
+  Slot, useComputed$, sync$, useStylesScoped$, CSSProperties
 } from "@builder.io/qwik";
 import { type ThumbType, sliderContextId, SliderContext } from "./slider-context";
 interface PublicThumbProps extends PropsOf<"div"> {
@@ -15,6 +15,14 @@ interface PublicThumbProps extends PropsOf<"div"> {
 }
 /** Draggable thumb component that users interact with to change slider values */
 export const SliderThumb = component$((props: PublicThumbProps) => {
+  useStylesScoped$(`
+    .thumb {
+      position: absolute;
+      left: var(--thumb-position);
+      transform: translate(-50%, -50%);
+    }
+  `);
+
   const { type, ...rest } = props;
   const context = useContext(sliderContextId);
   const isDragging = useSignal(false);
@@ -188,7 +196,10 @@ export const SliderThumb = component$((props: PublicThumbProps) => {
       data-qds-slider-thumb
       // Identifies whether the thumb is for the start or end value in range mode
       data-thumb-type={context.isRange.value ? type : undefined}
-      style={{ left: `${percentage}%` }}
+      style={{
+        ...(rest.style ?? {}) as CSSProperties,
+        '--thumb-position': `${percentage}%`
+      }}
       preventdefault:pointerdown
       preventdefault:pointermove
       preventdefault:pointerup

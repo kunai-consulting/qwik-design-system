@@ -12,7 +12,6 @@ import {
 } from "@builder.io/qwik";
 import { ThumbType, sliderContextId, type SliderValue } from "./slider-context";
 import styles from "./slider.css?inline";
-import { useBoundSignal } from "../../utils/bound-signal";
 
 type DivProps = Omit<PropsOf<"div">, "value" | "min" | "max" | "step" | "disabled">;
 
@@ -25,7 +24,7 @@ interface PublicSliderProps {
   /** The step interval for the slider value. Default is 1 */
   step?: number;
   /** Whether the slider is disabled. Default is false */
-  disabled?: boolean;
+  disabled?: boolean | Signal<boolean>;
   onChange$?: QRL<(value: SliderValue) => void> | PropFunction<(value: SliderValue) => void>;
   onChangeEnd$?: QRL<(value: SliderValue) => void> | PropFunction<(value: SliderValue) => void>;
 }
@@ -55,11 +54,11 @@ export const SliderRoot = component$<PublicRootProps>((props) => {
       : initialValue
   );
 
-  const disabledSignal = useBoundSignal(
+  const disabledSignal = (
     typeof props.disabled === 'object' && 'value' in props.disabled
       ? props.disabled
-      : useSignal(initialDisabled)
-  );
+      : useSignal(props.disabled ?? initialDisabled)
+  ) as Signal<boolean>;
 
   const startValue = useSignal(
     isRange ? (Array.isArray(valueSignal.value) ? valueSignal.value[0] : 0) : 0
@@ -114,7 +113,6 @@ export const SliderRoot = component$<PublicRootProps>((props) => {
   const min = useSignal(initialMin);
   const max = useSignal(initialMax);
   const step = useSignal(initialStep);
-  const disabled = useSignal(initialDisabled);
 
   const calculateValue = $((clientX: number, rect: DOMRect) => {
     if (!rect.width) return min.value;
@@ -159,7 +157,7 @@ export const SliderRoot = component$<PublicRootProps>((props) => {
       // Root container element for the entire slider component
       data-qds-slider-root
       role={isRange ? "group" : "slider"}
-      aria-disabled={disabled.value}
+      aria-disabled={disabledSignal.value}
       aria-valuemin={min.value}
       aria-valuemax={max.value}
       aria-valuenow={ariaValueNow.value}

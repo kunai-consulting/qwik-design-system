@@ -31,7 +31,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   };
 
   const getMarks = () => {
-    return rootLocator.locator("[data-qds-slider-mark]");
+    return rootLocator.locator("[data-qds-slider-marker]");
   };
 
   const getAllThumbs = () => {

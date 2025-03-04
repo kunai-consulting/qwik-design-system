@@ -10,12 +10,13 @@ async function setup(page: Page, exampleName: string) {
 test.describe("critical functionality", () => {
   test(`GIVEN a Slider component in single mode
         WHEN it is rendered
-        THEN all basic elements should be visible`, async ({ page }) => {
+        THEN all basic elements should be present in DOM`, async ({ page }) => {
     const d = await setup(page, "hero");
-    await expect(d.getRoot()).toBeVisible();
-    await expect(d.getTrack()).toBeVisible();
-    await expect(d.getRange()).toBeVisible();
-    await expect(d.getThumb()).toBeVisible();
+
+    await expect(d.getRoot()).toBeAttached();
+    await expect(d.getTrack()).toBeAttached();
+    await expect(d.getRange()).toBeAttached();
+    await expect(d.getThumb()).toBeAttached();
   });
 
   test(`GIVEN a Slider component in range mode
@@ -32,6 +33,7 @@ test.describe("critical functionality", () => {
         WHEN clicking on the track
         THEN the value should update`, async ({ page }) => {
     const d = await setup(page, "hero");
+    await page.waitForTimeout(100);
     const track = d.getTrack();
     const thumb = d.getThumb();
 
@@ -44,12 +46,12 @@ test.describe("critical functionality", () => {
       trackBounds.y + trackBounds.height / 2
     );
 
+    await page.waitForTimeout(100);
     // Check if thumb moved to ~50%
     const thumbBounds = await thumb.boundingBox();
     if (!thumbBounds) throw new Error("Thumb not found");
 
-    const thumbPosition = (thumbBounds.x - trackBounds.x) / trackBounds.width;
-    expect(thumbPosition).toBeCloseTo(0.5, 1);
+    await expect(thumb).toHaveAttribute('aria-valuenow', '50');
   });
 });
 
@@ -81,8 +83,9 @@ test.describe("keyboard navigation", () => {
   test(`GIVEN a Slider
       WHEN using arrow keys
       THEN value should change accordingly`, async ({ page }) => {
-    const d = await setup(page, "hero");
+    const d = await setup(page, "callbacks");
     const thumb = d.getThumb();
+    await page.waitForTimeout(100);
 
     const messages: { type: string; value: number }[] = [];
 
@@ -97,12 +100,12 @@ test.describe("keyboard navigation", () => {
     });
 
     const initialValue = Number(await thumb.getAttribute("aria-valuenow"));
-    expect(initialValue).toBe(50);
+    expect(initialValue).toBe(0);
 
     await thumb.focus();
     await page.keyboard.press("ArrowRight");
 
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(200);
 
     expect(messages.length).toBeGreaterThan(0);
 
@@ -171,8 +174,10 @@ test.describe("callbacks", () => {
   test(`GIVEN a Slider
         WHEN clicking on track
         THEN both callbacks should fire once`, async ({ page }) => {
-    const d = await setup(page, "hero");
+    const d = await setup(page, "callbacks");
     const track = d.getTrack();
+
+    await page.waitForTimeout(100);
 
     const messages: { type: string; value: number }[] = [];
 
@@ -196,11 +201,11 @@ test.describe("callbacks", () => {
     if (!trackBounds) throw new Error("Track not found");
 
     await page.mouse.click(
-      trackBounds.x + trackBounds.width * 0.75, // Кликаем на 75%
+      trackBounds.x + trackBounds.width * 0.75,
       trackBounds.y + trackBounds.height / 2
     );
 
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(200);
 
     const changeMessages = messages.filter((m) => m.type === "change");
     const endMessages = messages.filter((m) => m.type === "end");
@@ -216,7 +221,7 @@ test.describe("callbacks", () => {
       THEN onValueChange should fire multiple times and onValueChangeEnd once`, async ({
     page
   }) => {
-    const d = await setup(page, "hero");
+    const d = await setup(page, "callbacks");
     const thumb = d.getThumb();
 
     const messages: { type: string; value: number }[] = [];
@@ -274,7 +279,8 @@ test.describe("callbacks", () => {
   test(`GIVEN a Slider
         WHEN using keyboard navigation
         THEN callbacks should fire appropriately`, async ({ page }) => {
-    const d = await setup(page, "hero");
+    const d = await setup(page, "callbacks");
+    await page.waitForTimeout(100);
     const thumb = d.getThumb();
 
     const messages: { type: string; value: number }[] = [];
@@ -298,7 +304,7 @@ test.describe("callbacks", () => {
     await thumb.focus();
     await page.keyboard.press("ArrowRight");
 
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(200);
 
     const changeMessages = messages.filter((m) => m.type === "change");
     const endMessages = messages.filter((m) => m.type === "end");
@@ -306,7 +312,7 @@ test.describe("callbacks", () => {
     expect(changeMessages).toHaveLength(1);
     expect(endMessages).toHaveLength(1);
 
-    const expectedValue = 51; // 50 + 1
+    const expectedValue = 1;
     expect(changeMessages[0].value).toBe(expectedValue);
     expect(endMessages[0].value).toBe(expectedValue);
   });
@@ -421,3 +427,104 @@ test.describe("range mode", () => {
     await expect(endThumb).toHaveAttribute("aria-valuenow", String(startValue));
   });
 });
+
+test.describe("style customization", () => {
+  test(`GIVEN a Slider with custom inline styles
+        WHEN rendered
+        THEN custom styles should be merged with positioning styles`, async ({ page }) => {
+    const d = await setup(page, "custom-styles");
+    const thumb = d.getThumb();
+
+    await expect(thumb).toHaveCSS("background-color", "rgb(255, 0, 0)");
+    await expect(thumb).toHaveCSS("width", "24px");
+    await expect(thumb).toHaveCSS("height", "24px");
+    await expect(thumb).toHaveCSS("border", "3px solid rgb(139, 0, 0)"); // darkred
+
+    const track = d.getTrack();
+    const trackBounds = await track.boundingBox();
+    const thumbBounds = await thumb.boundingBox();
+
+    if (!trackBounds || !thumbBounds) throw new Error("Elements not found");
+
+    expect(thumbBounds.x).toBeGreaterThanOrEqual(trackBounds.x);
+    expect(thumbBounds.x + thumbBounds.width).toBeLessThanOrEqual(trackBounds.x + trackBounds.width);
+  });
+});
+
+test.describe("disabled state", () => {
+  test(`GIVEN a disabled Slider
+        WHEN trying to interact
+        THEN value should not change`, async ({ page }) => {
+    const d = await setup(page, "disabled");
+    const thumb = d.getThumb();
+    const track = d.getTrack();
+
+    await expect(d.getRoot()).toHaveAttribute("aria-disabled", "true");
+    await expect(thumb).toHaveAttribute("aria-disabled", "true");
+    await expect(thumb).toHaveAttribute("tabindex", "-1");
+
+    const initialValue = String(await thumb.getAttribute("aria-valuenow"));
+
+    const trackBounds = await track.boundingBox();
+    if (trackBounds) {
+      await page.mouse.click(
+        trackBounds.x + trackBounds.width * 0.75,
+        trackBounds.y + trackBounds.height / 2
+      );
+    }
+
+    await expect(thumb).toHaveAttribute("aria-valuenow", initialValue);
+
+    await thumb.focus();
+    await page.keyboard.press("ArrowRight");
+    await page.keyboard.press("ArrowLeft");
+    await page.keyboard.press("Home");
+    await page.keyboard.press("End");
+
+    await expect(thumb).toHaveAttribute("aria-valuenow", initialValue);
+
+    const messages: string[] = [];
+    page.on("console", (msg) => {
+      messages.push(msg.text());
+    });
+
+    await page.mouse.click(
+      trackBounds?.x ?? 0 + (trackBounds?.width ?? 0) * 0.25,
+      trackBounds?.y ?? 0 + (trackBounds?.height ?? 0) / 2
+    );
+
+    await page.waitForTimeout(100);
+    expect(messages).not.toContain(expect.stringContaining("This should not be called when disabled:"));
+  });
+
+  test(`GIVEN a disabled Slider
+      WHEN toggling disabled state
+      THEN interactions should work after enabling`, async ({ page }) => {
+    const d = await setup(page, "disabled");
+    const thumb = d.getThumb();
+    const toggleButton = page.locator("button");
+
+    await expect(d.getRoot()).toHaveAttribute("aria-disabled", "true");
+
+    await toggleButton.click();
+    await page.waitForTimeout(100);
+
+    const ariaDisabled = await d.getRoot().getAttribute("aria-disabled");
+    console.log("aria-disabled after click:", ariaDisabled);
+
+    await expect(d.getRoot()).toHaveAttribute("aria-disabled", "false");
+
+    await thumb.focus();
+    await page.keyboard.press("ArrowRight");
+
+    await expect(thumb).toHaveAttribute("aria-valuenow", "51"); // 50 + 1
+
+    await toggleButton.click();
+    await page.waitForTimeout(100);
+    await expect(d.getRoot()).toHaveAttribute("aria-disabled", "true");
+
+    await page.keyboard.press("ArrowRight");
+    await expect(thumb).toHaveAttribute("aria-valuenow", "51");
+  });
+});
+

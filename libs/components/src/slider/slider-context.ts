@@ -5,7 +5,7 @@ export type SliderValue = number | [number, number];
 
 export interface SliderContext {
   isRange: Signal<boolean>;
-  value: Signal<SliderValue>;  // для signal-based подхода
+  value: Signal<SliderValue>;
   startValue: Signal<number>;
   endValue: Signal<number>;
   min: Signal<number>;
