@@ -27,10 +27,10 @@ export const SliderTrack = component$((props: PropsOf<"div">) => {
         const endDistance = Math.abs(newValue - context.endValue.value);
         const type = startDistance < endDistance ? "start" : "end";
         await context.setValue(newValue, type);
-        context.isDragEnded.value = true;
       } else {
         await context.setValue(newValue);
       }
+      context.isDragEnded.value = true;
     }
   });
 
