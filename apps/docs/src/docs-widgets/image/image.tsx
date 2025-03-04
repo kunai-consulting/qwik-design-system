@@ -7,8 +7,8 @@ export const Image = component$<PropsOf<"img">>(({ alt, ...props }) => {
       alt={alt}
       loading="lazy"
       decoding="async"
-      class={cn("rounded-md border border-neutral-primary mt-6", props.class)}
       {...props}
+      class={cn("rounded-md border border-neutral-primary mt-6", props.class)}
     />
   );
 });

@@ -53,7 +53,7 @@ There are a few cases where it is unavoidable to have synchronous code.
 
 For example, light or dark mode detection, and preferences we can only know with javascript in the browser.
 
-In this case, we can use either the `sync$` function, or a script tag to run the code.
+In this case, we can use either the `sync$` function, or a script tag to run the code, avoiding waking up the Qwik runtime.
 
 ### Example: File Upload
 

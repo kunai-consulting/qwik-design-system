@@ -22,5 +22,10 @@
 - [Composition](/contributing/composition)
 - [Research](/contributing/research)
 - [State](/contributing/state)
+- [Events](/contributing/events)
 - [Philosophy](/contributing/philosophy)
 - [Conventions](/contributing/conventions)
+
+## Qwik core (future)
+
+- [Tasks](/qwik-core/tasks)

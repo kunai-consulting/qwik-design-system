@@ -1,6 +1,7 @@
 import { qwikCity } from "@builder.io/qwik-city/vite";
 import { qwikVite } from "@builder.io/qwik/optimizer";
 import tailwindcss from "@tailwindcss/vite";
+import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 
 /**
  * This is the base config for vite.
@@ -25,6 +26,10 @@ errorOnDuplicatesPkgDeps(devDependencies, dependencies);
  * Note that Vite normally starts from `index.html` but the qwikCity plugin makes start at `src/entry.ssr.tsx` instead.
  */
 export default defineConfig(({ command, mode }): UserConfig => {
+  const mainQuality = {
+    quality: 80,
+  };
+
   return {
     plugins: [
       tailwindcss(),
@@ -36,6 +41,14 @@ export default defineConfig(({ command, mode }): UserConfig => {
         }
       }),
       qwikVite({ lint: false }),
+      ViteImageOptimizer({
+        includePublic: true,
+        png: mainQuality,
+        jpeg: mainQuality,
+        jpg: mainQuality,
+        webp: mainQuality,
+        avif: mainQuality,
+      }),
       tsconfigPaths()
     ],
     // This tells Vite which dependencies to pre-build in dev mode.

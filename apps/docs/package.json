@@ -41,7 +41,8 @@
     "vite": "^5.4",
     "vite-tsconfig-paths": "^4.2.1",
     "wrangler": "^3.0.0",
-    "@fontsource/proza-libre": "^5.0.12"
+    "@fontsource/proza-libre": "^5.0.12",
+    "vite-plugin-image-optimizer": "^1.1.8"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.0",
