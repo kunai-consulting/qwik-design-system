@@ -12,6 +12,7 @@
 - [File Upload](/file-upload)
 - [QR Code](/qr-code)
 - [Slider](/slider)
+- [Toast](/toast)
 - [Resizable](/resizable)
 
 ## Styled
