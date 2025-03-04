@@ -9,7 +9,6 @@ import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
  */
 import { type UserConfig, defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
-import autoAPI from "./auto-api/auto-api";
 import pkg from "./package.json";
 import { recmaProvideComponents } from "./src/mdx/recma-provide-comp";
 
@@ -33,7 +32,6 @@ export default defineConfig(({ command, mode }): UserConfig => {
   return {
     plugins: [
       tailwindcss(),
-      autoAPI(),
       qwikCity({
         mdx: {
           providerImportSource: "~/mdx/provider",
