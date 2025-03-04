@@ -23,6 +23,7 @@
 - [Research](/contributing/research)
 - [State](/contributing/state)
 - [Events](/contributing/events)
+- [Testing](/contributing/testing)
 - [Philosophy](/contributing/philosophy)
 - [Conventions](/contributing/conventions)
 
