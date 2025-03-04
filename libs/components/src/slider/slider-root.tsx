@@ -8,16 +8,19 @@ import {
   useContextProvider,
   useSignal,
   useStyles$,
-  useComputed$, useTask$, $,
+  useComputed$,
+  useTask$,
+  $
 } from "@builder.io/qwik";
 import { ThumbType, sliderContextId, type SliderValue } from "./slider-context";
 import styles from "./slider.css?inline";
-
 type DivProps = Omit<PropsOf<"div">, "value" | "min" | "max" | "step" | "disabled">;
-
 interface PublicSliderProps {
+  /** Whether the slider should act as a range slider with two thumbs. Default is false */
   isRange?: boolean;
+  /** The current value of the slider. For range sliders, this should be a tuple of [start, end] values */
   value?: SliderValue | Signal<SliderValue>;
+  /** The minimum value of the slider. Default is 0 */
   min?: number;
   /** The maximum value of the slider. Default is 100 */
   max?: number;
@@ -25,8 +28,14 @@ interface PublicSliderProps {
   step?: number;
   /** Whether the slider is disabled. Default is false */
   disabled?: boolean | Signal<boolean>;
-  onChange$?: QRL<(value: SliderValue) => void> | PropFunction<(value: SliderValue) => void>;
-  onChangeEnd$?: QRL<(value: SliderValue) => void> | PropFunction<(value: SliderValue) => void>;
+  /** Event handler called when the slider value changes */
+  onChange$?:
+    | QRL<(value: SliderValue) => void>
+    | PropFunction<(value: SliderValue) => void>;
+  /** Event handler called when the slider value changes are committed (on drag end or keyboard navigation) */
+  onChangeEnd$?:
+    | QRL<(value: SliderValue) => void>
+    | PropFunction<(value: SliderValue) => void>;
 }
 
 type PublicRootProps = DivProps & PublicSliderProps;
@@ -49,13 +58,13 @@ export const SliderRoot = component$<PublicRootProps>((props) => {
   const isRangeSignal = useSignal(isRange);
 
   const valueSignal = useSignal<SliderValue>(
-    initialValue instanceof Object && 'value' in initialValue
+    initialValue instanceof Object && "value" in initialValue
       ? initialValue.value
       : initialValue
   );
 
   const disabledSignal = (
-    typeof props.disabled === 'object' && 'value' in props.disabled
+    typeof props.disabled === "object" && "value" in props.disabled
       ? props.disabled
       : useSignal(props.disabled ?? initialDisabled)
   ) as Signal<boolean>;
@@ -148,7 +157,7 @@ export const SliderRoot = component$<PublicRootProps>((props) => {
 
   const ariaValueNow = useComputed$(() => {
     if (isRange) return undefined;
-    return typeof valueSignal.value === 'number' ? valueSignal.value : undefined;
+    return typeof valueSignal.value === "number" ? valueSignal.value : undefined;
   });
 
   return (

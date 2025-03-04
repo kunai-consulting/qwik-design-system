@@ -1,7 +1,7 @@
 import { api } from "./auto-api/api";
 
 # Slider
-A customizable input that allows users to select numeric values by dragging along a track.
+A customizable input that allows users to select numeric values by dragging a thumb along a track.
 <Showcase name="hero" />
 ## Features
 <Features api={api} />
@@ -9,119 +9,126 @@ A customizable input that allows users to select numeric values by dragging alon
 <AnatomyTable api={api} />
 ## Examples
 ### Basic Usage
-The basic slider implementation allows users to select a single value within a defined range. The `min`, `max`, and `step` props control the value boundaries and increments.
-<Showcase name="hero" />
-In this example, we use:
-- `<Slider.Root>` with `mode="single"` for basic slider functionality
-- `<Slider.Track>` to create the sliding area
-- `<Slider.Range>` to show the filled portion
-- `<Slider.Thumb>` for the draggable handle
-- `<Slider.Tooltip>` to display the current value
+The most basic slider implementation allows users to select a single value within a range.
+<Showcase name="single-default-values" />
+The `min` and `max` props define the range (defaulting to 0-100), while `step` controls the increment size (default 1). The `value` prop sets the initial position.
 ### Visual Features
-#### Marks and Labels
-Add visual indicators and labels along the track to help users understand value ranges.
+#### Custom Styling
+The slider can be visually customized through CSS classes and inline styles.
+<Showcase name="custom-styles" />
+In this example, we customize the thumb's appearance using inline styles, demonstrating how to modify its `backgroundColor`, `width`, `height`, and `border`.
+#### Markers and Labels
+Add visual markers and labels to indicate specific values along the track.
 <Showcase name="marks" />
-This example demonstrates:
-- Using `marks` prop to define labeled points along the track
-- `<Slider.Marks>` component with custom styling for indicators and labels
-- Custom step intervals with `step={20}` to align with mark positions
+The `<Slider.MarkerGroup>` component contains `<Slider.Marker>` elements, each with a `value` prop that determines its position. Labels can be added as children.
 ### Advanced Usage
 #### Range Selection
-Create a range slider that allows users to select a minimum and maximum value.
+Create a range slider with two thumbs for selecting a value range.
 <Showcase name="range" />
-The range mode features:
-- `mode="range"` to enable dual thumb selection
-- Two `<Slider.Thumb>` components with `type="start"` and `type="end"`
-- `value` prop accepting an array of two numbers for start and end values
-- Tooltips positioned differently for each thumb
-#### Range with Custom Marks
-Combine range selection with custom marks for precise value selection.
+Set `isRange` to `true` and provide an array of two values `[start, end]` to create a range slider. Each thumb can be customized with its own tooltip placement.
+#### Range with Markers
+Combine range selection with markers for a more informative interface.
 <Showcase name="range-marks" />
-This example shows:
-- Range mode with percentage-based marks
-- Custom step intervals aligned with mark positions
-- Value change callbacks for both continuous updates and final selection
+This example shows how to integrate markers with a range slider, providing visual reference points for both thumbs.
+#### Callbacks
+Track value changes and final selections with callback functions.
+<Showcase name="callbacks" />
+The `onChange$` prop fires on every value change, while `onChangeEnd$` fires when the user finishes dragging or keyboard navigation.
+#### Disabled State
+Control the slider's interactive state.
+<Showcase name="disabled" />
+The `disabled` prop can be a boolean or signal to toggle the slider's interactive state. When disabled, all interactions are prevented.
 
 ## Component State
 ### Using Component State
-The Slider component supports both single and range modes, with state controlled through the `value` prop on `Slider.Root`.
-For single mode, pass a number:
-```typescript
-<Slider.Root value={50} />
-```
-For range mode, pass an array of two numbers:
-```typescript
-<Slider.Root mode="range" value={[25, 75]} />
-```
-Additional state-related props include:
-- `min`: Sets the minimum allowed value (default: 0)
-- `max`: Sets the maximum allowed value (default: 100)
-- `step`: Controls the granularity of values (default: 1)
-- `disabled`: Disables all interactions when true
-As shown in the hero example above, these props can be combined to create a basic slider with controlled bounds and step size.
+The Slider component offers flexible state management through its props. Here are the key ways to control the slider's state:
+1. **Single Value Mode**
+As shown in the "single-default-values" example above, you can control the slider's value using the `value` prop. The slider accepts a number between the `min` and `max` values.
+2. **Range Mode**
+To enable range selection mode, set the `isRange` prop to `true` and provide an array of two numbers as the `value` prop, representing the start and end values. This is demonstrated in the "range" example above.
+3. **Bounds and Steps**
+Control the slider's range and granularity with:
+- `min`: Set the minimum value (defaults to 0)
+- `max`: Set the maximum value (defaults to 100)
+- `step`: Define the increment size (defaults to 1)
+4. **Disabled State**
+As shown in the "disabled" example above, you can disable the slider by setting the `disabled` prop to `true`. This prevents all user interactions with the slider.
 ### State Interactions
-The Slider provides two callbacks for responding to value changes:
-- `onValueChange$`: Fires continuously as the value changes during interaction
-- `onValueChangeEnd$`: Fires once when the interaction ends (mouse up, key up, etc.)
-Both callbacks receive the current value(s) as their argument - a single number for single mode, or a tuple of numbers for range mode.
-As shown in the range-marks example above, you can use these callbacks to track both continuous changes and final values:
+The Slider component provides two main ways to respond to state changes:
+1. **Value Changes**
+Use the `onChange$` prop to handle immediate value changes:
 ```typescript
 <Slider.Root
-  onValueChange$={(values) => {
-    // Called continuously during drag
-    console.log("Values changed:", values);
+  onChange$={(value) => {
+    console.log('Value changed:', value);
   }}
-  onValueChangeEnd$={(values) => {
-    // Called once when interaction ends
-    console.log("Final values:", values);
-  }}
-/>
+>
 ```
-The component maintains its own internal state to ensure:
-- Range mode values stay ordered (start ≤ end)
-- Values remain within min/max bounds
+2. **Committed Values**
+The `onChangeEnd$` prop is called when the user finishes interacting with the slider (after drag or keyboard navigation):
+```typescript
+<Slider.Root
+  onChangeEnd$={(value) => {
+    console.log('Final value:', value);
+  }}
+>
+```
+As shown in the "callbacks" example above, both handlers receive either:
+- A single number in single-value mode
+- An array of two numbers `[start, end]` in range mode
+These handlers are useful for:
+- Updating external state
+- Triggering side effects
+- Validating values
+- Synchronizing with other components
+The state management system ensures that:
+- Values stay within the defined `min` and `max` bounds
+- Range values maintain their order (start ≤ end)
 - Values snap to the nearest step
-- Keyboard interactions respect step sizes
-This state management happens automatically - you only need to handle the value changes through the callbacks.
+- The UI updates smoothly during interactions
 
-Based on the provided examples and API information, I'll document the configuration options for the Slider component.
+Based on the provided implementation and examples, I'll document the configuration options for the Slider component.
 ## Core Configuration
-### Mode and Value Range
-The Slider supports two modes: `single` and `range`. The mode is configured through the `mode` prop on `Slider.Root`.
-As shown in the "hero" example above, single mode accepts a numeric value:
+### Value and Range Mode
+The Slider can be configured in two modes: single value or range. The core configuration is handled through the `SliderRoot` component.
+As shown in the `hero` example above, a basic single-value slider can be created with minimal configuration. By default, it operates with:
+- `min`: 0
+- `max`: 100
+- `step`: 1
+- `value`: 0 (single mode) or [0, 100] (range mode)
+For range mode, as demonstrated in the `range` example, set `isRange` to true and provide an array of two values:
 ```typescript
-type SingleValue = number;
+type SliderValue = number | [number, number];
 ```
-For range mode, as demonstrated in the "range" example, the value is a tuple of numbers:
-```typescript
-type RangeValue = [number, number];
-```
-The slider enforces value constraints between `min` and `max` props (defaults to 0 and 100 respectively). The `step` prop controls value increments (defaults to 1).
 ### Step Configuration
-The step value determines the granularity of the slider. As shown in the "marks" example above, larger step values (20) create discrete stops, while smaller values (as in the "hero" example) allow for smoother sliding.
-When using the Shift key with arrow keys, the step value is multiplied by 10 for faster navigation.
-### Marks Configuration
-Marks can be configured using the `marks` prop on `Slider.Root`, which accepts an array of objects with the following type:
+The slider supports custom step intervals through the `step` prop. As shown in the `marks` example above, you can configure larger step intervals to create discrete value points.
+> The step value must be greater than 0 and should evenly divide into the range between min and max for optimal behavior.
+### Marker System
+The Slider supports a marker system for displaying value points along the track. As shown in the `range-marks` example above, markers can be added with labels to create a more informative slider.
+Markers must have values within the slider's min/max range and are positioned automatically based on the percentage calculation:
 ```typescript
-interface Mark {
-  value: number;
-  label?: string;
-}
+markerPosition = ((value - min) / (max - min)) * 100
 ```
-As shown in the "range-marks" example above, marks can include both values and optional labels for better visual feedback.
 ## Advanced Configuration
 ### Tooltip Placement
-The `Slider.Tooltip` component supports four placement options:
-```typescript
-type PublicTooltipPlacement = "top" | "bottom" | "left" | "right";
-```
-As demonstrated across the examples above, tooltip placement can be customized to avoid overlapping with other UI elements or to improve visibility based on slider orientation.
-### Value Change Callbacks
-The slider provides two callback props for tracking value changes:
-- `onValueChange$`: Fires continuously during thumb movement
-- `onValueChangeEnd$`: Fires when interaction ends (mouse up, key up)
-Both callbacks receive either a single number (in single mode) or a tuple of numbers (in range mode).
-These callbacks can be used for controlled state management or for triggering side effects, as shown in the "hero" example above.
+The tooltip component supports four placement options:
+- `top` (default)
+- `bottom`
+- `left`
+- `right`
+As shown in the `range` example above, different tooltip placements can be used for each thumb in range mode.
+### Value Updates and Callbacks
+The Slider provides two callback mechanisms:
+- `onChange$`: Fires during continuous value changes (dragging)
+- `onChangeEnd$`: Fires when value changes are committed
+As shown in the `callbacks` example above, these can be used to track both intermediate and final values.
+### Disabled State Management
+The disabled state can be controlled either through a boolean or a signal. As shown in the `disabled` example above, the slider supports dynamic toggling of the disabled state.
+When disabled:
+- All user interactions are prevented
+- Callbacks are not fired
+- ARIA attributes are automatically updated
+- Visual styling can be controlled via the `aria-disabled` attribute
 
 
 

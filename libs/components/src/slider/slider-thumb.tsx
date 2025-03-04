@@ -6,7 +6,11 @@ import {
   useSignal,
   useVisibleTask$,
   useContextProvider,
-  Slot, useComputed$, sync$, useStylesScoped$, CSSProperties
+  Slot,
+  useComputed$,
+  sync$,
+  useStylesScoped$,
+  CSSProperties
 } from "@builder.io/qwik";
 import { type ThumbType, sliderContextId, SliderContext } from "./slider-context";
 interface PublicThumbProps extends PropsOf<"div"> {
@@ -41,19 +45,15 @@ export const SliderThumb = component$((props: PublicThumbProps) => {
   );
 
   const ariaValueMax = useComputed$(() =>
-    context.isRange.value && type === "end"
-      ? context.max.value
-      : context.endValue.value
+    context.isRange.value && type === "end" ? context.max.value : context.endValue.value
   );
-
   const ariaValueNow = useComputed$(() => {
     const value = !context.isRange.value
       ? context.value.value
       : type === "start"
         ? context.startValue.value
         : context.endValue.value;
-
-    return typeof value === 'number' ? value : undefined;
+    return typeof value === "number" ? value : undefined;
   });
 
   useContextProvider(sliderContextId, extendedContext);
@@ -66,11 +66,7 @@ export const SliderThumb = component$((props: PublicThumbProps) => {
       const value = context.value.value as number;
       return Math.min(100, Math.max(0, ((value - context.min.value) / range) * 100));
     }
-
-    const value = type === "start"
-      ? context.startValue.value
-      : context.endValue.value;
-
+    const value = type === "start" ? context.startValue.value : context.endValue.value;
     return Math.min(100, Math.max(0, ((value - context.min.value) / range) * 100));
   });
 
@@ -130,13 +126,13 @@ export const SliderThumb = component$((props: PublicThumbProps) => {
     }
     return thumbType === "start"
       ? {
-        min: context.min.value,
-        max: context.endValue.value
-      }
+          min: context.min.value,
+          max: context.endValue.value
+        }
       : {
-        min: context.startValue.value,
-        max: context.max.value
-      };
+          min: context.startValue.value,
+          max: context.max.value
+        };
   });
 
   const onKeyDown$ = $(async (event: KeyboardEvent) => {
@@ -144,7 +140,7 @@ export const SliderThumb = component$((props: PublicThumbProps) => {
 
     const step = event.shiftKey ? context.step.value * 10 : context.step.value;
     let newValue = !context.isRange.value
-      ? context.value.value as number
+      ? (context.value.value as number)
       : type === "start"
         ? context.startValue.value
         : context.endValue.value;
@@ -176,12 +172,12 @@ export const SliderThumb = component$((props: PublicThumbProps) => {
 
   const preventKeyDown = sync$((event: KeyboardEvent) => {
     const preventKeys = [
-      'ArrowRight',
-      'ArrowLeft',
-      'ArrowUp',
-      'ArrowDown',
-      'Home',
-      'End'
+      "ArrowRight",
+      "ArrowLeft",
+      "ArrowUp",
+      "ArrowDown",
+      "Home",
+      "End"
     ];
     if (preventKeys.includes(event.key)) {
       event.preventDefault();
@@ -197,8 +193,8 @@ export const SliderThumb = component$((props: PublicThumbProps) => {
       // Identifies whether the thumb is for the start or end value in range mode
       data-thumb-type={context.isRange.value ? type : undefined}
       style={{
-        ...(rest.style ?? {}) as CSSProperties,
-        '--thumb-position': `${percentage}%`
+        ...((rest.style ?? {}) as CSSProperties),
+        "--thumb-position": `${percentage}%`
       }}
       preventdefault:pointerdown
       preventdefault:pointermove

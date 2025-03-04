@@ -1,21 +1,21 @@
 {
   "keyboard": {
-    "keys": [
+    "keyboardShortcuts": [
       {
         "key": "ArrowRight",
-        "comment": "When focus is on the thumb, increases the value by one step. With Shift key, increases by 10 steps"
+        "comment": "When focus is on the thumb, increases the value by one step. If Shift is held, increases by ten steps"
       },
       {
         "key": "ArrowLeft",
-        "comment": "When focus is on the thumb, decreases the value by one step. With Shift key, decreases by 10 steps"
+        "comment": "When focus is on the thumb, decreases the value by one step. If Shift is held, decreases by ten steps"
       },
       {
         "key": "ArrowUp",
-        "comment": "When focus is on the thumb, increases the value by one step. With Shift key, increases by 10 steps"
+        "comment": "When focus is on the thumb, increases the value by one step. If Shift is held, increases by ten steps"
       },
       {
         "key": "ArrowDown",
-        "comment": "When focus is on the thumb, decreases the value by one step. With Shift key, decreases by 10 steps"
+        "comment": "When focus is on the thumb, decreases the value by one step. If Shift is held, decreases by ten steps"
       },
       {
         "key": "Home",
@@ -24,26 +24,24 @@
       {
         "key": "End",
         "comment": "When focus is on the thumb, sets the value to the maximum allowed value"
-      },
-      {
-        "key": "Tab",
-        "comment": "Moves focus to the next focusable element"
       }
     ]
   },
   "features": [
-    "WAI ARIA Slider design pattern compliance",
-    "Single and range modes with multiple thumbs",
-    "Keyboard navigation with arrow keys, Home/End",
-    "Custom step sizes with Shift key modifier",
-    "Customizable marks with labels",
-    "Drag and drop thumb control",
-    "Optional tooltips with flexible positioning",
-    "Disabled state support",
-    "Progress track visualization",
-    "Touch and pointer events support",
-    "Value change callbacks (continuous and end)",
-    "Min/max bounds enforcement",
-    "Customizable styling per component part"
+    "WAI ARIA Slider design pattern",
+    "Single and range value modes",
+    "Customizable step increments",
+    "Keyboard navigation with arrow keys",
+    "Touch/mouse dragging with pointer events",
+    "Shift key for fine-grained control (10x step)",
+    "Custom markers/ticks support",
+    "Visual range indicator",
+    "Tooltips with value display",
+    "Home/End key value jumps",
+    "Multiple thumb position tracking",
+    "Configurable min/max bounds",
+    "Custom styling via data attributes",
+    "Disabled state handling",
+    "Change and change-end event handlers"
   ]
 }

@@ -51,7 +51,7 @@ test.describe("critical functionality", () => {
     const thumbBounds = await thumb.boundingBox();
     if (!thumbBounds) throw new Error("Thumb not found");
 
-    await expect(thumb).toHaveAttribute('aria-valuenow', '50');
+    await expect(thumb).toHaveAttribute("aria-valuenow", "50");
   });
 });
 
@@ -431,7 +431,9 @@ test.describe("range mode", () => {
 test.describe("style customization", () => {
   test(`GIVEN a Slider with custom inline styles
         WHEN rendered
-        THEN custom styles should be merged with positioning styles`, async ({ page }) => {
+        THEN custom styles should be merged with positioning styles`, async ({
+    page
+  }) => {
     const d = await setup(page, "custom-styles");
     const thumb = d.getThumb();
 
@@ -447,7 +449,9 @@ test.describe("style customization", () => {
     if (!trackBounds || !thumbBounds) throw new Error("Elements not found");
 
     expect(thumbBounds.x).toBeGreaterThanOrEqual(trackBounds.x);
-    expect(thumbBounds.x + thumbBounds.width).toBeLessThanOrEqual(trackBounds.x + trackBounds.width);
+    expect(thumbBounds.x + thumbBounds.width).toBeLessThanOrEqual(
+      trackBounds.x + trackBounds.width
+    );
   });
 });
 
@@ -494,7 +498,9 @@ test.describe("disabled state", () => {
     );
 
     await page.waitForTimeout(100);
-    expect(messages).not.toContain(expect.stringContaining("This should not be called when disabled:"));
+    expect(messages).not.toContain(
+      expect.stringContaining("This should not be called when disabled:")
+    );
   });
 
   test(`GIVEN a disabled Slider
@@ -527,4 +533,3 @@ test.describe("disabled state", () => {
     await expect(thumb).toHaveAttribute("aria-valuenow", "51");
   });
 });
-

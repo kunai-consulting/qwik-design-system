@@ -14,6 +14,56 @@ export const api = {
       "Slider Root": {
         "types": [
           {
+            "PublicDivProps": [
+              {
+                "comment": "Whether the slider should act as a range slider with two thumbs. Default is false",
+                "prop": "isRange",
+                "type": "boolean",
+                "defaultValue": "false"
+              },
+              {
+                "comment": "The current value of the slider. For range sliders, this should be a tuple of [start, end] values",
+                "prop": "value",
+                "type": "SliderValue | Signal<SliderValue>",
+                "defaultValue": "isRange ? [0, 100] : 0"
+              },
+              {
+                "comment": "The minimum value of the slider. Default is 0",
+                "prop": "min",
+                "type": "number",
+                "defaultValue": "0"
+              },
+              {
+                "comment": "The maximum value of the slider. Default is 100",
+                "prop": "max",
+                "type": "number",
+                "defaultValue": "100"
+              },
+              {
+                "comment": "The step interval for the slider value. Default is 1",
+                "prop": "step",
+                "type": "number",
+                "defaultValue": "1"
+              },
+              {
+                "comment": "Whether the slider is disabled. Default is false",
+                "prop": "disabled",
+                "type": "boolean | Signal<boolean>",
+                "defaultValue": "false"
+              },
+              {
+                "comment": "Event handler called when the slider value changes",
+                "prop": "onChange$",
+                "type": "| QRL<(value: SliderValue) => void>\n    | PropFunction<(value: SliderValue) => void>"
+              },
+              {
+                "comment": "Event handler called when the slider value changes are committed (on drag end or keyboard navigation)",
+                "prop": "onChangeEnd$",
+                "type": "| QRL<(value: SliderValue) => void>\n    | PropFunction<(value: SliderValue) => void>"
+              }
+            ]
+          },
+          {
             "PublicRootProps": []
           }
         ],
@@ -78,10 +128,12 @@ export const api = {
       "description": "Draggable thumb component that users interact with to change slider values"
     },
     {
-      "name": "Slider.MarkerGroup"
+      "name": "Slider.MarkerGroup",
+      "description": "A container component for slider markers"
     },
     {
-      "name": "Slider.Marker"
+      "name": "Slider.Marker",
+      "description": "A marker component that displays a specific value point on the slider"
     },
     {
       "name": "Slider.Tooltip",
@@ -89,22 +141,22 @@ export const api = {
     }
   ],
   "keyboardInteractions": {
-    "keys": [
+    "keyboardShortcuts": [
       {
         "key": "ArrowRight",
-        "comment": "When focus is on the thumb, increases the value by one step. With Shift key, increases by 10 steps"
+        "comment": "When focus is on the thumb, increases the value by one step. If Shift is held, increases by ten steps"
       },
       {
         "key": "ArrowLeft",
-        "comment": "When focus is on the thumb, decreases the value by one step. With Shift key, decreases by 10 steps"
+        "comment": "When focus is on the thumb, decreases the value by one step. If Shift is held, decreases by ten steps"
       },
       {
         "key": "ArrowUp",
-        "comment": "When focus is on the thumb, increases the value by one step. With Shift key, increases by 10 steps"
+        "comment": "When focus is on the thumb, increases the value by one step. If Shift is held, increases by ten steps"
       },
       {
         "key": "ArrowDown",
-        "comment": "When focus is on the thumb, decreases the value by one step. With Shift key, decreases by 10 steps"
+        "comment": "When focus is on the thumb, decreases the value by one step. If Shift is held, decreases by ten steps"
       },
       {
         "key": "Home",
@@ -113,26 +165,24 @@ export const api = {
       {
         "key": "End",
         "comment": "When focus is on the thumb, sets the value to the maximum allowed value"
-      },
-      {
-        "key": "Tab",
-        "comment": "Moves focus to the next focusable element"
       }
     ]
   },
   "features": [
-    "WAI ARIA Slider design pattern compliance",
-    "Single and range modes with multiple thumbs",
-    "Keyboard navigation with arrow keys, Home/End",
-    "Custom step sizes with Shift key modifier",
-    "Customizable marks with labels",
-    "Drag and drop thumb control",
-    "Optional tooltips with flexible positioning",
-    "Disabled state support",
-    "Progress track visualization",
-    "Touch and pointer events support",
-    "Value change callbacks (continuous and end)",
-    "Min/max bounds enforcement",
-    "Customizable styling per component part"
+    "WAI ARIA Slider design pattern",
+    "Single and range value modes",
+    "Customizable step increments",
+    "Keyboard navigation with arrow keys",
+    "Touch/mouse dragging with pointer events",
+    "Shift key for fine-grained control (10x step)",
+    "Custom markers/ticks support",
+    "Visual range indicator",
+    "Tooltips with value display",
+    "Home/End key value jumps",
+    "Multiple thumb position tracking",
+    "Configurable min/max bounds",
+    "Custom styling via data attributes",
+    "Disabled state handling",
+    "Change and change-end event handlers"
   ]
 };

@@ -16,7 +16,7 @@ export const SliderTrack = component$((props: PropsOf<"div">) => {
   const onPointerDown$ = $(async (event: PointerEvent) => {
     if (context.disabled.value) return;
 
-    const clickedThumb = (event.target as HTMLElement).closest('[data-qds-slider-thumb]');
+    const clickedThumb = (event.target as HTMLElement).closest("[data-qds-slider-thumb]");
     if (clickedThumb) return;
 
     const rect = trackRef.value?.getBoundingClientRect();

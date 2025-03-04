@@ -10,14 +10,16 @@ export const SliderRange = component$((props: PropsOf<"div">) => {
     if (range === 0) return { left: "0%", width: "0%" };
 
     if (!context.isRange.value) {
-      const percentage = ((context.value.value as number - context.min.value) / range) * 100;
+      const percentage =
+        (((context.value.value as number) - context.min.value) / range) * 100;
       return {
         left: "0%",
         width: `${Math.min(100, Math.max(0, percentage))}%`
       };
     }
 
-    const startPercentage = ((context.startValue.value - context.min.value) / range) * 100;
+    const startPercentage =
+      ((context.startValue.value - context.min.value) / range) * 100;
     const endPercentage = ((context.endValue.value - context.min.value) / range) * 100;
 
     return {

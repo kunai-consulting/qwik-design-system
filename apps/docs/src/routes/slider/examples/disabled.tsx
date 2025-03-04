@@ -26,7 +26,11 @@ export default component$(() => {
           </Slider.Thumb>
         </Slider.Track>
       </Slider.Root>
-      <button onClick$={() => {isDisabled.value = !isDisabled.value}}>
+      <button
+        onClick$={() => {
+          isDisabled.value = !isDisabled.value;
+        }}
+      >
         Toggle Disabled
       </button>
     </div>
