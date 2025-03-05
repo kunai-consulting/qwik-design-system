@@ -326,6 +326,8 @@ useTask$(({ track }) => {
 
 ### Transitioning between environments
 
+Does the text say `hello from the browser` initially? If so refresh the page, this is because of SPA navigation.
+
 When the signal value changes, the task will re-run. What's important to note is that the task will run in the environment of where the tracked change took place. (usually the browser)
 
 For example, if you have a signal value, and the signal value was changed in the browser, the task will run in the browser.
