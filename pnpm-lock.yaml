@@ -82,6 +82,9 @@ importers:
       '@builder.io/qwik-city':
         specifier: https://pkg.pr.new/@builder.io/qwik-city@7362
         version: https://pkg.pr.new/@builder.io/qwik-city@7362(rollup@4.20.0)(typescript@5.4.5)(vite@5.4.8(@types/node@20.14.11)(lightningcss@1.29.1))
+      '@fontsource/proza-libre':
+        specifier: ^5.0.12
+        version: 5.1.1
       '@kunai-consulting/qwik':
         specifier: workspace:*
         version: link:../../libs/components
@@ -124,6 +127,9 @@ importers:
       vite:
         specifier: ^5.4
         version: 5.4.8(@types/node@20.14.11)(lightningcss@1.29.1)
+      vite-plugin-image-optimizer:
+        specifier: ^1.1.8
+        version: 1.1.8(vite@5.4.8(@types/node@20.14.11)(lightningcss@1.29.1))
       vite-tsconfig-paths:
         specifier: ^4.2.1
         version: 4.3.2(typescript@5.4.5)(vite@5.4.8(@types/node@20.14.11)(lightningcss@1.29.1))
@@ -635,6 +641,9 @@ packages:
 
   '@floating-ui/utils@0.2.7':
     resolution: {integrity: sha512-X8R8Oj771YRl/w+c1HqAC1szL8zWQRwFvgDwT129k9ACdBoud/+/rX9V0qiMl6LWUdP9voC2nDVZYPMQQsb6eA==}
+
+  '@fontsource/proza-libre@5.1.1':
+    resolution: {integrity: sha512-D42CrxaArGmQt6o2hkVfEHbqcpCUNtdgytN6YnrqayTS3XeA7psJMbFilF5Zbg+9TInYUbIOV5YQgJ8kWlRsCg==}
 
   '@graphql-typed-document-node/core@3.2.0':
     resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
@@ -2341,6 +2350,12 @@ packages:
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
 
+  vite-plugin-image-optimizer@1.1.8:
+    resolution: {integrity: sha512-40bYRDHQLUOrIwJIJQqyKJHrfgVshqzDLtMy8SEgf+fB7PnppslSTTkY7PJFrBGqgbCdOdN9KkqsvccXmnEa5Q==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      vite: '>=3'
+
   vite-tsconfig-paths@4.3.2:
     resolution: {integrity: sha512-0Vd/a6po6Q+86rPlntHye7F31zA2URZMbH8M3saAZ/xR9QoGN/L21bxEGfXdWmFdNkqPpRdxFT7nmNe12e9/uA==}
     peerDependencies:
@@ -2905,6 +2920,8 @@ snapshots:
       '@floating-ui/utils': 0.2.7
 
   '@floating-ui/utils@0.2.7': {}
+
+  '@fontsource/proza-libre@5.1.1': {}
 
   '@graphql-typed-document-node/core@3.2.0(graphql@15.9.0)':
     dependencies:
@@ -4844,6 +4861,12 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+
+  vite-plugin-image-optimizer@1.1.8(vite@5.4.8(@types/node@20.14.11)(lightningcss@1.29.1)):
+    dependencies:
+      ansi-colors: 4.1.3
+      pathe: 1.1.2
+      vite: 5.4.8(@types/node@20.14.11)(lightningcss@1.29.1)
 
   vite-tsconfig-paths@4.3.2(typescript@5.4.5)(vite@5.4.8(@types/node@20.14.11)(lightningcss@1.29.1)):
     dependencies:

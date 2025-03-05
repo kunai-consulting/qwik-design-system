@@ -7,13 +7,13 @@ import { AnatomyTable } from "../docs-widgets/anatomy-table/anatomy-table";
 import { APITable } from "../docs-widgets/api-table/api-table";
 import { MainHeading, SubHeading } from "../docs-widgets/toc/toc";
 import { Showcase } from "./showcase";
-
+import { Image } from "../docs-widgets/image/image";
 export const components: Record<string, Component> = {
   p: component$<PropsOf<"p">>(({ ...props }) => {
     return (
       <p
         {...props}
-        class={cn("leading-7 text-cool-700 [&:not(:first-child)]:mt-6", props.class)}
+        class={cn("leading-7 [&:not(:first-child)]:mt-6 text-[#b8c1cc]", props.class)}
       >
         <Slot />
       </p>
@@ -64,7 +64,10 @@ export const components: Record<string, Component> = {
     return (
       <a
         {...props}
-        class={cn("font-medium text-cool-700 underline underline-offset-4", props.class)}
+        class={cn(
+          "font-medium text-cool-700 underline underline-offset-4 text-white hover:text-qwik-blue-300 transition-colors",
+          props.class
+        )}
         target="_blank"
         rel="noreferrer"
       >
@@ -88,7 +91,7 @@ export const components: Record<string, Component> = {
   }),
   li: component$<PropsOf<"li">>(({ ...props }) => {
     return (
-      <li {...props} class={cn("mt-2 text-cool-700", props.class)}>
+      <li {...props} class={cn("mt-2 text-[#b8c1cc]", props.class)}>
         <Slot />
       </li>
     );
@@ -98,7 +101,7 @@ export const components: Record<string, Component> = {
       <blockquote
         {...props}
         class={cn(
-          "mt-6 border-l-2 border-cool-300 pl-6 italic text-cool-700 [&>*]:text-cool-600",
+          "mt-6 border-l-2 border-[#7a8799] bg-[#0e0f12] p-2 pl-6 italic [&>*]:text-[#7a8799]",
           props.class
         )}
       >
@@ -110,22 +113,17 @@ export const components: Record<string, Component> = {
     return <hr {...props} class={cn("my-6 border-cool-200 md:my-8", props.class)} />;
   }),
   img: component$<PropsOf<"img">>(({ alt, ...props }) => {
-    return (
-      <img
-        {...props}
-        alt={alt}
-        class={cn("rounded-md border border-cool-200", props.class)}
-      />
-    );
+    return <img {...props} alt={alt} class={cn("border border-cool-200", props.class)} />;
   }),
   pre: component$<PropsOf<"pre">>(({ ...props }) => {
     return (
       <pre
         {...props}
         class={cn(
-          "border border-qwik-neutral-900 rounded-md overflow-clip text-sm bg-[#181e20]",
+          "border border-neutral-primary overflow-clip text-sm bg-[#0e0f12] mt-6",
           props.class
         )}
+        data-pagefind-ignore
       >
         <Slot />
       </pre>
@@ -135,7 +133,7 @@ export const components: Record<string, Component> = {
     return (
       <code
         {...props}
-        class={cn("max-h-[31.25rem] max-w-full overflow-auto", props.class)}
+        class={cn("max-h-[31.25rem] whitespace-pre-wrap box-decoration-clone", props.class)}
       >
         <Slot />
       </code>
@@ -185,8 +183,23 @@ export const components: Record<string, Component> = {
       />
     );
   }),
+  em: component$<PropsOf<"em">>(({ ...props }) => {
+    return (
+      <em {...props} class={cn("font-medium text-white", props.class)}>
+        <Slot />
+      </em>
+    );
+  }),
+  strong: component$<PropsOf<"strong">>(({ ...props }) => {
+    return (
+      <strong {...props} class={cn("text-white", props.class)}>
+        <Slot />
+      </strong>
+    );
+  }),
   Showcase,
   APITable,
   AnatomyTable,
-  Features
+  Features,
+  Image
 };

@@ -1,0 +1,10 @@
+input {
+    border: 1px solid var(--color-neutral-interactive);
+    background: var(--color-neutral-background);
+    padding: 8px;
+}
+
+input:focus-visible {
+    outline: 1px solid var(--color-qwik-blue-300);
+    outline-offset: 2px;
+}
