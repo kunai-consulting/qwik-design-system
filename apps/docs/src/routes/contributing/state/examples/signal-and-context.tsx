@@ -7,7 +7,6 @@ export default component$(() => {
         [data-example-state-button]:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            background-color: red !important;
         }    
     `)
     
@@ -20,7 +19,7 @@ export default component$(() => {
             </Root>
 
             <button onClick$={() => isDisabled.value = !isDisabled.value}>
-                Enable button
+                Toggle disabled
             </button>
 
             <p>User disabled: {isDisabled.value ? 'true' : 'false'}</p>

@@ -13,6 +13,20 @@ Every signal (useComputed$, useSignal, useBoundSignal) should have a `Sig` suffi
 const isSelectedSig = useSignal(false);
 ```
 
+## Signal props and the bind convention
+
+The `bind:x` API's that expect a signal are really  *just a prop*. The convention is to use `bind:` for signals, to stay consistent with Qwik's API (which was inspired by frameworks like Svelte and Angular).
+
+```tsx
+<Select.Root bind:value={selectedValueSig} />
+```
+
+> You also get typescript autocomplete for each bind on the component!
+
+It is a requirement that you handle both [signal based](http://localhost:5173/contributing/state/#signal-based-reactive-state) and [value based state](http://localhost:5173/contributing/state/#value-based) for each component.
+
+
+
 ## Events
 
 ### Naming

@@ -31,7 +31,7 @@ export const SubHeading = component$((props: PropsOf<"h3">) => {
     <h3
       {...props}
       class={cn(
-        "mt-16 scroll-m-20 text-2xl font-semibold tracking-tight text-cool-700",
+        "mt-10 scroll-m-20 text-2xl font-semibold tracking-tight text-cool-700",
         props.class
       )}
     >
