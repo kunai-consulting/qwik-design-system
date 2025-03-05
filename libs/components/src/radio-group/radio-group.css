@@ -1,4 +1,25 @@
 @layer qds {
+  [data-qds-radio-group-root] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  [data-qds-radio-group-root][data-orientation="horizontal"] {
+    display: flex;
+    flex-direction: row !important;
+    align-items: center;
+  }
+
+  [data-qds-radio-group-root][data-orientation="horizontal"] [data-qds-radio-group-item] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  [data-qds-radio-group-root][data-orientation="horizontal"] [data-qds-radio-group-label] {
+    text-align: center;
+  }
+
   [data-qds-indicator] {
     user-select: none;
   }

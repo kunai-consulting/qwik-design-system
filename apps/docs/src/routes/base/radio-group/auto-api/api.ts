@@ -28,8 +28,7 @@ export const api = {
           {
             "name": "data-hidden",
             "type": "string",
-            "comment":
-              "Indicates whether the indicator is hidden based on selection state"
+            "comment": "Indicates whether the indicator is hidden based on selection state"
           },
           {
             "name": "data-checked",
@@ -52,7 +51,13 @@ export const api = {
             ]
           }
         ],
-        "inheritsFrom": "div"
+        "inheritsFrom": "div",
+        "dataAttributes": [
+          {
+            "name": "data-orientation",
+            "type": "string"
+          }
+        ]
       }
     },
     {
@@ -67,8 +72,8 @@ export const api = {
             "PublicRadioGroupRootProps": [
               {
                 "comment": "",
-                "prop": '"bind:value"',
-                "type": "Signal<boolean>"
+                "prop": "\"bind:value\"",
+                "type": "Signal<string | undefined>"
               },
               {
                 "comment": "Event handler for when the radio group selection changes",
@@ -104,6 +109,12 @@ export const api = {
                 "comment": "The current value of the radio group",
                 "prop": "value",
                 "type": "string"
+              },
+              {
+                "comment": "",
+                "prop": "orientation",
+                "type": "'horizontal' | 'vertical'",
+                "defaultValue": "'vertical'"
               }
             ]
           }
@@ -116,9 +127,8 @@ export const api = {
             "comment": "Indicates whether the radio group is disabled"
           },
           {
-            "name": "data-checked",
-            "type": "string | undefined",
-            "comment": "Indicates whether the radio group has a selected value"
+            "name": "data-orientation",
+            "type": "string"
           }
         ]
       }
@@ -145,8 +155,7 @@ export const api = {
         "dataAttributes": [
           {
             "name": "data-disabled",
-            "type": "string | undefined",
-            "comment": "Indicates whether this radio trigger is disabled"
+            "type": "string | undefined"
           },
           {
             "name": "data-checked",
@@ -164,8 +173,7 @@ export const api = {
     },
     {
       "name": "RadioGroup.Indicator",
-      "description":
-        "Visual indicator component that shows the selected state of a radio option"
+      "description": "Visual indicator component that shows the selected state of a radio option"
     },
     {
       "name": "RadioGroup.Trigger",
@@ -177,8 +185,7 @@ export const api = {
     },
     {
       "name": "RadioGroup.Description",
-      "description":
-        "A description component for the radio group that provides additional context"
+      "description": "A description component for the radio group that provides additional context"
     },
     {
       "name": "RadioGroup.HiddenNativeInput"

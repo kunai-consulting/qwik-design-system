@@ -8,7 +8,7 @@ export default component$(() => {
   const value = useSignal<string | undefined>("Item 2");
 
   return (
-    <RadioGroup.Root class="radio-group" value={value.value}>
+    <RadioGroup.Root class="radio-group-root" value={value.value}>
       <RadioGroup.Label class="radio-group-label">Items</RadioGroup.Label>
       {items.map((item, index) => (
         <RadioGroup.Item class="radio-group-item" key={item} value={item}>
@@ -27,4 +27,4 @@ export default component$(() => {
 });
 
 //  styles
-import styles from "./radio-group.css?inline";
+import styles from "./radio-group-custom.css?inline";

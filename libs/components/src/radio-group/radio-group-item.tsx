@@ -15,11 +15,12 @@ type PublicRadioGroupItemProps = PropsOf<"div"> & {
 export const RadioGroupItem = component$<PublicRadioGroupItemProps>(
   ({ value, ...props }) => {
     const context = useContext(radioGroupContextId);
-    const itemId = `${context.localId}-$trigger`;
+    const itemId = `${context.localId}-trigger`;
     const itemRef = useSignal<HTMLDivElement | undefined>(undefined);
+
     return (
       // Identifier for individual radio group item container
-      <div ref={itemRef} id={itemId} data-qds-radio-group-item {...props}>
+      <div ref={itemRef} id={itemId} data-qds-radio-group-item data-orientation={context.orientation} {...props}>
         <Slot />
       </div>
     );

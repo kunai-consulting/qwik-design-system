@@ -2,9 +2,7 @@ import {
   type PropsOf,
   Slot,
   component$,
-  sync$,
   useContext,
-  useOnWindow,
   useTask$
 } from "@builder.io/qwik";
 import { radioGroupContextId } from "./radio-group-context";
@@ -26,7 +24,7 @@ export const RadioGroupDescription = component$((props: RadioGroupDescriptionPro
 
   return (
     // Identifier for the radio group description element
-    <div id={descriptionId} data-qds-checkbox-description {...props}>
+    <div id={descriptionId} data-qds-radio-group-description {...props}>
       <Slot />
     </div>
   );
