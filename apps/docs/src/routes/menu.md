@@ -12,6 +12,7 @@
 - [File Upload](/base/file-upload)
 - [QR Code](/base/qr-code)
 - [Resizable](/base/resizable)
+- [Slider](/base/slider)
 
 ## Contributing
 

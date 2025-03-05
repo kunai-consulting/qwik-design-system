@@ -1,0 +1,47 @@
+{
+  "keyboard": {
+    "keyboardShortcuts": [
+      {
+        "key": "ArrowRight",
+        "comment": "When focus is on the thumb, increases the value by one step. If Shift is held, increases by ten steps"
+      },
+      {
+        "key": "ArrowLeft",
+        "comment": "When focus is on the thumb, decreases the value by one step. If Shift is held, decreases by ten steps"
+      },
+      {
+        "key": "ArrowUp",
+        "comment": "When focus is on the thumb, increases the value by one step. If Shift is held, increases by ten steps"
+      },
+      {
+        "key": "ArrowDown",
+        "comment": "When focus is on the thumb, decreases the value by one step. If Shift is held, decreases by ten steps"
+      },
+      {
+        "key": "Home",
+        "comment": "When focus is on the thumb, sets the value to the minimum allowed value"
+      },
+      {
+        "key": "End",
+        "comment": "When focus is on the thumb, sets the value to the maximum allowed value"
+      }
+    ]
+  },
+  "features": [
+    "WAI ARIA Slider design pattern",
+    "Single and range value modes",
+    "Customizable step increments",
+    "Keyboard navigation with arrow keys",
+    "Touch/mouse dragging with pointer events",
+    "Shift key for fine-grained control (10x step)",
+    "Custom markers/ticks support",
+    "Visual range indicator",
+    "Tooltips with value display",
+    "Home/End key value jumps",
+    "Multiple thumb position tracking",
+    "Configurable min/max bounds",
+    "Custom styling via data attributes",
+    "Disabled state handling",
+    "Change and change-end event handlers"
+  ]
+}
