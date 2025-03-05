@@ -12,10 +12,11 @@ export type AsChildProps = {
   asChild?: boolean;
 };
 
-export function syncFixedInV2<T extends (...args: unknown[]) => unknown>(fn: T) {
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export function syncFixedInV2<T extends (...args: any[]) => unknown>(fn: T) {
   // in v1, there is a very obscure bug with container state and context
   // that is fixed with the new serialization system in v2
-  return noSerialize(fn);
+  return noSerialize(fn) as T;
 }
 
 export function withAsChild<T>(BaseComponent: Component<T>, trackInstances?: boolean) {
