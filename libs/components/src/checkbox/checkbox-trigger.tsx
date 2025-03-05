@@ -9,9 +9,9 @@ import {
   useComputed$,
   useContext
 } from "@builder.io/qwik";
-import { checkboxContextId } from "./checkbox-context";
-import { Render } from "../render/render";
 import { syncFixedInV2, withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
+import { checkboxContextId } from "./checkbox-context";
 type PublicCheckboxControlProps = PropsOf<"button">;
 
 /** Interactive trigger component that handles checkbox toggling */

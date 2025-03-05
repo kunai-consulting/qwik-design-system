@@ -2,7 +2,7 @@ import { type Page, expect, test } from "@playwright/test";
 import { createTestDriver } from "./checklist.driver";
 
 async function setup(page: Page, exampleName: string) {
-  await page.goto(`http://localhost:6174/checklist/${exampleName}`);
+  await page.goto(`http://localhost:6174/base/checklist/${exampleName}`);
   return createTestDriver(page);
 }
 

@@ -111,14 +111,14 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
         return (
           <div key={itemName}>
             <div
-              class={`h-[1px] bg-qwik-neutral-900 ${index === 0 ? "mt-0" : "mt-8"}`}
+              class={`h-[1px] bg-neutral-primary ${index === 0 ? "mt-0" : "mt-8"}`}
               aria-hidden="true"
             />
             <SubHeading id={itemName}>{itemName}</SubHeading>
             {itemProps.inheritsFrom && (
-              <p class="mb-4 text-sm text-gray-600 dark:text-gray-400 mt-4">
+              <p class="mb-4 text-sm text-neutral-foreground mt-4">
                 Inherits from:{" "}
-                <code class="px-2 py-1 bg-qwik-neutral-950 text-qwik-blue-300">
+                <code class="px-2 py-1 !bg-neutral-primary !text-qwik-blue-300">
                   {`<${itemProps.inheritsFrom} />`}
                 </code>
               </p>
@@ -128,10 +128,10 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
             {propsArray && propsArray.length > 0 && (
               <>
                 <h4 class="mb-2 font-medium">Props</h4>
-                <div class="rounded-md border-qwik-neutral-900 border mb-6">
+                <div class="border-neutral-primary border mb-6">
                   <table class="w-full border-collapse text-sm">
                     <thead>
-                      <tr class="border-b border-qwik-neutral-900 dark:border-gray-800 bg-qwik-neutral-950">
+                      <tr class="border-b border-neutral-primary bg-neutral-primary">
                         <th class="py-4 px-4 text-left font-medium">Prop</th>
                         <th class="py-4 px-4 text-left font-medium">Type</th>
                         <th class="py-4 px-4 text-left font-medium">Default</th>
@@ -144,18 +144,16 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
                           key={prop.prop}
                           class="border-b last-of-type:border-b-0 border-qwik-neutral-900"
                         >
-                          <td class="py-4 px-4 font-mono text-sm">{prop.prop}</td>
-                          <td class="py-4 px-4 font-mono text-sm">{prop.type}</td>
-                          <td class="py-4 px-4 font-mono text-sm">
-                            {prop.defaultValue || "-"}
-                          </td>
+                          <td class="py-4 px-4 text-sm">{prop.prop}</td>
+                          <td class="py-4 px-4 text-sm">{prop.type}</td>
+                          <td class="py-4 px-4 text-sm">{prop.defaultValue || "-"}</td>
                           <td class="py-4 px-4">
                             {prop.comment && (
-                              <Popover.Root>
-                                <Popover.Trigger class="text-blue-500 hover:text-blue-600">
+                              <Popover.Root gutter={4}>
+                                <Popover.Trigger class="text-qwik-blue-500 hover:text-blue-300 cursor-pointer">
                                   Details
                                 </Popover.Trigger>
-                                <Popover.Panel class="p-4 max-w-xs">
+                                <Popover.Panel class="p-4 max-w-xs bg-neutral-foreground rounded-md">
                                   {prop.comment}
                                 </Popover.Panel>
                               </Popover.Root>
@@ -173,10 +171,10 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
             {itemProps.dataAttributes && itemProps.dataAttributes.length > 0 && (
               <>
                 <h4 class="mb-2 font-medium">Data Attributes</h4>
-                <div class="rounded-md border-qwik-neutral-900 border">
+                <div class="border-neutral-primary border">
                   <table class="w-full border-collapse text-sm">
                     <thead>
-                      <tr class="border-b border-qwik-neutral-900 bg-qwik-neutral-950">
+                      <tr class="border-b border-neutral-primary bg-neutral-primary">
                         <th class="py-4 px-4 text-left font-medium">Attribute</th>
                         <th class="py-4 px-4 text-left font-medium">Description</th>
                       </tr>
@@ -185,9 +183,9 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
                       {itemProps.dataAttributes.map((attr: DataAttribute) => (
                         <tr
                           key={attr.name}
-                          class="border-b last-of-type:border-b-0 border-qwik-neutral-900"
+                          class="border-b last-of-type:border-b-0 border-neutral-primary"
                         >
-                          <td class="py-4 px-4 font-mono text-sm text-qwik-blue-200">
+                          <td class="py-4 px-4 text-sm text-qwik-blue-200">
                             {attr.name}
                           </td>
                           <td class="py-4 px-4">{attr.comment}</td>
@@ -207,24 +205,22 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
         <>
           <MainHeading id="accessibility">Accessibility</MainHeading>
           <SubHeading id="keyboard-interactions">Keyboard Interactions</SubHeading>
-          <div class="rounded-md border-qwik-neutral-900 border mt-6">
+          <div class="border-neutral-primary border mt-6">
             <table class="w-full border-collapse border-spacing-1 text-sm">
               <thead>
-                <tr class="border-b border-qwik-neutral-900 bg-qwik-neutral-950">
-                  <th class="py-4 px-4 text-left font-medium rounded-tl-md">Key</th>
-                  <th class="py-4 px-4 text-left font-medium rounded-tr-md">
-                    Description
-                  </th>
+                <tr class="border-b border-neutral-primary bg-neutral-primary">
+                  <th class="py-4 px-4 text-left font-medium">Key</th>
+                  <th class="py-4 px-4 text-left font-medium">Description</th>
                 </tr>
               </thead>
               <tbody>
                 {api.keyboardInteractions.map((interaction) => (
                   <tr
                     key={interaction.key}
-                    class="border-b last-of-type:border-b-0 border-qwik-neutral-900"
+                    class="border-b last-of-type:border-b-0 border-neutral-primary"
                   >
-                    <td class="py-4 px-4 font-mono text-sm flex items-center">
-                      <span class="bg-qwik-neutral-800 px-3 py-1 rounded-md border-b-2 border-qwik-neutral-900">
+                    <td class="py-4 px-4 text-sm flex items-center">
+                      <span class="bg-neutral-interactive px-3 py-1 border-b-2 border-neutral-primary rounded-md">
                         {interaction.key}
                       </span>
                     </td>

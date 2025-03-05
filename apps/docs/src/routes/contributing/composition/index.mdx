@@ -1,0 +1,129 @@
+import { Image } from "~/docs-widgets/image/image";
+import composition from "~/assets/docs/composition/lego-composition.webp";
+
+# Composition
+
+<Image src={composition} loading="eager" alt="Composition" />
+
+## What is Composability?
+
+Composability means building complex UIs from simple, reusable pieces that work well together. In QDS, components are designed to be composed rather than configured through numerous props.
+
+For example, instead of a monolithic component with many configuration options, QDS provides component parts that you can combine:
+
+```jsx
+<Tooltip.Root>
+  <Tooltip.Trigger>Hover me</Tooltip.Trigger>
+  <Tooltip.Content>I appear on hover!</Tooltip.Content>
+</Tooltip.Root>
+```
+
+## One Component, One Markup Element
+
+A key principle in QDS is that each component typically corresponds to ONE piece of markup. With few exceptions, components are responsible for rendering and controlling a single element in the DOM.
+
+```tsx
+export const CheckboxTrigger = component$((props) => {
+  return (
+    <button {...props}>
+      <Slot />
+    </button>
+  );
+});
+```
+
+This principle:
+
+- Keeps components focused on a single responsibility
+- Makes the relationship between components and DOM clearer
+- Simplifies styling and accessibility implementations
+- Avoids "div soup" and unnecessary nesting
+
+By following these composition principles, QDS aims to provide a flexible foundation that can be adapted to any design system needs while maintaining accessibility and performance.
+
+Composability means building complex UIs from simple, reusable pieces that work well together.
+
+For example, instead of a single `<Tooltip>` component with many props, you get:
+
+```jsx
+<Tooltip.Root>
+  <Tooltip.Trigger>Hover me</Tooltip.Trigger>
+  <Tooltip.Content>I appear on hover!</Tooltip.Content>
+</Tooltip.Root>
+```
+
+This approach gives you more control and flexibility.
+
+Without composability, you face "prop armageddon":
+
+```jsx
+<Tooltip
+  content="I appear on hover!"
+  triggerText="Hover me"
+  triggerProps={{ className: "btn", disabled: false }}
+  triggerClass="text-blue"
+  contentBackgroundColor="#333"
+  contentClass="p-2 rounded"
+  position="top"
+  arrow={true}
+  arrowSize={8}
+  delay={200}
+  // ...and 20 more props
+/>
+```
+
+This pattern is ok for those consuming the library, but not for those building it.
+
+### Composing by abstraction
+
+The purpose of these primitives is for consumers to combine the pieces of the component, so you can focus on building your app.
+
+```jsx
+import { Tooltip } from "@kunai-consulting/qwik";
+
+export const HelpTip = component$(({ trigger }) => {
+  return (
+    <Tooltip.Root>
+      <Tooltip.Trigger asChild>
+        {trigger}
+      </Tooltip.Trigger>
+      <Tooltip.Content class="help-bubble">
+        <Slot />
+      </Tooltip.Content>
+    </Tooltip.Root>
+  );
+});
+
+export default component$(() => {
+  return (
+      <form>
+        <label>
+          Username
+          <HelpTip trigger={<Icon name="question-circle" />}>
+            Choose a username between 3-20 characters
+          </HelpTip>
+        </label>
+        <input name="username" />
+      </form>
+  )
+})
+```
+
+### Composing with your own elements
+
+With the `asChild` prop, consumers can even replace our default elements with their own JSX or components:
+
+```jsx
+<Tooltip.Root>
+  <Tooltip.Trigger asChild>
+    <button class="my-custom-button"> 
+      Hover me <Icon name="info" />
+    </button>
+  </Tooltip.Trigger>
+  <Tooltip.Content>I appear on hover!</Tooltip.Content>
+</Tooltip.Root>
+```
+
+> For more on composability, see [this article](https://atomicdesign.bradfrost.com/chapter-2/).
+
+This lets you maintain your component structure while still getting all the built-in behavior.

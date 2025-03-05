@@ -9,7 +9,7 @@ import {
   useContextProvider,
   useId,
   useSignal,
-  useTask$,
+  useTask$
 } from "@builder.io/qwik";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
@@ -61,7 +61,7 @@ export const CheckboxRoot = component$((props: PublicCheckboxRootProps) => {
     required,
     value,
     isErrorSig,
-    triggerRef,
+    triggerRef
   };
   useContextProvider(checkboxContextId, context);
   useTask$(async function handleChange({ track }) {

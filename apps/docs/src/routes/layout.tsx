@@ -4,7 +4,8 @@ import {
   component$,
   createContextId,
   useContextProvider,
-  useSignal
+  useSignal,
+  useStyles$
 } from "@builder.io/qwik";
 import {
   type ContentHeading,
@@ -12,13 +13,13 @@ import {
   useContent
 } from "@builder.io/qwik-city";
 import { ScrollArea } from "@kunai-consulting/qwik";
-import { SearchModal } from "~/components/search";
-import { Header } from "~/docs-widgets/header/header";
+import { NavFooter } from "~/docs-widgets/nav-footer/nav-footer";
+import { SearchModal } from "~/docs-widgets/search/search";
 import { Sidebar } from "~/docs-widgets/sidebar/sidebar";
 import { TOC } from "~/docs-widgets/toc/toc";
 import { components } from "~/mdx/components";
 import { MDXProvider } from "~/mdx/provider";
-
+import styles from "./layout.css?inline";
 type RootContext = {
   allHeadingsSig: Signal<ContentHeading[]>;
 };
@@ -37,6 +38,7 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 };
 
 export default component$(() => {
+  useStyles$(styles);
   const allHeadingsSig = useSignal<ContentHeading[]>([]);
   const { headings } = useContent();
 
@@ -46,11 +48,13 @@ export default component$(() => {
 
   return (
     <MDXProvider components={components}>
-      <Header />
+      <NavFooter />
       <SearchModal />
-      <div class="flex gap-4">
+      <div class="svg-bg w-full h-full top-0 left-0 absolute z-[-2]" />
+      <div class="w-full h-full top-0 left-0 absolute bg-gradient z-[-1]" />
+      <div class="grid grid-cols-1 md:grid-cols-[200px_1fr] xl:grid-cols-[225px_1fr_225px] gap-4">
         <Sidebar />
-        <main data-pagefind-body class="mx-auto max-w-screen-md">
+        <main data-pagefind-body class="w-full mx-auto max-w-screen-md">
           <Slot />
         </main>
         <aside class="hidden w-60 xl:block">
@@ -60,9 +64,9 @@ export default component$(() => {
             </ScrollArea.Viewport>
             <ScrollArea.Scrollbar
               orientation="vertical"
-              class="w-4 p-0.5 bg-[#FFFFFF1F] rounded-full"
+              class="w-4 p-0.5 bg-neutral-primary"
             >
-              <ScrollArea.Thumb class="h-12 w-3 bg-[#FFFFFF66] rounded-full transition-[background] duration-160 ease-out hover:bg-[#FFFFFF80]" />
+              <ScrollArea.Thumb class="h-12 w-3 bg-neutral-foreground transition-[background] duration-160 ease-out hover:bg-[#FFFFFF80]" />
             </ScrollArea.Scrollbar>
           </ScrollArea.Root>
         </aside>

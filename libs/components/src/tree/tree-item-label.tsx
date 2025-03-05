@@ -1,6 +1,6 @@
-import { component$, type PropsOf, Slot } from "@builder.io/qwik";
-import { Render } from "../render/render";
+import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
 
 export const TreeItemLabelBase = component$((props: PropsOf<"span">) => {
   return (

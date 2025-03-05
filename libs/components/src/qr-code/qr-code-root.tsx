@@ -4,8 +4,8 @@ import {
   component$,
   useContextProvider,
   useSignal,
-  useTask$,
-  useStyles$
+  useStyles$,
+  useTask$
 } from "@builder.io/qwik";
 import { encode } from "uqr";
 import { qrCodeContextId } from "./qr-code-context";

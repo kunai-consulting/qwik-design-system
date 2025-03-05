@@ -1,0 +1,166 @@
+# Slider Research
+
+## Research Links:
+- ARK UI Slider (https://ark-ui.com/react/docs/components/slider)
+- Radix UI Slider (https://www.radix-ui.com/primitives/docs/components/slider)
+- MUI Slider (https://mui.com/material-ui/react-slider/)
+- Chakra UI Slider (https://chakra-ui.com/docs/components/slider)
+- Mantine Slider (https://mantine.dev/core/slider/)
+
+---
+
+## Features:
+- [x] Single value slider
+- [x] Range slider (dual thumbs)
+- [x] Keyboard navigation
+- [x] Custom step sizes
+- [x] Disabled state
+- [x] Custom markers/ticks
+- [x] Tooltips
+- [x] Touch support
+- [x] Continuous updates
+- [x] Change end callback
+- [x] ARIA attributes
+- [x] Custom styles support
+- [ ] Vertical orientation
+- [ ] RTL support
+- [ ] Custom formatting
+- [ ] Labels
+- [ ] Color customization
+- [ ] Animations
+
+---
+
+## Keyboard Interactions:
+- ArrowUp/ArrowRight: Increment value
+- ArrowDown/ArrowLeft: Decrement value
+- Home: Set to minimum value
+- End: Set to maximum value
+- Shift + Arrow keys: Larger steps
+- Tab: Navigate between thumbs (in range mode)
+
+---
+
+## Attributes:
+- role="slider" (single mode)
+- role="group" (range mode)
+- aria-valuemin
+- aria-valuemax
+- aria-valuenow
+- aria-disabled
+- aria-label
+- tabindex
+- data-qds-slider-root
+- data-qds-slider-track
+- data-qds-slider-range
+- data-qds-slider-thumb
+- data-qds-slider-tooltip
+- data-qds-slider-marker
+
+---
+
+## Use Cases:
+- Volume controls
+- Price range filters
+- Image filters/adjustments
+- Progress indicators
+- Rating inputs
+- Numeric input alternatives
+- Time/duration selection
+- Zoom controls
+
+---
+
+## API:
+
+### Root:
+```typescript
+interface SliderProps {
+  isRange?: boolean;
+  value?: number | [number, number] | Signal<number | [number, number]>;
+  min?: number;
+  max?: number;
+  step?: number;
+  disabled?: boolean | Signal<boolean>;
+  onChange$?: (value: number | [number, number]) => void;
+  onChangeEnd$?: (value: number | [number, number]) => void;
+}
+```
+
+### Thumb:
+```typescript
+interface ThumbProps {
+  type?: "start" | "end";
+  // Additional HTML div props
+}
+```
+
+### Track:
+```typescript
+interface TrackProps {
+// HTML div props
+}
+```
+
+### Range:
+```typescript
+interface RangeProps {
+// HTML div props
+}
+```
+
+### Tooltip:
+```typescript
+interface TooltipProps {
+placement?: "top" | "bottom" | "left" | "right";
+// Additional HTML div props
+}
+```
+
+### Marker:
+
+```typescript
+interface MarkerProps {
+value: number;
+// Additional HTML div props
+}
+```
+
+## Important CSS:
+
+```css
+/* Required CSS */
+[data-qds-slider-root] {
+  position: relative;
+  touch-action: none;
+  user-select: none;
+}
+
+[data-qds-slider-track] {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+}
+
+[data-qds-slider-thumb] {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+[data-qds-slider-range] {
+  position: absolute;
+  height: 100%;
+}
+
+[data-qds-slider-tooltip] {
+  position: absolute;
+  pointer-events: none;
+}
+
+[data-qds-slider-marker] {
+  position: absolute;
+  transform: translateX(-50%);
+}
+```

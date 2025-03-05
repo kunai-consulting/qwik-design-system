@@ -8,7 +8,7 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import type { ContentHeading } from "@builder.io/qwik-city";
+import { type ContentHeading, useLocation } from "@builder.io/qwik-city";
 import { rootContextId } from "~/routes/layout";
 import { cn } from "~/utils/cn";
 
@@ -17,7 +17,7 @@ export const MainHeading = component$((props: PropsOf<"h2">) => {
     <h2
       {...props}
       class={cn(
-        "mt-16 scroll-m-20 border-b border-b-qwik-neutral-900 pb-1 text-3xl font-semibold tracking-tight text-cool-700 first:mt-0",
+        "mt-16 scroll-m-20 border-b border-b-neutral-primary pb-1 text-3xl font-semibold tracking-tight text-cool-700 first:mt-0",
         props.class
       )}
     >
@@ -31,7 +31,7 @@ export const SubHeading = component$((props: PropsOf<"h3">) => {
     <h3
       {...props}
       class={cn(
-        "mt-8 scroll-m-20 text-2xl font-semibold tracking-tight text-cool-700",
+        "mt-10 scroll-m-20 text-2xl font-semibold tracking-tight text-cool-700",
         props.class
       )}
     >
@@ -42,6 +42,7 @@ export const SubHeading = component$((props: PropsOf<"h3">) => {
 
 export const TOC = component$(({ headings }: { headings: ContentHeading[] }) => {
   const context = useContext(rootContextId);
+  const loc = useLocation();
 
   useTask$(() => {
     context.allHeadingsSig.value = [...headings, ...context.allHeadingsSig.value];
@@ -52,6 +53,16 @@ export const TOC = component$(({ headings }: { headings: ContentHeading[] }) => 
   }
   return (
     <div class="space-y-2">
+      <div class="mb-4 text-sm">
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href={`https://github.com/kunai-consulting/qwik-design-system/tree/main/apps/docs/src/routes${loc.url.pathname}index.mdx`}
+          class="hover:text-qwik-blue-200 text-neutral-foreground transition-colors text-sm"
+        >
+          Edit this page
+        </a>
+      </div>
       <TableOfContents headings={context.allHeadingsSig.value} />
     </div>
   );
@@ -148,16 +159,18 @@ type RecursiveListProps = {
 const RecursiveList = component$<RecursiveListProps>(
   ({ tree, activeItem, limit = 3 }) => {
     return tree?.children?.length && tree.level < limit ? (
-      <ul class={cn("m-0 list-none", { "pl-4": tree.level !== 1 })}>
-        {tree.children.map((childNode) => (
-          <li key={childNode.id} class="mt-0 list-none pt-2">
-            <Anchor node={childNode} activeItem={activeItem} />
-            {childNode.children.length > 0 && (
-              <RecursiveList tree={childNode} activeItem={activeItem} />
-            )}
-          </li>
-        ))}
-      </ul>
+      <>
+        <ul class={cn("m-0 list-none", { "pl-4": tree.level !== 1 })}>
+          {tree.children.map((childNode) => (
+            <li key={childNode.id} class="mt-0 list-none pt-2">
+              <Anchor node={childNode} activeItem={activeItem} />
+              {childNode.children.length > 0 && (
+                <RecursiveList tree={childNode} activeItem={activeItem} />
+              )}
+            </li>
+          ))}
+        </ul>
+      </>
     ) : null;
   }
 );
@@ -225,7 +238,7 @@ const Anchor = component$<AnchorProps>(({ node, activeItem }) => {
         node.level > 2 && "ml-2",
         node.level === 1 && "mb-4 font-bold",
         "inline-block no-underline transition-colors hover:text-qwik-blue-200",
-        isActive ? "font-medium text-qwik-blue-500" : ""
+        isActive ? "font-medium text-qwik-blue-300" : ""
       )}
     >
       {node.text}

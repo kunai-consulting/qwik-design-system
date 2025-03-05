@@ -1,0 +1,84 @@
+import { Image } from "~/docs-widgets/image/image";
+import convention from "~/assets/docs/conventions/chess.webp";
+
+# Conventions
+
+<Image loading="eager" src={convention} alt="QDS Conventions" />
+
+## Sig Suffix
+
+Every signal (useComputed$, useSignal, useBoundSignal) should have a `Sig` suffix. This is to help prevent confusion between form controls with `.value`
+
+```tsx
+const isSelectedSig = useSignal(false);
+```
+
+## Signal props and the bind convention
+
+The `bind:x` API's that expect a signal are really  *just a prop*. The convention is to use `bind:` for signals, to stay consistent with Qwik's API (which was inspired by frameworks like Svelte and Angular).
+
+```tsx
+<Select.Root bind:value={selectedValueSig} />
+```
+
+> You also get typescript autocomplete for each bind on the component!
+
+It is a requirement that you handle both [signal based](http://localhost:5173/contributing/state/#signal-based-reactive-state) and [value based state](http://localhost:5173/contributing/state/#value-based) for each component.
+
+
+
+## Events
+
+### Naming
+
+The most important event that handles the  value change should *always* be named `onChange$` on the `Root` piece.
+
+Any other events should be named like `on<EventName>Change$`.
+
+Ex: Listening to when the actual selected value changed
+
+```tsx
+<Select.Root onChange$={...} />
+```
+
+Ex: Listening to when the Select popover is open
+
+```tsx
+<Select.Root onOpenChange$={...} />
+```
+
+### Event handling
+
+All events, or functions inside the component should have a $ at the end of the name.
+
+It is also preferred to use a reference to the QRL in the JSX rather than inlining the function.
+
+```tsx
+const handleClick$ = $(() => {
+    // do something
+})
+
+// Do this:
+<button onClick$={[handleClick$, props.onClick$]}>
+    <Slot />
+</button>
+```
+
+```tsx
+// Not this:
+<button onClick$={[() => {
+    // do something
+}, props.onClick$]}>
+    <Slot />
+</button>
+```
+
+## Data Attributes
+
+Each component should have an identifier data attribute.
+
+Ex: `data-qds-select-root`
+
+We use this both for styling (layout / behavioral css), and for testing.
+
+

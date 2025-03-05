@@ -8,9 +8,9 @@ import {
 } from "@builder.io/qwik";
 import { CheckboxContext, checkboxContextId } from "./checkbox-context";
 import "./checkbox.css";
-import styles from "./checkbox.css?inline";
-import { Render } from "../render/render";
 import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
+import styles from "./checkbox.css?inline";
 export type PublicCheckboxIndicatorProps = PropsOf<"span">;
 /** Visual indicator component showing the checkbox state */
 export const CheckboxIndicatorBase = component$<PublicCheckboxIndicatorProps>((props) => {

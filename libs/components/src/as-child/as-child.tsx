@@ -1,8 +1,8 @@
 import {
   type Component,
-  noSerialize,
   type JSXChildren,
-  type NoSerialize
+  type NoSerialize,
+  noSerialize
 } from "@builder.io/qwik";
 import type { FunctionComponent } from "@builder.io/qwik/jsx-runtime";
 

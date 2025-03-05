@@ -1,6 +1,6 @@
-import { component$, PropsOf, Slot, useStyles$ } from "@builder.io/qwik";
-import { Render } from "../render/render";
+import { type PropsOf, Slot, component$, useStyles$ } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
 import styles from "./resizable.css?inline";
 type ResizableRootProps = {
   orientation: "horizontal" | "vertical";
