@@ -2,7 +2,7 @@ import { type Page, expect, test } from "@playwright/test";
 import { createTestDriver } from "./slider.driver";
 
 async function setup(page: Page, exampleName: string) {
-  await page.goto(`http://localhost:6174/slider/${exampleName}`);
+  await page.goto(`http://localhost:6174/base/slider/${exampleName}`);
   const driver = createTestDriver(page);
   return driver;
 }

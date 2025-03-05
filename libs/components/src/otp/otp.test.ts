@@ -62,7 +62,7 @@ async function setupEventListeners(input: Locator) {
 }
 
 async function setup(page: Page, exampleName: string) {
-  await page.goto(`http://localhost:6174/otp/${exampleName}`);
+  await page.goto(`http://localhost:6174/base/otp/${exampleName}`);
   const driver = createTestDriver(page);
   const input = driver.getInput();
   await input.focus();

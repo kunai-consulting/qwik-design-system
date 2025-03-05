@@ -58,7 +58,7 @@ const test = base.extend<TestFixtures>({
 });
 
 async function setup(page: Page, exampleName: string) {
-  await page.goto(`http://localhost:6174/file-upload/${exampleName}`);
+  await page.goto(`http://localhost:6174/base/file-upload/${exampleName}`);
   const driver = createTestDriver(page);
   return driver;
 }

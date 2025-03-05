@@ -2,7 +2,7 @@ import { type Page, expect, test } from "@playwright/test";
 import { createTestDriver } from "./resizable.driver";
 
 async function setup(page: Page, exampleName: string) {
-  await page.goto(`http://localhost:6174/resizable/${exampleName}`);
+  await page.goto(`http://localhost:6174/base/resizable/${exampleName}`);
   const driver = createTestDriver(page);
   return driver;
 }
@@ -14,7 +14,7 @@ test.describe("critical functionality", () => {
     const d = await setup(page, "hero");
 
     await d.getHandle().dragTo(d.getHandle(), {
-      targetPosition: { x: 100, y: 0 },
+      targetPosition: { x: 100, y: 0 }
     });
     await expect(d.getPanelAt(0)).toHaveCSS("width", "300px");
   });
@@ -25,7 +25,7 @@ test.describe("critical functionality", () => {
     const d = await setup(page, "vertical");
 
     await d.getHandle().dragTo(d.getHandle(), {
-      targetPosition: { x: 0, y: 100 },
+      targetPosition: { x: 0, y: 100 }
     });
     await expect(d.getPanelAt(0)).toHaveCSS("height", "300px");
   });
@@ -36,7 +36,7 @@ test.describe("critical functionality", () => {
     const d = await setup(page, "constrained");
 
     await d.getHandle().dragTo(d.getHandle(), {
-      targetPosition: { x: -500, y: 0 },
+      targetPosition: { x: -500, y: 0 }
     });
     await expect(d.getPanelAt(0)).toHaveCSS("width", "100px");
   });
@@ -47,7 +47,7 @@ test.describe("critical functionality", () => {
     const d = await setup(page, "constrained");
 
     await d.getHandle().dragTo(d.getHandle(), {
-      targetPosition: { x: 500, y: 0 },
+      targetPosition: { x: 500, y: 0 }
     });
     await expect(d.getPanelAt(0)).toHaveCSS("width", "500px");
   });
@@ -62,7 +62,7 @@ test.describe("critical functionality", () => {
     );
 
     await d.getHandle().dragTo(d.getHandle(), {
-      targetPosition: { x: 100, y: 0 },
+      targetPosition: { x: 100, y: 0 }
     });
 
     const finalSelection = await page.evaluate(
@@ -84,14 +84,12 @@ test.describe("state", () => {
 
   test(`GIVEN a resizable panel with onChange$
         WHEN resized
-        THEN the onChange$ handler should be called with new size`, async ({
-    page,
-  }) => {
+        THEN the onChange$ handler should be called with new size`, async ({ page }) => {
     const d = await setup(page, "reactive");
     const sizeDisplay = page.locator("[data-test-size]");
 
     await d.getHandle().dragTo(d.getHandle(), {
-      targetPosition: { x: 100, y: 0 },
+      targetPosition: { x: 100, y: 0 }
     });
     await expect(sizeDisplay).toHaveText("300");
   });
@@ -103,7 +101,7 @@ test.describe("state", () => {
     const eventsDisplay = page.locator("[data-test-events]");
 
     await d.getHandle().dragTo(d.getHandle(), {
-      targetPosition: { x: 50, y: 0 },
+      targetPosition: { x: 50, y: 0 }
     });
 
     await expect(eventsDisplay).toContainText("onResizeStart called");
@@ -117,7 +115,7 @@ test.describe("state", () => {
     const d = await setup(page, "collapsible");
 
     await d.getHandle().dragTo(d.getHandle(), {
-      targetPosition: { x: -500, y: 0 },
+      targetPosition: { x: -500, y: 0 }
     });
     await expect(d.getPanelAt(0)).toHaveCSS("width", "0px");
   });
@@ -128,12 +126,12 @@ test.describe("state", () => {
     const d = await setup(page, "collapsible");
 
     await d.getHandle().dragTo(d.getHandle(), {
-      targetPosition: { x: -500, y: 0 },
+      targetPosition: { x: -500, y: 0 }
     });
     await expect(d.getPanelAt(0)).toHaveCSS("width", "0px");
 
     await d.getHandle().dragTo(d.getHandle(), {
-      targetPosition: { x: 200, y: 0 },
+      targetPosition: { x: 200, y: 0 }
     });
     await expect(d.getPanelAt(0)).toHaveCSS("width", "200px");
   });
@@ -145,7 +143,7 @@ test.describe("state", () => {
     const collapseStateDisplay = page.locator("[data-test-collapse-state]");
 
     await d.getHandle().dragTo(d.getHandle(), {
-      targetPosition: { x: -500, y: 0 },
+      targetPosition: { x: -500, y: 0 }
     });
     await expect(collapseStateDisplay).toHaveText("collapsed");
   });
@@ -166,7 +164,7 @@ test.describe("state", () => {
       .evaluate((el) => window.getComputedStyle(el).width);
 
     await d.getHandle().dragTo(d.getHandle(), {
-      targetPosition: { x: 100, y: 0 },
+      targetPosition: { x: 100, y: 0 }
     });
     await expect(d.getPanelAt(0)).toHaveCSS("width", initialWidth);
   });
@@ -177,7 +175,7 @@ test.describe("state", () => {
     const d = await setup(page, "snap");
 
     await d.getHandle().dragTo(d.getHandle(), {
-      targetPosition: { x: 95, y: 0 },
+      targetPosition: { x: 95, y: 0 }
     });
     await expect(d.getPanelAt(0)).toHaveCSS("width", "300px");
   });
@@ -195,7 +193,7 @@ test.describe("state", () => {
       await expect(d.getPanelAt(1)).toHaveCSS("width", "200px");
 
       await innerHandle.dragTo(innerHandle, {
-        targetPosition: { x: 100, y: 100 },
+        targetPosition: { x: 100, y: 100 }
       });
 
       await expect(d.getPanelAt(0)).toHaveCSS("height", "300px");
@@ -212,7 +210,7 @@ test.describe("state", () => {
         .evaluate((el) => window.getComputedStyle(el).height);
 
       await d.getHandleAt(1).dragTo(d.getHandleAt(1), {
-        targetPosition: { x: 100, y: 0 },
+        targetPosition: { x: 100, y: 0 }
       });
 
       await expect(d.getPanelAt(0)).toHaveCSS("height", outerInitialHeight);
@@ -275,7 +273,7 @@ test.describe("persistence", () => {
     const d = await setup(page, "persistent");
 
     await d.getHandle().dragTo(d.getHandle(), {
-      targetPosition: { x: 100, y: 0 },
+      targetPosition: { x: 100, y: 0 }
     });
     await expect(d.getPanelAt(0)).toHaveCSS("width", "300px");
 
@@ -294,7 +292,7 @@ test.describe("persistence", () => {
     const d = await setup(page, "persistent-cookie");
 
     await d.getHandle().dragTo(d.getHandle(), {
-      targetPosition: { x: 100, y: 0 },
+      targetPosition: { x: 100, y: 0 }
     });
 
     const cookies = await context.cookies();
@@ -312,7 +310,7 @@ test.describe("persistence", () => {
     const d = await setup(page, "persistent-auto");
 
     await d.getHandle().dragTo(d.getHandle(), {
-      targetPosition: { x: 100, y: 0 },
+      targetPosition: { x: 100, y: 0 }
     });
 
     const storedSize = await page.evaluate(() =>
@@ -327,7 +325,7 @@ test.describe("persistence", () => {
     const d = await setup(page, "non-persistent");
 
     await d.getHandle().dragTo(d.getHandle(), {
-      targetPosition: { x: 100, y: 0 },
+      targetPosition: { x: 100, y: 0 }
     });
     await expect(d.getPanelAt(0)).toHaveCSS("width", "300px");
 
