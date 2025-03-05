@@ -16,9 +16,7 @@ export default component$(() => {
             height: "24px",
             border: "3px solid darkred"
           }}
-        >
-          <Slider.Tooltip class="slider-tooltip" placement="bottom" />
-        </Slider.Thumb>
+         />
       </Slider.Track>
     </Slider.Root>
   );

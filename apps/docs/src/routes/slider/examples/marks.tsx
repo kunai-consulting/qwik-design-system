@@ -8,9 +8,7 @@ export default component$(() => {
     <Slider.Root class="slider-root" value={50} min={0} max={100} step={20}>
       <Slider.Track class="slider-track">
         <Slider.Range class="slider-range" />
-        <Slider.Thumb class="slider-thumb">
-          <Slider.Tooltip class="slider-tooltip" placement="right" />
-        </Slider.Thumb>
+        <Slider.Thumb class="slider-thumb" />
       </Slider.Track>
       <Slider.MarkerGroup class="slider-marker-group">
         <Slider.Marker value={0} class="slider-marker">

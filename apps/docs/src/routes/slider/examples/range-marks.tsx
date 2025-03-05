@@ -21,12 +21,8 @@ export default component$(() => {
     >
       <Slider.Track class="slider-track">
         <Slider.Range class="slider-range" />
-        <Slider.Thumb type="start" class="slider-thumb">
-          <Slider.Tooltip class="slider-tooltip" placement="top" />
-        </Slider.Thumb>
-        <Slider.Thumb type="end" class="slider-thumb">
-          <Slider.Tooltip class="slider-tooltip" placement="top" />
-        </Slider.Thumb>
+        <Slider.Thumb type="start" class="slider-thumb" />
+        <Slider.Thumb type="end" class="slider-thumb" />
       </Slider.Track>
       <Slider.MarkerGroup class="slider-marker-group">
         <Slider.Marker value={0}>0%</Slider.Marker>

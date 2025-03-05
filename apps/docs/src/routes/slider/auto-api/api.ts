@@ -82,29 +82,6 @@ export const api = {
       }
     },
     {
-      "Slider Tooltip": {
-        "types": [
-          {
-            "PublicTooltipPlacement": [
-              {
-                "comment": "The placement of the tooltip relative to the thumb. Default is 'top'",
-                "prop": "placement",
-                "type": "PublicTooltipPlacement",
-                "defaultValue": "\"top\""
-              }
-            ]
-          }
-        ],
-        "dataAttributes": [
-          {
-            "name": "data-placement",
-            "type": "string",
-            "comment": "Specifies the placement position of the tooltip relative to the thumb"
-          }
-        ]
-      }
-    },
-    {
       "Slider Track": {
         "inheritsFrom": "div"
       }
@@ -135,10 +112,6 @@ export const api = {
       "name": "Slider.Marker",
       "description": "A marker component that displays a specific value point on the slider"
     },
-    {
-      "name": "Slider.Tooltip",
-      "description": "Component that displays the current value in a tooltip"
-    }
   ],
   "keyboardInteractions": {
     "keyboardShortcuts": [
@@ -177,7 +150,6 @@ export const api = {
     "Shift key for fine-grained control (10x step)",
     "Custom markers/ticks support",
     "Visual range indicator",
-    "Tooltips with value display",
     "Home/End key value jumps",
     "Multiple thumb position tracking",
     "Configurable min/max bounds",

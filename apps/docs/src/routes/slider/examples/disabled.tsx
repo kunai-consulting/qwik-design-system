@@ -21,9 +21,7 @@ export default component$(() => {
       >
         <Slider.Track class="slider-track">
           <Slider.Range class="slider-range" />
-          <Slider.Thumb class="slider-thumb">
-            <Slider.Tooltip class="slider-tooltip" placement="bottom" />
-          </Slider.Thumb>
+          <Slider.Thumb class="slider-thumb" />
         </Slider.Track>
       </Slider.Root>
       <button

@@ -25,7 +25,7 @@ The `<Slider.MarkerGroup>` component contains `<Slider.Marker>` elements, each w
 #### Range Selection
 Create a range slider with two thumbs for selecting a value range.
 <Showcase name="range" />
-Set `isRange` to `true` and provide an array of two values `[start, end]` to create a range slider. Each thumb can be customized with its own tooltip placement.
+Set `isRange` to `true` and provide an array of two values `[start, end]` to create a range slider.
 #### Range with Markers
 Combine range selection with markers for a more informative interface.
 <Showcase name="range-marks" />
@@ -110,13 +110,6 @@ Markers must have values within the slider's min/max range and are positioned au
 markerPosition = ((value - min) / (max - min)) * 100
 ```
 ## Advanced Configuration
-### Tooltip Placement
-The tooltip component supports four placement options:
-- `top` (default)
-- `bottom`
-- `left`
-- `right`
-As shown in the `range` example above, different tooltip placements can be used for each thumb in range mode.
 ### Value Updates and Callbacks
 The Slider provides two callback mechanisms:
 - `onChange$`: Fires during continuous value changes (dragging)
