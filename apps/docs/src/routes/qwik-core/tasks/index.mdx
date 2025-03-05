@@ -303,7 +303,7 @@ useTask$(() => {
 });
 ```
 
-<Showcase name="task-order" />
+{/* <Showcase name="task-order" /> */}
 
 ## Tracking and watching for changes 
 
@@ -326,5 +326,13 @@ useTask$(({ track }) => {
 
 ### Transitioning between environments
 
-When the signal value changes, the task will re-run. 
+When the signal value changes, the task will re-run. What's important to note is that the task will run in the environment of where the tracked change took place. (usually the browser)
+
+For example, if you have a signal value, and the signal value was changed in the browser, the task will run in the browser.
+
+<Showcase name="environment-transition" />
+
+> To reiterate, this function will re-run, and do a server to client handoff if the application was server rendered. Otherwise, it would always run in the browser.
+
+
 
