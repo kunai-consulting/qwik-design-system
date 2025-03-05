@@ -12,11 +12,11 @@ body:
     attributes:
       label: Which package is affected?
       options:
-        - Headless Kit
-        - Styled Kit
+        - Base / Headless
+        - Icons
         - Utils
         - CLI
-        - Documentation Website
+        - Docs
     validations:
       required: true
 
