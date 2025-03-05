@@ -13,6 +13,7 @@
 - [QR Code](/base/qr-code)
 - [Resizable](/base/resizable)
 - [Slider](/base/slider)
+- [Tree](/base/tree)
 
 ## Contributing
 

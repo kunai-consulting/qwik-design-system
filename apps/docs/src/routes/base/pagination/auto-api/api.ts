@@ -71,8 +71,9 @@ export const api = {
                 "type": "number"
               },
               {
-                "comment": "Reactive value that can be controlled via signal. Sets the current active page number",
-                "prop": "\"bind:page\"",
+                "comment":
+                  "Reactive value that can be controlled via signal. Sets the current active page number",
+                "prop": '"bind:page"',
                 "type": "Signal<number | 1>"
               },
               {
@@ -117,7 +118,8 @@ export const api = {
   "anatomy": [
     {
       "name": "Pagination.Root",
-      "description": "Root pagination container component that provides context and handles page management"
+      "description":
+        "Root pagination container component that provides context and handles page management"
     },
     {
       "name": "Pagination.Page",

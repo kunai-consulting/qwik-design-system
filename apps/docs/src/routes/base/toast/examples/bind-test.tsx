@@ -6,10 +6,10 @@ export default component$(() => {
 
   return (
     <>
-      <button id="show-button" onClick$={() => (isOpen.value = true)}>
+      <button type="button" id="show-button" onClick$={() => (isOpen.value = true)}>
         Show Toast
       </button>
-      <button id="hide-button" onClick$={() => (isOpen.value = false)}>
+      <button type="button" id="hide-button" onClick$={() => (isOpen.value = false)}>
         Hide Toast
       </button>
 

@@ -5,9 +5,9 @@ import { Features } from "~/docs-widgets/features/features";
 import { cn } from "~/utils/cn";
 import { AnatomyTable } from "../docs-widgets/anatomy-table/anatomy-table";
 import { APITable } from "../docs-widgets/api-table/api-table";
+import { Image } from "../docs-widgets/image/image";
 import { MainHeading, SubHeading } from "../docs-widgets/toc/toc";
 import { Showcase } from "./showcase";
-import { Image } from "../docs-widgets/image/image";
 export const components: Record<string, Component> = {
   p: component$<PropsOf<"p">>(({ ...props }) => {
     return (
@@ -133,7 +133,10 @@ export const components: Record<string, Component> = {
     return (
       <code
         {...props}
-        class={cn("max-h-[31.25rem] whitespace-pre-wrap box-decoration-clone", props.class)}
+        class={cn(
+          "max-h-[31.25rem] whitespace-pre-wrap box-decoration-clone",
+          props.class
+        )}
       >
         <Slot />
       </code>

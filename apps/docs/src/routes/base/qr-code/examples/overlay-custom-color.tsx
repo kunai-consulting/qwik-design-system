@@ -1,7 +1,7 @@
 import { component$, useStyles$ } from "@builder.io/qwik";
 import { QRCode } from "@kunai-consulting/qwik";
-import qwikLogo from "./qwik-ui.svg";
 import styles from "./qr-code.css?inline";
+import qwikLogo from "./qwik-ui.svg";
 
 export default component$(() => {
   useStyles$(styles);

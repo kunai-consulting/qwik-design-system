@@ -1,14 +1,14 @@
 import {
   $,
-  component$,
   type PropsOf,
   Slot,
+  component$,
   useSignal,
   useStyles$,
   useVisibleTask$
 } from "@builder.io/qwik";
-import sparkleStyles from "./sparkles.css?inline";
 import { random, useRandomInterval } from "~/utils/use-random-internal";
+import sparkleStyles from "./sparkles.css?inline";
 
 // Default color is a bright yellow
 const DEFAULT_COLOR = "#34c2fc";

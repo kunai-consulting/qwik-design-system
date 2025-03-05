@@ -6,12 +6,13 @@ export const QRCodePatternPath = component$((props: PropsOf<"path">) => {
   const context = useContext(qrCodeContextId);
 
   const pathData = context.data.value.reduce((acc, row, y) => {
+    let rowAcc = acc;
     row.forEach((isBlack, x) => {
       if (isBlack) {
-        acc += `M ${x} ${y} h 1 v 1 h -1 z `;
+        rowAcc += `M ${x} ${y} h 1 v 1 h -1 z `;
       }
     });
-    return acc;
+    return rowAcc;
   }, "");
 
   // SVG path element that renders the QR code pattern

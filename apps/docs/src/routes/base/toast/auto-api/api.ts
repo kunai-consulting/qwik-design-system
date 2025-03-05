@@ -12,7 +12,8 @@ export const api = {
           {
             "name": "data-state",
             "type": "string | undefined",
-            "comment": "Indicates the visibility state of the toast content (visible or hidden)"
+            "comment":
+              "Indicates the visibility state of the toast content (visible or hidden)"
           }
         ]
       }
@@ -24,18 +25,19 @@ export const api = {
             "PublicToastDataAttributes": [
               {
                 "comment": "The identifier for the root toast container",
-                "prop": "\"data-qds-toast-root\"",
+                "prop": '"data-qds-toast-root"',
                 "type": "boolean"
               },
               {
                 "comment": "Specifies the position of the toast on the screen",
-                "prop": "\"data-position\"",
+                "prop": '"data-position"',
                 "type": "ToastPosition"
               },
               {
-                "comment": "Indicates the visibility state of the toast (visible or hidden)",
-                "prop": "\"data-state\"",
-                "type": "\"visible\" | \"hidden\""
+                "comment":
+                  "Indicates the visibility state of the toast (visible or hidden)",
+                "prop": '"data-state"',
+                "type": '"visible" | "hidden"'
               }
             ]
           },
@@ -45,7 +47,7 @@ export const api = {
                 "comment": "Position of the toast on the screen",
                 "prop": "position",
                 "type": "ToastPosition",
-                "defaultValue": "\"bottom-right\""
+                "defaultValue": '"bottom-right"'
               },
               {
                 "comment": "Time in milliseconds before the toast automatically closes",
@@ -59,8 +61,9 @@ export const api = {
                 "type": "boolean"
               },
               {
-                "comment": "Reactive value that can be controlled via signal. Controls the open state of the toast",
-                "prop": "\"bind:open\"",
+                "comment":
+                  "Reactive value that can be controlled via signal. Controls the open state of the toast",
+                "prop": '"bind:open"',
                 "type": "Signal<boolean>"
               },
               {
@@ -88,7 +91,8 @@ export const api = {
   "anatomy": [
     {
       "name": "Toast.Root",
-      "description": "A root component that manages toast state, positioning, and duration"
+      "description":
+        "A root component that manages toast state, positioning, and duration"
     },
     {
       "name": "Toast.Content",
@@ -98,11 +102,13 @@ export const api = {
   "keyboardInteractions": [
     {
       "key": "Tab",
-      "comment": "When the toast is open, moves focus to the next focusable element within the toast"
+      "comment":
+        "When the toast is open, moves focus to the next focusable element within the toast"
     },
     {
       "key": "Shift+Tab",
-      "comment": "When the toast is open, moves focus to the previous focusable element within the toast"
+      "comment":
+        "When the toast is open, moves focus to the previous focusable element within the toast"
     }
   ],
   "features": [

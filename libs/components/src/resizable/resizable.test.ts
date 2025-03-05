@@ -280,7 +280,7 @@ test.describe("persistence", () => {
     const storedSize = await page.evaluate(() =>
       window.localStorage.getItem("resizable-panel-size")
     );
-    expect(JSON.parse(storedSize!)).toBe(300);
+    expect(JSON.parse(storedSize ?? "null")).toBe(300);
 
     await page.reload();
     await expect(d.getPanelAt(0)).toHaveCSS("width", "300px");
@@ -298,7 +298,7 @@ test.describe("persistence", () => {
     const cookies = await context.cookies();
     const sizeCookie = cookies.find((c) => c.name === "resizable-panel-size");
     expect(sizeCookie).toBeTruthy();
-    expect(JSON.parse(sizeCookie!.value)).toBe(300);
+    expect(JSON.parse(sizeCookie?.value ?? "")).toBe(300);
 
     await page.reload();
     await expect(d.getPanelAt(0)).toHaveCSS("width", "300px");
@@ -316,7 +316,7 @@ test.describe("persistence", () => {
     const storedSize = await page.evaluate(() =>
       window.localStorage.getItem("resizable-panel-size")
     );
-    expect(JSON.parse(storedSize!)).toBe(300);
+    expect(JSON.parse(storedSize ?? "")).toBe(300);
   });
 
   test(`GIVEN a resizable panel with persistence={false}

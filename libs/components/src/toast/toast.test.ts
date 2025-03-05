@@ -58,30 +58,36 @@ test.describe("positioning", () => {
       if (!viewport) throw new Error("Could not get viewport size");
 
       switch (position) {
-        case "top-left":
+        case "top-left": {
           expect(box.x).toBeLessThan(viewport.width / 2);
           expect(box.y).toBeLessThan(viewport.height / 2);
           break;
-        case "top-right":
+        }
+        case "top-right": {
           expect(box.x).toBeGreaterThan(viewport.width / 2);
           expect(box.y).toBeLessThan(viewport.height / 2);
           break;
-        case "bottom-left":
+        }
+        case "bottom-left": {
           expect(box.x).toBeLessThan(viewport.width / 2);
           expect(box.y).toBeGreaterThan(viewport.height / 2);
           break;
-        case "bottom-right":
+        }
+        case "bottom-right": {
           expect(box.x).toBeGreaterThan(viewport.width / 2);
           expect(box.y).toBeGreaterThan(viewport.height / 2);
           break;
-        case "top-center":
+        }
+        case "top-center": {
           expect(box.x + box.width / 2).toBeCloseTo(viewport.width / 2, -1);
           expect(box.y).toBeLessThan(viewport.height / 2);
           break;
-        case "bottom-center":
+        }
+        case "bottom-center": {
           expect(box.x + box.width / 2).toBeCloseTo(viewport.width / 2, -1);
           expect(box.y).toBeGreaterThan(viewport.height / 2);
           break;
+        }
       }
     });
   }

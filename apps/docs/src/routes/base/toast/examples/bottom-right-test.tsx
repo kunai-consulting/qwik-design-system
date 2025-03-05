@@ -9,6 +9,7 @@ export default component$(() => {
   return (
     <>
       <button
+        type="button"
         onClick$={() => {
           isOpen.value = true;
         }}

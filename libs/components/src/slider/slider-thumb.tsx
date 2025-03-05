@@ -1,18 +1,18 @@
 import {
-  type PropsOf,
-  component$,
-  useContext,
   $,
-  useSignal,
-  useVisibleTask$,
-  useContextProvider,
+  type CSSProperties,
+  type PropsOf,
   Slot,
-  useComputed$,
+  component$,
   sync$,
+  useComputed$,
+  useContext,
+  useContextProvider,
+  useSignal,
   useStylesScoped$,
-  CSSProperties
+  useVisibleTask$
 } from "@builder.io/qwik";
-import { type ThumbType, sliderContextId, SliderContext } from "./slider-context";
+import { type SliderContext, type ThumbType, sliderContextId } from "./slider-context";
 interface PublicThumbProps extends PropsOf<"div"> {
   /** The type of thumb - either 'start' or 'end' for range sliders */
   type?: ThumbType;
@@ -101,7 +101,7 @@ export const SliderThumb = component$((props: PublicThumbProps) => {
   });
 
   const onPointerUp$ = $(async (event: PointerEvent) => {
-    if (!isDragging.value || !thumbRef.value) return;
+    if (!(isDragging.value && thumbRef.value)) return;
     isDragging.value = false;
     thumbRef.value.releasePointerCapture(event.pointerId);
     const rect = trackRef.value?.getBoundingClientRect();

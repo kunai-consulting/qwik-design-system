@@ -1,9 +1,9 @@
 import {
+  $,
   type PropsOf,
   Slot,
   component$,
   useContext,
-  $,
   useSignal
 } from "@builder.io/qwik";
 import { sliderContextId } from "./slider-context";

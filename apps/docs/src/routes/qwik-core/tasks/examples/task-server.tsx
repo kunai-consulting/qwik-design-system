@@ -1,11 +1,11 @@
 import { component$, useSignal, useTask$ } from "@builder.io/qwik";
 
 export default component$(() => {
-	const signal = useSignal("");
+  const signal = useSignal("");
 
-	useTask$(() => {
-		signal.value = "Hello World";
-	});
+  useTask$(() => {
+    signal.value = "Hello World";
+  });
 
-	return <div>{signal.value}</div>;
+  return <div>{signal.value}</div>;
 });

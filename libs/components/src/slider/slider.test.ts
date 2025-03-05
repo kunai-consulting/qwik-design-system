@@ -364,9 +364,9 @@ test.describe("range mode", () => {
     expect(startValue).toBeLessThanOrEqual(endValue);
 
     // Checking that in all changes, start <= end.
-    messages.forEach((msg) => {
+    for (const msg of messages) {
       expect(msg.values[0]).toBeLessThanOrEqual(msg.values[1]);
-    });
+    }
   });
 
   test(`GIVEN a Range Slider
@@ -398,9 +398,9 @@ test.describe("range mode", () => {
     expect(endValue).toBeGreaterThanOrEqual(startValue);
 
     // Checking that in all changes, start <= end.
-    messages.forEach((msg) => {
+    for (const msg of messages) {
       expect(msg.values[0]).toBeLessThanOrEqual(msg.values[1]);
-    });
+    }
   });
 
   test(`GIVEN a Range Slider
@@ -446,7 +446,7 @@ test.describe("style customization", () => {
     const trackBounds = await track.boundingBox();
     const thumbBounds = await thumb.boundingBox();
 
-    if (!trackBounds || !thumbBounds) throw new Error("Elements not found");
+    if (!(trackBounds && thumbBounds)) throw new Error("Elements not found");
 
     expect(thumbBounds.x).toBeGreaterThanOrEqual(trackBounds.x);
     expect(thumbBounds.x + thumbBounds.width).toBeLessThanOrEqual(

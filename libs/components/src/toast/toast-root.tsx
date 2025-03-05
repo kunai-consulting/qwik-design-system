@@ -1,15 +1,15 @@
 import {
+  type PropsOf,
+  type Signal,
+  Slot,
   component$,
   useContextProvider,
   useSignal,
   useStyles$,
-  useVisibleTask$,
-  type PropsOf,
-  type Signal,
-  Slot
+  useVisibleTask$
 } from "@builder.io/qwik";
 import { usePopover } from "@qwik-ui/headless";
-import { toastContextId, type ToastPosition } from "./toast-context";
+import { type ToastPosition, toastContextId } from "./toast-context";
 import styles from "./toast.css?inline";
 type PublicToastDataAttributes = {
   // The identifier for the root toast container

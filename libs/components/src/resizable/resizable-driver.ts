@@ -19,6 +19,6 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     locator: rootLocator,
     getRoot,
     getHandle,
-    getPanel,
+    getPanel
   };
 }

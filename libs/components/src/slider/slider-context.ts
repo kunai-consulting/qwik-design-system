@@ -1,4 +1,9 @@
-import { type Signal, type PropFunction, createContextId, QRL } from "@builder.io/qwik";
+import {
+  type PropFunction,
+  type QRL,
+  type Signal,
+  createContextId
+} from "@builder.io/qwik";
 
 export type ThumbType = "start" | "end";
 export type SliderValue = number | [number, number];

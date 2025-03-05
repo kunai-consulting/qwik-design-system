@@ -68,8 +68,9 @@ export const api = {
           {
             "PublicOtpRootProps": [
               {
-                "comment": "Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property",
-                "prop": "\"bind:value\"",
+                "comment":
+                  "Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property",
+                "prop": '"bind:value"',
                 "type": "Signal<string>"
               },
               {
@@ -104,7 +105,8 @@ export const api = {
                 "defaultValue": "false"
               },
               {
-                "comment": "Whether password manager popups should shift to the right of the OTP. By default enabled",
+                "comment":
+                  "Whether password manager popups should shift to the right of the OTP. By default enabled",
                 "prop": "shiftPWManagers",
                 "type": "boolean",
                 "defaultValue": "true"
@@ -134,7 +136,8 @@ export const api = {
     },
     {
       "name": "Otp.HiddenInput",
-      "description": "Hidden input component that handles OTP input interactions and validation"
+      "description":
+        "Hidden input component that handles OTP input interactions and validation"
     },
     {
       "name": "Otp.Caret",
@@ -144,7 +147,8 @@ export const api = {
   "keyboardInteractions": [
     {
       "key": "ArrowLeft",
-      "comment": "When focus is on the hidden input, moves focus to the previous OTP item. Prevents skipping over filled slots when moving from empty slots"
+      "comment":
+        "When focus is on the hidden input, moves focus to the previous OTP item. Prevents skipping over filled slots when moving from empty slots"
     },
     {
       "key": "ArrowRight",
@@ -152,15 +156,18 @@ export const api = {
     },
     {
       "key": "Backspace",
-      "comment": "When focus is on the hidden input, deletes the previous character and moves focus backwards"
+      "comment":
+        "When focus is on the hidden input, deletes the previous character and moves focus backwards"
     },
     {
       "key": "0-9",
-      "comment": "When focus is on the hidden input, enters a numeric digit and moves focus to the next item"
+      "comment":
+        "When focus is on the hidden input, enters a numeric digit and moves focus to the next item"
     },
     {
       "key": "Shift",
-      "comment": "When held down, allows range selection of multiple OTP items using arrow keys"
+      "comment":
+        "When held down, allows range selection of multiple OTP items using arrow keys"
     },
     {
       "key": "Tab",
@@ -168,7 +175,8 @@ export const api = {
     },
     {
       "key": "Any non-numeric",
-      "comment": "When focus is on the hidden input, input is prevented if it doesn't match the pattern (defaults to numbers only)"
+      "comment":
+        "When focus is on the hidden input, input is prevented if it doesn't match the pattern (defaults to numbers only)"
     }
   ],
   "features": [

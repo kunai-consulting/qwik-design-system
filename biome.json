@@ -8,7 +8,8 @@
       "node_modules",
       "server",
       "apps/docs/public/pagefind",
-      "lib-types"
+      "lib-types",
+      "libs/components/lib/*"
     ]
   },
 

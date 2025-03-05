@@ -1,18 +1,18 @@
 import {
-  type PropsOf,
+  $,
   type PropFunction,
+  type PropsOf,
   type QRL,
   type Signal,
   Slot,
   component$,
+  useComputed$,
   useContextProvider,
   useSignal,
   useStyles$,
-  useComputed$,
-  useTask$,
-  $
+  useTask$
 } from "@builder.io/qwik";
-import { ThumbType, sliderContextId, type SliderValue } from "./slider-context";
+import { type SliderValue, type ThumbType, sliderContextId } from "./slider-context";
 import styles from "./slider.css?inline";
 type DivProps = Omit<PropsOf<"div">, "value" | "min" | "max" | "step" | "disabled">;
 interface PublicSliderProps {
@@ -110,12 +110,10 @@ export const SliderRoot = component$<PublicRootProps>((props) => {
   const setValue = $((newValue: number, type?: "start" | "end") => {
     if (!isRangeSignal.value) {
       valueSignal.value = newValue;
-    } else {
-      if (type === "start" && newValue <= endValue.value) {
-        startValue.value = newValue;
-      } else if (type === "end" && newValue >= startValue.value) {
-        endValue.value = newValue;
-      }
+    } else if (type === "start" && newValue <= endValue.value) {
+      startValue.value = newValue;
+    } else if (type === "end" && newValue >= startValue.value) {
+      endValue.value = newValue;
     }
   });
 

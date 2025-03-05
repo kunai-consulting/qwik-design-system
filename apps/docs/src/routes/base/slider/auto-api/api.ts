@@ -16,13 +16,15 @@ export const api = {
           {
             "PublicDivProps": [
               {
-                "comment": "Whether the slider should act as a range slider with two thumbs. Default is false",
+                "comment":
+                  "Whether the slider should act as a range slider with two thumbs. Default is false",
                 "prop": "isRange",
                 "type": "boolean",
                 "defaultValue": "false"
               },
               {
-                "comment": "The current value of the slider. For range sliders, this should be a tuple of [start, end] values",
+                "comment":
+                  "The current value of the slider. For range sliders, this should be a tuple of [start, end] values",
                 "prop": "value",
                 "type": "SliderValue | Signal<SliderValue>",
                 "defaultValue": "isRange ? [0, 100] : 0"
@@ -54,12 +56,15 @@ export const api = {
               {
                 "comment": "Event handler called when the slider value changes",
                 "prop": "onChange$",
-                "type": "| QRL<(value: SliderValue) => void>\n    | PropFunction<(value: SliderValue) => void>"
+                "type":
+                  "| QRL<(value: SliderValue) => void>\n    | PropFunction<(value: SliderValue) => void>"
               },
               {
-                "comment": "Event handler called when the slider value changes are committed (on drag end or keyboard navigation)",
+                "comment":
+                  "Event handler called when the slider value changes are committed (on drag end or keyboard navigation)",
                 "prop": "onChangeEnd$",
-                "type": "| QRL<(value: SliderValue) => void>\n    | PropFunction<(value: SliderValue) => void>"
+                "type":
+                  "| QRL<(value: SliderValue) => void>\n    | PropFunction<(value: SliderValue) => void>"
               }
             ]
           },
@@ -76,7 +81,8 @@ export const api = {
           {
             "name": "data-thumb-type",
             "type": "string | undefined",
-            "comment": "Identifies whether the thumb is for the start or end value in range mode"
+            "comment":
+              "Identifies whether the thumb is for the start or end value in range mode"
           }
         ]
       }
@@ -90,7 +96,8 @@ export const api = {
   "anatomy": [
     {
       "name": "Slider.Root",
-      "description": "Root component that provides slider context and handles core slider functionality"
+      "description":
+        "Root component that provides slider context and handles core slider functionality"
     },
     {
       "name": "Slider.Track",
@@ -98,11 +105,13 @@ export const api = {
     },
     {
       "name": "Slider.Range",
-      "description": "Component that displays the filled range between min value and current value"
+      "description":
+        "Component that displays the filled range between min value and current value"
     },
     {
       "name": "Slider.Thumb",
-      "description": "Draggable thumb component that users interact with to change slider values"
+      "description":
+        "Draggable thumb component that users interact with to change slider values"
     },
     {
       "name": "Slider.MarkerGroup",
@@ -110,34 +119,41 @@ export const api = {
     },
     {
       "name": "Slider.Marker",
-      "description": "A marker component that displays a specific value point on the slider"
-    },
+      "description":
+        "A marker component that displays a specific value point on the slider"
+    }
   ],
   "keyboardInteractions": {
     "keyboardShortcuts": [
       {
         "key": "ArrowRight",
-        "comment": "When focus is on the thumb, increases the value by one step. If Shift is held, increases by ten steps"
+        "comment":
+          "When focus is on the thumb, increases the value by one step. If Shift is held, increases by ten steps"
       },
       {
         "key": "ArrowLeft",
-        "comment": "When focus is on the thumb, decreases the value by one step. If Shift is held, decreases by ten steps"
+        "comment":
+          "When focus is on the thumb, decreases the value by one step. If Shift is held, decreases by ten steps"
       },
       {
         "key": "ArrowUp",
-        "comment": "When focus is on the thumb, increases the value by one step. If Shift is held, increases by ten steps"
+        "comment":
+          "When focus is on the thumb, increases the value by one step. If Shift is held, increases by ten steps"
       },
       {
         "key": "ArrowDown",
-        "comment": "When focus is on the thumb, decreases the value by one step. If Shift is held, decreases by ten steps"
+        "comment":
+          "When focus is on the thumb, decreases the value by one step. If Shift is held, decreases by ten steps"
       },
       {
         "key": "Home",
-        "comment": "When focus is on the thumb, sets the value to the minimum allowed value"
+        "comment":
+          "When focus is on the thumb, sets the value to the minimum allowed value"
       },
       {
         "key": "End",
-        "comment": "When focus is on the thumb, sets the value to the maximum allowed value"
+        "comment":
+          "When focus is on the thumb, sets the value to the maximum allowed value"
       }
     ]
   },

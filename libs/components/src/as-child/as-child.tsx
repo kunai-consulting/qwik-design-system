@@ -1,5 +1,10 @@
-import { Component, noSerialize, JSXChildren, sync$ } from "@builder.io/qwik";
-import { FunctionComponent } from "@builder.io/qwik/jsx-runtime";
+import {
+  type Component,
+  type JSXChildren,
+  type NoSerialize,
+  noSerialize
+} from "@builder.io/qwik";
+import type { FunctionComponent } from "@builder.io/qwik/jsx-runtime";
 
 export type AsChildProps = {
   _allProps?: object;
@@ -7,18 +12,33 @@ export type AsChildProps = {
   asChild?: boolean;
 };
 
-export function syncFixedInV2<T extends Function>(fn: T) {
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export function syncFixedInV2<T extends (...args: any[]) => unknown>(fn: T) {
   // in v1, there is a very obscure bug with container state and context
   // that is fixed with the new serialization system in v2
-  return noSerialize(fn);
+  return noSerialize(fn) as T;
 }
 
-export function withAsChild<T>(BaseComponent: Component<T>) {
+export function withAsChild<T>(BaseComponent: Component<T>, trackInstances?: boolean) {
+  let count = 0;
+
   return function AsChildWrapper(props: T & AsChildProps) {
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const children = (props as any).children;
 
+    let indexCount: number | undefined;
+
+    if (trackInstances === true) {
+      indexCount = count++;
+    }
+
     if (!props.asChild) {
-      return <BaseComponent {...(props as any)}>{children}</BaseComponent>;
+      return (
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        <BaseComponent {...(props as any)} _index={indexCount}>
+          {children}
+        </BaseComponent>
+      );
     }
 
     if (children.length > 1) {
@@ -29,12 +49,12 @@ export function withAsChild<T>(BaseComponent: Component<T>) {
 
     const allProps = {
       ...children.props,
-      ...children.immutableProps,
+      ...children.immutableProps
     };
     const { children: _, ...restProps } = allProps;
 
     const name = (children.type as { name: string }).name;
-    let jsxType;
+    let jsxType: string | FunctionComponent | NoSerialize<FunctionComponent>;
 
     if (name === "QwikComponent" || typeof children.type === "string") {
       jsxType = children.type;
@@ -44,9 +64,11 @@ export function withAsChild<T>(BaseComponent: Component<T>) {
 
     return (
       <BaseComponent
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         {...(props as any)}
         _jsxType={jsxType}
         _allProps={restProps}
+        _index={indexCount}
       >
         {(children.children ?? children.props?.children) as JSXChildren}
       </BaseComponent>

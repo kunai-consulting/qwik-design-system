@@ -1,4 +1,11 @@
-import { component$, Signal, useSignal, useStore, useStyles$, useTask$ } from "@builder.io/qwik";
+import {
+  type Signal,
+  component$,
+  useSignal,
+  useStore,
+  useStyles$,
+  useTask$
+} from "@builder.io/qwik";
 import { Checkbox } from "@kunai-consulting/qwik";
 import { LuCheck } from "@qwikest/icons/lucide";
 
@@ -6,7 +13,7 @@ export default component$(() => {
   useStyles$(styles);
 
   const myStore = useStore({
-    isChecked: false,
+    isChecked: false
   });
 
   const isChecked = useStoreSignal<boolean | "mixed">(myStore, "isChecked");
@@ -39,24 +46,23 @@ export default component$(() => {
 // example styles
 import styles from "./checkbox.css?inline";
 
-
 export function useStoreSignal<T>(
-    store: Record<string, unknown>,
-    key: keyof typeof store
-  ): Signal<T> {
-    const internalSig = useSignal<T>(store[key] as T);
-  
-    useTask$(function setStoreValue({ track }) {
-      track(internalSig);
-  
-      store[key] = internalSig.value;
-    });
-  
-    useTask$(function getStoreValue({ track }) {
-      track(() => store[key]);
-  
-      internalSig.value = store[key] as T;
-    });
-  
-    return internalSig;
-  }
+  store: Record<string, unknown>,
+  key: keyof typeof store
+): Signal<T> {
+  const internalSig = useSignal<T>(store[key] as T);
+
+  useTask$(function setStoreValue({ track }) {
+    track(internalSig);
+
+    store[key] = internalSig.value;
+  });
+
+  useTask$(function getStoreValue({ track }) {
+    track(() => store[key]);
+
+    internalSig.value = store[key] as T;
+  });
+
+  return internalSig;
+}

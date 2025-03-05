@@ -16,7 +16,7 @@ export default component$(() => {
             height: "24px",
             border: "3px solid darkred"
           }}
-         />
+        />
       </Slider.Track>
     </Slider.Root>
   );

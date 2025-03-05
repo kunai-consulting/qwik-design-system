@@ -1,9 +1,9 @@
 import {
   type PropsOf,
-  component$,
-  useContext,
   Slot,
-  useComputed$
+  component$,
+  useComputed$,
+  useContext
 } from "@builder.io/qwik";
 import { sliderContextId } from "./slider-context";
 interface PublicMarkerProps extends PropsOf<"div"> {

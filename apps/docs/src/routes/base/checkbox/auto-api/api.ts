@@ -42,7 +42,8 @@ export const api = {
           {
             "name": "data-hidden",
             "type": "string",
-            "comment": "Indicates whether the indicator should be hidden based on checkbox state"
+            "comment":
+              "Indicates whether the indicator should be hidden based on checkbox state"
           },
           {
             "name": "data-checked",
@@ -74,8 +75,8 @@ export const api = {
             "PublicCheckboxRootProps": [
               {
                 "comment": "",
-                "prop": "\"bind:checked\"",
-                "type": "Signal<boolean | \"mixed\">"
+                "prop": '"bind:checked"',
+                "type": 'Signal<boolean | "mixed">'
               },
               {
                 "comment": "Initial checked state of the checkbox",
@@ -156,7 +157,8 @@ export const api = {
   "anatomy": [
     {
       "name": "Checkbox.Root",
-      "description": "Root component that provides context and state management for the checkbox"
+      "description":
+        "Root component that provides context and state management for the checkbox"
     },
     {
       "name": "Checkbox.Indicator",
@@ -186,11 +188,13 @@ export const api = {
   "keyboardInteractions": [
     {
       "key": "Space",
-      "comment": "When focus is on the checkbox trigger, toggles the checkbox state between checked/unchecked/mixed"
+      "comment":
+        "When focus is on the checkbox trigger, toggles the checkbox state between checked/unchecked/mixed"
     },
     {
       "key": "Enter",
-      "comment": "When focus is on the checkbox trigger, toggles the checkbox state between checked/unchecked/mixed (default behavior prevented)"
+      "comment":
+        "When focus is on the checkbox trigger, toggles the checkbox state between checked/unchecked/mixed (default behavior prevented)"
     },
     {
       "key": "Tab",

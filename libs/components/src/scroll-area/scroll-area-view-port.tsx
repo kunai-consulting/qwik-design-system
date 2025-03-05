@@ -4,9 +4,9 @@ import {
   type PropsOf,
   Slot,
   component$,
+  sync$,
   useContext,
-  useOnDocument,
-  sync$
+  useOnDocument
 } from "@builder.io/qwik";
 import { scrollAreaContextId } from "./scroll-area-context";
 type PublicViewPortProps = PropsOf<"div"> & {

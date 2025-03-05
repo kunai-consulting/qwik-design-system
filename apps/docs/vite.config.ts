@@ -26,7 +26,7 @@ errorOnDuplicatesPkgDeps(devDependencies, dependencies);
  */
 export default defineConfig(({ command, mode }): UserConfig => {
   const mainQuality = {
-    quality: 80,
+    quality: 80
   };
 
   return {
@@ -45,7 +45,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
         jpeg: mainQuality,
         jpg: mainQuality,
         webp: mainQuality,
-        avif: mainQuality,
+        avif: mainQuality
       }),
       tsconfigPaths()
     ],

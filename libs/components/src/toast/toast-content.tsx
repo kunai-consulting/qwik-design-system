@@ -1,4 +1,4 @@
-import { component$, useContext, type PropsOf, Slot } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
 import { toastContextId } from "./toast-context";
 
 type PublicContentProps = PropsOf<"div">;
