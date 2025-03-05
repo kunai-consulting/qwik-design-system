@@ -1,4 +1,9 @@
+import { Image } from "~/docs-widgets/image/image";
+import testing from "~/assets/docs/testing/testing.webp";
+
 # Testing
+
+<Image src={testing} loading="eager" alt="Testing" />
 
 It is a requirement that every component has tests before it can be out of preview.
 
@@ -123,6 +128,18 @@ When writing tests, we use the [Given, When, Then](https://martinfowler.com/blik
     await expect(d.getIndicator()).toBeHidden();
   });
 ```
+
+## Test Driven Development
+
+[Test Driven Development (TDD)](https://martinfowler.com/bliki/TestDrivenDevelopment.html) is a development process that emphasizes writing out the intended behavior before writing the code.
+
+The process is as follows:
+
+1. Write a test
+2. Run the test and see it fails
+3. Write the code to pass the test
+
+It is preferred to write the tests before the code, but it is not required.
 
 
 

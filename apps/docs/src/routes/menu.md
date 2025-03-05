@@ -24,6 +24,7 @@
 - [State](/contributing/state)
 - [Events](/contributing/events)
 - [Testing](/contributing/testing)
+- [Styling](/contributing/styling)
 - [Philosophy](/contributing/philosophy)
 - [Conventions](/contributing/conventions)
 
