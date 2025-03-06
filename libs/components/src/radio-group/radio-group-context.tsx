@@ -15,5 +15,5 @@ export type RadioGroupContext = {
   value: string | undefined;
   triggerRef: Signal<HTMLButtonElement | undefined>;
   formRef: Signal<HTMLFormElement | undefined>;
-  orientation: 'horizontal' | 'vertical';
+  orientation: "horizontal" | "vertical";
 };

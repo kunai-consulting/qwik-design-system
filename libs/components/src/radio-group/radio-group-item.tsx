@@ -20,7 +20,13 @@ export const RadioGroupItem = component$<PublicRadioGroupItemProps>(
 
     return (
       // Identifier for individual radio group item container
-      <div ref={itemRef} id={itemId} data-qds-radio-group-item data-orientation={context.orientation} {...props}>
+      <div
+        ref={itemRef}
+        id={itemId}
+        data-qds-radio-group-item
+        data-orientation={context.orientation}
+        {...props}
+      >
         <Slot />
       </div>
     );

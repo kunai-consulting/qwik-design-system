@@ -49,7 +49,7 @@ export const RadioGroupTrigger = component$((props: PublicRadioGroupControlProps
   });
 
   const handleKeyDown$ = $((event: KeyboardEvent) => {
-    if ((event.key === ' ' || event.key === 'Enter') && !context.isDisabledSig.value) {
+    if ((event.key === " " || event.key === "Enter") && !context.isDisabledSig.value) {
       event.preventDefault();
       handleClick$();
     }
@@ -77,8 +77,11 @@ export const RadioGroupTrigger = component$((props: PublicRadioGroupControlProps
       // Indicates whether this radio trigger is disabled
       disabled={context.isDisabledSig.value}
       tabIndex={
-        isSelected.value ? 0 :
-          (!context.selectedValueSig.value && props._index === 0) ? 0 : -1
+        isSelected.value
+          ? 0
+          : !context.selectedValueSig.value && props._index === 0
+            ? 0
+            : -1
       }
       data-disabled={context.isDisabledSig.value ? "" : undefined}
       onClick$={[handleClick$, props.onClick$]}

@@ -6,18 +6,15 @@ import styles from "./radio-group-custom.css?inline";
 export default component$(() => {
   useStyles$(styles);
   return (
-    <RadioGroup.Root
-      class="radio-group-root"
-      orientation="horizontal"
-    >
+    <RadioGroup.Root class="radio-group-root" orientation="horizontal">
       <RadioGroup.Label class="radio-group-label">Size</RadioGroup.Label>
 
-      {['S', 'M', 'L', 'XL'].map((size) => (
+      {["S", "M", "L", "XL"].map((size) => (
         <RadioGroup.Item class="radio-group-item" key={size} value={size}>
           <div class="radio-group-item-content">
             <RadioGroup.Trigger class="radio-group-trigger" value={size}>
               <RadioGroup.Indicator class="radio-group-indicator" value={size}>
-                <LuCircle/>
+                <LuCircle />
               </RadioGroup.Indicator>
             </RadioGroup.Trigger>
             <RadioGroup.Label>{size}</RadioGroup.Label>

@@ -2,7 +2,10 @@ import { $, type PropsOf, component$, useContext } from "@builder.io/qwik";
 import { VisuallyHidden } from "../visually-hidden/visually-hidden";
 import { radioGroupContextId } from "./radio-group-context";
 
-type RadioGroupHiddenNativeInputProps = Omit<PropsOf<"input">, "type" | "checked" | "form"> & {
+type RadioGroupHiddenNativeInputProps = Omit<
+  PropsOf<"input">,
+  "type" | "checked" | "form"
+> & {
   _index?: number | null;
 };
 
@@ -20,12 +23,7 @@ export const RadioGroupHiddenNativeInput = component$(
       }
     });
 
-    const {
-      onChange$,
-      required,
-      value,
-      ...restProps
-    } = props;
+    const { onChange$, required, value, ...restProps } = props;
 
     return (
       <VisuallyHidden>
@@ -37,7 +35,7 @@ export const RadioGroupHiddenNativeInput = component$(
           // Identifier for the hidden native radio input element
           data-qds-radio-group-hidden-input
           required={context.required ?? required ?? undefined}
-          value={context.value ?? ''}
+          value={context.value ?? ""}
           name={context.localId}
           disabled={context.isDisabledSig.value}
           onChange$={[handleChange$, onChange$]}

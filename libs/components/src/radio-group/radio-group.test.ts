@@ -87,7 +87,7 @@ test.describe("Radio Group", () => {
 test.describe("Keyboard Navigation", () => {
   test(`GIVEN a radio group in vertical orientation
           WHEN ArrowDown is pressed
-          THEN focus should move to the next item`, async ({page}) => {
+          THEN focus should move to the next item`, async ({ page }) => {
     const d = await setup(page, "hero");
     const firstRadio = d.getInputAt(0);
     const secondRadio = d.getInputAt(1);
@@ -100,7 +100,7 @@ test.describe("Keyboard Navigation", () => {
 
   test(`GIVEN a radio group in vertical orientation
           WHEN ArrowUp is pressed
-          THEN focus should move to the previous item`, async ({page}) => {
+          THEN focus should move to the previous item`, async ({ page }) => {
     const d = await setup(page, "hero");
     const secondRadio = d.getInputAt(1);
     const firstRadio = d.getInputAt(0);
@@ -113,7 +113,7 @@ test.describe("Keyboard Navigation", () => {
 
   test(`GIVEN a radio group in horizontal orientation
           WHEN ArrowRight is pressed
-          THEN focus should move to the next item`, async ({page}) => {
+          THEN focus should move to the next item`, async ({ page }) => {
     const d = await setup(page, "horizontal");
     const firstRadio = d.getInputAt(0);
     const secondRadio = d.getInputAt(1);
@@ -126,7 +126,7 @@ test.describe("Keyboard Navigation", () => {
 
   test(`GIVEN a radio group
           WHEN Home key is pressed
-          THEN focus should move to the first item`, async ({page}) => {
+          THEN focus should move to the first item`, async ({ page }) => {
     const d = await setup(page, "hero");
     const lastRadio = d.getInputAt(3);
     const firstRadio = d.getInputAt(0);
@@ -139,7 +139,7 @@ test.describe("Keyboard Navigation", () => {
 
   test(`GIVEN a radio group
           WHEN End key is pressed
-          THEN focus should move to the last item`, async ({page}) => {
+          THEN focus should move to the last item`, async ({ page }) => {
     const d = await setup(page, "hero");
     const firstRadio = d.getInputAt(0);
     const lastRadio = d.getInputAt(3);
@@ -152,7 +152,7 @@ test.describe("Keyboard Navigation", () => {
 
   test(`GIVEN a radio group
           WHEN Space is pressed on focused item
-          THEN it should be selected`, async ({page}) => {
+          THEN it should be selected`, async ({ page }) => {
     const d = await setup(page, "hero");
     const firstRadio = d.getInputAt(0);
 
@@ -243,7 +243,7 @@ test.describe("Form Integration", () => {
 test.describe("Orientation", () => {
   test(`GIVEN a horizontal radio group
           WHEN rendered
-          THEN should have horizontal orientation`, async ({page}) => {
+          THEN should have horizontal orientation`, async ({ page }) => {
     const d = await setup(page, "horizontal");
     const root = d.getRoot();
 
@@ -252,7 +252,7 @@ test.describe("Orientation", () => {
 
   test(`GIVEN a horizontal radio group
           WHEN navigating with arrow keys
-          THEN should use left/right arrows`, async ({page}) => {
+          THEN should use left/right arrows`, async ({ page }) => {
     const d = await setup(page, "horizontal");
     const firstRadio = d.getInputAt(0);
     const secondRadio = d.getInputAt(1);
@@ -263,4 +263,3 @@ test.describe("Orientation", () => {
     await expect(secondRadio).toBeFocused();
   });
 });
-

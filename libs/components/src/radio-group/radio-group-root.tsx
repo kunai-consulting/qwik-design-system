@@ -1,4 +1,5 @@
 import {
+  $,
   type PropsOf,
   type QRL,
   type Signal,
@@ -9,7 +10,7 @@ import {
   useId,
   useSignal,
   useTask$,
-  $, useVisibleTask$
+  useVisibleTask$
 } from "@builder.io/qwik";
 import { type RadioGroupContext, radioGroupContextId } from "./radio-group-context";
 
@@ -29,7 +30,7 @@ export type PublicRadioGroupRootProps = {
   required?: boolean;
   /** The current value of the radio group */
   value?: string;
-  orientation?: 'horizontal' | 'vertical';
+  orientation?: "horizontal" | "vertical";
 } & PropsOf<"div">;
 /** Root component that manages the radio group's state and behavior */
 export const RadioGroupRoot = component$((props: PublicRadioGroupRootProps) => {
@@ -40,7 +41,7 @@ export const RadioGroupRoot = component$((props: PublicRadioGroupRootProps) => {
     isDescription,
     required,
     value,
-    orientation = 'vertical',
+    orientation = "vertical",
     ...rest
   } = props;
 
@@ -75,11 +76,11 @@ export const RadioGroupRoot = component$((props: PublicRadioGroupRootProps) => {
     if (isDisabledSig.value || !rootRef.value) return;
 
     const triggers = Array.from(
-      rootRef.value.querySelectorAll('[data-qds-radio-group-trigger]:not([disabled])')
+      rootRef.value.querySelectorAll("[data-qds-radio-group-trigger]:not([disabled])")
     );
     if (!triggers.length) return;
 
-    const currentIndex = triggers.findIndex(item => item === document.activeElement);
+    const currentIndex = triggers.findIndex((item) => item === document.activeElement);
     const startIndex = currentIndex === -1 ? 0 : currentIndex;
     const moveToIndex = (index: number) => {
       event.preventDefault();
@@ -87,7 +88,7 @@ export const RadioGroupRoot = component$((props: PublicRadioGroupRootProps) => {
       const targetElement = triggers[normalizedIndex] as HTMLElement;
       if (targetElement) {
         targetElement.focus();
-        const newValue = targetElement.getAttribute('value');
+        const newValue = targetElement.getAttribute("value");
         if (newValue) {
           selectedValueSig.value = newValue;
           selectedIndexSig.value = normalizedIndex;
@@ -96,19 +97,19 @@ export const RadioGroupRoot = component$((props: PublicRadioGroupRootProps) => {
       }
     };
 
-    const isHorizontal = orientation === 'horizontal';
+    const isHorizontal = orientation === "horizontal";
 
     switch (event.key) {
-      case isHorizontal ? 'ArrowRight' : 'ArrowDown':
+      case isHorizontal ? "ArrowRight" : "ArrowDown":
         moveToIndex(startIndex + 1);
         break;
-      case isHorizontal ? 'ArrowLeft' : 'ArrowUp':
+      case isHorizontal ? "ArrowLeft" : "ArrowUp":
         moveToIndex(startIndex - 1);
         break;
-      case 'Home':
+      case "Home":
         moveToIndex(0);
         break;
-      case 'End':
+      case "End":
         moveToIndex(triggers.length - 1);
         break;
     }
@@ -137,7 +138,9 @@ export const RadioGroupRoot = component$((props: PublicRadioGroupRootProps) => {
 
   useTask$(({ track }) => {
     track(() => selectedValueSig.value);
-    context.isErrorSig.value = !!(context.required && selectedValueSig.value === undefined);
+    context.isErrorSig.value = !!(
+      context.required && selectedValueSig.value === undefined
+    );
   });
 
   useTask$(({ track }) => {
@@ -159,9 +162,11 @@ export const RadioGroupRoot = component$((props: PublicRadioGroupRootProps) => {
     track(() => selectedValueSig.value);
 
     if (!selectedValueSig.value) {
-      const firstTrigger = document.querySelector('[data-qds-radio-group-trigger]:not([disabled])') as HTMLElement;
+      const firstTrigger = document.querySelector(
+        "[data-qds-radio-group-trigger]:not([disabled])"
+      ) as HTMLElement;
       if (firstTrigger) {
-        firstTrigger.setAttribute('tabindex', '0');
+        firstTrigger.setAttribute("tabindex", "0");
       }
     }
   });
@@ -173,11 +178,11 @@ export const RadioGroupRoot = component$((props: PublicRadioGroupRootProps) => {
     if (!rootRef.value) return;
 
     const triggers = Array.from(
-      rootRef.value.querySelectorAll('[data-qds-radio-group-trigger]:not([disabled])')
+      rootRef.value.querySelectorAll("[data-qds-radio-group-trigger]:not([disabled])")
     );
 
-    if (!hasFocusWithinSig.value && !selectedValueSig.value && triggers.length > 0) {
-      (triggers[0] as HTMLElement).setAttribute('tabindex', '0');
+    if (!(hasFocusWithinSig.value || selectedValueSig.value) && triggers.length > 0) {
+      (triggers[0] as HTMLElement).setAttribute("tabindex", "0");
     }
   });
 
