@@ -11,6 +11,7 @@ import {
 import { radioGroupContextId } from "./radio-group-context";
 import "./radio-group.css";
 import styles from "./radio-group.css?inline";
+
 type PublicRadioGroupControlProps = PropsOf<"button"> & {
   value: string;
   _index?: number;
@@ -23,7 +24,10 @@ export const RadioGroupTrigger = component$((props: PublicRadioGroupControlProps
   const triggerId = `${context.localId}-trigger`;
   const descriptionId = `${context.localId}-description`;
   const errorId = `${context.localId}-error`;
+  const labelId = `${context.localId}-label-${value}`;
   useStyles$(styles);
+
+  const isSelected = useComputed$(() => context.selectedValueSig.value === value);
 
   const describedByLabels = useComputed$(() => {
     const labels = [];
@@ -37,9 +41,18 @@ export const RadioGroupTrigger = component$((props: PublicRadioGroupControlProps
   });
 
   const handleClick$ = $(() => {
+    if (context.isDisabledSig.value) return;
+
     context.selectedIndexSig.value = _index ?? null;
     context.selectedValueSig.value = props.value;
     context.isErrorSig.value = false;
+  });
+
+  const handleKeyDown$ = $((event: KeyboardEvent) => {
+    if ((event.key === " " || event.key === "Enter") && !context.isDisabledSig.value) {
+      event.preventDefault();
+      handleClick$();
+    }
   });
 
   useTask$(({ track }) => {
@@ -53,20 +66,28 @@ export const RadioGroupTrigger = component$((props: PublicRadioGroupControlProps
 
   return (
     <button
-      tabIndex={0}
+      type="button"
       id={triggerId}
       ref={context.triggerRef}
       role="radio"
-      aria-label={`radioButton ${value}`}
-      aria-checked={context.selectedValueSig.value === value}
-      aria-describedby={describedByLabels ? describedByLabels.value : undefined}
+      aria-checked={isSelected.value}
+      aria-describedby={describedByLabels.value}
       aria-invalid={context.isErrorSig.value}
+      aria-labelledby={labelId}
       // Indicates whether this radio trigger is disabled
+      disabled={context.isDisabledSig.value}
+      tabIndex={
+        isSelected.value
+          ? 0
+          : !context.selectedValueSig.value && props._index === 0
+            ? 0
+            : -1
+      }
       data-disabled={context.isDisabledSig.value ? "" : undefined}
       onClick$={[handleClick$, props.onClick$]}
+      onKeyDown$={handleKeyDown$}
       // Indicates whether this radio trigger is checked
-      data-checked={context.selectedValueSig.value === value}
-      // Identifier for the radio group trigger button
+      data-checked={isSelected.value}
       data-qds-radio-group-trigger
       {...props}
     >

@@ -52,7 +52,13 @@ export const api = {
             ]
           }
         ],
-        "inheritsFrom": "div"
+        "inheritsFrom": "div",
+        "dataAttributes": [
+          {
+            "name": "data-orientation",
+            "type": "string"
+          }
+        ]
       }
     },
     {
@@ -68,7 +74,7 @@ export const api = {
               {
                 "comment": "",
                 "prop": '"bind:value"',
-                "type": "Signal<boolean>"
+                "type": "Signal<string | undefined>"
               },
               {
                 "comment": "Event handler for when the radio group selection changes",
@@ -104,6 +110,12 @@ export const api = {
                 "comment": "The current value of the radio group",
                 "prop": "value",
                 "type": "string"
+              },
+              {
+                "comment": "",
+                "prop": "orientation",
+                "type": "'horizontal' | 'vertical'",
+                "defaultValue": "'vertical'"
               }
             ]
           }
@@ -116,9 +128,8 @@ export const api = {
             "comment": "Indicates whether the radio group is disabled"
           },
           {
-            "name": "data-checked",
-            "type": "string | undefined",
-            "comment": "Indicates whether the radio group has a selected value"
+            "name": "data-orientation",
+            "type": "string"
           }
         ]
       }
@@ -145,8 +156,7 @@ export const api = {
         "dataAttributes": [
           {
             "name": "data-disabled",
-            "type": "string | undefined",
-            "comment": "Indicates whether this radio trigger is disabled"
+            "type": "string | undefined"
           },
           {
             "name": "data-checked",

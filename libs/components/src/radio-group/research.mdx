@@ -1,0 +1,171 @@
+# Radio Group Research
+
+## Overview
+Radio Group allows users to select a single option from a given list. The component is fully accessible,
+supports keyboard navigation, and complies with the WAI-ARIA specification for radio groups.
+
+## Research Links:
+- WAI-ARIA Radio Group Pattern (https://www.w3.org/WAI/ARIA/apg/patterns/radio/)
+- Radix UI Radio Group (https://www.radix-ui.com/primitives/docs/components/radio-group)
+- MUI Radio Group (https://mui.com/material-ui/react-radio-button/)
+- Chakra UI Radio Group (https://chakra-ui.com/docs/components/radio)
+- Mantine Radio Group (https://mantine.dev/core/radio-group/)
+
+---
+
+## Features:
+- [x] Single selection
+- [x] Keyboard navigation
+- [x] Disabled state
+- [x] Required state
+- [x] Error messages
+- [x] Form integration
+- [x] Controlled/Uncontrolled modes
+- [x] Horizontal/Vertical orientation
+- [x] ARIA attributes
+- [x] Custom styles support
+- [x] Description support
+- [ ] Custom indicators
+- [ ] RTL support
+- [ ] Animations
+- [ ] Color customization
+
+---
+
+## Keyboard Interactions:
+- Tab: Move focus to radio group
+- Space/Enter: Select focused option
+- ArrowDown/ArrowRight: Move focus to next option
+- ArrowUp/ArrowLeft: Move focus to previous option
+- Home: Move focus to first option
+- End: Move focus to last option
+
+---
+
+## Attributes:
+- role="radiogroup" (container)
+- role="radio" (individual options)
+- aria-checked
+- aria-disabled
+- aria-required
+- aria-invalid
+- aria-errormessage
+- aria-labelledby
+- aria-describedby
+- data-qds-radio-group-root
+- data-qds-radio-group-item
+- data-qds-radio-group-trigger
+- data-qds-radio-group-label
+- data-qds-radio-group-description
+- data-qds-radio-group-error-message
+- data-qds-indicator
+
+---
+
+## Use Cases:
+- Form selections
+- Settings preferences
+- Multiple choice questions
+- Payment method selection
+- Shipping options
+- Theme selection
+- Language selection
+- Account type selection
+
+---
+
+## API:
+
+### Root:
+```typescript
+interface RadioGroupRootProps {
+  "bind:value"?: Signal<string | undefined>;
+  onChange$?: QRL<(checked: string) => void>;
+  defaultValue?: string;
+  disabled?: boolean;
+  isDescription?: boolean;
+  name?: string;
+  required?: boolean;
+  value?: string;
+  orientation?: 'horizontal' | 'vertical';
+}
+```
+
+### Item:
+```typescript
+interface RadioGroupItemProps {
+  value: string;
+  // Additional HTML div props
+}
+```
+
+### Trigger:
+```typescript
+interface RadioGroupTriggerProps {
+  value: string;
+  _index?: number;
+  // Additional HTML button props
+}
+```
+
+### Label:
+```typescript
+interface RadioGroupLabelProps {
+  // HTML label props
+}
+```
+
+### Description:
+```typescript
+interface RadioGroupDescriptionProps {
+  // HTML div props
+}
+```
+
+### ErrorMessage:
+```typescript
+interface RadioGroupErrorMessageProps {
+  // HTML div props
+}
+```
+
+### Indicator:
+```typescript
+interface RadioGroupIndicatorProps {
+  value: string;
+  // Additional HTML span props
+}
+```
+
+## Important CSS:
+
+```css
+/* Required CSS */
+[data-qds-radio-group-root] {
+  display: flex;
+  flex-direction: column;
+}
+
+[data-qds-radio-group-root][data-orientation="horizontal"] {
+  flex-direction: row;
+  align-items: center;
+}
+
+[data-qds-radio-group-item] {
+  display: flex;
+  align-items: center;
+}
+
+[data-qds-radio-group-trigger][data-disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+[data-qds-indicator][data-hidden] {
+  display: none;
+}
+
+[data-qds-radio-group-error-message][data-visible] {
+  display: block;
+}
+```
