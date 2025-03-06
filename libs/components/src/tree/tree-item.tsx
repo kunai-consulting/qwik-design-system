@@ -24,8 +24,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
     if (e.key !== "ArrowDown") return;
     e.preventDefault();
 
-    const currentFocused = document.querySelector("[data-qds-tree-item][data-focus]");
-    if (!currentFocused) return;
+    if (!context.currentFocusEl.value) return;
 
     const treeWalker = document.createTreeWalker(
       context.rootRef.value ?? document.body,
@@ -39,7 +38,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       }
     );
 
-    treeWalker.currentNode = currentFocused;
+    treeWalker.currentNode = context.currentFocusEl.value;
 
     const nextNode = treeWalker.nextNode();
 
@@ -54,7 +53,9 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       fallback="div"
       tabIndex={0}
       onKeyDown$={handleArrowDownKey$}
-      onFocus$={() => {
+      onFocus$={(e, el) => {
+        context.currentFocusEl.value = el;
+        console.log(context.currentFocusEl.value);
         isFocusedSig.value = true;
       }}
       onBlur$={() => {
