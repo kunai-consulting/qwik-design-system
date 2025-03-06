@@ -17,51 +17,14 @@ interface TreeItemProps extends PropsOf<"div"> {
   _siblingIndex?: number;
 }
 
-let count = 0;
-let siblingCounter: Record<string, number> = {};
-
 export const TreeItemBase = component$((props: TreeItemProps) => {
   const context = useContext(TreeRootContextId);
 
-  console.log("INSIDE TREE ITEM BASE", props._index, props._nodePath);
-
-  let currCount = count;
-
   return (
-    <Render
-      role="treeitem"
-      fallback="div"
-      tabIndex={0}
-      data-count={currCount}
-      data-path={props._nodePath}
-      {...props}
-    >
+    <Render role="treeitem" fallback="div" tabIndex={0} {...props}>
       <Slot />
     </Render>
   );
 });
 
-export const TreeItem = withAsChild(TreeItemBase, false, (props) => {
-  console.log("TreeItem", count);
-
-  const parentPath = (props as any)._parentPath || "";
-
-  if (!siblingCounter[parentPath]) {
-    siblingCounter[parentPath] = 0;
-  }
-
-  const siblingIndex = siblingCounter[parentPath]++;
-  const nodePath = parentPath ? `${parentPath}-${siblingIndex}` : `${siblingIndex}`;
-
-  count++;
-  props._index = count;
-
-  props._nodePath = nodePath;
-
-  props._parentPath = nodePath;
-  props._siblingIndex = siblingIndex;
-
-  console.log("props", props, "nodePath", nodePath);
-
-  return props;
-});
+export const TreeItem = withAsChild(TreeItemBase, true);
