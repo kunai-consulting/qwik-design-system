@@ -203,6 +203,8 @@ export const RadioGroupRoot = component$((props: PublicRadioGroupRootProps) => {
       aria-labelledby={`${localId}-label`}
       aria-describedby={context.isDescription ? `${localId}-description` : undefined}
       aria-required={required ? "true" : "false"}
+      aria-invalid={isErrorSig.value}
+      aria-errormessage={isErrorSig.value ? `${localId}-error` : undefined}
       onKeyDown$={handleKeyDown$}
       onFocusIn$={handleFocusIn$}
       onFocusOut$={handleFocusOut$}

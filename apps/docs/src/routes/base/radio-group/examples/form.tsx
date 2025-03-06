@@ -11,6 +11,7 @@ export default component$(() => {
         class="radio-group"
         name="shipping-method"
         required
+        isDescription
       >
         <RadioGroup.Label class="radio-group-label">Shipping Method</RadioGroup.Label>
         <RadioGroup.Description>Select your preferred shipping method</RadioGroup.Description>

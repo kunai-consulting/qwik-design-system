@@ -83,3 +83,184 @@ test.describe("Radio Group", () => {
     expect(dataVisible).toBe(null);
   });
 });
+
+test.describe("Keyboard Navigation", () => {
+  test(`GIVEN a radio group in vertical orientation
+          WHEN ArrowDown is pressed
+          THEN focus should move to the next item`, async ({page}) => {
+    const d = await setup(page, "hero");
+    const firstRadio = d.getInputAt(0);
+    const secondRadio = d.getInputAt(1);
+
+    await firstRadio.focus();
+    await page.keyboard.press("ArrowDown");
+
+    await expect(secondRadio).toBeFocused();
+  });
+
+  test(`GIVEN a radio group in vertical orientation
+          WHEN ArrowUp is pressed
+          THEN focus should move to the previous item`, async ({page}) => {
+    const d = await setup(page, "hero");
+    const secondRadio = d.getInputAt(1);
+    const firstRadio = d.getInputAt(0);
+
+    await secondRadio.focus();
+    await page.keyboard.press("ArrowUp");
+
+    await expect(firstRadio).toBeFocused();
+  });
+
+  test(`GIVEN a radio group in horizontal orientation
+          WHEN ArrowRight is pressed
+          THEN focus should move to the next item`, async ({page}) => {
+    const d = await setup(page, "horizontal");
+    const firstRadio = d.getInputAt(0);
+    const secondRadio = d.getInputAt(1);
+
+    await firstRadio.focus();
+    await page.keyboard.press("ArrowRight");
+
+    await expect(secondRadio).toBeFocused();
+  });
+
+  test(`GIVEN a radio group
+          WHEN Home key is pressed
+          THEN focus should move to the first item`, async ({page}) => {
+    const d = await setup(page, "hero");
+    const lastRadio = d.getInputAt(3);
+    const firstRadio = d.getInputAt(0);
+
+    await lastRadio.focus();
+    await page.keyboard.press("Home");
+
+    await expect(firstRadio).toBeFocused();
+  });
+
+  test(`GIVEN a radio group
+          WHEN End key is pressed
+          THEN focus should move to the last item`, async ({page}) => {
+    const d = await setup(page, "hero");
+    const firstRadio = d.getInputAt(0);
+    const lastRadio = d.getInputAt(3);
+
+    await firstRadio.focus();
+    await page.keyboard.press("End");
+
+    await expect(lastRadio).toBeFocused();
+  });
+
+  test(`GIVEN a radio group
+          WHEN Space is pressed on focused item
+          THEN it should be selected`, async ({page}) => {
+    const d = await setup(page, "hero");
+    const firstRadio = d.getInputAt(0);
+
+    await firstRadio.focus();
+    await page.keyboard.press("Space");
+
+    await expect(firstRadio).toHaveAttribute("aria-checked", "true");
+  });
+});
+
+test.describe("Accessibility", () => {
+  test(`GIVEN a radio group
+          WHEN rendered
+          THEN it should have correct ARIA attributes`, async ({ page }) => {
+    const d = await setup(page, "form");
+    const root = d.getRoot();
+
+    await expect(root).toHaveAttribute("aria-labelledby");
+    await expect(root).toHaveAttribute("aria-required", "true");
+    await expect(root).toHaveAttribute("role", "radiogroup");
+  });
+
+  test(`GIVEN a disabled radio group
+          WHEN trying to interact
+          THEN items should not be selectable`, async ({ page }) => {
+    const d = await setup(page, "disabled");
+
+    // Click toggle disabled button
+    await page.getByText("Toggle Disabled").click();
+
+    const firstRadio = d.getInputAt(0);
+    await firstRadio.click();
+
+    await expect(firstRadio).not.toBeChecked();
+    await expect(firstRadio).toHaveAttribute("disabled", "");
+  });
+
+  test(`GIVEN a radio group with description
+          WHEN rendered
+          THEN description should be properly linked`, async ({ page }) => {
+    const d = await setup(page, "form");
+    const root = d.getRoot();
+
+    await expect(root).toHaveAttribute("aria-describedby");
+  });
+});
+
+test.describe("Controlled Mode", () => {
+  test(`GIVEN a controlled radio group
+          WHEN value is set externally
+          THEN correct option should be selected`, async ({ page }) => {
+    const d = await setup(page, "controlledValue");
+    const secondRadio = d.getInputAt(1);
+
+    // Item 2 should be selected by default
+    await expect(secondRadio).toHaveAttribute("aria-checked", "true");
+  });
+});
+
+test.describe("Form Integration", () => {
+  test(`GIVEN a radio group in a form
+          WHEN submitted without selection
+          THEN should show error message`, async ({ page }) => {
+    const d = await setup(page, "form");
+
+    // Try to submit form
+    await page.getByText("Continue to Payment").click();
+
+    const errorMessage = d.getErrorMessage();
+    await expect(errorMessage).toBeVisible();
+  });
+
+  test(`GIVEN a radio group in a form
+          WHEN option is selected and form is submitted
+          THEN should not show error message`, async ({ page }) => {
+    const d = await setup(page, "form");
+    const errorMessage = d.getErrorMessage();
+    await expect(errorMessage).toBeVisible();
+
+    // Select an option
+    const firstRadio = d.getInputAt(0);
+    await firstRadio.click();
+
+    await expect(errorMessage).not.toBeVisible();
+  });
+});
+
+test.describe("Orientation", () => {
+  test(`GIVEN a horizontal radio group
+          WHEN rendered
+          THEN should have horizontal orientation`, async ({page}) => {
+    const d = await setup(page, "horizontal");
+    const root = d.getRoot();
+
+    await expect(root).toHaveAttribute("data-orientation", "horizontal");
+  });
+
+  test(`GIVEN a horizontal radio group
+          WHEN navigating with arrow keys
+          THEN should use left/right arrows`, async ({page}) => {
+    const d = await setup(page, "horizontal");
+    const firstRadio = d.getInputAt(0);
+    const secondRadio = d.getInputAt(1);
+
+    await firstRadio.focus();
+    await page.keyboard.press("ArrowRight");
+
+    await expect(secondRadio).toBeFocused();
+  });
+});
+

@@ -24,6 +24,7 @@ export const RadioGroupTrigger = component$((props: PublicRadioGroupControlProps
   const triggerId = `${context.localId}-trigger`;
   const descriptionId = `${context.localId}-description`;
   const errorId = `${context.localId}-error`;
+  const labelId = `${context.localId}-label-${value}`;
   useStyles$(styles);
 
   const isSelected = useComputed$(() => context.selectedValueSig.value === value);
@@ -72,6 +73,7 @@ export const RadioGroupTrigger = component$((props: PublicRadioGroupControlProps
       aria-checked={isSelected.value}
       aria-describedby={describedByLabels.value}
       aria-invalid={context.isErrorSig.value}
+      aria-labelledby={labelId}
       // Indicates whether this radio trigger is disabled
       disabled={context.isDisabledSig.value}
       tabIndex={
