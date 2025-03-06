@@ -12,22 +12,22 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 
 type TreeRootContext = {
-  treeNodeRefs: Signal<HTMLElement[]>;
+  rootRef: Signal<HTMLDivElement | undefined>;
 };
 
 export const TreeRootContextId = createContextId<TreeRootContext>("tree-root");
 
 export const TreeRootBase = component$((props: PropsOf<"div">) => {
-  const treeNodeRefs = useSignal<HTMLElement[]>([]);
+  const rootRef = useSignal<HTMLDivElement>();
 
   const context: TreeRootContext = {
-    treeNodeRefs
+    rootRef
   };
 
   useContextProvider(TreeRootContextId, context);
 
   return (
-    <Render role="tree" fallback="div" {...props}>
+    <Render ref={rootRef} role="tree" fallback="div" {...props}>
       <Slot />
     </Render>
   );
