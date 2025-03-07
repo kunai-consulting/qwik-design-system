@@ -30,10 +30,13 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   useOnWindow(
     "keydown",
     sync$((e: KeyboardEvent) => {
-      const keys = ["ArrowDown", "ArrowUp"];
+      if (!(e.target as Element)?.hasAttribute("data-qds-tree-item")) return;
+
+      const keys = ["ArrowDown", "ArrowUp", "Home", "End"];
 
       if (!keys.includes(e.key)) return;
-      if (!(e.target as Element)?.hasAttribute("data-qds-tree-item")) return;
+
+      console.log("keydown", e.key);
 
       e.preventDefault();
     })
@@ -71,6 +74,31 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
         }
         break;
       }
+
+      case "Home": {
+        treeWalker.currentNode = context.rootRef.value ?? document.body;
+        const firstNode = treeWalker.nextNode();
+        if (firstNode) {
+          (firstNode as HTMLElement).focus();
+        }
+        break;
+      }
+
+      case "End": {
+        treeWalker.currentNode = context.rootRef.value ?? document.body;
+        let lastNode = null;
+        let currentNode = treeWalker.nextNode();
+
+        while (currentNode) {
+          lastNode = currentNode;
+          currentNode = treeWalker.nextNode();
+        }
+
+        if (lastNode) {
+          (lastNode as HTMLElement).focus();
+        }
+        break;
+      }
     }
   });
 
@@ -98,23 +126,3 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
 });
 
 export const TreeItem = withAsChild(TreeItemBase, true);
-
-/**
- *  <Tree.Item />
- *  <Tree.Group>
- *    <Tree.Group>
- *     <Tree.Item></Tree.Item> <--- how do I know I'm nested
- *    <Tree.Item></Tree.Item>
- *    </Tree.Group>
- *  </Tree.Group>
- */
-
-/**
- *  <Tree.Item />
- *  <Tree.Group>
- *    <Tree.Item />
- *  </Tree.Group>
- *  <Tree.Group>
- *    <Tree.Item />
- * </Tree.Group>
- */
