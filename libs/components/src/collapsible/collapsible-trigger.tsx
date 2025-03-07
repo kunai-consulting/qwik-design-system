@@ -1,14 +1,7 @@
-import {
-  $,
-  type PropsOf,
-  Slot,
-  component$,
-  useContext,
-  useOnWindow
-} from "@builder.io/qwik";
-import { collapsibleContextId } from "./collapsible-context";
+import { $, type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
+import { collapsibleContextId } from "./collapsible-root";
 
-export const HCollapsibleTrigger = component$<PropsOf<"button">>(
+export const CollapsibleTrigger = component$<PropsOf<"button">>(
   ({ onClick$, ...props }) => {
     const context = useContext(collapsibleContextId);
     const contentId = `${context.itemId}-content`;
@@ -18,8 +11,6 @@ export const HCollapsibleTrigger = component$<PropsOf<"button">>(
       if (context.isOpenSig.value && context.collapsible === false) return;
       context.isOpenSig.value = !context.isOpenSig.value;
     });
-
-    useOnWindow("resize", context.getContentDimensions$);
 
     return (
       <button
