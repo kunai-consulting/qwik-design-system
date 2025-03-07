@@ -1,11 +1,12 @@
 import { type Component, type PropsOf, Slot, component$ } from "@builder.io/qwik";
-import { Collapsible } from "@qwik-ui/headless";
+import { CollapsibleTrigger } from "../collapsible/collapsible-trigger";
 
-export const TreeGroupTrigger: Component<PropsOf<typeof Collapsible.Trigger>> =
-  component$(({ ...props }) => {
+export const TreeGroupTrigger: Component<PropsOf<typeof CollapsibleTrigger>> = component$(
+  ({ ...props }) => {
     return (
-      <Collapsible.Trigger {...props}>
+      <CollapsibleTrigger {...props}>
         <Slot />
-      </Collapsible.Trigger>
+      </CollapsibleTrigger>
     );
-  });
+  }
+);

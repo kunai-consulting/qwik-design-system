@@ -7,7 +7,7 @@ import {
   useContextProvider,
   useId
 } from "@builder.io/qwik";
-import { Collapsible } from "@qwik-ui/headless";
+import { CollapsibleRoot } from "../collapsible/collapsible-root";
 import { withAsChild } from "../as-child/as-child";
 
 type TreeGroupContext = {
@@ -16,7 +16,7 @@ type TreeGroupContext = {
 
 export const groupContextId = createContextId<TreeGroupContext>("tree-group");
 
-export const TreeGroupBase: Component<PropsOf<typeof Collapsible.Root>> = component$(
+export const TreeGroupBase: Component<PropsOf<typeof CollapsibleRoot>> = component$(
   (props) => {
     console.log("TREE GROUP");
 
@@ -29,9 +29,9 @@ export const TreeGroupBase: Component<PropsOf<typeof Collapsible.Root>> = compon
     useContextProvider(groupContextId, groupContext);
 
     return (
-      <Collapsible.Root {...props}>
+      <CollapsibleRoot {...props}>
         <Slot />
-      </Collapsible.Root>
+      </CollapsibleRoot>
     );
   }
 );
