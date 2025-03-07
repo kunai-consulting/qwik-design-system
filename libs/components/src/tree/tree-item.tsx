@@ -22,6 +22,7 @@ interface TreeItemProps extends PropsOf<"div"> {
 export const TreeItemBase = component$((props: TreeItemProps) => {
   const context = useContext(TreeRootContextId);
   const isFocusedSig = useSignal(false);
+  const root = context.rootRef.value ?? document.body;
 
   /**
    *  Todo: Change this to a sync$ passed to the Render component once v2 is released (sync QRL serialization issue)
@@ -31,12 +32,9 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
     "keydown",
     sync$((e: KeyboardEvent) => {
       if (!(e.target as Element)?.hasAttribute("data-qds-tree-item")) return;
-
       const keys = ["ArrowDown", "ArrowUp", "Home", "End"];
 
       if (!keys.includes(e.key)) return;
-
-      console.log("keydown", e.key);
 
       e.preventDefault();
     })
@@ -76,7 +74,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       }
 
       case "Home": {
-        treeWalker.currentNode = context.rootRef.value ?? document.body;
+        treeWalker.currentNode = root;
         const firstNode = treeWalker.nextNode();
         if (firstNode) {
           (firstNode as HTMLElement).focus();
@@ -85,17 +83,17 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       }
 
       case "End": {
-        treeWalker.currentNode = context.rootRef.value ?? document.body;
-        let lastNode = null;
-        let currentNode = treeWalker.nextNode();
-
-        while (currentNode) {
-          lastNode = currentNode;
-          currentNode = treeWalker.nextNode();
+        treeWalker.currentNode = root;
+        while (treeWalker.lastChild()) {
+          // go to last child until we can't go deeper
         }
 
-        if (lastNode) {
-          (lastNode as HTMLElement).focus();
+        if (!(treeWalker.currentNode as Element).hasAttribute("data-qds-tree-item")) {
+          treeWalker.previousNode();
+        }
+
+        if (treeWalker.currentNode && treeWalker.currentNode !== root) {
+          (treeWalker.currentNode as HTMLElement).focus();
         }
         break;
       }
