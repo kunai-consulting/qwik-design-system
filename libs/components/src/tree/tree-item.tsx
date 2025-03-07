@@ -15,6 +15,7 @@ import {
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { TreeRootContextId } from "./tree-root";
+import { groupContextId } from "./tree-group";
 
 interface TreeItemProps extends PropsOf<"div"> {
   _index?: number;
@@ -23,6 +24,8 @@ interface TreeItemProps extends PropsOf<"div"> {
 export const TreeItemBase = component$((props: TreeItemProps) => {
   const context = useContext(TreeRootContextId);
   const root = context.rootRef.value ?? document.body;
+  const groupContext = useContext(groupContextId, null);
+  console.log("Group Id if it exists: ", groupContext?.id);
 
   const handleKeyNavigation$ = $((e: KeyboardEvent) => {
     const treeWalker = document.createTreeWalker(

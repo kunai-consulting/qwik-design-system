@@ -1,10 +1,33 @@
-import { type Component, type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import {
+  type Component,
+  type PropsOf,
+  Slot,
+  component$,
+  createContextId,
+  useContextProvider,
+  useId
+} from "@builder.io/qwik";
 import { Collapsible } from "@qwik-ui/headless";
 import { withAsChild } from "../as-child/as-child";
-import { Render } from "../render/render";
 
-export const TreeGroup: Component<PropsOf<typeof Collapsible.Root>> = component$(
+type TreeGroupContext = {
+  id: string;
+};
+
+export const groupContextId = createContextId<TreeGroupContext>("tree-group");
+
+export const TreeGroupBase: Component<PropsOf<typeof Collapsible.Root>> = component$(
   (props) => {
+    console.log("TREE GROUP");
+
+    const id = useId();
+
+    const groupContext: TreeGroupContext = {
+      id
+    };
+
+    useContextProvider(groupContextId, groupContext);
+
     return (
       <Collapsible.Root {...props}>
         <Slot />
@@ -12,3 +35,5 @@ export const TreeGroup: Component<PropsOf<typeof Collapsible.Root>> = component$
     );
   }
 );
+
+export const TreeGroup = withAsChild(TreeGroupBase, false);
