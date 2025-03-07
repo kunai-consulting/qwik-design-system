@@ -12,6 +12,8 @@ import {
 
 import { createContextId } from "@builder.io/qwik";
 import { useBoundSignal } from "../../utils/bound-signal";
+import { Render } from "../render/render";
+import { withAsChild } from "../as-child/as-child";
 
 export const collapsibleContextId = createContextId<CollapsibleContext>("Collapsible");
 
@@ -33,7 +35,7 @@ export type CollapsibleRootProps = PropsOf<"div"> & {
   collapsible?: boolean;
 };
 
-export const CollapsibleRoot = component$((props: CollapsibleRootProps) => {
+export const CollapsibleRootBase = component$((props: CollapsibleRootProps) => {
   const {
     disabled,
     onChange$,
@@ -76,8 +78,9 @@ export const CollapsibleRoot = component$((props: CollapsibleRootProps) => {
   useContextProvider(collapsibleContextId, context);
 
   return (
-    <div
+    <Render
       id={itemId}
+      fallback="div"
       data-collapsible
       data-disabled={context.disabled ? "" : undefined}
       data-open={context.isOpenSig.value ? "" : undefined}
@@ -86,6 +89,8 @@ export const CollapsibleRoot = component$((props: CollapsibleRootProps) => {
       {...rest}
     >
       <Slot />
-    </div>
+    </Render>
   );
 });
+
+export const CollapsibleRoot = withAsChild(CollapsibleRootBase);

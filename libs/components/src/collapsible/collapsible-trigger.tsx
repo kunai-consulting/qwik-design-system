@@ -1,7 +1,9 @@
 import { $, type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
 import { collapsibleContextId } from "./collapsible-root";
+import { Render } from "../render/render";
+import { withAsChild } from "../as-child/as-child";
 
-export const CollapsibleTrigger = component$<PropsOf<"button">>(
+export const CollapsibleTriggerBase = component$<PropsOf<"button">>(
   ({ onClick$, ...props }) => {
     const context = useContext(collapsibleContextId);
     const contentId = `${context.itemId}-content`;
@@ -13,8 +15,9 @@ export const CollapsibleTrigger = component$<PropsOf<"button">>(
     });
 
     return (
-      <button
+      <Render
         {...props}
+        fallback="button"
         id={triggerId}
         ref={context.triggerRef}
         disabled={context.disabled}
@@ -27,7 +30,9 @@ export const CollapsibleTrigger = component$<PropsOf<"button">>(
         onClick$={[handleClick$, onClick$]}
       >
         <Slot />
-      </button>
+      </Render>
     );
   }
 );
+
+export const CollapsibleTrigger = withAsChild(CollapsibleTriggerBase);
