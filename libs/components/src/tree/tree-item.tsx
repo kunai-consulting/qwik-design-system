@@ -100,20 +100,17 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
     }
   });
 
+  const handleFocus$ = $((e: FocusEvent) => {
+    context.currentFocusEl.value = e.target as HTMLElement;
+  });
+
   return (
     <Render
       role="treeitem"
       fallback="div"
       tabIndex={0}
-      onKeyDown$={handleKeyNavigation$}
-      onFocus$={(e, el) => {
-        context.currentFocusEl.value = el;
-        console.log(context.currentFocusEl.value);
-        isFocusedSig.value = true;
-      }}
-      onBlur$={() => {
-        isFocusedSig.value = false;
-      }}
+      onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
+      onFocus$={[handleFocus$, props.onFocus$]}
       data-qds-tree-item
       data-focus={isFocusedSig.value}
       {...props}
