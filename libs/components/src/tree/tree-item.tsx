@@ -9,7 +9,8 @@ import {
   useOn,
   useOnWindow,
   useSignal,
-  useTask$
+  useTask$,
+  useVisibleTask$
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
@@ -21,24 +22,7 @@ interface TreeItemProps extends PropsOf<"div"> {
 
 export const TreeItemBase = component$((props: TreeItemProps) => {
   const context = useContext(TreeRootContextId);
-  const isFocusedSig = useSignal(false);
   const root = context.rootRef.value ?? document.body;
-
-  /**
-   *  Todo: Change this to a sync$ passed to the Render component once v2 is released (sync QRL serialization issue)
-   *
-   */
-  useOnWindow(
-    "keydown",
-    sync$((e: KeyboardEvent) => {
-      if (!(e.target as Element)?.hasAttribute("data-qds-tree-item")) return;
-      const keys = ["ArrowDown", "ArrowUp", "Home", "End"];
-
-      if (!keys.includes(e.key)) return;
-
-      e.preventDefault();
-    })
-  );
 
   const handleKeyNavigation$ = $((e: KeyboardEvent) => {
     const treeWalker = document.createTreeWalker(
@@ -112,7 +96,6 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
       onFocus$={[handleFocus$, props.onFocus$]}
       data-qds-tree-item
-      data-focus={isFocusedSig.value}
       {...props}
     >
       <Slot />
