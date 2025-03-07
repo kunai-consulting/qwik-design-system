@@ -48,7 +48,7 @@ export const TreeRootBase = component$((props: PropsOf<"div">) => {
   useContextProvider(TreeRootContextId, context);
 
   return (
-    <Render ref={rootRef} role="tree" fallback="div" {...props}>
+    <Render ref={rootRef} role="treegrid" fallback="div" {...props}>
       <Slot />
     </Render>
   );

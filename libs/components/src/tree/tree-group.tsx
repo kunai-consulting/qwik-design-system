@@ -29,7 +29,7 @@ export const TreeGroupBase: Component<PropsOf<typeof CollapsibleRoot>> = compone
     useContextProvider(groupContextId, groupContext);
 
     return (
-      <CollapsibleRoot {...props}>
+      <CollapsibleRoot role="row" {...props}>
         <Slot />
       </CollapsibleRoot>
     );

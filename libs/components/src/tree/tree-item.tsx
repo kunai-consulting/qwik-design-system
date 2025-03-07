@@ -93,11 +93,12 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
 
   return (
     <Render
-      role="treeitem"
+      role="gridcell"
       fallback="div"
       tabIndex={0}
       onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
       onFocus$={[handleFocus$, props.onFocus$]}
+      _index={props._index}
       data-qds-tree-item
       {...props}
     >
