@@ -19,7 +19,7 @@ import { groupContextId } from "./tree-group";
 
 interface TreeItemProps extends PropsOf<"div"> {
   _index?: number;
-  isGroup?: boolean;
+  groupTrigger?: boolean;
 }
 
 export const TreeItemBase = component$((props: TreeItemProps) => {
@@ -97,7 +97,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       return 1;
     }
 
-    if (props.isGroup) {
+    if (props.groupTrigger) {
       return groupContext?.level;
     }
 
