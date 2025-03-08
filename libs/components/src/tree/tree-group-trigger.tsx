@@ -9,7 +9,7 @@ import { withAsChild } from "../as-child/as-child";
 export const TreeGroupTriggerBase: Component<PropsOf<typeof CollapsibleTrigger>> =
   component$(({ ...props }) => {
     return (
-      <TreeItem asChild>
+      <TreeItem asChild isGroup>
         {/* When using asChild internally, you must always use asChild on the base, which is a component$ comp, not the inlne comp */}
         <CollapsibleTriggerBase {...props}>
           <Slot />

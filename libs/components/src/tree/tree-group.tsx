@@ -27,7 +27,7 @@ export const TreeGroupBase: Component<PropsOf<typeof CollapsibleRoot>> = compone
     const parentContext = useContext(groupContextId, null);
 
     // default level is 2, if there's a parent, increment its level
-    const level = parentContext ? parentContext.level + 1 : 2;
+    const level = parentContext ? parentContext.level + 1 : 1;
 
     const groupContext: TreeGroupContext = {
       id,
@@ -37,7 +37,7 @@ export const TreeGroupBase: Component<PropsOf<typeof CollapsibleRoot>> = compone
     useContextProvider(groupContextId, groupContext);
 
     return (
-      <CollapsibleRoot role="row" {...props} data-level={level}>
+      <CollapsibleRoot role="row" {...props}>
         <Slot />
       </CollapsibleRoot>
     );

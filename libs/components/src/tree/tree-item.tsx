@@ -19,6 +19,7 @@ import { groupContextId } from "./tree-group";
 
 interface TreeItemProps extends PropsOf<"div"> {
   _index?: number;
+  isGroup?: boolean;
 }
 
 export const TreeItemBase = component$((props: TreeItemProps) => {
@@ -91,18 +92,29 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
     context.currentFocusEl.value = e.target as HTMLElement;
   });
 
-  const level = groupContext?.level ?? 1;
+  function getLevel() {
+    if (!groupContext?.level) {
+      return 1;
+    }
+
+    if (props.isGroup) {
+      return groupContext?.level;
+    }
+
+    return groupContext?.level + 1;
+  }
 
   return (
     <Render
+      {...props}
       role="gridcell"
       fallback="div"
       tabIndex={0}
       onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
       onFocus$={[handleFocus$, props.onFocus$]}
       data-qds-tree-item
-      data-level={level}
-      {...props}
+      data-level={getLevel()}
+      data-group
     >
       <Slot />
     </Render>
