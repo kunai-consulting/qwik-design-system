@@ -98,7 +98,6 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       tabIndex={0}
       onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
       onFocus$={[handleFocus$, props.onFocus$]}
-      _index={props._index}
       data-qds-tree-item
       {...props}
     >
