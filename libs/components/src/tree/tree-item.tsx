@@ -91,6 +91,8 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
     context.currentFocusEl.value = e.target as HTMLElement;
   });
 
+  const level = groupContext?.level ?? 1;
+
   return (
     <Render
       role="gridcell"
@@ -99,6 +101,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
       onFocus$={[handleFocus$, props.onFocus$]}
       data-qds-tree-item
+      data-level={level}
       {...props}
     >
       <Slot />
