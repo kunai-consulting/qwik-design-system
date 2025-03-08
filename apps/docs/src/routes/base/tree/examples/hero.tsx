@@ -34,8 +34,10 @@ function renderTreeItem(item: TreeItemType) {
   if (item.children && item.children.length > 0) {
     return (
       <Tree.Group key={item.id}>
-        <Tree.GroupTrigger>
-          <Tree.GroupLabel>{item.label}</Tree.GroupLabel>
+        <Tree.GroupTrigger asChild>
+          <output>
+            <Tree.GroupLabel>{item.label}</Tree.GroupLabel>
+          </output>
         </Tree.GroupTrigger>
         <Tree.GroupContent>
           {item.children.map((child) => renderTreeItem(child))}

@@ -1,15 +1,21 @@
 import { type Component, type PropsOf, Slot, component$ } from "@builder.io/qwik";
-import { CollapsibleTrigger } from "../collapsible/collapsible-trigger";
+import {
+  type CollapsibleTrigger,
+  CollapsibleTriggerBase
+} from "../collapsible/collapsible-trigger";
 import { TreeItem } from "./tree-item";
+import { withAsChild } from "../as-child/as-child";
 
-export const TreeGroupTrigger: Component<PropsOf<typeof CollapsibleTrigger>> = component$(
-  ({ ...props }) => {
+export const TreeGroupTriggerBase: Component<PropsOf<typeof CollapsibleTrigger>> =
+  component$(({ ...props }) => {
     return (
       <TreeItem asChild>
-        <CollapsibleTrigger {...props}>
+        {/* When using asChild internally, you must always use asChild on the base, which is a component$ comp, not the inlne comp */}
+        <CollapsibleTriggerBase {...props}>
           <Slot />
-        </CollapsibleTrigger>
+        </CollapsibleTriggerBase>
       </TreeItem>
     );
-  }
-);
+  });
+
+export const TreeGroupTrigger = withAsChild(TreeGroupTriggerBase);
