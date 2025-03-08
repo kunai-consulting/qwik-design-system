@@ -1,17 +1,4 @@
-import {
-  $,
-  type PropsOf,
-  Slot,
-  component$,
-  sync$,
-  useComputed$,
-  useContext,
-  useOn,
-  useOnWindow,
-  useSignal,
-  useTask$,
-  useVisibleTask$
-} from "@builder.io/qwik";
+import { $, type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { TreeRootContextId } from "./tree-root";
@@ -20,13 +7,13 @@ import { groupContextId } from "./tree-group";
 interface TreeItemProps extends PropsOf<"div"> {
   _index?: number;
   groupTrigger?: boolean;
+  groupId?: string;
 }
 
 export const TreeItemBase = component$((props: TreeItemProps) => {
   const context = useContext(TreeRootContextId);
   const root = context.rootRef.value ?? document.body;
   const groupContext = useContext(groupContextId, null);
-  console.log("Group Id if it exists: ", groupContext?.id);
 
   const handleKeyNavigation$ = $((e: KeyboardEvent) => {
     const treeWalker = document.createTreeWalker(
@@ -121,4 +108,8 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   );
 });
 
-export const TreeItem = withAsChild(TreeItemBase, true);
+export const TreeItem = withAsChild(TreeItemBase, true, (props) => {
+  console.log("GROUP ID: ", props.groupId);
+
+  return props;
+});
