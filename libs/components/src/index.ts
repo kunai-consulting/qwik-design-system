@@ -11,3 +11,6 @@ export * as Slider from "./slider";
 export * as Toast from "./toast";
 export * as Resizable from "./resizable";
 export * as Tree from "./tree";
+
+export { Render } from "./render/render";
+export { withAsChild } from "./as-child/as-child";

@@ -14,7 +14,7 @@ export const CheckboxDescription = component$((props: PublicCheckboxDescriptionP
   const context = useContext(checkboxContextId);
   const descriptionId = `${context.localId}-description`;
   useTask$(() => {
-    if (!context.isDescription) {
+    if (!context.description) {
       console.warn(
         "Qwik Design System Warning: No description prop provided to the Checkbox Root component."
       );

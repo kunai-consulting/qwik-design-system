@@ -84,8 +84,8 @@ import { Tooltip } from "@kunai-consulting/qwik";
 export const HelpTip = component$(({ trigger }) => {
   return (
     <Tooltip.Root>
-      <Tooltip.Trigger asChild>
-        {trigger}
+      <Tooltip.Trigger>
+        {icon}
       </Tooltip.Trigger>
       <Tooltip.Content class="help-bubble">
         <Slot />
@@ -99,7 +99,7 @@ export default component$(() => {
       <form>
         <label>
           Username
-          <HelpTip trigger={<Icon name="question-circle" />}>
+          <HelpTip icon={<QuestionCircleIcon />}>
             Choose a username between 3-20 characters
           </HelpTip>
         </label>
@@ -126,4 +126,94 @@ With the `asChild` prop, consumers can even replace our default elements with th
 
 > For more on composability, see [this article](https://atomicdesign.bradfrost.com/chapter-2/).
 
-This lets you maintain your component structure while still getting all the built-in behavior.
+This lets you maintain your component structure while still getting all the built-in behavior. The next section covers `asChild` in more detail.
+
+## What is asChild?
+
+The `asChild` prop enables component polymorphism - the ability to change a component's underlying HTML element while preserving its functionality. This pattern allows developers to:
+
+- Use their own elements or components
+- Maintain semantic structure
+- Compose multiple components together seamlessly
+
+For example, instead of this:
+
+```jsx
+<Button>
+  <Link href="/about">About</Link>
+</Button>
+```
+
+You can write this:
+
+```jsx
+<Button asChild>
+  <Link href="/about">About</Link>
+</Button>
+```
+
+### Implementing asChild in Your Components
+
+#### Step 1: Import the Render Component
+
+The `Render` component is the foundation of the `asChild` pattern in Qwik Design System. It handles:
+
+- Merging props between your component and the consumer's element
+- Handling the JSX type given by the consumer
+- Giving fallback types to the author, with a better DX.
+
+<Showcase name="render" />
+
+`fallback` is the default element type to render if `asChild` is not used. 
+
+#### Step 2: Use the withAsChild Function
+
+The `withAsChild` function creates a wrapper around your base component that enables the `asChild` functionality:
+
+<Showcase name="as-child" />
+
+In this example:
+1. `TooltipTriggerBase` is your original component implementation
+2. `withAsChild` wraps it to create the consumer-facing `TooltipTrigger` component
+3. The consumer passes a `div` element as the child, and the `TooltipTrigger` component will now become the `div` element.
+
+> The returned component is an inline component. This is needed to be able to find the consumer's children, and pass the props to the consumer's children.
+
+### Usage Example
+
+```jsx
+// Default usage (renders a button)
+<TooltipTrigger>Click me</TooltipTrigger>
+
+// With asChild (renders a div)
+<TooltipTrigger asChild>
+  <div>Custom trigger element</div>
+</TooltipTrigger>
+```
+
+Be careful with the `asChild` and inline components. There is a [common pitfall where library authors pass inline components to the asChild prop](/contributing/tradeoffs/#aschild-and-inline-components), and then wonder why the component is not behaving as expected.
+
+
+### Accessibility Considerations
+
+When using `asChild`, accessibility responsibility shifts partially to the consumer. Remember:
+
+⚠️ **Important**: When allowing element substitution, ensure:
+
+- Interactive elements are focusable (add `tabindex="0"` when needed)
+- Proper keyboard event handling is maintained
+- ARIA attributes are preserved or properly implemented
+- The replacement element semantically makes sense for the component's purpose
+
+For example, if replacing a `button` with a `div`:
+
+```jsx
+<Button asChild>
+  <div 
+    tabIndex={0} 
+    onKeyDown$={(e) => e.key === 'Enter' && handleClick()}
+  >
+    Click me
+  </div>
+</Button>
+```

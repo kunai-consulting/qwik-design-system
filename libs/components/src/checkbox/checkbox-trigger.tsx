@@ -22,7 +22,7 @@ export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps
   const errorId = `${context.localId}-error`;
   const describedByLabels = useComputed$(() => {
     const labels = [];
-    if (context.isDescription) {
+    if (context.description) {
       labels.push(descriptionId);
     }
     if (context.isErrorSig.value) {

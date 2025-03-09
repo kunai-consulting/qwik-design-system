@@ -22,7 +22,7 @@ export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   /** Whether the checkbox is disabled */
   disabled?: boolean;
   /** Whether the checkbox has a description */
-  isDescription?: boolean;
+  description?: boolean;
   /** Name attribute for the hidden input element */
   name?: string;
   /** Whether the checkbox is required */
@@ -37,7 +37,7 @@ export const CheckboxRoot = component$((props: PublicCheckboxRootProps) => {
     checked,
     onClick$,
     onChange$,
-    isDescription,
+    description,
     name,
     required,
     value,
@@ -56,7 +56,7 @@ export const CheckboxRoot = component$((props: PublicCheckboxRootProps) => {
     isCheckedSig,
     isDisabledSig,
     localId,
-    isDescription,
+    description,
     name,
     required,
     value,

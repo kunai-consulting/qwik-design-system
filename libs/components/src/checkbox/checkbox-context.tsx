@@ -7,7 +7,7 @@ export type CheckboxContext = {
   isDisabledSig: Signal<boolean | undefined>;
   isErrorSig: Signal<boolean | undefined>;
   localId: string;
-  isDescription: boolean | undefined;
+  description: boolean | undefined;
   name: string | undefined;
   required: boolean | undefined;
   value: string | undefined;
