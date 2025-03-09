@@ -1,4 +1,4 @@
-import { type PropsOf, component$, useContext } from "@builder.io/qwik";
+import { type PropsOf, component$, useContext } from "@qwik.dev/core";
 import { qrCodeContextId } from "./qr-code-context";
 
 /** Renders the QR code pattern as an SVG path */

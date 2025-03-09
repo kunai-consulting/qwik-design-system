@@ -6,8 +6,8 @@ import {
   useContext,
   useOnDocument,
   useSignal
-} from "@builder.io/qwik";
-import type { PropFunction } from "@builder.io/qwik";
+} from "@qwik.dev/core";
+import type { PropFunction } from "@qwik.dev/core";
 import { scrollAreaContextId } from "./scroll-area-context";
 type PublicScrollAreaThumb = {
   /** Reference to the thumb element */

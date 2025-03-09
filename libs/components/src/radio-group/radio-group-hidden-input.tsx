@@ -1,4 +1,4 @@
-import { $, type PropsOf, component$, useContext } from "@builder.io/qwik";
+import { $, type PropsOf, component$, useContext } from "@qwik.dev/core";
 import { VisuallyHidden } from "../visually-hidden/visually-hidden";
 import { radioGroupContextId } from "./radio-group-context";
 

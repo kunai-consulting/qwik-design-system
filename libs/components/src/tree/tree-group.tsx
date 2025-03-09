@@ -7,7 +7,7 @@ import {
   useContext,
   useContextProvider,
   useId
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { CollapsibleRoot } from "../collapsible/collapsible-root";
 

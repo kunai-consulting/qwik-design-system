@@ -1,4 +1,4 @@
-import { $, type PropsOf, Slot, component$, sync$, useContext } from "@builder.io/qwik";
+import { $, type PropsOf, Slot, component$, sync$, useContext } from "@qwik.dev/core";
 import { Label } from "../label";
 import { radioGroupContextId } from "./radio-group-context";
 

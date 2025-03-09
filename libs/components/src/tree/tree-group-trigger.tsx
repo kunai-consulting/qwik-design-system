@@ -4,7 +4,7 @@ import {
   Slot,
   component$,
   useContext
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import {
   type CollapsibleTrigger,

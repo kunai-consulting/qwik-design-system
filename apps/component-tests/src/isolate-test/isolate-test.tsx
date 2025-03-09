@@ -1,6 +1,6 @@
-import { type Component, component$, useSignal, useTask$ } from "@builder.io/qwik";
-import { useLocation } from "@builder.io/qwik-city";
-import { isDev } from "@builder.io/qwik/build";
+import { type Component, component$, useSignal, useTask$ } from "@qwik.dev/core";
+import { useLocation } from "@qwik.dev/router";
+import { isDev } from "@qwik.dev/core/build";
 import { metaGlobComponents } from "./component-imports";
 
 /**

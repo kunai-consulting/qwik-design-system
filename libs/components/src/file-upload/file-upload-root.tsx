@@ -5,7 +5,7 @@ import {
   component$,
   useContextProvider,
   useSignal
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { type FileInfo, fileUploadContextId } from "./file-upload-context";
 type HTMLDivProps = PropsOf<"div">;
 /**

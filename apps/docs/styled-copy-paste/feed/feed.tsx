@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
 import { cn } from "~/utils/cn";
 
 type RootProps = PropsOf<"div">;

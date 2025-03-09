@@ -7,7 +7,7 @@ import {
   useContext,
   useStyles$,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { radioGroupContextId } from "./radio-group-context";
 import "./radio-group.css";
 import styles from "./radio-group.css?inline";

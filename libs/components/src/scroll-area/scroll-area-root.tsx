@@ -6,7 +6,7 @@ import {
   useContextProvider,
   useSignal,
   useStyles$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { scrollAreaContextId } from "./scroll-area-context";
 import styles from "./scroll-area.css?inline";
 type PublicScrollbarVisibility = "hover" | "scroll" | "auto" | "always";

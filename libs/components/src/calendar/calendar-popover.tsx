@@ -7,8 +7,8 @@ import {
   useContext,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
-import { isServer } from "@builder.io/qwik/build";
+} from "@qwik.dev/core";
+import { isServer } from "@qwik.dev/core/build";
 import { Popover, usePopover } from "@qwik-ui/headless";
 import { calendarContextId } from "./calendar-context";
 

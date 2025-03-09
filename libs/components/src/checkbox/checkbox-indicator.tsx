@@ -5,7 +5,7 @@ import {
   useContext,
   useStyles$,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { CheckboxContext, checkboxContextId } from "./checkbox-context";
 import "./checkbox.css";
 import { withAsChild } from "../as-child/as-child";

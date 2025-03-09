@@ -10,7 +10,7 @@ import {
   useSignal,
   useStyles$,
   useStylesScoped$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 
 export default component$(() => {
   const isDisabled = useSignal(true);

@@ -7,7 +7,7 @@ import {
   useSignal,
   useStyles$,
   useVisibleTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { usePopover } from "@qwik-ui/headless";
 import { type ToastPosition, toastContextId } from "./toast-context";
 import styles from "./toast.css?inline";

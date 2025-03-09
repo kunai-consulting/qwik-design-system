@@ -1,4 +1,4 @@
-import { Fragment, component$, useContext, useTask$ } from "@builder.io/qwik";
+import { Fragment, component$, useContext, useTask$ } from "@qwik.dev/core";
 import { Popover } from "@qwik-ui/headless";
 import { rootContextId } from "~/routes/layout";
 import type { AnatomyItem, ComponentEntry, ParsedProps } from "../../../auto-api/types";

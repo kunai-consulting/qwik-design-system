@@ -1,4 +1,4 @@
-import { component$, useStyles$ } from "@builder.io/qwik";
+import { component$, useStyles$ } from "@qwik.dev/core";
 import { Slider } from "@kunai-consulting/qwik";
 import styles from "./slider-custom.css?inline";
 

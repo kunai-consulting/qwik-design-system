@@ -5,7 +5,7 @@ import {
   component$,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 
 import { cn } from "~/utils/cn";
 

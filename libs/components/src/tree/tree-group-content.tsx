@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
 import { CollapsibleContent } from "../collapsible/collapsible-content";
 
 export const TreeGroupContent = component$(

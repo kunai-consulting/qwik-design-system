@@ -6,7 +6,9 @@
   },
   "engines-annotation": "Mostly required by sharp which needs a Node-API v9 compatible runtime",
   "private": true,
-  "trustedDependencies": ["sharp"],
+  "trustedDependencies": [
+    "sharp"
+  ],
   "trustedDependencies-annotation": "Needed for bun to allow running install scripts",
   "type": "module",
   "scripts": {
@@ -23,8 +25,6 @@
     "qwik": "qwik"
   },
   "devDependencies": {
-    "@builder.io/qwik": "https://pkg.pr.new/@builder.io/qwik@7362",
-    "@builder.io/qwik-city": "https://pkg.pr.new/@builder.io/qwik-city@7362",
     "@kunai-consulting/qwik": "workspace:*",
     "@qwik-ui/headless": "^0.6.4",
     "@qwikest/icons": "^0.0.13",
@@ -42,7 +42,9 @@
     "vite-tsconfig-paths": "^4.2.1",
     "wrangler": "^3.0.0",
     "@fontsource/proza-libre": "^5.0.12",
-    "vite-plugin-image-optimizer": "^1.1.8"
+    "vite-plugin-image-optimizer": "^1.1.8",
+    "@qwik.dev/router": "2.0.0-alpha.8",
+    "@qwik.dev/core": "2.0.0-alpha.8"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.0",

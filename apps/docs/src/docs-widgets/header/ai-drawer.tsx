@@ -1,4 +1,4 @@
-import { Slot, component$ } from "@builder.io/qwik";
+import { Slot, component$ } from "@qwik.dev/core";
 import { Modal } from "@qwik-ui/headless";
 import { AIButton } from "../docs-ai/ai-button";
 import { Sparkles } from "../sparkles/sparkles";

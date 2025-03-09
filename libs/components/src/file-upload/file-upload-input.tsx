@@ -1,4 +1,4 @@
-import { $, type PropsOf, component$, noSerialize, useContext } from "@builder.io/qwik";
+import { $, type PropsOf, component$, noSerialize, useContext } from "@qwik.dev/core";
 import { type FileInfo, fileUploadContextId } from "./file-upload-context";
 type PublicInputProps = PropsOf<"input">;
 /**

@@ -8,7 +8,7 @@ import {
   sync$,
   useComputed$,
   useContext
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { syncFixedInV2, withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { checkboxContextId } from "./checkbox-context";

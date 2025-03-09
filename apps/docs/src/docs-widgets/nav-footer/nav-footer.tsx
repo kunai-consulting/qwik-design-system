@@ -1,5 +1,5 @@
-import { Slot, component$, isDev, useStyles$ } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
+import { Slot, component$, isDev, useStyles$ } from "@qwik.dev/core";
+import { Link } from "@qwik.dev/router";
 import { SearchModal } from "~/docs-widgets/search/search";
 import { AIDrawer } from "../header/ai-drawer";
 import styles from "./nav-footer.css?inline";

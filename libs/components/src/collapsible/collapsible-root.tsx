@@ -8,9 +8,9 @@ import {
   useId,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 
-import { createContextId } from "@builder.io/qwik";
+import { createContextId } from "@qwik.dev/core";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";

@@ -5,7 +5,7 @@ import {
   Slot,
   component$,
   useContext
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { scrollAreaContextId } from "./scroll-area-context";
 type PublicScrollBarType = PropsOf<"div"> & {
   /** The orientation of the scrollbar */

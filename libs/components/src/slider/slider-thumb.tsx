@@ -11,7 +11,7 @@ import {
   useSignal,
   useStylesScoped$,
   useVisibleTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { type SliderContext, type ThumbType, sliderContextId } from "./slider-context";
 interface PublicThumbProps extends PropsOf<"div"> {
   /** The type of thumb - either 'start' or 'end' for range sliders */

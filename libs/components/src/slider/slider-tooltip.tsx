@@ -1,4 +1,4 @@
-import { type PropsOf, component$, useComputed$, useContext } from "@builder.io/qwik";
+import { type PropsOf, component$, useComputed$, useContext } from "@qwik.dev/core";
 import { sliderContextId } from "./slider-context";
 type PublicTooltipPlacement = "top" | "bottom" | "left" | "right";
 interface PublicTooltipProps extends PropsOf<"div"> {

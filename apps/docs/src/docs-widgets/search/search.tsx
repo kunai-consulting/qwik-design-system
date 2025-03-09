@@ -1,5 +1,5 @@
-import { $, Slot, component$, useOnWindow, useSignal, useTask$ } from "@builder.io/qwik";
-import { isServer } from "@builder.io/qwik/build";
+import { $, Slot, component$, useOnWindow, useSignal, useTask$ } from "@qwik.dev/core";
+import { isServer } from "@qwik.dev/core/build";
 import { Combobox, Modal } from "@qwik-ui/headless";
 import { LuSearch } from "@qwikest/icons/lucide";
 import { cn } from "~/utils/cn";
