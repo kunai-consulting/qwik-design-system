@@ -1,8 +1,8 @@
 import { $, type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-import { TreeRootContextId } from "./tree-root";
 import { groupContextId } from "./tree-group";
+import { TreeRootContextId } from "./tree-root";
 
 interface TreeItemProps extends PropsOf<"div"> {
   _index?: number;

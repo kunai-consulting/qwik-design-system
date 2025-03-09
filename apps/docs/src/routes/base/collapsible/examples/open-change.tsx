@@ -1,6 +1,6 @@
-import { component$, useStyles$, useSignal, $ } from '@builder.io/qwik';
-import { Collapsible } from '@qwik-ui/headless';
-import { LuChevronDown } from '@qwikest/icons/lucide';
+import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
+import { Collapsible } from "@qwik-ui/headless";
+import { LuChevronDown } from "@qwikest/icons/lucide";
 
 export default component$(() => {
   useStyles$(styles);
@@ -32,4 +32,4 @@ export default component$(() => {
 });
 
 // internal
-import styles from '../snippets/collapsible.css?inline';
+import styles from "../snippets/collapsible.css?inline";

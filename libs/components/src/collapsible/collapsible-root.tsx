@@ -1,19 +1,19 @@
 import {
-  component$,
+  type PropsOf,
+  type QRL,
+  type Signal,
   Slot,
+  component$,
   useContextProvider,
   useId,
   useSignal,
-  type Signal,
-  type PropsOf,
-  type QRL,
   useTask$
 } from "@builder.io/qwik";
 
 import { createContextId } from "@builder.io/qwik";
 import { useBoundSignal } from "../../utils/bound-signal";
-import { Render } from "../render/render";
 import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
 
 export const collapsibleContextId = createContextId<CollapsibleContext>("Collapsible");
 

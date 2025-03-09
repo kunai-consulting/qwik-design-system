@@ -1,5 +1,5 @@
-import { component$ } from '@builder.io/qwik';
-import { Collapsible } from '@qwik-ui/headless';
+import { component$ } from "@builder.io/qwik";
+import { Collapsible } from "@qwik-ui/headless";
 
 export default component$(() => (
   <Collapsible.Root>

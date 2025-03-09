@@ -5,13 +5,13 @@ import {
   component$,
   useContext
 } from "@builder.io/qwik";
+import { withAsChild } from "../as-child/as-child";
 import {
   type CollapsibleTrigger,
   CollapsibleTriggerBase
 } from "../collapsible/collapsible-trigger";
-import { TreeItem } from "./tree-item";
-import { withAsChild } from "../as-child/as-child";
 import { groupContextId } from "./tree-group";
+import { TreeItem } from "./tree-item";
 
 export const TreeGroupTriggerBase: Component<PropsOf<typeof CollapsibleTrigger>> =
   component$(({ ...props }) => {

@@ -8,8 +8,8 @@ import {
   useContextProvider,
   useId
 } from "@builder.io/qwik";
-import { CollapsibleRoot } from "../collapsible/collapsible-root";
 import { withAsChild } from "../as-child/as-child";
+import { CollapsibleRoot } from "../collapsible/collapsible-root";
 
 type TreeGroupContext = {
   id: string;

@@ -1,6 +1,6 @@
-import { component$, useSignal, useStyles$ } from '@builder.io/qwik';
-import { Collapsible } from '@qwik-ui/headless';
-import styles from '../snippets/collapsible.css?inline';
+import { component$, useSignal, useStyles$ } from "@builder.io/qwik";
+import { Collapsible } from "@qwik-ui/headless";
+import styles from "../snippets/collapsible.css?inline";
 
 export default component$(() => {
   useStyles$(styles);
@@ -9,7 +9,7 @@ export default component$(() => {
   return (
     <>
       <p>
-        is open: <strong>{isOpen.value ? 'true' : 'false'}</strong>
+        is open: <strong>{isOpen.value ? "true" : "false"}</strong>
       </p>
 
       <Collapsible.Root class="collapsible" bind:open={isOpen}>
