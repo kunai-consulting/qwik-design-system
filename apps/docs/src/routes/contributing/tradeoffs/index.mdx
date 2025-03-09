@@ -60,6 +60,14 @@ Our current approach passes information up front through props:
 </Checkbox.Root>
 ```
 
+What's happening under the hood:
+
+```tsx
+<button aria-describedby={context.description ? descriptionId : undefined}>
+    <Slot />
+</button>
+```
+
 This pattern:
 - Informs `Root` ahead of time that a description exists
 - Allows proper ARIA attributes to be added when components render
