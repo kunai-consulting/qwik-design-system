@@ -1,12 +1,12 @@
 import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
-import { Collapsible } from "@qwik-ui/headless";
+import { CollapsibleContent } from "../collapsible/collapsible-content";
 
 export const TreeGroupContent = component$(
-  (props: PropsOf<typeof Collapsible.Content>) => {
+  (props: PropsOf<typeof CollapsibleContent>) => {
     return (
-      <Collapsible.Content {...props}>
+      <CollapsibleContent {...props}>
         <Slot />
-      </Collapsible.Content>
+      </CollapsibleContent>
     );
   }
 );
