@@ -8,7 +8,12 @@ export default component$(() => {
   return (
     <Checkbox.Root description>
       <div
-        style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          marginBottom: "8px"
+        }}
       >
         <Checkbox.Trigger class="checkbox-trigger">
           <Checkbox.Indicator class="checkbox-indicator">
