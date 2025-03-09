@@ -7,9 +7,9 @@ export default component$(() => {
   const items = Array.from({ length: 4 }, (_, i) => `Item ${i + 1}`);
 
   return (
-    <RadioGroup.Root class="radio-group">
+    <RadioGroup.Root class="radio-group-root">
       <RadioGroup.Label class="radio-group-label">Items</RadioGroup.Label>
-      {items.map((item, index) => (
+      {items.map((item) => (
         <RadioGroup.Item class="radio-group-item" key={item} value={item}>
           <RadioGroup.Label>{item}</RadioGroup.Label>
           <RadioGroup.Trigger class="radio-group-trigger" value={item}>
@@ -24,4 +24,4 @@ export default component$(() => {
 });
 
 //  styles
-import styles from "./radio-group.css?inline";
+import styles from "./radio-group-custom.css?inline";

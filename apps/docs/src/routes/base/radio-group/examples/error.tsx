@@ -1,4 +1,4 @@
-import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
+import { component$, useStyles$ } from "@builder.io/qwik";
 import { RadioGroup } from "@kunai-consulting/qwik";
 import { LuCircle } from "@qwikest/icons/lucide";
 
@@ -8,7 +8,7 @@ export default component$(() => {
 
   return (
     <div class="flex justify-start">
-      <RadioGroup.Root class="radio-group">
+      <RadioGroup.Root class="radio-group-root">
         <RadioGroup.Label class="radio-group-label">Items</RadioGroup.Label>
         {items.map((item, index) => (
           <RadioGroup.Item class="radio-group-item" key={item} value={item}>
@@ -31,4 +31,4 @@ export default component$(() => {
 });
 
 //  styles
-import styles from "./radio-group.css?inline";
+import styles from "./radio-group-custom.css?inline";

@@ -3,6 +3,8 @@ import { api } from "./auto-api/api";
 # Radio Group
 Select a single option from a list of choices with keyboard navigation and accessibility support.
 <Showcase name="hero" />
+<Showcase name="horizontal" />
+<Showcase name="disabled" />
 ## Features
 <Features api={api} />
 ## Anatomy
@@ -63,7 +65,7 @@ Disable the entire radio group using the `disabled` prop:
 1. **Handling Selection Changes**
 Listen for selection changes using the `onChange$` prop:
 ```typescript
-<RadioGroup.Root 
+<RadioGroup.Root
   onChange$={(value) => {
     // Handle the new selected value
     console.log('Selected:', value);
@@ -96,7 +98,7 @@ As shown in the `controlledValue` example above, you can control the selected va
 The Radio Group supports required field validation through the `required` prop on `RadioGroup.Root`. When enabled, it enforces selection before form submission.
 As shown in the `error` example above, the component displays an error message when no option is selected and the field is required.
 ### Description Support
-The Radio Group can be configured to display additional descriptive text through the `isDescription` prop on `RadioGroup.Root`. 
+The Radio Group can be configured to display additional descriptive text through the `isDescription` prop on `RadioGroup.Root`.
 > When `isDescription` is true but no description is provided, a warning will be logged to the console.
 ### Disabled State
 The entire Radio Group can be disabled using the `disabled` prop on `RadioGroup.Root`. When disabled:
@@ -128,13 +130,13 @@ These configurations ensure proper form integration while maintaining accessibil
 The Radio Group component includes form integration features through the `RadioGroup.HiddenNativeInput` component and built-in validation support.
 ### Form Validation
 The Radio Group provides built-in validation with error handling through the `RadioGroup.ErrorMessage` component.
-<Showcase name="error" />
+<Showcase name="form" />
 In this example, the following form-specific features are demonstrated:
 - `RadioGroup.ErrorMessage` displays validation feedback when no option is selected
 - The error message is automatically shown/hidden based on selection state
 - The `data-visible` attribute on `RadioGroup.ErrorMessage` controls visibility
 - Form validation state is managed internally by the component
-### Form Integration 
+### Form Integration
 The component includes a hidden native radio input through `RadioGroup.HiddenNativeInput` that enables form submission and browser-native validation.
 Key form integration features:
 - The `required` prop can be passed to `RadioGroup.Root` to make selection mandatory
