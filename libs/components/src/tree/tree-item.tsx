@@ -16,6 +16,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   const groupContext = useContext(groupContextId, null);
 
   const handleKeyNavigation$ = $((e: KeyboardEvent) => {
+    const visibilityCache = new WeakMap<HTMLElement, boolean>();
     const treeWalker = document.createTreeWalker(
       context.rootRef.value ?? document.body,
       NodeFilter.SHOW_ELEMENT,
@@ -27,14 +28,22 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
         }
       }
     );
-
+    
     const isNodeVisible = (node: HTMLElement): boolean => {
+      if (visibilityCache.has(node)) {
+        return visibilityCache.get(node)!;
+      }
+      
       let current: HTMLElement | null = node;
       while (current) {
-        if (current.hasAttribute('data-collapsible-content') && current.hidden) return false;
-    
+        if (current.hasAttribute('data-collapsible-content') && current.hidden) {
+          visibilityCache.set(node, false);
+          return false;
+        }
         current = current.parentElement;
       }
+      
+      visibilityCache.set(node, true);
       return true;
     };
 
@@ -77,21 +86,20 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       }
 
       case "End": {
+        let lastVisibleNode: Node | null = null;
+        
         treeWalker.currentNode = root;
-        while (treeWalker.lastChild()) {
-          // go to last child until we can't go deeper
-        }
-
-        if (!(treeWalker.currentNode as Element).hasAttribute("data-qds-tree-item")) {
-          treeWalker.previousNode();
+        let node = treeWalker.nextNode();
+        
+        while (node) {
+          if (isNodeVisible(node as HTMLElement)) {
+            lastVisibleNode = node;
+          }
+          node = treeWalker.nextNode();
         }
         
-        while (treeWalker.currentNode && !isNodeVisible(treeWalker.currentNode as HTMLElement)) {
-          treeWalker.previousNode();
-        }
-
-        if (treeWalker.currentNode && treeWalker.currentNode !== root) {
-          (treeWalker.currentNode as HTMLElement).focus();
+        if (lastVisibleNode) {
+          (lastVisibleNode as HTMLElement).focus();
         }
         break;
       }
