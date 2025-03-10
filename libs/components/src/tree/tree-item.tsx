@@ -28,12 +28,25 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       }
     );
 
+    const isNodeVisible = (node: HTMLElement): boolean => {
+      let current: HTMLElement | null = node;
+      while (current) {
+        if (current.hasAttribute('data-collapsible-content') && current.hidden) return false;
+    
+        current = current.parentElement;
+      }
+      return true;
+    };
+
     if (!context.currentFocusEl.value) return;
     treeWalker.currentNode = context.currentFocusEl.value;
 
     switch (e.key) {
       case "ArrowDown": {
-        const nextNode = treeWalker.nextNode();
+        let nextNode = treeWalker.nextNode();
+        while (nextNode && !isNodeVisible(nextNode as HTMLElement)) {
+          nextNode = treeWalker.nextNode();
+        }
         if (nextNode) {
           (nextNode as HTMLElement).focus();
         }
@@ -41,7 +54,10 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       }
 
       case "ArrowUp": {
-        const prevNode = treeWalker.previousNode();
+        let prevNode = treeWalker.previousNode();
+        while (prevNode && !isNodeVisible(prevNode as HTMLElement)) {
+          prevNode = treeWalker.previousNode();
+        }
         if (prevNode) {
           (prevNode as HTMLElement).focus();
         }
@@ -50,7 +66,10 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
 
       case "Home": {
         treeWalker.currentNode = root;
-        const firstNode = treeWalker.nextNode();
+        let firstNode = treeWalker.nextNode();
+        while (firstNode && !isNodeVisible(firstNode as HTMLElement)) {
+          firstNode = treeWalker.nextNode();
+        }
         if (firstNode) {
           (firstNode as HTMLElement).focus();
         }
@@ -64,6 +83,10 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
         }
 
         if (!(treeWalker.currentNode as Element).hasAttribute("data-qds-tree-item")) {
+          treeWalker.previousNode();
+        }
+        
+        while (treeWalker.currentNode && !isNodeVisible(treeWalker.currentNode as HTMLElement)) {
           treeWalker.previousNode();
         }
 
