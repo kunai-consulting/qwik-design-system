@@ -1,5 +1,7 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, useStyles$ } from "@builder.io/qwik";
 import { Tree } from "@kunai-consulting/qwik";
+import { LuChevronRight } from "@qwikest/icons/lucide";
+import styles from "./tree.css?inline";
 
 type TreeItemType = {
   id: string;
@@ -8,22 +10,38 @@ type TreeItemType = {
 };
 
 export default component$(() => {
+  useStyles$(styles);
   const treeData: TreeItemType[] = [
     {
       id: "item-1",
-      label: "Documents",
+      label: "Docs",
       children: [
-        { id: "item-1-1", label: "Work" },
-        { id: "item-1-2", label: "Personal" }
+        {
+          id: "item-1-1",
+          label: "Guides",
+          children: [{ id: "item-1-1-1", label: "Getting Started" }]
+        },
+        {
+          id: "item-1-2",
+          label: "Components",
+          children: [
+            { id: "item-1-2-1", label: "Button" },
+            { id: "item-1-2-2", label: "Input" }
+          ]
+        }
       ]
     },
     {
       id: "item-2",
-      label: "Downloads"
+      label: "API Reference"
     },
     {
       id: "item-3",
-      label: "Desktop"
+      label: "Examples"
+    },
+    {
+      id: "item-4",
+      label: "Community"
     }
   ];
 
@@ -34,10 +52,11 @@ function renderTreeItem(item: TreeItemType) {
   if (item.children && item.children.length > 0) {
     return (
       <Tree.Group key={item.id}>
-        <Tree.GroupTrigger>
+        <Tree.GroupTrigger class="tree-group-trigger">
           <Tree.GroupLabel>{item.label}</Tree.GroupLabel>
+          <LuChevronRight />
         </Tree.GroupTrigger>
-        <Tree.GroupContent>
+        <Tree.GroupContent class="tree-group-content">
           {item.children.map((child) => renderTreeItem(child))}
         </Tree.GroupContent>
       </Tree.Group>

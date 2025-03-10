@@ -1,0 +1,13 @@
+.tree-group-trigger {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.tree-group-trigger[data-open] svg {
+    transform: rotate(90deg);
+}
+
+.tree-group-content {
+    margin-left: 1rem;
+}
