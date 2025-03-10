@@ -45,7 +45,11 @@ export default component$(() => {
     }
   ];
 
-  return <Tree.Root>{treeData.map((item) => renderTreeItem(item))}</Tree.Root>;
+  return (
+    <Tree.Root class="tree-root">
+      {treeData.map((item) => renderTreeItem(item))}
+    </Tree.Root>
+  );
 });
 
 function renderTreeItem(item: TreeItemType) {

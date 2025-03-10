@@ -1,4 +1,13 @@
-import { $, type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
+import {
+  $,
+  type PropsOf,
+  Slot,
+  component$,
+  sync$,
+  useContext,
+  useOn,
+  useOnWindow
+} from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { groupContextId } from "./tree-group";
@@ -28,21 +37,21 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
         }
       }
     );
-    
+
     const isNodeVisible = (node: HTMLElement): boolean => {
       if (visibilityCache.has(node)) {
-        return visibilityCache.get(node)!;
+        return visibilityCache.get(node) ?? false;
       }
-      
+
       let current: HTMLElement | null = node;
       while (current) {
-        if (current.hasAttribute('data-collapsible-content') && current.hidden) {
+        if (current.hasAttribute("data-collapsible-content") && current.hidden) {
           visibilityCache.set(node, false);
           return false;
         }
         current = current.parentElement;
       }
-      
+
       visibilityCache.set(node, true);
       return true;
     };
@@ -87,17 +96,17 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
 
       case "End": {
         let lastVisibleNode: Node | null = null;
-        
+
         treeWalker.currentNode = root;
         let node = treeWalker.nextNode();
-        
+
         while (node) {
           if (isNodeVisible(node as HTMLElement)) {
             lastVisibleNode = node;
           }
           node = treeWalker.nextNode();
         }
-        
+
         if (lastVisibleNode) {
           (lastVisibleNode as HTMLElement).focus();
         }
@@ -121,6 +130,22 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
 
     return groupContext?.level + 1;
   }
+
+  /**
+   *  Todo: Change this to a sync$ passed to the Render component once v2 is released (sync QRL serialization issue)
+   *
+   */
+  useOn(
+    "keydown",
+    sync$((e: KeyboardEvent) => {
+      if (!(e.target as Element)?.hasAttribute("data-qds-tree-item")) return;
+      const keys = ["ArrowDown", "ArrowUp", "Home", "End"];
+
+      if (!keys.includes(e.key)) return;
+
+      e.preventDefault();
+    })
+  );
 
   return (
     <Render

@@ -33,22 +33,6 @@ export const TreeRootBase = component$((props: PropsOf<"div">) => {
     currentFocusEl
   };
 
-  /**
-   *  Todo: Change this to a sync$ passed to the Render component once v2 is released (sync QRL serialization issue)
-   *
-   */
-  useOnWindow(
-    "keydown",
-    sync$((e: KeyboardEvent) => {
-      if (!(e.target as Element)?.hasAttribute("data-qds-tree-item")) return;
-      const keys = ["ArrowDown", "ArrowUp", "Home", "End"];
-
-      if (!keys.includes(e.key)) return;
-
-      e.preventDefault();
-    })
-  );
-
   useContextProvider(TreeRootContextId, context);
 
   return (
