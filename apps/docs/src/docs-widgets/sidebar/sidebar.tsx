@@ -24,12 +24,12 @@ export const Sidebar = component$(() => {
   return (
     <nav class="flex-col gap-4 sticky top-20 hidden md:flex h-[calc(100vh-160px)]">
       <div class="mb-4">
-        <Link
+        <a
           href={isContributing ? "/base/checkbox" : "/contributing/intro"}
           class="hover:text-qwik-blue-300 hover:underline"
         >
           {isContributing ? "Go to docs" : "Go to contributing"}
-        </Link>
+        </a>
       </div>
 
       {filteredItems?.map((section) => (
