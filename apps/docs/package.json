@@ -20,11 +20,13 @@
     "preview": "qwik build preview && vite preview --open",
     "serve": "wrangler pages dev ./dist --compatibility-flags=nodejs_als",
     "start": "vite --open --mode ssr",
-    "qwik": "qwik"
+    "qwik": "qwik",
+    "aac": "aac"
   },
   "devDependencies": {
     "@builder.io/qwik": "https://pkg.pr.new/@builder.io/qwik@7362",
     "@builder.io/qwik-city": "https://pkg.pr.new/@builder.io/qwik-city@7362",
+    "@kunai-consulting/auto-api-cli": "file:../../../auto-api/cli",
     "@kunai-consulting/qwik": "workspace:*",
     "@qwik-ui/headless": "^0.6.4",
     "@qwikest/icons": "^0.0.13",
