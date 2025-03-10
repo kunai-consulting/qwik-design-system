@@ -18,6 +18,10 @@ type TreeRootContext = {
   currentFocusEl: Signal<HTMLElement | undefined>;
 };
 
+declare global {
+  var treeItemCount: number;
+}
+
 export const TreeRootContextId = createContextId<TreeRootContext>("tree-root");
 
 export const TreeRootBase = component$((props: PropsOf<"div">) => {
