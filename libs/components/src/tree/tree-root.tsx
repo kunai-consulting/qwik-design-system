@@ -54,4 +54,7 @@ export const TreeRootBase = component$((props: PropsOf<"div">) => {
   );
 });
 
-export const TreeRoot = withAsChild(TreeRootBase);
+export const TreeRoot = withAsChild(TreeRootBase, (props) => {
+  globalThis.treeItemCount = 0;
+  return props;
+});

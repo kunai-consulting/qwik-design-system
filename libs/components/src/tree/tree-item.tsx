@@ -139,4 +139,12 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   );
 });
 
-export const TreeItem = withAsChild(TreeItemBase);
+export const TreeItem = withAsChild(TreeItemBase, (props) => {
+  if (props.groupTrigger) {
+    return props;
+  }
+
+  props._index = globalThis.treeItemCount;
+  globalThis.treeItemCount++;
+  return props;
+});
