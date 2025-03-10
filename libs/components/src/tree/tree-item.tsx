@@ -131,8 +131,4 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   );
 });
 
-export const TreeItem = withAsChild(TreeItemBase, true, (props) => {
-  console.log("GROUP ID: ", props.groupId);
-
-  return props;
-});
+export const TreeItem = withAsChild(TreeItemBase);
