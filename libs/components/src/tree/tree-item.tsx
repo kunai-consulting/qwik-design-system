@@ -6,7 +6,9 @@ import {
   sync$,
   useContext,
   useOn,
-  useOnWindow
+  useOnWindow,
+  useSignal,
+  useTask$
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
@@ -23,6 +25,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   const context = useContext(TreeRootContextId);
   const root = context.rootRef.value ?? document.body;
   const groupContext = useContext(groupContextId, null);
+  const itemRef = useSignal<HTMLElement>();
 
   const handleKeyNavigation$ = $((e: KeyboardEvent) => {
     const visibilityCache = new WeakMap<HTMLElement, boolean>();
@@ -131,6 +134,19 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
     return groupContext?.level + 1;
   }
 
+  useTask$(({ track }) => {
+    track(() => context.currentFocusEl.value);
+
+    if (context.currentFocusEl.value?.hasAttribute("groupTrigger")) {
+      console.log("GROUP TRIGGER");
+      console.log(props.ref);
+    }
+
+    if (context.currentFocusEl.value === itemRef.value) {
+      console.log(context.currentFocusEl.value);
+    }
+  });
+
   /**
    *  Todo: Change this to a sync$ passed to the Render component once v2 is released (sync QRL serialization issue)
    *
@@ -150,9 +166,10 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   return (
     <Render
       {...props}
+      ref={itemRef}
       role="gridcell"
       fallback="div"
-      tabIndex={0}
+      tabIndex={itemRef.value === context.currentFocusEl.value ? 0 : -1}
       onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
       onFocus$={[handleFocus$, props.onFocus$]}
       data-qds-tree-item
