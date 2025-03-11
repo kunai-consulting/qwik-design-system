@@ -1,4 +1,11 @@
-import { $, type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
+import {
+  $,
+  type PropsOf,
+  type Signal,
+  Slot,
+  component$,
+  useContext
+} from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { collapsibleContextId } from "./collapsible-root";
@@ -13,7 +20,9 @@ export const CollapsibleTriggerBase = component$<PropsOf<"button">>((props) => {
     context.isOpenSig.value = !context.isOpenSig.value;
   });
 
-  props.ref.value = context.triggerRef.value;
+  if (props.ref) {
+    (props.ref as Signal<HTMLButtonElement | undefined>).value = context.triggerRef.value;
+  }
 
   return (
     <Render
