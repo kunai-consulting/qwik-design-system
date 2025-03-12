@@ -20,16 +20,11 @@ export const CollapsibleTriggerBase = component$<PropsOf<"button">>((props) => {
     context.isOpenSig.value = !context.isOpenSig.value;
   });
 
-  if (props.ref) {
-    (props.ref as Signal<HTMLButtonElement | undefined>).value = context.triggerRef.value;
-  }
-
   return (
     <Render
       {...props}
       fallback="button"
       id={triggerId}
-      ref={context.triggerRef}
       disabled={context.disabled}
       data-disabled={context.disabled ? "" : undefined}
       aria-disabled={context.disabled ? "true" : "false"}
@@ -38,6 +33,13 @@ export const CollapsibleTriggerBase = component$<PropsOf<"button">>((props) => {
       aria-expanded={context.isOpenSig.value}
       aria-controls={contentId}
       onClick$={[handleClick$, props.onClick$]}
+      ref={$((el: HTMLButtonElement) => {
+        if (props.ref) {
+          (props.ref as Signal<HTMLButtonElement | undefined>).value = el;
+        }
+
+        context.triggerRef.value = el;
+      })}
     >
       <Slot />
     </Render>

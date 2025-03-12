@@ -4,6 +4,7 @@ import {
   Slot,
   component$,
   sync$,
+  useComputed$,
   useContext,
   useOn,
   useOnWindow,
@@ -122,7 +123,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
     context.currentFocusEl.value = e.target as HTMLElement;
   });
 
-  function getLevel() {
+  const currLevelSig = useComputed$(() => {
     if (!groupContext?.level) {
       return 1;
     }
@@ -132,7 +133,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
     }
 
     return groupContext?.level + 1;
-  }
+  });
 
   useTask$(({ track }) => {
     track(() => context.currentFocusEl.value);
@@ -173,7 +174,8 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
       onFocus$={[handleFocus$, props.onFocus$]}
       data-qds-tree-item
-      data-level={getLevel()}
+      data-level={currLevelSig.value}
+      aria-level={currLevelSig.value}
       data-group
     >
       <Slot />
