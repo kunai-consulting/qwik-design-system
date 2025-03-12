@@ -38,7 +38,7 @@ export const Sidebar = component$(() => {
           <ul class="flex flex-col">
             {section.items?.map((item) => (
               <li key={item.href} class="hover:bg-neutral-interactive transition-colors">
-                <a
+                <Link
                   href={item.href}
                   class={`w-full h-full p-1 px-2 block ${
                     loc.url.pathname === item.href
@@ -47,7 +47,7 @@ export const Sidebar = component$(() => {
                   }`}
                 >
                   {item.text}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
