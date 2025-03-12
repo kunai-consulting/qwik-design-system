@@ -7,7 +7,6 @@ import {
   useComputed$,
   useContext,
   useOn,
-  useOnWindow,
   useSignal,
   useTask$
 } from "@builder.io/qwik";
@@ -15,6 +14,7 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { groupContextId } from "./tree-group";
 import { TreeRootContextId } from "./tree-root";
+import { CollapsibleRootBase } from "../collapsible/collapsible-root";
 
 interface TreeItemProps extends PropsOf<"div"> {
   _index?: number;
@@ -165,11 +165,10 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   );
 
   return (
-    <Render
+    <CollapsibleRootBase
       {...props}
       ref={itemRef}
       role="gridcell"
-      fallback="div"
       tabIndex={itemRef.value === context.currentFocusEl.value ? 0 : -1}
       onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
       onFocus$={[handleFocus$, props.onFocus$]}
@@ -179,7 +178,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       data-group
     >
       <Slot />
-    </Render>
+    </CollapsibleRootBase>
   );
 });
 
