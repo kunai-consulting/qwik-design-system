@@ -1,4 +1,4 @@
-export const api = {
+{
   "tree": [
     {
       "Tree Group Label": {
@@ -62,4 +62,4 @@ export const api = {
   ],
   "keyboardInteractions": [],
   "features": []
-};
+}

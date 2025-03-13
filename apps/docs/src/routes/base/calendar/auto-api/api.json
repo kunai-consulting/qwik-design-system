@@ -1,4 +1,4 @@
-export const api = {
+{
   "calendar": [
     {
       "Calendar Grid Day": {
@@ -41,7 +41,7 @@ export const api = {
               {
                 "comment": "Props to be spread onto each date button",
                 "prop": "buttonProps",
-                "type": 'PropsOf<"button">'
+                "type": "PropsOf<\"button\">"
               },
               {
                 "comment": "Event handler called when a date is selected",
@@ -116,7 +116,7 @@ export const api = {
                 "comment": "The locale used for formatting dates and text",
                 "prop": "locale",
                 "type": "Locale",
-                "defaultValue": '"en"'
+                "defaultValue": "\"en\""
               },
               {
                 "comment": "The initial date to display when the calendar first loads",
@@ -155,7 +155,7 @@ export const api = {
               {
                 "comment":
                   "Reactive value to control the open state of the calendar popover",
-                "prop": '"bind:open"',
+                "prop": "\"bind:open\"",
                 "type": "Signal<boolean>"
               }
             ]
@@ -276,4 +276,4 @@ export const api = {
     "Date validation and parsing",
     "Responsive calendar grid layout"
   ]
-};
+}

@@ -1,4 +1,4 @@
-export const api = {
+{
   "otp": [
     {
       "Otp Caret": {
@@ -70,7 +70,7 @@ export const api = {
               {
                 "comment":
                   "Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property",
-                "prop": '"bind:value"',
+                "prop": "\"bind:value\"",
                 "type": "Signal<string>"
               },
               {
@@ -196,4 +196,4 @@ export const api = {
     "Individual item customization",
     "Visual highlight state management"
   ]
-};
+}

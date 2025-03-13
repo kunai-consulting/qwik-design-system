@@ -1,4 +1,4 @@
-export const api = {
+{
   "radio-group": [
     {
       "Radio Group Description": {
@@ -67,7 +67,7 @@ export const api = {
             "PublicRadioGroupRootProps": [
               {
                 "comment": "",
-                "prop": '"bind:value"',
+                "prop": "\"bind:value\"",
                 "type": "Signal<boolean>"
               },
               {
@@ -242,4 +242,4 @@ export const api = {
     "Keyboard navigation support",
     "Required field validation"
   ]
-};
+}

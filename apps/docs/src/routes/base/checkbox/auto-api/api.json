@@ -1,4 +1,4 @@
-export const api = {
+{
   "checkbox": [
     {
       "Checkbox Description": {
@@ -75,8 +75,8 @@ export const api = {
             "PublicCheckboxRootProps": [
               {
                 "comment": "",
-                "prop": '"bind:checked"',
-                "type": 'Signal<boolean | "mixed">'
+                "prop": "\"bind:checked\"",
+                "type": "Signal<boolean | \"mixed\">"
               },
               {
                 "comment": "Initial checked state of the checkbox",
@@ -213,4 +213,4 @@ export const api = {
     "Disabled state handling",
     "Enter key prevention for form submissions"
   ]
-};
+}
