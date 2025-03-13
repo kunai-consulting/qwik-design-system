@@ -26,7 +26,8 @@
     "@linear/sdk": "^27.0.0",
     "@playwright/test": "^1.46.0",
     "@types/node": "20.14.11",
-    "vite-node": "^2.0.5"
+    "vite-node": "^2.0.5",
+    "vitest": "^3.0.8"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.33.1",

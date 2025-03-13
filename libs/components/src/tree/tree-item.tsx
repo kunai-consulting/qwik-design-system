@@ -183,14 +183,6 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
 
   useContextProvider(itemContextId, itemContext);
 
-  const currLevelSig = useComputed$(() => {
-    if (!itemContext?.level) {
-      return 1;
-    }
-
-    return itemContext?.level;
-  });
-
   const handleKeyNavigation$ = $((e: KeyboardEvent) => {
     console.log("Key pressed:", e.key);
 
@@ -301,8 +293,8 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
       onFocus$={[handleFocus$, props.onFocus$]}
       data-qds-tree-item
-      data-level={currLevelSig.value}
-      aria-level={currLevelSig.value}
+      data-level={level}
+      aria-level={level}
       data-group
     >
       <Slot />
