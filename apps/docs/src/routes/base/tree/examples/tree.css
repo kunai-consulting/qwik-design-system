@@ -4,7 +4,7 @@
     border: 1px solid #0f1317;
 }
 
-.tree-group-trigger {
+.tree-item-trigger {
     display: flex;
     gap: 0.5rem;
     align-items: center;
@@ -12,10 +12,10 @@
     width: 100%;
 }
 
-.tree-group-trigger[data-open] svg {
+.tree-item-trigger[data-open] svg {
     transform: rotate(90deg);
 }
 
-.tree-group-content {
+.tree-item-content {
     padding-left: 1rem;
 }

@@ -55,15 +55,15 @@ export default component$(() => {
 function renderTreeItem(item: TreeItemType) {
   if (item.children && item.children.length > 0) {
     return (
-      <Tree.Group key={item.id}>
-        <Tree.GroupTrigger class="tree-group-trigger">
-          <Tree.GroupLabel>{item.label}</Tree.GroupLabel>
+      <Tree.Item key={item.id}>
+        <Tree.ItemTrigger class="tree-item-trigger">
+          <Tree.ItemLabel>{item.label}</Tree.ItemLabel>
           <LuChevronRight />
-        </Tree.GroupTrigger>
-        <Tree.GroupContent class="tree-group-content">
+        </Tree.ItemTrigger>
+        <Tree.ItemContent class="tree-item-content">
           {item.children.map((child) => renderTreeItem(child))}
-        </Tree.GroupContent>
-      </Tree.Group>
+        </Tree.ItemContent>
+      </Tree.Item>
     );
   }
 

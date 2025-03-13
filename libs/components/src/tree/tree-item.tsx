@@ -3,20 +3,29 @@ import {
   type PropsOf,
   Slot,
   component$,
+  createContextId,
   sync$,
   useComputed$,
   useContext,
+  useContextProvider,
+  useId,
   useOn,
   useSignal,
   useTask$
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-import { groupContextId } from "./tree-group";
 import { TreeRootContextId } from "./tree-root";
 import { CollapsibleRootBase } from "../collapsible/collapsible-root";
 
-interface TreeItemProps extends PropsOf<"div"> {
+type TreeItemContext = {
+  id: string;
+  level: number;
+};
+
+export const itemContextId = createContextId<TreeItemContext>("tree-item");
+
+interface TreeItemProps extends PropsOf<typeof CollapsibleRootBase> {
   _index?: number;
   groupTrigger?: boolean;
   groupId?: string;
@@ -25,7 +34,8 @@ interface TreeItemProps extends PropsOf<"div"> {
 export const TreeItemBase = component$((props: TreeItemProps) => {
   const context = useContext(TreeRootContextId);
   const root = context.rootRef.value ?? document.body;
-  const groupContext = useContext(groupContextId, null);
+  const parentContext = useContext(itemContextId, null);
+  const id = useId();
   const itemRef = useSignal<HTMLElement>();
 
   const handleKeyNavigation$ = $((e: KeyboardEvent) => {
@@ -123,18 +133,6 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
     context.currentFocusEl.value = e.target as HTMLElement;
   });
 
-  const currLevelSig = useComputed$(() => {
-    if (!groupContext?.level) {
-      return 1;
-    }
-
-    if (props.groupTrigger) {
-      return groupContext?.level;
-    }
-
-    return groupContext?.level + 1;
-  });
-
   useTask$(({ track }) => {
     track(() => context.currentFocusEl.value);
 
@@ -163,6 +161,24 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       e.preventDefault();
     })
   );
+
+  // default level is 1, if there's a parent, increment its level
+  const level = parentContext ? parentContext.level + 1 : 1;
+
+  const itemContext: TreeItemContext = {
+    id,
+    level
+  };
+
+  useContextProvider(itemContextId, itemContext);
+
+  const currLevelSig = useComputed$(() => {
+    if (!itemContext?.level) {
+      return 1;
+    }
+
+    return itemContext?.level;
+  });
 
   return (
     <CollapsibleRootBase
