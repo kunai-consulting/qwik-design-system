@@ -1,0 +1,161 @@
+# Radio Group Research
+
+## Overview
+Radio Group component allows users to select a single option from a list. The component is fully accessible,
+supports keyboard navigation, and complies with the WAI-ARIA specification for radio groups.
+
+## Research Links:
+- WAI-ARIA Radio Group Pattern (https://www.w3.org/WAI/ARIA/apg/patterns/radio/)
+- Ark UI Radio Group (https://ark-ui.com/docs/components/radio-group)
+- Kobalte Radio Group (https://kobalte.dev/docs/core/components/radio-group)
+- Radix UI Radio Group (https://www.radix-ui.com/primitives/docs/components/radio-group)
+
+---
+
+## Features:
+- [x] Single selection
+- [x] Keyboard navigation
+- [x] Disabled state (group and individual items)
+- [x] Required state
+- [x] Error messages
+- [x] Form integration
+- [x] Controlled/Uncontrolled modes
+- [x] Bind value support
+- [x] Horizontal/Vertical orientation
+- [x] ARIA attributes
+- [x] Custom styles support
+- [x] Description support
+- [x] Custom indicators
+- [ ] RTL support
+- [ ] Animations
+
+---
+
+## Keyboard Interactions:
+- Tab: Focus on first item (if none selected) or selected item
+- Space/Enter: Select focused item
+- ArrowDown/ArrowRight: Move to next item
+- ArrowUp/ArrowLeft: Move to previous item
+- Home: Move to first item
+- End: Move to last item
+
+---
+
+## Attributes:
+- role="radiogroup" (container)
+- role="radio" (individual options)
+- aria-checked
+- aria-disabled
+- aria-required
+- aria-invalid
+- aria-errormessage
+- aria-labelledby
+- aria-describedby
+- aria-orientation
+- data-qds-radio-group-root
+- data-qds-radio-group-item
+- data-qds-radio-group-trigger
+- data-qds-radio-group-label
+- data-qds-radio-group-description
+- data-qds-radio-group-error-message
+- data-qds-indicator
+- data-state
+- data-disabled
+- data-hidden
+
+---
+
+## Use Cases:
+- Form inputs
+- Settings
+- Subscription plans
+- Payment methods
+- Shipping options
+- Size selection
+- Answer selection
+- Theme selection
+
+---
+
+## API:
+
+### Root:
+```typescript
+interface RadioGroupRootProps {
+  value?: string;
+  defaultValue?: string;
+  "bind:value"?: Signal<string | undefined>;
+  onChange$?: PropFunction<(value: string) => void>;
+  disabled?: boolean;
+  name?: string;
+  required?: boolean;
+  form?: string;
+  orientation?: 'horizontal' | 'vertical';
+  isDescription?: boolean;
+}
+```
+
+### Item:
+```typescript
+interface RadioGroupItemProps {
+  value: string;
+  // Additional HTML div props
+}
+```
+
+### Trigger:
+```typescript
+interface RadioGroupTriggerProps {
+  value: string;
+  _index?: number;
+  // Additional HTML button props
+}
+```
+
+### Label:
+```typescript
+interface RadioGroupLabelProps {
+  // HTML label props
+}
+```
+
+### Description:
+```typescript
+interface RadioGroupDescriptionProps {
+  // HTML div props
+}
+```
+
+### ErrorMessage:
+```typescript
+interface RadioGroupErrorMessageProps {
+  // HTML div props
+}
+```
+
+### Indicator:
+```typescript
+interface RadioGroupIndicatorProps {
+  value: string;
+  // Additional HTML span props
+}
+```
+
+## Important CSS:
+
+```css
+/* Required CSS */
+[data-qds-radio-group-root][data-orientation="horizontal"] {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+[data-qds-indicator][data-hidden] {
+  display: none;
+}
+
+[data-qds-radio-group-error-message][data-visible="false"] {
+  display: none;
+}
+```
