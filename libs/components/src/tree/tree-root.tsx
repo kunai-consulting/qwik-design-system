@@ -8,7 +8,8 @@ import {
   useContext,
   useContextProvider,
   useOnWindow,
-  useSignal
+  useSignal,
+  useStore
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
@@ -16,8 +17,7 @@ import { Render } from "../render/render";
 type TreeRootContext = {
   rootRef: Signal<HTMLDivElement | undefined>;
   currentFocusEl: Signal<HTMLElement | undefined>;
-  // First dimension is level, second dimension is index within that level
-  itemRefs: Signal<Record<number, Record<number, Signal<HTMLElement | undefined>>>>;
+  treeData: TreeData;
 };
 
 declare global {
@@ -26,17 +26,24 @@ declare global {
 
 export const TreeRootContextId = createContextId<TreeRootContext>("tree-root");
 
+type TreeNode = {
+  level: number;
+  index: number;
+  ref: Signal<HTMLElement | undefined>;
+  children?: Record<number, TreeNode>;
+};
+
+type TreeData = Record<number, TreeNode>;
+
 export const TreeRootBase = component$((props: PropsOf<"div">) => {
   const rootRef = useSignal<HTMLDivElement>();
   const currentFocusEl = useSignal<HTMLElement>();
-  const itemRefs = useSignal<
-    Record<number, Record<number, Signal<HTMLElement | undefined>>>
-  >({});
+  const treeData = useStore<TreeData>({});
 
   const context: TreeRootContext = {
     rootRef,
     currentFocusEl,
-    itemRefs
+    treeData
   };
 
   useContextProvider(TreeRootContextId, context);
