@@ -49,6 +49,69 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
     level
   };
 
+  // Create a derived flattened tree of visible items for navigation
+  const visibleItemsSig = useComputed$(() => {
+    const visibleItems: Array<{ node: TreeNode; element: HTMLElement | undefined }> = [];
+
+    // Helper to check if an element is visible (not in a collapsed section)
+    const isVisible = (el: HTMLElement | undefined): boolean => {
+      if (!el) return false;
+
+      // Check if this item is in a hidden collapsible content
+      let parent = el.parentElement;
+      while (parent) {
+        if (parent.hasAttribute("data-collapsible-content") && parent.hidden) {
+          return false;
+        }
+        parent = parent.parentElement;
+      }
+
+      return true;
+    };
+
+    // Helper to recursively collect visible items
+    const collectVisibleItems = (nodes: Record<string | number, TreeNode> = {}) => {
+      // Get all nodes sorted by index
+      const sortedKeys = Object.keys(nodes).sort((a, b) => {
+        const indexA = nodes[a].index;
+        const indexB = nodes[b].index;
+        return indexA - indexB;
+      });
+
+      for (const key of sortedKeys) {
+        const node = nodes[key];
+        const element = node.ref?.value;
+
+        // Include this node if it has a reference and is visible in the DOM
+        if (element && isVisible(element)) {
+          visibleItems.push({ node, element });
+
+          // If this node has children and is open, recursively process them too
+          if (
+            node.children &&
+            Object.keys(node.children).length > 0 &&
+            node.isOpen?.value
+          ) {
+            collectVisibleItems(node.children);
+          }
+        }
+      }
+    };
+
+    // Start collecting from the root level nodes (nodes without parents)
+    const rootNodes: Record<string, TreeNode> = {};
+
+    for (const [key, node] of Object.entries(context.treeStore)) {
+      if (!node.parentId) {
+        rootNodes[key] = node;
+      }
+    }
+
+    collectVisibleItems(rootNodes);
+
+    return visibleItems;
+  });
+
   useTask$(({ cleanup }) => {
     const level = parentContext ? parentContext.level + 1 : 1;
     const index = props._index ?? 0;
@@ -118,12 +181,6 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
     });
   });
 
-  useVisibleTask$(({ track }) => {
-    track(() => context.treeStore);
-
-    console.log("Tree store:", context.treeStore);
-  });
-
   useContextProvider(itemContextId, itemContext);
 
   const currLevelSig = useComputed$(() => {
@@ -137,73 +194,9 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   const handleKeyNavigation$ = $((e: KeyboardEvent) => {
     console.log("Key pressed:", e.key);
 
-    // Build a flat list of all visible items from the tree structure
-    const visibleItems: Array<{ node: TreeNode; element: HTMLElement }> = [];
-
-    // Helper to check if an element is visible (not in a collapsed section)
-    const isVisible = (el: HTMLElement | undefined): boolean => {
-      if (!el) return false;
-
-      // Check if this item is in a hidden collapsible content
-      let parent = el.parentElement;
-      while (parent) {
-        if (parent.hasAttribute("data-collapsible-content") && parent.hidden) {
-          return false;
-        }
-        parent = parent.parentElement;
-      }
-
-      return true;
-    };
-
-    // Helper to recursively collect visible items
-    const collectVisibleItems = (nodes: Record<string | number, TreeNode> = {}) => {
-      // Get all nodes sorted by index
-      const sortedKeys = Object.keys(nodes).sort((a, b) => {
-        const indexA = nodes[a].index;
-        const indexB = nodes[b].index;
-        return indexA - indexB;
-      });
-
-      for (const key of sortedKeys) {
-        const node = nodes[key];
-        const element = node.ref?.value;
-
-        if (element && isVisible(element)) {
-          visibleItems.push({ node, element });
-
-          // If this node has children and is open, process them too
-          if (
-            node.children &&
-            Object.keys(node.children).length > 0 &&
-            node.isOpen?.value
-          ) {
-            collectVisibleItems(node.children);
-          }
-        }
-      }
-    };
-
-    // Start collecting from the root level nodes (nodes without parents)
-    const rootNodes: Record<string, TreeNode> = {};
-
-    Object.entries(context.treeStore).forEach(([key, node]) => {
-      if (!node.parentId) {
-        rootNodes[key] = node;
-      }
-    });
-
-    collectVisibleItems(rootNodes);
-
+    // Get the current flattened list of visible items
+    const visibleItems = visibleItemsSig.value;
     console.log("Visible items count:", visibleItems.length);
-    console.log(
-      "Visible items:",
-      visibleItems.map((item) => ({
-        id: item.node.id,
-        level: item.node.level,
-        index: item.node.index
-      }))
-    );
 
     if (visibleItems.length === 0) return;
 
@@ -217,7 +210,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       case "ArrowDown": {
         if (currentIndex < visibleItems.length - 1) {
           console.log("Moving to next item:", visibleItems[currentIndex + 1].node.id);
-          visibleItems[currentIndex + 1].element.focus();
+          visibleItems[currentIndex + 1].element?.focus();
         }
         break;
       }
@@ -225,14 +218,14 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       case "ArrowUp": {
         if (currentIndex > 0) {
           console.log("Moving to previous item:", visibleItems[currentIndex - 1].node.id);
-          visibleItems[currentIndex - 1].element.focus();
+          visibleItems[currentIndex - 1].element?.focus();
         }
         break;
       }
 
       case "Home": {
         console.log("Moving to first item:", visibleItems[0].node.id);
-        visibleItems[0].element.focus();
+        visibleItems[0].element?.focus();
         break;
       }
 
@@ -241,7 +234,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
           "Moving to last item:",
           visibleItems[visibleItems.length - 1].node.id
         );
-        visibleItems[visibleItems.length - 1].element.focus();
+        visibleItems[visibleItems.length - 1].element?.focus();
         break;
       }
 
@@ -270,7 +263,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
 
           if (parentItem) {
             console.log("Moving to parent:", parentContext.id);
-            parentItem.element.focus();
+            parentItem.element?.focus();
           }
         }
         break;
