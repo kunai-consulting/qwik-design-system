@@ -26,7 +26,7 @@ declare global {
 
 export const TreeRootContextId = createContextId<TreeRootContext>("tree-root");
 
-type TreeNode = {
+export type TreeNode = {
   id: string;
   level: number;
   index: number;
@@ -36,7 +36,7 @@ type TreeNode = {
   children?: Record<number, TreeNode>;
 };
 
-type TreeData = Record<number, TreeNode>;
+type TreeData = Record<string, TreeNode>;
 
 export const TreeRootBase = component$((props: PropsOf<"div">) => {
   const rootRef = useSignal<HTMLDivElement>();

@@ -18,6 +18,9 @@ import { withAsChild } from "../as-child/as-child";
 import { TreeRootContextId } from "./tree-root";
 import { CollapsibleRootBase } from "../collapsible/collapsible-root";
 
+// Import types from tree-root
+import type { TreeNode } from "./tree-root";
+
 type TreeItemContext = {
   id: string;
   level: number;
@@ -57,26 +60,29 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       `Registering tree item at level ${level}, index ${index}, parent: ${parentId || "none"}`
     );
 
+    // Use a unique ID for the store key rather than reusing the index
+    const storeKey = `${level}-${index}`;
+
     // Register this item in the tree store with improved structure
-    context.treeStore[index] = {
+    context.treeStore[storeKey] = {
       id,
       level,
       index,
       ref: itemRef,
       isOpen: isOpenSig,
       parentId,
-      children: context.treeStore[index]?.children || {}
+      children: context.treeStore[storeKey]?.children || {}
     };
 
     // If this is a child item, add it to its parent's children correctly
     if (parentId) {
       // Find the parent node by searching all nodes
-      const parentNodes = Object.values(context.treeStore).filter(
-        (node) => node.id === parentId
+      const parentNodes = Object.entries(context.treeStore).filter(
+        ([_, node]) => node.id === parentId
       );
 
       if (parentNodes.length > 0) {
-        const parentNode = parentNodes[0];
+        const [parentKey, parentNode] = parentNodes[0];
 
         // Initialize children object if it doesn't exist
         if (!parentNode.children) {
@@ -84,9 +90,9 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
         }
 
         // Add this node as a child of the parent
-        parentNode.children[index] = context.treeStore[index];
+        parentNode.children[index] = context.treeStore[storeKey];
 
-        console.log(`Added item ${index} as child of parent ${parentId}`);
+        console.log(`Added item ${storeKey} as child of parent ${parentId}`);
       }
     }
 
@@ -99,7 +105,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       // First, remove this node from any parent's children
       if (parentId) {
         // Find and update the parent
-        for (const node of Object.values(context.treeStore)) {
+        for (const [_, node] of Object.entries(context.treeStore)) {
           if (node.id === parentId && node.children && node.children[index]) {
             delete node.children[index];
             break;
@@ -108,7 +114,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       }
 
       // Then remove the node itself from the tree store
-      delete context.treeStore[index];
+      delete context.treeStore[storeKey];
     });
   });
 
@@ -132,7 +138,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
     console.log("Key pressed:", e.key);
 
     // Build a flat list of all visible items from the tree structure
-    const visibleItems: Array<{ node: any; element: HTMLElement }> = [];
+    const visibleItems: Array<{ node: TreeNode; element: HTMLElement }> = [];
 
     // Helper to check if an element is visible (not in a collapsed section)
     const isVisible = (el: HTMLElement | undefined): boolean => {
@@ -151,14 +157,16 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
     };
 
     // Helper to recursively collect visible items
-    const collectVisibleItems = (nodes: Record<string | number, any> = {}) => {
+    const collectVisibleItems = (nodes: Record<string | number, TreeNode> = {}) => {
       // Get all nodes sorted by index
-      const sortedIndices = Object.keys(nodes)
-        .map(Number)
-        .sort((a, b) => a - b);
+      const sortedKeys = Object.keys(nodes).sort((a, b) => {
+        const indexA = nodes[a].index;
+        const indexB = nodes[b].index;
+        return indexA - indexB;
+      });
 
-      for (const idx of sortedIndices) {
-        const node = nodes[idx];
+      for (const key of sortedKeys) {
+        const node = nodes[key];
         const element = node.ref?.value;
 
         if (element && isVisible(element)) {
@@ -176,33 +184,39 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       }
     };
 
-    // Start collecting from the root level nodes
-    const rootNodes = Object.values(context.treeStore)
-      .filter((node) => !node.parentId)
-      .reduce(
-        (acc, node) => {
-          acc[node.index] = node;
-          return acc;
-        },
-        {} as Record<number, any>
-      );
+    // Start collecting from the root level nodes (nodes without parents)
+    const rootNodes: Record<string, TreeNode> = {};
+
+    Object.entries(context.treeStore).forEach(([key, node]) => {
+      if (!node.parentId) {
+        rootNodes[key] = node;
+      }
+    });
 
     collectVisibleItems(rootNodes);
 
-    console.log("Visible items:", visibleItems.length);
+    console.log("Visible items count:", visibleItems.length);
+    console.log(
+      "Visible items:",
+      visibleItems.map((item) => ({
+        id: item.node.id,
+        level: item.node.level,
+        index: item.node.index
+      }))
+    );
 
     if (visibleItems.length === 0) return;
 
     // Find current index in visible items
     const currentIndex = visibleItems.findIndex((item) => item.element === itemRef.value);
-    console.log("Current item index:", currentIndex);
+    console.log("Current item index in visible list:", currentIndex);
 
     if (currentIndex === -1) return;
 
     switch (e.key) {
       case "ArrowDown": {
         if (currentIndex < visibleItems.length - 1) {
-          console.log("Moving to next item");
+          console.log("Moving to next item:", visibleItems[currentIndex + 1].node.id);
           visibleItems[currentIndex + 1].element.focus();
         }
         break;
@@ -210,20 +224,23 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
 
       case "ArrowUp": {
         if (currentIndex > 0) {
-          console.log("Moving to previous item");
+          console.log("Moving to previous item:", visibleItems[currentIndex - 1].node.id);
           visibleItems[currentIndex - 1].element.focus();
         }
         break;
       }
 
       case "Home": {
-        console.log("Moving to first item");
+        console.log("Moving to first item:", visibleItems[0].node.id);
         visibleItems[0].element.focus();
         break;
       }
 
       case "End": {
-        console.log("Moving to last item");
+        console.log(
+          "Moving to last item:",
+          visibleItems[visibleItems.length - 1].node.id
+        );
         visibleItems[visibleItems.length - 1].element.focus();
         break;
       }
@@ -231,7 +248,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       case "ArrowRight": {
         // Right arrow only opens the collapsible
         if (!isOpenSig.value) {
-          console.log("Opening node");
+          console.log("Opening node:", id);
           isOpenSig.value = true;
         }
         break;
@@ -240,11 +257,11 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       case "ArrowLeft": {
         if (isOpenSig.value) {
           // If expanded, collapse it
-          console.log("Collapsing node");
+          console.log("Collapsing node:", id);
           isOpenSig.value = false;
         } else if (parentContext) {
           // If already collapsed and has a parent, go to parent
-          console.log("Looking for parent");
+          console.log("Looking for parent:", parentContext.id);
 
           // Find the parent node
           const parentItem = visibleItems.find(
@@ -252,7 +269,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
           );
 
           if (parentItem) {
-            console.log("Moving to parent");
+            console.log("Moving to parent:", parentContext.id);
             parentItem.element.focus();
           }
         }
