@@ -12,4 +12,7 @@ export const TreeItemContentBase = component$(
   }
 );
 
-export const TreeItemContent = withAsChild(TreeItemContentBase);
+export const TreeItemContent = withAsChild(TreeItemContentBase, (props) => {
+  globalThis.treeItemCount = 0;
+  return props;
+});
