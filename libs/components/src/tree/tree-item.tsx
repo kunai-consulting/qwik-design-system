@@ -37,6 +37,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   const parentContext = useContext(itemContextId, null);
   const id = useId();
   const itemRef = useSignal<HTMLElement>();
+  const isOpenSig = useSignal(false);
 
   const handleKeyNavigation$ = $((e: KeyboardEvent) => {
     const visibilityCache = new WeakMap<HTMLElement, boolean>();
@@ -105,6 +106,16 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
         if (firstNode) {
           (firstNode as HTMLElement).focus();
         }
+        break;
+      }
+
+      case "ArrowRight": {
+        isOpenSig.value = true;
+        break;
+      }
+
+      case "ArrowLeft": {
+        isOpenSig.value = false;
         break;
       }
 
@@ -185,6 +196,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       {...props}
       ref={itemRef}
       role="gridcell"
+      bind:open={isOpenSig}
       tabIndex={itemRef.value === context.currentFocusEl.value ? 0 : -1}
       onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
       onFocus$={[handleFocus$, props.onFocus$]}
