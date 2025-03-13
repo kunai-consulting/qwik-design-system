@@ -11,8 +11,7 @@ import {
   useId,
   useOnWindow,
   useSignal,
-  useTask$,
-  useVisibleTask$
+  useTask$
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { TreeRootContextId } from "./tree-root";
@@ -20,6 +19,7 @@ import { CollapsibleRootBase } from "../collapsible/collapsible-root";
 
 // Import types from tree-root
 import type { TreeNode } from "./tree-root";
+import { useTree } from "./use-tree";
 
 type TreeItemContext = {
   id: string;
@@ -41,8 +41,9 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   const itemRef = useSignal<HTMLElement>();
   const isOpenSig = useSignal(false);
 
-  // default level is 1, if there's a parent, increment its level
-  const level = parentContext ? parentContext.level + 1 : 1;
+  const { getCurrentLevel } = useTree();
+
+  const level = getCurrentLevel(parentContext?.level);
 
   const itemContext: TreeItemContext = {
     id,
