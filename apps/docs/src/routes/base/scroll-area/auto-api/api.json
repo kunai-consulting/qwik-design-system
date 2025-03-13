@@ -1,4 +1,4 @@
-export const api = {
+{
   "scroll-area": [
     {
       "Scroll Area Root": {
@@ -13,7 +13,7 @@ export const api = {
                   "Controls when the scrollbars are visible: 'hover', 'scroll', 'auto', or 'always'",
                 "prop": "type",
                 "type": "PublicScrollbarVisibility",
-                "defaultValue": '"hover"'
+                "defaultValue": "\"hover\""
               },
               {
                 "comment":
@@ -49,8 +49,8 @@ export const api = {
               {
                 "comment": "The orientation of the scrollbar",
                 "prop": "orientation",
-                "type": '"vertical" | "horizontal"',
-                "defaultValue": '"vertical"'
+                "type": "\"vertical\" | \"horizontal\"",
+                "defaultValue": "\"vertical\""
               },
               {
                 "comment": "Event handler for scroll events",
@@ -218,4 +218,4 @@ export const api = {
     "Cross-browser zoom handling",
     "Dynamic thumb size based on content"
   ]
-};
+}

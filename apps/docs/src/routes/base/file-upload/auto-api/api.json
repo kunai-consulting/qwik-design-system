@@ -1,4 +1,4 @@
-export const api = {
+{
   "file-upload": [
     {
       "File Upload Dropzone": {
@@ -166,4 +166,4 @@ export const api = {
     "Cross-browser drag and drop compatibility",
     "Compound component architecture"
   ]
-};
+}

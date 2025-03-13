@@ -1,4 +1,4 @@
-export const api = {
+{
   "toast": [
     {
       "Toast Content": {
@@ -25,19 +25,19 @@ export const api = {
             "PublicToastDataAttributes": [
               {
                 "comment": "The identifier for the root toast container",
-                "prop": '"data-qds-toast-root"',
+                "prop": "\"data-qds-toast-root\"",
                 "type": "boolean"
               },
               {
                 "comment": "Specifies the position of the toast on the screen",
-                "prop": '"data-position"',
+                "prop": "\"data-position\"",
                 "type": "ToastPosition"
               },
               {
                 "comment":
                   "Indicates the visibility state of the toast (visible or hidden)",
-                "prop": '"data-state"',
-                "type": '"visible" | "hidden"'
+                "prop": "\"data-state\"",
+                "type": "\"visible\" | \"hidden\""
               }
             ]
           },
@@ -47,7 +47,7 @@ export const api = {
                 "comment": "Position of the toast on the screen",
                 "prop": "position",
                 "type": "ToastPosition",
-                "defaultValue": '"bottom-right"'
+                "defaultValue": "\"bottom-right\""
               },
               {
                 "comment": "Time in milliseconds before the toast automatically closes",
@@ -63,7 +63,7 @@ export const api = {
               {
                 "comment":
                   "Reactive value that can be controlled via signal. Controls the open state of the toast",
-                "prop": '"bind:open"',
+                "prop": "\"bind:open\"",
                 "type": "Signal<boolean>"
               },
               {
@@ -123,4 +123,4 @@ export const api = {
     "Signal-based state binding",
     "Automatic timeout cleanup"
   ]
-};
+}
