@@ -9,7 +9,7 @@ import {
   useContext,
   useContextProvider,
   useId,
-  useOn,
+  useOnWindow,
   useSignal,
   useTask$
 } from "@builder.io/qwik";
@@ -150,7 +150,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
    *  Todo: Change this to a sync$ passed to the Render component once v2 is released (sync QRL serialization issue)
    *
    */
-  useOn(
+  useOnWindow(
     "keydown",
     sync$((e: KeyboardEvent) => {
       if (!(e.target as Element)?.hasAttribute("data-qds-tree-item")) return;
