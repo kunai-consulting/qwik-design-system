@@ -11,10 +11,10 @@ import {
   useId,
   useOnWindow,
   useSignal,
-  useTask$
+  useTask$,
+  useVisibleTask$
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
-import { Render } from "../render/render";
 import { TreeRootContextId } from "./tree-root";
 import { CollapsibleRootBase } from "../collapsible/collapsible-root";
 
@@ -54,6 +54,33 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
     }
 
     return itemContext?.level;
+  });
+
+  useTask$(() => {
+    const level = currLevelSig.value;
+    const index = props._index ?? 0;
+
+    console.log(`Registering tree item at level ${level}, index ${index}`);
+
+    // Make a copy of the current structure
+    const newItemRefs = { ...context.itemRefs.value };
+
+    // Ensure level exists
+    if (!newItemRefs[level]) {
+      newItemRefs[level] = {};
+    }
+
+    // Register this item at its level and index
+    newItemRefs[level][index] = itemRef;
+
+    // Update the context with the new structure
+    context.itemRefs.value = newItemRefs;
+
+    console.log("item refs", context.itemRefs.value);
+  });
+
+  useVisibleTask$(() => {
+    console.log("item refs", context.itemRefs.value);
   });
 
   const handleKeyNavigation$ = $((e: KeyboardEvent) => {

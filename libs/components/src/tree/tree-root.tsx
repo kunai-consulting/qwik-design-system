@@ -16,6 +16,8 @@ import { Render } from "../render/render";
 type TreeRootContext = {
   rootRef: Signal<HTMLDivElement | undefined>;
   currentFocusEl: Signal<HTMLElement | undefined>;
+  // First dimension is level, second dimension is index within that level
+  itemRefs: Signal<Record<number, Record<number, HTMLElement>>>;
 };
 
 declare global {
@@ -27,10 +29,12 @@ export const TreeRootContextId = createContextId<TreeRootContext>("tree-root");
 export const TreeRootBase = component$((props: PropsOf<"div">) => {
   const rootRef = useSignal<HTMLDivElement>();
   const currentFocusEl = useSignal<HTMLElement>();
+  const itemRefs = useSignal<Record<number, Record<number, HTMLElement>>>({});
 
   const context: TreeRootContext = {
     rootRef,
-    currentFocusEl
+    currentFocusEl,
+    itemRefs
   };
 
   useContextProvider(TreeRootContextId, context);
