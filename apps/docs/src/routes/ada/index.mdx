@@ -1,0 +1,185 @@
+---
+title: Qwik | ADA
+---
+
+
+# ADA
+<h2 style="border-bottom: 2px solid white; font-size: 1.75rem; font-weight: bold; padding-bottom: 0.5rem;">
+</h2>
+The Americans with Disabilities Act (ADA) is a civil rights law that ensures equal for people with disabilities.  Understanding ADA is important for developers to ensure their applications are accessible to all users.  This section provides practical guidance on how to implement ADA in your applications.  The following sections offer insights, tools and links to help build accessibility into your application.
+## Why Accessibility Matters
+<h2 style="border-bottom: 2px solid white; font-size: 1.75rem; font-weight: bold; padding-bottom: 0.5rem;">
+</h2>
+
+Accessibility ensures that all users, including those with disabilities, can navigate and interact with applications effectively. By following accessibility best practices, developers can:
+
+- Improve the user experience for everyone, not just users of assistive technologies.
+- Comply with legal standards 
+- Reach a broader audience, including users who rely on screen readers, keyboard navigation, and other assistive technologies.
+
+## Unique Accessibility Challenges in Qwik
+<h2 style="border-bottom: 2px solid white; font-size: 1.75rem; font-weight: bold; padding-bottom: 0.5rem;">
+</h2>
+Qwik’s unique architecture—focusing on lazy execution, resumability, and server-side rendering (SSR), can create some accessibility challenges. This section provides guidance on how to ensure your Qwik.js applications remain accessible.
+The below list is not an exhaustive list of all accessibility challenges, but a few key ones to be aware of:
+
+ __Lazy Execution__  
+ {/* - Qwik defers JavaScript execution until user interaction, which may prevent buttons, dropdowns and other interactive elements from being immediately focusable. When components are loaded dynamically, keyboard users may have a hard time moving through the application.   */}
+Ensure critical interactive elements are available when needed with onClick$, onFocus$, or with a prefetching strategy and use tabindex to maintain focus order. 
+
+ __UI changes & Screen Readers__  
+- Screen readers rely on live updates to reflect UI changes and dynamically updated content should announce properly.
+- **Solution:**: Manually manage focus, and use Qwik's Tasks for asynchronous operations or state changes. 
+
+__Custom Components & Semantic HTML__  
+- Custom components might require proper roles and attributes for accessibility.  ARIA attributes need to be applied correctly.
+- **Solution:** Use semantic HTML whenever possible and apply ARIA roles and or properties only when necessary. Test with assistive technologies to ensure ARIA attributes remain effective after loading.
+
+__Performance Optimizations vs. Accessibility__
+- While Qwik reduces JavaScript execution, critical accessibility features should not be delayed.
+- **Solution:** Prioritize accessibility over optimzation for essential UI components.
+
+## Testing for Accessibility
+<h2 style="border-bottom: 2px solid white; font-size: 1.75rem; font-weight: bold; padding-bottom: 0.5rem;">
+</h2>
+To ensure your Qwik.js applications are accessible, consider the following testing strategies:
+
+### Automated Accessibility Testing   
+This should be the first step in testing your application for accessibility. Automated testing tools can help identify accessibility issues with minimal effort.
+
+- Use a linter to detect issues early in the development process. (e.g. axe DevTools Linter)
+- Use a browser extension to test for accessibility issues. (e.g. Lighthouse, axe DevTools, WCAG Contrast Checker)
+- Use a testing framework to automate accessibility testing. (e.g. Playwright, Cypress)
+
+### Manual Accessibility Testing
+Manual testing should not be skipped. It is beneficial to test using different platforms and devices and review and fix any issues that automated testing may have missed.  While pairing of screen readers and browsers is outside the scope of this guide, it is important to note that there are screen readers that work better with certain browsers and platforms.  
+- Test with keyboard navigation initially.  
+	- Make sure all interactive elements are focusable using just the keyboard. 
+	- Note any elements that are skipped or out of order.  
+	- Confirm that modals and other dynamically loaded content trap focus as necessary and return it correctly when closed.
+- Test with screen readers.  
+	- Use screen readers like NVDA, JAWS, or VoiceOver to navigate and interact with your application.  
+	- Note any issues or areas that may be difficult to navigate.  
+	- As with keyboard only navigation, confirm that modals and other dynamically loaded content trap focus as necessary and return it correctly when closed and that the screen reader announces the changes properly.
+
+### Cross-Platform Accessibility Testing
+Testing accessibility across multiple platforms and devices is essential to ensure your application is accessible to all users.  A good testing strategy involves multiple platforms and devices to ensure that your application is accessible to many different kinds of users.  This section provides guidance on how to conduct cross-platform accessibility testing.  
+_Note: This section does not replace automated and manual testing, it is in addition to those methods._
+- Test with key platforms, devices and assistive technologies.
+   - __Windows:__ NVDA, JAWS, Narrator.  These are widely used screen readers for Windows. JAWS is a proprietary screen reader for Windows and has an associated cost, NVDA and Narrator are free and open source making accessibility testing easier.
+   - __Mac:__ VoiceOver is the proprietary screen reader for Mac and iOS (iPhones, iPads, and iPods). 
+   - __Android:__ Talkback is the screen reader for Android devices.  
+
+- Establish a Testing Plan
+    The testing plan should be repeatable and include the following steps:
+	- Prioritize a browser screen reader pairing for initial development and testing.  This will provide a baseline for the application and help identify any accessibility issues early in the development process.  Continued testing with this pair will allow you to predict and address many issues that may arise.
+	- Document your findings.  Note the browser, screen reader and operating system used.  If there are multiple pages or sections to the application, note the page or section.  If there are multiple issues, note the issue and how it was resolved.
+	- Repeat on other platforms and devices.  Many users access applications on mobile devices, like smartphones and tablets.  These devices may have different screen sizes, resolutions, and operating systems and many are touch-based, meaning they may not be able to use the keyboard.  Testing on these devices can reveal issues not found on desktops or laptops.  Choose your secondary browser screen reader pairing and repeat the testing plan. Continue this process until you have tested on all platforms and devices you have access to.
+
+- Continuous process
+   - Accessibility testing should be an ongoing process.  It should be integrated into your development workflow and should be performed regularly.  Ensuring that the application is accessible to all users may be an initial goal, but a more realistic goal is to test on a regular basis, learn from the results and continue to improve the application.  Solving one accessibility issue on one platform and device could unintentionally impact another platform or device.  Continuous testing will help you identify and address these issues.
+
+## Accessibility Resources
+<h2 style="border-bottom: 2px solid white; font-size: 1.75rem; font-weight: bold; padding-bottom: 0.5rem;">
+</h2>
+A (growing) collection of useful links, tools, and resources to have handy for your everyday accessibility work.
+### Accessibility Standards
+[HTML: The Living Standard](https://html.spec.whatwg.org/)   
+[WCAG](https://www.w3.org/TR/WCAG/)  
+[WCAG Quick Reference](https://www.w3.org/WAI/WCAG21/quickref/)  
+[Understanding WCAG 2.1](https://www.w3.org/WAI/WCAG21/Understanding/)  
+[Techniques for WCAG 2.1](https://www.w3.org/WAI/WCAG21/Techniques/)  
+[ARIA](https://www.w3.org/TR/wai-aria/)  
+[ARIA Authoring Practices Guide (APG)](https://www.w3.org/WAI/ARIA/apg/)  
+[ARIA in HTML](https://www.w3.org/TR/html-aria/)  
+[Using ARIA](https://www.w3.org/TR/using-aria/)  
+[HTML Accessibiliy API Mappings (AAM)](https://www.w3.org/TR/html-aam/)  
+[Accessible Name and Description Computation](https://w3c.github.io/html-aam/#accessible-name-and-description-computation)  
+ 
+
+
+### Useful resources and references
+[HTML5 Accessibility
+“This site tests which newish HTML5 features are accessibly supported by major browsers.”](http://www.html5accessibility.com/)  
+[a11ysupport.io
+ARIA attributes support across screen readers](https://a11ysupport.io/)  
+[This is WCAG 2.1](https://thisiswcag.com/)  
+[WCAG 2.1 Map](https://intopia.digital/articles/intopia-launches-wcag-2-1-map/)  
+
+### Guides & Cheatsheets  
+Official screen reader user guides
+
+__NVDA:__  
+Most read-only webpages are browsed in NVDA using Browse mode.  
+[User Guide](https://www.nvaccess.org/files/nvda/documentation/userGuide.html)  
+[Browse Mode](https://www.nvaccess.org/files/nvda/documentation/userGuide.html#BrowseMode)  
+[JAWS documentation](https://www.freedomscientific.com/Products/software/JAWS/)  
+[JAWS Hotkeys](https://www.freedomscientific.com/training/jaws/hotkeys/#wb)    
+[Complete guide to Narrator](https://support.microsoft.com/en-us/windows/complete-guide-to-narrator-e4397a0d-ef4f-b386-d8ae-c172f109bdb1)   
+[Narrator keyboard commands and touch gestures](https://support.microsoft.com/en-us/windows/appendix-b-narrator-keyboard-commands-and-touch-gestures-8bdab3f4-b3e9-4554-7f28-8b15bd37410a#WindowsVersion=Windows_11)  
+
+
+__VoiceOver:__  
+[iPhone](https://help.apple.com/iphone/11/#/iph3e2e415f)  
+[Mac](https://support.apple.com/en-lb/guide/voiceover/vo27974/10/mac/13.0)  
+[Apple VoiceOver Command charts](https://help.apple.com/voiceover/command-charts/)  
+[Android](https://support.google.com/accessibility/android/topic/10601774?hl=en&ref_topic=3529932)  
+[Talkback user guides](https://support.apple.com/en-lb/guide/iphone/iph3e2e415f/16.0/ios/16.0)    
+[Turn on and practice VoiceOver on iPhone](https://help.apple.com/iphone/11/#/iph3e2e415f)  
+[Talkback Gestures on iOS](https://dequeuniversity.com/screenreaders/talkback-shortcuts)  
+ 
+ 
+__Screen reader cheatsheets:__  
+[VoiceOver Keyboard Shortcuts on a Mac](https://dequeuniversity.com/screenreaders/voiceover-keyboard-shortcut)
+[VoiceOver Gestures on iOS](https://dequeuniversity.com/screenreaders/voiceover-ios-shortcuts)  
+[NVDA Keyboard Shortcuts](https://dequeuniversity.com/screenreaders/nvda-keyboard-shortcuts)  
+[Talkback Gestures on Android](https://dequeuniversity.com/screenreaders/talkback-shortcuts)  
+[JAWS Keyboard Shortcuts](https://dequeuniversity.com/screenreaders/jaws-keyboard-shortcuts)  
+[Narrator Keyboard Shortcuts](https://dequeuniversity.com/screenreaders/narrator-keyboard-shortcuts)  
+[Desktop Screen Readers Forms Guide](https://dequeuniversity.com/screenreaders/forms-guide)  
+[Desktop Screen Readers Survival Guide - Basic Keyboard Shortcuts](https://dequeuniversity.com/screenreaders/survival-guide)
+
+
+### Checklists
+[Custom Control Accessible Development Checklist](https://www.w3.org/TR/using-aria/#ariachecklist)  
+[Deque’s Web Accessibility Checklist](https://dequeuniversity.com/checklists/web/)
+-includes checklists for components, forms, images, links, multimedia, etc. VERY useful.)   
+[“The Must-Have WCAG 2.1 Checklist”](https://kma.global/wp-content/uploads/2019/07/WCAG_2.1_Checklist.pdf)  
+[A11y Project Checklist](https://www.a11yproject.com/checklist/)  
+[WebAIM WCAG 2 Checklist](https://webaim.org/standards/wcag/checklist)  
+[Accessibility Not-Checklist](https://not-checklist.intopia.digital/)  
+
+
+### Auditing and Testing tools  
+[A comprehensive list of Web Accessibility Evaluation Tools](https://www.w3.org/WAI/ER/tools/)  
+[A list of JavaScript Bookmarklets for Accessibility Testing](https://pauljadam.com/bookmarklets.html)
+
+__Virtual Machines:__  
+[Microsoft Edge Virtual Machines](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/)  
+[Windows 11 Virtual Machines](https://developer.microsoft.com/en-us/windows/downloads/virtual-machines/)
+
+
+### Accessibility Auditing
+[WCAG Conformance Evaluation Methodology (WCAG-EM)](https://www.w3.org/TR/WCAG-EM/)  
+[WCAG-EM Report Tool (Generates a standards-first report)](https://www.w3.org/WAI/eval/report-tool/)  
+[HTML validation (Nu HTML Checker)](https://validator.nu/)  
+[The W3C Markup validator](https://validator.w3.org/)
+
+
+__Browser extensions & bookmarklets__  
+[ARC Toolkit by TPGi (Chrome-only extension)](https://www.tpgi.com/arc-platform/arc-toolkit/)  
+[WAVE browser extension](https://wave.webaim.org/extension/)  
+[Web Developer Extension](https://chrispederick.com/work/web-developer/)  
+[h123 HTML5 Outliner bookmarklet, cross-browser](https://hinderlingvolkart.github.io/h123/)  
+[Accessibility Insights for Web](https://accessibilityinsights.io/)  
+
+
+__Other__  
+[Build a Better Mobile Input](https://better-mobile-inputs.netlify.app/?android=false&autocomplete=one-time-code&inputmode=decimal&type=email)
+– displays mobile keyboard used by browser based on HTML input attributes used
+[Estimate how many people using your website might be disabled](https://how-many.herokuapp.com/)  
+[ISO 639-1 Language Codes](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)  
+[Simple Web Accessibility Guidelines](https://jfhector.github.io/accessibility-guidelines/index.html)  
+[Accessibility Statement Generator from Nomensa](https://www.accessibilitystatementgenerator.com/)  
+[The W3C Accessibility statement generator](https://www.w3.org/WAI/planning/statements/generator/#create)  
+https://better-mobile-inputs.netlify.app/?android=false&autocomplete=one-time-code&inputmode=decimal&type=email    
