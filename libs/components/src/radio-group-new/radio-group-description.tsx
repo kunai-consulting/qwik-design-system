@@ -1,10 +1,4 @@
-import {
-  component$,
-  useContext,
-  type PropsOf,
-  Slot,
-  useTask$
-} from "@builder.io/qwik";
+import { type PropsOf, Slot, component$, useContext, useTask$ } from "@builder.io/qwik";
 import { radioGroupContextId } from "./radio-group-context";
 
 type PublicDescriptionProps = PropsOf<"div">;
@@ -22,11 +16,7 @@ export const RadioGroupDescription = component$((props: PublicDescriptionProps) 
   });
 
   return (
-    <div
-      {...props}
-      id={descriptionId}
-      data-qds-radio-group-description
-    >
+    <div {...props} id={descriptionId} data-qds-radio-group-description>
       <Slot />
     </div>
   );

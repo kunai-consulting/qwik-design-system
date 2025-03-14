@@ -1,10 +1,13 @@
 import {
-  component$,
-  useContext,
   $,
   type PropsOf,
+  Slot,
+  component$,
+  sync$,
   useComputed$,
-  Slot, useSignal, useVisibleTask$, sync$, useTask$, useOn
+  useContext,
+  useSignal,
+  useVisibleTask$
 } from "@builder.io/qwik";
 import { radioGroupContextId } from "./radio-group-context";
 
@@ -57,7 +60,9 @@ export const RadioGroupTrigger = component$((props: PublicTriggerProps) => {
       onClick$={[handleClick$, props.onClick$]}
       onKeyDown$={[handleKeyDown$, props.onKeyDown$]}
       disabled={isDisabledSig.value}
-      tabIndex={isSelectedSig.value || (!context.selectedValueSig.value && _index === 0) ? 0 : -1}
+      tabIndex={
+        isSelectedSig.value || (!context.selectedValueSig.value && _index === 0) ? 0 : -1
+      }
     >
       <Slot />
     </button>

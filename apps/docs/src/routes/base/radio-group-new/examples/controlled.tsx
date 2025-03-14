@@ -15,16 +15,16 @@ export default component$(() => {
     >
       <RadioGroup.Label>Choose option</RadioGroup.Label>
 
-      <RadioGroup.Item value="option1"  class="radio-group-item">
+      <RadioGroup.Item value="option1" class="radio-group-item">
         <RadioGroup.Trigger value="option1" _index={0} class="radio-group-trigger">
-          <RadioGroup.Indicator value="option1"  class="radio-group-indicator"/>
+          <RadioGroup.Indicator value="option1" class="radio-group-indicator" />
         </RadioGroup.Trigger>
         <RadioGroup.Label>Option 1</RadioGroup.Label>
       </RadioGroup.Item>
 
       <RadioGroup.Item value="option2" class="radio-group-item">
         <RadioGroup.Trigger value="option2" _index={1} class="radio-group-trigger">
-          <RadioGroup.Indicator value="option2" class="radio-group-indicator"/>
+          <RadioGroup.Indicator value="option2" class="radio-group-indicator" />
         </RadioGroup.Trigger>
         <RadioGroup.Label>Option 2</RadioGroup.Label>
       </RadioGroup.Item>

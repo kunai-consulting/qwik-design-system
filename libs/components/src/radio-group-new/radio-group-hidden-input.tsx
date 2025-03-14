@@ -1,9 +1,4 @@
-import {
-  component$,
-  useContext,
-  $,
-  type PropsOf
-} from "@builder.io/qwik";
+import { $, type PropsOf, component$, useContext } from "@builder.io/qwik";
 import { radioGroupContextId } from "./radio-group-context";
 
 type PublicHiddenInputProps = Omit<
@@ -36,7 +31,7 @@ export const RadioGroupHiddenInput = component$((props: PublicHiddenInputProps) 
       name={context.localId}
       disabled={context.isDisabledSig.value}
       onChange$={[handleChange$, onChange$]}
-      style={{ position: 'absolute', opacity: 0, pointerEvents: 'none' }}
+      style={{ position: "absolute", opacity: 0, pointerEvents: "none" }}
     />
   );
 });

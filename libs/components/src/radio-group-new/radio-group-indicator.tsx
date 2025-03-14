@@ -1,9 +1,9 @@
 import {
-  component$,
-  useContext,
   type PropsOf,
   Slot,
-  useComputed$
+  component$,
+  useComputed$,
+  useContext
 } from "@builder.io/qwik";
 import { radioGroupContextId } from "./radio-group-context";
 

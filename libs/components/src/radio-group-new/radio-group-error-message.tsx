@@ -1,9 +1,4 @@
-import {
-  component$,
-  useContext,
-  type PropsOf,
-  Slot
-} from "@builder.io/qwik";
+import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
 import { radioGroupContextId } from "./radio-group-context";
 
 type PublicErrorMessageProps = PropsOf<"div">;

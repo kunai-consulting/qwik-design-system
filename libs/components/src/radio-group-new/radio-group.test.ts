@@ -29,8 +29,8 @@ test.describe("Radio Group", () => {
   test(`GIVEN a radio group
         WHEN a different radio button is clicked
         THEN the previously selected radio button should no longer be checked`, async ({
-                                                                                                 page
-                                                                                               }) => {
+    page
+  }) => {
     const d = await setup(page, "hero");
     const firstTrigger = d.getTriggerAt(0);
     const secondTrigger = d.getTriggerAt(1);

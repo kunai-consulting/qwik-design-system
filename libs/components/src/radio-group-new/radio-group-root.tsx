@@ -1,14 +1,18 @@
 import {
-  component$,
-  useSignal,
-  useStyles$,
-  useContextProvider,
   $,
-  useTask$,
   type PropFunction,
   type PropsOf,
+  type Signal,
   Slot,
-  useId, useComputed$, useStore, Signal, sync$
+  component$,
+  sync$,
+  useComputed$,
+  useContextProvider,
+  useId,
+  useSignal,
+  useStore,
+  useStyles$,
+  useTask$
 } from "@builder.io/qwik";
 import { radioGroupContextId } from "./radio-group-context";
 import styles from "./radio-group.css?inline";
@@ -21,7 +25,7 @@ type PublicRootProps = PropsOf<"div"> & {
   name?: string;
   required?: boolean;
   form?: string;
-  orientation?: 'horizontal' | 'vertical';
+  orientation?: "horizontal" | "vertical";
   isDescription?: boolean;
   "bind:value"?: Signal<string | undefined>;
 };
@@ -30,7 +34,9 @@ export const RadioGroupRoot = component$((props: PublicRootProps) => {
   useStyles$(styles);
 
   const rootRef = useSignal<HTMLElement>();
-  const selectedValueSig = props["bind:value"] || useSignal<string | undefined>(props.defaultValue || props.value);
+  const selectedValueSig =
+    props["bind:value"] ||
+    useSignal<string | undefined>(props.defaultValue || props.value);
   const isDisabledSig = useComputed$(() => !!props.disabled);
   const isErrorSig = useSignal(false);
   const formRef = useSignal<HTMLFormElement>();
@@ -42,7 +48,7 @@ export const RadioGroupRoot = component$((props: PublicRootProps) => {
   });
 
   const unregisterTrigger$ = $((element: Element) => {
-    const index = triggers.findIndex(t => t.element === element);
+    const index = triggers.findIndex((t) => t.element === element);
     if (index !== -1) {
       triggers.splice(index, 1);
     }
@@ -75,7 +81,7 @@ export const RadioGroupRoot = component$((props: PublicRootProps) => {
   const moveToIndex = $((index: number, enabledTriggers: Element[]) => {
     const normalizedIndex = (index + enabledTriggers.length) % enabledTriggers.length;
     const trigger = enabledTriggers[normalizedIndex] as HTMLElement;
-    const value = trigger.getAttribute('value');
+    const value = trigger.getAttribute("value");
 
     if (value) {
       selectedValueSig.value = value;
@@ -85,31 +91,27 @@ export const RadioGroupRoot = component$((props: PublicRootProps) => {
   });
 
   const handleKeyDown$ = $((e: KeyboardEvent) => {
-
     if (isDisabledSig.value || !rootRef.value) return;
 
-    if (![
-      'ArrowUp',
-      'ArrowDown',
-      'ArrowLeft',
-      'ArrowRight',
-      'Home',
-      'End'
-    ].includes(e.key)) return;
+    if (
+      !["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)
+    )
+      return;
 
     sync$((e: KeyboardEvent) => e.preventDefault())(e);
 
     const enabledTriggers = triggers
-      .filter(item => !(item.element as HTMLElement).hasAttribute('disabled'))
+      .filter((item) => !(item.element as HTMLElement).hasAttribute("disabled"))
       .sort((a, b) => a.index - b.index)
-      .map(item => item.element);
+      .map((item) => item.element);
 
     if (!enabledTriggers.length) return;
 
     const currentIndex = selectedValueSig.value
       ? enabledTriggers.findIndex(
-        trigger => (trigger as HTMLElement).getAttribute('value') === selectedValueSig.value
-      )
+          (trigger) =>
+            (trigger as HTMLElement).getAttribute("value") === selectedValueSig.value
+        )
       : 0;
 
     const isHorizontal = props.orientation === "horizontal";
@@ -119,7 +121,10 @@ export const RadioGroupRoot = component$((props: PublicRootProps) => {
         moveToIndex(currentIndex + 1, enabledTriggers);
         break;
       case isHorizontal ? "ArrowLeft" : "ArrowUp":
-        moveToIndex(currentIndex === 0 ? enabledTriggers.length - 1 : currentIndex - 1, enabledTriggers);
+        moveToIndex(
+          currentIndex === 0 ? enabledTriggers.length - 1 : currentIndex - 1,
+          enabledTriggers
+        );
         break;
       case "Home":
         moveToIndex(0, enabledTriggers);
@@ -138,7 +143,7 @@ export const RadioGroupRoot = component$((props: PublicRootProps) => {
     required: props.required,
     name: props.name,
     formRef,
-    orientation: props.orientation || 'vertical',
+    orientation: props.orientation || "vertical",
     isDescription: props.isDescription,
     onChange$,
     registerTrigger$,
@@ -151,7 +156,7 @@ export const RadioGroupRoot = component$((props: PublicRootProps) => {
       ref={rootRef}
       role="radiogroup"
       data-qds-radio-group-root
-      data-orientation={props.orientation || 'vertical'}
+      data-orientation={props.orientation || "vertical"}
       data-disabled={isDisabledSig.value ? "" : undefined}
       aria-disabled={isDisabledSig.value}
       aria-required={props.required}
@@ -159,7 +164,7 @@ export const RadioGroupRoot = component$((props: PublicRootProps) => {
       aria-labelledby={`${localId}-label`}
       aria-describedby={props.isDescription ? `${localId}-description` : undefined}
       aria-errormessage={isErrorSig.value ? `${localId}-error` : undefined}
-      aria-orientation={props.orientation || 'vertical'}
+      aria-orientation={props.orientation || "vertical"}
       onKeyDown$={[handleKeyDown$, props.onKeyDown$]}
     >
       <Slot />

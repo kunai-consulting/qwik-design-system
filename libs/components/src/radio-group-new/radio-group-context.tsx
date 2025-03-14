@@ -1,4 +1,9 @@
-import {type Signal, type QRL, createContextId, ReadonlySignal} from "@builder.io/qwik";
+import {
+  type QRL,
+  type ReadonlySignal,
+  type Signal,
+  createContextId
+} from "@builder.io/qwik";
 
 export interface RadioGroupContext {
   selectedValueSig: Signal<string | undefined>;
@@ -15,5 +20,5 @@ export interface RadioGroupContext {
   unregisterTrigger$: QRL<(element: Element) => void>;
 }
 
-
-export const radioGroupContextId = createContextId<RadioGroupContext>("radio-group-context");
+export const radioGroupContextId =
+  createContextId<RadioGroupContext>("radio-group-context");
