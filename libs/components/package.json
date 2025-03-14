@@ -37,6 +37,9 @@
     "vite-tsconfig-paths": "^4.2.1",
     "@axe-core/playwright": "^4.9.1",
     "uqr": "^0.1.2",
-    "@qwik.dev/core": "2.0.0-alpha.8"
+    "@qwik.dev/core": "2.0.0-alpha.8",
+    "@floating-ui/core": "^1.6.2",
+    "@floating-ui/dom": "^1.6.5",
+    "@oddbird/popover-polyfill": "0.4.3"
   }
 }

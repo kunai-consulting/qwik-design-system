@@ -1,5 +1,5 @@
 import { Fragment, component$, useContext, useTask$ } from "@qwik.dev/core";
-import { Popover } from "@qwik-ui/headless";
+import { Popover } from "@kunai-consulting/qwik";
 import { rootContextId } from "~/routes/layout";
 import type { AnatomyItem, ComponentEntry, ParsedProps } from "../../../auto-api/types";
 import { MainHeading, SubHeading } from "../toc/toc";
@@ -99,19 +99,16 @@ export const APITable = component$(({ api }: { api: ComponentParts }) => {
 
   return (
     <div class="overflow-x-auto">
-      {items.map((item, index) => {
+      {items.map((item) => {
         const componentData = Object.entries(item)[0];
-        console.log(componentData);
         const [itemName] = componentData;
-
-        console.log("key", componentData);
 
         return (
           <div key={itemName}>
-            <Popover.Root>
+            <>
               <Popover.Trigger>Details</Popover.Trigger>
               <Popover.Panel>ddd</Popover.Panel>
-            </Popover.Root>
+            </>
           </div>
         );
       })}

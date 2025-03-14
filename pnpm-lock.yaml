@@ -142,6 +142,15 @@ importers:
       '@axe-core/playwright':
         specifier: ^4.9.1
         version: 4.10.0(playwright-core@1.46.0)
+      '@floating-ui/core':
+        specifier: ^1.6.2
+        version: 1.6.7
+      '@floating-ui/dom':
+        specifier: ^1.6.5
+        version: 1.6.10
+      '@oddbird/popover-polyfill':
+        specifier: 0.4.3
+        version: 0.4.3
       '@qwik-ui/headless':
         specifier: ^0.6.5
         version: 0.6.5(@builder.io/qwik@1.12.1(vite@5.4.8(@types/node@20.14.11)(lightningcss@1.29.1)))
