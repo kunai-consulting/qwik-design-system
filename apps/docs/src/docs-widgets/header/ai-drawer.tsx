@@ -14,12 +14,12 @@ export const AIDrawer = component$(() => {
       </Modal.Trigger>
       <Modal.Panel class=" ml-auto data-open:translate-x-0 translate-x-[100%] duration-300 h-full w-[300px] data-open:backdrop:backdrop-brightness-20 data-open:backdrop:animate-fade-in data-closing:backdrop:animate-fade-out  border-l border-neutral-800 bg-neutral-accent data-open:flex flex-col gap-4 px-4 pt-4">
         <p class="text-neutral-foreground">
-          Auto API is currently disabled. Once the Auto API package is released, this
-          drawer will be updated to include the Auto API documentation.
+          Code-Notate is currently disabled. Once the Code-Notate package is released,
+          this drawer will be updated to include the Code-Notate documentation.
         </p>
 
         <p class="text-neutral-foreground">
-          Welcome to <Sparkles>Auto API!</Sparkles> I'm here to help you create awesome
+          Welcome to <Sparkles>Code-Notate!</Sparkles> I'm here to help you create awesome
           documentation.
         </p>
         <AIButton>Generate API</AIButton>
