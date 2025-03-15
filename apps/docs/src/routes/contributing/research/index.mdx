@@ -7,9 +7,9 @@ import research from "~/assets/docs/research/research.webp";
 
 Research is a critical step in the development of any component. It helps us understand the problem we're solving and the best way to solve it.
 
-## Inspiration 
+## Inspiration
 
-As OSS library authors, we want to create solutions that are not only useful, but also a *joy to use*. Existing projects can give us insight into how to make our components better, figure out limitations and edge cases, and come up with intuitive API design.
+As OSS library authors, we want to create solutions that are not only useful, but also a _joy to use_. Existing projects can give us insight into how to make our components better, figure out limitations and edge cases, and come up with intuitive API design.
 
 ### Existing Headless libraries
 
@@ -25,6 +25,7 @@ Take a look at the following projects and see if you can find any inspiration. T
 - [Headless UI](https://headlessui.com/)
 - [Base UI](https://base-ui.com/)
 - [Dice UI](https://www.diceui.com/)
+- [Material Angular CDK](https://material.angular.io/cdk/categories)
 
 #### Not headless but interesting
 
@@ -33,9 +34,7 @@ Take a look at the following projects and see if you can find any inspiration. T
 
 > If you find something cool and think it fits, add it to the list!
 
-
 ### What is common across all these projects?
-
 
 For each component you work on, find what is common across all the projects.
 
@@ -52,10 +51,6 @@ Is there an API that is very different from the rest? If you were going to use t
 ### What is the best part of these projects?
 
 Is there an API that stands out and seems to be a better design? If you were going to use this component, what would you like to see in the API?
-
-
-
-
 
 ## Research Process
 
@@ -109,6 +104,7 @@ Define the composition pieces of the component:
 
 ```md
 Pieces:
+
 - Root
 - Panel
 - Handle
@@ -130,6 +126,7 @@ List all the attributes needed for the component to work or be accessible:
 
 ```md
 role="dialog"
+
 - aria-labelledby
 - aria-describedby
 ```
@@ -157,6 +154,7 @@ Note any important CSS properties or techniques:
 
 ```md
 Important CSS:
+
 - position: absolute
 - position-anchor: top-left
 - overflow: hidden
@@ -168,10 +166,12 @@ Document the proposed API for each component part:
 
 ```md
 Root:
+
 - prop1 -> description
 - prop2 -> description
 
 Panel:
+
 - propA -> description
 - propB -> description
 ```
@@ -205,4 +205,3 @@ Only look at the implementation if you are stuck or need to understand a specifi
 ## Research is not a one time thing
 
 Research is not a one time thing. It is a living document that should be updated as you learn more about the component.
-
