@@ -17,17 +17,21 @@ import accessibility from "~/assets/docs/accessibility/accessibility.webp";
 
 ## Accessibility in Qwik
 
-Most accessibility features in Qwik work through standard HTML attributes rendered on the server. The main considerations are:
+Most accessibility features in Qwik work through standard HTML attributes added on initial render. The main considerations are:
 
 ### Example 1: State Management and Updates
 
 ```tsx
 const isOpen = useSignal(false);
 
+const handleClick$ = $(() => {
+    isOpen.value = true
+})
+
 return (
   <>
     <button 
-      onClick$={() => isOpen.value = true}
+      onClick$={[handleClick$, props.onClick$]}
       aria-expanded={isOpen.value}
     >
       Toggle Menu
@@ -51,8 +55,13 @@ The ref value becomes the DOM element when it is resolved on the client.
 ```tsx
 const triggerRef = useSignal<HTMLButtonElement>();
 
+const handleClick$ = $(() => {
+    // on the client I resolve to the button
+    console.log(triggerRef.value)
+})
+
 return (
-    <button ref={triggerRef}>
+    <button ref={triggerRef} onClick$={[handleClick$, props.onClick$]}>
        <Slot />
     </button>
 )
@@ -60,7 +69,7 @@ return (
 
 #### Merging refs
 
-The `ref` attribute can also accept a function, with the first argument being the element when resolved on the client.
+The `ref` attribute can also accept a function, with the first argument being the element in the DOM when resolved on the client.
 
 This can be useful when consumers of your component provide a ref to the component.
 
