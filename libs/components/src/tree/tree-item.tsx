@@ -16,6 +16,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   const groupContext = useContext(groupContextId, null);
 
   const handleKeyNavigation$ = $((e: KeyboardEvent) => {
+    const visibilityCache = new WeakMap<HTMLElement, boolean>();
     const treeWalker = document.createTreeWalker(
       context.rootRef.value ?? document.body,
       NodeFilter.SHOW_ELEMENT,
@@ -28,12 +29,33 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       }
     );
 
+    const isNodeVisible = (node: HTMLElement): boolean => {
+      if (visibilityCache.has(node)) {
+        return visibilityCache.get(node) ?? false;
+      }
+
+      let current: HTMLElement | null = node;
+      while (current) {
+        if (current.hasAttribute("data-collapsible-content") && current.hidden) {
+          visibilityCache.set(node, false);
+          return false;
+        }
+        current = current.parentElement;
+      }
+
+      visibilityCache.set(node, true);
+      return true;
+    };
+
     if (!context.currentFocusEl.value) return;
     treeWalker.currentNode = context.currentFocusEl.value;
 
     switch (e.key) {
       case "ArrowDown": {
-        const nextNode = treeWalker.nextNode();
+        let nextNode = treeWalker.nextNode();
+        while (nextNode && !isNodeVisible(nextNode as HTMLElement)) {
+          nextNode = treeWalker.nextNode();
+        }
         if (nextNode) {
           (nextNode as HTMLElement).focus();
         }
@@ -41,7 +63,10 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       }
 
       case "ArrowUp": {
-        const prevNode = treeWalker.previousNode();
+        let prevNode = treeWalker.previousNode();
+        while (prevNode && !isNodeVisible(prevNode as HTMLElement)) {
+          prevNode = treeWalker.previousNode();
+        }
         if (prevNode) {
           (prevNode as HTMLElement).focus();
         }
@@ -50,7 +75,10 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
 
       case "Home": {
         treeWalker.currentNode = root;
-        const firstNode = treeWalker.nextNode();
+        let firstNode = treeWalker.nextNode();
+        while (firstNode && !isNodeVisible(firstNode as HTMLElement)) {
+          firstNode = treeWalker.nextNode();
+        }
         if (firstNode) {
           (firstNode as HTMLElement).focus();
         }
@@ -58,17 +86,20 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       }
 
       case "End": {
+        let lastVisibleNode: Node | null = null;
+
         treeWalker.currentNode = root;
-        while (treeWalker.lastChild()) {
-          // go to last child until we can't go deeper
+        let node = treeWalker.nextNode();
+
+        while (node) {
+          if (isNodeVisible(node as HTMLElement)) {
+            lastVisibleNode = node;
+          }
+          node = treeWalker.nextNode();
         }
 
-        if (!(treeWalker.currentNode as Element).hasAttribute("data-qds-tree-item")) {
-          treeWalker.previousNode();
-        }
-
-        if (treeWalker.currentNode && treeWalker.currentNode !== root) {
-          (treeWalker.currentNode as HTMLElement).focus();
+        if (lastVisibleNode) {
+          (lastVisibleNode as HTMLElement).focus();
         }
         break;
       }
@@ -108,8 +139,4 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   );
 });
 
-export const TreeItem = withAsChild(TreeItemBase, true, (props) => {
-  console.log("GROUP ID: ", props.groupId);
-
-  return props;
-});
+export const TreeItem = withAsChild(TreeItemBase);

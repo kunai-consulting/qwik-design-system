@@ -29,6 +29,7 @@
 - [Styling](/contributing/styling)
 - [Philosophy](/contributing/philosophy)
 - [Conventions](/contributing/conventions)
+- [Forms](/contributing/forms)
 - [Tradeoffs](/contributing/tradeoffs)
 
 ## Qwik core (future)

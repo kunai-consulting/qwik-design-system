@@ -44,4 +44,4 @@ export const TreeGroupBase: Component<PropsOf<typeof CollapsibleRoot>> = compone
   }
 );
 
-export const TreeGroup = withAsChild(TreeGroupBase, false);
+export const TreeGroup = withAsChild(TreeGroupBase);

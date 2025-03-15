@@ -21,21 +21,13 @@ export function syncFixedInV2<T extends (...args: any[]) => unknown>(fn: T) {
 
 export function withAsChild<T>(
   BaseComponent: Component<T>,
-  trackInstances?: boolean,
   fn?: (props: T & AsChildProps) => T & AsChildProps
 ) {
-  let count = 0;
+  const count = 0;
 
   return function AsChildWrapper(props: T & AsChildProps) {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const children = (props as any).children;
-
-    // standard indexing, if you want hierarchical indexing, or any other functionality, you can use the callback function to inject your own logic
-    let indexCount: number | undefined;
-
-    if (trackInstances === true) {
-      indexCount = count++;
-    }
 
     let moreProps: (T & AsChildProps) | undefined;
 
@@ -46,7 +38,7 @@ export function withAsChild<T>(
     if (!props.asChild) {
       return (
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        <BaseComponent {...(props as any)} _index={indexCount} {...moreProps}>
+        <BaseComponent {...(props as any)} {...moreProps}>
           {children}
         </BaseComponent>
       );
@@ -79,7 +71,6 @@ export function withAsChild<T>(
         {...(props as any)}
         _jsxType={jsxType}
         _allProps={restProps}
-        _index={indexCount}
       >
         {(children.children ?? children.props?.children) as JSXChildren}
       </BaseComponent>
