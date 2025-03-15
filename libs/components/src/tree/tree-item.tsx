@@ -28,21 +28,21 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
         }
       }
     );
-    
+
     const isNodeVisible = (node: HTMLElement): boolean => {
       if (visibilityCache.has(node)) {
-        return visibilityCache.get(node)!;
+        return visibilityCache.get(node) ?? false;
       }
-      
+
       let current: HTMLElement | null = node;
       while (current) {
-        if (current.hasAttribute('data-collapsible-content') && current.hidden) {
+        if (current.hasAttribute("data-collapsible-content") && current.hidden) {
           visibilityCache.set(node, false);
           return false;
         }
         current = current.parentElement;
       }
-      
+
       visibilityCache.set(node, true);
       return true;
     };
@@ -87,17 +87,17 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
 
       case "End": {
         let lastVisibleNode: Node | null = null;
-        
+
         treeWalker.currentNode = root;
         let node = treeWalker.nextNode();
-        
+
         while (node) {
           if (isNodeVisible(node as HTMLElement)) {
             lastVisibleNode = node;
           }
           node = treeWalker.nextNode();
         }
-        
+
         if (lastVisibleNode) {
           (lastVisibleNode as HTMLElement).focus();
         }

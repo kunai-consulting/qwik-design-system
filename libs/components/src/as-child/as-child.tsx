@@ -23,7 +23,7 @@ export function withAsChild<T>(
   BaseComponent: Component<T>,
   fn?: (props: T & AsChildProps) => T & AsChildProps
 ) {
-  let count = 0;
+  const count = 0;
 
   return function AsChildWrapper(props: T & AsChildProps) {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
