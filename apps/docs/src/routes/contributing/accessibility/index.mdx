@@ -358,122 +358,120 @@ This should be the first step in testing your application for accessibility. Aut
   - As with keyboard only navigation, confirm that modals and other dynamically loaded content trap focus as necessary and return it correctly when closed and that the screen reader **announces the changes properly**
 
 ### Cross-Platform Accessibility Testing
-Testing accessibility across multiple platforms and devices is essential to ensure your application is accessible to all users.  A good testing strategy involves multiple platforms and devices to ensure that your application is accessible to many different kinds of users.  This section provides guidance on how to conduct cross-platform accessibility testing.  
+
+Testing accessibility across multiple platforms and devices is essential to ensure your application is accessible to all users.
+
 _Note: This section does not replace automated and manual testing, it is in addition to those methods._
-- Test with key platforms, devices and assistive technologies.
-   - __Windows:__ NVDA, JAWS, Narrator.  These are widely used screen readers for Windows. JAWS is a proprietary screen reader for Windows and has an associated cost, NVDA and Narrator are free and open source making accessibility testing easier.
-   - __Mac:__ VoiceOver is the proprietary screen reader for Mac and iOS (iPhones, iPads, and iPods). 
-   - __Android:__ Talkback is the screen reader for Android devices.  
 
-- Establish a Testing Plan
-    The testing plan should be repeatable and include the following steps:
-	- Prioritize a browser screen reader pairing for initial development and testing.  This will provide a baseline for the application and help identify any accessibility issues early in the development process.  Continued testing with this pair will allow you to predict and address many issues that may arise.
-	- Document your findings.  Note the browser, screen reader and operating system used.  If there are multiple pages or sections to the application, note the page or section.  If there are multiple issues, note the issue and how it was resolved.
-	- Repeat on other platforms and devices.  Many users access applications on mobile devices, like smartphones and tablets.  These devices may have different screen sizes, resolutions, and operating systems and many are touch-based, meaning they may not be able to use the keyboard.  Testing on these devices can reveal issues not found on desktops or laptops.  Choose your secondary browser screen reader pairing and repeat the testing plan. Continue this process until you have tested on all platforms and devices you have access to.
+#### Test with key platforms and assistive technologies
 
-- Continuous process
-   - Accessibility testing should be an ongoing process.  It should be integrated into your development workflow and should be performed regularly.  Ensuring that the application is accessible to all users may be an initial goal, but a more realistic goal is to test on a regular basis, learn from the results and continue to improve the application.  Solving one accessibility issue on one platform and device could unintentionally impact another platform or device.  Continuous testing will help you identify and address these issues.
+- **Windows:** NVDA, JAWS, Narrator. JAWS is paid, while NVDA and Narrator are free and open source.
+- **Mac:** VoiceOver for Mac and iOS devices
+- **Android:** Talkback for Android devices
+
+#### Establish a Testing Plan
+
+- Choose a primary browser + screen reader combination for initial development. This provides a baseline and helps identify issues early.
+- Document your findings: browser version, screen reader used, OS version, and any issues found.
+- Test on other platforms and devices. Mobile devices have different screen sizes and input methods (touch vs keyboard), which can reveal new issues.
+
+#### Continuous process
+
+Accessibility testing should be integrated into your development workflow. Test regularly and continuously improve - solving an issue on one platform might affect another, so ongoing testing across platforms is essential.
 
 ## Accessibility Resources
 
-A (growing) collection of useful links, tools, and resources to have handy for your everyday accessibility work.
+A growing collection of useful links, tools, and resources to have handy for your everyday accessibility work.
+
 ### Accessibility Standards
-[HTML: The Living Standard](https://html.spec.whatwg.org/)   
-[WCAG](https://www.w3.org/TR/WCAG/)  
-[WCAG Quick Reference](https://www.w3.org/WAI/WCAG21/quickref/)  
-[Understanding WCAG 2.1](https://www.w3.org/WAI/WCAG21/Understanding/)  
-[Techniques for WCAG 2.1](https://www.w3.org/WAI/WCAG21/Techniques/)  
-[ARIA](https://www.w3.org/TR/wai-aria/)  
-[ARIA Authoring Practices Guide (APG)](https://www.w3.org/WAI/ARIA/apg/)  
-[ARIA in HTML](https://www.w3.org/TR/html-aria/)  
-[Using ARIA](https://www.w3.org/TR/using-aria/)  
-[HTML Accessibiliy API Mappings (AAM)](https://www.w3.org/TR/html-aam/)  
-[Accessible Name and Description Computation](https://w3c.github.io/html-aam/#accessible-name-and-description-computation)  
+- [HTML: The Living Standard](https://html.spec.whatwg.org/)
+- [WCAG](https://www.w3.org/TR/WCAG/)
+- [WCAG Quick Reference](https://www.w3.org/WAI/WCAG21/quickref/)
+- [Understanding WCAG 2.1](https://www.w3.org/WAI/WCAG21/Understanding/)
+- [Techniques for WCAG 2.1](https://www.w3.org/WAI/WCAG21/Techniques/)
+- [ARIA](https://www.w3.org/TR/wai-aria/)
+- [ARIA Authoring Practices Guide (APG)](https://www.w3.org/WAI/ARIA/apg/)
+- [ARIA in HTML](https://www.w3.org/TR/html-aria/)
+- [Using ARIA](https://www.w3.org/TR/using-aria/)
+- [HTML Accessibiliy API Mappings (AAM)](https://www.w3.org/TR/html-aam/)
+- [Accessible Name and Description Computation](https://w3c.github.io/html-aam/#accessible-name-and-description-computation)
 
+### Useful Resources and References
+- [HTML5 Accessibility](http://www.html5accessibility.com/) - Tests which HTML5 features are accessibly supported by major browsers
+- [a11ysupport.io](https://a11ysupport.io/) - ARIA attributes support across screen readers
+- [This is WCAG 2.1](https://thisiswcag.com/)
+- [WCAG 2.1 Map](https://intopia.digital/articles/intopia-launches-wcag-2-1-map/)
 
+### Guides & Cheatsheets
 
-### Useful resources and references
-[HTML5 Accessibility
-“This site tests which newish HTML5 features are accessibly supported by major browsers.”](http://www.html5accessibility.com/)  
-[a11ysupport.io
-ARIA attributes support across screen readers](https://a11ysupport.io/)  
-[This is WCAG 2.1](https://thisiswcag.com/)  
-[WCAG 2.1 Map](https://intopia.digital/articles/intopia-launches-wcag-2-1-map/)  
+#### Official Screen Reader User Guides
 
-### Guides & Cheatsheets  
-Official screen reader user guides
+##### NVDA
+- [User Guide](https://www.nvaccess.org/files/nvda/documentation/userGuide.html)
+- [Browse Mode](https://www.nvaccess.org/files/nvda/documentation/userGuide.html#BrowseMode) - Most read-only webpages are browsed in NVDA using Browse mode
 
-__NVDA:__  
-Most read-only webpages are browsed in NVDA using Browse mode.  
-[User Guide](https://www.nvaccess.org/files/nvda/documentation/userGuide.html)  
-[Browse Mode](https://www.nvaccess.org/files/nvda/documentation/userGuide.html#BrowseMode)  
-[JAWS documentation](https://www.freedomscientific.com/Products/software/JAWS/)  
-[JAWS Hotkeys](https://www.freedomscientific.com/training/jaws/hotkeys/#wb)    
-[Complete guide to Narrator](https://support.microsoft.com/en-us/windows/complete-guide-to-narrator-e4397a0d-ef4f-b386-d8ae-c172f109bdb1)   
-[Narrator keyboard commands and touch gestures](https://support.microsoft.com/en-us/windows/appendix-b-narrator-keyboard-commands-and-touch-gestures-8bdab3f4-b3e9-4554-7f28-8b15bd37410a#WindowsVersion=Windows_11)  
+##### JAWS
+- [JAWS Documentation](https://www.freedomscientific.com/Products/software/JAWS/)
+- [JAWS Hotkeys](https://www.freedomscientific.com/training/jaws/hotkeys/#wb)
 
+##### Narrator
+- [Complete Guide to Narrator](https://support.microsoft.com/en-us/windows/complete-guide-to-narrator-e4397a0d-ef4f-b386-d8ae-c172f109bdb1)
+- [Narrator Keyboard Commands and Touch Gestures](https://support.microsoft.com/en-us/windows/appendix-b-narrator-keyboard-commands-and-touch-gestures-8bdab3f4-b3e9-4554-7f28-8b15bd37410a#WindowsVersion=Windows_11)
 
-__VoiceOver:__  
-[iPhone](https://help.apple.com/iphone/11/#/iph3e2e415f)  
-[Mac](https://support.apple.com/en-lb/guide/voiceover/vo27974/10/mac/13.0)  
-[Apple VoiceOver Command charts](https://help.apple.com/voiceover/command-charts/)  
-[Android](https://support.google.com/accessibility/android/topic/10601774?hl=en&ref_topic=3529932)  
-[Talkback user guides](https://support.apple.com/en-lb/guide/iphone/iph3e2e415f/16.0/ios/16.0)    
-[Turn on and practice VoiceOver on iPhone](https://help.apple.com/iphone/11/#/iph3e2e415f)  
-[Talkback Gestures on iOS](https://dequeuniversity.com/screenreaders/talkback-shortcuts)  
+##### VoiceOver
+- [VoiceOver for iPhone](https://help.apple.com/iphone/11/#/iph3e2e415f)
+- [VoiceOver for Mac](https://support.apple.com/en-lb/guide/voiceover/vo27974/10/mac/13.0)
+- [Apple VoiceOver Command Charts](https://help.apple.com/voiceover/command-charts/)
 
+##### TalkBack
+- [Android Accessibility](https://support.google.com/accessibility/android/topic/10601774?hl=en&ref_topic=3529932)
+- [TalkBack User Guides](https://support.apple.com/en-lb/guide/iphone/iph3e2e415f/16.0/ios/16.0)
+- [Turn on and Practice VoiceOver on iPhone](https://help.apple.com/iphone/11/#/iph3e2e415f)
+- [TalkBack Gestures on iOS](https://dequeuniversity.com/screenreaders/talkback-shortcuts)
 
-__Screen reader cheatsheets:__  
-[VoiceOver Keyboard Shortcuts on a Mac](https://dequeuniversity.com/screenreaders/voiceover-keyboard-shortcut)
-[VoiceOver Gestures on iOS](https://dequeuniversity.com/screenreaders/voiceover-ios-shortcuts)  
-[NVDA Keyboard Shortcuts](https://dequeuniversity.com/screenreaders/nvda-keyboard-shortcuts)  
-[Talkback Gestures on Android](https://dequeuniversity.com/screenreaders/talkback-shortcuts)  
-[JAWS Keyboard Shortcuts](https://dequeuniversity.com/screenreaders/jaws-keyboard-shortcuts)  
-[Narrator Keyboard Shortcuts](https://dequeuniversity.com/screenreaders/narrator-keyboard-shortcuts)  
-[Desktop Screen Readers Forms Guide](https://dequeuniversity.com/screenreaders/forms-guide)  
-[Desktop Screen Readers Survival Guide - Basic Keyboard Shortcuts](https://dequeuniversity.com/screenreaders/survival-guide)
-
+#### Screen Reader Cheatsheets
+- [VoiceOver Keyboard Shortcuts on a Mac](https://dequeuniversity.com/screenreaders/voiceover-keyboard-shortcut)
+- [VoiceOver Gestures on iOS](https://dequeuniversity.com/screenreaders/voiceover-ios-shortcuts)
+- [NVDA Keyboard Shortcuts](https://dequeuniversity.com/screenreaders/nvda-keyboard-shortcuts)
+- [TalkBack Gestures on Android](https://dequeuniversity.com/screenreaders/talkback-shortcuts)
+- [JAWS Keyboard Shortcuts](https://dequeuniversity.com/screenreaders/jaws-keyboard-shortcuts)
+- [Narrator Keyboard Shortcuts](https://dequeuniversity.com/screenreaders/narrator-keyboard-shortcuts)
+- [Desktop Screen Readers Forms Guide](https://dequeuniversity.com/screenreaders/forms-guide)
+- [Desktop Screen Readers Survival Guide - Basic Keyboard Shortcuts](https://dequeuniversity.com/screenreaders/survival-guide)
 
 ### Checklists
-[Custom Control Accessible Development Checklist](https://www.w3.org/TR/using-aria/#ariachecklist)  
-[Deque’s Web Accessibility Checklist](https://dequeuniversity.com/checklists/web/)
--includes checklists for components, forms, images, links, multimedia, etc. VERY useful.)   
-[“The Must-Have WCAG 2.1 Checklist”](https://kma.global/wp-content/uploads/2019/07/WCAG_2.1_Checklist.pdf)  
-[A11y Project Checklist](https://www.a11yproject.com/checklist/)  
-[WebAIM WCAG 2 Checklist](https://webaim.org/standards/wcag/checklist)  
-[Accessibility Not-Checklist](https://not-checklist.intopia.digital/)  
+- [Custom Control Accessible Development Checklist](https://www.w3.org/TR/using-aria/#ariachecklist)
+- [Deque's Web Accessibility Checklist](https://dequeuniversity.com/checklists/web/) - Includes checklists for components, forms, images, links, multimedia, etc.
+- [The Must-Have WCAG 2.1 Checklist](https://kma.global/wp-content/uploads/2019/07/WCAG_2.1_Checklist.pdf)
+- [A11y Project Checklist](https://www.a11yproject.com/checklist/)
+- [WebAIM WCAG 2 Checklist](https://webaim.org/standards/wcag/checklist)
+- [Accessibility Not-Checklist](https://not-checklist.intopia.digital/)
 
+### Auditing and Testing Tools
+- [A Comprehensive List of Web Accessibility Evaluation Tools](https://www.w3.org/WAI/ER/tools/)
+- [JavaScript Bookmarklets for Accessibility Testing](https://pauljadam.com/bookmarklets.html)
 
-### Auditing and Testing tools  
-[A comprehensive list of Web Accessibility Evaluation Tools](https://www.w3.org/WAI/ER/tools/)  
-[A list of JavaScript Bookmarklets for Accessibility Testing](https://pauljadam.com/bookmarklets.html)
+#### Virtual Machines
+- [Microsoft Edge Virtual Machines](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/)
+- [Windows 11 Virtual Machines](https://developer.microsoft.com/en-us/windows/downloads/virtual-machines/)
 
-__Virtual Machines:__  
-[Microsoft Edge Virtual Machines](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/)  
-[Windows 11 Virtual Machines](https://developer.microsoft.com/en-us/windows/downloads/virtual-machines/)
+#### Accessibility Auditing
+- [WCAG Conformance Evaluation Methodology (WCAG-EM)](https://www.w3.org/TR/WCAG-EM/)
+- [WCAG-EM Report Tool](https://www.w3.org/WAI/eval/report-tool/) - Generates a standards-first report
+- [HTML Validation (Nu HTML Checker)](https://validator.nu/)
+- [The W3C Markup Validator](https://validator.w3.org/)
 
+#### Browser Extensions & Bookmarklets
+- [ARC Toolkit by TPGi](https://www.tpgi.com/arc-platform/arc-toolkit/) - Chrome-only extension
+- [WAVE Browser Extension](https://wave.webaim.org/extension/)
+- [Web Developer Extension](https://chrispederick.com/work/web-developer/)
+- [h123 HTML5 Outliner](https://hinderlingvolkart.github.io/h123/) - Cross-browser bookmarklet
+- [Accessibility Insights for Web](https://accessibilityinsights.io/)
 
-### Accessibility Auditing
-[WCAG Conformance Evaluation Methodology (WCAG-EM)](https://www.w3.org/TR/WCAG-EM/)  
-[WCAG-EM Report Tool (Generates a standards-first report)](https://www.w3.org/WAI/eval/report-tool/)  
-[HTML validation (Nu HTML Checker)](https://validator.nu/)  
-[The W3C Markup validator](https://validator.w3.org/)
-
-
-__Browser extensions & bookmarklets__  
-[ARC Toolkit by TPGi (Chrome-only extension)](https://www.tpgi.com/arc-platform/arc-toolkit/)  
-[WAVE browser extension](https://wave.webaim.org/extension/)  
-[Web Developer Extension](https://chrispederick.com/work/web-developer/)  
-[h123 HTML5 Outliner bookmarklet, cross-browser](https://hinderlingvolkart.github.io/h123/)  
-[Accessibility Insights for Web](https://accessibilityinsights.io/)  
-
-
-__Other__  
-[Build a Better Mobile Input](https://better-mobile-inputs.netlify.app/?android=false&autocomplete=one-time-code&inputmode=decimal&type=email)
-– displays mobile keyboard used by browser based on HTML input attributes used
-[Estimate how many people using your website might be disabled](https://how-many.herokuapp.com/)  
-[ISO 639-1 Language Codes](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)  
-[Simple Web Accessibility Guidelines](https://jfhector.github.io/accessibility-guidelines/index.html)  
-[Accessibility Statement Generator from Nomensa](https://www.accessibilitystatementgenerator.com/)  
-[The W3C Accessibility statement generator](https://www.w3.org/WAI/planning/statements/generator/#create)  
-https://better-mobile-inputs.netlify.app/?android=false&autocomplete=one-time-code&inputmode=decimal&type=email    
+### Other Helpful Resources
+- [Build a Better Mobile Input](https://better-mobile-inputs.netlify.app/?android=false&autocomplete=one-time-code&inputmode=decimal&type=email) - Displays mobile keyboard used by browser based on HTML input attributes
+- [Estimate How Many People Using Your Website Might Be Disabled](https://how-many.herokuapp.com/)
+- [ISO 639-1 Language Codes](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)
+- [Simple Web Accessibility Guidelines](https://jfhector.github.io/accessibility-guidelines/index.html)
+- [Accessibility Statement Generator from Nomensa](https://www.accessibilitystatementgenerator.com/)
+- [The W3C Accessibility Statement Generator](https://www.w3.org/WAI/planning/statements/generator/#create)
