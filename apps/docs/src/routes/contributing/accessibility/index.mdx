@@ -15,38 +15,61 @@ import accessibility from "~/assets/docs/accessibility/accessibility.webp";
 - Meet legal requirements
 - Support consumers who rely on assistive technologies
 
-## Accessibility in Qwik
+## Qwik specific
 
-Most accessibility features in Qwik work through standard HTML attributes added on initial render. The main considerations are:
+Most accessibility features in Qwik work through standard HTML attributes added on initial render.
 
-### Example 1: State Management and Updates
+There are however, some Qwik specific features that can be used to manage attributes, elements, focus management, and state.
+
+### Attributes and state
+
+In this example, we're creating an accessible toggle button that properly announces its state to screen readers:
 
 ```tsx
-const isOpen = useSignal(false);
+const isPressedSig = useSignal(false);
 
 const handleClick$ = $(() => {
-    isOpen.value = true
+    isPressedSig.value = !isPressedSig.value
 })
 
 return (
   <>
     <button 
       onClick$={[handleClick$, props.onClick$]}
-      aria-expanded={isOpen.value}
+      aria-pressed={isPressedSig.value}
     >
-      Toggle Menu
+      Toggle
     </button>
-    <div 
-      aria-hidden={!isOpen.value}
-      aria-live="polite"
-    >
-      Content
-    </div>
   </>
 );
 ```
 
-### Example 2: Refs
+Make sure to use reactive state to manage attributes (signals, stores, props).
+
+In the case of `data-*` attributes, you can use a ternary to indicate the presence of the attribute, otherwise it will be undefined.
+
+```tsx
+const isPressedSig = useSignal(false);
+
+const handleClick$ = $(() => {
+    isPressedSig.value = !isPressedSig.value
+})
+
+return (
+  <>
+    <button 
+      onClick$={[handleClick$, props.onClick$]}
+      aria-pressed={isPressedSig.value}
+      data-pressed={isPressedSig.value ? '' : undefined}
+    >
+      Toggle
+    </button>
+  </>
+);
+```
+
+
+### Refs
 
 Signals in Qwik are also refs.  This means that you can use a signal to manage the ref for an element.
 
@@ -89,97 +112,93 @@ return (
 
 > The ref function can also be used for other more complex use cases, such as handling an array of refs.
 
-### Example 3: Multiple Instances
+### Managing Multiple Instances
 
-**Do not use `querySelector` or `getElementById` to get an element in the DOM.**  Instead, use **refs and ref values.**
+When working with multiple instances of components (like tabs, accordions, or carousels), it's important to manage DOM elements correctly for accessibility. **Never use `querySelector` or `getElementById`** - instead, use Qwik's ref system.
 
-In an earlier section, we mentioned how ref values resolve to a DOM element on the client.
+#### Single Instance vs Multiple Instances
 
-If only one instance of a piece is needed, e.g one trigger or content for an item, the ref can be placed in the root component in context.
-
-If there are multiple instances, e.g. multiple triggers or content for an item, then an array of refs can be used.
-
-For example, imagine you have a carousel of slides, and you want to manage when each slide is shown or hidden.
-
-Inside root: 
+For a single instance (e.g., one modal trigger):
 ```tsx
-  const slideRefsArray = useSignal<Array<Signal>>([]);
+// In your root component
+const triggerRef = useSignal<HTMLButtonElement>();
 
-  const context = {
-    slideRefsArray
-  }
-
-  useContextProvider(carouselContextId, context);
+// Make it available to child components
+const context = {
+  triggerRef
+};
+useContextProvider(modalContextId, context);
 ```
 
-Inside the item component:
-
+For multiple instances (e.g., carousel slides), use an array of refs:
 ```tsx
-  const slideRef = useSignal<HTMLDivElement>();
+// In your root component
+type CarouselContext = {
+  slideRefs: Signal<HTMLElement[]>;
+  currentIndexSig: Signal<number>;
+}
 
-  useTask$(function getIndexOrder() {
+const context: CarouselContext = {
+  slideRefs: useSignal([]),
+  currentIndexSig: useSignal(0)
+};
+useContextProvider(carouselContextId, context);
+```
+
+#### Managing Individual Refs
+
+When rendering multiple instances, each needs its own ref:
+```tsx
+export const CarouselSlide = component$(() => {
+  const context = useContext(carouselContextId);
+  const slideRef = useSignal<HTMLElement>();
+  const index = context.numSlidesSig.value - 1;
+
+  useTask$(function setIndexOrder({ cleanup }) {
+    context.numSlidesSig.value++
+
     if (index !== undefined) {
       context.slideRefsArray.value[index] = slideRef;
     } else {
       throw new Error('Qwik UI: Carousel Slide cannot find its proper index.');
     }
+
+    cleanup(() => {
+      context.slideRefsArray.value[index] = undefined;
+      context.numSlidesSig.value--;
+    })
   });
+
+  return (
+    <div 
+      ref={slideRef}
+      role="tabpanel"
+      aria-hidden={context.currentIndex.value !== index}
+    >
+      <Slot />
+    </div>
+  );
+});
 ```
 
-The slide ref is defined directly in the item piece, this is because the item component is rendered multiple times, and we need to manage the ref for each instance.
+> Notice that an array of refs is used to manage the refs for each instance.
 
-Then, the slide refs array is updated with the ref for the current item.
+#### Using Refs for focus management
 
-Now throughout the component, we can use the slide refs array to manage actions for each slide.
-
+Once refs are set up, you can manage focus and ARIA attributes properly:
 ```tsx
-const handleDragSnap = $(async () => {
-    if (!context.scrollerRef.value) return;
+const focusNextSlide$ = $((currentIndex: number) => {
+    const slides = context.slideRefs.value;
+    const totalSlides = slides.length;
 
-    const slides = context.slideRefsArray.value;
-    const currentPosition = -transformSig.value[direction];
+    if (!totalSlides) return;
 
-    let closestIndex = 0;
-    let minDistance = Infinity;
-
-    for (let i = 0; i < slides.length; i++) {
-      const slide = slides[i].value;
-      if (!slide) continue;
-
-      const slidePosition = await getSlidePosition(i);
-      const distance = Math.abs(slidePosition - currentPosition);
-
-      if (distance < minDistance) {
-        closestIndex = i;
-        minDistance = distance;
-      }
-    }
-
-    const dragSnapPosition = await getSlidePosition(closestIndex);
-
-    await setTransition(true);
-    transformSig.value[direction] = -dragSnapPosition;
-    await setTransform();
-
-    context.currentIndexSig.value = closestIndex;
-    isMouseDownSig.value = false;
-    isMouseMovingSig.value = false;
-    isTouchMovingSig.value = false;
-    isTouchStartSig.value = false;
-    window.removeEventListener('mousemove', handleMouseMove);
-  });
+    const nextIndex = (currentIndex + 1) % totalSlides;
+    return focusSlide(slides[nextIndex], nextIndex);
+});
 ```
 
-
-
-### Best Practices
-- Use semantic HTML elements (`<button>`) OR the equivalent with ARIA attributes
-- Add ARIA attributes directly in your JSX
-- Leverage Qwik's fine-grained reactivity to ensure screen readers announce state changes
-
-## Testing for Accessibility
-
-To ensure your Qwik.js applications are accessible, consider the following testing strategies:
+## Testing
 
 ### Automated Accessibility Testing   
 This should be the first step in testing your application for accessibility. Automated testing tools can help identify accessibility issues with minimal effort.
