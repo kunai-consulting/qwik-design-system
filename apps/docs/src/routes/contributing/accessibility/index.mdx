@@ -15,6 +15,12 @@ import accessibility from "~/assets/docs/accessibility/accessibility.webp";
 - Meet legal requirements
 - Support consumers who rely on assistive technologies
 
+## Getting started
+
+The [Aria APG](https://www.w3.org/WAI/ARIA/apg/) is a great starting point for understanding how to make your component pieces and API's accessible.
+
+> Keep in mind, that this is more of a starting point and not a comprehensive guide.  It is important to test your component on a regular basis to ensure that it is accessible to all users.
+
 ## Qwik specific
 
 Most accessibility features in Qwik work through standard HTML attributes added on initial render.
@@ -325,9 +331,10 @@ In JSX, boolean attributes can be written in shorthand when the value is `true`:
 <input /> // disabled={false}
 ```
 
-## Testing
+## A11y Testing
 
 ### Automated Accessibility Testing   
+
 This should be the first step in testing your application for accessibility. Automated testing tools can help identify accessibility issues with minimal effort.
 
 - Use a linter to detect issues early in the development process. (e.g. axe DevTools Linter)
@@ -335,15 +342,20 @@ This should be the first step in testing your application for accessibility. Aut
 - Use a testing framework to automate accessibility testing. (e.g. Playwright, Vitest)
 
 ### Manual Accessibility Testing
-Manual testing should not be skipped. It is beneficial to test using different platforms and devices and review and fix any issues that automated testing may have missed.  While pairing of screen readers and browsers is outside the scope of this guide, it is important to note that there are screen readers that work better with certain browsers and platforms.  
-- Test with keyboard navigation initially.  
-	- Make sure all interactive elements are focusable using just the keyboard. 
-	- Note any elements that are skipped or out of order.  
-	- Confirm that modals and other dynamically loaded content trap focus as necessary and return it correctly when closed.
-- Test with screen readers.  
-	- Use screen readers like NVDA, JAWS, or VoiceOver to navigate and interact with your application.  
-	- Note any issues or areas that may be difficult to navigate.  
-	- As with keyboard only navigation, confirm that modals and other dynamically loaded content trap focus as necessary and return it correctly when closed and that the screen reader announces the changes properly.
+
+**Manual testing should not be skipped.** It is beneficial to test using different platforms and devices and review and fix any issues that automated testing may have missed. While pairing of screen readers and browsers is outside the scope of this guide, it is important to note that there are screen readers that work better with certain browsers and platforms.
+
+#### Testing order:
+
+**1. Keyboard Navigation Testing**
+  - Make sure all interactive elements are **focusable** using just the keyboard
+  - Note any elements that are **skipped** or **out of order**
+  - Confirm that modals and other dynamically loaded content **trap focus** as necessary and return it correctly when closed
+
+**2. Screen Reader Testing**
+  - Use screen readers like **NVDA**, **JAWS**, or **VoiceOver** to navigate and interact with your application
+  - Note any issues or areas that may be **difficult to navigate**
+  - As with keyboard only navigation, confirm that modals and other dynamically loaded content trap focus as necessary and return it correctly when closed and that the screen reader **announces the changes properly**
 
 ### Cross-Platform Accessibility Testing
 Testing accessibility across multiple platforms and devices is essential to ensure your application is accessible to all users.  A good testing strategy involves multiple platforms and devices to ensure that your application is accessible to many different kinds of users.  This section provides guidance on how to conduct cross-platform accessibility testing.  
