@@ -28,6 +28,7 @@
 - [Testing](/contributing/testing)
 - [Styling](/contributing/styling)
 - [Philosophy](/contributing/philosophy)
+- [Accessibility](/contributing/accessibility)
 - [Conventions](/contributing/conventions)
 - [Forms](/contributing/forms)
 - [Tradeoffs](/contributing/tradeoffs)
