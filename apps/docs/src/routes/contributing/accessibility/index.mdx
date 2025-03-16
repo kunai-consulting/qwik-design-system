@@ -198,6 +198,133 @@ const focusNextSlide$ = $((currentIndex: number) => {
 });
 ```
 
+## JSX in Qwik
+
+There are a couple of differences between JSX and HTML that are important to know when working with Qwik.
+
+### Self-Closing Tags
+
+Unlike HTML which can be forgiving with unclosed tags, JSX requires explicit closing of all elements. For elements that can't have children (like `img`, `input`, etc.), use self-closing syntax:
+
+```tsx
+// ❌ Invalid JSX
+<img src="/images/logo.png">
+
+// ✅ Valid JSX
+<img src="/images/logo.png" />
+```
+
+### Case Sensitivity 
+
+### Tags
+HTML tags must be lowercase in JSX:
+
+```tsx
+// ❌ Invalid JSX
+<MAIN>
+  <H1>Hello World!</H1>
+</MAIN>
+
+// ✅ Valid JSX
+<main>
+  <h1>Hello World!</h1>
+</main>
+```
+
+### Attributes
+Most attributes in JSX use camelCase:
+
+```tsx
+// ❌ Invalid JSX
+<video
+  src="/videos/demo.mp4"
+  autoplay={true}
+/>
+
+// ✅ Valid JSX
+<video
+  src="/videos/demo.mp4"
+  autoPlay={true}
+/>
+```
+
+> **Exception**: `data-*` and `aria-*` attributes keep their original kebab-case format:
+> ```tsx
+> <button
+>   data-test-id="submit-button"
+>   aria-label="Submit form"
+> >
+>   Submit
+> </button>
+> ```
+
+### Inline Styles
+
+In JSX, the `style` attribute takes an object instead of a string:
+
+```tsx
+// ❌ Invalid JSX
+<div style="color: blue; font-size: 16px;">
+
+// ✅ Valid JSX
+<div style={{ color: 'blue', fontSize: '16px' }}>
+```
+
+CSS properties are written in camelCase:
+- `background-color` → `backgroundColor`
+- `border-radius` → `borderRadius`
+- `font-family` → `fontFamily`
+
+### Event Handlers in Qwik
+
+Qwik has a unique approach to event handlers using the `$` suffix:
+
+```tsx
+export const Counter = component$(() => {
+  const count = useSignal(0);
+
+  // ❌ Invalid in Qwik
+  return <button onClick={() => count.value++}>
+
+  // ✅ Valid in Qwik
+  return <button onClick$={() => count.value++}>
+    Count: {count.value}
+  </button>
+});
+```
+
+The `$` suffix is crucial in Qwik as it enables modular lazy-loading of code.
+
+### Expression Slots
+
+Like React, Qwik JSX uses curly braces `{}` for JavaScript expressions:
+
+```tsx
+export const Greeting = component$(() => {
+  const name = "World";
+  return (
+    <div>
+      <h1>Hello {name}!</h1>
+      <div>{2 + 2}</div>
+      <div>{getGreeting()}</div>
+    </div>
+  );
+});
+```
+
+### Boolean Attributes
+
+In JSX, boolean attributes can be written in shorthand when the value is `true`:
+
+```tsx
+// These are equivalent:
+<input disabled={true} />
+<input disabled />
+
+// To set false, omit the attribute:
+<input /> // disabled={false}
+```
+
 ## Testing
 
 ### Automated Accessibility Testing   
