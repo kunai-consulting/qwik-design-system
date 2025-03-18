@@ -1,45 +1,43 @@
-# Qwik Design System 🚀
+# Qwik Design System
 
-A design system framework to manage your project UI at scale.
+An open source framework for building better design systems at scale with Qwik.
 
-## Key features ✨
+## About Qwik Design System
 
-- 🎨 Unstyled base components for flexible customization
-- 📐 Styling guide for creating consistent components
-- 📦 Ready-to-use, copy-paste styled components
-- 🖥️ Interactive component showcase with live examples
-- ♿ Accessibility-first approach in component design
-- 🎭 Customization options for adapting to various brand identities
-- 📚 Detailed API documentation for each component
-- 🔄 Version control and changelog for easy updates
-- 🎨 Design tokens for maintaining consistent styles across the system
-- 🛠️ Developer tooling for efficient workflow and debugging
+QDS is currently in active development. It aims to provide:
 
-## Why Qwik Design System? 🤔
+- ✨ A component library of unstyled UI components
+- 📚 A documentation framework that allows you to focus on content
+- 🎨 A comprehensive icons library
+- 📊 A powerful data visualization library (charts)
+- 🧮 A flexible and accessible tables library
 
-Qwik Design System offers a comprehensive solution for building modern, efficient, and consistent user interfaces. Here's why you should consider it:
+And much more, you can view our roadmap [here](https://qwik.design/contributing/intro/#roadmap).
 
-- **Qwik-optimized** ⚡: Built specifically for Qwik, ensuring optimal performance and seamless integration
-- **Customizable** 🎨: Easily adapt components to match your brand's unique style and requirements
-- **Accessibility-focused** ♿: Ensures your applications are usable by everyone, right out of the box
-- **Responsive** 📱: Designed to work flawlessly across all device sizes and orientations
-- **Developer-friendly** 👩‍💻👨‍💻: Intuitive API, extensive documentation, and ready-to-use components accelerate development
-- **Performance-first** 🏎️: Lightweight and optimized components that don't compromise on functionality
-- **Consistent design language** 🎭: Maintain visual and functional consistency across your entire application
-- **Scalable** 📈: Designed to grow with your project, from small applications to large-scale enterprises
-- **Community-driven** 🤝: Benefit from continuous improvements and additions from an active community
-- **Time-saving** ⏱️: Reduce development time with pre-built, tested, and documented components
+## Contributing
 
-Whether you're starting a new project or looking to improve an existing one, Qwik Design System provides the tools and structure needed to create beautiful, efficient, and consistent user interfaces.
+We welcome contributions to Qwik Design System! 
 
-## Getting Started 🏁
+To learn more about contributing to QDS, please visit our [contribution docs](https://qwik.design/contributing/intro/).
 
-Create a new design system from the Qwik Design System template, a starting point for managing your company design system.
+## Tech Stack
 
-## Installation 💻
+QDS is built with:
 
-To install the project, run the following command:
+- **[Qwik](https://qwik.dev/)** ⚡: Our core framework for environment agnostic components
+- **[TypeScript](https://www.typescriptlang.org/)** 🔒: For type safety and better developer experience
+- **[Vite](https://vite.dev/)** 🚀: For fast development and optimized builds
+- **[MDX](https://mdxjs.com/)** 📝: For documentation with embedded components
+- **[Vitest](https://vitest.dev/)** 🧪: For unit and component testing
+- **[Playwright](https://playwright.dev/)** 🎭: For end-to-end testing
+- **[Tailwind CSS](https://tailwindcss.com/)** 🎨: For styling the documentation site itself
+- **[Changesets](https://changesets-docs.vercel.app/en)** 📦: For versioning and changelog management
 
-```shell
-npm i -D @kunai-consulting/qwik
-```
+> We also use [Biome](https://biomejs.dev/) for linting and formatting. Please enable the [Biome extension](https://marketplace.visualstudio.com/items?itemName=biomejs.biome) in VSCode to get the recommended rules and formatting.
+
+## Roadmap
+
+Qwik Design System is currently focused on Phase 1: Core Headless Components. 
+Future phases will include design system tooling and enterprise features.
+
+For more information, visit [qwik.design](https://qwik.design/)
