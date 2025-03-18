@@ -1,5 +1,5 @@
 
-<img src="./apps/docs/src/assets/logo/planet.svg" width="240" height="240" />
+<img src="./apps/docs/src/assets/logo/planet.svg" width="120" height="120" />
 
 # Qwik Design System
 
