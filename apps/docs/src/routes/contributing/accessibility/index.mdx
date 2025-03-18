@@ -191,7 +191,7 @@ export const CarouselSlide = withAsChild(CarouselSlideBase, (props) => {
 
 Please read the [indexing docs](https://qwik.design/contributing/indexing/) for more information on how to manage multiple instances of components.
 
-> Notice that an array of refs is used to manage the refs for each instance.
+> Notice that an array of refs is used to manage the refs for each instance. You will also need to use the `resetIndexes(namespace)` to tie the component to the render lifecycle.
 
 #### Using Refs for focus management
 
