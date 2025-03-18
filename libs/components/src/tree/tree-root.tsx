@@ -51,7 +51,7 @@ export const TreeRootBase = component$((props: PropsOf<"div">) => {
 
   return (
     <Render
-      onQdsClick$={() => console.log("clicked")}
+      onClick$={[() => console.log("clicked"), props.onClick$]}
       ref={rootRef}
       role="treegrid"
       fallback="div"
