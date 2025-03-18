@@ -1,8 +1,16 @@
 # Indexing
 
-When there is multiple instances of a piece, as library authors we need to know the **specific index** for each item.
+## Understanding the Need for Component Indexing
 
-1 piece only:
+When building compound components with multiple instances of the same element type, we need to track the **specific index** of each item. This is crucial for features like:
+
+- Determining the active slide in a carousel
+- Managing selection in a list or tabs component
+- Implementing keyboard navigation between related elements
+
+### Single vs. Multiple Component Instances
+
+**Single instance components** (like tooltips) don't typically need indexing:
 
 ```tsx
 <Tooltip.Root>
@@ -15,35 +23,49 @@ When there is multiple instances of a piece, as library authors we need to know 
 </Tooltip.Root>
 ```
 
-Multiple pieces:
+**Multiple instance components** (like carousels) require proper indexing:
 
 ```tsx
 <Carousel.Root>
-    <Carousel.Slide /> index 0
-    <Carousel.Slide /> index 1
-    <Carousel.Slide /> index 2
+    <Carousel.Slide /> {/* index 0 */}
+    <Carousel.Slide /> {/* index 1 */}
+    <Carousel.Slide /> {/* index 2 */}
 </Carousel.Root>
 ```
 
-## The problem
+## The Challenge with Qwik v1
 
-In Qwik v1, the framework does not have a built-in scheduler. Qwik executes code that **might be asynchronous**. 
+### Asynchronous Execution vs. Predictable Indexing
 
-Synchronous frameworks (React, Preact, Solid) have a "implicit" scheduler, which is the order of the function calls and component render order  all being sequential and predictable. The downside of this is **performance**, everything is blocking, and code needs to be executed eagerly.
+In Qwik v1, the framework executes code that **might be asynchronous** without a built-in scheduler:
 
-On the other hand, with asynchronous code, we don't know when the code (promise) will resolve in the browser. Qwik v2 solves this with a scheduler.
+- **Traditional frameworks** (React, Preact, Solid) have "implicit" schedulers
+  - Component render order is sequential and predictable
+  - This makes indexing straightforward but comes at a performance cost
+  - Everything executes eagerly and blocks the main thread
 
-Here's an example:
+- **Qwik v1's asynchronous model**
+  - We can't predict when promises will resolve
+  - This creates challenges for reliable indexing
+
+Here's an example demonstrating the problem:
 
 <Showcase name="the-problem" />
 
-In v1, we have to work around this problem.
+## The Workaround for Qwik v1
 
-### V1 Workaround
+To solve this in v1, we use **synchronous code execution** via inline components:
 
-The current workaround is getting the index with synchronous code. Qwik has something called an [inline component](https://qwik.dev/docs/components/overview/#inline-components), which is similar to what traditional frameworks provide.
+### Using Inline Components
 
-Inline components also have the ability to **grab the children**. As a result, we use wrapper inline components with our `asChild` implementation.
+Qwik provides [inline components](https://qwik.dev/docs/components/overview/#inline-components) that:
+- Execute synchronously (like traditional frameworks)
+- Can access and manipulate children
+- Allow us to implement reliable indexing
+
+### Implementation Steps
+
+1. **Create a base component**:
 
 ```tsx
 const CarouselRootBase = component$((props) => {
@@ -57,7 +79,9 @@ const CarouselRootBase = component$((props) => {
 export const CarouselRoot = withAsChild(CarouselRootBase)
 ```
 
-`withAsChild` returns an inline component, all you need to know is that the second argument gives a callback function which you can execute **synchronous** code inside.
+2. **Use `withAsChild` for synchronous execution**:
+
+The `withAsChild` function returns an inline component with a callback for synchronous code:
 
 ```tsx
 const CarouselRootBase = component$((props) => {
@@ -69,56 +93,74 @@ const CarouselRootBase = component$((props) => {
 })
 
 export const CarouselRoot = withAsChild(CarouselRootBase, (props) => {
+    // Synchronous code runs here
     console.log("I can do synchronous work here!");
-
     props.newProp = newValue;
-
     return props;
 })
 ```
 
-To pass information to a stateful component (one with component$), we can add a new prop to the props object.
+### Creating a Reliable Indexing System
 
-We have a couple of helper utils to setup proper indexing: `resetIndexes` and `getNextIndex`
+We use two helper utilities:
 
-In the `Root` we use `resetIndexes`:
+1. **In the Root component**: Reset indexes at the start of each render cycle
 
 ```tsx
 export const CarouselRoot = withAsChild(CarouselRootBase, (props) => {
-    resetIndexes("carousel")
-
+    resetIndexes("carousel")  // Tie indexes to render lifecycle
     return props;
 })
 ```
 
-> `resetIndexes` is used on the root to tie the indexes to the render lifecycle, otherwise it would persist.
-
-In the `Slide` we grab the next index:
+2. **In each item component**: Get the next sequential index
 
 ```tsx
 export const CarouselSlide = withAsChild(CarouselSlideBase, (props) => {
   const nextIndex = getNextIndex("carousel");
-  props._index = nextIndex;
-
+  props._index = nextIndex;  // Store index in props for component access
   return props;
 });
 ```
 
-With both changes, we now get the correct indexes:
+This solution produces correct indexes in most cases:
 
 <Showcase name="the-fix" />
 
-### Remaining issue in v1
+> Both helper functions expect a namespace, to prevent collision with other components.
 
-At first glance, it may look like the index problem is solved completely, but unfortunately that's not the case.
+## Limitations of the v1 Solution
 
-For example, what if someone wraps some of our item instances in their own component?
+The v1 solution breaks when consumers wrap our component instances in their own components:
 
 <Showcase name="wrapped" />
 
-We run back into the same issue, where the execution order and lack of a built-in scheduler causes the indexes to be out of order.
+This happens because:
+- The consumer's wrapper components may introduce their own execution timing
+- Without a built-in scheduler, we lose control of the execution order
+- The indexes become out of sync with visual order
 
+> In v1 on the consumer side, make sure not to compose multiple instance components.
 
-## The solution (v2)
+## The Complete Solution in Qwik v2
 
-In v2, we can do what was initially done in our problem example, increment a count from context inside of our root component.
+In Qwik v2, the built-in scheduler solves these problems by allowing us to:
+- Track component indexes reliably via context
+- Maintain the correct order regardless of wrapper components
+- Handle asynchronous operations without losing indexing reliability
+
+```tsx
+<Carousel.Root>
+    <Carousel.Slide /> {/* index 0 */}
+    <Carousel.Slide /> {/* index 1 */}
+    <Carousel.Slide /> {/* index 2 */}
+</Carousel.Root>
+```
+
+## Key Takeaways
+
+- **Indexing is critical** for components with multiple instances of the same type
+- **Qwik v1** requires manual synchronous workarounds using inline components
+- **Helper utilities** (`resetIndexes` and `getNextIndex`) make implementation easier
+- **Qwik v2's scheduler** solves these problems more elegantly
+- Always consider how your component will behave when wrapped by consumer components
