@@ -1,0 +1,124 @@
+# Indexing
+
+When there is multiple instances of a piece, as library authors we need to know the **specific index** for each item.
+
+1 piece only:
+
+```tsx
+<Tooltip.Root>
+ <Tooltip.Trigger>
+    Trigger
+ </Tooltip.Trigger>
+ <Tooltip.Content>
+   Content
+ </Tooltip.Content>
+</Tooltip.Root>
+```
+
+Multiple pieces:
+
+```tsx
+<Carousel.Root>
+    <Carousel.Slide /> index 0
+    <Carousel.Slide /> index 1
+    <Carousel.Slide /> index 2
+</Carousel.Root>
+```
+
+## The problem
+
+In Qwik v1, the framework does not have a built-in scheduler. Qwik executes code that **might be asynchronous**. 
+
+Synchronous frameworks (React, Preact, Solid) have a "implicit" scheduler, which is the order of the function calls and component render order  all being sequential and predictable. The downside of this is **performance**, everything is blocking, and code needs to be executed eagerly.
+
+On the other hand, with asynchronous code, we don't know when the code (promise) will resolve in the browser. Qwik v2 solves this with a scheduler.
+
+Here's an example:
+
+<Showcase name="the-problem" />
+
+In v1, we have to work around this problem.
+
+### V1 Workaround
+
+The current workaround is getting the index with synchronous code. Qwik has something called an [inline component](https://qwik.dev/docs/components/overview/#inline-components), which is similar to what traditional frameworks provide.
+
+Inline components also have the ability to **grab the children**. As a result, we use wrapper inline components with our `asChild` implementation.
+
+```tsx
+const CarouselRootBase = component$((props) => {
+    return (
+        <Render fallback="div" {...props}>
+          <Slot />
+        </Render>
+    )
+})
+
+export const CarouselRoot = withAsChild(CarouselRootBase)
+```
+
+`withAsChild` returns an inline component, all you need to know is that the second argument gives a callback function which you can execute **synchronous** code inside.
+
+```tsx
+const CarouselRootBase = component$((props) => {
+    return (
+        <Render fallback="div" {...props}>
+          <Slot />
+        </Render>
+    )
+})
+
+export const CarouselRoot = withAsChild(CarouselRootBase, (props) => {
+    console.log("I can do synchronous work here!");
+
+    props.newProp = newValue;
+
+    return props;
+})
+```
+
+To pass information to a stateful component (one with component$), we can add a new prop to the props object.
+
+We have a couple of helper utils to setup proper indexing: `resetIndexes` and `getNextIndex`
+
+In the `Root` we use `resetIndexes`:
+
+```tsx
+export const CarouselRoot = withAsChild(CarouselRootBase, (props) => {
+    resetIndexes("carousel")
+
+    return props;
+})
+```
+
+> `resetIndexes` is used on the root to tie the indexes to the render lifecycle, otherwise it would persist.
+
+In the `Slide` we grab the next index:
+
+```tsx
+export const CarouselSlide = withAsChild(CarouselSlideBase, (props) => {
+  const nextIndex = getNextIndex("carousel");
+  props._index = nextIndex;
+
+  return props;
+});
+```
+
+With both changes, we now get the correct indexes:
+
+<Showcase name="the-fix" />
+
+### Remaining issue in v1
+
+At first glance, it may look like the index problem is solved completely, but unfortunately that's not the case.
+
+For example, what if someone wraps some of our item instances in their own component?
+
+<Showcase name="wrapped" />
+
+We run back into the same issue, where the execution order and lack of a built-in scheduler causes the indexes to be out of order.
+
+
+## The solution (v2)
+
+In v2, we can do what was initially done in our problem example, increment a count from context inside of our root component.
