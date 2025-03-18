@@ -1,0 +1,88 @@
+name: Check Event Handler Patterns
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '**/*.jsx'
+      - '**/*.tsx'
+
+jobs:
+  check-event-handlers:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v39
+        with:
+          files: |
+            **/*.jsx
+            **/*.tsx
+          
+      - name: Check event handler patterns
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          # Initialize arrays for tracking issues
+          invalid_patterns=()
+          
+          # Check each changed JSX/TSX file
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "Checking $file for event handler patterns..."
+            
+            # Read file line by line with line numbers
+            line_num=0
+            while IFS= read -r line; do
+              line_num=$((line_num + 1))
+              
+              # Match event handlers like onXxx$={...} but exclude any with "qds" in the name (case insensitive)
+              if [[ "$line" =~ on[A-Z][a-zA-Z0-9]*\$= ]]; then
+                # Extract the event name
+                event_name=$(echo "$line" | grep -o 'on[A-Za-z0-9]*\$=' | sed 's/\$=//')
+                
+                # Skip if the event name contains "qds" (case insensitive)
+                if [[ "${event_name,,}" =~ qds ]]; then
+                  continue
+                fi
+                
+                # Good pattern would have an array: onEvent$={[handler1, handler2]}
+                if ! [[ "$line" =~ on[A-Z][a-zA-Z0-9]*\$=\{[^{}]*\[[^{}]*\][^{}]*\} ]]; then
+                  invalid_patterns+=("$file:$line_num:$line")
+                fi
+              fi
+            done < "$file"
+          done
+          
+          # Report invalid patterns
+          if [ ${#invalid_patterns[@]} -gt 0 ]; then
+            echo "::error title=Invalid Event Handler Patterns::❌ Event handlers must use array pattern"
+            echo "::group::Event handlers with invalid patterns"
+            
+            for pattern in "${invalid_patterns[@]}"; do
+              # Extract file, line number and content
+              file_path=$(echo "$pattern" | cut -d':' -f1)
+              line_num=$(echo "$pattern" | cut -d':' -f2)
+              line_content=$(echo "$pattern" | cut -d':' -f3-)
+              
+              echo "::error file=$file_path,line=$line_num::Event handler should use array pattern: $line_content"
+            done
+            
+            echo "::endgroup::"
+            
+            echo "::group::How to fix"
+            echo "Event handlers should use the array pattern to combine local handlers with props:"
+            echo ""
+            echo "❌ Bad: onKeyDown$={handleKeyDown$}"
+            echo "✅ Good: onKeyDown$={[handleKeyDown$, props.onKeyDown$]}"
+            echo ""
+            echo "If this is a custom event that doesn't need the array pattern, you can:"
+            echo "- Include 'qds' in your event name (e.g., onQdsCustomEvent$ or onCustomQdsEvent$)"
+            echo "::endgroup::"
+            
+            exit 1
+          else
+            echo "✅ All event handlers use the proper array pattern."
+          fi

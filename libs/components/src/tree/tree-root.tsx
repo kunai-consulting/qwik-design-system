@@ -50,7 +50,13 @@ export const TreeRootBase = component$((props: PropsOf<"div">) => {
   useContextProvider(TreeRootContextId, context);
 
   return (
-    <Render ref={rootRef} role="treegrid" fallback="div" {...props}>
+    <Render
+      onClick$={() => console.log("clicked")}
+      ref={rootRef}
+      role="treegrid"
+      fallback="div"
+      {...props}
+    >
       <Slot />
     </Render>
   );
