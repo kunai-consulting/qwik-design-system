@@ -58,7 +58,7 @@ jobs:
             for dir in "${missing[@]}"; do
               echo "✅ $dir/research.mdx"
             done
-            echo "See libs/components/src/radio-group-new/research.mdx for a template example."
+            echo "See https://qwik.design/contributing/research/ for more info on how to write research files."
             echo "::endgroup::"
             
             exit 1
