@@ -14,6 +14,14 @@ QDS is currently in active development. It aims to provide:
 
 And much more, you can view our roadmap [here](https://qwik.design/contributing/intro/#roadmap).
 
+## Installation 💻
+
+To install the project, run the following command:
+
+```shell
+npm i -D @kunai-consulting/qwik
+```
+
 ## Contributing
 
 We welcome contributions to Qwik Design System! 
