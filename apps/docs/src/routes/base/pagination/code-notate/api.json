@@ -139,43 +139,41 @@
   "keyboardInteractions": [
     {
       "key": "ArrowRight",
-      "comment": "When focus is on a pagination page, moves focus to the next page"
+      "comment": "When focus is on a page number button, moves focus to the next page number"
     },
     {
       "key": "ArrowLeft",
-      "comment": "When focus is on a pagination page, moves focus to the previous page"
+      "comment": "When focus is on a page number button, moves focus to the previous page number"
     },
     {
       "key": "Home",
-      "comment": "When focus is on a pagination page, moves focus to the first page"
+      "comment": "When focus is on a page number button, moves focus to the first page number"
     },
     {
       "key": "End",
-      "comment": "When focus is on a pagination page, moves focus to the last page"
+      "comment": "When focus is on a page number button, moves focus to the last page number"
     },
     {
       "key": "Enter",
-      "comment": "When focus is on a pagination page, selects that page"
+      "comment": "When focus is on a page number button, selects that page number"
     },
     {
       "key": "Space",
-      "comment": "When focus is on a pagination page, selects that page"
-    },
-    {
-      "key": "Tab",
-      "comment": "Moves focus to the next focusable element in the pagination component"
+      "comment": "When focus is on the previous or next button, navigates to the previous or next page respectively"
     }
   ],
   "features": [
-    "Dynamic page range calculation with sibling pages",
-    "Smart ellipsis placement for large page counts",
-    "Keyboard navigation with arrow keys and Home/End",
-    "Aria-compliant pagination controls",
-    "Bound signal synchronization for page changes",
+    "Page number selection with keyboard navigation (arrows, home, end)",
+    "Dynamic pagination with customizable sibling count",
     "First/Last page quick navigation",
-    "Disabled state handling for boundary pages",
-    "Customizable ellipsis display",
-    "Controlled and uncontrolled page state",
-    "Page change event handling"
+    "Ellipsis support for large page sets",
+    "WAI-ARIA compliant pagination controls",
+    "Controlled and uncontrolled page selection modes",
+    "Customizable ellipsis element",
+    "Disabled state handling",
+    "Page change event handlers",
+    "Automatic page range calculation",
+    "Focus management between page numbers",
+    "Boundary page number validation"
   ]
 }

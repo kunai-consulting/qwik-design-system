@@ -9,15 +9,13 @@
           {
             "PublicRootProps": [
               {
-                "comment":
-                  "Controls when the scrollbars are visible: 'hover', 'scroll', 'auto', or 'always'",
+                "comment": "Controls when the scrollbars are visible: 'hover', 'scroll', 'auto', or 'always'",
                 "prop": "type",
                 "type": "PublicScrollbarVisibility",
                 "defaultValue": "\"hover\""
               },
               {
-                "comment":
-                  "Delay in milliseconds before hiding the scrollbars when type is 'scroll'",
+                "comment": "Delay in milliseconds before hiding the scrollbars when type is 'scroll'",
                 "prop": "hideDelay",
                 "type": "number",
                 "defaultValue": "600"
@@ -30,8 +28,7 @@
           {
             "name": "data-type",
             "type": "string",
-            "comment":
-              "Defines the scrollbar visibility behavior (hover, scroll, auto, or always)"
+            "comment": "Defines the scrollbar visibility behavior (hover, scroll, auto, or always)"
           },
           {
             "name": "data-has-overflow",
@@ -69,8 +66,7 @@
           {
             "name": "data-state",
             "type": "string | undefined",
-            "comment":
-              "Indicates the visibility state of the scrollbar (visible or hidden)"
+            "comment": "Indicates the visibility state of the scrollbar (visible or hidden)"
           }
         ]
       }
@@ -133,63 +129,52 @@
   "anatomy": [
     {
       "name": "ScrollArea.Root",
-      "description":
-        "A root component for scrollable content areas with customizable scrollbar behavior"
+      "description": "A root component for scrollable content areas with customizable scrollbar behavior"
     },
     {
       "name": "ScrollArea.Viewport"
     },
     {
       "name": "ScrollArea.Scrollbar",
-      "description":
-        "A scrollbar component that can be oriented vertically or horizontally"
+      "description": "A scrollbar component that can be oriented vertically or horizontally"
     },
     {
       "name": "ScrollArea.Thumb",
-      "description":
-        "A draggable thumb component for the scrollbar that handles scroll position"
+      "description": "A draggable thumb component for the scrollbar that handles scroll position"
     }
   ],
   "keyboardInteractions": [
     {
       "key": "ArrowDown",
-      "comment":
-        "Scrolls the viewport content vertically downward when focus is on the viewport"
+      "comment": "Scrolls the viewport content vertically downward when focus is on the viewport"
     },
     {
       "key": "ArrowUp",
-      "comment":
-        "Scrolls the viewport content vertically upward when focus is on the viewport"
+      "comment": "Scrolls the viewport content vertically upward when focus is on the viewport"
     },
     {
       "key": "ArrowRight",
-      "comment":
-        "Scrolls the viewport content horizontally to the right when focus is on the viewport"
+      "comment": "Scrolls the viewport content horizontally to the right when focus is on the viewport"
     },
     {
       "key": "ArrowLeft",
-      "comment":
-        "Scrolls the viewport content horizontally to the left when focus is on the viewport"
+      "comment": "Scrolls the viewport content horizontally to the left when focus is on the viewport"
     },
     {
       "key": "PageDown",
-      "comment":
-        "Scrolls the viewport content down by a larger increment when focus is on the viewport"
+      "comment": "Scrolls the viewport content down by a larger increment when focus is on the viewport"
     },
     {
       "key": "PageUp",
-      "comment":
-        "Scrolls the viewport content up by a larger increment when focus is on the viewport"
+      "comment": "Scrolls the viewport content up by a larger increment when focus is on the viewport"
     },
     {
       "key": "Home",
-      "comment":
-        "Scrolls to the top of the viewport content when focus is on the viewport"
+      "comment": "Scrolls to the top of the viewport content when focus is on the viewport"
     },
     {
       "key": "End",
-      "comment":
-        "Scrolls to the bottom of the viewport content when focus is on the viewport"
+      "comment": "Scrolls to the bottom of the viewport content when focus is on the viewport"
     },
     {
       "key": "Ctrl/Cmd + 0",

@@ -9,8 +9,7 @@
       "server",
       "apps/docs/public/pagefind",
       "lib-types",
-      "libs/components/lib/*",
-      "*/auto-api/api.ts"
+      "libs/components/lib/*"
     ]
   },
 

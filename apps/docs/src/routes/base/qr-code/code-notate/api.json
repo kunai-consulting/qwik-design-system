@@ -31,8 +31,7 @@
                 "type": "string"
               },
               {
-                "comment":
-                  "The error correction level of the QR code. L = Low, M = Medium, Q = Quartile, H = High",
+                "comment": "The error correction level of the QR code. L = Low, M = Medium, Q = Quartile, H = High",
                 "prop": "level",
                 "type": "\"L\" | \"M\" | \"Q\" | \"H\""
               }
