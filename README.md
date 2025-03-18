@@ -1,3 +1,6 @@
+
+![QDS Logo](./apps/docs/src/assets/logo/qds-logo.webp)
+
 # Qwik Design System
 
 > Better Design Systems at Scale
