@@ -1,3 +1,6 @@
+
+<img src="./apps/docs/src/assets/logo/cauldron-white.svg" width="120" height="120" />
+
 # Qwik Design System
 
 > Better Design Systems at Scale
@@ -11,11 +14,11 @@
 - 🧰 Utilities for creating extensible design systems
 - 🚀 Runs in any meta-framework that supports Qwik
 
-## About Qwik Design System
+Qwik Design System (QDS) is a next generation toolkit for creating Qwik apps of any size. It intends to be the foundation for design system authors, and is already being adopted in production by enterprise organizations.
 
-QDS is currently in active development. It aims to provide:
+It is currently in active development, and aims to provide:
 
-- ✨ A component library of unstyled UI components
+- ✨ A component library of unstyled UI components (currently in development)
 - 📚 A documentation framework that allows you to focus on content
 - 🎨 A comprehensive icons library
 - 📊 A powerful data visualization library (charts)
