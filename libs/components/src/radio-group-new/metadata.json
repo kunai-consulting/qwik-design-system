@@ -1,0 +1,59 @@
+{
+  "keyboard": [
+    {
+      "key": "Tab",
+      "comment": "Focuses the first radio option if none selected, or the selected option"
+    },
+    {
+      "key": "Space",
+      "comment": "Selects the focused radio option"
+    },
+    {
+      "key": "Enter",
+      "comment": "Selects the focused radio option"
+    },
+    {
+      "key": "ArrowDown",
+      "comment": "Moves focus to the next radio option in vertical orientation"
+    },
+    {
+      "key": "ArrowRight",
+      "comment": "Moves focus to the next radio option in horizontal orientation"
+    },
+    {
+      "key": "ArrowUp",
+      "comment": "Moves focus to the previous radio option in vertical orientation"
+    },
+    {
+      "key": "ArrowLeft",
+      "comment": "Moves focus to the previous radio option in horizontal orientation"
+    },
+    {
+      "key": "Home",
+      "comment": "Moves focus to the first radio option"
+    },
+    {
+      "key": "End",
+      "comment": "Moves focus to the last radio option"
+    }
+  ],
+  "features": [
+    "WAI-ARIA RadioGroup pattern implementation",
+    "Single selection from multiple options",
+    "Keyboard navigation with orientation support",
+    "Error state handling and validation",
+    "Custom error messages with aria-invalid",
+    "Optional description text support",
+    "Visual and screen reader feedback",
+    "Controlled and uncontrolled value management",
+    "Two-way binding support (bind:value)",
+    "Custom accessible labels",
+    "Disabled state for group and individual items",
+    "Focus management and tab navigation",
+    "Hidden native inputs for form submission",
+    "Visual indicators for selected state",
+    "Horizontal and vertical orientation support",
+    "Required field validation",
+    "Form integration with native validation"
+  ]
+}
