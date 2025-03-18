@@ -1,6 +1,15 @@
 # Qwik Design System
 
-An open source framework for building better design systems at scale with Qwik.
+> Better Design Systems at Scale
+
+- 🌐 Runs in any environment (browser, server, etc)
+- 🔍 Just-in-time code execution
+- ♿ Fully accessible and tested across browsers and devices
+- 🧩 Composable architecture with compound components
+- 🔍 Comprehensive TypeScript support
+- 🛠️ Decoupled from styling (headless)
+- 🧰 Utilities for creating extensible design systems
+- 🚀 Runs in any meta-framework that supports Qwik
 
 ## About Qwik Design System
 
