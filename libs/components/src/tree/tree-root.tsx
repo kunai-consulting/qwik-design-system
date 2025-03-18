@@ -13,6 +13,8 @@ import {
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 
+// Example change in tree root
+
 type TreeRootContext = {
   rootRef: Signal<HTMLDivElement | undefined>;
   currentFocusEl: Signal<HTMLElement | undefined>;
