@@ -1,4 +1,9 @@
+import { Image } from "~/docs-widgets/image/image";
+import indexing from "~/assets/docs/indexing/indexing.webp";
+
 # Indexing
+
+<Image src={indexing} alt="Indexing" />
 
 ## Understanding the Need for Component Indexing
 
@@ -162,5 +167,5 @@ In Qwik v2, the built-in scheduler solves these problems by allowing us to:
 - **Indexing is critical** for components with multiple instances of the same type
 - **Qwik v1** requires manual synchronous workarounds using inline components
 - **Helper utilities** (`resetIndexes` and `getNextIndex`) make implementation easier
-- **Qwik v2's scheduler** solves these problems more elegantly
+- **Qwik v2's scheduler** solves these problems more elegantly, and anywhere in the component tree
 - Always consider how your component will behave when wrapped by consumer components
