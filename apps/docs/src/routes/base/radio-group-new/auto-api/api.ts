@@ -50,7 +50,7 @@ export const api = {
         "dataAttributes": [
           {
             "name": "data-state",
-            "type": "\"checked\" | undefined",
+            "type": '"checked" | undefined',
             "comment": "Indicates whether this indicator is in a checked state"
           }
         ]
@@ -73,7 +73,7 @@ export const api = {
         "dataAttributes": [
           {
             "name": "data-orientation",
-            "type": "\"horizontal\" | \"vertical\"",
+            "type": '"horizontal" | "vertical"',
             "comment": "The orientation of the radio group item"
           }
         ]
@@ -132,7 +132,7 @@ export const api = {
               {
                 "comment": "The orientation of the radio group",
                 "prop": "orientation",
-                "type": "\"horizontal\" | \"vertical\""
+                "type": '"horizontal" | "vertical"'
               },
               {
                 "comment": "The current value of the radio group",
@@ -151,7 +151,7 @@ export const api = {
           },
           {
             "name": "data-orientation",
-            "type": "\"horizontal\" | \"vertical\"",
+            "type": '"horizontal" | "vertical"',
             "comment": "The orientation of the radio group"
           }
         ]
@@ -184,7 +184,7 @@ export const api = {
           },
           {
             "name": "data-state",
-            "type": "\"checked\" | undefined",
+            "type": '"checked" | undefined',
             "comment": "Indicates whether this trigger is checked"
           }
         ]
