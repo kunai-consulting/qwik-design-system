@@ -1,8 +1,8 @@
 import {
-  component$,
-  createContextId,
   type Signal,
   Slot,
+  component$,
+  createContextId,
   useContext,
   useContextProvider,
   useSignal,

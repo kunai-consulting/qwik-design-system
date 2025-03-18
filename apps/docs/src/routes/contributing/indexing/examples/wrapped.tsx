@@ -1,14 +1,14 @@
 import {
-  component$,
-  createContextId,
   type PropsOf,
   Slot,
+  component$,
+  createContextId,
   useContext,
   useContextProvider,
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import { withAsChild, Render, getNextIndex, resetIndexes } from "@kunai-consulting/qwik";
+import { Render, getNextIndex, resetIndexes, withAsChild } from "@kunai-consulting/qwik";
 
 export default component$(() => {
   const isRenderedSig = useSignal(false);
