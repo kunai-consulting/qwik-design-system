@@ -24,6 +24,7 @@
 - [Composition](/contributing/composition)
 - [Research](/contributing/research)
 - [State](/contributing/state)
+- [Indexing](/contributing/indexing)
 - [Events](/contributing/events)
 - [Testing](/contributing/testing)
 - [Styling](/contributing/styling)
