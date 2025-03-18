@@ -41,10 +41,26 @@ jobs:
           
           # Report missing research files
           if [ ${#missing[@]} -gt 0 ]; then
-            echo "::error::The following directories are missing research files:"
+            echo "::error title=Missing Research Documentation::❌ Research documentation is required for component folders"
+            echo "::group::Components missing required research files"
             for dir in "${missing[@]}"; do
-              echo "::error::$dir"
+              echo "::error::📁 $dir - Missing research file (research.mdx/md/tsx/ts/js)"
+              echo "📝 Each directory containing a -root.tsx file must include a research file that documents:"
+              echo "   - Component research and rationale"
+              echo "   - Accessibility considerations"
+              echo "   - Design decisions"
+              echo "   - Usage guidelines"
             done
+            echo "::endgroup::"
+            
+            echo "::group::How to fix"
+            echo "Create a research.mdx file in each of the following directories:"
+            for dir in "${missing[@]}"; do
+              echo "✅ $dir/research.mdx"
+            done
+            echo "See libs/components/src/radio-group-new/research.mdx for a template example."
+            echo "::endgroup::"
+            
             exit 1
           else
             echo "✅ All directories with -root.tsx files have research files."
