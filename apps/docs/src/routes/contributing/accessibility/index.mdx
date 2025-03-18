@@ -141,12 +141,10 @@ For multiple instances (e.g., carousel slides), use an array of refs:
 // In your root component
 type CarouselContext = {
   slideRefs: Signal<HTMLElement[]>;
-  currentIndexSig: Signal<number>;
 }
 
 const context: CarouselContext = {
   slideRefs: useSignal([]),
-  currentIndexSig: useSignal(0)
 };
 useContextProvider(carouselContextId, context);
 ```
@@ -155,37 +153,43 @@ useContextProvider(carouselContextId, context);
 
 When rendering multiple instances, each needs its own ref:
 ```tsx
-export const CarouselSlide = component$(() => {
+export const CarouselSlideBase = component$((props) => {
   const context = useContext(carouselContextId);
   const slideRef = useSignal<HTMLElement>();
-  const index = context.numSlidesSig.value - 1;
 
   useTask$(function setIndexOrder({ cleanup }) {
-    context.numSlidesSig.value++
-
-    if (index !== undefined) {
-      context.slideRefsArray.value[index] = slideRef;
+    if (props._index !== undefined) {
+      context.slideRefsArray.value[props._index] = slideRef;
     } else {
       throw new Error('Qwik UI: Carousel Slide cannot find its proper index.');
     }
 
     cleanup(() => {
-      context.slideRefsArray.value[index] = undefined;
-      context.numSlidesSig.value--;
+      context.slideRefsArray.value[props._index] = undefined;
     })
   });
 
   return (
-    <div 
+    <Render
       ref={slideRef}
       role="tabpanel"
-      aria-hidden={context.currentIndex.value !== index}
+      aria-hidden={context.currentIndex.value !== props._index}
     >
       <Slot />
-    </div>
+    </Render>
   );
 });
+
+export const CarouselSlide = withAsChild(CarouselSlideBase, (props) => {
+  const index = getNextIndex("carousel")
+
+  props._index = index;
+
+  return props;
+});
 ```
+
+Please read the [indexing docs](https://qwik.design/contributing/indexing/) for more information on how to manage multiple instances of components.
 
 > Notice that an array of refs is used to manage the refs for each instance.
 
