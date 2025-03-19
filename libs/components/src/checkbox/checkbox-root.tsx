@@ -14,8 +14,6 @@ import {
 import { useBoundSignal } from "../../utils/bound-signal";
 import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
 
-// file that uses useBoundSignal
-
 export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   "bind:checked"?: Signal<boolean | "mixed">;
   /** Initial checked state of the checkbox */
