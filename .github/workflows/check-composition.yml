@@ -48,22 +48,18 @@ jobs:
               continue
             fi
             
-            # Only process component files
-            if grep -q "component\$" "$file"; then
+            # Only process component files with return statements
+            if grep -q "component\$" "$file" && grep -q "return" "$file"; then
               echo "Checking composition in $file..."
               
-              # Extract the component function body
-              component_body=$(sed -n '/component\$/,/return/p' "$file")
+              # Find all HTML tags (lowercase tag names)
+              html_tags=$(grep -o "<[a-z][a-zA-Z0-9]*" "$file" | sort | uniq)
+              unique_tags=$(echo "$html_tags" | wc -l)
               
-              # Count the number of distinct HTML tags
-              html_tags=$(echo "$component_body" | grep -o "<[a-zA-Z][a-zA-Z0-9]*" | grep -v "<Slot" | grep -v "<Fragment" | grep -v "<>" | sort | uniq)
-              tag_count=$(echo "$html_tags" | grep -v "^$" | wc -l)
-              
-              # If more than one distinct HTML tag type (excluding Slot, Fragment)
-              if [ "$tag_count" -gt 1 ]; then
-                # Get the tags for the error message
+              # If more than one unique HTML tag
+              if [ "$unique_tags" -gt 1 ]; then
                 tag_list=$(echo "$html_tags" | tr '\n' ' ')
-                composition_issues+=("$file:Multiple HTML tag types found: $tag_list")
+                composition_issues+=("$file:Multiple HTML elements found: $tag_list")
               fi
             fi
           done
@@ -85,34 +81,23 @@ jobs:
             echo "::group::How to fix composition issues"
             echo "Each component should correspond to ONE type of markup element. This follows the 'One Component, One Markup Element' principle."
             echo ""
-            echo "❌ Bad pattern:"
+            echo "❌ Bad pattern (detected in your file):"
             echo '```tsx'
-            echo "return ("
-            echo "  <div>"
-            echo "    <span><Slot /></span>"
-            echo "  </div>"
-            echo ");"
+            echo "<div>"
+            echo "  <span {...props}>"
+            echo "    <Slot />"
+            echo "  </span>"
+            echo "</div>"
             echo '```'
             echo ""
             echo "✅ Good pattern:"
             echo '```tsx'
-            echo "return ("
-            echo "  <div>"
-            echo "    <Slot />"
-            echo "  </div>"
-            echo ");"
+            echo "<span {...props}>"
+            echo "  <Slot />"
+            echo "</span>"
             echo '```'
             echo ""
-            echo "Use <Render> with the asChild pattern for polymorphic components:"
-            echo '```tsx'
-            echo "return ("
-            echo "  <Render fallback=\"div\" {...props}>"
-            echo "    <Slot />"
-            echo "  </Render>"
-            echo ");"
-            echo '```'
-            echo ""
-            echo "If you need to exempt a component, add: // no-composition-check"
+            echo "If you need to exempt a component, add this comment: // no-composition-check"
             echo ""
             echo "See: https://qwik.design/contributing/composition/"
             echo "::endgroup::"
