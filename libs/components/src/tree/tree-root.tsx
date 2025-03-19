@@ -18,6 +18,7 @@ import { Render } from "../render/render";
 type TreeRootContext = {
   rootRef: Signal<HTMLDivElement | undefined>;
   currentFocusEl: Signal<HTMLElement | undefined>;
+  defaultValue?: string;
 };
 
 export const TreeRootContextId = createContextId<TreeRootContext>("tree-root");
