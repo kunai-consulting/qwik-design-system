@@ -31,6 +31,9 @@ export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   /** Value attribute for the hidden input element */
   value?: string;
 } & PropsOf<"div">;
+
+// changing checkbox root
+
 /** Root component that provides context and state management for the checkbox */
 export const CheckboxRoot = component$((props: PublicCheckboxRootProps) => {
   const {
