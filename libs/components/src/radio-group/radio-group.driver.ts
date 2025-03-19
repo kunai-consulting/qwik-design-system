@@ -6,7 +6,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator("[data-qds-radio-group-root]");
   };
 
-  const getMainIndicator = () => {
+  const getIndicator = () => {
     return rootLocator.locator("[data-qds-indicator]");
   };
 
@@ -22,7 +22,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator("[data-qds-radio-group-label]").nth(index);
   };
 
-  const getInputAt = (index: number) => {
+  const getTriggerAt = (index: number) => {
     return rootLocator.locator("[data-qds-radio-group-trigger]").nth(index);
   };
 
@@ -37,8 +37,8 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getItemAt,
     getIndicatorAt,
     getLabelAt,
-    getInputAt,
+    getTriggerAt,
     getErrorMessage,
-    getMainIndicator
+    getIndicator
   };
 }

@@ -1,149 +1,169 @@
 import api from "./code-notate/api.json";
 
 # Radio Group
-Select a single option from a list of choices with keyboard navigation and accessibility support.
+A fully accessible radio group component that allows users to select a single option from a list of choices.
+
 <Showcase name="hero" />
+
 ## Features
 <Features api={api} />
+
 ## Anatomy
 <AnatomyTable api={api} />
-## Examples
-### Basic Usage
-The most basic radio group implementation requires a `RadioGroup.Root` component containing `RadioGroup.Item` components with their associated values.
-<Showcase name="controlledValue" />
-This example demonstrates:
-- Using `value` prop on `RadioGroup.Root` to set the selected option
-- `RadioGroup.Label` for group identification
-- `RadioGroup.Trigger` and `RadioGroup.Indicator` for selection interaction
-- Individual `RadioGroup.Item` components with unique values
-### Error Handling
-Radio groups can display error messages when validation fails, such as when no option is selected.
-<Showcase name="error" />
-This example shows:
-- `RadioGroup.ErrorMessage` component for displaying validation feedback
-- Error state automatically managed through the `isErrorSig` context
-- Error message visibility controlled by `data-visible` attribute
-- ARIA attributes automatically updated for accessibility
-The error message appears when no option is selected and disappears when a selection is made, providing clear feedback to users.
-Note: The examples available demonstrate core functionality like controlled values and error handling. Additional examples for visual features and advanced usage would typically be included but are not available in the provided example set.
 
-## Component State
-### Using Component State
-The Radio Group component provides several ways to manage its state through props on the `RadioGroup.Root` component.
-1. **Controlled Value**
-As shown in the `controlledValue` example above, you can control the selected value using the `value` prop:
-```typescript
-const value = useSignal<string>("Item 2");
-<RadioGroup.Root value={value.value}>
-  // Radio items
-</RadioGroup.Root>
-```
-2. **Uncontrolled Value**
-You can set an initial uncontrolled value using the `defaultValue` prop:
-```typescript
-<RadioGroup.Root defaultValue="Item 1">
-  // Radio items
-</RadioGroup.Root>
-```
-3. **Required State**
-Make the radio group required by setting the `required` prop:
-```typescript
-<RadioGroup.Root required>
-  // Radio items
-</RadioGroup.Root>
-```
-4. **Disabled State**
-Disable the entire radio group using the `disabled` prop:
-```typescript
-<RadioGroup.Root disabled>
-  // Radio items
-</RadioGroup.Root>
-```
-### State Interactions
-1. **Handling Selection Changes**
-Listen for selection changes using the `onChange$` prop:
-```typescript
-<RadioGroup.Root 
+## Examples
+
+### Basic Usage
+The most basic radio group implementation with vertical orientation.
+
+<Showcase name="hero" />
+
+This example demonstrates:
+- Basic radio group structure
+- Label and item organization
+- Visual indicators for selection
+- Default vertical orientation
+
+### Controlled Value
+Using controlled state with external value management.
+
+<Showcase name="controlled" />
+
+```tsx
+const currentValue = useSignal("option1");
+
+<RadioGroup.Root
+  value={currentValue.value}
   onChange$={(value) => {
-    // Handle the new selected value
-    console.log('Selected:', value);
+    currentValue.value = value;
+    console.log("Selected:", value);
   }}
 >
-  // Radio items
+  {/* Radio items */}
 </RadioGroup.Root>
 ```
-2. **Error State**
-As shown in the `error` example above, the Radio Group automatically manages error states when validation fails. The error state is cleared when a valid selection is made.
-3. **Description State**
-Enable description support by setting the `isDescription` prop:
-```typescript
-<RadioGroup.Root isDescription>
-  <RadioGroup.Description>
-    Additional context about the radio group
-  </RadioGroup.Description>
-  // Radio items
+
+### Form Integration
+Radio group with form validation and error messages.
+<Showcase name="form" />
+
+This example shows:
+-	Required field validation
+-	Error message display
+-	Description text
+-	Hidden native inputs for form submission
+-	Custom labels for options
+
+### Horizontal Layout
+Radio group with horizontal orientation, useful for compact layouts.
+<Showcase name="horizontal" />
+
+### Disabled States
+Example showing both group-level and individual item disabled states.
+<Showcase name="disabled" />
+
+This demonstrates:
+- Disabling the entire group
+- Individual item disabling
+- Visual feedback for disabled state
+- Maintaining proper keyboard navigation
+
+## Component API
+
+### Root
+The root component manages the radio group's state and behavior.
+```tsx
+<RadioGroup.Root
+  value={value}           // Controlled value
+  defaultValue="option1"  // Uncontrolled initial value
+  onChange$={(v) => {}}  // Change handler
+  disabled={false}       // Disable entire group
+  required={true}        // Make selection required
+  orientation="vertical" // Layout orientation
+>
+  {/* Radio items */}
 </RadioGroup.Root>
 ```
-The state management in Radio Group is designed to handle common use cases while maintaining accessibility and providing clear feedback to users through visual indicators and ARIA attributes.
 
-Based on the provided implementation and examples, I'll document the core configuration options for the Radio Group component.
-## Core Configuration
-### Value Management
-The Radio Group can be configured in both controlled and uncontrolled modes. The value can be managed through the `value` prop on `RadioGroup.Root`.
-As shown in the `controlledValue` example above, you can control the selected value by passing a value prop:
-> The `value` prop accepts a string and determines which radio option is currently selected.
-### Required Validation
-The Radio Group supports required field validation through the `required` prop on `RadioGroup.Root`. When enabled, it enforces selection before form submission.
-As shown in the `error` example above, the component displays an error message when no option is selected and the field is required.
-### Description Support
-The Radio Group can be configured to display additional descriptive text through the `isDescription` prop on `RadioGroup.Root`. 
-> When `isDescription` is true but no description is provided, a warning will be logged to the console.
-### Disabled State
-The entire Radio Group can be disabled using the `disabled` prop on `RadioGroup.Root`. When disabled:
-```typescript
-type DisabledConfig = {
-  disabled?: boolean; // Disables all radio options when true
+### Item
+Container for individual radio options.
+```tsx
+<RadioGroup.Item value="option1">
+  <RadioGroup.Label>Option 1</RadioGroup.Label>
+  <RadioGroup.Trigger value="option1" _index={0}>
+    <RadioGroup.Indicator value="option1" />
+  </RadioGroup.Trigger>
+</RadioGroup.Item>
+```
+
+### Trigger
+The interactive button component that handles selection.
+```tsx
+<RadioGroup.Trigger
+  value="option1"  // Must match parent Item value
+  _index={0}       // For keyboard navigation order
+  disabled={false} // Optional individual disable
+/>
+```
+
+### Indicator
+Visual indicator for the selected state.
+```tsx
+<RadioGroup.Indicator value="option1">
+  {/* Custom indicator content */}
+</RadioGroup.Indicator>
+```
+
+## Keyboard Navigation
+
+The component supports full keyboard navigation:
+-	Tab: Focus the radio group
+-	Space/Enter: Select focused option
+-	Arrow keys: Navigate between options (respects orientation)
+-	Home/End: Jump to first/last option
+
+## Accessibility
+
+Built following the WAI-ARIA radio group pattern, the component includes:
+-	Proper role attributes (radiogroup, radio)
+-	Aria states (checked, disabled)
+-	Focus management
+-	Keyboard navigation
+-	Form integration
+-	Error states
+-	Description support
+
+## Form Integration
+
+The component provides several features for form integration:
+```tsx
+<RadioGroup.Root
+  name="options"        // Form field name
+  required={true}      // Required validation
+  form="form-id"       // Form connection
+>
+  {/* Radio items */}
+  <RadioGroup.ErrorMessage>
+    Please select an option
+  </RadioGroup.ErrorMessage>
+</RadioGroup.Root>
+```
+
+## Styling
+The component uses data attributes for styling:
+```css
+[data-qds-radio-group-root] {
+/* Root styles */
+}
+
+[data-qds-radio-group-trigger][data-state="checked"] {
+/* Checked state styles */
+}
+
+[data-qds-radio-group-trigger][data-disabled] {
+/* Disabled state styles */
 }
 ```
-### Event Handling
-The Radio Group supports change event handling through the `onChange$` prop:
-```typescript
-type ChangeHandler = {
-  onChange$?: QRL<(checked: string) => void>;
-}
-```
-This handler is called whenever a radio option is selected, receiving the new value as an argument.
-### Hidden Input Configuration
-For form submission, the component includes a hidden native radio input that can be configured with:
-```typescript
-type HiddenInputConfig = {
-  name?: string;      // Form field name
-  required?: boolean; // Required field validation
-  value?: string;     // Current value
-}
-```
-These configurations ensure proper form integration while maintaining accessibility and native form behavior.
-
-## Forms
-The Radio Group component includes form integration features through the `RadioGroup.HiddenNativeInput` component and built-in validation support.
-### Form Validation
-The Radio Group provides built-in validation with error handling through the `RadioGroup.ErrorMessage` component.
-<Showcase name="error" />
-In this example, the following form-specific features are demonstrated:
-- `RadioGroup.ErrorMessage` displays validation feedback when no option is selected
-- The error message is automatically shown/hidden based on selection state
-- The `data-visible` attribute on `RadioGroup.ErrorMessage` controls visibility
-- Form validation state is managed internally by the component
-### Form Integration 
-The component includes a hidden native radio input through `RadioGroup.HiddenNativeInput` that enables form submission and browser-native validation.
-Key form integration features:
-- The `required` prop can be passed to `RadioGroup.Root` to make selection mandatory
-- The `name` prop on `RadioGroup.Root` sets the form field name
-- The `value` prop determines the submitted form value
-- Native form validation is supported through the hidden input
-The error example above demonstrates these form capabilities working together to provide a complete form field solution.
-Note: The `controlledValue` example shows controlled form state management but since it was covered in the state management section, it is not repeated here.
-
 
 
 <APITable api={api} />

@@ -1,17 +1,24 @@
-import { type Signal, createContextId } from "@builder.io/qwik";
+import {
+  type QRL,
+  type ReadonlySignal,
+  type Signal,
+  createContextId
+} from "@builder.io/qwik";
 
-export const radioGroupContextId = createContextId<RadioGroupContext>(
-  "qds-radio-group-context"
-);
-
-export type RadioGroupContext = {
+export interface RadioGroupContext {
   selectedValueSig: Signal<string | undefined>;
-  selectedIndexSig: Signal<number | null>;
-  isDisabledSig: Signal<boolean | undefined>;
-  isErrorSig: Signal<boolean | undefined>;
+  isDisabledSig: Signal<boolean> | ReadonlySignal<boolean>;
+  isErrorSig: Signal<boolean>;
   localId: string;
-  isDescription: boolean | undefined;
-  required: boolean | undefined;
-  value: string | undefined;
-  triggerRef: Signal<HTMLButtonElement | undefined>;
-};
+  required?: boolean;
+  name?: string;
+  formRef: Signal<HTMLFormElement | undefined>;
+  orientation: "horizontal" | "vertical";
+  isDescription?: boolean;
+  onChange$: QRL<(value: string) => void>;
+  registerTrigger$: QRL<(element: Element, index?: number) => void>;
+  unregisterTrigger$: QRL<(element: Element) => void>;
+}
+
+export const radioGroupContextId =
+  createContextId<RadioGroupContext>("radio-group-context");

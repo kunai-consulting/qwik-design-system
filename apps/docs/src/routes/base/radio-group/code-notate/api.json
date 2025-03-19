@@ -11,7 +11,7 @@
         "dataAttributes": [
           {
             "name": "data-visible",
-            "type": "string",
+            "type": "boolean",
             "comment": "Indicates whether the error message is currently visible"
           }
         ]
@@ -19,11 +19,34 @@
     },
     {
       "Radio Group Hidden Input": {
-        "inheritsFrom": "input"
+        "inheritsFrom": "input",
+        "types": [
+          {
+            "PublicHiddenInputProps": [
+              {
+                "comment": "Index for tracking order in the group",
+                "prop": "_index",
+                "type": "number | null"
+              }
+            ]
+          }
+        ]
       }
     },
     {
       "Radio Group Indicator": {
+        "inheritsFrom": "span",
+        "types": [
+          {
+            "PublicIndicatorProps": [
+              {
+                "comment": "The value associated with this indicator",
+                "prop": "value",
+                "type": "string"
+              }
+            ]
+          }
+        ],
         "dataAttributes": [
           {
             "name": "data-hidden",
@@ -32,7 +55,7 @@
           },
           {
             "name": "data-checked",
-            "type": "string",
+            "type": '"checked" | undefined',
             "comment": "Indicates whether this indicator is in a checked state"
           }
         ]
@@ -42,16 +65,23 @@
       "Radio Group Item": {
         "types": [
           {
-            "PublicRadioGroupItemProps": [
+            "PublicItemProps": [
               {
-                "comment": "",
+                "comment": "The value of the radio item",
                 "prop": "value",
                 "type": "string"
               }
             ]
           }
         ],
-        "inheritsFrom": "div"
+        "inheritsFrom": "div",
+        "dataAttributes": [
+          {
+            "name": "data-orientation",
+            "type": '"horizontal" | "vertical"',
+            "comment": "The orientation of the radio group item"
+          }
+        ]
       }
     },
     {
@@ -63,16 +93,16 @@
       "Radio Group Root": {
         "types": [
           {
-            "PublicRadioGroupRootProps": [
+            "PublicRootProps": [
               {
-                "comment": "",
-                "prop": "\"bind:value\"",
-                "type": "Signal<boolean>"
+                "comment": "Two-way binding for the selected value",
+                "prop": "bind:value",
+                "type": "Signal<string | undefined>",
               },
               {
                 "comment": "Event handler for when the radio group selection changes",
                 "prop": "onChange$",
-                "type": "QRL<(checked: string) => void>"
+                "type": "PropFunction<(value: string) => void>"
               },
               {
                 "comment": "Initial value of the radio group when first rendered",
@@ -90,7 +120,7 @@
                 "type": "boolean"
               },
               {
-                "comment": "Name attribute for the hidden radio input",
+                "comment": "Name attribute for form integration",
                 "prop": "name",
                 "type": "string"
               },
@@ -98,6 +128,16 @@
                 "comment": "Whether the radio group is required",
                 "prop": "required",
                 "type": "boolean"
+              },
+              {
+                "comment": "The form element to attach to",
+                "prop": "form",
+                "type": "string"
+              },
+              {
+                "comment": "The orientation of the radio group",
+                "prop": "orientation",
+                "type": '"horizontal" | "vertical"'
               },
               {
                 "comment": "The current value of the radio group",
@@ -115,9 +155,9 @@
             "comment": "Indicates whether the radio group is disabled"
           },
           {
-            "name": "data-checked",
-            "type": "string | undefined",
-            "comment": "Indicates whether the radio group has a selected value"
+            "name": "data-orientation",
+            "type": '"horizontal" | "vertical"',
+            "comment": "The orientation of the radio group"
           }
         ]
       }
@@ -126,14 +166,14 @@
       "Radio Group Trigger": {
         "types": [
           {
-            "PublicRadioGroupControlProps": [
+            "PublicTriggerProps": [
               {
-                "comment": "",
+                "comment": "The value associated with this trigger",
                 "prop": "value",
                 "type": "string"
               },
               {
-                "comment": "",
+                "comment": "Index for keyboard navigation order",
                 "prop": "_index",
                 "type": "number"
               }
@@ -145,12 +185,12 @@
           {
             "name": "data-disabled",
             "type": "string | undefined",
-            "comment": "Indicates whether this radio trigger is disabled"
+            "comment": "Indicates whether this trigger is disabled"
           },
           {
-            "name": "data-checked",
-            "type": "string",
-            "comment": "Indicates whether this radio trigger is checked"
+            "name": "data-state",
+            "type": '"checked" | undefined',
+            "comment": "Indicates whether this trigger is checked"
           }
         ]
       }
@@ -166,12 +206,20 @@
       "description": "Visual indicator component that shows the selected state of a radio option"
     },
     {
+      "name": "RadioGroup.Item",
+      "description": "Container component for individual radio options"
+    },
+    {
       "name": "RadioGroup.Trigger",
-      "description": "Interactive trigger component that handles radio option selection"
+      "description": "Interactive button component that handles radio option selection"
+    },
+    {
+      "name": "RadioGroup.Indicator",
+      "description": "Visual indicator component that shows the selected state"
     },
     {
       "name": "RadioGroup.Label",
-      "description": "Label component for the radio group or individual radio options"
+      "description": "Label component for the radio group or individual options"
     },
     {
       "name": "RadioGroup.Description",
@@ -179,64 +227,63 @@
     },
     {
       "name": "RadioGroup.HiddenNativeInput"
+      "description": "Optional description component for additional context"
     },
     {
       "name": "RadioGroup.ErrorMessage",
-      "description": "Displays error message when radio group validation fails"
+      "description": "Component for displaying validation error messages"
     },
     {
-      "name": "RadioGroup.Item",
-      "description": "Individual radio option container component"
+      "name": "RadioGroup.HiddenInput",
+      "description": "Hidden native input for form integration"
     }
   ],
   "keyboardInteractions": [
     {
       "key": "Space",
-      "comment": "When focus is on a radio button trigger, selects that radio option"
+      "comment": "Selects the focused radio option"
     },
     {
       "key": "Enter",
-      "comment": "When focus is on a radio button trigger, selects that radio option"
+      "comment": "Selects the focused radio option"
     },
     {
       "key": "ArrowDown",
-      "comment": "Moves focus to the next radio button trigger in the group"
+      "comment": "Moves focus to the next radio option in vertical orientation"
     },
     {
       "key": "ArrowRight",
-      "comment": "Moves focus to the next radio button trigger in the group"
+      "comment": "Moves focus to the next radio option in horizontal orientation"
     },
     {
       "key": "ArrowUp",
-      "comment": "Moves focus to the previous radio button trigger in the group"
+      "comment": "Moves focus to the previous radio option in vertical orientation"
     },
     {
       "key": "ArrowLeft",
-      "comment": "Moves focus to the previous radio button trigger in the group"
+      "comment": "Moves focus to the previous radio option in horizontal orientation"
     },
     {
-      "key": "Tab",
-      "comment": "Moves focus to the next focusable element outside the radio group"
+      "key": "Home",
+      "comment": "Moves focus to the first radio option"
     },
     {
-      "key": "Shift+Tab",
-      "comment": "Moves focus to the previous focusable element outside the radio group"
+      "key": "End",
+      "comment": "Moves focus to the last radio option"
     }
   ],
   "features": [
-    "WAI ARIA RadioGroup design pattern",
-    "Single selection from multiple options",
+    "WAI-ARIA RadioGroup pattern implementation",
+    "Keyboard navigation with orientation support",
+    "Form integration with hidden native inputs",
     "Error state handling and validation",
-    "Custom error messages with aria-invalid",
-    "Optional description text support",
-    "Visual and screen reader feedback",
-    "Controlled and uncontrolled value management",
-    "Custom accessible labels and descriptions",
-    "Disabled state support",
-    "Focus management with tab navigation",
-    "Hidden native radio inputs for form submission",
-    "Visual indicators for selected state",
-    "Keyboard navigation support",
-    "Required field validation"
+    "Controlled and uncontrolled modes",
+    "Two-way binding support (bind:value)",
+    "Disabled state for group and individual items",
+    "Custom styling through data attributes",
+    "Description and error message support",
+    "Proper focus management",
+    "Required field validation",
+    "Horizontal and vertical orientation"
   ]
 }

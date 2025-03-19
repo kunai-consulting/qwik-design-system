@@ -83,7 +83,6 @@ supports keyboard navigation, and complies with the WAI-ARIA specification for r
 ```typescript
 interface RadioGroupRootProps {
   value?: string;
-  defaultValue?: string;
   "bind:value"?: Signal<string | undefined>;
   onChange$?: PropFunction<(value: string) => void>;
   disabled?: boolean;

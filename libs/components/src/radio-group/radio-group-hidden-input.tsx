@@ -1,35 +1,37 @@
 import { $, type PropsOf, component$, useContext } from "@builder.io/qwik";
-import { VisuallyHidden } from "../visually-hidden/visually-hidden";
 import { radioGroupContextId } from "./radio-group-context";
 
-type RadioGroupHiddenNativeInputProps = PropsOf<"input"> & {
+type PublicHiddenInputProps = Omit<
+  PropsOf<"input">,
+  "type" | "checked" | "form" | "style"
+> & {
   _index?: number | null;
 };
 
-/** Hidden native radio input for form submission and accessibility */
-export const RadioGroupHiddenNativeInput = component$(
-  (props: RadioGroupHiddenNativeInputProps) => {
-    const context = useContext(radioGroupContextId);
-    const _index = props._index;
+export const RadioGroupHiddenInput = component$((props: PublicHiddenInputProps) => {
+  const context = useContext(radioGroupContextId);
+  const { _index, value, onChange$, required, ...restProps } = props;
 
-    const handleChange$ = $(() => {
-      context.selectedIndexSig.value = _index ?? null;
-    });
+  const handleChange$ = $(() => {
+    if (!context.isDisabledSig.value) {
+      context.selectedValueSig.value = value ? String(value) : undefined;
+      context.isErrorSig.value = false;
+    }
+  });
 
-    return (
-      <VisuallyHidden>
-        <input
-          type="radio"
-          tabIndex={-1}
-          checked={context.selectedIndexSig.value === _index}
-          // Identifier for the hidden native radio input element
-          data-qds-radio-group-hidden-input
-          required={context.required ?? props.required ?? undefined}
-          value={context.value ?? props.value ?? undefined}
-          onChange$={[handleChange$, props.onChange$]}
-          {...props}
-        />
-      </VisuallyHidden>
-    );
-  }
-);
+  return (
+    <input
+      {...restProps}
+      type="radio"
+      tabIndex={-1}
+      checked={context.selectedValueSig.value === value}
+      data-qds-radio-group-hidden-input
+      required={context.required ?? required ?? undefined}
+      value={value ?? ""}
+      name={context.localId}
+      disabled={context.isDisabledSig.value}
+      onChange$={[handleChange$, onChange$]}
+      style={{ position: "absolute", opacity: 0, pointerEvents: "none" }}
+    />
+  );
+});
