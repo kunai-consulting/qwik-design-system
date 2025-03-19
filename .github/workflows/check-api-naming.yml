@@ -1,0 +1,79 @@
+name: Check API naming
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check-default-naming:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v46
+        with:
+          files: |
+            **/*.tsx
+            **/*.jsx
+          
+      - name: Check for defaultX patterns
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          # Initialize array for files with defaultX patterns
+          files_with_default=()
+          
+          # Pattern to match: defaultX where X is an uppercase letter
+          pattern='default[A-Z][a-zA-Z0-9]*'
+          
+          # Check each changed file
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            # Skip test files or mock files
+            if [[ $file =~ (\.test\.|\.spec\.|\.mock\.) ]]; then
+              continue
+            fi
+            
+            echo "Checking $file for defaultX patterns..."
+            
+            # Check if file contains defaultX pattern
+            if grep -q -E "$pattern" "$file"; then
+              # Add file to the list with specific matches
+              matches=$(grep -n -E "$pattern" "$file" | head -n 5)
+              files_with_default+=("$file:$matches")
+            fi
+          done
+          
+          # Report files with defaultX patterns
+          if [ ${#files_with_default[@]} -gt 0 ]; then
+            echo "::error title=Invalid API Naming Pattern::❌ 'defaultX' naming pattern detected"
+            echo "::group::Files with 'defaultX' patterns"
+            
+            for file_match in "${files_with_default[@]}"; do
+              file_path=$(echo "$file_match" | cut -d':' -f1)
+              line_info=$(echo "$file_match" | cut -d':' -f2-)
+              
+              echo "::error file=$file_path::Found 'defaultX' pattern - React convention not aligned with Qwik"
+              echo "In $file_path:"
+              echo "$line_info"
+              echo ""
+            done
+            
+            echo "::endgroup::"
+            
+            echo "::group::Why this matters"
+            echo "defaultX is a React thing, please read about the idea of signal and value based state"
+            echo ""
+            echo "Qwik uses a different pattern for handling component state:"
+            echo "- Signal-based (two-way binding)"
+            echo "- Value-based (one-way binding)"
+            echo ""
+            echo "See documentation: https://qwik.design/contributing/state/"
+            echo "::endgroup::"
+            
+            exit 1
+          else
+            echo "✅ No 'defaultX' patterns found in changed files."
+          fi
