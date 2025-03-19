@@ -1,7 +1,7 @@
 import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
 import { Checkbox } from "..";
 
-// no asChild ...
+// no-as-child
 
 export const ChecklistLabel = component$((props: PropsOf<typeof Checkbox.Label>) => {
   return (
