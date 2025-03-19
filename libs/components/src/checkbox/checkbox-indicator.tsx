@@ -15,6 +15,8 @@ export type PublicCheckboxIndicatorProps = PropsOf<"span">;
 
 // composition check
 
+// another change
+
 /** Visual indicator component showing the checkbox state */
 export const CheckboxIndicator = component$<PublicCheckboxIndicatorProps>((props) => {
   useStyles$(styles);
