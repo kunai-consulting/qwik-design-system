@@ -42,47 +42,29 @@ jobs:
               continue
             fi
             
-            # Skip files that use asChild
-            if grep -q "asChild" "$file"; then
-              echo "File uses asChild, skipping"
-              continue
-            fi
+            echo "Checking composition in $file..."
             
-            # Only process component files with return statements
-            if grep -q "component\$" "$file" && grep -q "return" "$file"; then
-              echo "Checking composition in $file..."
+            # Extract all return blocks (multiline) - get 20 lines after each return
+            grep -A 20 "return (" "$file" > /tmp/return_blocks.txt || true
+            
+            if [ -s /tmp/return_blocks.txt ]; then
+              # Look for HTML tags in return blocks - any tag starting with <lowercase
+              tag_types=$(grep -o -E "<[a-z][a-zA-Z0-9]*" /tmp/return_blocks.txt | sort | uniq)
               
-              # Extract return statements (better method)
-              return_content=$(sed -n '/return/,/;/p' "$file")
+              echo "Found HTML tags in return block:"
+              echo "$tag_types"
               
-              # DEBUG: Show the return content
-              echo "=== RETURN CONTENT ==="
-              echo "$return_content"
-              echo "====================="
+              # Count unique tag types
+              unique_count=$(echo "$tag_types" | grep -v "^$" | wc -l)
+              echo "Number of unique tag types: $unique_count"
               
-              # Find all HTML tags and count unique ones
-              # This catches tags like <div>, <span>, <p>, etc.
-              html_tags=$(echo "$return_content" | grep -o -E "<[a-z][a-zA-Z0-9]*" | sort | uniq)
-              
-              # DEBUG: Show what was found
-              echo "=== UNIQUE HTML TAGS FOUND ==="
-              echo "$html_tags"
-              echo "============================="
-              
-              # Count unique tags
-              unique_tag_count=$(echo "$html_tags" | grep -v "^$" | wc -l)
-              echo "Unique tag count: $unique_tag_count"
-              
-              # If multiple tag types were found
-              if [ "$unique_tag_count" -gt 1 ]; then
-                tag_list=$(echo "$html_tags" | tr '\n' ' ')
-                echo "FOUND MULTIPLE TAGS: $tag_list"
-                composition_issues+=("$file:Multiple HTML elements found: $tag_list")
-              else
-                echo "Only found one type of tag or check failed"
+              # If multiple tag types found, it's a composition issue
+              if [ "$unique_count" -gt 1 ]; then
+                tag_list=$(echo "$tag_types" | tr '\n' ' ')
+                composition_issues+=("$file:Multiple HTML elements in return: $tag_list")
               fi
             else
-              echo "File doesn't contain both component$ and return keywords"
+              echo "No return blocks found or grep failed"
             fi
           done
           
