@@ -1,0 +1,96 @@
+name: Check AsChild Implementation
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check-as-child:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v46
+        with:
+          files: |
+            **/*.tsx
+            **/*.jsx
+          
+      - name: Check for AsChild implementation
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          # Initialize array for files missing AsChild implementation
+          files_missing_aschild=()
+          
+          # Check each changed file
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "Checking $file for AsChild implementation..."
+            
+            # Check if file is exempted with no-as-child comment
+            if grep -q "no-as-child" "$file"; then
+              echo "File is exempted with no-as-child comment: $file"
+              continue
+            fi
+            
+            # Check if file contains both withAsChild and Render
+            if ! grep -q "withAsChild" "$file" || ! grep -q "Render" "$file"; then
+              # Check if it's a root component
+              if [[ $file =~ -root\.(tsx|jsx)$ ]]; then
+                files_missing_aschild+=("$file:ROOT")
+              else
+                files_missing_aschild+=("$file:COMPONENT")
+              fi
+            fi
+          done
+          
+          # Report files missing AsChild implementation
+          if [ ${#files_missing_aschild[@]} -gt 0 ]; then
+            echo "::error title=Missing AsChild Implementation::❌ Components should implement AsChild pattern"
+            echo "::group::Files missing AsChild implementation"
+            
+            for file_info in "${files_missing_aschild[@]}"; do
+              file_path=$(echo "$file_info" | cut -d':' -f1)
+              file_type=$(echo "$file_info" | cut -d':' -f2)
+              
+              if [ "$file_type" == "ROOT" ]; then
+                echo "::error file=$file_path::Root component missing AsChild and indexing implementation"
+              else
+                echo "::error file=$file_path::Component missing AsChild implementation"
+              fi
+            done
+            
+            echo "::endgroup::"
+            
+            echo "::group::How to implement AsChild"
+            echo "Missing AsChild implementation. For more information, see:"
+            echo ""
+            echo "https://qwik.design/contributing/composition/#what-is-aschild"
+            echo ""
+            echo "Example implementation:"
+            echo '```tsx'
+            echo 'export const ComponentBase = component$((props) => {'
+            echo '  return ('
+            echo '    <Render fallback="div" {...props}>'
+            echo '      <Slot />'
+            echo '    </Render>'
+            echo '  );'
+            echo '});'
+            echo ''
+            echo 'export const Component = withAsChild(ComponentBase);'
+            echo '```'
+            echo ""
+            echo "Root components also need indexing implementation:"
+            echo "https://qwik.design/contributing/indexing/"
+            echo ""
+            echo "If you have to go without the asChild implementation:"
+            echo "Add a '// no-as-child' comment in your file."
+            echo "::endgroup::"
+            
+            exit 1
+          else
+            echo "✅ All components properly implement AsChild pattern or are exempted."
+          fi
