@@ -12,9 +12,9 @@ import {
   useTask$
 } from "@builder.io/qwik";
 import { useBoundSignal } from "../../utils/bound-signal";
-import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
-import { Render } from "../render/render";
 import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
+import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
 
 export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   "bind:checked"?: Signal<boolean | "mixed">;
