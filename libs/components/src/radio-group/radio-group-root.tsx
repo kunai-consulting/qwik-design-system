@@ -14,11 +14,11 @@ import {
   useStyles$,
   useTask$
 } from "@builder.io/qwik";
+import { useBoundSignal } from "../../utils/bound-signal";
+import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 import styles from "./radio-group.css?inline";
-import { useBoundSignal } from "../../utils/bound-signal";
-import { Render } from "../render/render";
-import { withAsChild } from "../as-child/as-child";
 
 type PublicRootProps = PropsOf<"div"> & {
   value?: string;

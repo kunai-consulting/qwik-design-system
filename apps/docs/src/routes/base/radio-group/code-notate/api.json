@@ -55,7 +55,7 @@
           },
           {
             "name": "data-checked",
-            "type": '"checked" | undefined',
+            "type": "\"checked\" | undefined",
             "comment": "Indicates whether this indicator is in a checked state"
           }
         ]
@@ -78,7 +78,7 @@
         "dataAttributes": [
           {
             "name": "data-orientation",
-            "type": '"horizontal" | "vertical"',
+            "type": "\"horizontal\" | \"vertical\"",
             "comment": "The orientation of the radio group item"
           }
         ]
@@ -97,7 +97,7 @@
               {
                 "comment": "Two-way binding for the selected value",
                 "prop": "bind:value",
-                "type": "Signal<string | undefined>",
+                "type": "Signal<string | undefined>"
               },
               {
                 "comment": "Event handler for when the radio group selection changes",
@@ -137,7 +137,7 @@
               {
                 "comment": "The orientation of the radio group",
                 "prop": "orientation",
-                "type": '"horizontal" | "vertical"'
+                "type": "\"horizontal\" | \"vertical\""
               },
               {
                 "comment": "The current value of the radio group",
@@ -156,7 +156,7 @@
           },
           {
             "name": "data-orientation",
-            "type": '"horizontal" | "vertical"',
+            "type": "\"horizontal\" | \"vertical\"",
             "comment": "The orientation of the radio group"
           }
         ]
@@ -189,7 +189,7 @@
           },
           {
             "name": "data-state",
-            "type": '"checked" | undefined',
+            "type": "\"checked\" | undefined",
             "comment": "Indicates whether this trigger is checked"
           }
         ]
@@ -226,7 +226,7 @@
       "description": "A description component for the radio group that provides additional context"
     },
     {
-      "name": "RadioGroup.HiddenNativeInput"
+      "name": "RadioGroup.HiddenNativeInput",
       "description": "Optional description component for additional context"
     },
     {
