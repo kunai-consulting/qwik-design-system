@@ -1,0 +1,138 @@
+name: Check Component Composition
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '**/*.tsx'
+      - '**/*.jsx'
+
+jobs:
+  check-composition:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v46
+        with:
+          files: |
+            **/*.tsx
+            **/*.jsx
+          
+      - name: Check component composition
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          # Initialize array for tracking issues
+          composition_issues=()
+          
+          # Check each changed component file
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            # Skip test files
+            if [[ "$file" == *".test."* || "$file" == *".spec."* ]]; then
+              continue
+            fi
+            
+            # Only process component files
+            if grep -q "component\$" "$file"; then
+              echo "Checking composition in $file..."
+              
+              # Skip check if file contains asChild (allowed exception)
+              if grep -q "asChild" "$file"; then
+                echo "File uses asChild, skipping composition check"
+                continue
+              fi
+              
+              # Skip check if file contains .Root components (allowed exception)
+              if grep -q "\.[A-Z][a-zA-Z]*Root" "$file"; then
+                echo "File uses Root components, skipping composition check"
+                continue
+              fi
+              
+              # Find all return statements and check their content
+              # Extract return blocks using awk to handle multiline returns
+              awk '/return[^;]*\(/{
+                bracket=1
+                print "START_RETURN"
+                while(bracket > 0) {
+                  if($0 ~ /\(/) bracket++
+                  if($0 ~ /\)/) bracket--
+                  print
+                  if(bracket > 0) {getline}
+                }
+                print "END_RETURN"
+              }' "$file" > /tmp/returns.txt
+              
+              # Check each return block for composition issues
+              if grep -q "START_RETURN" /tmp/returns.txt; then
+                return_block=$(sed -n '/START_RETURN/,/END_RETURN/p' /tmp/returns.txt)
+                
+                # Check for fragment with multiple children
+                if echo "$return_block" | grep -q "<>.*<.*>.*<.*>.*</>" || 
+                   echo "$return_block" | grep -q "<Fragment>.*<.*>.*<.*>.*</Fragment>"; then
+                  composition_issues+=("$file:Fragment with multiple children")
+                fi
+                
+                # Check for nested elements with Slot (simplified check)
+                if echo "$return_block" | grep -q "<[a-zA-Z][^>]*>.*<[a-zA-Z][^>]*>.*<Slot" &&
+                   ! echo "$return_block" | grep -q "<Render"; then
+                  composition_issues+=("$file:Nested elements with Slot")
+                fi
+              fi
+            fi
+          done
+          
+          # Report composition issues
+          if [ ${#composition_issues[@]} -gt 0 ]; then
+            echo "::error title=Component Composition Issues::❌ Components should follow 'One Component, One Markup Element' principle"
+            echo "::group::Files with composition issues"
+            
+            for issue in "${composition_issues[@]}"; do
+              file_path=$(echo "$issue" | cut -d':' -f1)
+              issue_desc=$(echo "$issue" | cut -d':' -f2-)
+              
+              echo "::error file=$file_path::$issue_desc"
+            done
+            
+            echo "::endgroup::"
+            
+            echo "::group::How to fix composition issues"
+            echo "Each component should typically correspond to ONE piece of markup."
+            echo ""
+            echo "❌ Bad patterns:"
+            echo '```tsx'
+            echo "// Multiple elements in fragment"
+            echo "<>"
+            echo "  <div>First element</div>"
+            echo "  <span>Second element</span>"
+            echo "</>"
+            echo ""
+            echo "// Deeply nested elements"
+            echo "<div>"
+            echo "  <span><Slot /></span>"
+            echo "</div>"
+            echo '```'
+            echo ""
+            echo "✅ Good patterns:"
+            echo '```tsx'
+            echo "// One element with Slot"
+            echo "<div>"
+            echo "  <Slot />"
+            echo "</div>"
+            echo ""
+            echo "// Using Render with asChild"
+            echo "<Render fallback=\"div\" {...props}>"
+            echo "  <Slot />"
+            echo "</Render>"
+            echo '```'
+            echo ""
+            echo "See: https://qwik.design/contributing/composition/"
+            echo "::endgroup::"
+            
+            exit 1
+          else
+            echo "✅ All components follow proper composition patterns."
+          fi
