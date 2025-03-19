@@ -1,0 +1,112 @@
+name: Check Component Composition
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '**/*.tsx'
+      - '**/*.jsx'
+
+jobs:
+  check-composition:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v46
+        with:
+          files: |
+            **/*.tsx
+            **/*.jsx
+          
+      - name: Check component composition
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          # Initialize array for tracking issues
+          composition_issues=()
+          
+          # Check each changed component file
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            # Skip test files
+            if [[ "$file" == *".test."* || "$file" == *".spec."* ]]; then
+              continue
+            fi
+            
+            # Skip files with "no-composition-check" comment
+            if grep -q "no-composition-check" "$file"; then
+              echo "File has no-composition-check, skipping"
+              continue
+            fi
+            
+            echo "Checking composition in $file..."
+            
+            # Extract all return blocks (multiline) - get 20 lines after each return
+            grep -A 20 "return (" "$file" > /tmp/return_blocks.txt || true
+            
+            if [ -s /tmp/return_blocks.txt ]; then
+              # Look for HTML tags in return blocks - any tag starting with <lowercase
+              tag_types=$(grep -o -E "<[a-z][a-zA-Z0-9]*" /tmp/return_blocks.txt | sort | uniq)
+              
+              echo "Found HTML tags in return block:"
+              echo "$tag_types"
+              
+              # Count unique tag types
+              unique_count=$(echo "$tag_types" | grep -v "^$" | wc -l)
+              echo "Number of unique tag types: $unique_count"
+              
+              # If multiple tag types found, it's a composition issue
+              if [ "$unique_count" -gt 1 ]; then
+                tag_list=$(echo "$tag_types" | tr '\n' ' ')
+                composition_issues+=("$file:Multiple HTML elements in return: $tag_list")
+              fi
+            else
+              echo "No return blocks found or grep failed"
+            fi
+          done
+          
+          # Report composition issues
+          if [ ${#composition_issues[@]} -gt 0 ]; then
+            echo "::error title=Component Composition Issues::❌ Components should follow 'One Component, One Markup Element' principle"
+            echo "::group::Files with composition issues"
+            
+            for issue in "${composition_issues[@]}"; do
+              file_path=$(echo "$issue" | cut -d':' -f1)
+              issue_desc=$(echo "$issue" | cut -d':' -f2-)
+              
+              echo "::error file=$file_path::$issue_desc"
+            done
+            
+            echo "::endgroup::"
+            
+            echo "::group::How to fix composition issues"
+            echo "Each component should correspond to ONE type of markup element. This follows the 'One Component, One Markup Element' principle."
+            echo ""
+            echo "❌ Bad pattern (detected in your file):"
+            echo '```tsx'
+            echo "<div>"
+            echo "  <span {...props}>"
+            echo "    <Slot />"
+            echo "  </span>"
+            echo "</div>"
+            echo '```'
+            echo ""
+            echo "✅ Good pattern:"
+            echo '```tsx'
+            echo "<span {...props}>"
+            echo "  <Slot />"
+            echo "</span>"
+            echo '```'
+            echo ""
+            echo "If you need to exempt a component, add this comment: // no-composition-check"
+            echo ""
+            echo "See: https://qwik.design/contributing/composition/"
+            echo "::endgroup::"
+            
+            exit 1
+          else
+            echo "✅ All components follow proper composition patterns."
+          fi
