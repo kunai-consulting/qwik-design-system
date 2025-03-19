@@ -59,10 +59,9 @@ jobs:
             echo "::endgroup::"
             
             echo "::group::How to fix"
-            echo "Each component folder with a -root.tsx file must include at least one test file:"
-            echo "- *.test.* (React Testing Library)"
-            echo "- *.spec.* (Jest/Vitest/etc.)"
-            echo "- *.unit.* (Custom naming convention)"
+            echo "Each component folder with a -root.tsx file must include at least one type of test file:"
+            echo "- *.test.* (Currently for Playwright)"
+            echo "- *.unit.* (Currently for Vitest)"
             echo ""
             echo "Tests ensure component quality and prevent regressions."
             echo "::endgroup::"
