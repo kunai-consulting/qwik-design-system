@@ -95,15 +95,6 @@ jobs:
             echo ''
             echo 'export const Component = withAsChild(ComponentBase);'
             echo '```'
-            
-            # Only show the indexing documentation in the "How to implement" section
-            # if there are NO root components (since we've already showed it prominently)
-            if [ "$has_root_component" = false ]; then
-              echo ""
-              echo "Root components also need indexing implementation:"
-              echo "https://qwik.design/contributing/indexing/"
-            fi
-            
             echo ""
             echo "If you have to go without the asChild implementation:"
             echo "Add a '// no-as-child' comment in your file."
