@@ -14,6 +14,8 @@ import { Render } from "../render/render";
 import { checkboxContextId } from "./checkbox-context";
 type PublicCheckboxControlProps = PropsOf<"button">;
 
+// file with asChild
+
 /** Interactive trigger component that handles checkbox toggling */
 export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps) => {
   const context = useContext(checkboxContextId);
