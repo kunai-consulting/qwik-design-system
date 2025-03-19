@@ -16,9 +16,9 @@ import {
 } from "@builder.io/qwik";
 import { radioGroupContextId } from "./radio-group-context";
 import styles from "./radio-group.css?inline";
-import {useBoundSignal} from "../../utils/bound-signal";
-import {Render} from "../render/render";
-import {withAsChild} from "../as-child/as-child";
+import { useBoundSignal } from "../../utils/bound-signal";
+import { Render } from "../render/render";
+import { withAsChild } from "../as-child/as-child";
 
 type PublicRootProps = PropsOf<"div"> & {
   value?: string;
@@ -36,12 +36,8 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
   useStyles$(styles);
 
   const rootRef = useSignal<HTMLElement>();
-  const {
-    "bind:value": givenValueSig,
-  } = props;
-  const selectedValueSig = useBoundSignal(
-    givenValueSig, props.value
-  );
+  const { "bind:value": givenValueSig } = props;
+  const selectedValueSig = useBoundSignal(givenValueSig, props.value);
   const isDisabledSig = useComputed$(() => !!props.disabled);
   const isErrorSig = useSignal(false);
   const formRef = useSignal<HTMLFormElement>();
