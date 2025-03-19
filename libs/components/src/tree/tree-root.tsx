@@ -1,3 +1,5 @@
+// no-bound-signal
+
 import {
   type PropsOf,
   type Signal,
