@@ -3,8 +3,7 @@ name: Check Research Files
 on:
   pull_request:
     branches: [ main ]
-    paths:
-      - '**/*-root.tsx'
+    # Runs on all PRs to main
 
 jobs:
   check-research-files:
@@ -17,8 +16,6 @@ jobs:
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v46
-        with:
-          files: '**/*-root.tsx'
           
       - name: Check for research files
         if: steps.changed-files.outputs.any_changed == 'true'
@@ -26,16 +23,30 @@ jobs:
           # Initialize array for missing research files
           missing=()
           
-          # Check each changed -root.tsx file
+          # Get unique folders from changed files
+          folders=()
+          
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            # Get the directory containing the file
-            dir=$(dirname "$file")
+            folder=$(dirname "$file")
             
-            # Check if research file exists in that directory
-            if [ ! -f "$dir/research.mdx" ] && [ ! -f "$dir/research.md" ] && 
-               [ ! -f "$dir/research.tsx" ] && [ ! -f "$dir/research.ts" ] && 
-               [ ! -f "$dir/research.js" ]; then
-              missing+=("$dir")
+            # Check if this folder is already in our list
+            if [[ ! " ${folders[@]} " =~ " ${folder} " ]]; then
+              folders+=("$folder")
+            fi
+          done
+          
+          # Check each folder for root components and research files
+          for folder in "${folders[@]}"; do
+            # Only check folders that contain a -root.tsx file
+            if find "$folder" -maxdepth 1 -name "*-root.tsx" | grep -q .; then
+              echo "Checking folder $folder for research files..."
+              
+              # Check if research file exists in that directory
+              if [ ! -f "$folder/research.mdx" ] && [ ! -f "$folder/research.md" ] && 
+                 [ ! -f "$folder/research.tsx" ] && [ ! -f "$folder/research.ts" ] && 
+                 [ ! -f "$folder/research.js" ]; then
+                missing+=("$folder")
+              fi
             fi
           done
           
