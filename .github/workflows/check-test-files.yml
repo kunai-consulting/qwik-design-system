@@ -1,0 +1,72 @@
+name: Check Test Files
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check-test-files:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v46
+          
+      - name: Check for test files
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          # Initialize array for folders missing test files
+          folders_missing_tests=()
+          
+          # Get unique folders from changed files
+          folders=()
+          
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            folder=$(dirname "$file")
+            
+            # Check if this folder is already in our list
+            if [[ ! " ${folders[@]} " =~ " ${folder} " ]]; then
+              folders+=("$folder")
+            fi
+          done
+          
+          # Check each folder for root components and test files
+          for folder in "${folders[@]}"; do
+            # Only check folders that contain a -root.tsx file
+            if ls "$folder"/*-root.tsx &> /dev/null; then
+              echo "Checking folder $folder for test files..."
+              
+              # Look for any test file in this folder
+              if ! find "$folder" -maxdepth 1 -name "*.test.*" -o -name "*.spec.*" -o -name "*.unit.*" | grep -q .; then
+                folders_missing_tests+=("$folder")
+              fi
+            fi
+          done
+          
+          # Report folders missing test files
+          if [ ${#folders_missing_tests[@]} -gt 0 ]; then
+            echo "::error title=Missing Test Files::❌ Component folders must include test files"
+            echo "::group::Folders missing test files"
+            
+            for folder in "${folders_missing_tests[@]}"; do
+              echo "::error::$folder is missing a test file, tests are required for components before they can be merged to main"
+            done
+            
+            echo "::endgroup::"
+            
+            echo "::group::How to fix"
+            echo "Each component folder with a -root.tsx file must include at least one type of test file:"
+            echo "- *.test.* (Currently for Playwright)"
+            echo "- *.unit.* (Currently for Vitest)"
+            echo ""
+            echo "Tests ensure component quality and prevent regressions."
+            echo "::endgroup::"
+            
+            exit 1
+          else
+            echo "✅ All component folders with -root.tsx files have test files."
+          fi

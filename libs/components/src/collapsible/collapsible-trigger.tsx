@@ -3,6 +3,8 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { collapsibleContextId } from "./collapsible-root";
 
+// changing collapsible trigger
+
 export const CollapsibleTriggerBase = component$<PropsOf<"button">>(
   ({ onClick$, ...props }) => {
     const context = useContext(collapsibleContextId);
