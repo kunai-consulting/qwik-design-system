@@ -51,10 +51,11 @@ jobs:
             echo "useBoundSignal is expected on the root component to make state management easier with the bind syntax."
             echo ""
             echo "Example usage:"
-            echo "```tsx"
-            echo "const {\"bind:value\": givenValueSig} = props;"
-            echo "const valueSig = useBoundSignal(givenValueSig, defaultValue);"
-            echo "```"
+            echo '```tsx'
+            echo 'const { "bind:value": givenValueSig } = props;'
+            echo ''
+            echo 'const selectedValueSig = useBoundSignal(givenValueSig, initialValue);'
+            echo '```'
             echo ""
             echo "If the component does not need to use bound signal, add this comment in the file:"
             echo "// no-bound-signal"
