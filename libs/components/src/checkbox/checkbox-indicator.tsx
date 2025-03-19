@@ -16,14 +16,13 @@ export type PublicCheckboxIndicatorProps = PropsOf<"span">;
 // composition check
 
 /** Visual indicator component showing the checkbox state */
-export const CheckboxIndicatorBase = component$<PublicCheckboxIndicatorProps>((props) => {
+export const CheckboxIndicator = component$<PublicCheckboxIndicatorProps>((props) => {
   useStyles$(styles);
   const context = useContext(checkboxContextId);
   return (
     <div>
-      <Render
+      <span
         {...props}
-        fallback="span"
         // Indicates whether the indicator should be hidden based on checkbox state
         data-hidden={!context.isCheckedSig.value}
         // Indicates whether the checkbox is in a checked state
@@ -35,9 +34,7 @@ export const CheckboxIndicatorBase = component$<PublicCheckboxIndicatorProps>((p
         aria-hidden="true"
       >
         <Slot />
-      </Render>
+      </span>
     </div>
   );
 });
-
-export const CheckboxIndicator = withAsChild(CheckboxIndicatorBase);
