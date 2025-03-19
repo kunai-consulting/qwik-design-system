@@ -25,6 +25,7 @@ jobs:
         run: |
           # Initialize array for files missing AsChild implementation
           files_missing_aschild=()
+          has_root_component=false
           
           # Check each changed file
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
@@ -36,11 +37,12 @@ jobs:
               continue
             fi
             
-            # Check if file contains both withAsChild and Render
-            if ! grep -q "withAsChild" "$file" || ! grep -q "Render" "$file"; then
+            # Check if file contains withAsChild
+            if ! grep -q "withAsChild" "$file"; then
               # Check if it's a root component
               if [[ $file =~ -root\.(tsx|jsx)$ ]]; then
                 files_missing_aschild+=("$file:ROOT")
+                has_root_component=true
               else
                 files_missing_aschild+=("$file:COMPONENT")
               fi
@@ -50,6 +52,17 @@ jobs:
           # Report files missing AsChild implementation
           if [ ${#files_missing_aschild[@]} -gt 0 ]; then
             echo "::error title=Missing AsChild Implementation::❌ Components should implement AsChild pattern"
+            
+            # If there are root components, display the indexing message first
+            if [ "$has_root_component" = true ]; then
+              echo "::group::IMPORTANT: MISSING INDEX IMPLEMENTATION"
+              echo ""
+              echo "Root components (-root.tsx) require proper indexing implementation!"
+              echo "@https://qwik.design/contributing/indexing/"
+              echo ""
+              echo "::endgroup::"
+            fi
+            
             echo "::group::Files missing AsChild implementation"
             
             for file_info in "${files_missing_aschild[@]}"; do
@@ -82,9 +95,15 @@ jobs:
             echo ''
             echo 'export const Component = withAsChild(ComponentBase);'
             echo '```'
-            echo ""
-            echo "Root components also need indexing implementation:"
-            echo "https://qwik.design/contributing/indexing/"
+            
+            # Only show the indexing documentation in the "How to implement" section
+            # if there are NO root components (since we've already showed it prominently)
+            if [ "$has_root_component" = false ]; then
+              echo ""
+              echo "Root components also need indexing implementation:"
+              echo "https://qwik.design/contributing/indexing/"
+            fi
+            
             echo ""
             echo "If you have to go without the asChild implementation:"
             echo "Add a '// no-as-child' comment in your file."
