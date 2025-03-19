@@ -52,15 +52,37 @@ jobs:
             if grep -q "component\$" "$file" && grep -q "return" "$file"; then
               echo "Checking composition in $file..."
               
-              # Find all HTML tags (lowercase tag names)
-              html_tags=$(grep -o "<[a-z][a-zA-Z0-9]*" "$file" | sort | uniq)
-              unique_tags=$(echo "$html_tags" | wc -l)
+              # Extract return statements (better method)
+              return_content=$(sed -n '/return/,/;/p' "$file")
               
-              # If more than one unique HTML tag
-              if [ "$unique_tags" -gt 1 ]; then
+              # DEBUG: Show the return content
+              echo "=== RETURN CONTENT ==="
+              echo "$return_content"
+              echo "====================="
+              
+              # Find all HTML tags and count unique ones
+              # This catches tags like <div>, <span>, <p>, etc.
+              html_tags=$(echo "$return_content" | grep -o -E "<[a-z][a-zA-Z0-9]*" | sort | uniq)
+              
+              # DEBUG: Show what was found
+              echo "=== UNIQUE HTML TAGS FOUND ==="
+              echo "$html_tags"
+              echo "============================="
+              
+              # Count unique tags
+              unique_tag_count=$(echo "$html_tags" | grep -v "^$" | wc -l)
+              echo "Unique tag count: $unique_tag_count"
+              
+              # If multiple tag types were found
+              if [ "$unique_tag_count" -gt 1 ]; then
                 tag_list=$(echo "$html_tags" | tr '\n' ' ')
+                echo "FOUND MULTIPLE TAGS: $tag_list"
                 composition_issues+=("$file:Multiple HTML elements found: $tag_list")
+              else
+                echo "Only found one type of tag or check failed"
               fi
+            else
+              echo "File doesn't contain both component$ and return keywords"
             fi
           done
           
