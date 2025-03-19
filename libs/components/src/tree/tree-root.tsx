@@ -1,3 +1,5 @@
+// no-bound-signal
+
 import {
   type PropsOf,
   type Signal,
@@ -12,8 +14,6 @@ import {
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-
-// Example change in tree root
 
 type TreeRootContext = {
   rootRef: Signal<HTMLDivElement | undefined>;
