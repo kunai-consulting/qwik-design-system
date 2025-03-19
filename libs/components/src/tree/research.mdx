@@ -1,0 +1,161 @@
+Research:
+
+- Ark UI (https://ark-ui.com/react/docs/components/tree-view)
+
+- Material UI (https://mui.com/x/react-tree-view/?srsltid=AfmBOor5Lu38zUPxWS633qeArjpzz9IK_DuLrAtQxqsjy33VUa5EyI3l)
+
+- React Headless Tree (https://headless-tree.lukasbach.com/storybook/react/index.html?path=/story/react-async-data-loading--async-data-loading)
+
+- React Arborist (https://github.com/brimdata/react-arborist)
+
+Features
+
+- [ ] Keyboard navigation
+- [ ] Nested items (recursion)
+- [ ] CSR
+- [ ] SSR
+- [ ] Tree Search
+- [ ] Drag and drop
+- [ ] Multi-select
+- [ ] Renaming
+- [ ] Expand All
+
+
+
+Pieces:
+
+
+Keyboard interactions:
+
+Down Arrow -> next item or folder Down
+
+Up Arrow -> previous item or folder Up
+
+
+
+Attributes:
+
+
+potential ones:
+
+
+Use cases:
+
+
+Important CSS:
+
+API's
+
+<Tree.Root>
+  <Tree.Item>
+    <Tree.ItemIndicator>:small_blue_diamond:</Tree.ItemIndicator>
+    <Tree.ItemLabel>Single Item</Tree.ItemLabel>
+  </Tree.Item>
+  
+  <Tree.Group>
+    <Tree.GroupLabel>Group Label</Tree.GroupLabel>
+    
+    <Tree.Item>
+      <Tree.ItemIndicator>:small_blue_diamond:</Tree.ItemIndicator>
+      <Tree.ItemLabel>Item 1</Tree.ItemLabel>
+    </Tree.Item>
+    
+    <Tree.Item>
+      <Tree.ItemIndicator>:small_blue_diamond:</Tree.ItemIndicator>
+      <Tree.ItemLabel>Item 2</Tree.ItemLabel>
+    </Tree.Item>
+    
+    {/* Nested groups */}
+    <Tree.Group>
+      <Tree.GroupLabel>Nested Group</Tree.GroupLabel>
+      
+      <Tree.Item>
+        <Tree.ItemIndicator>:small_blue_diamond:</Tree.ItemIndicator>
+        <Tree.ItemLabel>Nested Item 1</Tree.ItemLabel>
+      </Tree.Item>
+      
+      <Tree.Item>
+        <Tree.ItemIndicator>:small_blue_diamond:</Tree.ItemIndicator>
+        <Tree.ItemLabel>Nested Item 2</Tree.ItemLabel>
+      </Tree.Item>
+    </Tree.Group>
+  </Tree.Group>
+</Tree.Root>
+
+
+Questions:
+
+
+## Sample Data Structure and Mapping
+
+Here's an example of a dummy tree data structure:
+
+```typescript
+type TreeItemType = {
+  id: string;
+  label: string;
+  children?: TreeItemType[];
+};
+
+const treeData: TreeItemType[] = [
+  {
+    id: "item-1",
+    label: "Documents",
+    children: [
+      {
+        id: "item-1-1",
+        label: "Work",
+        children: [
+          { id: "item-1-1-1", label: "Project A" },
+          { id: "item-1-1-2", label: "Project B" }
+        ]
+      },
+      {
+        id: "item-1-2",
+        label: "Personal",
+        children: [
+          { id: "item-1-2-1", label: "Finances" },
+          { id: "item-1-2-2", label: "Photos" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "item-2",
+    label: "Downloads",
+    children: [
+      { id: "item-2-1", label: "Movies" },
+      { id: "item-2-2", label: "Applications" }
+    ]
+  },
+  { id: "item-3", label: "Desktop" }
+];
+```
+
+### Mapping the Data to the Tree Component
+
+Here's how you would map this data structure to our Tree component:
+
+```tsx
+<Tree.Root>
+  {treeData.map(item => renderTreeItem(item))}
+</Tree.Root>
+
+function renderTreeItem(item: TreeItemType) {
+  if (item.children && item.children.length > 0) {
+    return (
+      <Tree.Group key={item.id}>
+        <Tree.GroupLabel>{item.label}</Tree.GroupLabel>
+        {item.children.map(child => renderTreeItem(child))}
+      </Tree.Group>
+    );
+  }
+  
+  return (
+    <Tree.Item key={item.id}>
+      <Tree.ItemIndicator>🔹</Tree.ItemIndicator>
+      <Tree.ItemLabel>{item.label}</Tree.ItemLabel>
+    </Tree.Item>
+  );
+}
+```
