@@ -1,4 +1,4 @@
-export const api = {
+{
   "resizable": [
     {
       "Resizable Handle": {
@@ -29,4 +29,4 @@ export const api = {
   ],
   "keyboardInteractions": [],
   "features": []
-};
+}

@@ -1,4 +1,4 @@
-export const api = {
+{
   "qr-code": [
     {
       "Qr Code Frame": {
@@ -31,10 +31,9 @@ export const api = {
                 "type": "string"
               },
               {
-                "comment":
-                  "The error correction level of the QR code. L = Low, M = Medium, Q = Quartile, H = High",
+                "comment": "The error correction level of the QR code. L = Low, M = Medium, Q = Quartile, H = High",
                 "prop": "level",
-                "type": '"L" | "M" | "Q" | "H"'
+                "type": "\"L\" | \"M\" | \"Q\" | \"H\""
               }
             ]
           }
@@ -110,4 +109,4 @@ export const api = {
     "Reactive state management for QR code updates",
     "Support for CSS styling and customization"
   ]
-};
+}
