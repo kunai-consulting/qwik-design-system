@@ -13,6 +13,8 @@ import {
 } from "@builder.io/qwik";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
+import { Render } from "../render/render";
+import { withAsChild } from "../as-child/as-child";
 
 export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   "bind:checked"?: Signal<boolean | "mixed">;
@@ -35,7 +37,7 @@ export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
 // changing checkbox root
 
 /** Root component that provides context and state management for the checkbox */
-export const CheckboxRoot = component$((props: PublicCheckboxRootProps) => {
+export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
   const {
     "bind:checked": givenCheckedSig,
     checked,
@@ -79,8 +81,9 @@ export const CheckboxRoot = component$((props: PublicCheckboxRootProps) => {
     isInitialLoadSig.value = false;
   });
   return (
-    <div
+    <Render
       {...rest}
+      fallback="div"
       // Identifier for the root checkbox container
       data-qds-checkbox-root
       // Indicates whether the checkbox is disabled
@@ -92,6 +95,8 @@ export const CheckboxRoot = component$((props: PublicCheckboxRootProps) => {
       data-mixed={context.isCheckedSig.value === "mixed" ? "" : undefined}
     >
       <Slot />
-    </div>
+    </Render>
   );
 });
+
+export const CheckboxRoot = withAsChild(CheckboxRootBase);
