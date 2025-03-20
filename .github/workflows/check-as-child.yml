@@ -27,8 +27,13 @@ jobs:
           files_missing_aschild=()
           has_root_component=false
           
-          # Check each changed file
+          # Check each changed file, but only process files in libs directory
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            # Skip files not in libs directory
+            if [[ ! $file =~ ^libs/ ]]; then
+              continue
+            fi
+            
             echo "Checking $file for AsChild implementation..."
             
             # Check if file is exempted with no-as-child comment
