@@ -1,9 +1,9 @@
-import {
-  type QRL,
-  type ReadonlySignal,
-  type Signal,
-  createContextId
-} from "@builder.io/qwik";
+import { type ReadonlySignal, type Signal, createContextId } from "@builder.io/qwik";
+
+type TriggerRef = {
+  ref: Signal;
+  value: string | undefined;
+};
 
 export interface RadioGroupContext {
   selectedValueSig: Signal<string | undefined>;
@@ -15,9 +15,8 @@ export interface RadioGroupContext {
   orientation: "horizontal" | "vertical";
   isDescription?: boolean;
   onValueChange$: (value: string) => void;
-  registerTrigger$: QRL<(element: Element, index?: number) => void>;
-  unregisterTrigger$: QRL<(element: Element) => void>;
   itemValue?: string;
+  triggerRefsArray: Signal<TriggerRef[]>;
 }
 
 export const radioGroupContextId =

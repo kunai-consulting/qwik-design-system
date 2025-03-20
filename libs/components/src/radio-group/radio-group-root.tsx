@@ -9,7 +9,6 @@ import {
   useContextProvider,
   useId,
   useSignal,
-  useStore,
   useStyles$,
   useTask$
 } from "@builder.io/qwik";
@@ -33,6 +32,11 @@ type PublicRootProps = PropsOf<"div"> & {
   "bind:value"?: Signal<string | undefined>;
 };
 
+interface TriggerRef {
+  ref: Signal;
+  value: string;
+}
+
 export const RadioGroupRootBase = component$((props: PublicRootProps) => {
   useStyles$(styles);
 
@@ -43,18 +47,7 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
   const localId = useId();
   const selectedFromOnChange = useSignal<string | undefined>();
   const computedIsError = useComputed$(() => !!props.isError);
-  const triggers = useStore<Array<{ element: Element; index: number }>>([]);
-
-  const registerTrigger$ = $((element: Element, index?: number) => {
-    triggers.push({ element, index: index ?? 0 });
-  });
-
-  const unregisterTrigger$ = $((element: Element) => {
-    const index = triggers.findIndex((t) => t.element === element);
-    if (index !== -1) {
-      triggers.splice(index, 1);
-    }
-  });
+  const triggerRefsArray = useSignal<TriggerRef[]>([]);
 
   useTask$(({ track }) => {
     const value = track(() => selectedFromOnChange.value);
@@ -77,10 +70,12 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
     }
   });
 
-  const moveToIndex = $((index: number, enabledTriggers: Element[]) => {
-    const normalizedIndex = (index + enabledTriggers.length) % enabledTriggers.length;
-    const trigger = enabledTriggers[normalizedIndex] as HTMLElement;
-    const value = (trigger as HTMLButtonElement).value;
+  const selectAndFocusTrigger = $((index: number) => {
+    const normalizedIndex =
+      (index + triggerRefsArray.value.length) % triggerRefsArray.value.length;
+    const triggerData = triggerRefsArray.value[normalizedIndex];
+    const trigger = triggerData.ref.value;
+    const value = triggerData.value;
 
     if (value) {
       selectedValueSig.value = value;
@@ -104,39 +99,52 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
     })
   );
 
-  const handleKeyDown$ = $((e: KeyboardEvent) => {
+  const getEnabledTriggerIndexes = $((triggerRefs: TriggerRef[]) => {
+    return triggerRefs
+      .map((item, index) => ({ item, index }))
+      .filter(({ item }) => !item.ref.value?.disabled)
+      .map(({ index }) => index);
+  });
+
+  const handleKeyDown$ = $(async (e: KeyboardEvent) => {
     if (isDisabledSig.value || !rootRef.value) return;
 
-    const enabledTriggers = triggers
-      .filter((item) => !(item.element as HTMLElement).hasAttribute("disabled"))
-      .sort((a, b) => a.index - b.index)
-      .map((item) => item.element);
+    const enabledTriggerIndexes = await getEnabledTriggerIndexes(triggerRefsArray.value);
 
-    if (!enabledTriggers.length) return;
+    if (!enabledTriggerIndexes.length) return;
 
-    const currentIndex = selectedValueSig.value
-      ? enabledTriggers.findIndex(
-          (trigger) => (trigger as HTMLButtonElement).value === selectedValueSig.value
+    const currentEnabledIndex = selectedValueSig.value
+      ? enabledTriggerIndexes.findIndex(
+          (index) => triggerRefsArray.value[index].value === selectedValueSig.value
         )
       : 0;
 
     const isHorizontal = props.orientation === "horizontal";
 
     switch (e.key) {
-      case isHorizontal ? "ArrowRight" : "ArrowDown":
-        moveToIndex(currentIndex + 1, enabledTriggers);
+      case isHorizontal ? "ArrowRight" : "ArrowDown": {
+        const nextIndex = currentEnabledIndex + 1;
+        const targetIndex =
+          enabledTriggerIndexes[
+            nextIndex >= enabledTriggerIndexes.length ? 0 : nextIndex
+          ];
+        selectAndFocusTrigger(targetIndex);
         break;
-      case isHorizontal ? "ArrowLeft" : "ArrowUp":
-        moveToIndex(
-          currentIndex === 0 ? enabledTriggers.length - 1 : currentIndex - 1,
-          enabledTriggers
-        );
+      }
+      case isHorizontal ? "ArrowLeft" : "ArrowUp": {
+        const prevIndex = currentEnabledIndex - 1;
+        const targetIndex =
+          enabledTriggerIndexes[
+            prevIndex < 0 ? enabledTriggerIndexes.length - 1 : prevIndex
+          ];
+        selectAndFocusTrigger(targetIndex);
         break;
+      }
       case "Home":
-        moveToIndex(0, enabledTriggers);
+        selectAndFocusTrigger(enabledTriggerIndexes[0]);
         break;
       case "End":
-        moveToIndex(enabledTriggers.length - 1, enabledTriggers);
+        selectAndFocusTrigger(enabledTriggerIndexes[enabledTriggerIndexes.length - 1]);
         break;
     }
   });
@@ -151,8 +159,8 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
     orientation: props.orientation || "vertical",
     isDescription: props.isDescription,
     onValueChange$,
-    registerTrigger$,
-    unregisterTrigger$
+    itemValue: undefined,
+    triggerRefsArray
   });
 
   return (

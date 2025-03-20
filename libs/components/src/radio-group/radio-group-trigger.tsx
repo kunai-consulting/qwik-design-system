@@ -6,7 +6,7 @@ import {
   useComputed$,
   useContext,
   useSignal,
-  useVisibleTask$
+  useTask$
 } from "@builder.io/qwik";
 import { getNextIndex } from "../../utils/indexer";
 import { withAsChild } from "../as-child/as-child";
@@ -19,16 +19,19 @@ type PublicTriggerProps = PropsOf<"button"> & {
 
 export const RadioGroupTriggerBase = component$((props: PublicTriggerProps) => {
   const context = useContext(radioGroupContextId);
-  const radioGroupRef = useSignal<HTMLElement>();
+  const triggerRef = useSignal<HTMLElement>();
   const { _index, ...restProps } = props;
   const value = context.itemValue;
 
-  useVisibleTask$(({ track, cleanup }) => {
-    const element = track(() => radioGroupRef.value);
-    if (!element) return;
+  useTask$(function getIndexOrder() {
+    if (_index === undefined) {
+      throw new Error("RadioGroupTrigger cannot find its proper index.");
+    }
 
-    context.registerTrigger$(element, _index);
-    cleanup(() => context.unregisterTrigger$(element));
+    context.triggerRefsArray.value[_index] = {
+      ref: triggerRef,
+      value
+    };
   });
 
   const isSelectedSig = useComputed$(() => context.selectedValueSig.value === value);
@@ -59,7 +62,7 @@ export const RadioGroupTriggerBase = component$((props: PublicTriggerProps) => {
     <Render
       fallback="button"
       {...restProps}
-      ref={radioGroupRef}
+      ref={triggerRef}
       type="button"
       role="radio"
       aria-checked={isSelectedSig.value}
