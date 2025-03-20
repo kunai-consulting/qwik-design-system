@@ -1,4 +1,4 @@
-import { type QRL, type Signal, createContextId } from "@builder.io/qwik";
+import { type Signal, createContextId } from "@builder.io/qwik";
 
 export interface OTPContext {
   inputValueSig: Signal<string>;

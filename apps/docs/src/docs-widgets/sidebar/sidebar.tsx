@@ -1,4 +1,4 @@
-import { component$, useTask$ } from "@builder.io/qwik";
+import { component$ } from "@builder.io/qwik";
 import { Link, useContent, useLocation } from "@builder.io/qwik-city";
 
 export const Sidebar = component$(() => {

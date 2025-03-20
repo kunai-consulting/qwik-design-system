@@ -1,12 +1,5 @@
-import {
-  type PropsOf,
-  Slot,
-  component$,
-  useContext,
-  useStyles$,
-  useTask$
-} from "@builder.io/qwik";
-import { CheckboxContext, checkboxContextId } from "./checkbox-context";
+import { type PropsOf, Slot, component$, useContext, useStyles$ } from "@builder.io/qwik";
+import { checkboxContextId } from "./checkbox-context";
 import "./checkbox.css";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";

@@ -8,7 +8,6 @@ import {
 } from "@builder.io/qwik";
 import { calendarContextId } from "./calendar-context";
 import type { LocalDate, Locale, Month } from "./types";
-import { getWeekNumber } from "./utils";
 type PublicCalendarGridProps = PropsOf<"table"> & {
   /** Props to be spread onto each date button */
   buttonProps?: PropsOf<"button">;

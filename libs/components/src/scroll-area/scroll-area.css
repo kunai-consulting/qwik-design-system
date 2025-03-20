@@ -1,50 +1,51 @@
 @layer qds {
-    [data-qds-scroll-area-root] {
-        position: relative;
-        overflow: hidden;
-    }
+  [data-qds-scroll-area-root] {
+    position: relative;
+    overflow: hidden;
+  }
 
-    [data-qds-scroll-area-viewport] {
-        overflow: auto;
-        position: relative;
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none; /* IE and Edge */
-    }
+  [data-qds-scroll-area-viewport] {
+    overflow: auto;
+    position: relative;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
 
-    /* Hide default scrollbars */
-    [data-qds-scroll-area-viewport]::-webkit-scrollbar {
-        display: none;
-    }
+  /* Hide default scrollbars */
+  [data-qds-scroll-area-viewport]::-webkit-scrollbar {
+    display: none;
+  }
 
-    [data-qds-scroll-area-scrollbar] {
-        touch-action: none;
-        user-select: none;
-        position: absolute;
-        opacity: 0;
-        transition: opacity 0.2s ease-in;
-        transition-delay: 0s;
-    }
+  [data-qds-scroll-area-scrollbar] {
+    touch-action: none;
+    user-select: none;
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.2s ease-in;
+    transition-delay: 0s;
+  }
 
-    [data-qds-scroll-area-scrollbar][data-orientation='vertical'] {
-        height: 100%;
-        right: 0;
-        top: 0;
-    }
+  [data-qds-scroll-area-scrollbar][data-orientation="vertical"] {
+    height: 100%;
+    right: 0;
+    top: 0;
+  }
 
-    [data-qds-scroll-area-scrollbar][data-orientation='horizontal'] {
-        bottom: 0;
-        left: 0;
-    }
+  [data-qds-scroll-area-scrollbar][data-orientation="horizontal"] {
+    bottom: 0;
+    left: 0;
+  }
 
-    [data-qds-scroll-area-thumb] {
-        position: relative;
-    }
+  [data-qds-scroll-area-thumb] {
+    position: relative;
+  }
 
+  [data-qds-scroll-area-scrollbar][data-state="visible"] {
+    opacity: 1;
+  }
+
+  [data-qds-scroll-area-root][data-has-overflow]
     [data-qds-scroll-area-scrollbar][data-state="visible"] {
-        opacity: 1;
-    }
-
-    [data-qds-scroll-area-root][data-has-overflow] [data-qds-scroll-area-scrollbar][data-state="visible"] {
-        opacity: 1;
-    }
+    opacity: 1;
+  }
 }

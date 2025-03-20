@@ -1,36 +1,36 @@
 .pagination-root {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
 .pagination-page {
-    border-width: 1px;
-    width: 44px;
-    height: 44px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
+  border-width: 1px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
 .pagination-page[data-current] {
-    background-color: #006da4;
-    color: white;
-    border-color: #006da4;  /* It is applied here */
+  background-color: #006da4;
+  color: white;
+  border-color: #006da4; /* It is applied here */
 }
 
 .pagination-page:disabled {
-    cursor: default;
+  cursor: default;
 }
 
 .pagination-previous {
-    color: white;
-    border: 2px dashed white;
-    padding: 0.5rem;
-}   
+  color: white;
+  border: 2px dashed white;
+  padding: 0.5rem;
+}
 
 .pagination-next {
-    color: white;
-    border: 2px dashed white;
-    padding: 0.5rem;
-}   
+  color: white;
+  border: 2px dashed white;
+  padding: 0.5rem;
+}

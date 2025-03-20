@@ -1,7 +1,6 @@
 import { $, Slot, component$, useOnWindow, useSignal, useTask$ } from "@builder.io/qwik";
 import { isServer } from "@builder.io/qwik/build";
 import { Combobox, Modal } from "@qwik-ui/headless";
-import { LuSearch } from "@qwikest/icons/lucide";
 import { cn } from "~/utils/cn";
 
 interface PagefindSearchResult {

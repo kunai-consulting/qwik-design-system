@@ -1,10 +1,8 @@
 import {
   $,
-  Component,
   type PropsOf,
   Slot,
   component$,
-  noSerialize,
   sync$,
   useComputed$,
   useContext

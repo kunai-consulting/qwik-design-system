@@ -1,114 +1,114 @@
 .slider-root {
-    width: 200px;
-    height: 24px;
+  width: 200px;
+  height: 24px;
 }
 
 .slider-track {
-    height: 4px;
-    background-color: #e2e8f0;
-    border-radius: 2px;
+  height: 4px;
+  background-color: #e2e8f0;
+  border-radius: 2px;
 }
 
 .slider-range {
-    background-color: #3b82f6;
+  background-color: #3b82f6;
 }
 
 .slider-thumb {
-    width: 16px;
-    height: 16px;
-    background-color: white;
-    border: 2px solid #3b82f6;
-    border-radius: 50%;
-    cursor: grab;
+  width: 16px;
+  height: 16px;
+  background-color: white;
+  border: 2px solid #3b82f6;
+  border-radius: 50%;
+  cursor: grab;
 }
 
 .slider-thumb:active {
-    cursor: grabbing;
+  cursor: grabbing;
 }
 
 .slider-thumb:focus-visible {
-    outline: 2px solid #3b82f6;
-    outline-offset: 2px;
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
 }
 
 .slider-tooltip {
-    background-color: #1e293b;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
+  background-color: #1e293b;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
 }
 
 .slider-tooltip::after {
-    content: '';
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background-color: #1e293b;
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: #1e293b;
 }
 
 .slider-tooltip[data-placement="top"] {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .slider-tooltip[data-placement="bottom"] {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 .slider-tooltip[data-placement="left"] {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .slider-tooltip[data-placement="right"] {
-    margin-left: 10px;
+  margin-left: 10px;
 }
 
 .slider-tooltip[data-placement="top"]::after {
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%) rotate(45deg);
-    margin-top: -4px;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  margin-top: -4px;
 }
 
 .slider-tooltip[data-placement="bottom"]::after {
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%) rotate(45deg);
-    margin-bottom: -4px;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  margin-bottom: -4px;
 }
 
 .slider-tooltip[data-placement="left"]::after {
-    left: 100%;
-    top: 50%;
-    transform: translateY(-50%) rotate(45deg);
-    margin-left: -4px;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  margin-left: -4px;
 }
 
 .slider-tooltip[data-placement="right"]::after {
-    right: 100%;
-    top: 50%;
-    transform: translateY(-50%) rotate(45deg);
-    margin-right: -4px;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  margin-right: -4px;
 }
 
 .slider-marker-group {
-    width: 100%;
-    position: absolute;
-    top: 100%;
-    margin-top: 8px;
+  width: 100%;
+  position: absolute;
+  top: 100%;
+  margin-top: 8px;
 }
 
 .slider-marker {
-    width: 2px;
-    height: 8px;
-    background-color: #e2e8f0;
-    display: flex;
-    justify-content: center;
+  width: 2px;
+  height: 8px;
+  background-color: #e2e8f0;
+  display: flex;
+  justify-content: center;
 }
 
 .slider-mark-label {
-    font-size: 12px;
-    color: #64748b;
-    white-space: nowrap;
-    margin-top: 8px;
+  font-size: 12px;
+  color: #64748b;
+  white-space: nowrap;
+  margin-top: 8px;
 }

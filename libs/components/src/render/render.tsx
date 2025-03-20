@@ -1,5 +1,4 @@
 import {
-  type JSXNode,
   type JSXOutput,
   type QwikIntrinsicElements,
   Slot,

@@ -5,8 +5,7 @@ import {
   createContextId,
   useContext,
   useContextProvider,
-  useSignal,
-  useTask$
+  useSignal
 } from "@builder.io/qwik";
 import { Render, getNextIndex, resetIndexes, withAsChild } from "@kunai-consulting/qwik";
 

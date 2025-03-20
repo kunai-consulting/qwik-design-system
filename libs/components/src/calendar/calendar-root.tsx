@@ -1,6 +1,4 @@
 import {
-  $,
-  type Component,
   type PropsOf,
   type QRL,
   type Signal,

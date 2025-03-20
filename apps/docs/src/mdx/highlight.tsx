@@ -1,5 +1,4 @@
 import {
-  $,
   type ClassList,
   type PropsOf,
   component$,

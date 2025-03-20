@@ -6,8 +6,7 @@ import {
   useContext,
   useContextProvider,
   useSignal,
-  useStyles$,
-  useStylesScoped$
+  useStyles$
 } from "@builder.io/qwik";
 
 export default component$(() => {

@@ -1,12 +1,4 @@
-import {
-  $,
-  type PropsOf,
-  Slot,
-  component$,
-  useContext,
-  useSignal,
-  useTask$
-} from "@builder.io/qwik";
+import { type PropsOf, Slot, component$, useContext, useSignal } from "@builder.io/qwik";
 import { radioGroupContextId } from "./radio-group-context";
 type PublicRadioGroupItemProps = PropsOf<"div"> & {
   value: string;

@@ -9,7 +9,8 @@
       "server",
       "apps/docs/public/pagefind",
       "lib-types",
-      "libs/components/lib/*"
+      "libs/components/lib/*",
+      ".vscode"
     ]
   },
 
@@ -45,7 +46,8 @@
     "enabled": true,
     "rules": {
       "a11y": {
-        "recommended": true
+        "recommended": true,
+        "useSemanticElements": "off"
       },
       "complexity": {
         "recommended": true,

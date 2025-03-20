@@ -1,4 +1,4 @@
-import { $, implicit$FirstArg, useSignal, useVisibleTask$ } from "@builder.io/qwik";
+import { $, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 
 export const random = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min)) + min;

@@ -1,12 +1,10 @@
 import {
-  type Signal,
   Slot,
   component$,
   createContextId,
   useContext,
   useContextProvider,
-  useSignal,
-  useTask$
+  useSignal
 } from "@builder.io/qwik";
 
 export default component$(() => {

@@ -7,7 +7,6 @@ import {
   component$,
   createContextId,
   sync$,
-  useContext,
   useContextProvider,
   useOnWindow,
   useSignal
