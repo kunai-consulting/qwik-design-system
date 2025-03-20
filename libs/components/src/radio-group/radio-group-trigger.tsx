@@ -14,14 +14,14 @@ import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 
 type PublicTriggerProps = PropsOf<"button"> & {
-  value: string;
   _index?: number;
 };
 
 export const RadioGroupTriggerBase = component$((props: PublicTriggerProps) => {
   const context = useContext(radioGroupContextId);
   const radioGroupRef = useSignal<HTMLElement>();
-  const { value, _index, ...restProps } = props;
+  const { _index, ...restProps } = props;
+  const value = context.itemValue;
 
   useVisibleTask$(({ track, cleanup }) => {
     const element = track(() => radioGroupRef.value);

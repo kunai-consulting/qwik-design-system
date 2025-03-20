@@ -17,6 +17,7 @@ export interface RadioGroupContext {
   onValueChange$: (value: string) => void;
   registerTrigger$: QRL<(element: Element, index?: number) => void>;
   unregisterTrigger$: QRL<(element: Element) => void>;
+  itemValue?: string;
 }
 
 export const radioGroupContextId =

@@ -1,16 +1,16 @@
+// no-as-child
 import { $, type PropsOf, component$, useContext } from "@builder.io/qwik";
 import { radioGroupContextId } from "./radio-group-context";
 
 type PublicHiddenInputProps = Omit<
   PropsOf<"input">,
   "type" | "checked" | "form" | "style"
-> & {
-  _index?: number | null;
-};
+>;
 
 export const RadioGroupHiddenInput = component$((props: PublicHiddenInputProps) => {
   const context = useContext(radioGroupContextId);
-  const { _index, value, onChange$, required, ...restProps } = props;
+  const { onChange$, required, ...restProps } = props;
+  const value = context.itemValue;
 
   const handleChange$ = $(() => {
     if (!context.isDisabledSig.value) {

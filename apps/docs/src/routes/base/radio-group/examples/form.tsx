@@ -3,6 +3,10 @@ import { RadioGroup } from "@kunai-consulting/qwik";
 
 export default component$(() => {
   const isError = useSignal(false);
+  const items = [
+    { label: "Basic - $10/month", value: "basic" },
+    { label: "Pro - $20/month", value: "pro" }
+  ];
 
   return (
     <form
@@ -33,21 +37,15 @@ export default component$(() => {
           Choose your preferred subscription plan
         </RadioGroup.Description>
 
-        <RadioGroup.Item value="basic" class="radio-group-item">
-          <RadioGroup.Label>Basic - $10/month</RadioGroup.Label>
-          <RadioGroup.Trigger value="basic" class="radio-group-trigger">
-            <RadioGroup.Indicator value="basic" class="radio-group-indicator" />
-          </RadioGroup.Trigger>
-          <RadioGroup.HiddenInput value="basic" />
-        </RadioGroup.Item>
-
-        <RadioGroup.Item value="pro" class="radio-group-item">
-          <RadioGroup.Label>Pro - $20/month</RadioGroup.Label>
-          <RadioGroup.Trigger value="pro" class="radio-group-trigger">
-            <RadioGroup.Indicator value="pro" class="radio-group-indicator" />
-          </RadioGroup.Trigger>
-          <RadioGroup.HiddenInput value="pro" />
-        </RadioGroup.Item>
+        {items.map((item) => (
+          <RadioGroup.Item value={item.value} key={item.value} class="radio-group-item">
+            <RadioGroup.Label>{item.label}</RadioGroup.Label>
+            <RadioGroup.Trigger class="radio-group-trigger">
+              <RadioGroup.Indicator class="radio-group-indicator" />
+            </RadioGroup.Trigger>
+            <RadioGroup.HiddenInput />
+          </RadioGroup.Item>
+        ))}
 
         {isError.value && (
           <RadioGroup.ErrorMessage class="radio-group-error-message">

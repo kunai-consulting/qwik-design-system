@@ -8,19 +8,14 @@ export default component$(() => {
     <RadioGroup.Root class="radio-group-root">
       <RadioGroup.Label>Choose option</RadioGroup.Label>
 
-      <RadioGroup.Item value="option1" class="radio-group-item">
-        <RadioGroup.Label>Option 1</RadioGroup.Label>
-        <RadioGroup.Trigger value="option1" class="radio-group-trigger">
-          <RadioGroup.Indicator value="option1" class="radio-group-indicator" />
-        </RadioGroup.Trigger>
-      </RadioGroup.Item>
-
-      <RadioGroup.Item value="option2" class="radio-group-item">
-        <RadioGroup.Label>Option 2</RadioGroup.Label>
-        <RadioGroup.Trigger value="option2" class="radio-group-trigger">
-          <RadioGroup.Indicator value="option2" class="radio-group-indicator" />
-        </RadioGroup.Trigger>
-      </RadioGroup.Item>
+      {["Option 1", "Option 2"].map((value) => (
+        <RadioGroup.Item value={value} key={value} class="radio-group-item">
+          <RadioGroup.Label>{value}</RadioGroup.Label>
+          <RadioGroup.Trigger class="radio-group-trigger">
+            <RadioGroup.Indicator class="radio-group-indicator" />
+          </RadioGroup.Trigger>
+        </RadioGroup.Item>
+      ))}
     </RadioGroup.Root>
   );
 });

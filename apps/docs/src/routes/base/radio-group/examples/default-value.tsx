@@ -4,7 +4,7 @@ import styles from "./radio-group-custom.css?inline";
 
 export default component$(() => {
   useStyles$(styles);
-  const currentValue = useSignal("option1");
+  const currentValue = useSignal("Option 1");
 
   return (
     <RadioGroup.Root
@@ -17,19 +17,14 @@ export default component$(() => {
     >
       <RadioGroup.Label>Choose option</RadioGroup.Label>
 
-      <RadioGroup.Item value="option1" class="radio-group-item">
-        <RadioGroup.Trigger value="option1" class="radio-group-trigger">
-          <RadioGroup.Indicator value="option1" class="radio-group-indicator" />
-        </RadioGroup.Trigger>
-        <RadioGroup.Label>Option 1</RadioGroup.Label>
-      </RadioGroup.Item>
-
-      <RadioGroup.Item value="option2" class="radio-group-item">
-        <RadioGroup.Trigger value="option2" class="radio-group-trigger">
-          <RadioGroup.Indicator value="option2" class="radio-group-indicator" />
-        </RadioGroup.Trigger>
-        <RadioGroup.Label>Option 2</RadioGroup.Label>
-      </RadioGroup.Item>
+      {["Option 1", "Option 2"].map((value) => (
+        <RadioGroup.Item value={value} key={value} class="radio-group-item">
+          <RadioGroup.Trigger class="radio-group-trigger">
+            <RadioGroup.Indicator class="radio-group-indicator" />
+          </RadioGroup.Trigger>
+          <RadioGroup.Label>{value}</RadioGroup.Label>
+        </RadioGroup.Item>
+      ))}
     </RadioGroup.Root>
   );
 });
