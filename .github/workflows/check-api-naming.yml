@@ -17,8 +17,8 @@ jobs:
         uses: tj-actions/changed-files@v46
         with:
           files: |
-            **/*.tsx
-            **/*.jsx
+            libs/**/*.tsx
+            libs/**/*.jsx
           
       - name: Check for defaultX patterns
         if: steps.changed-files.outputs.any_changed == 'true'

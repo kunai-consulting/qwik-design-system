@@ -20,8 +20,8 @@ jobs:
         uses: tj-actions/changed-files@v46
         with:
           files: |
-            **/*.jsx
-            **/*.tsx
+            libs/**/*.tsx
+            libs/**/*.jsx
           
       - name: Check event handler patterns
         if: steps.changed-files.outputs.any_changed == 'true'

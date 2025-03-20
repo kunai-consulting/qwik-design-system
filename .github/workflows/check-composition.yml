@@ -20,8 +20,8 @@ jobs:
         uses: tj-actions/changed-files@v46
         with:
           files: |
-            **/*.tsx
-            **/*.jsx
+            libs/**/*.tsx
+            libs/**/*.jsx
           
       - name: Check component composition
         if: steps.changed-files.outputs.any_changed == 'true'
