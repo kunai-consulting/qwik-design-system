@@ -37,3 +37,6 @@ lerna-debug.log*
 
 # Cloudflare
 functions/**/*.js
+
+# CodeNotate
+.code-notate/*/log.mdx
