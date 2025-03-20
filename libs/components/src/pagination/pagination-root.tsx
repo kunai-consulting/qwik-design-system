@@ -1,7 +1,5 @@
 import {
-  $,
   type JSXChildren,
-  type JSXNode,
   type PropsOf,
   type QRL,
   type Signal,
@@ -9,7 +7,6 @@ import {
   component$,
   useComputed$,
   useContextProvider,
-  useId,
   useSignal,
   useTask$
 } from "@builder.io/qwik";

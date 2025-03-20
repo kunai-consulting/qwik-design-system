@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
   "files": {
     "ignore": [
       ".git",
@@ -9,7 +9,8 @@
       "server",
       "apps/docs/public/pagefind",
       "lib-types",
-      "libs/components/lib/*"
+      "libs/components/lib/*",
+      ".vscode"
     ]
   },
 
@@ -45,7 +46,8 @@
     "enabled": true,
     "rules": {
       "a11y": {
-        "recommended": true
+        "recommended": true,
+        "useSemanticElements": "off"
       },
       "complexity": {
         "recommended": true,
@@ -53,6 +55,7 @@
       },
       "correctness": {
         "noUndeclaredVariables": "error",
+        "noUnusedImports": "error",
         "recommended": true
       },
       "performance": {

@@ -1,11 +1,11 @@
 .toast-root {
-    background: white;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
+  background: white;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
 }
 
 .toast-content {
-    display: flex;
-    gap: 0.5rem;
-    color: black;
+  display: flex;
+  gap: 0.5rem;
+  color: black;
 }

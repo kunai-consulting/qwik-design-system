@@ -1,9 +1,10 @@
-import { Fragment, component$, useContext, useTask$ } from "@builder.io/qwik";
+import { component$, useContext, useTask$ } from "@builder.io/qwik";
 import type {
   AnatomyItem,
   ComponentEntry,
   ParsedProps
 } from "@kunai-consulting/code-notate-core";
+
 import { Popover } from "@qwik-ui/headless";
 import { rootContextId } from "~/routes/layout";
 import { MainHeading, SubHeading } from "../toc/toc";

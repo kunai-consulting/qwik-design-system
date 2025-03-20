@@ -1,5 +1,4 @@
 import {
-  JSXNode,
   type PropsOf,
   type QRL,
   type Signal,

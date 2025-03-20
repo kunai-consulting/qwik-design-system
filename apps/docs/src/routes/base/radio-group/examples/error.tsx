@@ -1,4 +1,4 @@
-import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
+import { component$, useStyles$ } from "@builder.io/qwik";
 import { RadioGroup } from "@kunai-consulting/qwik";
 import { LuCircle } from "@qwikest/icons/lucide";
 

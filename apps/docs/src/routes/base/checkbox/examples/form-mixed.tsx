@@ -1,4 +1,4 @@
-import { $, type Signal, component$, useSignal, useStyles$ } from "@builder.io/qwik";
+import { type Signal, component$, useSignal, useStyles$ } from "@builder.io/qwik";
 import { Checkbox } from "@kunai-consulting/qwik";
 import { LuCheck } from "@qwikest/icons/lucide";
 

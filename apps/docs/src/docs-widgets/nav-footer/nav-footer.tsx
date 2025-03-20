@@ -1,4 +1,4 @@
-import { Slot, component$, isDev, useStyles$ } from "@builder.io/qwik";
+import { component$, isDev, useStyles$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import { SearchModal } from "~/docs-widgets/search/search";
 import { AIDrawer } from "../header/ai-drawer";

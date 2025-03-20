@@ -3,8 +3,7 @@ import {
   Slot,
   component$,
   useContextProvider,
-  useSignal,
-  useTask$
+  useSignal
 } from "@builder.io/qwik";
 import { Checkbox } from "..";
 import { findComponent, processChildren } from "../../utils/inline-component";

@@ -1,4 +1,4 @@
-import { JSXNode, type Signal, createContextId } from "@builder.io/qwik";
+import { type Signal, createContextId } from "@builder.io/qwik";
 
 export const checkboxContextId = createContextId<CheckboxContext>("qds-checkbox-context");
 

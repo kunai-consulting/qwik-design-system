@@ -1,7 +1,6 @@
-import { $, type PropsOf, component$, useSignal } from "@builder.io/qwik";
+import { $, component$, useSignal } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { Otp } from "@kunai-consulting/qwik";
-import value from "~/routes/base/checkbox/examples/value";
 
 export const head: DocumentHead = {
   title: "Qwik Design System",

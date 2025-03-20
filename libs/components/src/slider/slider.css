@@ -1,73 +1,73 @@
 @layer qds {
-    [data-qds-slider-root] {
-        position: relative;
-        touch-action: none;
-        user-select: none;
-        display: block;
-    }
+  [data-qds-slider-root] {
+    position: relative;
+    touch-action: none;
+    user-select: none;
+    display: block;
+  }
 
-    [data-qds-slider-track] {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 50%;
-        cursor: pointer;
-    }
+  [data-qds-slider-track] {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    cursor: pointer;
+  }
 
-    [data-qds-slider-range] {
-        position: absolute;
-        height: 100%;
-        border-radius: inherit;
-    }
+  [data-qds-slider-range] {
+    position: absolute;
+    height: 100%;
+    border-radius: inherit;
+  }
 
-    [data-qds-slider-thumb] {
-        position: absolute;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        touch-action: none;
-        z-index: 1;
-    }
+  [data-qds-slider-thumb] {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    touch-action: none;
+    z-index: 1;
+  }
 
-    [data-qds-slider-tooltip] {
-        position: absolute;
-        opacity: 0;
-        transition: opacity 0.2s;
-        pointer-events: none;
-        white-space: nowrap;
-    }
+  [data-qds-slider-tooltip] {
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    white-space: nowrap;
+  }
 
-    [data-qds-slider-tooltip][data-placement="top"] {
-        bottom: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-    }
+  [data-qds-slider-tooltip][data-placement="top"] {
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 
-    [data-qds-slider-tooltip][data-placement="bottom"] {
-        top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-    }
+  [data-qds-slider-tooltip][data-placement="bottom"] {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 
-    [data-qds-slider-tooltip][data-placement="left"] {
-        right: 100%;
-        top: 50%;
-        transform: translateY(-50%);
-    }
+  [data-qds-slider-tooltip][data-placement="left"] {
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 
-    [data-qds-slider-tooltip][data-placement="right"] {
-        left: 100%;
-        top: 50%;
-        transform: translateY(-50%);
-    }
+  [data-qds-slider-tooltip][data-placement="right"] {
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 
-    [data-qds-slider-thumb]:hover [data-qds-slider-tooltip],
-    [data-qds-slider-thumb]:active [data-qds-slider-tooltip],
-    [data-qds-slider-thumb]:focus-visible [data-qds-slider-tooltip] {
-        opacity: 1;
-    }
+  [data-qds-slider-thumb]:hover [data-qds-slider-tooltip],
+  [data-qds-slider-thumb]:active [data-qds-slider-tooltip],
+  [data-qds-slider-thumb]:focus-visible [data-qds-slider-tooltip] {
+    opacity: 1;
+  }
 
-    [data-qds-slider-marker] {
-        position: absolute;
-        transform: translateX(-50%);
-    }
+  [data-qds-slider-marker] {
+    position: absolute;
+    transform: translateX(-50%);
+  }
 }

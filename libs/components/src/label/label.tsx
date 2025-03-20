@@ -17,6 +17,7 @@ export const Label = component$<LabelProps>((props) => {
   });
 
   return (
+    // biome-ignore lint/a11y/noLabelWithoutControl: we bind the control when a label is used in a compound component
     <label
       {...props}
       onMouseDown$={[handleMouseDownSync$, handleMouseDown$, props.onMouseDown$]}
