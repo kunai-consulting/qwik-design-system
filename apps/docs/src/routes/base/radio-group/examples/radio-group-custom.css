@@ -1,6 +1,3 @@
-.radio-group-root {
-}
-
 .radio-group-root[data-orientation="horizontal"] {
   gap: 1rem;
 }
