@@ -15,7 +15,7 @@ export const RadioGroupErrorMessage = component$((props: PublicErrorMessageProps
       data-visible={context.isErrorSig.value}
       aria-hidden={!context.isErrorSig.value}
     >
-      {context.isErrorSig.value && <Slot />}
+      <Slot />
     </div>
   );
 });

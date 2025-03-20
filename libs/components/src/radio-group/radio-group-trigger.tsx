@@ -3,12 +3,14 @@ import {
   type PropsOf,
   Slot,
   component$,
-  sync$,
   useComputed$,
   useContext,
   useSignal,
   useVisibleTask$
 } from "@builder.io/qwik";
+import { getNextIndex } from "../../utils/indexer";
+import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 
 type PublicTriggerProps = PropsOf<"button"> & {
@@ -16,13 +18,13 @@ type PublicTriggerProps = PropsOf<"button"> & {
   _index?: number;
 };
 
-export const RadioGroupTrigger = component$((props: PublicTriggerProps) => {
+export const RadioGroupTriggerBase = component$((props: PublicTriggerProps) => {
   const context = useContext(radioGroupContextId);
-  const elementRef = useSignal<HTMLElement>();
+  const radioGroupRef = useSignal<HTMLElement>();
   const { value, _index, ...restProps } = props;
 
   useVisibleTask$(({ track, cleanup }) => {
-    const element = track(() => elementRef.value);
+    const element = track(() => radioGroupRef.value);
     if (!element) return;
 
     context.registerTrigger$(element, _index);
@@ -32,39 +34,51 @@ export const RadioGroupTrigger = component$((props: PublicTriggerProps) => {
   const isSelectedSig = useComputed$(() => context.selectedValueSig.value === value);
   const isDisabledSig = useComputed$(() => context.isDisabledSig.value || props.disabled);
 
+  const tabIndexSig = useComputed$(() => {
+    const isSelected = isSelectedSig.value;
+    const isFirstItem = _index === 0;
+    const noSelection = !context.selectedValueSig.value;
+
+    return isSelected || (noSelection && isFirstItem) ? 0 : -1;
+  });
+
   const handleClick$ = $(() => {
     if (isDisabledSig.value) return;
-    context.onChange$(value);
+    context.selectedValueSig.value = value;
   });
 
   const handleKeyDown$ = $((event: KeyboardEvent) => {
     if (isDisabledSig.value) return;
 
     if (event.key === " " || event.key === "Enter") {
-      sync$((e: KeyboardEvent) => e.preventDefault())(event);
       handleClick$();
     }
   });
 
   return (
-    <button
+    <Render
+      fallback="button"
       {...restProps}
-      ref={elementRef}
+      ref={radioGroupRef}
       type="button"
       role="radio"
       aria-checked={isSelectedSig.value}
-      data-state={isSelectedSig.value ? "checked" : undefined}
+      data-checked={isSelectedSig.value}
       data-qds-radio-group-trigger
       data-disabled={isDisabledSig.value || undefined}
       value={value}
       onClick$={[handleClick$, props.onClick$]}
       onKeyDown$={[handleKeyDown$, props.onKeyDown$]}
       disabled={isDisabledSig.value}
-      tabIndex={
-        isSelectedSig.value || (!context.selectedValueSig.value && _index === 0) ? 0 : -1
-      }
+      tabIndex={tabIndexSig.value}
     >
       <Slot />
-    </button>
+    </Render>
   );
+});
+
+export const RadioGroupTrigger = withAsChild(RadioGroupTriggerBase, (props) => {
+  const nextIndex = getNextIndex("radioGroup");
+  props._index = nextIndex;
+  return props;
 });

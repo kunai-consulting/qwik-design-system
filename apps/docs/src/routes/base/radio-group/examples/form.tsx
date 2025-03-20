@@ -1,14 +1,32 @@
-import { component$ } from "@builder.io/qwik";
+import { $, component$, useSignal } from "@builder.io/qwik";
 import { RadioGroup } from "@kunai-consulting/qwik";
 
 export default component$(() => {
+  const isError = useSignal(false);
+
   return (
-    <form>
+    <form
+      preventdefault:submit
+      noValidate
+      onSubmit$={$((e) => {
+        const form = e.target as HTMLFormElement;
+        if (!form.checkValidity()) {
+          isError.value = true;
+        } else {
+          isError.value = false;
+          console.log("Form submitted successfully");
+        }
+      })}
+    >
       <RadioGroup.Root
         required
         isDescription
+        isError={isError.value}
         name="subscription"
         class="radio-group-root"
+        onValueChange$={$(() => {
+          isError.value = false;
+        })}
       >
         <RadioGroup.Label>Subscription Plan</RadioGroup.Label>
         <RadioGroup.Description>
@@ -17,23 +35,25 @@ export default component$(() => {
 
         <RadioGroup.Item value="basic" class="radio-group-item">
           <RadioGroup.Label>Basic - $10/month</RadioGroup.Label>
-          <RadioGroup.Trigger value="basic" _index={0} class="radio-group-trigger">
+          <RadioGroup.Trigger value="basic" class="radio-group-trigger">
             <RadioGroup.Indicator value="basic" class="radio-group-indicator" />
           </RadioGroup.Trigger>
-          <RadioGroup.HiddenInput value="basic" _index={0} />
+          <RadioGroup.HiddenInput value="basic" />
         </RadioGroup.Item>
 
         <RadioGroup.Item value="pro" class="radio-group-item">
           <RadioGroup.Label>Pro - $20/month</RadioGroup.Label>
-          <RadioGroup.Trigger value="pro" _index={1} class="radio-group-trigger">
+          <RadioGroup.Trigger value="pro" class="radio-group-trigger">
             <RadioGroup.Indicator value="pro" class="radio-group-indicator" />
           </RadioGroup.Trigger>
-          <RadioGroup.HiddenInput value="pro" _index={1} />
+          <RadioGroup.HiddenInput value="pro" />
         </RadioGroup.Item>
 
-        <RadioGroup.ErrorMessage class="radio-group-error-message">
-          Please select a subscription plan
-        </RadioGroup.ErrorMessage>
+        {isError.value && (
+          <RadioGroup.ErrorMessage class="radio-group-error-message">
+            Please select a subscription plan
+          </RadioGroup.ErrorMessage>
+        )}
       </RadioGroup.Root>
 
       <button type="submit">Subscribe</button>

@@ -12,10 +12,9 @@ export interface RadioGroupContext {
   localId: string;
   required?: boolean;
   name?: string;
-  formRef: Signal<HTMLFormElement | undefined>;
   orientation: "horizontal" | "vertical";
   isDescription?: boolean;
-  onChange$: QRL<(value: string) => void>;
+  onValueChange$: (value: string) => void;
   registerTrigger$: QRL<(element: Element, index?: number) => void>;
   unregisterTrigger$: QRL<(element: Element) => void>;
 }

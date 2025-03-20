@@ -1,23 +1,28 @@
 import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
+import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 
 type PublicItemProps = PropsOf<"div"> & {
   value: string;
 };
 
-export const RadioGroupItem = component$((props: PublicItemProps) => {
+export const RadioGroupItemBase = component$((props: PublicItemProps) => {
   const context = useContext(radioGroupContextId);
   const { value, ...restProps } = props;
   const itemId = `${context.localId}-item-${value}`;
 
   return (
-    <div
+    <Render
+      fallback="div"
       {...restProps}
       id={itemId}
       data-qds-radio-group-item
       data-orientation={context.orientation}
     >
       <Slot />
-    </div>
+    </Render>
   );
 });
+
+export const RadioGroupItem = withAsChild(RadioGroupItemBase);

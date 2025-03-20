@@ -24,7 +24,7 @@
   background: none;
 }
 
-.radio-group-trigger[data-state="checked"] {
+.radio-group-trigger[data-checked] {
   background-color: #e5e5e5;
 }
 

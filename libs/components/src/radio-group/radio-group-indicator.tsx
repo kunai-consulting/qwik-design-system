@@ -21,7 +21,7 @@ export const RadioGroupIndicator = component$((props: PublicIndicatorProps) => {
     <span
       {...restProps}
       data-qds-indicator
-      data-state={isChecked.value ? "checked" : undefined}
+      data-checked={isChecked.value || undefined}
       data-hidden={!isChecked.value || undefined}
       aria-hidden="true"
     >

@@ -1,6 +1,5 @@
 import {
   $,
-  type PropFunction,
   type PropsOf,
   type Signal,
   Slot,
@@ -15,20 +14,22 @@ import {
   useTask$
 } from "@builder.io/qwik";
 import { useBoundSignal } from "../../utils/bound-signal";
-import { withAsChild } from "../as-child/as-child";
+import { resetIndexes } from "../../utils/indexer";
+import { syncFixedInV2, withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 import styles from "./radio-group.css?inline";
 
 type PublicRootProps = PropsOf<"div"> & {
   value?: string;
-  onChange$?: PropFunction<(value: string) => void>;
+  onValueChange$?: (value: string) => void;
   disabled?: boolean;
   name?: string;
   required?: boolean;
   form?: string;
   orientation?: "horizontal" | "vertical";
   isDescription?: boolean;
+  isError?: boolean;
   "bind:value"?: Signal<string | undefined>;
 };
 
@@ -39,9 +40,9 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
   const { "bind:value": givenValueSig } = props;
   const selectedValueSig = useBoundSignal(givenValueSig, props.value);
   const isDisabledSig = useComputed$(() => !!props.disabled);
-  const isErrorSig = useSignal(false);
-  const formRef = useSignal<HTMLFormElement>();
   const localId = useId();
+  const selectedFromOnChange = useSignal<string | undefined>();
+  const computedIsError = useComputed$(() => !!props.isError);
   const triggers = useStore<Array<{ element: Element; index: number }>>([]);
 
   const registerTrigger$ = $((element: Element, index?: number) => {
@@ -55,51 +56,56 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
     }
   });
 
-  const onChange$ = $((value: string) => {
-    if (isDisabledSig.value) return;
-    selectedValueSig.value = value;
-    props.onChange$?.(value);
-    isErrorSig.value = false;
-  });
-
-  useTask$(() => {
-    if (!props.form) return;
-    formRef.value = document.getElementById(props.form) as HTMLFormElement;
-  });
-
   useTask$(({ track }) => {
-    track(() => selectedValueSig.value);
-    isErrorSig.value = !!(props.required && !selectedValueSig.value);
-  });
+    const value = track(() => selectedFromOnChange.value);
+    if (value === undefined) return;
 
-  useTask$(({ track }) => {
-    const value = track(() => props.value);
-    if (value !== undefined) {
+    if (!isDisabledSig.value) {
       selectedValueSig.value = value;
+    }
+  });
+
+  const onValueChange$ = $((value: string) => {
+    if (isDisabledSig.value) return;
+    selectedFromOnChange.value = value;
+  });
+
+  useTask$(({ track }) => {
+    const value = track(() => selectedValueSig.value);
+    if (value !== undefined) {
+      props.onValueChange$?.(value);
     }
   });
 
   const moveToIndex = $((index: number, enabledTriggers: Element[]) => {
     const normalizedIndex = (index + enabledTriggers.length) % enabledTriggers.length;
     const trigger = enabledTriggers[normalizedIndex] as HTMLElement;
-    const value = trigger.getAttribute("value");
+    const value = (trigger as HTMLButtonElement).value;
 
     if (value) {
       selectedValueSig.value = value;
-      props.onChange$?.(value);
       trigger.focus();
     }
   });
 
+  const preventKeyDown = syncFixedInV2(
+    sync$((event: KeyboardEvent) => {
+      const preventKeys = [
+        "ArrowRight",
+        "ArrowLeft",
+        "ArrowUp",
+        "ArrowDown",
+        "Home",
+        "End"
+      ];
+      if (preventKeys.includes(event.key)) {
+        event.preventDefault();
+      }
+    })
+  );
+
   const handleKeyDown$ = $((e: KeyboardEvent) => {
     if (isDisabledSig.value || !rootRef.value) return;
-
-    if (
-      !["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)
-    )
-      return;
-
-    sync$((e: KeyboardEvent) => e.preventDefault())(e);
 
     const enabledTriggers = triggers
       .filter((item) => !(item.element as HTMLElement).hasAttribute("disabled"))
@@ -110,8 +116,7 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
 
     const currentIndex = selectedValueSig.value
       ? enabledTriggers.findIndex(
-          (trigger) =>
-            (trigger as HTMLElement).getAttribute("value") === selectedValueSig.value
+          (trigger) => (trigger as HTMLButtonElement).value === selectedValueSig.value
         )
       : 0;
 
@@ -139,14 +144,13 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
   useContextProvider(radioGroupContextId, {
     selectedValueSig,
     isDisabledSig,
-    isErrorSig,
+    isErrorSig: computedIsError,
     localId,
     required: props.required,
     name: props.name,
-    formRef,
     orientation: props.orientation || "vertical",
     isDescription: props.isDescription,
-    onChange$,
+    onValueChange$,
     registerTrigger$,
     unregisterTrigger$
   });
@@ -162,16 +166,19 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
       data-disabled={isDisabledSig.value ? "" : undefined}
       aria-disabled={isDisabledSig.value}
       aria-required={props.required}
-      aria-invalid={isErrorSig.value}
+      aria-invalid={computedIsError.value}
       aria-labelledby={`${localId}-label`}
       aria-describedby={props.isDescription ? `${localId}-description` : undefined}
-      aria-errormessage={isErrorSig.value ? `${localId}-error` : undefined}
+      aria-errormessage={computedIsError.value ? `${localId}-error` : undefined}
       aria-orientation={props.orientation || "vertical"}
-      onKeyDown$={[handleKeyDown$, props.onKeyDown$]}
+      onKeyDown$={[preventKeyDown, handleKeyDown$, props.onKeyDown$]}
     >
       <Slot />
     </Render>
   );
 });
 
-export const RadioGroupRoot = withAsChild(RadioGroupRootBase);
+export const RadioGroupRoot = withAsChild(RadioGroupRootBase, (props) => {
+  resetIndexes("radioGroup");
+  return props;
+});
