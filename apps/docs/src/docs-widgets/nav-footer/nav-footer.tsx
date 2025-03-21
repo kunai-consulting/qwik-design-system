@@ -1,11 +1,13 @@
 import { component$, isDev, useStyles$ } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
+import { Link, useLocation } from "@builder.io/qwik-city";
 import { SearchModal } from "~/docs-widgets/search/search";
 import { AIDrawer } from "../header/ai-drawer";
 import styles from "./nav-footer.css?inline";
 
 export const NavFooter = component$(() => {
   useStyles$(styles);
+  const location = useLocation();
+  const isComponentPath = location.url.pathname.includes("/base/");
   return (
     <div class="fixed bottom-10 bg-neutral-primary z-50 w-fit h-10 max-w-[500px] mx-auto rounded-full left-0 right-0 flex items-center gap-4 px-4 nav-footer-animation">
       <Link href="/">
@@ -104,7 +106,7 @@ export const NavFooter = component$(() => {
           <path d="m19 20 1 2" />
         </svg>
       </Link>
-      {isDev && (
+      {isDev && isComponentPath && (
         <AIDrawer>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -118,7 +120,7 @@ export const NavFooter = component$(() => {
             stroke-linejoin="round"
             class="lucide lucide-wand-sparkles"
           >
-            <title>Code-Notate</title>
+            <title>CodeNotate</title>
             <path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72" />
             <path d="m14 7 3 3" />
             <path d="M5 6v4" />
