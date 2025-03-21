@@ -6,7 +6,7 @@ supports keyboard navigation, and complies with the WAI-ARIA specification for r
 
 ## Research Links:
 - WAI-ARIA Radio Group Pattern (https://www.w3.org/WAI/ARIA/apg/patterns/radio/)
-- Ark UI Radio Group (https://ark-ui.com/docs/components/radio-group)
+- Ark UI Radio Group (https://ark-ui.com/react/docs/components/radio-group)
 - Kobalte Radio Group (https://kobalte.dev/docs/core/components/radio-group)
 - Radix UI Radio Group (https://www.radix-ui.com/primitives/docs/components/radio-group)
 
@@ -34,10 +34,10 @@ supports keyboard navigation, and complies with the WAI-ARIA specification for r
 ## Keyboard Interactions:
 - Tab: Focus on first item (if none selected) or selected item
 - Space/Enter: Select focused item
-- ArrowDown/ArrowRight: Move to next item
-- ArrowUp/ArrowLeft: Move to previous item
-- Home: Move to first item
-- End: Move to last item
+- ArrowDown/ArrowRight: Move to next enabled item
+- ArrowUp/ArrowLeft: Move to previous enabled item
+- Home: Move to first enabled item
+- End: Move to last enabled item
 
 ---
 
@@ -59,19 +59,18 @@ supports keyboard navigation, and complies with the WAI-ARIA specification for r
 - data-qds-radio-group-description
 - data-qds-radio-group-error-message
 - data-qds-indicator
-- data-state
+- data-checked
 - data-disabled
-- data-hidden
 
 ---
 
 ## Use Cases:
+- Size selection
 - Form inputs
 - Settings
 - Subscription plans
 - Payment methods
 - Shipping options
-- Size selection
 - Answer selection
 - Theme selection
 
@@ -84,13 +83,13 @@ supports keyboard navigation, and complies with the WAI-ARIA specification for r
 interface RadioGroupRootProps {
   value?: string;
   "bind:value"?: Signal<string | undefined>;
-  onChange$?: PropFunction<(value: string) => void>;
+  onValueChange$?: (value: string) => void;
   disabled?: boolean;
   name?: string;
   required?: boolean;
-  form?: string;
   orientation?: 'horizontal' | 'vertical';
   isDescription?: boolean;
+  isError?: boolean;
 }
 ```
 
@@ -105,7 +104,6 @@ interface RadioGroupItemProps {
 ### Trigger:
 ```typescript
 interface RadioGroupTriggerProps {
-  value: string;
   _index?: number;
   // Additional HTML button props
 }
@@ -135,8 +133,14 @@ interface RadioGroupErrorMessageProps {
 ### Indicator:
 ```typescript
 interface RadioGroupIndicatorProps {
-  value: string;
   // Additional HTML span props
+}
+```
+
+### HiddenInput:
+```typescript
+interface RadioGroupHiddenInputProps {
+  // Omit<HTMLInputProps, "type" | "checked" | "form" | "style">
 }
 ```
 

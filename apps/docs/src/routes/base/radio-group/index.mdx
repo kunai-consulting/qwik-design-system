@@ -1,9 +1,30 @@
 import api from "./code-notate/api.json";
 
 # Radio Group
-A fully accessible radio group component that allows users to select a single option from a list of choices.
+A set of options where users can select only one choice at a time, commonly used in forms, settings, and questionnaires.
 
-<Showcase name="hero" />
+<Showcase name="horizontal" />
+
+## When to use Radio Group
+
+Radio Group is ideal when:
+- Users must choose exactly one option from a list (unlike checkboxes which allow multiple selections)
+- You have 2-7 mutually exclusive options (for more options, consider using a Select component)
+- Options need to be immediately visible to users
+- You need native form integration
+
+Real-world examples:
+- Payment method selection in checkout flows
+- Account settings (e.g., notification preferences)
+- Survey questions with single-choice answers
+- Subscription plan selection
+
+## Implementation Notes
+
+Radio Group is built on native radio inputs, providing several advantages:
+- Works with browser form validation
+- Reliable form submission
+- Better accessibility out of the box
 
 ## Features
 <Features api={api} />
@@ -14,7 +35,7 @@ A fully accessible radio group component that allows users to select a single op
 ## Examples
 
 ### Basic Usage
-The most basic radio group implementation with vertical orientation.
+Start with this example if you're new to Radio Group. It shows the minimal setup needed for a functional component.
 
 <Showcase name="hero" />
 
@@ -24,8 +45,19 @@ This example demonstrates:
 - Visual indicators for selection
 - Default vertical orientation
 
-### Controlled Value
-Using controlled state with external value management.
+```tsx
+<RadioGroup.Root>
+  <RadioGroup.Item value="option1">
+    <RadioGroup.Label>Option 1</RadioGroup.Label>
+    <RadioGroup.Trigger>
+      <RadioGroup.Indicator />
+    </RadioGroup.Trigger>
+  </RadioGroup.Item>
+</RadioGroup.Root>
+```
+
+### Default Value
+Manage the radio group's selected value externally using signals, allowing for dynamic updates and state sharing across components.
 
 <Showcase name="default-value" />
 
@@ -47,15 +79,19 @@ const currentValue = useSignal("option1");
 Radio group with form validation and error messages.
 <Showcase name="form" />
 
-This example shows:
--	Required field validation
--	Error message display
--	Description text
--	Hidden native inputs for form submission
--	Custom labels for options
+Essential for collecting user input. This example demonstrates:
+-	Form validation integration
+-	Error message handling
+-	Description text for better context
+-	Hidden native inputs for reliable form submission
 
 ### Horizontal Layout
-Radio group with horizontal orientation, useful for compact layouts.
+Radio group with horizontal orientation.
+Use horizontal layout for:
+-	Compact spaces
+-	Short option labels
+-	Small number of choices (2-3 options)
+-	Binary choices (Yes/No, Enable/Disable)
 <Showcase name="horizontal" />
 
 ### Disabled States
@@ -68,6 +104,11 @@ This demonstrates:
 - Visual feedback for disabled state
 - Maintaining proper keyboard navigation
 
+Implement disabled states to:
+-	Prevent selection based on conditions
+-	Show unavailable options
+-	Maintain context while restricting access
+
 ## Component API
 
 ### Root
@@ -75,7 +116,7 @@ The root component manages the radio group's state and behavior.
 ```tsx
 <RadioGroup.Root
   value={value}           // Controlled value
-  onChange$={(v) => {}}  // Change handler
+  onValueChange$={(v) => {}}  // Change handler
   disabled={false}       // Disable entire group
   required={true}        // Make selection required
   orientation="vertical" // Layout orientation
@@ -89,8 +130,8 @@ Container for individual radio options.
 ```tsx
 <RadioGroup.Item value="option1">
   <RadioGroup.Label>Option 1</RadioGroup.Label>
-  <RadioGroup.Trigger value="option1" _index={0}>
-    <RadioGroup.Indicator value="option1" />
+  <RadioGroup.Trigger>
+    <RadioGroup.Indicator />
   </RadioGroup.Trigger>
 </RadioGroup.Item>
 ```
@@ -99,8 +140,6 @@ Container for individual radio options.
 The interactive button component that handles selection.
 ```tsx
 <RadioGroup.Trigger
-  value="option1"  // Must match parent Item value
-  _index={0}       // For keyboard navigation order
   disabled={false} // Optional individual disable
 />
 ```
@@ -163,6 +202,12 @@ The component uses data attributes for styling:
 /* Disabled state styles */
 }
 ```
+
+## Resources
+-	[WAI-ARIA Radio Group Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/radio/)
+-	[MDN Radio Button Guide](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/radio)
+- [Nielsen Norman Group: Radio Button UX Design](https://www.nngroup.com/articles/radio-buttons-default-selection/)
+- [WCAG Radio Group Tutorial](https://www.w3.org/WAI/tutorials/forms/grouping/)
 
 
 <APITable api={api} />

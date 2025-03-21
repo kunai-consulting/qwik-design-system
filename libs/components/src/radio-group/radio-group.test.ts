@@ -22,7 +22,7 @@ test.describe("Radio Group", () => {
     const firstTrigger = d.getTriggerAt(0);
 
     await firstTrigger.click();
-    await expect(firstTrigger).toHaveAttribute("data-state", "checked");
+    await expect(firstTrigger).toHaveAttribute("data-checked");
     await expect(firstTrigger).toHaveAttribute("aria-checked", "true");
   });
 
@@ -36,14 +36,14 @@ test.describe("Radio Group", () => {
     const secondTrigger = d.getTriggerAt(1);
 
     await firstTrigger.click();
-    await expect(firstTrigger).toHaveAttribute("data-state", "checked");
+    await expect(firstTrigger).toHaveAttribute("data-checked");
 
     await secondTrigger.click();
-    await expect(firstTrigger).not.toHaveAttribute("data-state", "checked");
-    await expect(secondTrigger).toHaveAttribute("data-state", "checked");
+    await expect(firstTrigger).not.toHaveAttribute("data-checked");
+    await expect(secondTrigger).toHaveAttribute("data-checked");
   });
 
-  test(`GIVEN a radio group
+  test(`GIVEN a radio group with error state
         WHEN no radio button is selected
         THEN the error message should be displayed`, async ({ page }) => {
     const d = await setup(page, "error");
@@ -53,14 +53,14 @@ test.describe("Radio Group", () => {
     const count = await triggers.count();
     for (let i = 0; i < count; i++) {
       const trigger = triggers.nth(i);
-      await expect(trigger).not.toHaveAttribute("data-state", "checked");
+      await expect(trigger).not.toHaveAttribute("data-checked");
     }
 
     await expect(errorMessage).toBeVisible();
     await expect(errorMessage).toHaveText("Please select an option");
   });
 
-  test(`GIVEN a radio group
+  test(`GIVEN a radio group with error state
         WHEN any radio button is selected
         THEN the error message should not be displayed`, async ({ page }) => {
     const d = await setup(page, "error");
@@ -68,7 +68,7 @@ test.describe("Radio Group", () => {
     const errorMessage = d.getErrorMessage();
 
     await firstTrigger.click();
-    await expect(firstTrigger).toHaveAttribute("data-state", "checked");
+    await expect(firstTrigger).toHaveAttribute("data-checked");
     await expect(errorMessage).not.toBeVisible();
   });
 });
@@ -76,22 +76,21 @@ test.describe("Radio Group", () => {
 test.describe("Keyboard Navigation", () => {
   test(`GIVEN a radio group in vertical orientation
           WHEN ArrowDown is pressed
-          THEN next item should be selected`, async ({ page }) => {
+          THEN next enabled item should be selected`, async ({ page }) => {
     const d = await setup(page, "hero");
     const firstTrigger = d.getTriggerAt(0);
     const secondTrigger = d.getTriggerAt(1);
 
     await firstTrigger.focus();
     await page.keyboard.press("ArrowDown");
-    await page.keyboard.press("ArrowDown");
 
-    await expect(secondTrigger).toHaveAttribute("data-state", "checked");
+    await expect(secondTrigger).toHaveAttribute("data-checked");
     await expect(secondTrigger).toHaveAttribute("aria-checked", "true");
   });
 
   test(`GIVEN a radio group in horizontal orientation
           WHEN ArrowRight is pressed
-          THEN next item should be selected`, async ({ page }) => {
+          THEN next enabled item should be selected`, async ({ page }) => {
     const d = await setup(page, "horizontal");
     const firstTrigger = d.getTriggerAt(0);
     const secondTrigger = d.getTriggerAt(1);
@@ -99,13 +98,13 @@ test.describe("Keyboard Navigation", () => {
     await firstTrigger.focus();
     await page.keyboard.press("ArrowRight");
 
-    await expect(secondTrigger).toHaveAttribute("data-state", "checked");
+    await expect(secondTrigger).toHaveAttribute("data-checked");
     await expect(secondTrigger).toHaveAttribute("aria-checked", "true");
   });
 
   test(`GIVEN a radio group
           WHEN Home key is pressed
-          THEN first item should be selected`, async ({ page }) => {
+          THEN first enabled item should be selected`, async ({ page }) => {
     const d = await setup(page, "horizontal");
     const lastTrigger = d.getTriggerAt(3);
     const firstTrigger = d.getTriggerAt(0);
@@ -113,13 +112,13 @@ test.describe("Keyboard Navigation", () => {
     await lastTrigger.focus();
     await page.keyboard.press("Home");
 
-    await expect(firstTrigger).toHaveAttribute("data-state", "checked");
+    await expect(firstTrigger).toHaveAttribute("data-checked");
     await expect(firstTrigger).toHaveAttribute("aria-checked", "true");
   });
 
   test(`GIVEN a radio group
           WHEN End key is pressed
-          THEN last item should be selected`, async ({ page }) => {
+          THEN last enabled item should be selected`, async ({ page }) => {
     const d = await setup(page, "horizontal");
     const firstTrigger = d.getTriggerAt(0);
     const lastTrigger = d.getTriggerAt(3);
@@ -127,7 +126,7 @@ test.describe("Keyboard Navigation", () => {
     await firstTrigger.focus();
     await page.keyboard.press("End");
 
-    await expect(lastTrigger).toHaveAttribute("data-state", "checked");
+    await expect(lastTrigger).toHaveAttribute("data-checked");
     await expect(lastTrigger).toHaveAttribute("aria-checked", "true");
   });
 
@@ -140,8 +139,21 @@ test.describe("Keyboard Navigation", () => {
     await firstTrigger.focus();
     await page.keyboard.press("Space");
 
-    await expect(firstTrigger).toHaveAttribute("data-state", "checked");
+    await expect(firstTrigger).toHaveAttribute("data-checked");
     await expect(firstTrigger).toHaveAttribute("aria-checked", "true");
+  });
+
+  test(`GIVEN a radio group with disabled items
+          WHEN navigating with keyboard
+          THEN should skip disabled items`, async ({ page }) => {
+    const d = await setup(page, "disabled");
+    const firstTrigger = d.getTriggerAt(0);
+    const thirdTrigger = d.getTriggerAt(2);
+
+    await firstTrigger.focus();
+    await page.keyboard.press("ArrowDown");
+
+    await expect(thirdTrigger).toHaveAttribute("data-checked");
   });
 });
 
@@ -167,7 +179,7 @@ test.describe("Accessibility", () => {
     const firstTrigger = d.getTriggerAt(0);
     await firstTrigger.click();
 
-    await expect(firstTrigger).not.toHaveAttribute("data-state", "checked");
+    await expect(firstTrigger).not.toHaveAttribute("data-checked");
     await expect(firstTrigger).toHaveAttribute("data-disabled");
   });
 
@@ -181,14 +193,24 @@ test.describe("Accessibility", () => {
   });
 });
 
-test.describe("Controlled Mode", () => {
-  test(`GIVEN a controlled radio group
-          WHEN value is set externally
+test.describe("Default Value", () => {
+  test(`GIVEN a radio group with default value
+          WHEN rendered
           THEN correct option should be selected`, async ({ page }) => {
-    const d = await setup(page, "controlled");
+    const d = await setup(page, "default-value");
     const firstTrigger = d.getTriggerAt(0);
 
-    await expect(firstTrigger).toHaveAttribute("data-state", "checked");
+    await expect(firstTrigger).toHaveAttribute("data-checked");
+  });
+
+  test(`GIVEN a radio group with default value
+          WHEN value changes externally
+          THEN selection should update`, async ({ page }) => {
+    const d = await setup(page, "default-value");
+    const secondTrigger = d.getTriggerAt(1);
+
+    await secondTrigger.click();
+    await expect(secondTrigger).toHaveAttribute("data-checked");
   });
 });
 
