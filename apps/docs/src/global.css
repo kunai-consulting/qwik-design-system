@@ -39,7 +39,7 @@ body {
 }
 
 @font-palette-values --kung-fury {
-  font-family: "Monaspace", monospace;
+  font-family: "Monaspace";
   override-colors:
     0 #b8c1cc /* curlies and tags */, 1 #a2bebe /* punctuation */,
     2 #7ad6ff /* function */, 3 #c8d9d9 /* operators */,
@@ -49,7 +49,6 @@ body {
     10 #b9e7fe /* strings */, 11 #3b4c4f /* comments */,
     12 #f1e9fe /* decorators */, 13 #34c2fc /* special characters */,
     14 #e2ebeb /* doc strings */, 15 #7ad6ff /* class names */;
-  font-family: monospace;
   color: white;
   font-family: "Yusei Magic", "Adjusted Tahoma Fallback", sans-serif !important;
 }
