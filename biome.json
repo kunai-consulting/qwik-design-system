@@ -47,7 +47,8 @@
     "rules": {
       "a11y": {
         "recommended": true,
-        "useSemanticElements": "off"
+        "useSemanticElements": "off",
+        "useGenericFontNames": "off"
       },
       "complexity": {
         "recommended": true,
