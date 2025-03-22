@@ -26,6 +26,21 @@ jobs:
           # Initialize array for files missing AsChild implementation
           files_missing_aschild=()
           has_root_component=false
+          has_root_file=false
+          
+          # First check if any changed file has -root.tsx in the name
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            if [[ $file =~ -root\.tsx$ ]]; then
+              has_root_file=true
+              break
+            fi
+          done
+          
+          # Only proceed if a root file was changed
+          if [ "$has_root_file" = false ]; then
+            echo "No -root.tsx files changed, skipping AsChild check."
+            exit 0
+          fi
           
           # Check each changed file, but only process files in libs directory
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
@@ -75,9 +90,9 @@ jobs:
               file_type=$(echo "$file_info" | cut -d':' -f2)
               
               if [ "$file_type" == "ROOT" ]; then
-                echo "::error file=$file_path::Root component missing AsChild and indexing implementation"
+                echo "::error file=$file_path::Root component missing AsChild and indexing implementation: $file_path"
               else
-                echo "::error file=$file_path::Component missing AsChild implementation"
+                echo "::error file=$file_path::Component missing AsChild implementation: $file_path"
               fi
             done
             
