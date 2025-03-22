@@ -31,7 +31,7 @@ export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   required?: boolean;
   /** Value attribute for the hidden input element */
   value?: string;
-} & PropsOf<"div">;
+} & Omit<PropsOf<"div">, "onChange$">;
 
 // changing checkbox root
 
@@ -39,7 +39,6 @@ export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
 export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
   const {
     "bind:checked": givenCheckedSig,
-    checked,
     onClick$,
     onChange$,
     description,
@@ -48,10 +47,17 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
     value,
     ...rest
   } = props;
+
+  const checkedPropSig = useComputed$(() => props.checked);
   const isCheckedSig = useBoundSignal<boolean | "mixed">(
+    // 2 way binding
     givenCheckedSig,
-    checked ?? false
+    // initial value
+    givenCheckedSig?.value ?? checkedPropSig.value ?? false,
+    // value based signal
+    checkedPropSig
   );
+
   const isInitialLoadSig = useSignal(true);
   const isDisabledSig = useComputed$(() => props.disabled);
   const isErrorSig = useSignal(false);

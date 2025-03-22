@@ -1,6 +1,7 @@
 // no-as-child
 import { $, type PropsOf, component$, useContext } from "@builder.io/qwik";
 import { radioGroupContextId } from "./radio-group-context";
+import { VisuallyHidden } from "@qwik-ui/headless";
 
 type PublicHiddenInputProps = Omit<
   PropsOf<"input">,
@@ -20,7 +21,8 @@ export const RadioGroupHiddenInput = component$((props: PublicHiddenInputProps) 
   });
 
   return (
-    <input
+    <VisuallyHidden>
+      <input
       {...restProps}
       type="radio"
       tabIndex={-1}
@@ -31,7 +33,7 @@ export const RadioGroupHiddenInput = component$((props: PublicHiddenInputProps) 
       name={context.localId}
       disabled={context.isDisabledSig.value}
       onChange$={[handleChange$, onChange$]}
-      style={{ position: "absolute", opacity: 0, pointerEvents: "none" }}
     />
+    </VisuallyHidden>
   );
 });

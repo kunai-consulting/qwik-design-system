@@ -50,11 +50,11 @@ export const RadioGroupTriggerBase = component$((props: PublicTriggerProps) => {
     context.selectedValueSig.value = value;
   });
 
-  const handleKeyDown$ = $((event: KeyboardEvent) => {
+  const handleKeyDown$ = $(async (event: KeyboardEvent) => {
     if (isDisabledSig.value) return;
 
     if (event.key === " " || event.key === "Enter") {
-      handleClick$();
+      await handleClick$();
     }
   });
 

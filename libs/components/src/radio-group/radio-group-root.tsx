@@ -8,13 +8,14 @@ import {
   useComputed$,
   useContextProvider,
   useId,
+  useOnWindow,
   useSignal,
   useStyles$,
   useTask$
 } from "@builder.io/qwik";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { resetIndexes } from "../../utils/indexer";
-import { syncFixedInV2, withAsChild } from "../as-child/as-child";
+import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 import styles from "./radio-group.css?inline";
@@ -83,21 +84,25 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
     }
   });
 
-  const preventKeyDown = syncFixedInV2(
-    sync$((event: KeyboardEvent) => {
-      const preventKeys = [
-        "ArrowRight",
-        "ArrowLeft",
-        "ArrowUp",
-        "ArrowDown",
-        "Home",
-        "End"
-      ];
-      if (preventKeys.includes(event.key)) {
-        event.preventDefault();
-      }
-    })
-  );
+  useOnWindow("keydown", sync$((event: KeyboardEvent) => {
+    // we have to do this on a window event due to v1 serialization issues
+    const activeElement = document.activeElement;
+    const isWithinRadioGroup = activeElement?.closest("[data-qds-radio-group-root]");
+
+    if (!isWithinRadioGroup) return;
+
+    const preventKeys = [
+      "ArrowRight",
+      "ArrowLeft",
+      "ArrowUp",
+      "ArrowDown",
+      "Home",
+      "End"
+    ];
+    if (preventKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  }));
 
   const getEnabledTriggerIndexes = $((triggerRefs: TriggerRef[]) => {
     return triggerRefs
@@ -179,7 +184,7 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
       aria-describedby={props.isDescription ? `${localId}-description` : undefined}
       aria-errormessage={computedIsError.value ? `${localId}-error` : undefined}
       aria-orientation={props.orientation || "vertical"}
-      onKeyDown$={[preventKeyDown, handleKeyDown$, props.onKeyDown$]}
+      onKeyDown$={[handleKeyDown$, props.onKeyDown$]}
     >
       <Slot />
     </Render>

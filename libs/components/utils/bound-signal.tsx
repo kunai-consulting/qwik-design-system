@@ -11,10 +11,22 @@
  * and will also update itself when the external signal changes.
  */
 
-import { type Signal, createSignal, useConstant } from "@builder.io/qwik";
+import { type Signal, createSignal, useConstant, useTask$ } from "@builder.io/qwik";
 
 export const useBoundSignal = <T,>(
   givenSignal?: Signal<T>,
-  initialValue?: T
-): Signal<T> =>
-  useConstant(() => givenSignal || (createSignal(initialValue) as Signal<T>));
+  initialValue?: T,
+  valueBasedSignal?: Signal<T | undefined>
+): Signal<T> => {
+  const signal = useConstant(() => givenSignal || (createSignal(initialValue) as Signal<T>));
+
+  if (!valueBasedSignal) return signal;
+
+  useTask$(({ track }) => {
+    const value = track(() => valueBasedSignal.value);
+    if (value === undefined) return;
+    signal.value = value;
+  });
+
+  return signal;
+};
