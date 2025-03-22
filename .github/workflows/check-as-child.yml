@@ -57,6 +57,12 @@ jobs:
               continue
             fi
             
+            # Skip files that don't contain component$
+            if ! grep -q "component\$" "$file"; then
+              echo "File doesn't contain component$, skipping: $file"
+              continue
+            fi
+            
             # Check if file contains withAsChild
             if ! grep -q "withAsChild" "$file"; then
               # Check if it's a root component
