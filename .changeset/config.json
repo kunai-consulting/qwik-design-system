@@ -4,12 +4,8 @@
   "commit": false,
   "fixed": [["@kunai-consulting/qwik"]],
   "linked": [],
-  "access": "restricted",
+  "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["qwik-design-system-docs"],
-  "privatePackages": {
-    "version": true,
-    "tag": true
-  }
+  "ignore": ["qwik-design-system-docs"]
 }
