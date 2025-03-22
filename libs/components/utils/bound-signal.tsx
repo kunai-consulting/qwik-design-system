@@ -18,7 +18,9 @@ export const useBoundSignal = <T,>(
   initialValue?: T,
   valueBasedSignal?: Signal<T | undefined>
 ): Signal<T> => {
-  const signal = useConstant(() => givenSignal || (createSignal(initialValue) as Signal<T>));
+  const signal = useConstant(
+    () => givenSignal || (createSignal(initialValue) as Signal<T>)
+  );
 
   if (!valueBasedSignal) return signal;
 

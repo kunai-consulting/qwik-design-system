@@ -84,25 +84,28 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
     }
   });
 
-  useOnWindow("keydown", sync$((event: KeyboardEvent) => {
-    // we have to do this on a window event due to v1 serialization issues
-    const activeElement = document.activeElement;
-    const isWithinRadioGroup = activeElement?.closest("[data-qds-radio-group-root]");
+  useOnWindow(
+    "keydown",
+    sync$((event: KeyboardEvent) => {
+      // we have to do this on a window event due to v1 serialization issues
+      const activeElement = document.activeElement;
+      const isWithinRadioGroup = activeElement?.closest("[data-qds-radio-group-root]");
 
-    if (!isWithinRadioGroup) return;
+      if (!isWithinRadioGroup) return;
 
-    const preventKeys = [
-      "ArrowRight",
-      "ArrowLeft",
-      "ArrowUp",
-      "ArrowDown",
-      "Home",
-      "End"
-    ];
-    if (preventKeys.includes(event.key)) {
-      event.preventDefault();
-    }
-  }));
+      const preventKeys = [
+        "ArrowRight",
+        "ArrowLeft",
+        "ArrowUp",
+        "ArrowDown",
+        "Home",
+        "End"
+      ];
+      if (preventKeys.includes(event.key)) {
+        event.preventDefault();
+      }
+    })
+  );
 
   const getEnabledTriggerIndexes = $((triggerRefs: TriggerRef[]) => {
     return triggerRefs

@@ -9,14 +9,11 @@ export default component$(() => {
 
   const toggleChecked$ = $((checked: boolean) => {
     isChecked.value = checked;
-  })
+  });
 
   return (
     <>
-      <Checkbox.Root
-        checked={isChecked.value}
-        onChange$={toggleChecked$}
-      >
+      <Checkbox.Root checked={isChecked.value} onChange$={toggleChecked$}>
         <Checkbox.Trigger class="checkbox-trigger">
           <Checkbox.Indicator class="checkbox-indicator">
             <LuCheck />

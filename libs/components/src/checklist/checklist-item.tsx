@@ -6,10 +6,10 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import { checklistContextId } from "./checklist-context";
-import { CheckboxRoot } from "../checkbox/checkbox-root";
-import * as Checkbox from "../checkbox";
 import { withAsChild } from "../as-child/as-child";
+import * as Checkbox from "../checkbox";
+import type { CheckboxRoot } from "../checkbox/checkbox-root";
+import { checklistContextId } from "./checklist-context";
 
 type PublicChecklistItemProps = {
   /** Internal prop for tracking item position in checklist */
