@@ -1,5 +1,15 @@
 # @kunai-consulting/qwik-headless
 
+## 0.0.5
+
+### Patch Changes
+
+- d481f1a: Work on the radio-group component
+- 1c62fff: Added missing documents
+- c767656: Work on the DocsAI generation.
+- 844a5cc: Work on the toast component
+- d4ad550: Work on the slider component
+
 ## 0.0.4
 
 ### Patch Changes
