@@ -11,6 +11,9 @@ export default component$(() => {
         <Popover.Panel>Popover Panel</Popover.Panel>
       </Popover.Root>
       <p>Is open: {isOpen.value ? "true" : "false"}</p>
+      <button type="button" onClick$={() => (isOpen.value = !isOpen.value)}>
+        Toggle popover
+      </button>
     </>
   );
 });

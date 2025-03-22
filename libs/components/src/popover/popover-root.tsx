@@ -15,6 +15,8 @@ import { Render } from "../render/render";
 import { withAsChild } from "../as-child/as-child";
 import { useBoundSignal } from "../../utils/bound-signal";
 
+// Define interface for HTMLElement with Popover AP
+
 type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   "bind:open"?: Signal<boolean>;
   open?: boolean;
@@ -53,11 +55,17 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
 
   useContextProvider(popoverContextId, context);
 
-  useTask$(function handleChange({ track, cleanup }) {
+  useTask$(async function handleChange({ track, cleanup }) {
     track(() => isOpenSig.value);
 
     if (!isInitialRenderSig.value) {
       onChange$?.(isOpenSig.value);
+    }
+
+    if (isOpenSig.value && !panelRef.value) {
+      await panelRef.value?.showPopover();
+    } else if (!isOpenSig.value && panelRef.value) {
+      await panelRef.value?.hidePopover();
     }
 
     cleanup(() => {
