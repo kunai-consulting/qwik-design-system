@@ -48,7 +48,7 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
   );
 
   const isInitialRenderSig = useSignal(true);
-  const isExternalToggleSig = useSignal(false);
+  const isExternalToggleSig = useSignal(true);
 
   const context: PopoverContext = {
     panelRef,
@@ -60,6 +60,17 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
 
   useContextProvider(popoverContextId, context);
 
+  const handleExternalToggle$ = $(() => {
+    if (!isExternalToggleSig.value) return;
+    if (!panelRef.value) return;
+
+    if (isOpenSig.value) {
+      panelRef.value.showPopover();
+    } else {
+      panelRef.value.hidePopover();
+    }
+  });
+
   useTask$(async function handleChange({ track, cleanup }) {
     track(() => isOpenSig.value);
 
@@ -67,37 +78,16 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
       await onChange$?.(isOpenSig.value);
     }
 
+    await handleExternalToggle$();
+
     cleanup(() => {
       if (!isInitialRenderSig.value) return;
       isInitialRenderSig.value = false;
     });
   });
 
-  useTask$(({ track }) => {
-    track(() => givenOpenSig?.value);
-
-    if (isInitialRenderSig.value) return;
-
-    isExternalToggleSig.value = true;
-
-    const event = new CustomEvent("external", {
-      bubbles: true,
-      detail: {
-        external: true
-      }
-    });
-    rootRef.value?.dispatchEvent(event);
-  });
-
   return (
-    <Render
-      onExternal$={$(() => {
-        panelRef.value?.togglePopover();
-      })}
-      ref={rootRef}
-      fallback="div"
-      {...rest}
-    >
+    <Render ref={rootRef} fallback="div" {...rest}>
       <Slot />
     </Render>
   );
