@@ -1,25 +1,27 @@
 import { type PropsOf, Slot, component$, useContext, useTask$ } from "@builder.io/qwik";
+import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 
-type RadioGroupDescriptionProps = PropsOf<"div">;
+type PublicDescriptionProps = PropsOf<"div">;
 
-/** A description component for the radio group that provides additional context */
-export const RadioGroupDescription = component$((props: RadioGroupDescriptionProps) => {
+export const RadioGroupDescriptionBase = component$((props: PublicDescriptionProps) => {
   const context = useContext(radioGroupContextId);
   const descriptionId = `${context.localId}-description`;
 
   useTask$(() => {
     if (!context.isDescription) {
       console.warn(
-        "Qwik Design System Warning: No description prop provided to the Radio Group Root component."
+        "Radio Group Warning: isDescription prop is not provided to the Root component"
       );
     }
   });
 
   return (
-    // Identifier for the radio group description element
-    <div id={descriptionId} data-qds-checkbox-description {...props}>
+    <Render {...props} id={descriptionId} data-qds-radio-group-description fallback="div">
       <Slot />
-    </div>
+    </Render>
   );
 });
+
+export const RadioGroupDescription = withAsChild(RadioGroupDescriptionBase);

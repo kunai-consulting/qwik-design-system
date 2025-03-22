@@ -1,17 +1,19 @@
-import { $, component$, useSignal } from "@builder.io/qwik";
+import { component$, useSignal, useStyles$ } from "@builder.io/qwik";
 import { RadioGroup } from "@kunai-consulting/qwik";
+import styles from "./radio-group-custom.css?inline";
 
 export default component$(() => {
-  const isError = useSignal(true);
+  useStyles$(styles);
+  const currentValue = useSignal("Option 1");
 
   return (
     <RadioGroup.Root
+      value={currentValue.value}
+      onValueChange$={(value: string) => {
+        currentValue.value = value;
+        console.log("Selected:", value);
+      }}
       class="radio-group-root"
-      required
-      isError={isError.value}
-      onValueChange$={$(() => {
-        isError.value = false;
-      })}
     >
       <RadioGroup.Label>Choose option</RadioGroup.Label>
 
@@ -23,12 +25,6 @@ export default component$(() => {
           <RadioGroup.Label>{value}</RadioGroup.Label>
         </RadioGroup.Item>
       ))}
-
-      {isError.value && (
-        <RadioGroup.ErrorMessage class="radio-group-error-message">
-          Please select an option
-        </RadioGroup.ErrorMessage>
-      )}
     </RadioGroup.Root>
   );
 });

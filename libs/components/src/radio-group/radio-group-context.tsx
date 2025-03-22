@@ -1,17 +1,23 @@
-import { type Signal, createContextId } from "@builder.io/qwik";
+import { type ReadonlySignal, type Signal, createContextId } from "@builder.io/qwik";
 
-export const radioGroupContextId = createContextId<RadioGroupContext>(
-  "qds-radio-group-context"
-);
-
-export type RadioGroupContext = {
-  selectedValueSig: Signal<string | undefined>;
-  selectedIndexSig: Signal<number | null>;
-  isDisabledSig: Signal<boolean | undefined>;
-  isErrorSig: Signal<boolean | undefined>;
-  localId: string;
-  isDescription: boolean | undefined;
-  required: boolean | undefined;
+type TriggerRef = {
+  ref: Signal;
   value: string | undefined;
-  triggerRef: Signal<HTMLButtonElement | undefined>;
 };
+
+export interface RadioGroupContext {
+  selectedValueSig: Signal<string | undefined>;
+  isDisabledSig: Signal<boolean> | ReadonlySignal<boolean>;
+  isErrorSig: Signal<boolean>;
+  localId: string;
+  required?: boolean;
+  name?: string;
+  orientation: "horizontal" | "vertical";
+  isDescription?: boolean;
+  onValueChange$: (value: string) => void;
+  itemValue?: string;
+  triggerRefsArray: Signal<TriggerRef[]>;
+}
+
+export const radioGroupContextId =
+  createContextId<RadioGroupContext>("radio-group-context");

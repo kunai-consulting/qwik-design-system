@@ -1,19 +1,39 @@
-import { type PropsOf, Slot, component$, useContext, useSignal } from "@builder.io/qwik";
+import {
+  type PropsOf,
+  Slot,
+  component$,
+  useContext,
+  useContextProvider
+} from "@builder.io/qwik";
+import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
-type PublicRadioGroupItemProps = PropsOf<"div"> & {
+
+type PublicItemProps = PropsOf<"div"> & {
   value: string;
 };
-/** Individual radio option container component */
-export const RadioGroupItem = component$<PublicRadioGroupItemProps>(
-  ({ value, ...props }) => {
-    const context = useContext(radioGroupContextId);
-    const itemId = `${context.localId}-$trigger`;
-    const itemRef = useSignal<HTMLDivElement | undefined>(undefined);
-    return (
-      // Identifier for individual radio group item container
-      <div ref={itemRef} id={itemId} data-qds-radio-group-item {...props}>
-        <Slot />
-      </div>
-    );
-  }
-);
+
+export const RadioGroupItemBase = component$((props: PublicItemProps) => {
+  const context = useContext(radioGroupContextId);
+  const { value, ...restProps } = props;
+  const itemId = `${context.localId}-item-${value}`;
+
+  useContextProvider(radioGroupContextId, {
+    ...context,
+    itemValue: value
+  });
+
+  return (
+    <Render
+      fallback="div"
+      {...restProps}
+      id={itemId}
+      data-qds-radio-group-item
+      data-orientation={context.orientation}
+    >
+      <Slot />
+    </Render>
+  );
+});
+
+export const RadioGroupItem = withAsChild(RadioGroupItemBase);

@@ -1,35 +1,39 @@
+// no-as-child
 import { $, type PropsOf, component$, useContext } from "@builder.io/qwik";
-import { VisuallyHidden } from "../visually-hidden/visually-hidden";
+import { VisuallyHidden } from "@qwik-ui/headless";
 import { radioGroupContextId } from "./radio-group-context";
 
-type RadioGroupHiddenNativeInputProps = PropsOf<"input"> & {
-  _index?: number | null;
-};
+type PublicHiddenInputProps = Omit<
+  PropsOf<"input">,
+  "type" | "checked" | "form" | "style"
+>;
 
-/** Hidden native radio input for form submission and accessibility */
-export const RadioGroupHiddenNativeInput = component$(
-  (props: RadioGroupHiddenNativeInputProps) => {
-    const context = useContext(radioGroupContextId);
-    const _index = props._index;
+export const RadioGroupHiddenInput = component$((props: PublicHiddenInputProps) => {
+  const context = useContext(radioGroupContextId);
+  const { onChange$, required, ...restProps } = props;
+  const value = context.itemValue;
 
-    const handleChange$ = $(() => {
-      context.selectedIndexSig.value = _index ?? null;
-    });
+  const handleChange$ = $(() => {
+    if (!context.isDisabledSig.value) {
+      context.selectedValueSig.value = value ? String(value) : undefined;
+      context.isErrorSig.value = false;
+    }
+  });
 
-    return (
-      <VisuallyHidden>
-        <input
-          type="radio"
-          tabIndex={-1}
-          checked={context.selectedIndexSig.value === _index}
-          // Identifier for the hidden native radio input element
-          data-qds-radio-group-hidden-input
-          required={context.required ?? props.required ?? undefined}
-          value={context.value ?? props.value ?? undefined}
-          onChange$={[handleChange$, props.onChange$]}
-          {...props}
-        />
-      </VisuallyHidden>
-    );
-  }
-);
+  return (
+    <VisuallyHidden>
+      <input
+        {...restProps}
+        type="radio"
+        tabIndex={-1}
+        checked={context.selectedValueSig.value === value}
+        data-qds-radio-group-hidden-input
+        required={context.required ?? required ?? undefined}
+        value={value ?? ""}
+        name={context.localId}
+        disabled={context.isDisabledSig.value}
+        onChange$={[handleChange$, onChange$]}
+      />
+    </VisuallyHidden>
+  );
+});

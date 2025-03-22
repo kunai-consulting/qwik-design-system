@@ -6,14 +6,18 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import { Checkbox } from "..";
+import { withAsChild } from "../as-child/as-child";
+import * as Checkbox from "../checkbox";
+import type { CheckboxRoot } from "../checkbox/checkbox-root";
 import { checklistContextId } from "./checklist-context";
-type PublicChecklistItemProps = PropsOf<typeof Checkbox.Root> & {
+
+type PublicChecklistItemProps = {
   /** Internal prop for tracking item position in checklist */
   _index?: number;
-};
+} & Omit<PropsOf<typeof CheckboxRoot>, "_index">;
+
 /** Internal prop for tracking item position in checklist */
-export const ChecklistItem = component$((props: PublicChecklistItemProps) => {
+export const ChecklistItemBase = component$((props: PublicChecklistItemProps) => {
   // console.log(props._index);
   const context = useContext(checklistContextId);
 
@@ -54,3 +58,5 @@ export const ChecklistItem = component$((props: PublicChecklistItemProps) => {
     </Checkbox.Root>
   );
 });
+
+export const ChecklistItem = withAsChild(ChecklistItemBase);

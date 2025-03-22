@@ -1,23 +1,26 @@
 import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
+import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 
-type RadioGroupErrorMessageProps = PropsOf<"div">;
+type PublicErrorMessageProps = PropsOf<"div">;
 
-/** Displays error message when radio group validation fails */
-export const RadioGroupErrorMessage = component$((props: RadioGroupErrorMessageProps) => {
+export const RadioGroupErrorMessageBase = component$((props: PublicErrorMessageProps) => {
   const context = useContext(radioGroupContextId);
   const errorId = `${context.localId}-error`;
 
   return (
-    <div
-      id={errorId}
-      // Identifier for the radio group error message container
-      data-qds-radio-group-error-message
+    <Render
+      fallback="div"
       {...props}
-      // Indicates whether the error message is currently visible
-      data-visible={context.isErrorSig.value === true}
+      id={errorId}
+      data-qds-radio-group-error-message
+      data-visible={context.isErrorSig.value}
+      aria-hidden={!context.isErrorSig.value}
     >
-      {context.isErrorSig.value === true && <Slot />}
-    </div>
+      <Slot />
+    </Render>
   );
 });
+
+export const RadioGroupErrorMessage = withAsChild(RadioGroupErrorMessageBase);

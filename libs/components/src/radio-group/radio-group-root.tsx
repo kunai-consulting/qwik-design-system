@@ -1,101 +1,200 @@
 import {
+  $,
   type PropsOf,
-  type QRL,
   type Signal,
   Slot,
   component$,
+  sync$,
   useComputed$,
   useContextProvider,
   useId,
+  useOnWindow,
   useSignal,
+  useStyles$,
   useTask$
 } from "@builder.io/qwik";
-import { type RadioGroupContext, radioGroupContextId } from "./radio-group-context";
-export type PublicRadioGroupRootProps = {
-  "bind:value"?: Signal<boolean>;
-  /** Event handler for when the radio group selection changes */
-  onChange$?: QRL<(checked: string) => void>;
-  /** Initial value of the radio group when first rendered */
-  defaultValue?: string;
-  /** Whether the radio group is disabled */
-  disabled?: boolean;
-  /** Whether the radio group has a description */
-  isDescription?: boolean;
-  /** Name attribute for the hidden radio input */
-  name?: string;
-  /** Whether the radio group is required */
-  required?: boolean;
-  /** The current value of the radio group */
+import { useBoundSignal } from "../../utils/bound-signal";
+import { resetIndexes } from "../../utils/indexer";
+import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
+import { radioGroupContextId } from "./radio-group-context";
+import styles from "./radio-group.css?inline";
+
+type PublicRootProps = PropsOf<"div"> & {
   value?: string;
-} & PropsOf<"div">;
-/** Root component that manages the radio group's state and behavior */
-export const RadioGroupRoot = component$((props: PublicRadioGroupRootProps) => {
-  const {
-    "bind:value": givenCheckedSig,
-    onClick$,
-    onChange$,
-    isDescription,
-    required,
-    value,
-    ...rest
-  } = props;
+  onValueChange$?: (value: string) => void;
+  disabled?: boolean;
+  name?: string;
+  required?: boolean;
+  form?: string;
+  orientation?: "horizontal" | "vertical";
+  isDescription?: boolean;
+  isError?: boolean;
+  "bind:value"?: Signal<string | undefined>;
+};
 
-  const selectedValueSig = useSignal<string | undefined>(undefined);
-  const selectedIndexSig = useSignal<number | null>(null);
-  const isInitialLoadSig = useSignal(true);
-  const isDisabledSig = useComputed$(() => props.disabled);
-  const isErrorSig = useSignal(false);
+interface TriggerRef {
+  ref: Signal;
+  value: string;
+}
+
+export const RadioGroupRootBase = component$((props: PublicRootProps) => {
+  useStyles$(styles);
+
+  const rootRef = useSignal<HTMLElement>();
+  const { "bind:value": givenValueSig } = props;
+  const selectedValueSig = useBoundSignal(givenValueSig, props.value);
+  const isDisabledSig = useComputed$(() => !!props.disabled);
   const localId = useId();
-  const triggerRef = useSignal<HTMLButtonElement>();
-
-  const context: RadioGroupContext = {
-    selectedValueSig,
-    selectedIndexSig,
-    isDisabledSig,
-    localId,
-    isDescription,
-    required,
-    value,
-    isErrorSig,
-    triggerRef
-  };
-
-  useContextProvider(radioGroupContextId, context);
+  const selectedFromOnChange = useSignal<string | undefined>();
+  const computedIsError = useComputed$(() => !!props.isError);
+  const triggerRefsArray = useSignal<TriggerRef[]>([]);
 
   useTask$(({ track }) => {
-    track(() => value);
-    if (value !== undefined) {
+    const value = track(() => selectedFromOnChange.value);
+    if (value === undefined) return;
+
+    if (!isDisabledSig.value) {
       selectedValueSig.value = value;
     }
   });
 
-  useTask$(async function handleChange({ track }) {
-    track(() => selectedValueSig.value);
-
-    if (isInitialLoadSig.value) {
-      return;
-    }
-
-    await onChange$?.(selectedValueSig.value as string);
+  const onValueChange$ = $((value: string) => {
+    if (isDisabledSig.value) return;
+    selectedFromOnChange.value = value;
   });
 
-  useTask$(() => {
-    isInitialLoadSig.value = false;
+  useTask$(({ track }) => {
+    const value = track(() => selectedValueSig.value);
+    if (value !== undefined) {
+      props.onValueChange$?.(value);
+    }
+  });
+
+  const selectAndFocusTrigger = $((index: number) => {
+    const normalizedIndex =
+      (index + triggerRefsArray.value.length) % triggerRefsArray.value.length;
+    const triggerData = triggerRefsArray.value[normalizedIndex];
+    const trigger = triggerData.ref.value;
+    const value = triggerData.value;
+
+    if (value) {
+      selectedValueSig.value = value;
+      trigger.focus();
+    }
+  });
+
+  useOnWindow(
+    "keydown",
+    sync$((event: KeyboardEvent) => {
+      // we have to do this on a window event due to v1 serialization issues
+      const activeElement = document.activeElement;
+      const isWithinRadioGroup = activeElement?.closest("[data-qds-radio-group-root]");
+
+      if (!isWithinRadioGroup) return;
+
+      const preventKeys = [
+        "ArrowRight",
+        "ArrowLeft",
+        "ArrowUp",
+        "ArrowDown",
+        "Home",
+        "End"
+      ];
+      if (preventKeys.includes(event.key)) {
+        event.preventDefault();
+      }
+    })
+  );
+
+  const getEnabledTriggerIndexes = $((triggerRefs: TriggerRef[]) => {
+    return triggerRefs
+      .map((item, index) => ({ item, index }))
+      .filter(({ item }) => !item.ref.value?.disabled)
+      .map(({ index }) => index);
+  });
+
+  const handleKeyDown$ = $(async (e: KeyboardEvent) => {
+    if (isDisabledSig.value || !rootRef.value) return;
+
+    const enabledTriggerIndexes = await getEnabledTriggerIndexes(triggerRefsArray.value);
+
+    if (!enabledTriggerIndexes.length) return;
+
+    const currentEnabledIndex = selectedValueSig.value
+      ? enabledTriggerIndexes.findIndex(
+          (index) => triggerRefsArray.value[index].value === selectedValueSig.value
+        )
+      : 0;
+
+    const isHorizontal = props.orientation === "horizontal";
+
+    switch (e.key) {
+      case isHorizontal ? "ArrowRight" : "ArrowDown": {
+        const nextIndex = currentEnabledIndex + 1;
+        const targetIndex =
+          enabledTriggerIndexes[
+            nextIndex >= enabledTriggerIndexes.length ? 0 : nextIndex
+          ];
+        selectAndFocusTrigger(targetIndex);
+        break;
+      }
+      case isHorizontal ? "ArrowLeft" : "ArrowUp": {
+        const prevIndex = currentEnabledIndex - 1;
+        const targetIndex =
+          enabledTriggerIndexes[
+            prevIndex < 0 ? enabledTriggerIndexes.length - 1 : prevIndex
+          ];
+        selectAndFocusTrigger(targetIndex);
+        break;
+      }
+      case "Home":
+        selectAndFocusTrigger(enabledTriggerIndexes[0]);
+        break;
+      case "End":
+        selectAndFocusTrigger(enabledTriggerIndexes[enabledTriggerIndexes.length - 1]);
+        break;
+    }
+  });
+
+  useContextProvider(radioGroupContextId, {
+    selectedValueSig,
+    isDisabledSig,
+    isErrorSig: computedIsError,
+    localId,
+    required: props.required,
+    name: props.name,
+    orientation: props.orientation || "vertical",
+    isDescription: props.isDescription,
+    onValueChange$,
+    itemValue: undefined,
+    triggerRefsArray
   });
 
   return (
-    <div
-      {...rest}
+    <Render
+      fallback="div"
+      {...props}
+      ref={rootRef}
       role="radiogroup"
-      // Identifier for the root radio group container
       data-qds-radio-group-root
-      // Indicates whether the radio group is disabled
-      data-disabled={context.isDisabledSig.value ? "" : undefined}
-      aria-disabled={context.isDisabledSig.value ? "true" : "false"}
-      // Indicates whether the radio group has a selected value
-      data-checked={context.selectedValueSig.value === props.value ? "true" : "false"}
+      data-orientation={props.orientation || "vertical"}
+      data-disabled={isDisabledSig.value ? "" : undefined}
+      aria-disabled={isDisabledSig.value}
+      aria-required={props.required}
+      aria-invalid={computedIsError.value}
+      aria-labelledby={`${localId}-label`}
+      aria-describedby={props.isDescription ? `${localId}-description` : undefined}
+      aria-errormessage={computedIsError.value ? `${localId}-error` : undefined}
+      aria-orientation={props.orientation || "vertical"}
+      onKeyDown$={[handleKeyDown$, props.onKeyDown$]}
     >
       <Slot />
-    </div>
+    </Render>
   );
+});
+
+export const RadioGroupRoot = withAsChild(RadioGroupRootBase, (props) => {
+  resetIndexes("radioGroup");
+  return props;
 });

@@ -1,27 +1,36 @@
-import { type PropsOf, Slot, component$, useContext, useStyles$ } from "@builder.io/qwik";
+import {
+  type PropsOf,
+  Slot,
+  component$,
+  useComputed$,
+  useContext
+} from "@builder.io/qwik";
+import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
-import "./radio-group.css";
-import styles from "./radio-group.css?inline";
-export interface PublicRadioGroupIndicatorProps extends PropsOf<"span"> {
-  /** The value associated with this radio indicator */
-  value: string;
-}
-/** Visual indicator component that shows the selected state of a radio option */
-export const RadioGroupIndicator = component$<PublicRadioGroupIndicatorProps>((props) => {
-  useStyles$(styles);
+
+type PublicIndicatorProps = PropsOf<"span">;
+
+export const RadioGroupIndicatorBase = component$((props: PublicIndicatorProps) => {
   const context = useContext(radioGroupContextId);
+  const { ...restProps } = props;
+
+  const isChecked = useComputed$(
+    () => context.selectedValueSig.value === context.itemValue
+  );
+
   return (
-    <span
-      {...props}
-      // Indicates whether the indicator is hidden based on selection state
-      data-hidden={context.selectedValueSig.value !== props.value}
-      // Indicates whether this indicator is in a checked state
-      data-checked={context.selectedValueSig.value === props.value}
-      // Identifier for the radio group indicator element
+    <Render
+      fallback="span"
+      {...restProps}
       data-qds-indicator
-      aria-hidden={context.selectedValueSig.value !== props.value}
+      data-checked={isChecked.value || undefined}
+      data-hidden={!isChecked.value || undefined}
+      aria-hidden="true"
     >
       <Slot />
-    </span>
+    </Render>
   );
 });
+
+export const RadioGroupIndicator = withAsChild(RadioGroupIndicatorBase);
