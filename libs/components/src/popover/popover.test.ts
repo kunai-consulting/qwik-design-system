@@ -68,3 +68,22 @@ test.describe("critical functionality", () => {
     await expect(d.getPopover()).not.toBeVisible();
   });
 });
+
+test.describe("state", () => {
+  test(`GIVEN a popover with value based state
+        WHEN the popover is open
+        THEN the state should update`, async ({ page }) => {
+    const d = await setup(page, "value");
+    await expect(page.getByText("Is open: false")).toBeVisible();
+
+    await d.getTrigger().click();
+    await expect(page.getByText("Is open: true")).toBeVisible();
+  });
+
+  test(`GIVEN a popover with value based state
+        WHEN an initial value is set
+        THEN the state should be set to the initial value`, async ({ page }) => {
+    const d = await setup(page, "initial-value");
+    await expect(d.getPopover()).toBeVisible();
+  });
+});

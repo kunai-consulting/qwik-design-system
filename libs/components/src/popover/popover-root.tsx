@@ -86,8 +86,26 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
     });
   });
 
+  const isInitiallyOpenSig = useComputed$(() => {
+    if (isInitialRenderSig.value && isOpenSig.value) {
+      return true;
+    }
+
+    return false;
+  });
+
+  /**
+   *  AVOID THIS UNLESS YOU REALLY KNOW WHAT YOU ARE DOING
+   *  qvisible -> conditionally add a visible task
+   */
+  const handleOpenOnRender$ = isInitiallyOpenSig.value
+    ? $(() => {
+        context.panelRef.value?.showPopover();
+      })
+    : undefined;
+
   return (
-    <Render ref={rootRef} fallback="div" {...rest}>
+    <Render onQVisible$={handleOpenOnRender$} ref={rootRef} fallback="div" {...rest}>
       <Slot />
     </Render>
   );
