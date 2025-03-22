@@ -5,9 +5,9 @@ import { popoverContextId } from "./popover-root";
 
 export const PopoverPanelBase = component$((props: PropsOf<'div'>) => {
   const context = useContext(popoverContextId);
-
+  const panelId = `${context.localId}-panel`;
   return (
-    <Render ref={context.panelRef} fallback="div" {...props}>
+    <Render popover="auto" id={panelId} ref={context.panelRef} fallback="div" {...props}>
       <Slot />
     </Render>
   )

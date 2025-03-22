@@ -5,9 +5,10 @@ import { popoverContextId } from "./popover-root";
 
 export const PopoverTriggerBase = component$((props: PropsOf<'button'>) => {
   const context = useContext(popoverContextId);
+  const panelId = `${context.localId}-panel`;
 
   return (
-    <Render ref={context.triggerRef} fallback="button" {...props}>
+    <Render ref={context.triggerRef} popovertarget={panelId} fallback="button" {...props}>
       <Slot />
     </Render>
   )
