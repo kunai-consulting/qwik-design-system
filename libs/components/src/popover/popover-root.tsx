@@ -68,6 +68,16 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
     });
   });
 
+  useTask$(async function handleExternalToggle({ track }) {
+    track(() => givenOpenSig?.value);
+    track(() => openPropSig.value);
+
+    console.log("toggle", isOpenSig.value);
+
+    const event = new Event("beforetoggle", { bubbles: true });
+    panelRef.value?.dispatchEvent(event);
+  });
+
   return (
     <Render fallback="div" {...rest}>
       <Slot />

@@ -9,12 +9,18 @@ export const PopoverPanelBase = component$((props: PropsOf<"div">) => {
 
   const handleToggle$ = $(() => {
     context.isOpenSig.value = !context.isOpenSig.value;
+    console.log("toggle", context.isOpenSig.value);
+  });
+
+  const handleBeforeToggle$ = $(() => {
+    console.log("beforetoggle", context.isOpenSig.value);
   });
 
   return (
     <Render
       popover="auto"
       onToggle$={[handleToggle$, props.onToggle$]}
+      onBeforeToggle$={[handleBeforeToggle$, props.onBeforeToggle$]}
       id={panelId}
       ref={context.panelRef}
       fallback="div"
