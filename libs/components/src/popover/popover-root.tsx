@@ -31,7 +31,7 @@ type PopoverContext = {
   triggerRef: Signal<HTMLButtonElement | undefined>;
   localId: string;
   isOpenSig: Signal<boolean>;
-  isExternalToggleSig: Signal<boolean>;
+  canExternallyChangeSig: Signal<boolean>;
 };
 
 export const PopoverRootBase = component$((props: PopoverRootProps) => {
@@ -48,20 +48,20 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
   );
 
   const isInitialRenderSig = useSignal(true);
-  const isExternalToggleSig = useSignal(true);
+  const canExternallyChangeSig = useSignal(true);
 
   const context: PopoverContext = {
     panelRef,
     triggerRef,
     localId,
     isOpenSig,
-    isExternalToggleSig
+    canExternallyChangeSig
   };
 
   useContextProvider(popoverContextId, context);
 
   const handleExternalToggle$ = $(() => {
-    if (!isExternalToggleSig.value) return;
+    if (!canExternallyChangeSig.value) return;
     if (!panelRef.value) return;
 
     if (isOpenSig.value) {

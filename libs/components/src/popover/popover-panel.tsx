@@ -17,9 +17,8 @@ export const PopoverPanelBase = component$((props: PropsOf<"div">) => {
   const handleToggle$ = $((e: CorrectedToggleEvent) => {
     context.isOpenSig.value = e.newState === "open";
 
-    // If user changes signal externally, but then uses internal toggle, we need to reset the external toggle flag
-    if (context.isExternalToggleSig.value === false) {
-      context.isExternalToggleSig.value = true;
+    if (context.canExternallyChangeSig.value === false) {
+      context.canExternallyChangeSig.value = true;
     }
   });
 

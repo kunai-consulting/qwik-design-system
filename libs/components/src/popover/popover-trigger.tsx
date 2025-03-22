@@ -11,7 +11,7 @@ export const PopoverTriggerBase = component$((props: PropsOf<"button">) => {
     <Render
       onClick$={[
         $(() => {
-          context.isExternalToggleSig.value = false;
+          context.canExternallyChangeSig.value = false;
         }),
         props.onClick$
       ]}
