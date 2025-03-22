@@ -59,13 +59,7 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
     track(() => isOpenSig.value);
 
     if (!isInitialRenderSig.value) {
-      onChange$?.(isOpenSig.value);
-    }
-
-    if (isOpenSig.value && !panelRef.value) {
-      await panelRef.value?.showPopover();
-    } else if (!isOpenSig.value && panelRef.value) {
-      await panelRef.value?.hidePopover();
+      await onChange$?.(isOpenSig.value);
     }
 
     cleanup(() => {
