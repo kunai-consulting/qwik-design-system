@@ -17,6 +17,7 @@ export const PopoverTriggerBase = component$((props: PropsOf<"button">) => {
       ]}
       ref={context.triggerRef}
       popovertarget={panelId}
+      data-qds-popover-trigger
       fallback="button"
       {...props}
     >

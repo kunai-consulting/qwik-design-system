@@ -28,6 +28,7 @@ export const PopoverPanelBase = component$((props: PropsOf<"div">) => {
       popover="auto"
       id={panelId}
       ref={context.panelRef}
+      data-qds-popover-panel
       fallback="div"
       {...props}
     >
