@@ -2,20 +2,23 @@ import {
   component$,
   createContextId,
   type PropsOf,
+  type QRL,
   type Signal,
   Slot,
   useComputed$,
   useContextProvider,
   useId,
-  useSignal
+  useSignal,
+  useTask$
 } from "@builder.io/qwik";
 import { Render } from "../render/render";
 import { withAsChild } from "../as-child/as-child";
 import { useBoundSignal } from "../../utils/bound-signal";
 
-type PopoverRootProps = PropsOf<"div"> & {
+type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   "bind:open"?: Signal<boolean>;
   open?: boolean;
+  onChange$?: QRL<(open: boolean) => void>;
 };
 
 export const popoverContextId = createContextId<PopoverContext>("qds-popover");
@@ -28,7 +31,7 @@ type PopoverContext = {
 };
 
 export const PopoverRootBase = component$((props: PopoverRootProps) => {
-  const { "bind:open": givenOpenSig, ...rest } = props;
+  const { "bind:open": givenOpenSig, onChange$, ...rest } = props;
   const panelRef = useSignal<HTMLDivElement>();
   const triggerRef = useSignal<HTMLButtonElement>();
   const localId = useId();
@@ -39,6 +42,8 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
     openPropSig
   );
 
+  const isInitialRenderSig = useSignal(true);
+
   const context: PopoverContext = {
     panelRef,
     triggerRef,
@@ -47,6 +52,18 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
   };
 
   useContextProvider(popoverContextId, context);
+
+  useTask$(function handleChange({ track, cleanup }) {
+    track(() => isOpenSig.value);
+
+    if (!isInitialRenderSig.value) {
+      onChange$?.(isOpenSig.value);
+    }
+
+    cleanup(() => {
+      isInitialRenderSig.value = false;
+    });
+  });
 
   return (
     <Render fallback="div" {...rest}>
