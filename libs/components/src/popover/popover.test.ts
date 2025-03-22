@@ -67,6 +67,16 @@ test.describe("critical functionality", () => {
     await d.getTrigger().press("Escape");
     await expect(d.getPopover()).not.toBeVisible();
   });
+
+  test(`GIVEN a popover in auto mode
+        WHEN the backdrop is clicked
+        THEN the popover should be closed`, async ({ page }) => {
+    const d = await setup(page, "hero");
+    await d.openPopover("click");
+
+    await page.locator("body").click({ position: { x: 0, y: 0 } });
+    await expect(d.getPopover()).not.toBeVisible();
+  });
 });
 
 test.describe("state", () => {
