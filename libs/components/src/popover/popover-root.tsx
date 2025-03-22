@@ -61,6 +61,7 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
     }
 
     cleanup(() => {
+      if (!isInitialRenderSig.value) return;
       isInitialRenderSig.value = false;
     });
   });
