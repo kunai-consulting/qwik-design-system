@@ -5,6 +5,7 @@
 - [Checkbox](/base/checkbox)
 - [Checklist](/base/checklist)
 - [Pagination](/base/pagination)
+- [Popover](/base/popover)
 - [OTP](/base/otp)
 - [Scroll Area](/base/scroll-area)
 - [Radio Group](/base/radio-group)
