@@ -1,4 +1,5 @@
 import {
+  $,
   component$,
   createContextId,
   type PropsOf,
@@ -30,12 +31,14 @@ type PopoverContext = {
   triggerRef: Signal<HTMLButtonElement | undefined>;
   localId: string;
   isOpenSig: Signal<boolean>;
+  isExternalToggleSig: Signal<boolean>;
 };
 
 export const PopoverRootBase = component$((props: PopoverRootProps) => {
   const { "bind:open": givenOpenSig, onChange$, ...rest } = props;
   const panelRef = useSignal<HTMLDivElement>();
   const triggerRef = useSignal<HTMLButtonElement>();
+  const rootRef = useSignal<HTMLDivElement>();
   const localId = useId();
   const openPropSig = useComputed$(() => props.open);
   const isOpenSig = useBoundSignal(
@@ -45,12 +48,14 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
   );
 
   const isInitialRenderSig = useSignal(true);
+  const isExternalToggleSig = useSignal(false);
 
   const context: PopoverContext = {
     panelRef,
     triggerRef,
     localId,
-    isOpenSig
+    isOpenSig,
+    isExternalToggleSig
   };
 
   useContextProvider(popoverContextId, context);
@@ -68,18 +73,31 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
     });
   });
 
-  useTask$(async function handleExternalToggle({ track }) {
+  useTask$(({ track }) => {
     track(() => givenOpenSig?.value);
-    track(() => openPropSig.value);
 
-    console.log("toggle", isOpenSig.value);
+    if (isInitialRenderSig.value) return;
 
-    const event = new Event("beforetoggle", { bubbles: true });
-    panelRef.value?.dispatchEvent(event);
+    isExternalToggleSig.value = true;
+
+    const event = new CustomEvent("external", {
+      bubbles: true,
+      detail: {
+        external: true
+      }
+    });
+    rootRef.value?.dispatchEvent(event);
   });
 
   return (
-    <Render fallback="div" {...rest}>
+    <Render
+      onExternal$={$(() => {
+        panelRef.value?.togglePopover();
+      })}
+      ref={rootRef}
+      fallback="div"
+      {...rest}
+    >
       <Slot />
     </Render>
   );
