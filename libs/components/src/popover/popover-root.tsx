@@ -51,6 +51,7 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
 
   const isInitialRenderSig = useSignal(true);
   const canExternallyChangeSig = useSignal(true);
+  const isPolyfilledSig = useSignal(false);
 
   const isInitiallyOpenSig = useComputed$(() => {
     if (isInitialRenderSig.value && isOpenSig.value) {
@@ -93,9 +94,11 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
 
   const handlePolyfill$ = $(async () => {
     if (isServer) return;
+    if (isPolyfilledSig.value) return;
 
     if (!("anchorName" in document.documentElement.style)) {
       await polyfill();
+      isPolyfilledSig.value = true;
     }
   });
 
