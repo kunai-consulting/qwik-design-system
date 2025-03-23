@@ -80,15 +80,22 @@ test.describe("critical functionality", () => {
 });
 
 test.describe("state", () => {
-  test(`GIVEN a popover with value based state
-        WHEN the popover is open
-        THEN the state should update`, async ({ page }) => {
-    const d = await setup(page, "value");
-    await expect(page.getByText("Is open: false")).toBeVisible();
+  const testCases = [
+    { example: "value", description: "value based state" },
+    { example: "signal", description: "signal based state" }
+  ];
 
-    await d.getTrigger().click();
-    await expect(page.getByText("Is open: true")).toBeVisible();
-  });
+  for (const { example, description } of testCases) {
+    test(`GIVEN a popover with ${description}
+          WHEN the popover is open
+          THEN the state should update`, async ({ page }) => {
+      const d = await setup(page, example);
+      await expect(page.getByText("Is open: false")).toBeVisible();
+
+      await d.getTrigger().click();
+      await expect(page.getByText("Is open: true")).toBeVisible();
+    });
+  }
 
   test(`GIVEN a popover with value based state
         WHEN an initial value is set
