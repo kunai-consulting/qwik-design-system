@@ -65,14 +65,14 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
 
   useContextProvider(popoverContextId, context);
 
-  const handleExternalToggle$ = $(() => {
+  const handleExternalToggle$ = $(async () => {
     if (!canExternallyChangeSig.value) return;
     if (!panelRef.value) return;
 
     if (isOpenSig.value) {
-      panelRef.value.showPopover();
+      await panelRef.value.showPopover();
     } else {
-      panelRef.value.hidePopover();
+      await panelRef.value.hidePopover();
     }
   });
 
