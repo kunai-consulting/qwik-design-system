@@ -24,6 +24,7 @@ export const PopoverPanelBase = component$((props: PropsOf<"div">) => {
 
   return (
     <Render
+      hidden={context.isHiddenSig.value}
       onToggle$={[handleToggle$, props.onToggle$]}
       popover="auto"
       id={panelId}

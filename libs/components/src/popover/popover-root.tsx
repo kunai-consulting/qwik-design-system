@@ -6,11 +6,9 @@ import {
   type PropsOf,
   type Signal,
   Slot,
-  sync$,
   useComputed$,
   useContextProvider,
   useId,
-  useOnWindow,
   useSignal,
   useStyles$,
   useTask$
@@ -35,6 +33,7 @@ type PopoverContext = {
   localId: string;
   isOpenSig: Signal<boolean>;
   canExternallyChangeSig: Signal<boolean>;
+  isHiddenSig: Signal<boolean>;
 };
 
 export const PopoverRootBase = component$((props: PopoverRootProps) => {
@@ -53,7 +52,8 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
 
   const isInitialRenderSig = useSignal(true);
   const canExternallyChangeSig = useSignal(true);
-  const isPolyfilledSig = useSignal(false);
+  const isPolyfillExecutedSig = useSignal(false);
+  const isHiddenSig = useSignal(true);
 
   const isInitiallyOpenSig = useComputed$(() => {
     if (isInitialRenderSig.value && isOpenSig.value) {
@@ -68,7 +68,8 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
     triggerRef,
     localId,
     isOpenSig,
-    canExternallyChangeSig
+    canExternallyChangeSig,
+    isHiddenSig
   };
 
   useContextProvider(popoverContextId, context);
@@ -84,27 +85,18 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
     }
   });
 
-  useOnWindow(
-    "DOMContentLoaded",
-    sync$(() => {
-      if ("anchorName" in document.documentElement.style) return;
-
-      const panelsOnPage = document.querySelectorAll("[data-qds-popover-panel]");
-
-      for (const panel of panelsOnPage) {
-        panel.style.setProperty("display", "none", "important");
-      }
-    })
-  );
-
   const handlePolyfill$ = $(async () => {
     if (isServer) return;
-    if (isPolyfilledSig.value) return;
+    if (isPolyfillExecutedSig.value) return;
 
-    if (!("anchorName" in document.documentElement.style)) {
+    const isPolyfill = !("anchorName" in document.documentElement.style);
+
+    if (isPolyfill) {
       await polyfill();
-      panelRef.value?.style.removeProperty("display");
-      isPolyfilledSig.value = true;
+      isHiddenSig.value = false;
+      isPolyfillExecutedSig.value = true;
+    } else {
+      isHiddenSig.value = false;
     }
   });
 
