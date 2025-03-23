@@ -7,10 +7,10 @@ export default component$(() => {
   return (
     <Popover.Root>
       <Popover.Anchor>Open Popover</Popover.Anchor>
-      <Popover.Content class="popover-panel">Popover Panel</Popover.Content>
+      <Popover.Content class="popover-transition">Popover</Popover.Content>
     </Popover.Root>
   );
 });
 
 // internal styles
-import styles from "./simple-transition.css?inline";
+import styles from "./transition.css?inline";
