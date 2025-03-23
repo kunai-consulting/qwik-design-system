@@ -6,9 +6,11 @@ import {
   type PropsOf,
   type Signal,
   Slot,
+  sync$,
   useComputed$,
   useContextProvider,
   useId,
+  useOnWindow,
   useSignal,
   useStyles$,
   useTask$
@@ -82,15 +84,18 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
     }
   });
 
-  // useOnWindow(
-  //   "DOMContentLoaded",
-  //   sync$(() => {
-  //     if (!("anchorName" in document.documentElement.style)) {
-  //       // @ts-expect-error follows polyfill instructions
-  //       import("https://unpkg.com/@oddbird/css-anchor-positioning");
-  //     }
-  //   })
-  // );
+  useOnWindow(
+    "DOMContentLoaded",
+    sync$(() => {
+      if ("anchorName" in document.documentElement.style) return;
+
+      const panelsOnPage = document.querySelectorAll("[data-qds-popover-panel]");
+
+      for (const panel of panelsOnPage) {
+        panel.style.setProperty("display", "none", "important");
+      }
+    })
+  );
 
   const handlePolyfill$ = $(async () => {
     if (isServer) return;
@@ -98,6 +103,7 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
 
     if (!("anchorName" in document.documentElement.style)) {
       await polyfill();
+      panelRef.value?.style.removeProperty("display");
       isPolyfilledSig.value = true;
     }
   });
@@ -124,7 +130,8 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
    *  qvisible -> conditionally add a visible task
    */
   const handleOpenOnRender$ = isInitiallyOpenSig.value
-    ? $(() => {
+    ? $(async () => {
+        await handlePolyfill$();
         context.panelRef.value?.showPopover();
       })
     : undefined;
