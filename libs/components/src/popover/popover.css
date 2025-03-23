@@ -1,0 +1,9 @@
+[data-qds-popover-trigger] {
+  anchor-name: --my-anchor-positioning;
+}
+
+[data-qds-popover-panel] {
+  position: absolute;
+  top: anchor(--my-anchor-positioning bottom);
+  left: anchor(--my-anchor-positioning right);
+}

@@ -2,6 +2,7 @@ import {
   $,
   component$,
   createContextId,
+  isServer,
   type PropsOf,
   type Signal,
   Slot,
@@ -9,11 +10,13 @@ import {
   useContextProvider,
   useId,
   useSignal,
+  useStyles$,
   useTask$
 } from "@builder.io/qwik";
 import { Render } from "../render/render";
 import { withAsChild } from "../as-child/as-child";
 import { useBoundSignal } from "../../utils/bound-signal";
+import polyfill from "@oddbird/css-anchor-positioning/fn";
 
 type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   "bind:open"?: Signal<boolean>;
@@ -21,6 +24,7 @@ type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   onChange$?: (open: boolean) => void;
 };
 
+import styles from "./popover.css?inline";
 export const popoverContextId = createContextId<PopoverContext>("qds-popover");
 
 type PopoverContext = {
@@ -43,6 +47,7 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
     openPropSig.value ?? givenOpenSig?.value ?? false,
     openPropSig
   );
+  useStyles$(styles);
 
   const isInitialRenderSig = useSignal(true);
   const canExternallyChangeSig = useSignal(true);
@@ -76,12 +81,32 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
     }
   });
 
+  // useOnWindow(
+  //   "DOMContentLoaded",
+  //   sync$(() => {
+  //     if (!("anchorName" in document.documentElement.style)) {
+  //       // @ts-expect-error follows polyfill instructions
+  //       import("https://unpkg.com/@oddbird/css-anchor-positioning");
+  //     }
+  //   })
+  // );
+
+  const handlePolyfill$ = $(async () => {
+    if (isServer) return;
+
+    if (!("anchorName" in document.documentElement.style)) {
+      await polyfill();
+    }
+  });
+
   useTask$(async function handleChange({ track, cleanup }) {
     track(() => isOpenSig.value);
 
     if (!isInitialRenderSig.value) {
       await onChange$?.(isOpenSig.value);
     }
+
+    await handlePolyfill$();
 
     await handleExternalToggle$();
 
