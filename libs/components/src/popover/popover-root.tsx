@@ -3,7 +3,6 @@ import {
   component$,
   createContextId,
   type PropsOf,
-  type QRL,
   type Signal,
   Slot,
   useComputed$,
@@ -16,12 +15,10 @@ import { Render } from "../render/render";
 import { withAsChild } from "../as-child/as-child";
 import { useBoundSignal } from "../../utils/bound-signal";
 
-// Define interface for HTMLElement with Popover AP
-
 type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   "bind:open"?: Signal<boolean>;
   open?: boolean;
-  onChange$?: QRL<(open: boolean) => void>;
+  onChange$?: (open: boolean) => void;
 };
 
 export const popoverContextId = createContextId<PopoverContext>("qds-popover");
