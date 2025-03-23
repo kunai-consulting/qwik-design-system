@@ -50,6 +50,14 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
   const isInitialRenderSig = useSignal(true);
   const canExternallyChangeSig = useSignal(true);
 
+  const isInitiallyOpenSig = useComputed$(() => {
+    if (isInitialRenderSig.value && isOpenSig.value) {
+      return true;
+    }
+
+    return false;
+  });
+
   const context: PopoverContext = {
     panelRef,
     triggerRef,
@@ -84,14 +92,6 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
       if (!isInitialRenderSig.value) return;
       isInitialRenderSig.value = false;
     });
-  });
-
-  const isInitiallyOpenSig = useComputed$(() => {
-    if (isInitialRenderSig.value && isOpenSig.value) {
-      return true;
-    }
-
-    return false;
   });
 
   /**
