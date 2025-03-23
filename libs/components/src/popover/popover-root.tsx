@@ -93,11 +93,10 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
 
     if (isPolyfill) {
       await polyfill();
-      isHiddenSig.value = false;
       isPolyfillExecutedSig.value = true;
-    } else {
-      isHiddenSig.value = false;
     }
+
+    isHiddenSig.value = false;
   });
 
   useTask$(async function handleChange({ track, cleanup }) {
