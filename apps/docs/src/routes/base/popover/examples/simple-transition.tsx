@@ -13,4 +13,4 @@ export default component$(() => {
 });
 
 // internal styles
-import styles from "./popover.css?inline";
+import styles from "./simple-transition.css?inline";
