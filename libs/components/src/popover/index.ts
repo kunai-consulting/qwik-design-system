@@ -1,3 +1,3 @@
 export { PopoverRoot as Root } from "./popover-root";
-export { PopoverTrigger as Trigger } from "./popover-trigger";
-export { PopoverPanel as Panel } from "./popover-panel";
+export { PopoverAnchor as Anchor } from "./popover-anchor";
+export { PopoverContent as Content } from "./popover-content";

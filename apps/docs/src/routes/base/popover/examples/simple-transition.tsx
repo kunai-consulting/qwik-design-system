@@ -6,8 +6,8 @@ export default component$(() => {
 
   return (
     <Popover.Root>
-      <Popover.Trigger>Open Popover</Popover.Trigger>
-      <Popover.Panel class="popover-panel">Popover Panel</Popover.Panel>
+      <Popover.Anchor>Open Popover</Popover.Anchor>
+      <Popover.Content class="popover-panel">Popover Panel</Popover.Content>
     </Popover.Root>
   );
 });

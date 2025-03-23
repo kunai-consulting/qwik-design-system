@@ -10,7 +10,7 @@ import { Render } from "../render/render";
 import { withAsChild } from "../as-child/as-child";
 import { popoverContextId } from "./popover-root";
 
-export const PopoverPanelBase = component$((props: PropsOf<"div">) => {
+export const PopoverContentBase = component$((props: PropsOf<"div">) => {
   const context = useContext(popoverContextId);
   const panelId = `${context.localId}-panel`;
 
@@ -38,4 +38,4 @@ export const PopoverPanelBase = component$((props: PropsOf<"div">) => {
   );
 });
 
-export const PopoverPanel = withAsChild(PopoverPanelBase);
+export const PopoverContent = withAsChild(PopoverContentBase);

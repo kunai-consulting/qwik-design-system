@@ -13,8 +13,8 @@ export default component$(() => {
           isOpen.value = open;
         }}
       >
-        <Popover.Trigger>Open Popover</Popover.Trigger>
-        <Popover.Panel>Popover Panel</Popover.Panel>
+        <Popover.Anchor>Open Popover</Popover.Anchor>
+        <Popover.Content>Popover Panel</Popover.Content>
       </Popover.Root>
       <p>Is open: {isOpen.value ? "true" : "false"}</p>
     </>

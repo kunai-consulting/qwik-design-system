@@ -3,7 +3,7 @@ import { Render } from "../render/render";
 import { withAsChild } from "../as-child/as-child";
 import { popoverContextId } from "./popover-root";
 
-export const PopoverTriggerBase = component$((props: PropsOf<"button">) => {
+export const PopoverAnchorBase = component$((props: PropsOf<"button">) => {
   const context = useContext(popoverContextId);
   const panelId = `${context.localId}-panel`;
 
@@ -20,4 +20,4 @@ export const PopoverTriggerBase = component$((props: PropsOf<"button">) => {
   );
 });
 
-export const PopoverTrigger = withAsChild(PopoverTriggerBase);
+export const PopoverAnchor = withAsChild(PopoverAnchorBase);
