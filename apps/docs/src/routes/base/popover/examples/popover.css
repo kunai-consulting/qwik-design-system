@@ -1,0 +1,18 @@
+.popover-panel {
+  transition: opacity 0.3s, display 0.3s, overlay 0.3s;
+  transition-behavior: allow-discrete;
+}
+
+@starting-style {
+  .popover-panel {
+    opacity: 0;
+  }
+}
+
+.popover-panel[data-open] {
+  opacity: 1;
+}
+
+.popover-panel[data-closed] {
+  opacity: 0;
+}

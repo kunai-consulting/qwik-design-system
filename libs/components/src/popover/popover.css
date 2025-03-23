@@ -1,11 +1,13 @@
 @layer qds {
   [data-qds-popover-trigger] {
-    anchor-name: --my-anchor-positioning;
+    anchor-name: --qds-popover;
   }
 
   [data-qds-popover-panel] {
+    position-anchor: --qds-popover;
+    position-try-fallbacks: top;
     position: absolute;
-    top: anchor(--my-anchor-positioning bottom);
-    left: anchor(--my-anchor-positioning left);
+    top: anchor(bottom);
+    left: anchor(left);
   }
 }
