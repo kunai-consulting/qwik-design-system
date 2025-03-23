@@ -128,7 +128,14 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
     : undefined;
 
   return (
-    <Render onQVisible$={handleOpenOnRender$} ref={rootRef} fallback="div" {...rest}>
+    <Render
+      data-open={isOpenSig.value}
+      data-closed={!isOpenSig.value}
+      onQVisible$={handleOpenOnRender$}
+      ref={rootRef}
+      fallback="div"
+      {...rest}
+    >
       <Slot />
     </Render>
   );
