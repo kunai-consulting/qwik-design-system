@@ -79,8 +79,8 @@
               },
               {
                 "comment": "Event handler for when the radio group selection changes",
-                "prop": "onValueChange$",
-                "type": "(value: string) => void"
+                "prop": "onChange$",
+                "type": "QRL<(value: string) => void>"
               },
               {
                 "comment": "Whether the radio group is disabled",
@@ -137,17 +137,6 @@
     },
     {
       "Radio Group Trigger": {
-        "types": [
-          {
-            "PublicTriggerProps": [
-              {
-                "comment": "Index for keyboard navigation order",
-                "prop": "_index",
-                "type": "number"
-              }
-            ]
-          }
-        ],
         "inheritsFrom": "button",
         "dataAttributes": [
           {

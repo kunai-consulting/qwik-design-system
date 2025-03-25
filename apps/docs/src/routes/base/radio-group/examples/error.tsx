@@ -9,7 +9,7 @@ export default component$(() => {
       class="radio-group-root"
       required
       isError={isError.value}
-      onValueChange$={$(() => {
+      onChange$={$(() => {
         isError.value = false;
       })}
     >

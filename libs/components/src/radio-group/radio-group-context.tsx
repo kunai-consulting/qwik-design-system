@@ -14,7 +14,6 @@ export interface RadioGroupContext {
   name?: string;
   orientation: "horizontal" | "vertical";
   isDescription?: boolean;
-  onValueChange$: (value: string) => void;
   itemValue?: string;
   triggerRefsArray: Signal<TriggerRef[]>;
 }
