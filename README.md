@@ -42,7 +42,7 @@ To learn more about contributing to QDS, please visit our [contribution docs](ht
 
 ## Special Sponsor 
 
-![Uploading Type=Ful<svg width="301" height="88" viewBox="0 0 301 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="301" height="88" viewBox="0 0 301 88" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M0.5 43.8447C0.5 33.3289 19.3424 29.1884 30.7585 23.0336C47.8246 13.8323 62.6153 -1.11781 69.6662 5.74834C78.1025 13.9599 58.4203 33.1781 58.4203 43.7673C58.4203 54.3565 78.1025 73.5748 69.6662 81.7863C62.6153 88.6525 47.8246 73.7023 30.7585 64.5011C19.3424 58.3463 0.5 54.2057 0.5 43.69V43.8447Z" fill="#F53535"/>
 <path d="M15.3835 9.51828L49.7054 43.8065L15.3835 78.0947V9.51828ZM11.4363 0V87.6207L55.2896 43.8104L11.4363 0Z" fill="white"/>
 <path d="M113.264 54.6578L105.691 45.008L103.713 46.8985V54.6578H99.7622V33H103.713V42.4294L113.152 33H117.842L108.512 42.4835L118.09 54.6539H113.264V54.6578Z" fill="white"/>
@@ -51,7 +51,6 @@ To learn more about contributing to QDS, please visit our [contribution docs](ht
 <path d="M249.081 54.6578H245.022L253.365 33H258.33L266.26 54.6578H262.146L260.226 49.396H251.09L249.081 54.6578ZM256.326 38.4821L255.776 36.6457L255.227 38.5092L252.344 45.9939H259.011L256.326 38.4821Z" fill="white"/>
 <path d="M296.468 54.6578V33H300.5V54.6578H296.468Z" fill="white"/>
 </svg>
-l, Size=Large, Mode=Light ver2.svg…]()
 
 [Kunai](https://kunaico.com/) funds the work that makes Qwik Design System possible.
 
