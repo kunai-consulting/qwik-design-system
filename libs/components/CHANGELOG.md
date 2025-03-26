@@ -1,5 +1,11 @@
 # @kunai-consulting/qwik-headless
 
+## 0.0.6
+
+### Patch Changes
+
+- da0b5cf: Fix types reference
+
 ## 0.0.5
 
 ### Patch Changes
