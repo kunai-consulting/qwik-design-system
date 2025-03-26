@@ -39,7 +39,7 @@ We welcome contributions to Qwik Design System!
 
 To learn more about contributing to QDS, please visit our [contribution docs](https://qwik.design/contributing/intro/).
 
-## Special Sponsor 
+## Created by Kunai
 
 <br />
 
