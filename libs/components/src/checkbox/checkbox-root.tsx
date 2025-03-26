@@ -1,6 +1,5 @@
 import {
   type PropsOf,
-  type QRL,
   type Signal,
   Slot,
   component$,
@@ -20,7 +19,7 @@ export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   /** Initial checked state of the checkbox */
   checked?: T;
   /** Event handler called when the checkbox state changes */
-  onChange$?: QRL<(checked: T) => void>;
+  onChange$?: (checked: T) => void;
   /** Whether the checkbox is disabled */
   disabled?: boolean;
   /** Whether the checkbox has a description */
