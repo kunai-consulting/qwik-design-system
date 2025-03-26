@@ -3,8 +3,7 @@ import {
   Slot,
   component$,
   useContextProvider,
-  useSignal,
-  useTask$
+  useSignal
 } from "@builder.io/qwik";
 import { resetIndexes } from "..";
 import { type ChecklistContext, checklistContextId } from "./checklist-context";
@@ -23,12 +22,6 @@ export const ChecklistRootBase = component$((props: PublicChecklistRootProps) =>
   };
 
   useContextProvider(checklistContextId, context);
-
-  useTask$(({ track }) => {
-    track(() => isAllCheckedSig.value);
-
-    console.log("is all checked: ", isAllCheckedSig.value);
-  });
 
   // The checkbox root to the select all checkbox
   return (

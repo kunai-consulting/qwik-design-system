@@ -5,7 +5,11 @@ export const ChecklistSelectAll = component$(
   (props: PropsOf<typeof CheckboxTriggerBase>) => {
     return (
       // Identifies the trigger element for the select all checkbox
-      <CheckboxTriggerBase data-qds-checklist-select-all-trigger {...props}>
+      <CheckboxTriggerBase
+        data-qds-checklist-select-all-trigger
+        {...props}
+        data-qds-checkbox-trigger={undefined}
+      >
         <Slot />
       </CheckboxTriggerBase>
     );

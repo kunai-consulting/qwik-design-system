@@ -49,7 +49,7 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
   } = props;
 
   const checkedPropSig = useComputed$(() => props.checked);
-  const isCheckedSig = useBoundSignal<boolean | "mixed">(
+  const checkedStateSig = useBoundSignal<boolean | "mixed">(
     // 2 way binding
     givenCheckedSig,
     // initial value
@@ -63,8 +63,21 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
   const isErrorSig = useSignal(false);
   const localId = useId();
   const triggerRef = useSignal<HTMLButtonElement>();
+
+  const isCheckedSig = useComputed$(() => {
+    return checkedStateSig.value === true;
+  });
+
+  const dataAttributes = useComputed$(() => {
+    return {
+      "data-checked": isCheckedSig.value ? "" : undefined,
+      "data-mixed": checkedStateSig.value === "mixed" ? "" : undefined,
+      "data-disabled": isDisabledSig.value ? "" : undefined
+    };
+  });
+
   const context: CheckboxContext = {
-    isCheckedSig,
+    checkedStateSig,
     isDisabledSig,
     localId,
     description,
@@ -72,27 +85,22 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
     required,
     value,
     isErrorSig,
-    triggerRef
+    triggerRef,
+    dataAttributes
   };
 
   useContextProvider(checkboxContextId, context);
 
   useTask$(async function handleChange({ track, cleanup }) {
-    track(() => isCheckedSig.value);
+    track(() => checkedStateSig.value);
 
     if (!isInitialLoadSig.value) {
-      await onChange$?.(isCheckedSig.value as boolean);
+      await onChange$?.(checkedStateSig.value as boolean);
     }
 
     cleanup(() => {
       isInitialLoadSig.value = false;
     });
-  });
-
-  useTask$(({ track }) => {
-    track(() => isCheckedSig.value);
-
-    console.log("is checked: ", isCheckedSig.value);
   });
 
   return (
@@ -102,12 +110,8 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
       // Identifier for the root checkbox container
       data-qds-checkbox-root
       // Indicates whether the checkbox is disabled
-      data-disabled={context.isDisabledSig.value ? "" : undefined}
       aria-disabled={context.isDisabledSig.value ? "true" : "false"}
-      // Indicates whether the checkbox is checked
-      data-checked={context.isCheckedSig.value ? "" : undefined}
-      // Indicates whether the checkbox is in an indeterminate state
-      data-mixed={context.isCheckedSig.value === "mixed" ? "" : undefined}
+      {...context.dataAttributes.value}
     >
       <Slot />
     </Render>

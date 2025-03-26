@@ -5,7 +5,11 @@ export const ChecklistSelectAllIndicator = component$(
   (props: PropsOf<typeof CheckboxIndicatorBase>) => {
     return (
       // Identifies the indicator element for the select all checkbox
-      <CheckboxIndicatorBase data-qds-checklist-select-all-indicator {...props}>
+      <CheckboxIndicatorBase
+        data-qds-checklist-select-all-indicator
+        {...props}
+        data-qds-checkbox-indicator={undefined}
+      >
         <Slot />
       </CheckboxIndicatorBase>
     );

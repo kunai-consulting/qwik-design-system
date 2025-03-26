@@ -47,7 +47,6 @@ export const ChecklistItemBase = component$((props: PublicChecklistItemProps) =>
     } else if (context.checkedStatesSig.value.every((state) => state === false)) {
       context.isAllCheckedSig.value = false;
     } else {
-      console.log("MIXED");
       context.isAllCheckedSig.value = "mixed";
     }
   });
