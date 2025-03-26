@@ -1,23 +1,27 @@
 import { component$, PropsOf, Slot } from "@builder.io/qwik";
 import { Render, withAsChild } from "@kunai-consulting/qwik";
 
-const DummyCompBase = component$(() => {
+const DummyCompBase = component$((props: PropsOf<"div">) => {
 	return (
-		<div>
+		<Render fallback="div" {...props}>
 			<Slot />
-		</div>
+		</Render>
 	);
 });
 
 const DummyComp = withAsChild(DummyCompBase);
 
 const AsChildComp = component$((props: PropsOf<"span">) => {
-	return <span {...props}>Hello</span>;
+	return (
+		<span {...props} data-inside-comp>
+			Hello
+		</span>
+	);
 });
 
 export default component$(() => {
 	return (
-		<DummyComp asChild>
+		<DummyComp asChild data-outside-comp>
 			<AsChildComp>Hello</AsChildComp>
 		</DummyComp>
 	);

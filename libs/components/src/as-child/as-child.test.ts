@@ -34,3 +34,28 @@ test.describe("JSX Node", () => {
 		);
 	});
 });
+
+test.describe("Component", () => {
+	test(`GIVEN a component that uses asChild
+        WHEN the direct child is a component
+        THEN the component should be rendered instead of the returning jsx
+    `, async ({ page }) => {
+		await setup(page, "component");
+
+		await expect(page.locator("span").first()).toBeVisible();
+	});
+
+	test(`GIVEN a component that uses asChild
+        WHEN the direct child is a component
+        THEN the props should merge and pass to the child component
+    `, async ({ page }) => {
+		await setup(page, "component");
+
+		await expect(page.locator("span").first()).toHaveAttribute(
+			"data-outside-comp",
+		);
+		await expect(page.locator("span").first()).toHaveAttribute(
+			"data-inside-comp",
+		);
+	});
+});
