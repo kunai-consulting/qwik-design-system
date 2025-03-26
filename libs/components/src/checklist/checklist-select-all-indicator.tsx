@@ -1,13 +1,13 @@
 import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
-import { Checkbox } from "..";
+import { CheckboxIndicatorBase } from "../checkbox/checkbox-indicator";
 
 export const ChecklistSelectAllIndicator = component$(
-	(props: PropsOf<typeof Checkbox.Indicator>) => {
-		return (
-			// Identifies the indicator element for the select all checkbox
-			<Checkbox.Indicator data-qds-checklist-select-all-indicator {...props}>
-				<Slot />
-			</Checkbox.Indicator>
-		);
-	},
+  (props: PropsOf<typeof CheckboxIndicatorBase>) => {
+    return (
+      // Identifies the indicator element for the select all checkbox
+      <CheckboxIndicatorBase data-qds-checklist-select-all-indicator {...props}>
+        <Slot />
+      </CheckboxIndicatorBase>
+    );
+  }
 );
