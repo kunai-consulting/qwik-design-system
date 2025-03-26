@@ -1,10 +1,4 @@
-import {
-	type Component,
-	component$,
-	useSignal,
-	useTask$,
-	useComputed$,
-} from "@builder.io/qwik";
+import { type Component, component$, useSignal, useTask$ } from "@builder.io/qwik";
 import { useLocation } from "@builder.io/qwik-city";
 import { metaGlobComponents } from "./component-imports";
 
@@ -12,30 +6,21 @@ import { metaGlobComponents } from "./component-imports";
  * This component takes docs examples and renders them in isolation. Until a more robust integration with playwright for component testing is available, this is our current solution for testing components.
  * */
 export const IsolateTest = component$(() => {
-	const loc = useLocation();
+  const location = useLocation();
 
-	const componentPath = useComputed$(
-		() =>
-			`${loc.params.kit}/${loc.params.component}/examples/${loc.params.example}.tsx`,
-	);
+  const componentPath = `${location.params.kit}/${location.params.component}/examples/${location.params.example}.tsx`;
 
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	const MetaGlobComponentSig = useSignal<Component<any>>();
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  const MetaGlobComponentSig = useSignal<Component<any>>();
 
-	useTask$(async ({ track }) => {
-		track(() => componentPath.value);
+  useTask$(async () => {
+    try {
+      // @ts-ignore
+      MetaGlobComponentSig.value = await metaGlobComponents[componentPath]();
+    } catch (e) {
+      throw new Error(`Unable to load path ${componentPath}`);
+    }
+  });
 
-		try {
-			// @ts-ignore
-			MetaGlobComponentSig.value = await (
-				metaGlobComponents as Record<string, () => Promise<Component<any>>>
-			)[componentPath.value]();
-		} catch (e) {
-			throw new Error(`Unable to load path ${componentPath.value}`);
-		}
-	});
-
-	const Comp = MetaGlobComponentSig.value;
-
-	return Comp ? <Comp /> : null;
+  return <>{MetaGlobComponentSig.value && <MetaGlobComponentSig.value />}</>;
 });
