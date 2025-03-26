@@ -41,7 +41,11 @@ To learn more about contributing to QDS, please visit our [contribution docs](ht
 
 ## Special Sponsor 
 
+<br />
+
 ![Type=Full, Size=Large, Mode=Light ver2](https://github.com/user-attachments/assets/47c6d86a-5141-40c6-a0fb-5986266fa589)
+
+<br />
 
 [Kunai](https://kunaico.com/) funds the work that makes Qwik Design System possible.
 
