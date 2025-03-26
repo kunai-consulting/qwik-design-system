@@ -3,7 +3,7 @@
 
 # Qwik Design System
 
-> Better Design Systems at Scale
+> Production Ready
 
 - 🌐 Runs in any environment (browser, server, etc)
 - 🔍 Just-in-time code execution
