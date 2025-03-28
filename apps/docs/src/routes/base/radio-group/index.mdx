@@ -56,17 +56,17 @@ This example demonstrates:
 </RadioGroup.Root>
 ```
 
-### Default Value
+### Value Based
 Manage the radio group's selected value externally using signals, allowing for dynamic updates and state sharing across components.
 
-<Showcase name="default-value" />
+<Showcase name="value-based" />
 
 ```tsx
 const currentValue = useSignal("option1");
 
 <RadioGroup.Root
   value={currentValue.value}
-  onChange$={(value) => {
+  onChange$={(value: string) => {
     currentValue.value = value;
     console.log("Selected:", value);
   }}
@@ -108,49 +108,6 @@ Implement disabled states to:
 -	Prevent selection based on conditions
 -	Show unavailable options
 -	Maintain context while restricting access
-
-## Component API
-
-### Root
-The root component manages the radio group's state and behavior.
-```tsx
-<RadioGroup.Root
-  value={value}           // Controlled value
-  onValueChange$={(v) => {}}  // Change handler
-  disabled={false}       // Disable entire group
-  required={true}        // Make selection required
-  orientation="vertical" // Layout orientation
->
-  {/* Radio items */}
-</RadioGroup.Root>
-```
-
-### Item
-Container for individual radio options.
-```tsx
-<RadioGroup.Item value="option1">
-  <RadioGroup.Label>Option 1</RadioGroup.Label>
-  <RadioGroup.Trigger>
-    <RadioGroup.Indicator />
-  </RadioGroup.Trigger>
-</RadioGroup.Item>
-```
-
-### Trigger
-The interactive button component that handles selection.
-```tsx
-<RadioGroup.Trigger
-  disabled={false} // Optional individual disable
-/>
-```
-
-### Indicator
-Visual indicator for the selected state.
-```tsx
-<RadioGroup.Indicator value="option1">
-  {/* Custom indicator content */}
-</RadioGroup.Indicator>
-```
 
 ## Keyboard Navigation
 
@@ -202,12 +159,6 @@ The component uses data attributes for styling:
 /* Disabled state styles */
 }
 ```
-
-## Resources
--	[WAI-ARIA Radio Group Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/radio/)
--	[MDN Radio Button Guide](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/radio)
-- [Nielsen Norman Group: Radio Button UX Design](https://www.nngroup.com/articles/radio-buttons-default-selection/)
-- [WCAG Radio Group Tutorial](https://www.w3.org/WAI/tutorials/forms/grouping/)
 
 
 <APITable api={api} />

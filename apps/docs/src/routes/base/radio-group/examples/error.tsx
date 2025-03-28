@@ -1,4 +1,4 @@
-import { $, component$, useSignal } from "@builder.io/qwik";
+import { component$, useSignal } from "@builder.io/qwik";
 import { RadioGroup } from "@kunai-consulting/qwik";
 
 export default component$(() => {
@@ -9,9 +9,9 @@ export default component$(() => {
       class="radio-group-root"
       required
       isError={isError.value}
-      onValueChange$={$(() => {
+      onChange$={() => {
         isError.value = false;
-      })}
+      }}
     >
       <RadioGroup.Label>Choose option</RadioGroup.Label>
 

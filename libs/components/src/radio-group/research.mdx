@@ -5,11 +5,13 @@ Radio Group component allows users to select a single option from a list. The co
 supports keyboard navigation, and complies with the WAI-ARIA specification for radio groups.
 
 ## Research Links:
-- WAI-ARIA Radio Group Pattern (https://www.w3.org/WAI/ARIA/apg/patterns/radio/)
-- Ark UI Radio Group (https://ark-ui.com/react/docs/components/radio-group)
-- Kobalte Radio Group (https://kobalte.dev/docs/core/components/radio-group)
-- Radix UI Radio Group (https://www.radix-ui.com/primitives/docs/components/radio-group)
-
+- [WAI-ARIA Radio Group Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/radio/)
+- [Ark UI Radio Group](https://ark-ui.com/react/docs/components/radio-group)
+- [Kobalte Radio Group](https://kobalte.dev/docs/core/components/radio-group)
+- [Radix UI Radio Group](https://www.radix-ui.com/primitives/docs/components/radio-group)
+-	[MDN Radio Button Guide](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/radio)
+- [Nielsen Norman Group: Radio Button UX Design](https://www.nngroup.com/articles/radio-buttons-default-selection/)
+- [WCAG Radio Group Tutorial](https://www.w3.org/WAI/tutorials/forms/grouping/)
 ---
 
 ## Features:
@@ -83,7 +85,7 @@ supports keyboard navigation, and complies with the WAI-ARIA specification for r
 interface RadioGroupRootProps {
   value?: string;
   "bind:value"?: Signal<string | undefined>;
-  onValueChange$?: (value: string) => void;
+  onChange$?: (value: string) => void;
   disabled?: boolean;
   name?: string;
   required?: boolean;

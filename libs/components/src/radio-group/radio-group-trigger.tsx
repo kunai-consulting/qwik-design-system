@@ -45,7 +45,7 @@ export const RadioGroupTriggerBase = component$((props: PublicTriggerProps) => {
     return isSelected || (noSelection && isFirstItem) ? 0 : -1;
   });
 
-  const handleClick$ = $(() => {
+  const handleSelection$ = $(() => {
     if (isDisabledSig.value) return;
     context.selectedValueSig.value = value;
   });
@@ -54,7 +54,7 @@ export const RadioGroupTriggerBase = component$((props: PublicTriggerProps) => {
     if (isDisabledSig.value) return;
 
     if (event.key === " " || event.key === "Enter") {
-      await handleClick$();
+      await handleSelection$();
     }
   });
 
@@ -70,7 +70,7 @@ export const RadioGroupTriggerBase = component$((props: PublicTriggerProps) => {
       data-qds-radio-group-trigger
       data-disabled={isDisabledSig.value || undefined}
       value={value}
-      onClick$={[handleClick$, props.onClick$]}
+      onClick$={[handleSelection$, props.onClick$]}
       onKeyDown$={[handleKeyDown$, props.onKeyDown$]}
       disabled={isDisabledSig.value}
       tabIndex={tabIndexSig.value}

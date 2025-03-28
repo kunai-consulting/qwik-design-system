@@ -79,7 +79,7 @@
               },
               {
                 "comment": "Event handler for when the radio group selection changes",
-                "prop": "onValueChange$",
+                "prop": "onChange$",
                 "type": "(value: string) => void"
               },
               {
@@ -137,17 +137,6 @@
     },
     {
       "Radio Group Trigger": {
-        "types": [
-          {
-            "PublicTriggerProps": [
-              {
-                "comment": "Index for keyboard navigation order",
-                "prop": "_index",
-                "type": "number"
-              }
-            ]
-          }
-        ],
         "inheritsFrom": "button",
         "dataAttributes": [
           {

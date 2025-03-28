@@ -20,18 +20,17 @@ import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 import styles from "./radio-group.css?inline";
 
-type PublicRootProps = PropsOf<"div"> & {
+type PublicRootProps = {
   value?: string;
-  onValueChange$?: (value: string) => void;
+  onChange$?: (value: string) => void;
   disabled?: boolean;
   name?: string;
   required?: boolean;
-  form?: string;
   orientation?: "horizontal" | "vertical";
   isDescription?: boolean;
   isError?: boolean;
   "bind:value"?: Signal<string | undefined>;
-};
+} & Omit<PropsOf<"div">, "onChange$">;
 
 interface TriggerRef {
   ref: Signal;
@@ -41,47 +40,44 @@ interface TriggerRef {
 export const RadioGroupRootBase = component$((props: PublicRootProps) => {
   useStyles$(styles);
 
+  const {
+    "bind:value": givenValueSig,
+    onChange$,
+    disabled,
+    name,
+    required,
+    orientation,
+    isDescription,
+    isError,
+    onKeyDown$,
+    ...rest
+  } = props;
+
   const rootRef = useSignal<HTMLElement>();
-  const { "bind:value": givenValueSig } = props;
-  const selectedValueSig = useBoundSignal(givenValueSig, props.value);
+  const valuePropSig = useComputed$(() => props.value);
+  const selectedValueSig = useBoundSignal<string | undefined>(
+    givenValueSig,
+    givenValueSig?.value ?? valuePropSig.value,
+    valuePropSig
+  );
+  const isInitialLoadSig = useSignal(true);
   const isDisabledSig = useComputed$(() => !!props.disabled);
   const localId = useId();
-  const selectedFromOnChange = useSignal<string | undefined>();
   const computedIsError = useComputed$(() => !!props.isError);
   const triggerRefsArray = useSignal<TriggerRef[]>([]);
 
-  useTask$(({ track }) => {
-    const value = track(() => selectedFromOnChange.value);
-    if (value === undefined) return;
-
-    if (!isDisabledSig.value) {
-      selectedValueSig.value = value;
+  useTask$(function handleChange({ track }) {
+    track(() => selectedValueSig.value);
+    if (isInitialLoadSig.value) {
+      return;
+    }
+    if (selectedValueSig.value) {
+      props.onChange$?.(selectedValueSig.value);
     }
   });
 
-  const onValueChange$ = $((value: string) => {
-    if (isDisabledSig.value) return;
-    selectedFromOnChange.value = value;
-  });
-
-  useTask$(({ track }) => {
-    const value = track(() => selectedValueSig.value);
-    if (value !== undefined) {
-      props.onValueChange$?.(value);
-    }
-  });
-
-  const selectAndFocusTrigger = $((index: number) => {
-    const normalizedIndex =
-      (index + triggerRefsArray.value.length) % triggerRefsArray.value.length;
-    const triggerData = triggerRefsArray.value[normalizedIndex];
-    const trigger = triggerData.ref.value;
-    const value = triggerData.value;
-
-    if (value) {
-      selectedValueSig.value = value;
-      trigger.focus();
-    }
+  useTask$(() => {
+    isInitialLoadSig.value = false;
   });
 
   useOnWindow(
@@ -114,47 +110,58 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
       .map(({ index }) => index);
   });
 
+  const activateItemAt = $((index: number, enabledTriggers: number[]) => {
+    const triggerData = triggerRefsArray.value[enabledTriggers[index]];
+    const trigger = triggerData.ref.value;
+    const value = triggerData.value;
+
+    if (value) {
+      selectedValueSig.value = value;
+      trigger.focus();
+    }
+  });
+
   const handleKeyDown$ = $(async (e: KeyboardEvent) => {
     if (isDisabledSig.value || !rootRef.value) return;
+
+    const isHorizontal = props.orientation === "horizontal";
+    const nextKey = isHorizontal ? "ArrowRight" : "ArrowDown";
+    const prevKey = isHorizontal ? "ArrowLeft" : "ArrowUp";
 
     const enabledTriggerIndexes = await getEnabledTriggerIndexes(triggerRefsArray.value);
 
     if (!enabledTriggerIndexes.length) return;
 
-    const currentEnabledIndex = selectedValueSig.value
-      ? enabledTriggerIndexes.findIndex(
-          (index) => triggerRefsArray.value[index].value === selectedValueSig.value
-        )
-      : 0;
+    let currentIndex = 0;
 
-    const isHorizontal = props.orientation === "horizontal";
-
-    switch (e.key) {
-      case isHorizontal ? "ArrowRight" : "ArrowDown": {
-        const nextIndex = currentEnabledIndex + 1;
-        const targetIndex =
-          enabledTriggerIndexes[
-            nextIndex >= enabledTriggerIndexes.length ? 0 : nextIndex
-          ];
-        selectAndFocusTrigger(targetIndex);
-        break;
-      }
-      case isHorizontal ? "ArrowLeft" : "ArrowUp": {
-        const prevIndex = currentEnabledIndex - 1;
-        const targetIndex =
-          enabledTriggerIndexes[
-            prevIndex < 0 ? enabledTriggerIndexes.length - 1 : prevIndex
-          ];
-        selectAndFocusTrigger(targetIndex);
-        break;
-      }
-      case "Home":
-        selectAndFocusTrigger(enabledTriggerIndexes[0]);
-        break;
-      case "End":
-        selectAndFocusTrigger(enabledTriggerIndexes[enabledTriggerIndexes.length - 1]);
-        break;
+    if (selectedValueSig.value) {
+      currentIndex = enabledTriggerIndexes.findIndex(
+        (index) => triggerRefsArray.value[index].value === selectedValueSig.value
+      );
     }
+
+    let nextIndex: number;
+
+    if (e.key === nextKey) {
+      nextIndex = currentIndex + 1;
+    } else if (e.key === prevKey) {
+      nextIndex = currentIndex - 1;
+    } else if (e.key === "Home") {
+      nextIndex = 0;
+    } else if (e.key === "End") {
+      nextIndex = enabledTriggerIndexes.length - 1;
+    } else {
+      return;
+    }
+
+    // Ensure circular navigation
+    if (nextIndex < 0) {
+      nextIndex = enabledTriggerIndexes.length - 1;
+    } else if (nextIndex >= enabledTriggerIndexes.length) {
+      nextIndex = 0;
+    }
+
+    activateItemAt(nextIndex, enabledTriggerIndexes);
   });
 
   useContextProvider(radioGroupContextId, {
@@ -166,7 +173,6 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
     name: props.name,
     orientation: props.orientation || "vertical",
     isDescription: props.isDescription,
-    onValueChange$,
     itemValue: undefined,
     triggerRefsArray
   });
@@ -174,7 +180,7 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
   return (
     <Render
       fallback="div"
-      {...props}
+      {...rest}
       ref={rootRef}
       role="radiogroup"
       data-qds-radio-group-root
