@@ -13,7 +13,6 @@ export const RadioGroupIndicatorBase = component$((props: PublicIndicatorProps) 
       {...props}
       fallback="span"
       data-qds-indicator
-      data-is-selected={`${itemContext.isSelectedSig.value}`}
       data-checked={itemContext.isSelectedSig.value}
       data-hidden={!itemContext.isSelectedSig.value}
       aria-hidden="true"
