@@ -1,5 +1,11 @@
 # @kunai-consulting/qwik-headless
 
+## 0.0.7
+
+### Patch Changes
+
+- c9e7468: Address feedback
+
 ## 0.0.6
 
 ### Patch Changes
