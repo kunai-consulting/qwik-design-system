@@ -45,9 +45,7 @@ test.describe("Radio Group", () => {
 
   test(`GIVEN a radio group
         WHEN a radio button is clicked
-        THEN the indicator should be visible`, async ({
-    page
-    }) => {
+        THEN the indicator should be visible`, async ({ page }) => {
     const d = await setup(page, "hero");
 
     await d.getTriggerAt(0).click();
