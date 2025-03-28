@@ -80,7 +80,7 @@
               {
                 "comment": "Event handler for when the radio group selection changes",
                 "prop": "onChange$",
-                "type": "QRL<(value: string) => void>"
+                "type": "(value: string) => void"
               },
               {
                 "comment": "Whether the radio group is disabled",

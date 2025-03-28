@@ -85,7 +85,7 @@ supports keyboard navigation, and complies with the WAI-ARIA specification for r
 interface RadioGroupRootProps {
   value?: string;
   "bind:value"?: Signal<string | undefined>;
-  onChange$?: QRL<(value: string) => void>;
+  onChange$?: (value: string) => void;
   disabled?: boolean;
   name?: string;
   required?: boolean;

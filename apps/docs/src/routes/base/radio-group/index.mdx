@@ -66,10 +66,10 @@ const currentValue = useSignal("option1");
 
 <RadioGroup.Root
   value={currentValue.value}
-  onChange$={$((value: string) => {
+  onChange$={(value: string) => {
     currentValue.value = value;
     console.log("Selected:", value);
-  });)
+  }}
 >
   {/* Radio items */}
 </RadioGroup.Root>

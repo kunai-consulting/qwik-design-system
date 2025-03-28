@@ -25,9 +25,9 @@ export default component$(() => {
         isError={isError.value}
         name="subscription"
         class="radio-group-root"
-        onChange$={$(() => {
+        onChange$={() => {
           isError.value = false;
-        })}
+        }}
       >
         <RadioGroup.Label>Subscription Plan</RadioGroup.Label>
         <RadioGroup.Description>

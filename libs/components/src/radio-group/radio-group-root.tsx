@@ -1,7 +1,6 @@
 import {
   $,
   type PropsOf,
-  type QRL,
   type Signal,
   Slot,
   component$,
@@ -23,7 +22,7 @@ import styles from "./radio-group.css?inline";
 
 type PublicRootProps = {
   value?: string;
-  onChange$?: QRL<(value: string) => void>;
+  onChange$?: (value: string) => void;
   disabled?: boolean;
   name?: string;
   required?: boolean;
