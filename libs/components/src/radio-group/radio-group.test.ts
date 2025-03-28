@@ -42,6 +42,16 @@ test.describe("Radio Group", () => {
     await expect(firstTrigger).not.toHaveAttribute("data-checked");
     await expect(secondTrigger).toHaveAttribute("data-checked");
   });
+
+  test(`GIVEN a radio group
+        WHEN a radio button is clicked
+        THEN the indicator should be visible`, async ({ page }) => {
+    const d = await setup(page, "hero");
+
+    await d.getTriggerAt(0).click();
+    await expect(d.getIndicatorAt(0)).toBeVisible();
+    await expect(d.getIndicatorAt(0)).not.toHaveAttribute("data-hidden");
+  });
 });
 
 test.describe("Keyboard Navigation", () => {

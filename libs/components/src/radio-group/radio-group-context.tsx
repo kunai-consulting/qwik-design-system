@@ -14,7 +14,6 @@ export interface RadioGroupContext {
   name?: string;
   orientation: "horizontal" | "vertical";
   isDescription?: boolean;
-  itemValue?: string;
   triggerRefsArray: Signal<TriggerRef[]>;
 }
 

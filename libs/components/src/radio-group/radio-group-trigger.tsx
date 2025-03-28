@@ -12,6 +12,7 @@ import { getNextIndex } from "../../utils/indexer";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
+import { radioGroupItemContextId } from "./radio-group-item";
 
 type PublicTriggerProps = PropsOf<"button"> & {
   _index?: number;
@@ -19,9 +20,10 @@ type PublicTriggerProps = PropsOf<"button"> & {
 
 export const RadioGroupTriggerBase = component$((props: PublicTriggerProps) => {
   const context = useContext(radioGroupContextId);
+  const itemContext = useContext(radioGroupItemContextId);
   const triggerRef = useSignal<HTMLElement>();
   const { _index, ...restProps } = props;
-  const value = context.itemValue;
+  const value = itemContext.itemValue;
 
   useTask$(function getIndexOrder() {
     if (_index === undefined) {
@@ -34,11 +36,10 @@ export const RadioGroupTriggerBase = component$((props: PublicTriggerProps) => {
     };
   });
 
-  const isSelectedSig = useComputed$(() => context.selectedValueSig.value === value);
   const isDisabledSig = useComputed$(() => context.isDisabledSig.value || props.disabled);
 
   const tabIndexSig = useComputed$(() => {
-    const isSelected = isSelectedSig.value;
+    const isSelected = itemContext.isSelectedSig.value;
     const isFirstItem = _index === 0;
     const noSelection = !context.selectedValueSig.value;
 
@@ -65,8 +66,8 @@ export const RadioGroupTriggerBase = component$((props: PublicTriggerProps) => {
       ref={triggerRef}
       type="button"
       role="radio"
-      aria-checked={isSelectedSig.value}
-      data-checked={isSelectedSig.value}
+      aria-checked={itemContext.isSelectedSig.value}
+      data-checked={itemContext.isSelectedSig.value}
       data-qds-radio-group-trigger
       data-disabled={isDisabledSig.value || undefined}
       value={value}

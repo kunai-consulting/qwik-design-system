@@ -2,6 +2,7 @@
 import { $, type PropsOf, component$, useContext } from "@builder.io/qwik";
 import { VisuallyHidden } from "@qwik-ui/headless";
 import { radioGroupContextId } from "./radio-group-context";
+import { radioGroupItemContextId } from "./radio-group-item";
 
 type PublicHiddenInputProps = Omit<
   PropsOf<"input">,
@@ -10,8 +11,9 @@ type PublicHiddenInputProps = Omit<
 
 export const RadioGroupHiddenInput = component$((props: PublicHiddenInputProps) => {
   const context = useContext(radioGroupContextId);
+  const itemContext = useContext(radioGroupItemContextId);
   const { onChange$, required, ...restProps } = props;
-  const value = context.itemValue;
+  const value = itemContext.itemValue;
 
   const handleChange$ = $(() => {
     if (!context.isDisabledSig.value) {
