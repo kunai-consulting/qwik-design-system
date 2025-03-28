@@ -6,9 +6,9 @@ import {
   useSignal
 } from "@builder.io/qwik";
 import { resetIndexes } from "..";
-import { type ChecklistContext, checklistContextId } from "./checklist-context";
 import { withAsChild } from "../as-child/as-child";
 import { CheckboxRootBase } from "../checkbox/checkbox-root";
+import { type ChecklistContext, checklistContextId } from "./checklist-context";
 
 type PublicChecklistRootProps = Omit<PropsOf<"div">, "onChange$">;
 

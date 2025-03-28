@@ -1,8 +1,8 @@
 import {
-	type JSXOutput,
-	type QwikIntrinsicElements,
-	Slot,
-	component$,
+  type JSXOutput,
+  type QwikIntrinsicElements,
+  Slot,
+  component$
 } from "@builder.io/qwik";
 import type { AsChildProps } from "../as-child/as-child";
 
@@ -10,10 +10,10 @@ import type { AsChildProps } from "../as-child/as-child";
 type AllowedFallbacks = "div" | "span" | "a" | "button" | "label";
 
 type RenderInternalProps<T extends AllowedFallbacks> = {
-	/** The default element and types if a render prop is not provided */
-	fallback: T;
+  /** The default element and types if a render prop is not provided */
+  fallback: T;
 } & QwikIntrinsicElements[T] &
-	AsChildProps;
+  AsChildProps;
 
 /**
  * Render component enables flexible composition by allowing a component to be rendered with a fallback
@@ -26,18 +26,18 @@ type RenderInternalProps<T extends AllowedFallbacks> = {
  * accessibility.
  */
 export const Render = component$(
-	<T extends AllowedFallbacks>(props: RenderInternalProps<T>): JSXOutput => {
-		const { fallback, _jsxType, _allProps, asChild, ...rest } = props;
+  <T extends AllowedFallbacks>(props: RenderInternalProps<T>): JSXOutput => {
+    const { fallback, _jsxType, _allProps, asChild, ...rest } = props;
 
-		fallback;
-		_jsxType;
+    fallback;
+    _jsxType;
 
-		const Comp = props._jsxType ?? props.fallback;
+    const Comp = props._jsxType ?? props.fallback;
 
-		return (
-			<Comp {...rest} {...props._allProps}>
-				<Slot />
-			</Comp>
-		);
-	},
+    return (
+      <Comp {...rest} {...props._allProps}>
+        <Slot />
+      </Comp>
+    );
+  }
 );
