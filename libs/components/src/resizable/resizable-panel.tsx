@@ -2,7 +2,7 @@ import {
   type PropsOf,
   Slot,
   component$,
-  useContext
+  useContext, useId
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
@@ -32,6 +32,7 @@ interface ResizablePanelProps extends PropsOf<"div"> {
 export const ResizablePanelBase = component$<ResizablePanelProps>((props) => {
   const context = useContext(resizableContextId);
   const isVertical = context.orientation.value === 'vertical';
+  const panelId = useId(); // Добавляем уникальный id
 
   const {
     width,
@@ -72,6 +73,7 @@ export const ResizablePanelBase = component$<ResizablePanelProps>((props) => {
     <Render
       fallback="div"
       {...rest}
+      id={panelId}
       data-qds-resizable-panel
       data-orientation={context.orientation.value}
       data-min-size={isVertical ? minHeight : minWidth}
