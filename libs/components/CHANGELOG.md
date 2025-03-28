@@ -1,5 +1,11 @@
 # @kunai-consulting/qwik-headless
 
+## 0.0.8
+
+### Patch Changes
+
+- e88ff7d: fix: radio group data attribute handling
+
 ## 0.0.7
 
 ### Patch Changes
