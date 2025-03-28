@@ -4,7 +4,7 @@ import {
   component$,
   useStyles$,
   useSignal,
-  useContextProvider,
+  useContextProvider, useOnWindow, sync$,
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
@@ -20,6 +20,30 @@ type ResizableRootProps = {
 export const ResizableRootBase = component$<ResizableRootProps>((props) => {
   useStyles$(styles);
   const { orientation = "horizontal", disabled = false } = props;
+
+  useOnWindow(
+    "keydown",
+    sync$((event: KeyboardEvent) => {
+      const activeElement = document.activeElement;
+      const isWithinResizable = activeElement?.closest("[data-qds-resizable-root]");
+
+      if (!isWithinResizable) return;
+
+      const preventKeys = [
+        "Home",
+        "End",
+        "ArrowRight",
+        "ArrowLeft",
+        "ArrowUp",
+        "ArrowDown"
+      ];
+
+      if (preventKeys.includes(event.key)) {
+        event.preventDefault();
+      }
+    })
+  );
+
 
   const isDragging = useSignal(false);
   const initialSizes = useSignal<{ [key: string]: number }>({});
