@@ -173,14 +173,13 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
     name: props.name,
     orientation: props.orientation || "vertical",
     isDescription: props.isDescription,
-    itemValue: undefined,
     triggerRefsArray
   });
 
   return (
     <Render
-      fallback="div"
       {...rest}
+      fallback="div"
       ref={rootRef}
       role="radiogroup"
       data-qds-radio-group-root
