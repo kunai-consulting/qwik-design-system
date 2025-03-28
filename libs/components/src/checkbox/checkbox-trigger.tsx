@@ -5,9 +5,10 @@ import {
   component$,
   sync$,
   useComputed$,
-  useContext
+  useContext,
+  useOnWindow
 } from "@builder.io/qwik";
-import { syncFixedInV2, withAsChild } from "../as-child/as-child";
+import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { checkboxContextId } from "./checkbox-context";
 type PublicCheckboxControlProps = PropsOf<"button">;
@@ -29,18 +30,20 @@ export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps
     return labels.join(" ") || undefined;
   });
   const handleClick$ = $(() => {
-    if (context.isCheckedSig.value === "mixed") {
-      context.isCheckedSig.value = true;
+    if (context.checkedStateSig.value === "mixed") {
+      context.checkedStateSig.value = true;
     } else {
-      context.isCheckedSig.value = !context.isCheckedSig.value;
+      context.checkedStateSig.value = !context.checkedStateSig.value;
     }
   });
 
-  const handleKeyDownSync$ = syncFixedInV2(
-    sync$((e: KeyboardEvent) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-      }
+  const handleKeyDownSync$ = useOnWindow(
+    "keydown",
+    sync$((e: KeyboardEvent, el: HTMLButtonElement) => {
+      if (e.key !== "Enter") return;
+      if (!el.hasAttribute("data-qds-checkbox-trigger")) return;
+
+      e.preventDefault();
     })
   );
 
@@ -51,18 +54,13 @@ export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps
       type="button"
       role="checkbox"
       fallback="button"
-      aria-checked={`${context.isCheckedSig.value}`}
+      aria-checked={`${context.checkedStateSig.value}`}
       aria-describedby={describedByLabels ? describedByLabels.value : undefined}
       aria-invalid={context.isErrorSig.value}
       disabled={context.isDisabledSig.value}
-      // Indicates whether the checkbox trigger is disabled
-      data-disabled={context.isDisabledSig.value ? "" : undefined}
-      onKeyDown$={[handleKeyDownSync$, props.onKeyDown$]}
       onClick$={[handleClick$, props.onClick$]}
-      // Indicates whether the checkbox trigger is checked
-      // Indicates whether the checkbox trigger is in an indeterminate state
-      // Identifier for the checkbox trigger element
       data-qds-checkbox-trigger
+      {...context.dataAttributes.value}
       {...props}
     >
       <Slot />

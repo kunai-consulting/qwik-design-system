@@ -1,8 +1,10 @@
 import { $, type PropsOf, Slot, component$, sync$ } from "@builder.io/qwik";
+import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
 
 type LabelProps = PropsOf<"label">;
 
-export const Label = component$<LabelProps>((props) => {
+export const LabelBase = component$<LabelProps>((props) => {
   const handleMouseDownSync$ = sync$((event: MouseEvent) => {
     if (!event.defaultPrevented && event.detail > 1) {
       event.preventDefault();
@@ -17,12 +19,14 @@ export const Label = component$<LabelProps>((props) => {
   });
 
   return (
-    // biome-ignore lint/a11y/noLabelWithoutControl: we bind the control when a label is used in a compound component
-    <label
+    <Render
+      fallback="label"
       {...props}
       onMouseDown$={[handleMouseDownSync$, handleMouseDown$, props.onMouseDown$]}
     >
       <Slot />
-    </label>
+    </Render>
   );
 });
+
+export const Label = withAsChild(LabelBase);

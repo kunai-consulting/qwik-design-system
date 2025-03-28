@@ -11,7 +11,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   };
 
   const getIndicator = () => {
-    return rootLocator.locator("[data-qds-indicator]");
+    return rootLocator.locator("[data-qds-checkbox-indicator]");
   };
 
   const getLabel = () => {

@@ -102,6 +102,32 @@ const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
 </button>
 ```
 
+#### v1 Serialization Bug
+
+In v1 there is a serialization bug with `sync$` events that is fixed in v2. The current workaround is the `useOnWindow` hook rather than passing the event directly. Here is an example workaround in v1:
+
+```tsx
+  useOnWindow("keydown", sync$((event: KeyboardEvent) => {
+    // we have to do this on a window event due to v1 serialization issues
+    const activeElement = document.activeElement;
+    const isWithinRadioGroup = activeElement?.closest("[data-qds-radio-group-root]");
+
+    if (!isWithinRadioGroup) return;
+
+    const preventKeys = [
+      "ArrowRight",
+      "ArrowLeft",
+      "ArrowUp",
+      "ArrowDown",
+      "Home",
+      "End"
+    ];
+    if (preventKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  }));
+```
+
 ### Preventing Default Behavior
 
 For common events where you want to prevent default browser behavior, use the `preventdefault:` directive:

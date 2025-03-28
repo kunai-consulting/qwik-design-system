@@ -59,7 +59,11 @@ export const SelectRoot = component$((props: SelectRootProps) => {
 })
 ```
 
-The first argument is the **signal that the consumer passed in**. The second argument is the **initial value** of the signal.
+The `useBoundSignal` hook takes three arguments:
+
+1. The **signal that the consumer passed in** for signal-based state
+2. The **initial value** to use when no signal is provided
+3. A **computed signal** that gets the latest resolved value from value-based state
 
 In this case we've provided the initial value of `"Jim"` to the signal, but it could be an initial value from a prop passed by the consumer as well from value based state.
 
@@ -68,6 +72,18 @@ In this case we've provided the initial value of `"Jim"` to the signal, but it c
 Above is an example of a component that uses the `useBoundSignal` hook to combine the signal from the consumer with our internal signal.
 
 > Notice that whenever toggling the checkbox or programmatically changing the signal, the **signal value** of the checkbox is updated both **internally and externally**.
+
+Another example:
+
+```tsx
+  const { "bind:open": givenOpenSig,  ...rest } = props;
+  const openPropSig = useComputed$(() => props.open);
+  const isOpenSig = useBoundSignal(
+    givenOpenSig,
+    openPropSig.value ?? givenOpenSig?.value ?? false,
+    openPropSig
+  );
+```
 
 ### Two-way store properties
 

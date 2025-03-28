@@ -1,12 +1,12 @@
 import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
-import { Checkbox } from "..";
+import { CheckboxErrorMessageBase } from "../checkbox/checkbox-error-message";
 
 export const ChecklistErrorMessage = component$(
-  (props: PropsOf<typeof Checkbox.ErrorMessage>) => {
+  (props: PropsOf<typeof CheckboxErrorMessageBase>) => {
     return (
-      <Checkbox.ErrorMessage {...props}>
+      <CheckboxErrorMessageBase {...props}>
         <Slot />
-      </Checkbox.ErrorMessage>
+      </CheckboxErrorMessageBase>
     );
   }
 );
