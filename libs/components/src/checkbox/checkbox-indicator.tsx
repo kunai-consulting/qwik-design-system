@@ -1,4 +1,11 @@
-import { type PropsOf, Slot, component$, useContext, useStyles$ } from "@builder.io/qwik";
+import {
+  type PropsOf,
+  Slot,
+  component$,
+  useComputed$,
+  useContext,
+  useStyles$
+} from "@builder.io/qwik";
 import { checkboxContextId } from "./checkbox-context";
 import "./checkbox.css";
 import { withAsChild } from "../as-child/as-child";
@@ -9,14 +16,18 @@ export type PublicCheckboxIndicatorProps = PropsOf<"span">;
 export const CheckboxIndicatorBase = component$<PublicCheckboxIndicatorProps>((props) => {
   useStyles$(styles);
   const context = useContext(checkboxContextId);
+
+  const isHiddenSig = useComputed$(() => context.checkedStateSig.value === false);
+  const isCheckedSig = useComputed$(() => context.checkedStateSig.value === true);
+
   return (
     <Render
       {...props}
       fallback="span"
       // Indicates whether the indicator should be hidden based on checkbox state
-      data-hidden={!context.checkedStateSig.value}
+      data-hidden={isHiddenSig.value}
       // Indicates whether the checkbox is in a checked state
-      data-checked={context.checkedStateSig.value ? "" : undefined}
+      data-checked={isCheckedSig.value}
       // Indicates whether the checkbox is in an indeterminate state
       data-mixed={context.checkedStateSig.value === "mixed" ? "" : undefined}
       // Identifier for the checkbox indicator element
