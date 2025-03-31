@@ -73,13 +73,14 @@
     transition: background-color 0.15s ease;
   }
 
-  [data-qds-resizable-root][data-disabled="true"] {
+  [data-qds-resizable-handle][data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.5;
     pointer-events: none;
   }
 
-  [data-qds-resizable-root][data-disabled="true"] [data-qds-resizable-handle] {
-    opacity: 0.5;
-    cursor: not-allowed;
+  [data-qds-resizable-root][data-disabled] {
+    pointer-events: none;
   }
 
   [data-qds-resizable-panel] {
