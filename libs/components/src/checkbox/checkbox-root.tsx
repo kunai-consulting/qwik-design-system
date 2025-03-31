@@ -1,6 +1,5 @@
 import {
   type PropsOf,
-  type QRL,
   type Signal,
   Slot,
   component$,
@@ -20,7 +19,7 @@ export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   /** Initial checked state of the checkbox */
   checked?: T;
   /** Event handler called when the checkbox state changes */
-  onChange$?: QRL<(checked: T) => void>;
+  onChange$?: (checked: T) => void;
   /** Whether the checkbox is disabled */
   disabled?: boolean;
   /** Whether the checkbox has a description */
@@ -49,7 +48,7 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
   } = props;
 
   const checkedPropSig = useComputed$(() => props.checked);
-  const isCheckedSig = useBoundSignal<boolean | "mixed">(
+  const checkedStateSig = useBoundSignal<boolean | "mixed">(
     // 2 way binding
     givenCheckedSig,
     // initial value
@@ -63,8 +62,21 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
   const isErrorSig = useSignal(false);
   const localId = useId();
   const triggerRef = useSignal<HTMLButtonElement>();
+
+  const isCheckedSig = useComputed$(() => {
+    return checkedStateSig.value === true;
+  });
+
+  const dataAttributes = useComputed$(() => {
+    return {
+      "data-checked": isCheckedSig.value ? "" : undefined,
+      "data-mixed": checkedStateSig.value === "mixed" ? "" : undefined,
+      "data-disabled": isDisabledSig.value ? "" : undefined
+    };
+  });
+
   const context: CheckboxContext = {
-    isCheckedSig,
+    checkedStateSig,
     isDisabledSig,
     localId,
     description,
@@ -72,19 +84,24 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
     required,
     value,
     isErrorSig,
-    triggerRef
+    triggerRef,
+    dataAttributes
   };
+
   useContextProvider(checkboxContextId, context);
-  useTask$(async function handleChange({ track }) {
-    track(() => isCheckedSig.value);
-    if (isInitialLoadSig.value) {
-      return;
+
+  useTask$(async function handleChange({ track, cleanup }) {
+    track(() => checkedStateSig.value);
+
+    if (!isInitialLoadSig.value) {
+      await onChange$?.(checkedStateSig.value as boolean);
     }
-    await onChange$?.(isCheckedSig.value as boolean);
+
+    cleanup(() => {
+      isInitialLoadSig.value = false;
+    });
   });
-  useTask$(() => {
-    isInitialLoadSig.value = false;
-  });
+
   return (
     <Render
       {...rest}
@@ -92,12 +109,8 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
       // Identifier for the root checkbox container
       data-qds-checkbox-root
       // Indicates whether the checkbox is disabled
-      data-disabled={context.isDisabledSig.value ? "" : undefined}
       aria-disabled={context.isDisabledSig.value ? "true" : "false"}
-      // Indicates whether the checkbox is checked
-      data-checked={context.isCheckedSig.value ? "" : undefined}
-      // Indicates whether the checkbox is in an indeterminate state
-      data-mixed={context.isCheckedSig.value === "mixed" ? "" : undefined}
+      {...context.dataAttributes.value}
     >
       <Slot />
     </Render>

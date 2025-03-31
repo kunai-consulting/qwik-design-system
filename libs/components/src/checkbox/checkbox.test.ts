@@ -21,11 +21,7 @@ test.describe("critical functionality", () => {
   test(`GIVEN a checkbox that is initially checked
         WHEN the trigger is clicked
         THEN the indicator should be hidden`, async ({ page }) => {
-    const d = await setup(page, "hero");
-
-    // initial setup
-    await d.getTrigger().click();
-    await expect(d.getIndicator()).toBeVisible();
+    const d = await setup(page, "initial");
 
     await d.getTrigger().click();
     await expect(d.getIndicator()).toBeHidden();

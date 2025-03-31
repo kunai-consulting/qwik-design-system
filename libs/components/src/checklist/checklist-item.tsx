@@ -6,19 +6,18 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
+import { getNextIndex } from "../../utils/indexer";
 import { withAsChild } from "../as-child/as-child";
-import * as Checkbox from "../checkbox";
-import type { CheckboxRoot } from "../checkbox/checkbox-root";
+import { CheckboxRootBase } from "../checkbox/checkbox-root";
 import { checklistContextId } from "./checklist-context";
 
 type PublicChecklistItemProps = {
   /** Internal prop for tracking item position in checklist */
   _index?: number;
-} & Omit<PropsOf<typeof CheckboxRoot>, "_index">;
+} & Omit<PropsOf<typeof CheckboxRootBase>, "_index">;
 
 /** Internal prop for tracking item position in checklist */
 export const ChecklistItemBase = component$((props: PublicChecklistItemProps) => {
-  // console.log(props._index);
   const context = useContext(checklistContextId);
 
   if (props._index === undefined) {
@@ -53,10 +52,14 @@ export const ChecklistItemBase = component$((props: PublicChecklistItemProps) =>
   });
 
   return (
-    <Checkbox.Root bind:checked={isCheckedSig} {...props}>
+    <CheckboxRootBase bind:checked={isCheckedSig} {...props}>
       <Slot />
-    </Checkbox.Root>
+    </CheckboxRootBase>
   );
 });
 
-export const ChecklistItem = withAsChild(ChecklistItemBase);
+export const ChecklistItem = withAsChild(ChecklistItemBase, (props) => {
+  props._index = getNextIndex("qds-checklist");
+
+  return props;
+});
