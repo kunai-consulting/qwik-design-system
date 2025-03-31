@@ -1,11 +1,11 @@
 import {
   $,
-  component$,
-  createContextId,
-  isServer,
   type PropsOf,
   type Signal,
   Slot,
+  component$,
+  createContextId,
+  isServer,
   useComputed$,
   useContextProvider,
   useId,
@@ -13,10 +13,10 @@ import {
   useStyles$,
   useTask$
 } from "@builder.io/qwik";
-import { Render } from "../render/render";
-import { withAsChild } from "../as-child/as-child";
-import { useBoundSignal } from "../../utils/bound-signal";
 import polyfill from "@oddbird/css-anchor-positioning/fn";
+import { useBoundSignal } from "../../utils/bound-signal";
+import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
 
 type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   "bind:open"?: Signal<boolean>;

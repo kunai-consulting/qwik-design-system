@@ -1,6 +1,6 @@
-import { component$, type PropsOf, Slot, useContext } from "@builder.io/qwik";
-import { Render } from "../render/render";
+import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
 import { popoverContextId } from "./popover-root";
 
 export const PopoverAnchorBase = component$((props: PropsOf<"button">) => {
