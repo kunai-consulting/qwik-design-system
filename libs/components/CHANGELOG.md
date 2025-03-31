@@ -1,5 +1,23 @@
 # @kunai-consulting/qwik-headless
 
+## 0.0.8
+
+### Patch Changes
+
+- e88ff7d: fix: radio group data attribute handling
+
+## 0.0.7
+
+### Patch Changes
+
+- c9e7468: Address feedback
+
+## 0.0.6
+
+### Patch Changes
+
+- da0b5cf: Fix types reference
+
 ## 0.0.5
 
 ### Patch Changes

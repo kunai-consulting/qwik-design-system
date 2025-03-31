@@ -1,6 +1,6 @@
 {
   "name": "@kunai-consulting/qwik",
-  "version": "0.0.5",
+  "version": "0.0.8",
   "description": "Create a Qwik library",
   "main": "./lib/index.qwik.mjs",
   "qwik": "./lib/index.qwik.mjs",
@@ -9,7 +9,7 @@
     ".": {
       "import": "./lib/index.qwik.mjs",
       "require": "./lib/index.qwik.cjs",
-      "types": "./lib-types/index.d.ts"
+      "types": "./lib-types/src/index.d.ts"
     }
   },
   "files": [

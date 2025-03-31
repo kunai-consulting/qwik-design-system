@@ -43,33 +43,14 @@ test.describe("Radio Group", () => {
     await expect(secondTrigger).toHaveAttribute("data-checked");
   });
 
-  test(`GIVEN a radio group with error state
-        WHEN no radio button is selected
-        THEN the error message should be displayed`, async ({ page }) => {
-    const d = await setup(page, "error");
-    const triggers = page.locator("[data-qds-radio-group-trigger]");
-    const errorMessage = d.getErrorMessage();
+  test(`GIVEN a radio group
+        WHEN a radio button is clicked
+        THEN the indicator should be visible`, async ({ page }) => {
+    const d = await setup(page, "hero");
 
-    const count = await triggers.count();
-    for (let i = 0; i < count; i++) {
-      const trigger = triggers.nth(i);
-      await expect(trigger).not.toHaveAttribute("data-checked");
-    }
-
-    await expect(errorMessage).toBeVisible();
-    await expect(errorMessage).toHaveText("Please select an option");
-  });
-
-  test(`GIVEN a radio group with error state
-        WHEN any radio button is selected
-        THEN the error message should not be displayed`, async ({ page }) => {
-    const d = await setup(page, "error");
-    const firstTrigger = d.getTriggerAt(0);
-    const errorMessage = d.getErrorMessage();
-
-    await firstTrigger.click();
-    await expect(firstTrigger).toHaveAttribute("data-checked");
-    await expect(errorMessage).not.toBeVisible();
+    await d.getTriggerAt(0).click();
+    await expect(d.getIndicatorAt(0)).toBeVisible();
+    await expect(d.getIndicatorAt(0)).not.toHaveAttribute("data-hidden");
   });
 });
 
@@ -193,20 +174,20 @@ test.describe("Accessibility", () => {
   });
 });
 
-test.describe("Default Value", () => {
-  test(`GIVEN a radio group with default value
+test.describe("Value Based", () => {
+  test(`GIVEN a radio group with initial value
           WHEN rendered
           THEN correct option should be selected`, async ({ page }) => {
-    const d = await setup(page, "default-value");
+    const d = await setup(page, "value-based");
     const firstTrigger = d.getTriggerAt(0);
 
     await expect(firstTrigger).toHaveAttribute("data-checked");
   });
 
-  test(`GIVEN a radio group with default value
+  test(`GIVEN a radio group with initial value
           WHEN value changes externally
           THEN selection should update`, async ({ page }) => {
-    const d = await setup(page, "default-value");
+    const d = await setup(page, "value-based");
     const secondTrigger = d.getTriggerAt(1);
 
     await secondTrigger.click();

@@ -1,8 +1,10 @@
 import { type PropsOf, Slot, component$, useContext, useTask$ } from "@builder.io/qwik";
+import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
 import { checkboxContextId } from "./checkbox-context";
 type PublicCheckboxErrorMessageProps = PropsOf<"div">;
 /** A component that displays error messages for a checkbox */
-export const CheckboxErrorMessage = component$(
+export const CheckboxErrorMessageBase = component$(
   (props: PublicCheckboxErrorMessageProps) => {
     const context = useContext(checkboxContextId);
     const errorId = `${context.localId}-error`;
@@ -14,9 +16,11 @@ export const CheckboxErrorMessage = component$(
     });
     return (
       // Identifier for the checkbox error message element
-      <div id={errorId} data-qds-checkbox-error-message {...props}>
+      <Render fallback="div" id={errorId} data-qds-checkbox-error-message {...props}>
         <Slot />
-      </div>
+      </Render>
     );
   }
 );
+
+export const CheckboxErrorMessage = withAsChild(CheckboxErrorMessageBase);

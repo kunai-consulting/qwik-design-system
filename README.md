@@ -1,9 +1,8 @@
-
 <img src="./apps/docs/src/assets/logo/cauldron-white.svg" width="120" height="120" />
 
 # Qwik Design System
 
-> Better Design Systems at Scale
+> Production Ready
 
 - 🌐 Runs in any environment (browser, server, etc)
 - 🔍 Just-in-time code execution
@@ -39,6 +38,24 @@ npm i -D @kunai-consulting/qwik
 We welcome contributions to Qwik Design System! 
 
 To learn more about contributing to QDS, please visit our [contribution docs](https://qwik.design/contributing/intro/).
+
+## Created by Kunai
+
+<br />
+
+![Type=Full, Size=Large, Mode=Light ver2](https://github.com/user-attachments/assets/47c6d86a-5141-40c6-a0fb-5986266fa589)
+
+<br />
+
+[Kunai](https://kunaico.com/) funds the work that makes Qwik Design System possible.
+
+Their sponsorship enables:
+- Full-time development of core components
+- Comprehensive documentation and examples
+- Regular maintenance and updates
+- Community support and engagement
+
+We're grateful for Kunai's continued support in making QDS a production-ready design system for the Qwik ecosystem.
 
 ## Tech Stack
 

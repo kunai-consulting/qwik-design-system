@@ -7,30 +7,27 @@ export default component$(() => {
     { label: "Basic - $10/month", value: "basic" },
     { label: "Pro - $20/month", value: "pro" }
   ];
+  const handleSubmit$ = $((e: SubmitEvent) => {
+    const form = e.target as HTMLFormElement;
+    if (!form.checkValidity()) {
+      isError.value = true;
+    } else {
+      isError.value = false;
+      console.log("Form submitted successfully");
+    }
+  });
 
   return (
-    <form
-      preventdefault:submit
-      noValidate
-      onSubmit$={$((e) => {
-        const form = e.target as HTMLFormElement;
-        if (!form.checkValidity()) {
-          isError.value = true;
-        } else {
-          isError.value = false;
-          console.log("Form submitted successfully");
-        }
-      })}
-    >
+    <form preventdefault:submit noValidate onSubmit$={handleSubmit$}>
       <RadioGroup.Root
         required
         isDescription
         isError={isError.value}
         name="subscription"
         class="radio-group-root"
-        onValueChange$={$(() => {
+        onChange$={() => {
           isError.value = false;
-        })}
+        }}
       >
         <RadioGroup.Label>Subscription Plan</RadioGroup.Label>
         <RadioGroup.Description>

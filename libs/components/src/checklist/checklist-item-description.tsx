@@ -1,12 +1,12 @@
 import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
-import { Checkbox } from "..";
+import { CheckboxDescriptionBase } from "../checkbox/checkbox-description";
 
 export const ChecklistItemDescription = component$(
-  (props: PropsOf<typeof Checkbox.Description>) => {
+  (props: PropsOf<typeof CheckboxDescriptionBase>) => {
     return (
-      <Checkbox.Description {...props}>
+      <CheckboxDescriptionBase {...props}>
         <Slot />
-      </Checkbox.Description>
+      </CheckboxDescriptionBase>
     );
   }
 );

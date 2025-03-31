@@ -1,7 +1,10 @@
 import {
   type PropsOf,
+  type Signal,
   Slot,
   component$,
+  createContextId,
+  useComputed$,
   useContext,
   useContextProvider
 } from "@builder.io/qwik";
@@ -13,20 +16,34 @@ type PublicItemProps = PropsOf<"div"> & {
   value: string;
 };
 
+export const radioGroupItemContextId = createContextId<RadioGroupItemContext>(
+  "radio-group-item-context"
+);
+
+type RadioGroupItemContext = {
+  isSelectedSig: Signal<boolean>;
+  itemValue: string;
+};
+
 export const RadioGroupItemBase = component$((props: PublicItemProps) => {
   const context = useContext(radioGroupContextId);
-  const { value, ...restProps } = props;
-  const itemId = `${context.localId}-item-${value}`;
+  const itemId = `${context.localId}-item-${props.value}`;
 
-  useContextProvider(radioGroupContextId, {
-    ...context,
-    itemValue: value
-  });
+  const isSelectedSig = useComputed$(
+    () => context.selectedValueSig.value === props.value
+  );
+
+  const itemContext: RadioGroupItemContext = {
+    isSelectedSig,
+    itemValue: props.value
+  };
+
+  useContextProvider(radioGroupItemContextId, itemContext);
 
   return (
     <Render
+      {...props}
       fallback="div"
-      {...restProps}
       id={itemId}
       data-qds-radio-group-item
       data-orientation={context.orientation}

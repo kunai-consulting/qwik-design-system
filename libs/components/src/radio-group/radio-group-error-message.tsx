@@ -11,8 +11,8 @@ export const RadioGroupErrorMessageBase = component$((props: PublicErrorMessageP
 
   return (
     <Render
-      fallback="div"
       {...props}
+      fallback="div"
       id={errorId}
       data-qds-radio-group-error-message
       data-visible={context.isErrorSig.value}

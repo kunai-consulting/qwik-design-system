@@ -1,31 +1,20 @@
-import {
-  type PropsOf,
-  Slot,
-  component$,
-  useComputed$,
-  useContext
-} from "@builder.io/qwik";
+import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-import { radioGroupContextId } from "./radio-group-context";
+import { radioGroupItemContextId } from "./radio-group-item";
 
 type PublicIndicatorProps = PropsOf<"span">;
 
 export const RadioGroupIndicatorBase = component$((props: PublicIndicatorProps) => {
-  const context = useContext(radioGroupContextId);
-  const { ...restProps } = props;
-
-  const isChecked = useComputed$(
-    () => context.selectedValueSig.value === context.itemValue
-  );
+  const itemContext = useContext(radioGroupItemContextId);
 
   return (
     <Render
+      {...props}
       fallback="span"
-      {...restProps}
       data-qds-indicator
-      data-checked={isChecked.value || undefined}
-      data-hidden={!isChecked.value || undefined}
+      data-checked={itemContext.isSelectedSig.value}
+      data-hidden={!itemContext.isSelectedSig.value}
       aria-hidden="true"
     >
       <Slot />
