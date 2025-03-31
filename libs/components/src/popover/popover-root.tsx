@@ -41,6 +41,7 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
   const panelRef = useSignal<HTMLDivElement>();
   const triggerRef = useSignal<HTMLButtonElement>();
   const rootRef = useSignal<HTMLDivElement>();
+  // TODO: somehow multiple components are sharing the same id
   const localId = useId();
   const openPropSig = useComputed$(() => props.open);
   const isOpenSig = useBoundSignal(
