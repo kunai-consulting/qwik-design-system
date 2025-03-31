@@ -1,33 +1,22 @@
 {
-  "resizable": [
-    {
-      "Resizable Handle": {
-        "inheritsFrom": "button"
-      }
-    },
-    {
-      "Resizable Panel": {
-        "inheritsFrom": "div"
-      }
-    },
-    {
-      "Resizable Root": {
-        "inheritsFrom": "div"
-      }
-    }
+  "features": [
+    "Resizable panels with drag handles",
+    "Horizontal and vertical orientation support",
+    "Keyboard accessibility with arrow keys and Home/End",
+    "Fine control with Shift key modifier (10x step)",
+    "Minimum and maximum size constraints",
+    "Live resizing with smooth updates",
+    "Focus management and ARIA attributes",
+    "Mouse/touch pointer events handling",
+    "Responsive flex-based layout",
+    "Customizable panel dimensions",
+    "Pixel-perfect size calculations",
+    "Global keyboard event prevention",
+    "Multiple panel support",
+    "Disabled state handling",
+    "Size persistence between drag operations"
   ],
-  "anatomy": [
-    {
-      "name": "Resizable.Root"
-    },
-    {
-      "name": "Resizable.Panel"
-    },
-    {
-      "name": "Resizable.Handle"
-    }
-  ],
-  "keyboardInteractions": {
+  "keyboard": {
     "keyboard_interactions": [
       {
         "key": "ArrowLeft",
@@ -58,22 +47,5 @@
         "comment": "When focus is on the handle, expands the previous panel to its maximum size while respecting the next panel's minimum size"
       }
     ]
-  },
-  "features": [
-    "Resizable panels with drag handles",
-    "Horizontal and vertical orientation support",
-    "Keyboard accessibility with arrow keys and Home/End",
-    "Fine control with Shift key modifier (10x step)",
-    "Minimum and maximum size constraints",
-    "Live resizing with smooth updates",
-    "Focus management and ARIA attributes",
-    "Mouse/touch pointer events handling",
-    "Responsive flex-based layout",
-    "Customizable panel dimensions",
-    "Pixel-perfect size calculations",
-    "Global keyboard event prevention",
-    "Multiple panel support",
-    "Disabled state handling",
-    "Size persistence between drag operations"
-  ]
+  }
 }

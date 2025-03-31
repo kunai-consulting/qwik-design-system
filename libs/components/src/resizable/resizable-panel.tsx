@@ -1,14 +1,8 @@
-import {
-  type PropsOf,
-  Slot,
-  component$,
-  useContext, useId
-} from "@builder.io/qwik";
+import { type PropsOf, Slot, component$, useContext, useId } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { resizableContextId } from "./resizable-context";
-
-interface ResizablePanelProps extends PropsOf<"div"> {
+interface PublicResizablePanelProps extends PropsOf<"div"> {
   // Default height of the panel (in pixels)
   height?: number;
   // Default width of the panel (in pixels)
@@ -28,33 +22,22 @@ interface ResizablePanelProps extends PropsOf<"div"> {
   // Width to collapse to (in pixels)
   collapsedSize?: number;
 }
-
-export const ResizablePanelBase = component$<ResizablePanelProps>((props) => {
+/** A resizable panel component that can be adjusted using a ResizableHandle */
+export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) => {
   const context = useContext(resizableContextId);
-  const isVertical = context.orientation.value === 'vertical';
+  const isVertical = context.orientation.value === "vertical";
   const panelId = useId(); // Добавляем уникальный id
-
-  const {
-    width,
-    height,
-    minWidth,
-    minHeight,
-    maxWidth,
-    maxHeight,
-    ...rest
-  } = props;
-
+  const { width, height, minWidth, minHeight, maxWidth, maxHeight, ...rest } = props;
   const getPanelStyles = () => {
     const size = isVertical ? height : width;
     const minSize = isVertical ? minHeight : minWidth;
     const maxSize = isVertical ? maxHeight : maxWidth;
-    const sizeProp = isVertical ? 'height' : 'width';
-    const minSizeProp = isVertical ? 'minHeight' : 'minWidth';
-    const maxSizeProp = isVertical ? 'maxHeight' : 'maxWidth';
-
+    const sizeProp = isVertical ? "height" : "width";
+    const minSizeProp = isVertical ? "minHeight" : "minWidth";
+    const maxSizeProp = isVertical ? "maxHeight" : "maxWidth";
     const styles: Record<string, string | undefined> = {
-      flex: size ? '0 0 auto' : '1',
-      position: 'relative',
+      flex: size ? "0 0 auto" : "1",
+      position: "relative",
       display: "flex"
     };
     if (size) {
@@ -68,15 +51,18 @@ export const ResizablePanelBase = component$<ResizablePanelProps>((props) => {
     }
     return styles;
   };
-
   return (
     <Render
       fallback="div"
       {...rest}
       id={panelId}
+      // The identifier for the resizable panel component
       data-qds-resizable-panel
+      // Indicates the orientation of the resizable panel (vertical or horizontal)
       data-orientation={context.orientation.value}
+      // Specifies the minimum size constraint for the panel
       data-min-size={isVertical ? minHeight : minWidth}
+      // Specifies the maximum size constraint for the panel
       data-max-size={isVertical ? maxHeight : maxWidth}
       style={getPanelStyles()}
     >
@@ -84,5 +70,4 @@ export const ResizablePanelBase = component$<ResizablePanelProps>((props) => {
     </Render>
   );
 });
-
 export const ResizablePanel = withAsChild(ResizablePanelBase);
