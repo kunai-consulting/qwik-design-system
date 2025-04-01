@@ -28,6 +28,7 @@
   "devDependencies": {
     "@builder.io/qwik": "https://pkg.pr.new/@builder.io/qwik@7362",
     "@builder.io/qwik-city": "https://pkg.pr.new/@builder.io/qwik-city@7362",
+    "@fontsource/proza-libre": "^5.0.12",
     "@kunai-consulting/code-notate": "0.0.2",
     "@kunai-consulting/code-notate-core": "0.0.2",
     "@kunai-consulting/qwik": "workspace:*",
@@ -44,12 +45,12 @@
     "undici": "*",
     "unified": "^11.0.4",
     "vite": "^5.4",
+    "vite-plugin-image-optimizer": "^1.1.8",
     "vite-tsconfig-paths": "^4.2.1",
-    "wrangler": "^3.0.0",
-    "@fontsource/proza-libre": "^5.0.12",
-    "vite-plugin-image-optimizer": "^1.1.8"
+    "wrangler": "^3.0.0"
   },
   "dependencies": {
+    "@stackblitz/sdk": "^1.11.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "rehype-pretty-code": "^0.13.2",
