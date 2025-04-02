@@ -1,5 +1,5 @@
 import sdk from "@stackblitz/sdk";
-import { getHeadlessAppContent, STACKBLITZ_CONFIG } from "./stackblitz-config";
+import { STACKBLITZ_CONFIG, getHeadlessAppContent } from "./stackblitz-config";
 
 export const createStackblitzProject = async (
   appContent: string,
