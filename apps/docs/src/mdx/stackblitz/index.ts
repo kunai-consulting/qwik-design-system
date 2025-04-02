@@ -13,22 +13,6 @@ export const createStackblitzProject = async (
     return;
   }
 
-  // This approach seems to require the user to save the file we overwrite which is not ideal
-
-  // const vm = await sdk.embedGithubProject(
-  //   "qds-example",
-  //   "benjamin-kunai/qds-example-test",
-  //   {
-  //     openFile: "index.html"
-  //   }
-  // );
-  // await vm.applyFsDiff({
-  //   create: {
-  //     "src/components/app/app.tsx": headlessAppContent
-  //   },
-  //   destroy: []
-  // });
-
   await sdk.embedProject(
     containerId,
     {
@@ -38,13 +22,15 @@ export const createStackblitzProject = async (
       files: {
         "index.html": STACKBLITZ_CONFIG.indexHtml,
         "package.json": STACKBLITZ_CONFIG.packageJson,
-        "src/main.tsx": STACKBLITZ_CONFIG.mainTsx,
+        "src/root.tsx": STACKBLITZ_CONFIG.rootTsx,
         "src/app.tsx": headlessAppContent,
         "src/vite-env.d.ts": STACKBLITZ_CONFIG.viteEnvTs,
         "tsconfig.json": STACKBLITZ_CONFIG.tsconfigJson,
         "tsconfig.app.json": STACKBLITZ_CONFIG.tsconfigAppJson,
         "tsconfig.node.json": STACKBLITZ_CONFIG.tsconfigNodeJson,
-        "vite.config.ts": STACKBLITZ_CONFIG.viteConfigTs
+        "vite.config.ts": STACKBLITZ_CONFIG.viteConfigTs,
+        "src/entry.dev.tsx": STACKBLITZ_CONFIG.entryDevTsx,
+        "src/entry.ssr.tsx": STACKBLITZ_CONFIG.entrySsrTsx
       }
     },
     {

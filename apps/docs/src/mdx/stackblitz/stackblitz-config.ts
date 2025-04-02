@@ -20,11 +20,44 @@ const packageJson = `{
   }
 }`;
 
-const mainTsx = `import '@builder.io/qwik/qwikloader.js';
-import { render } from '@builder.io/qwik';
+const entryDevTsx = `import { render, type RenderOptions } from '@builder.io/qwik';
+import Root from './root';
+
+export default function(opts: RenderOptions) {
+  return render(document, <Root />, opts);
+}`;
+
+const entrySsrTsx = `import {
+  renderToStream,
+  type RenderToStreamOptions,
+} from '@builder.io/qwik/server';
+import { manifest } from '@qwik-client-manifest';
+import Root from './root';
+
+export default function (opts: RenderToStreamOptions) {
+  return renderToStream(<Root />, {
+    manifest,
+    ...opts,
+  });
+}`;
+
+const rootTsx = `import { component$ } from '@builder.io/qwik';
 import App from './app';
 
-render(document.getElementById('app') as HTMLElement, <App />);`;
+export default component$(() => {
+  return (
+    <html lang="en">
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Qwik Design System Example</title>
+      </head>
+      <body>
+        <App />
+      </body>
+    </html>
+  );
+});`;
 
 const indexHtml = `<!DOCTYPE html>
 <html lang="en">
@@ -35,7 +68,6 @@ const indexHtml = `<!DOCTYPE html>
   </head>
   <body>
     <div id="app"></div>
-    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>`;
 
@@ -102,9 +134,7 @@ import { qwikVite } from '@builder.io/qwik/optimizer'
 
 export default defineConfig({
   plugins: [
-    qwikVite({
-      csr: true,
-    }),
+    qwikVite(),
   ],
 });`;
 
@@ -118,7 +148,9 @@ export const STACKBLITZ_CONFIG = {
   indexHtml,
   viteConfigTs,
   viteEnvTs,
-  mainTsx
+  entryDevTsx,
+  entrySsrTsx,
+  rootTsx
 };
 
 export const getUnstyledAppContent = (componentCode: string) => {
