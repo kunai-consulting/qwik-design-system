@@ -153,14 +153,44 @@ export const STACKBLITZ_CONFIG = {
   rootTsx
 };
 
-export const getUnstyledAppContent = (componentCode: string) => {
+export const getHeadlessAppContent = (componentCode: string) => {
   if (!componentCode) return "";
 
-  let cleanedCode = componentCode.replace(/useStyles\$\(.*?\);/g, "");
+  // 1. Remove CSS import statements
+  let cleanedCode = componentCode.replace(
+    /import\s+(?:.*\s+from\s+)?['"].*\.css(?:\?.*)?['"];?/g,
+    ""
+  );
 
-  cleanedCode = cleanedCode.replace(/\sclass=["'].*?["']/g, "");
+  // 2. Remove useStyles$ from import statements
+  cleanedCode = cleanedCode.replace(
+    /import\s+{([^}]*)useStyles\$([^}]*)}([^;]*);/g,
+    (match, before, after, from) => {
+      // Handle leading/trailing commas and whitespace properly
+      const imports = `${before}${after}`
+        .replace(/,\s*,/g, ",")
+        .replace(/^\s*,\s*/, "") // Remove leading comma
+        .replace(/\s*,\s*$/, "") // Remove trailing comma
+        .trim();
 
-  cleanedCode = cleanedCode.replace(/import.*\.css.*?;/g, "");
+      if (!imports) {
+        return ""; // Remove the entire import if nothing else is imported
+      }
+      return `import { ${imports} }${from};`;
+    }
+  );
+
+  // 3. Remove useStyles$ hook calls
+  cleanedCode = cleanedCode.replace(/useStyles\$\([^)]*\);/g, "");
+
+  // 4. Remove class attributes from JSX elements
+  cleanedCode = cleanedCode.replace(/\sclass=["'][^"']*["']/g, "");
+
+  // 5. Remove all comments (single-line and multi-line)
+  cleanedCode = cleanedCode.replace(/\/\/.*|\/\*[\s\S]*?\*\//g, "");
+
+  // 6. Clean up multiple blank lines
+  cleanedCode = cleanedCode.replace(/\n\s*\n\s*\n/g, "\n\n");
 
   return cleanedCode;
 };

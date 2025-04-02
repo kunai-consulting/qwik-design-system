@@ -1,12 +1,11 @@
-// import { Project } from "@stackblitz/sdk";
 import sdk from "@stackblitz/sdk";
-import { getUnstyledAppContent, STACKBLITZ_CONFIG } from "./stackblitz-config";
+import { getHeadlessAppContent, STACKBLITZ_CONFIG } from "./stackblitz-config";
 
 export const createStackblitzProject = async (
   appContent: string,
   containerId: string
 ) => {
-  const headlessAppContent = getUnstyledAppContent(appContent);
+  const headlessAppContent = getHeadlessAppContent(appContent);
   const containerParent = document.getElementById(`${containerId}-parent`);
 
   if (containerParent?.querySelector("iframe")) {
