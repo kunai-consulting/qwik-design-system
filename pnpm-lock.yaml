@@ -181,6 +181,9 @@ importers:
       '@types/node':
         specifier: 20.14.11
         version: 20.14.11
+      svgo:
+        specifier: ^3.3.2
+        version: 3.3.2
       typescript:
         specifier: 5.4.5
         version: 5.4.5

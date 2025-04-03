@@ -5,7 +5,7 @@ import type { IconPackConfig } from "./config.interface";
 import { configs } from "./configs";
 import { downloadIcons } from "./download-icons";
 
-const iconLimit = process.env["ICON_LIMIT"];
+const iconLimit = process.env.ICON_LIMIT;
 const baseOutputPath = "src/icons";
 const pageOutputPath = "src/page";
 
