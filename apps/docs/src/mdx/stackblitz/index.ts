@@ -3,21 +3,18 @@ import { STACKBLITZ_CONFIG, getHeadlessAppContent } from "./stackblitz-config";
 
 export const createStackblitzProject = async (
   appContent: string,
-  parentElement: HTMLElement
+  parentContainerId: string,
+  containerId: string
 ) => {
   const headlessAppContent = getHeadlessAppContent(appContent);
+  const parentElement = document.getElementById(parentContainerId);
+  const stackblitzContainer = document.getElementById(containerId);
 
-  if (parentElement.querySelector("iframe")) {
+  if (parentElement?.querySelector("iframe")) {
     return;
   }
-
-  // If an iframe has not already been created we know that this element will exist
-  const stackblitzContainer = parentElement.querySelector(
-    ".stackblitz-container"
-  ) as HTMLElement;
-
   await sdk.embedProject(
-    stackblitzContainer,
+    stackblitzContainer as HTMLElement,
     {
       title: "Qwik Design System Example",
       description: "Qwik Design System Example",

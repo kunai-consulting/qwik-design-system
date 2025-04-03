@@ -3,6 +3,7 @@ import {
   type Component,
   type PropsOf,
   component$,
+  useId,
   useSignal,
   useTask$
 } from "@builder.io/qwik";
@@ -20,23 +21,19 @@ type ShowcaseProps = PropsOf<"div"> & {
 export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
   const location = useLocation();
   const componentPath = `/src/routes${location.url.pathname}examples/${name}.tsx`;
+  const id = useId();
+  const stackblitzContainerId = `stackblitz-container-${id}`;
+  const stackblitzParentContainerId = `stackblitz-parent-${id}`;
 
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const MetaGlobComponentSig = useSignal<Component<any>>();
   const componentCodeSig = useSignal<string>();
 
-  const openStackblitz$ = $(async (_: PointerEvent, element: HTMLButtonElement) => {
-    const carouselContainer = element.closest(".carousel-container");
-    if (!carouselContainer) return;
-
-    // A child section with the class stackblitz-container-parent should always exist
-    const stackblitzContainerParent = carouselContainer.querySelector(
-      ".stackblitz-container-parent"
-    ) as HTMLElement;
-
+  const openStackblitz$ = $(async () => {
     await createStackblitzProject(
       componentCodeSig.value || "",
-      stackblitzContainerParent
+      stackblitzParentContainerId,
+      stackblitzContainerId
     );
   });
 
@@ -50,7 +47,7 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
   });
 
   return (
-    <Carousel.Root class="my-4 border-neutral-primary border carousel-container">
+    <Carousel.Root class="my-4 border-neutral-primary border">
       <Carousel.Pagination data-pagefind-ignore class="flex bg-neutral-accent">
         <Carousel.Bullet class="data-[active]:bg-qwik-blue-800 data-[active]:!text-[#fff] p-2 hover:bg-qwik-blue-200 hover:text-qwik-neutral-700 transition-colors outline-qwik-blue-500">
           Preview
@@ -76,9 +73,10 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
       </Carousel.Slide>
       <Carousel.Slide class="border border-neutral-primary overflow-clip text-sm">
         <section
-          class={"stackblitz-container-parent flex flex-col items-center *:flex-wrap"}
+          id={stackblitzParentContainerId}
+          class={"flex flex-col items-center *:flex-wrap"}
         >
-          <div class="stackblitz-container" />
+          <div id={stackblitzContainerId} />
         </section>
       </Carousel.Slide>
     </Carousel.Root>
