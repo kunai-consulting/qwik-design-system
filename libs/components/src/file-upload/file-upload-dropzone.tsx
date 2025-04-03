@@ -7,7 +7,7 @@ import {
   useTask$
 } from "@builder.io/qwik";
 import { type FileInfo, fileUploadContextId } from "./file-upload-context";
-import { useFileUpload$ } from "../../utils/use-file-upload";
+import { useFileUpload$ } from "./use-file-upload";
 
 type PublicDropzoneProps = PropsOf<"div">;
 
