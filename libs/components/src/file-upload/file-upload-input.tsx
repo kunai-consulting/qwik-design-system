@@ -1,6 +1,6 @@
 import { $, type PropsOf, component$, useContext } from "@builder.io/qwik";
 import { type FileInfo, fileUploadContextId } from "./file-upload-context";
-import { useFileUpload$ } from "./use-file-upload";
+import { useFileUpload } from "./use-file-upload";
 
 type PublicInputProps = PropsOf<"input">;
 /**
@@ -10,7 +10,7 @@ type PublicInputProps = PropsOf<"input">;
 export const FileUploadInput = component$<PublicInputProps>((props) => {
   const context = useContext(fileUploadContextId);
 
-  const { processFiles$ } = useFileUpload$({
+  const { processFiles$ } = useFileUpload({
     disabled: context.disabled,
     multiple: context.multiple,
     debug: import.meta.env.DEV,

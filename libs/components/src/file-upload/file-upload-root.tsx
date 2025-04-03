@@ -23,8 +23,6 @@ type PublicRootProps = HTMLDivProps & PublicFileUploadProps;
  * Root component for file upload functionality
  * Provides context and state management for child components
  */
-/** Root component for file upload functionality
- * Provides context and state management for child components */
 export const FileUploadRoot = component$<PublicRootProps>((props) => {
   const inputRef = useSignal<HTMLInputElement>();
   const isDragging = useSignal(false);
