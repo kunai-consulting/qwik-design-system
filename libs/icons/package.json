@@ -12,7 +12,10 @@
       "types": "./lib-types/index.d.ts"
     }
   },
-  "files": ["lib", "lib-types"],
+  "files": [
+    "lib",
+    "lib-types"
+  ],
   "engines": {
     "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
   },
@@ -28,6 +31,7 @@
   "devDependencies": {
     "@builder.io/qwik": "1.13.0",
     "@types/node": "22.14.0",
+    "node-stream-zip": "^1.15.0",
     "svgo": "^3.3.2",
     "typescript": "5.4.5",
     "undici": "*",
