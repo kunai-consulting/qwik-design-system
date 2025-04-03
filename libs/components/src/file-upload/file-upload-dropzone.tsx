@@ -15,12 +15,7 @@ type PublicDropzoneProps = PropsOf<"div">;
 export const FileUploadDropzone = component$<PublicDropzoneProps>((props) => {
   const context = useContext(fileUploadContextId);
 
-  const {
-    dropzoneRef,
-    isDragging,
-    handlers,
-    processFiles$
-  } = useFileUpload$({
+  const { dropzoneRef, isDragging, handlers, processFiles$ } = useFileUpload$({
     disabled: context.disabled,
     multiple: context.multiple,
     debug: import.meta.env.DEV,
@@ -30,7 +25,7 @@ export const FileUploadDropzone = component$<PublicDropzoneProps>((props) => {
       } else {
         context.files.value = files.slice(0, 1);
       }
-      
+
       if (context.onFilesChange$) {
         context.onFilesChange$(context.files.value);
       }
@@ -44,8 +39,8 @@ export const FileUploadDropzone = component$<PublicDropzoneProps>((props) => {
 
   const onQdsfiledrop$ = $((e: CustomEvent<{ fileInfos: FileInfo[] }>) => {
     if (context.disabled) return;
-    
-    const files = e.detail.fileInfos.map(info => info.file);
+
+    const files = e.detail.fileInfos.map((info) => info.file);
     if (files.length) {
       processFiles$(files as unknown as File[]);
     }
