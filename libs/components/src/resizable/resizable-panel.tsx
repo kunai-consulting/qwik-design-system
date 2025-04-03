@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$, useContext, useId } from "@builder.io/qwik";
+import {type PropsOf, Slot, component$, useContext, useId, useSignal} from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { resizableContextId } from "./resizable-context";
@@ -21,13 +21,26 @@ interface PublicResizablePanelProps extends PropsOf<"div"> {
   defaultCollapsed?: boolean;
   // Width to collapse to (in pixels)
   collapsedSize?: number;
+  collapseThreshold?: number;
 }
 /** A resizable panel component that can be adjusted using a ResizableHandle */
 export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) => {
   const context = useContext(resizableContextId);
   const isVertical = context.orientation.value === "vertical";
-  const panelId = useId(); // Добавляем уникальный id
-  const { width, height, minWidth, minHeight, maxWidth, maxHeight, ...rest } = props;
+  const isCollapsed = useSignal(props.defaultCollapsed || false);
+  const panelId = useId();
+  const {
+    width,
+    height,
+    minWidth,
+    minHeight,
+    maxWidth,
+    maxHeight,
+    collapsible = false,
+    collapsedSize = 0,
+    collapseThreshold = 0.05,
+    ...rest
+  } = props;
   const getPanelStyles = () => {
     const size = isVertical ? height : width;
     const minSize = isVertical ? minHeight : minWidth;
@@ -64,6 +77,10 @@ export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) 
       data-min-size={isVertical ? minHeight : minWidth}
       // Specifies the maximum size constraint for the panel
       data-max-size={isVertical ? maxHeight : maxWidth}
+      data-collapsible={collapsible ? 'true' : 'false'}
+      data-collapsed-size={collapsedSize}
+      data-collapse-threshold={collapseThreshold}
+      data-is-collapsed={isCollapsed.value.toString()}
       style={getPanelStyles()}
     >
       <Slot />
