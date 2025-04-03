@@ -29,7 +29,7 @@ export interface UseFileUploadOptions {
 /**
  * A hook that handles file upload drag-and-drop functionality
  */
-export function useFileUpload$(options: UseFileUploadOptions = {}) {
+export function useFileUpload(options: UseFileUploadOptions = {}) {
   const dropzoneRef = useSignal<HTMLElement>();
   const isDragging = useSignal(false);
   const files = useSignal<FileInfo[]>([]);
