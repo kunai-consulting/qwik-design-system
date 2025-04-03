@@ -1,4 +1,4 @@
-import glob from "fast-glob";
+import { glob } from "node:fs/promises";
 import { definePack } from "./define-pack";
 import { extractor } from "./extractor";
 
@@ -8,7 +8,7 @@ export const lucideConfig = definePack({
   variants: {},
   defaultVariants: {},
   contents: {
-    files: glob("node_modules/lucide-static/icons/*.svg"),
+    files: Array.fromAsync(glob("node_modules/lucide-static/icons/*.svg")),
     extract: extractor(/^.*\/(?<name>.+?).svg/)
   },
   projectUrl: "https://lucide.dev/",

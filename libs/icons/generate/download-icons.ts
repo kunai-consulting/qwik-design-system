@@ -1,9 +1,9 @@
 import { createWriteStream } from "node:fs";
 import { mkdir } from "node:fs/promises";
-import got from "got";
 import StreamZip from "node-stream-zip";
 import { join } from "node:path";
 import type { IconPackConfig } from "./config.interface";
+import { pipeline } from "node:stream/promises";
 
 const basePath = "download";
 
@@ -17,12 +17,9 @@ export async function downloadIcons(pack: IconPackConfig) {
   const zipPath = join(basePath, zipName);
   await mkdir(outputPath, { recursive: true });
 
-  const download = got.stream(pack.download.zip).pipe(createWriteStream(zipPath));
-
-  await new Promise((fulfill, reject) => {
-    download.on("close", fulfill);
-    download.on("error", reject);
-  });
+  const response = await fetch(pack.download.zip);
+  const fileStream = createWriteStream(zipPath);
+  await pipeline(response.body, fileStream);
 
   const zip = new StreamZip.async({ file: zipPath });
   await zip.extract(pack.download.folder, outputPath);

@@ -1,9 +1,8 @@
-import glob from "fast-glob";
+import { glob } from "node:fs/promises";
 import { definePack } from "../define-pack";
 import { extractor } from "../extractor";
 
-const extractRegex =
-  /heroicons\/(?<res>.[0-9]+)\/(?<style>.[a-z]+)\/(?<name>.+)?\.svg/;
+const extractRegex = /heroicons\/(?<res>.[0-9]+)\/(?<style>.[a-z]+)\/(?<name>.+)?\.svg/;
 
 function heroiconsExtract(path: string) {
   const { res, style, name } = extractor(extractRegex)(path);
@@ -31,11 +30,11 @@ export const heroiconsPack = definePack({
   variants: { variant: ["solid", "outline", "mini"] },
   defaultVariants: { variant: "solid" },
   contents: {
-    files: glob("node_modules/heroicons/*/*/*.svg"),
-    extract: heroiconsExtract,
+    files: Array.fromAsync(glob("node_modules/heroicons/*/*/*.svg")),
+    extract: heroiconsExtract
   },
   projectUrl: "https://github.com/tailwindlabs/heroicons",
   license: "MIT",
   licenseUrl: "https://opensource.org/licenses/MIT",
-  coloring: "keep",
+  coloring: "keep"
 });

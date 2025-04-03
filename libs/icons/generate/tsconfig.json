@@ -7,9 +7,10 @@
   },
   "compilerOptions": {
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
-    "target": "ESNext"
+    "target": "ESNext",
+    "types": ["node"]
   },
   "include": ["*.ts", "config.interface.ts"]
 }
