@@ -57,9 +57,9 @@ export const FileUploadDropzone = component$<PublicDropzoneProps>((props) => {
       preventdefault:dragleave
       preventdefault:drop
       onDragEnter$={[handlers.onDragEnter$, props.onDragEnter$]}
-      onDragOver$={handlers.onDragOver$}
-      onDragLeave$={handlers.onDragLeave$}
-      onDrop$={handlers.onDrop$}
+      onDragOver$={[handlers.onDragOver$, props.onDragOver$]}
+      onDragLeave$={[handlers.onDragLeave$, props.onDragLeave$]}
+      onDrop$={[handlers.onDrop$, props.onDrop$]}
       data-file-upload-dropzone
       data-dragging={isDragging.value ? "" : undefined}
       data-disabled={context.disabled ? "" : undefined}

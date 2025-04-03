@@ -43,7 +43,7 @@ export const FileUploadInput = component$<PublicInputProps>((props) => {
       type="file"
       ref={context.inputRef}
       hidden
-      onChange$={onChange$}
+      onChange$={[onChange$, props.onChange$]}
       multiple={context.multiple}
       accept={context.accept}
       disabled={context.disabled}
