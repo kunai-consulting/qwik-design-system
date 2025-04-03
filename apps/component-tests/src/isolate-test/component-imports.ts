@@ -5,9 +5,9 @@
 // /src/routes/docs/components/styled/modal/examples/hero.tsx
 // /src/routes/docs/components/headless/modal/examples/hero.tsx
 
-function createMetaGlobComponents() {
+async function createMetaGlobComponents() {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  const metaGlobComponents: Record<string, any> = import.meta.glob(
+  const metaGlobComponents: Record<string, any> = await import.meta.glob(
     "../../../docs/src/routes/**/**/examples/*.tsx",
     {
       import: "default",
@@ -18,12 +18,12 @@ function createMetaGlobComponents() {
   const componentsMap: Record<string, unknown> = {};
 
   for (const key in metaGlobComponents) {
-    const component = metaGlobComponents[key];
+    const component = await metaGlobComponents[key];
 
     if (component) {
       const componentName = key.split("routes/")[1];
       if (componentName) {
-        componentsMap[componentName] = component;
+        componentsMap[componentName] = await component;
       }
     }
   }
@@ -31,4 +31,4 @@ function createMetaGlobComponents() {
   return componentsMap;
 }
 
-export const metaGlobComponents = createMetaGlobComponents();
+export const metaGlobComponents = await createMetaGlobComponents();

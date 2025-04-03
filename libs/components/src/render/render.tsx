@@ -7,7 +7,7 @@ import {
 import type { AsChildProps } from "../as-child/as-child";
 
 // keyof slows the type server a bunch, instead we use the most common fallbacks
-type AllowedFallbacks = "div" | "span" | "a" | "button";
+type AllowedFallbacks = "div" | "span" | "a" | "button" | "label";
 
 type RenderInternalProps<T extends AllowedFallbacks> = {
   /** The default element and types if a render prop is not provided */
