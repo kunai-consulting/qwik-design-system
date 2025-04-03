@@ -21,7 +21,9 @@ export interface UseFileUploadOptions {
   disabled?: boolean | Signal<boolean>;
   multiple?: boolean;
   debug?: boolean;
-  onFilesChange$?: PropFunction<(files: FileInfo[]) => void> | QRL<(files: FileInfo[]) => void>;
+  onFilesChange$?:
+    | PropFunction<(files: FileInfo[]) => void>
+    | QRL<(files: FileInfo[]) => void>;
 }
 
 /**
@@ -64,11 +66,11 @@ export function useFileUpload$(options: UseFileUploadOptions = {}) {
   const onDragEnter$ = $((e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (isDisabled.value) return;
-    
+
     isDragging.value = true;
-    
+
     if (e.dataTransfer) {
       e.dataTransfer.effectAllowed = "all";
       e.dataTransfer.dropEffect = "copy";
@@ -78,9 +80,9 @@ export function useFileUpload$(options: UseFileUploadOptions = {}) {
   const onDragOver$ = $((e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (isDisabled.value) return;
-    
+
     if (e.dataTransfer) {
       e.dataTransfer.dropEffect = "copy";
     }
@@ -89,9 +91,9 @@ export function useFileUpload$(options: UseFileUploadOptions = {}) {
   const onDragLeave$ = $((e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (isDisabled.value) return;
-    
+
     const rect = dropzoneRef.value?.getBoundingClientRect();
     if (rect) {
       const { clientX, clientY } = e;
@@ -109,20 +111,20 @@ export function useFileUpload$(options: UseFileUploadOptions = {}) {
   const onDrop$ = $((e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (isDisabled.value) return;
-    
+
     isDragging.value = false;
-    
+
     const dt = e.dataTransfer;
     if (!dt) return;
-    
+
     let files: File[] = [];
-    
+
     if (dt.files?.length) {
       files = Array.from(dt.files);
     }
-    
+
     if (files.length) {
       processFiles$(files);
     }
@@ -150,4 +152,4 @@ export function useFileUpload$(options: UseFileUploadOptions = {}) {
     },
     processFiles$
   };
-} 
+}

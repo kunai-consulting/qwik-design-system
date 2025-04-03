@@ -9,7 +9,7 @@ type PublicInputProps = PropsOf<"input">;
 /** Hidden file input component that handles file selection via system dialog */
 export const FileUploadInput = component$<PublicInputProps>((props) => {
   const context = useContext(fileUploadContextId);
-  
+
   const { processFiles$ } = useFileUpload$({
     disabled: context.disabled,
     multiple: context.multiple,
@@ -20,7 +20,7 @@ export const FileUploadInput = component$<PublicInputProps>((props) => {
       } else {
         context.files.value = files.slice(0, 1);
       }
-      
+
       if (context.onFilesChange$) {
         context.onFilesChange$(context.files.value);
       }
@@ -36,7 +36,7 @@ export const FileUploadInput = component$<PublicInputProps>((props) => {
 
     processFiles$(Array.from(input.files));
   });
-  
+
   return (
     <input
       {...props}
