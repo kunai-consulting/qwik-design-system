@@ -37,6 +37,7 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
   const elementRef = useSignal<HTMLElement>();
   const prevPanelId = useSignal<string>();
   const nextPanelId = useSignal<string>();
+  const totalDragDistance = useSignal(0);
   const currentValue = useSignal<{
     min: number;
     max: number;
@@ -104,13 +105,62 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
     if (!panels) return false;
     const sizeProps = await getSizeProperties();
     const sizes = await getPanelSizes(panels, sizeProps);
-    const newPrevSize = sizes.prevSize + delta;
-    const newNextSize = sizes.nextSize - delta;
+
+    const isPrevCollapsible = panels.prevPanel.dataset.collapsible === 'true';
+
+    let newPrevSize = sizes.prevSize + delta;
+    let newNextSize = sizes.nextSize - delta;
+
+    if (isPrevCollapsible) {
+      const prevCollapsedSize = Number(panels.prevPanel.dataset.collapsedSize);
+      const prevCollapseThreshold = Number(panels.prevPanel.dataset.collapseThreshold);
+      const isCollapsed = panels.prevPanel.dataset.isCollapsed === 'true';
+
+      if (!isCollapsed && newPrevSize <= sizes.prevMinSize) {
+        totalDragDistance.value += delta;
+      } else if (isCollapsed && delta > 0) {
+        totalDragDistance.value += delta;
+      }
+
+      if (!isCollapsed &&
+        newPrevSize <= sizes.prevMinSize &&
+        Math.abs(totalDragDistance.value) > (sizes.prevMinSize * prevCollapseThreshold)) {
+        panels.prevPanel.dataset.isCollapsed = 'true';
+        panels.prevPanel.style[sizeProps.minSizeProp] = `${prevCollapsedSize}px`;
+        panels.prevPanel.style[sizeProps.sizeProp] = `${prevCollapsedSize}px`;
+        panels.nextPanel.style[sizeProps.sizeProp] =
+          `${sizes.containerSize - prevCollapsedSize - sizes.handleSize}px`;
+        totalDragDistance.value = 0;
+
+        context.startPosition.value = null;
+        return true;
+      }
+
+      if (isCollapsed) {
+        if (delta > 0 && totalDragDistance.value > (prevCollapsedSize * prevCollapseThreshold)) {
+          panels.prevPanel.dataset.isCollapsed = 'false';
+          panels.prevPanel.style[sizeProps.minSizeProp] = `${sizes.prevMinSize}px`;
+          panels.prevPanel.style[sizeProps.sizeProp] = `${sizes.prevMinSize}px`;
+          panels.nextPanel.style[sizeProps.sizeProp] =
+            `${sizes.containerSize - sizes.prevMinSize - sizes.handleSize}px`;
+          totalDragDistance.value = 0;
+          return true;
+        }
+        return false;
+      }
+    }
+
+    const currentPanelsSize = sizes.prevSize + sizes.nextSize;
+
     const isValidResize =
       newPrevSize >= sizes.prevMinSize &&
       newNextSize >= sizes.nextMinSize &&
-      newPrevSize + newNextSize + sizes.handleSize <= sizes.containerSize;
+      newPrevSize + newNextSize <= currentPanelsSize;
+
     if (isValidResize) {
+      if (isPrevCollapsible && Math.abs(totalDragDistance.value) > 0) {
+        return false;
+      }
       panels.prevPanel.style[sizeProps.sizeProp] = `${newPrevSize}px`;
       panels.nextPanel.style[sizeProps.sizeProp] = `${newNextSize}px`;
       return true;
@@ -135,16 +185,12 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
   const onPointerDown$ = $(async (e: PointerEvent) => {
     if (!elementRef.value || context.disabled.value) return;
     elementRef.value.setPointerCapture(e.pointerId);
+    totalDragDistance.value = 0;
     const panels = await getPanels();
     if (!panels) return;
     const sizeProps = await getSizeProperties();
-    const sizes = await getPanelSizes(panels, sizeProps);
     context.startPosition.value = e[sizeProps.clientAxis];
     context.isDragging.value = true;
-    context.initialSizes.value = {
-      prev: sizes.prevSize,
-      next: sizes.nextSize
-    };
   });
   const onPointerMove$ = $(async (e: PointerEvent) => {
     if (

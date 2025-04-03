@@ -13,15 +13,15 @@ export default component$(() => {
       }}
     >
       <Resizable.Root orientation="vertical">
-        <Resizable.Panel height={200} minHeight={50}>
+        <Resizable.Panel height={100} minHeight={50}>
           <div style={{ padding: "20px", color: "black" }}>Header</div>
         </Resizable.Panel>
         <Resizable.Handle />
-        <Resizable.Panel height={150}>
+        <Resizable.Panel height={50}>
           <div style={{ padding: "20px", color: "black" }}>Main Content</div>
         </Resizable.Panel>
         <Resizable.Handle />
-        <Resizable.Panel height={250}>
+        <Resizable.Panel height={150}>
           <div style={{ padding: "20px", color: "black" }}>Footer</div>
         </Resizable.Panel>
       </Resizable.Root>
