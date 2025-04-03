@@ -6,12 +6,7 @@ export default component$(() => {
   useStyles$(styles);
   return (
     <div
-      style={{
-        width: "100%",
-        height: "350px",
-        padding: "20px",
-        background: "#f5f5f5"
-      }}
+      style={{ width: "100%", height: "350px", padding: "20px", background: "#f5f5f5" }}
     >
       <Resizable.Root orientation="horizontal">
         <Resizable.Panel
@@ -29,9 +24,7 @@ export default component$(() => {
         <Resizable.Handle />
 
         <Resizable.Panel minWidth={200}>
-          <div style={{ padding: "20px", color: "black" }}>
-            Regular Panel (min: 200)
-          </div>
+          <div style={{ padding: "20px", color: "black" }}>Regular Panel (min: 200)</div>
         </Resizable.Panel>
       </Resizable.Root>
     </div>

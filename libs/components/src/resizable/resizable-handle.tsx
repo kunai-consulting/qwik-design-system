@@ -106,15 +106,15 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
     const sizeProps = await getSizeProperties();
     const sizes = await getPanelSizes(panels, sizeProps);
 
-    const isPrevCollapsible = panels.prevPanel.dataset.collapsible === 'true';
+    const isPrevCollapsible = panels.prevPanel.dataset.collapsible === "true";
 
-    let newPrevSize = sizes.prevSize + delta;
-    let newNextSize = sizes.nextSize - delta;
+    const newPrevSize = sizes.prevSize + delta;
+    const newNextSize = sizes.nextSize - delta;
 
     if (isPrevCollapsible) {
       const prevCollapsedSize = Number(panels.prevPanel.dataset.collapsedSize);
       const prevCollapseThreshold = Number(panels.prevPanel.dataset.collapseThreshold);
-      const isCollapsed = panels.prevPanel.dataset.isCollapsed === 'true';
+      const isCollapsed = panels.prevPanel.dataset.isCollapsed === "true";
 
       if (!isCollapsed && newPrevSize <= sizes.prevMinSize) {
         totalDragDistance.value += delta;
@@ -122,10 +122,12 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
         totalDragDistance.value += delta;
       }
 
-      if (!isCollapsed &&
+      if (
+        !isCollapsed &&
         newPrevSize <= sizes.prevMinSize &&
-        Math.abs(totalDragDistance.value) > (sizes.prevMinSize * prevCollapseThreshold)) {
-        panels.prevPanel.dataset.isCollapsed = 'true';
+        Math.abs(totalDragDistance.value) > sizes.prevMinSize * prevCollapseThreshold
+      ) {
+        panels.prevPanel.dataset.isCollapsed = "true";
         panels.prevPanel.style[sizeProps.minSizeProp] = `${prevCollapsedSize}px`;
         panels.prevPanel.style[sizeProps.sizeProp] = `${prevCollapsedSize}px`;
         panels.nextPanel.style[sizeProps.sizeProp] =
@@ -137,8 +139,11 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
       }
 
       if (isCollapsed) {
-        if (delta > 0 && totalDragDistance.value > (prevCollapsedSize * prevCollapseThreshold)) {
-          panels.prevPanel.dataset.isCollapsed = 'false';
+        if (
+          delta > 0 &&
+          totalDragDistance.value > prevCollapsedSize * prevCollapseThreshold
+        ) {
+          panels.prevPanel.dataset.isCollapsed = "false";
           panels.prevPanel.style[sizeProps.minSizeProp] = `${sizes.prevMinSize}px`;
           panels.prevPanel.style[sizeProps.sizeProp] = `${sizes.prevMinSize}px`;
           panels.nextPanel.style[sizeProps.sizeProp] =
