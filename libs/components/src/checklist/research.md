@@ -11,6 +11,8 @@ If `value` is not set, the value will be set to "on". `value` is treated as a `s
 
 Each checkbox can have its own `name`, OR alternatively a set of related checkboxes can be grouped together 
 with a common `name`, in which case the name key will be repeated in the form submission for each checked item.
+I think we can omit support for the common name approach, because it would it is not required for accessibility 
+and would complicate our code and API.
 
 ## Official accessibility guidance:
 The [ARIA APG Checkbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/) provides guidance related to 
@@ -82,7 +84,7 @@ Source: https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/
 
 # Use Cases
 - Multiple choice questionnaires
-- Feature selection, i.e. in a software installation or subscription form
+- Interest or feature selection, i.e. in a software installation or subscription form
 - Sign-up form with multiple checkbox options
 - TODO List
 
