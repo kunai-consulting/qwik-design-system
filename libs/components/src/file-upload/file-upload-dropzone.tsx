@@ -7,7 +7,7 @@ import {
   useTask$
 } from "@builder.io/qwik";
 import { type FileInfo, fileUploadContextId } from "./file-upload-context";
-import { useFileUpload$ } from "./use-file-upload";
+import { useFileUpload } from "./use-file-upload";
 
 type PublicDropzoneProps = PropsOf<"div">;
 
@@ -15,7 +15,7 @@ type PublicDropzoneProps = PropsOf<"div">;
 export const FileUploadDropzone = component$<PublicDropzoneProps>((props) => {
   const context = useContext(fileUploadContextId);
 
-  const { dropzoneRef, isDragging, handlers, processFiles$ } = useFileUpload$({
+  const { dropzoneRef, isDragging, handlers, processFiles$ } = useFileUpload({
     disabled: context.disabled,
     multiple: context.multiple,
     debug: import.meta.env.DEV,
