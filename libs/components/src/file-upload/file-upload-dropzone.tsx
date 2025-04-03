@@ -51,7 +51,7 @@ export const FileUploadDropzone = component$<PublicDropzoneProps>((props) => {
       {...props}
       ref={dropzoneRef}
       onQdsfiledrop$={onQdsfiledrop$}
-      window:onDragOver$={handlers.onWindowDragOver$}
+      window:onDragOver$={[handlers.onWindowDragOver$, props.onDragOver$]}
       preventdefault:dragenter
       preventdefault:dragover
       preventdefault:dragleave
