@@ -187,7 +187,7 @@ export const getHeadlessAppContent = (componentCode: string) => {
   cleanedCode = cleanedCode.replace(/\sclass=["'][^"']*["']/g, "");
 
   // 5. Remove all comments (single-line and multi-line)
-  cleanedCode = cleanedCode.replace(/\/\/.*|\/\*[\s\S]*?\*\//g, "");
+  cleanedCode = cleanedCode.replace(/(?:^|\s)\/\/.*|\/\*[\s\S]*?\*\//g, "");
 
   // 6. Clean up multiple blank lines
   cleanedCode = cleanedCode.replace(/\n\s*\n\s*\n/g, "\n\n");
