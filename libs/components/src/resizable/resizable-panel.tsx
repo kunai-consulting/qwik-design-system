@@ -1,4 +1,11 @@
-import {type PropsOf, Slot, component$, useContext, useId, useSignal} from "@builder.io/qwik";
+import {
+  type PropsOf,
+  Slot,
+  component$,
+  useContext,
+  useId,
+  useSignal
+} from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { resizableContextId } from "./resizable-context";
@@ -27,7 +34,7 @@ interface PublicResizablePanelProps extends PropsOf<"div"> {
 export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) => {
   const context = useContext(resizableContextId);
   const isVertical = context.orientation.value === "vertical";
-  const isCollapsed = useSignal(props.defaultCollapsed || false);
+  const isCollapsed = useSignal(!!props.defaultCollapsed);
   const panelId = useId();
   const {
     width,
@@ -77,7 +84,7 @@ export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) 
       data-min-size={isVertical ? minHeight : minWidth}
       // Specifies the maximum size constraint for the panel
       data-max-size={isVertical ? maxHeight : maxWidth}
-      data-collapsible={collapsible ? 'true' : 'false'}
+      data-collapsible={collapsible ? "true" : "false"}
       data-collapsed-size={collapsedSize}
       data-collapse-threshold={collapseThreshold}
       data-is-collapsed={isCollapsed.value.toString()}
