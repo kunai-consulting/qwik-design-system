@@ -1,47 +1,39 @@
-# Qwik Library ⚡️
+# Icon Generation Tools
 
-- [Qwik Docs](https://qwik.dev/)
-- [Discord](https://qwik.dev/chat)
-- [Qwik on GitHub](https://github.com/QwikDev/qwik)
-- [@QwikDev](https://twitter.com/QwikDev)
-- [Vite](https://vitejs.dev/)
-- [Partytown](https://partytown.builder.io/)
-- [Mitosis](https://github.com/BuilderIO/mitosis)
-- [Builder.io](https://www.builder.io/)
+Part of Qwik Design System's icon library tooling, forked from [Qwikest Icons](https://github.com/qwikest/icons) by [Niklas Por](https://github.com/NiklasPor). This fork continues the development and evolution of the icon generation tooling within the Qwik Design System ecosystem.
 
----
+## Features
 
-## Project Structure
+- 🔄 Automated icon downloading from source repositories
+- 🛠️ SVG optimization and transformation
+- 📦 Variant generation support
+- 🔍 TypeScript declarations generation
 
-Inside your project, you'll see the following directories and files:
+## Key Files
 
-```
-├── public/
-│   └── ...
-└── src/
-    ├── components/
-    │   └── ...
-    └── index.ts
-```
+- `generate-icons.ts` - Main generation pipeline
+- `download-icons.ts` - Icon set downloading utilities
+- `extractor.ts` - Icon variant extraction logic
+- `config.interface.ts` - Configuration type definitions
 
-- `src/components`: Recommended directory for components.
+## Usage
 
-- `index.ts`: The entry point of your component library, make sure all the public components are exported from this file.
+Run from the project root:
 
-## Development
-
-Development mode uses [Vite's development server](https://vitejs.dev/). For Qwik during development, the `dev` command will also server-side render (SSR) the output. The client-side development modules are loaded by the browser.
-
-```
-pnpm dev
+```bash
+npm run generate:icons
 ```
 
-> Note: during dev mode, Vite will request many JS files, which does not represent a Qwik production build.
+## Configuration
 
-## Production
+Icon packs are configured in the `packs` directory. Each pack can specify:
 
-The production build should generate the production build of your component library in (./lib) and the typescript type definitions in (./lib-types).
+- Source repository
+- Download settings
+- Color handling
+- Variant extraction rules
+- Output prefix
 
-```
-pnpm build
-```
+## Environment Variables
+
+- `ICON_LIMIT` - Optional limit for number of icons to generate (useful for testing)
