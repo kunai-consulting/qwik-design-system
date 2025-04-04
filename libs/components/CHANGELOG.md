@@ -1,5 +1,12 @@
 # @kunai-consulting/qwik-headless
 
+## 0.0.9
+
+### Patch Changes
+
+- 192d983: Added Stackblitz integration for each component example in the docs.
+- a527c1d: Add native form support to Checklist
+
 ## 0.0.8
 
 ### Patch Changes
