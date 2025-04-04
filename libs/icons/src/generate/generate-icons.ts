@@ -6,8 +6,8 @@ import { configs } from "./configs";
 import { downloadIcons } from "./download-icons";
 
 const iconLimit = process.env.ICON_LIMIT;
-const baseOutputPath = "src/icons";
-const pageOutputPath = "src/page";
+const baseOutputPath = process.env.TEST_MODE ? "test-output/icons" : "src/icons";
+const pageOutputPath = process.env.TEST_MODE ? "test-output/page" : "src/page";
 
 const getOutputPath = (pack: IconPackConfig, name: string, ext: string) =>
   `${baseOutputPath}/${pack.prefix.toLowerCase()}/${name}${ext}`;
