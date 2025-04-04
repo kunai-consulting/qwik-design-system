@@ -51,13 +51,13 @@ checkbox group. These include: [Kobalte](https://kobalte.dev/), [corvu](https://
 [Radix UI](https://www.radix-ui.com/primitives/docs/components/checkbox), [melt](https://next.melt-ui.com/).
 
 # Features
-- [ ] Handles state for child checkboxes
-- [ ] Keyboard navigation
+- [ x ] Handles state for child checkboxes
+- [ x ] Keyboard navigation
+- [ x ] Form integration
+- [ x ] Optional Select-all/none/indeterminate control
 - [ ] Disabled state (group and individual items)
 - [ ] Required validation (group and individual items)
 - [ ] Custom validation support
-- [ ] Form integration
-- [ ] Optional Select-all/none/indeterminate control
 - [ ] Optional label for the group of checkboxes
 
 # Component Structure
@@ -68,6 +68,7 @@ checkbox group. These include: [Kobalte](https://kobalte.dev/), [corvu](https://
   - ItemTrigger
     - ItemIndicator
   - ItemLabel
+  - HiddenInput
 
 # Keyboard Interactions
 - Tab for moving focus to the next checkbox
