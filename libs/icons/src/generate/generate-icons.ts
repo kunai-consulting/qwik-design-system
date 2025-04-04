@@ -6,11 +6,15 @@ import { configs } from "./configs";
 import { downloadIcons } from "./download-icons";
 
 const iconLimit = process.env.ICON_LIMIT;
-const baseOutputPath = process.env.TEST_MODE ? "test-output/icons" : "src/icons";
-const pageOutputPath = process.env.TEST_MODE ? "test-output/page" : "src/page";
+const baseOutputPath = process.env.TEST_MODE
+  ? join(process.cwd(), "test-output", "icons")
+  : join(process.cwd(), "src", "icons");
+const pageOutputPath = process.env.TEST_MODE
+  ? join(process.cwd(), "test-output", "page")
+  : join(process.cwd(), "src", "page");
 
 const getOutputPath = (pack: IconPackConfig, name: string, ext: string) =>
-  `${baseOutputPath}/${pack.prefix.toLowerCase()}/${name}${ext}`;
+  join(baseOutputPath, pack.prefix.toLowerCase(), `${name}${ext}`);
 
 const ext = ".jsx";
 
@@ -110,10 +114,12 @@ async function generateIconVariant(file: string, pack: IconPackConfig) {
 }
 
 async function generateIcons(pack: IconPackConfig) {
-  await rm(dirname(getIndexPath(pack, ".ts")), {
+  const packDir = dirname(getIndexPath(pack, ".ts"));
+  await rm(packDir, {
     force: true,
     recursive: true
   });
+  await mkdir(packDir, { recursive: true });
 
   if (pack.download) {
     await downloadIcons(pack);
@@ -183,10 +189,15 @@ async function createRootIndex(packs: IconPackConfig[]) {
 }
 
 async function cleanup() {
+  // Ensure parent directories exist
+  await mkdir(dirname(baseOutputPath), { recursive: true });
+  await mkdir(dirname(pageOutputPath), { recursive: true });
+
+  // Clean and create output directories
   await rm(baseOutputPath, { force: true, recursive: true });
   await rm(pageOutputPath, { force: true, recursive: true });
-  await mkdir(baseOutputPath);
-  await mkdir(pageOutputPath);
+  await mkdir(baseOutputPath, { recursive: true });
+  await mkdir(pageOutputPath, { recursive: true });
   await writeFile(join(baseOutputPath, ".gitkeep"), "");
   await writeFile(join(pageOutputPath, ".gitkeep"), "");
 }
