@@ -6,7 +6,7 @@ import { configs } from "./configs";
 import { downloadIcons } from "./download-icons";
 
 const iconLimit = process.env.ICON_LIMIT;
-const basePath = "libs/icons/src";
+const basePath = "./src";
 const baseOutputPath = join(basePath, "icons");
 const pageOutputPath = join(basePath, "page");
 const downloadsPath = join(basePath, "downloads");

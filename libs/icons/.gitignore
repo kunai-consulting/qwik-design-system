@@ -37,7 +37,7 @@ lerna-debug.log*
 .yarn/*
 !.yarn/releases
 
-# Test output
+# Icons
 test-output/
 downloads
 libs/icons/src/icons
