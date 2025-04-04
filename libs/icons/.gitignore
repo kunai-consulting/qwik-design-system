@@ -40,5 +40,5 @@ lerna-debug.log*
 # Icons
 test-output/
 downloads
-libs/icons/src/icons
-libs/icons/src/page
+src/icons
+src/page
