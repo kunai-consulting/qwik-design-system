@@ -12,7 +12,7 @@ export const bootstrapPack = definePack({
   },
   defaultVariants: { variant: "outline" },
   contents: {
-    files: Array.fromAsync(glob("node_modules/bootstrap-icons/icons/*.svg")),
+    files: Array.fromAsync(glob("src/downloads/bs/**/*.svg")),
     extract: extractor(extractRegex, { variant: "" })
   },
   projectUrl: "https://icons.getbootstrap.com/",

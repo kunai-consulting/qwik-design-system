@@ -6,12 +6,10 @@ import { configs } from "./configs";
 import { downloadIcons } from "./download-icons";
 
 const iconLimit = process.env.ICON_LIMIT;
-const baseOutputPath = process.env.TEST_MODE
-  ? join(process.cwd(), "test-output", "icons")
-  : join(process.cwd(), "src", "icons");
-const pageOutputPath = process.env.TEST_MODE
-  ? join(process.cwd(), "test-output", "page")
-  : join(process.cwd(), "src", "page");
+const basePath = "libs/icons/src";
+const baseOutputPath = join(basePath, "icons");
+const pageOutputPath = join(basePath, "page");
+const downloadsPath = join(basePath, "downloads");
 
 const getOutputPath = (pack: IconPackConfig, name: string, ext: string) =>
   join(baseOutputPath, pack.prefix.toLowerCase(), `${name}${ext}`);
@@ -113,27 +111,50 @@ async function generateIconVariant(file: string, pack: IconPackConfig) {
   return { path, symbolName: names.camelCase, names };
 }
 
-async function generateIcons(pack: IconPackConfig) {
+export async function generateIcons(pack: IconPackConfig) {
+  console.log(`Generating icons for ${pack.name}...`);
+  console.log(`Downloads path: ${downloadsPath}`);
+
   const packDir = dirname(getIndexPath(pack, ".ts"));
-  await rm(packDir, {
-    force: true,
-    recursive: true
-  });
+
+  // Clean up pack directory with force and recursive
+  await rm(packDir, { recursive: true, force: true });
   await mkdir(packDir, { recursive: true });
 
   if (pack.download) {
-    await downloadIcons(pack);
+    console.log(`Downloading icons for ${pack.name}...`);
+    await downloadIcons(pack, downloadsPath);
   }
 
   const fileLimit = iconLimit ? Number.parseInt(iconLimit) : undefined;
+  console.log(`File limit: ${fileLimit}`);
+
   const files = (await pack.contents.files).slice(0, fileLimit);
+  console.log(`Found ${files.length} files for ${pack.name}`);
+
+  if (files.length === 0) {
+    console.warn(`No files found for ${pack.name}. Skipping generation.`);
+    return;
+  }
 
   const variantsResult = await Promise.all(
-    files.map(async (file) => ({
-      file,
-      ...(await generateIconVariant(file, pack))
-    }))
-  );
+    files.map(async (file) => {
+      try {
+        return {
+          file,
+          ...(await generateIconVariant(file, pack))
+        };
+      } catch (error) {
+        console.warn(`Failed to generate variant for ${file}: ${error}`);
+        return null;
+      }
+    })
+  ).then((results) => results.filter(Boolean));
+
+  if (variantsResult.length === 0) {
+    console.warn(`No variants generated for ${pack.name}. Skipping index creation.`);
+    return;
+  }
 
   const indexContent = [
     ...variantsResult.map((variant) => {

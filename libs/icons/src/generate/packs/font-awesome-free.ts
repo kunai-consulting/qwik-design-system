@@ -26,7 +26,7 @@ export const fontAwesomeFreePack = definePack({
     folder: "Font-Awesome-6.x/svgs"
   },
   contents: {
-    files: Array.fromAsync(glob("download/Font Awesome 6 Free/*/*.svg")),
+    files: Array.fromAsync(glob("src/downloads/fa/*/*.svg")),
     extract: extract
   },
   projectUrl: "https://fontawesome.com/v6/icons/?o=r&m=free",

@@ -8,7 +8,7 @@ export const lucidePack = definePack({
   variants: {},
   defaultVariants: {},
   contents: {
-    files: Array.fromAsync(glob("node_modules/lucide-static/icons/*.svg")),
+    files: Array.fromAsync(glob("src/downloads/lu/**/*.svg")),
     extract: extractor(/^.*\/(?<name>.+?)\.svg/)
   },
   projectUrl: "https://lucide.dev/",
