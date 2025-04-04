@@ -1,0 +1,16 @@
+{
+  "ts-node": {
+    // It is faster to skip typechecking.
+    // Remove if you want ts-node to do typechecking.
+    "transpileOnly": true,
+    "files": true
+  },
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "target": "ESNext",
+    "types": ["node"]
+  },
+  "include": ["*.ts", "config.interface.ts"]
+}
