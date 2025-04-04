@@ -57,6 +57,7 @@
       "correctness": {
         "noUndeclaredVariables": "error",
         "noUnusedImports": "error",
+        "noUnknownProperty": "off",
         "recommended": true
       },
       "performance": {
