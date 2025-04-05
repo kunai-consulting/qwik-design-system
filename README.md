@@ -43,7 +43,11 @@ To learn more about contributing to QDS, please visit our [contribution docs](ht
 
 <br />
 
-<img src="https://github.com/user-attachments/assets/47c6d86a-5141-40c6-a0fb-5986266fa589" alt="Kunai Logo" data-canonical-src="https://github.com/user-attachments/assets/25b5651b-ca8e-4190-93c6-4ad98a6a33be" />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/25b5651b-ca8e-4190-93c6-4ad98a6a33be">
+  <source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/47c6d86a-5141-40c6-a0fb-5986266fa589">
+  <img src="https://github.com/user-attachments/assets/47c6d86a-5141-40c6-a0fb-5986266fa589" alt="Kunai Logo">
+</picture>
 
 <br />
 
