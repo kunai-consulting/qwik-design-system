@@ -55,4 +55,13 @@ describe("Icon Generation", () => {
       expect(content).toContain("prefix");
     });
   });
+
+  describe("Component Generation", () => {
+    it("should be a regular Qwik component", async () => {
+      const iconPath = join(basePath, "icons", "lucide", "activity.js");
+      const content = await readFile(iconPath, "utf-8");
+
+      expect(content).toContain("component$");
+    });
+  });
 });
