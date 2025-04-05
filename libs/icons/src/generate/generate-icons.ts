@@ -16,7 +16,7 @@ const downloadsPath = join(basePath, "downloads");
 const getOutputPath = (pack: IconPackConfig, name: string, ext: string) =>
   join(baseOutputPath, pack.prefix.toLowerCase(), `${name}${ext}`);
 
-const ext = ".jsx";
+const ext = ".tsx";
 
 function getIndexPath(pack: IconPackConfig, ext: string) {
   return getOutputPath(pack, pack.prefix.toLowerCase(), ext);
@@ -101,9 +101,10 @@ async function generateIconVariant(file: string, pack: IconPackConfig) {
     .replace(/<!--.*?-->/g, "");
 
   const fileContent = [
-    `export const ${names.camelCase} = (props) =>`,
-    svgElement,
-    ";"
+    `import { component$, type PropsOf } from '@builder.io/qwik';`,
+    `export const ${names.camelCase} = component$((props: PropsOf<"svg">) => {`,
+    `  return (${svgElement});`,
+    "});"
   ].join("\n");
 
   const path = getVariantPath(names.dashCase, pack);
@@ -165,17 +166,7 @@ export async function generateIcons(pack: IconPackConfig) {
     })
   ].join("\n");
 
-  const indexDeclarationContent = [
-    "import type { JSXNode } from '@builder.io/qwik';",
-    "import type { IconProps } from '../../utils';",
-    ...variantsResult.map(
-      (variant) =>
-        `export declare const ${variant.symbolName}: (props: IconProps) => JSXNode;`
-    )
-  ].join("\n");
-
   await writeFile(getIndexPath(pack, ".js"), indexContent);
-  await writeFile(getIndexPath(pack, ".ts"), indexDeclarationContent);
 
   console.log(`Generated ${pack.name}: ${variantsResult.length} icons`);
 }
