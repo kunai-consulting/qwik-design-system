@@ -1,48 +1,70 @@
+#!/usr/bin/env node
+
 import { createWriteStream } from "node:fs";
 import { mkdir, rm } from "node:fs/promises";
 import StreamZip from "node-stream-zip";
 import { join } from "node:path";
-import type { IconPackConfig } from "./config.interface";
 import { pipeline } from "node:stream/promises";
+import type { IconPackConfig } from "./config.interface";
+import { configs } from "./configs";
 
-export async function downloadIcons(pack: IconPackConfig, downloadsPath: string) {
+const basePath = "src/downloads";
+
+export async function downloadIcons(pack: IconPackConfig) {
+  console.log(`[${pack.name}] Starting download process...`);
+
   if (!pack.download) {
-    throw new Error("Download key required in pack for downloading.");
+    console.log(`[${pack.name}] No download configuration, skipping...`);
+    return;
   }
 
-  console.log(`Downloading ${pack.name} icons...`);
-  console.log(`Downloads path: ${downloadsPath}`);
-  console.log(`Download URL: ${pack.download.zip}`);
-
-  const outputPath = join(downloadsPath, pack.prefix.toLowerCase());
+  const outputPath = join(basePath, pack.prefix.toLowerCase());
   const zipName = `${pack.prefix.toLowerCase()}.zip`;
-  const zipPath = join(downloadsPath, zipName);
+  const zipPath = join(basePath, zipName);
 
-  console.log(`Output path: ${outputPath}`);
-  console.log(`Zip path: ${zipPath}`);
-
-  // Clean up existing files
+  console.log(`[${pack.name}] Cleaning up existing files...`);
   await rm(outputPath, { recursive: true, force: true });
   await rm(zipPath, { force: true });
 
-  // Create directory
+  console.log(`[${pack.name}] Creating output directory...`);
   await mkdir(outputPath, { recursive: true });
-  console.log(`Created directory: ${outputPath}`);
 
-  // Download and extract
+  console.log(`[${pack.name}] Downloading from ${pack.download.zip}...`);
   const response = await fetch(pack.download.zip);
-  console.log(`Download response status: ${response.status}`);
+  if (!response.ok) {
+    throw new Error(`Failed to download: ${response.status} ${response.statusText}`);
+  }
 
+  console.log(`[${pack.name}] Writing to ${zipPath}...`);
   const fileStream = createWriteStream(zipPath);
   await pipeline(response.body, fileStream);
-  console.log(`Downloaded zip file to: ${zipPath}`);
 
+  console.log(`[${pack.name}] Extracting to ${outputPath}...`);
   const zip = new StreamZip.async({ file: zipPath });
   await zip.extract(pack.download.folder, outputPath);
   await zip.close();
-  console.log(`Extracted files to: ${outputPath}`);
 
-  // Clean up zip file
+  console.log(`[${pack.name}] Cleaning up zip file...`);
   await rm(zipPath);
-  console.log(`Cleaned up zip file: ${zipPath}`);
+  console.log(`[${pack.name}] Download complete!`);
 }
+
+export async function run() {
+  console.log("Starting icon download process...");
+  const packsToDownload = configs.filter((pack) => pack.download);
+  console.log(`Found ${packsToDownload.length} packs to download`);
+
+  if (packsToDownload.length === 0) {
+    console.log("No packs with download configuration found!");
+    return;
+  }
+
+  await Promise.all(packsToDownload.map(downloadIcons));
+  console.log("All downloads completed!");
+}
+
+// Run the script
+run().catch((error) => {
+  console.error("Error downloading icons:", error);
+  process.exit(1);
+});

@@ -4,14 +4,12 @@ import { fileURLToPath } from "node:url";
 import { optimize } from "svgo";
 import type { IconPackConfig } from "./config.interface";
 import { configs } from "./configs";
-import { downloadIcons } from "./download-icons";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const iconLimit = process.env.ICON_LIMIT;
-const basePath = join(__dirname, "..");
-const baseOutputPath = join(basePath, "icons");
-const pageOutputPath = join(basePath, "page");
-const downloadsPath = join(basePath, "downloads");
+const basePath = join(__dirname, "..", "..");
+const baseOutputPath = join(basePath, "src", "icons");
+const pageOutputPath = join(basePath, "src", "page");
 
 const getOutputPath = (pack: IconPackConfig, name: string, ext: string) =>
   join(baseOutputPath, pack.prefix.toLowerCase(), `${name}${ext}`);
@@ -87,7 +85,7 @@ async function generateIconVariant(file: string, pack: IconPackConfig) {
             ...colorAttributes,
             width: "1em",
             height: "1em",
-            "data-qwikest-icon": undefined
+            "data-qds-icon": undefined
           }).map(([key, value]) => ({ [key]: value }))
         }
       }
@@ -115,50 +113,43 @@ async function generateIconVariant(file: string, pack: IconPackConfig) {
 }
 
 export async function generateIcons(pack: IconPackConfig) {
-  console.log(`Generating icons for ${pack.name}...`);
-  console.log(`Downloads path: ${downloadsPath}`);
+  console.log(`[${pack.name}] Starting icon generation...`);
+  console.time(`[${pack.name}] Total generation time`);
 
   const packDir = dirname(getIndexPath(pack, ".ts"));
-
-  // Clean up pack directory with force and recursive
+  console.log(`[${pack.name}] Cleaning directory: ${packDir}`);
   await rm(packDir, { recursive: true, force: true });
   await mkdir(packDir, { recursive: true });
 
-  if (pack.download) {
-    console.log(`Downloading icons for ${pack.name}...`);
-    await downloadIcons(pack, downloadsPath);
-  }
-
   const fileLimit = iconLimit ? Number.parseInt(iconLimit) : undefined;
-  console.log(`File limit: ${fileLimit}`);
-
+  console.log(`[${pack.name}] Getting files (limit: ${fileLimit})...`);
   const files = (await pack.contents.files).slice(0, fileLimit);
-  console.log(`Found ${files.length} files for ${pack.name}`);
+  console.log(`[${pack.name}] Found ${files.length} files to process`);
 
-  if (files.length === 0) {
-    console.warn(`No files found for ${pack.name}. Skipping generation.`);
-    return;
-  }
-
+  console.log(`[${pack.name}] Starting icon generation...`);
+  console.time(`[${pack.name}] Icon generation time`);
   const variantsResult = await Promise.all(
-    files.map(async (file) => {
+    files.map(async (file, index) => {
+      console.log(`[${pack.name}] Processing icon ${index + 1}/${files.length}`);
       try {
         return {
           file,
           ...(await generateIconVariant(file, pack))
         };
       } catch (error) {
-        console.warn(`Failed to generate variant for ${file}: ${error}`);
+        console.error(`[${pack.name}] Failed to generate variant for ${file}:`, error);
         return null;
       }
     })
   ).then((results) => results.filter(Boolean));
+  console.timeEnd(`[${pack.name}] Icon generation time`);
 
   if (variantsResult.length === 0) {
-    console.warn(`No variants generated for ${pack.name}. Skipping index creation.`);
+    console.warn(`[${pack.name}] No variants generated. Skipping index creation.`);
     return;
   }
 
+  console.log(`[${pack.name}] Creating index file...`);
   const indexContent = [
     ...variantsResult.map((variant) => {
       const relative = `./${variant.names.dashCase}`;
@@ -167,8 +158,10 @@ export async function generateIcons(pack: IconPackConfig) {
   ].join("\n");
 
   await writeFile(getIndexPath(pack, ".js"), indexContent);
+  console.log(`[${pack.name}] Index file created`);
 
-  console.log(`Generated ${pack.name}: ${variantsResult.length} icons`);
+  console.timeEnd(`[${pack.name}] Total generation time`);
+  console.log(`[${pack.name}] Generated ${variantsResult.length} icons`);
 }
 
 async function createConfigs(packs: IconPackConfig[]) {
@@ -203,11 +196,9 @@ async function createRootIndex(packs: IconPackConfig[]) {
 }
 
 async function cleanup() {
-  // Ensure parent directories exist
   await mkdir(dirname(baseOutputPath), { recursive: true });
   await mkdir(dirname(pageOutputPath), { recursive: true });
 
-  // Clean and create output directories
   await rm(baseOutputPath, { force: true, recursive: true });
   await rm(pageOutputPath, { force: true, recursive: true });
   await mkdir(baseOutputPath, { recursive: true });

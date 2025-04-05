@@ -22,7 +22,8 @@
     "build": "qwik build",
     "build.lib": "vite build --mode lib",
     "build.types": "tsc --emitDeclarationOnly",
-    "generate-5-icons": "export ICON_LIMIT=5 && vite-node ./src/generate/generate-icons.ts",
+    "download-icons": "vite-node ./src/generate/download-icons.ts",
+    "generate-icons": "export ICON_LIMIT=50 && vite-node ./src/generate/generate-icons.ts",
     "dev": "vite --mode ssr",
     "qwik": "qwik"
   },
