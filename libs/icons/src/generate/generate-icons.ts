@@ -1,12 +1,14 @@
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { optimize } from "svgo";
 import type { IconPackConfig } from "./config.interface";
 import { configs } from "./configs";
 import { downloadIcons } from "./download-icons";
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const iconLimit = process.env.ICON_LIMIT;
-const basePath = "./src";
+const basePath = join(__dirname, "..");
 const baseOutputPath = join(basePath, "icons");
 const pageOutputPath = join(basePath, "page");
 const downloadsPath = join(basePath, "downloads");
