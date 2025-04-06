@@ -26,6 +26,12 @@ The select-all functionality automatically manages three states:
 Each item maintains its own state while staying synchronized with the select-all checkbox.
 Note: The example uses Lucide icons (`LuCheck` and `LuMinus`) to display the checkbox states, but you can customize these with your own icons or indicators.
 
+### Form Integration
+Integrate with native HTML forms by adding the `Checklist.HiddenInput` component under each item.
+The selected items are then automatically submitted with the form. The `name` input is required and should be unique
+within the form.
+<Showcase name="form" />
+
 ## Component State
 ### Using Component State
 The Checklist component provides a powerful way to manage multiple checkbox selections with a "select all" capability. Let's look at how to implement and control the checklist state.
@@ -48,8 +54,8 @@ The select-all checkbox automatically updates based on the state of individual i
 - Shows checked when all items are selected
 To respond to state changes, the checklist items and select-all checkbox are automatically synchronized:
 1. When clicking the select-all checkbox:
-   - If unchecked: All items become checked
-   - If checked or mixed: All items become unchecked
+   - If unchecked or mixed: All items become checked
+   - If checked: All items become unchecked
 2. When clicking individual items:
    - Updates the select-all checkbox state based on overall selection
    - Maintains the mixed state when appropriate

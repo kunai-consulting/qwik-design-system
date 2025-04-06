@@ -23,6 +23,9 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Test
+test-results
+
 .idea
 .DS_Store
 *.suo

@@ -12,7 +12,8 @@
       "libs/components/lib/*",
       "libs/icons/src/downloads",
       "libs/icons/src/icons",
-      ".vscode"
+      ".vscode",
+      "test-results"
     ]
   },
 

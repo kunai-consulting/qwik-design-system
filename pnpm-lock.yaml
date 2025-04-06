@@ -65,6 +65,9 @@ importers:
 
   apps/docs:
     dependencies:
+      '@stackblitz/sdk':
+        specifier: ^1.11.0
+        version: 1.11.0
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -84,6 +87,9 @@ importers:
       '@builder.io/qwik-city':
         specifier: https://pkg.pr.new/@builder.io/qwik-city@7362
         version: https://pkg.pr.new/@builder.io/qwik-city@7362(rollup@4.20.0)(typescript@5.4.5)(vite@5.4.8(@types/node@22.14.0)(lightningcss@1.29.1))
+      '@fontsource/proza-libre':
+        specifier: ^5.0.12
+        version: 5.2.5
       '@kunai-consulting/code-notate':
         specifier: 0.0.2
         version: 0.0.2
@@ -661,6 +667,9 @@ packages:
   '@floating-ui/utils@0.2.7':
     resolution: {integrity: sha512-X8R8Oj771YRl/w+c1HqAC1szL8zWQRwFvgDwT129k9ACdBoud/+/rX9V0qiMl6LWUdP9voC2nDVZYPMQQsb6eA==}
 
+  '@fontsource/proza-libre@5.2.5':
+    resolution: {integrity: sha512-35FS6mzJ7VkghgR2NX6lqbqB+8AD8+pScpLcHB2XJH82MWhjxNrHgPf2gG0TaaOKDZWU8fhAgSTuRaE6lkFgLA==}
+
   '@graphql-typed-document-node/core@3.2.0':
     resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
     peerDependencies:
@@ -1014,6 +1023,9 @@ packages:
 
   '@shikijs/core@1.12.1':
     resolution: {integrity: sha512-biCz/mnkMktImI6hMfMX3H9kOeqsInxWEyCHbSlL8C/2TR1FqfmGxTLRNwYCKsyCyxWLbB8rEqXRVZuyxuLFmA==}
+
+  '@stackblitz/sdk@1.11.0':
+    resolution: {integrity: sha512-DFQGANNkEZRzFk1/rDP6TcFdM82ycHE+zfl9C/M/jXlH68jiqHWHFMQURLELoD8koxvu/eW5uhg94NSAZlYrUQ==}
 
   '@stencil/core@4.29.1':
     resolution: {integrity: sha512-5Ik6wyB3CWeUbVdhpVaAw3utlOZGW/1VXZXLMRol+lwJVdpSUjeioxYVkoDHQLdtKSDe61lv3/pPHY7PM1o4wA==}
@@ -3233,6 +3245,8 @@ snapshots:
 
   '@floating-ui/utils@0.2.7': {}
 
+  '@fontsource/proza-libre@5.2.5': {}
+
   '@graphql-typed-document-node/core@3.2.0(graphql@15.9.0)':
     dependencies:
       graphql: 15.9.0
@@ -3572,6 +3586,8 @@ snapshots:
   '@shikijs/core@1.12.1':
     dependencies:
       '@types/hast': 3.0.4
+
+  '@stackblitz/sdk@1.11.0': {}
 
   '@stencil/core@4.29.1':
     optionalDependencies:
