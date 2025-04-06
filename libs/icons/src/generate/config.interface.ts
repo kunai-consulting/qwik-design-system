@@ -1,13 +1,11 @@
-export type AnyIconVariants = { variant?: string };
+export type AnyIconVariants = { variant?: string; res?: string };
 
 export interface IconPackDownload {
   zip: string;
   folder: string;
 }
 
-export interface IconPackConfig<
-  Variants extends AnyIconVariants = AnyIconVariants
-> {
+export interface IconPackConfig<Variants extends AnyIconVariants = AnyIconVariants> {
   name: string;
   prefix: string;
   variants: {

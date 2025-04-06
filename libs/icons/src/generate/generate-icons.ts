@@ -154,8 +154,8 @@ export async function generateIcons(pack: IconPackConfig) {
   console.log(`[${pack.name}] Creating index file...`);
   const indexContent = [
     ...variantsResult.map((variant) => {
-      const relative = `./${variant.names.dashCase}`;
-      return `export { ${variant.symbolName} } from '${relative}';`;
+      const relative = `./${variant?.names.dashCase}`;
+      return `export { ${variant?.symbolName} } from '${relative}';`;
     })
   ].join("\n");
 
