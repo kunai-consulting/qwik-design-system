@@ -1,4 +1,4 @@
-import { glob } from "node:fs/promises";
+import glob from "fast-glob";
 import { definePack } from "../define-pack";
 import { extractor } from "../extractor";
 
@@ -8,13 +8,13 @@ export const ioniconsPack = definePack({
   variants: { variant: ["solid", "sharp", "outline"] },
   defaultVariants: { variant: "solid" },
   contents: {
-    files: Array.fromAsync(glob("node_modules/ionicons/dist/svg/*.svg")),
+    files: glob("node_modules/ionicons/dist/svg/*.svg"),
     extract: extractor(/^.*\/(?<name>.+?)(-(?<variant>[a-z]+))?\.svg/, {
-      variant: "solid"
-    })
+      variant: "solid",
+    }),
   },
   projectUrl: "https://ionicons.com/",
   license: "MIT",
   licenseUrl: "https://github.com/ionic-team/ionicons/blob/master/LICENSE",
-  coloring: "fill"
+  coloring: "fill",
 });

@@ -1,10 +1,7 @@
 #!/usr/bin/env node
-
-import { createWriteStream } from "node:fs";
-import { mkdir, rm } from "node:fs/promises";
+import { mkdir, rm, writeFile } from "node:fs/promises";
 import StreamZip from "node-stream-zip";
 import { join } from "node:path";
-import { pipeline } from "node:stream/promises";
 import type { IconPackConfig } from "./config.interface";
 import { configs } from "./configs";
 
@@ -36,8 +33,9 @@ export async function downloadIcons(pack: IconPackConfig) {
   }
 
   console.log(`[${pack.name}] Writing to ${zipPath}...`);
-  const fileStream = createWriteStream(zipPath);
-  await pipeline(response.body, fileStream);
+  const blob = await response.blob();
+  const buffer = Buffer.from(await blob.arrayBuffer());
+  await writeFile(zipPath, buffer);
 
   console.log(`[${pack.name}] Extracting to ${outputPath}...`);
   const zip = new StreamZip.async({ file: zipPath });

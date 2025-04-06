@@ -1,4 +1,4 @@
-import { glob } from "node:fs/promises";
+import glob from "fast-glob";
 import { definePack } from "../define-pack";
 import { extractor } from "../extractor";
 
@@ -10,11 +10,12 @@ export const simpleIconsPack = definePack({
   variants: {},
   defaultVariants: {},
   contents: {
-    files: Array.fromAsync(glob("node_modules/simple-icons/icons/*.svg")),
-    extract: extractor(/^.*\/(?<name>.+?)\.svg/)
+    files: glob("node_modules/simple-icons/icons/*.svg"),
+    extract: extractor(/^.*\/(?<name>.+?)\.svg/),
   },
   projectUrl: "https://simpleicons.org/",
   license: "CC0 1.0",
-  licenseUrl: "https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md",
-  coloring: "fill"
+  licenseUrl:
+    "https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md",
+  coloring: "fill",
 });
