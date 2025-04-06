@@ -18,5 +18,6 @@
     "types": ["vite/client"],
     "noEmit": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["src/icons/**/*", "src/downloads/**/*", "src/page/**/*"]
 }
