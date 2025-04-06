@@ -1,53 +1,76 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, useStyles$ } from "@builder.io/qwik";
 import { Tree } from "@kunai-consulting/qwik";
+import { LuChevronRight } from "@qwikest/icons/lucide";
+import styles from "./tree.css?inline";
 
 type TreeItemType = {
-  id: string;
-  label: string;
-  children?: TreeItemType[];
+	id: string;
+	label: string;
+	children?: TreeItemType[];
 };
 
 export default component$(() => {
-  const treeData: TreeItemType[] = [
-    {
-      id: "item-1",
-      label: "Documents",
-      children: [
-        { id: "item-1-1", label: "Work" },
-        { id: "item-1-2", label: "Personal" }
-      ]
-    },
-    {
-      id: "item-2",
-      label: "Downloads"
-    },
-    {
-      id: "item-3",
-      label: "Desktop"
-    }
-  ];
+	useStyles$(styles);
+	const treeData: TreeItemType[] = [
+		{
+			id: "item-1",
+			label: "Docs",
+			children: [
+				{
+					id: "item-1-1",
+					label: "Guides",
+					children: [{ id: "item-1-1-1", label: "Getting Started" }],
+				},
+				{
+					id: "item-1-2",
+					label: "Components",
+					children: [
+						{ id: "item-1-2-1", label: "Button" },
+						{ id: "item-1-2-2", label: "Input" },
+					],
+				},
+			],
+		},
+		{
+			id: "item-2",
+			label: "API Reference",
+		},
+		{
+			id: "item-3",
+			label: "Examples",
+		},
+		{
+			id: "item-4",
+			label: "Community",
+		},
+	];
 
-  return <Tree.Root>{treeData.map((item) => renderTreeItem(item))}</Tree.Root>;
+	return (
+		<Tree.Root class="tree-root">
+			{treeData.map((item) => renderTreeItem(item))}
+		</Tree.Root>
+	);
 });
 
 function renderTreeItem(item: TreeItemType) {
-  if (item.children && item.children.length > 0) {
-    return (
-      <Tree.Group key={item.id}>
-        <Tree.GroupTrigger>
-          <Tree.GroupLabel>{item.label}</Tree.GroupLabel>
-        </Tree.GroupTrigger>
-        <Tree.GroupContent>
-          {item.children.map((child) => renderTreeItem(child))}
-        </Tree.GroupContent>
-      </Tree.Group>
-    );
-  }
+	if (item.children && item.children.length > 0) {
+		return (
+			<Tree.Item key={item.id}>
+				<Tree.ItemTrigger class="tree-item-trigger">
+					<Tree.ItemLabel>{item.label}</Tree.ItemLabel>
+					<LuChevronRight />
+				</Tree.ItemTrigger>
+				<Tree.ItemContent class="tree-item-content">
+					{item.children.map((child) => renderTreeItem(child))}
+				</Tree.ItemContent>
+			</Tree.Item>
+		);
+	}
 
-  return (
-    <Tree.Item key={item.id}>
-      <Tree.ItemIndicator>🔹</Tree.ItemIndicator>
-      <Tree.ItemLabel>{item.label}</Tree.ItemLabel>
-    </Tree.Item>
-  );
+	return (
+		<Tree.Item key={item.id}>
+			<Tree.ItemIndicator>🔹</Tree.ItemIndicator>
+			<Tree.ItemLabel>{item.label}</Tree.ItemLabel>
+		</Tree.Item>
+	);
 }
