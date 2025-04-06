@@ -172,7 +172,7 @@ export async function generateIcons(pack: IconPackConfig) {
     })
   ].join("\n");
 
-  await writeFile(getIndexPath(pack, ".js"), indexContent);
+  await writeFile(getIndexPath(pack, ".ts"), indexContent);
   console.log(`[${pack.name}] Index file created`);
 
   console.timeEnd(`[${pack.name}] Total generation time`);
@@ -199,13 +199,23 @@ async function createConfigs(packs: IconPackConfig[]) {
 }
 
 async function createRootIndex(packs: IconPackConfig[]) {
-  const content = packs
-    .map(
+  const content = [
+    "import type { Component, PropsOf } from '@builder.io/qwik';",
+    "",
+    "// Define the base type for an icon component",
+    'type IconComponent = Component<PropsOf<"svg">>;',
+    "",
+    "// Export all icon namespaces",
+    ...packs.map(
       (pack) =>
-        `export * from './${pack.prefix.toLowerCase()}/${pack.prefix.toLowerCase()}';
-`
+        `export * as ${pack.name} from './${pack.prefix.toLowerCase()}/${pack.prefix.toLowerCase()}';`
+    ),
+    "",
+    "// Export types for each namespace",
+    ...packs.map(
+      (pack) => `export type ${pack.name}Icons = Record<string, IconComponent>;`
     )
-    .join("\n");
+  ].join("\n");
 
   await writeFile(join(baseOutputPath, "all.ts"), content);
 }

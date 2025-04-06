@@ -15,7 +15,7 @@ function extract(path: string) {
 }
 
 export const fontAwesomeFreePack = definePack({
-  name: "Font Awesome 6 Free",
+  name: "FontAwesome",
   prefix: "Fa",
   variants: {
     variant: ["solid", "regular"]

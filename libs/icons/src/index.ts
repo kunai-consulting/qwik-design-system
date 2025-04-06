@@ -1,5 +1,1 @@
-import * as allIcons from "./icons/all";
-
-export const Icon = {
-  ...allIcons
-};
+export * from "./icons/all";

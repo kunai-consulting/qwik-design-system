@@ -21,7 +21,7 @@ function heroiconsExtract(path: string) {
 }
 
 export const heroiconsPack = definePack({
-  name: "Heroicons",
+  name: "HeroIcons",
   prefix: "Hi",
   variants: { variant: ["solid", "outline", "mini"], res: ["20", "24"] },
   defaultVariants: { variant: "solid", res: "24" },

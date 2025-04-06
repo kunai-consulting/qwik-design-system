@@ -3,7 +3,7 @@ import { definePack } from "../define-pack";
 import { extractor } from "../extractor";
 
 export const octiconPack = definePack({
-  name: "Github Octicons",
+  name: "Octicons",
   prefix: "Go",
   variants: { res: ["12", "16", "24", "48", "96"] },
   defaultVariants: { res: "24" },
