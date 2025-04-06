@@ -1,6 +1,6 @@
 {
-  "name": "@kunai-consulting/qwik",
-  "version": "0.0.8",
+  "name": "@kunai-consulting/qwik-icons",
+  "version": "0.0.1",
   "description": "Create a Qwik library",
   "main": "./lib/index.qwik.mjs",
   "qwik": "./lib/index.qwik.mjs",
@@ -9,7 +9,7 @@
     ".": {
       "import": "./lib/index.qwik.mjs",
       "require": "./lib/index.qwik.cjs",
-      "types": "./lib-types/src/index.d.ts"
+      "types": "./lib-types/index.d.ts"
     }
   },
   "files": ["lib", "lib-types"],
@@ -22,21 +22,26 @@
     "build": "qwik build",
     "build.lib": "vite build --mode lib",
     "build.types": "tsc --emitDeclarationOnly",
+    "download-icons": "tsx ./src/generate/download-icons.ts",
+    "generate-icons": "tsx ./src/generate/generate-icons.ts",
     "dev": "vite --mode ssr",
-    "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
-    "start": "vite --open --mode ssr",
-    "test": "echo \"No test specified\" && exit 0",
     "qwik": "qwik"
   },
   "devDependencies": {
-    "@builder.io/qwik": "https://pkg.pr.new/@builder.io/qwik@7362",
-    "@qwik-ui/headless": "^0.6.5",
+    "@builder.io/qwik": "1.13.0",
+    "@primer/octicons": "^19.15.1",
     "@types/node": "22.14.0",
+    "bootstrap-icons": "^1.11.3",
+    "fast-glob": "^3.3.3",
+    "heroicons": "^2.2.0",
+    "ionicons": "^7.4.0",
+    "lucide-static": "^0.487.0",
+    "node-stream-zip": "^1.15.0",
+    "simple-icons": "^14.12.1",
+    "svgo": "^3.3.2",
     "typescript": "5.4.5",
     "undici": "*",
-    "vite": "^5.4",
-    "vite-tsconfig-paths": "^4.2.1",
-    "@axe-core/playwright": "^4.9.1",
-    "uqr": "^0.1.2"
+    "vite": "5.3.5",
+    "vite-tsconfig-paths": "^4.2.1"
   }
 }
