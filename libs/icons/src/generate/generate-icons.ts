@@ -85,8 +85,10 @@ async function generateIconVariant(file: string, pack: IconPackConfig) {
             ...colorAttributes,
             width: "1em",
             height: "1em",
-            "data-qds-icon": undefined
-          }).map(([key, value]) => ({ [key]: value }))
+            "data-qds-icon": ""
+          })
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => ({ [key]: value }))
         }
       }
     ]
