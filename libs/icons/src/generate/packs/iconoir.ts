@@ -22,7 +22,7 @@ export const iconoirPack = definePack({
     folder: "iconoir-main/icons"
   },
   contents: {
-    files: glob("download/Iconoir/*/*.svg"),
+    files: glob("src/downloads/in/**/*.svg"),
     extract: iconoirExtract
   },
   projectUrl: "https://iconoir.com/",

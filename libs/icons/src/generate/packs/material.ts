@@ -15,7 +15,7 @@ export const materialIconsPack = definePack({
     folder: "material-design-icons-main/svg"
   },
   contents: {
-    files: glob("download/MaterialIcons/(filled|outlined|round|sharp)/*.svg"),
+    files: glob("src/downloads/mat/**/*.svg"),
     extract: extractor(/^.*\/(?<variant>.+?)\/(?<name>.+?).svg/)
   },
   projectUrl: "https://github.com/google/material-design-icons",

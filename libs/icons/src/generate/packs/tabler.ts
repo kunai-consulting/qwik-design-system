@@ -22,7 +22,7 @@ export const tablerIconsPack = definePack({
     folder: "tabler-icons-main/icons"
   },
   contents: {
-    files: glob("download/TablerIcons/*/*.svg"),
+    files: glob("src/downloads/tb/**/*.svg"),
     extract: tablerExtract
   },
   projectUrl: "https://tabler.io/",

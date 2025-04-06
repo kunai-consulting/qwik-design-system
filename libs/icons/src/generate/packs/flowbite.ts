@@ -14,7 +14,7 @@ export const flowbiteIconsPack = definePack({
     folder: "flowbite-icons-main/src"
   },
   contents: {
-    files: glob("download/Flowbite/(solid|outline)/*/*.svg"),
+    files: glob("src/downloads/fl/**/*.svg"),
     extract: extractor(/^.*\/(?<variant>.+?)\/.*?\/(?<name>.+?).svg/)
   },
   projectUrl: "https://github.com/themesberg/flowbite-icons/",

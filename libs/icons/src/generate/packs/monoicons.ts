@@ -12,7 +12,7 @@ export const monoIconsPack = definePack({
     folder: "mono-icons-master/svg"
   },
   contents: {
-    files: glob("download/MonoIcons/*.svg"),
+    files: glob("src/downloads/mo/**/*.svg"),
     extract: extractor(/^.*\/(?<name>.+?)\.svg/)
   },
   projectUrl: "https://icons.mono.company/",
