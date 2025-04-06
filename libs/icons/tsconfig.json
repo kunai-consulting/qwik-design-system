@@ -15,8 +15,7 @@
     "skipLibCheck": true,
     "incremental": true,
     "isolatedModules": true,
-    "types": ["vite/client"],
-    "noEmit": true
+    "types": ["vite/client"]
   },
   "include": ["src"],
   "exclude": ["src/icons/**/*", "src/downloads/**/*", "src/page/**/*"]

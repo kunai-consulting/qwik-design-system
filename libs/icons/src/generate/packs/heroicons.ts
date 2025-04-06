@@ -2,33 +2,29 @@ import glob from "fast-glob";
 import { definePack } from "../define-pack";
 import { extractor } from "../extractor";
 
-const extractRegex = /heroicons\/(?<res>.[0-9]+)\/(?<style>.[a-z]+)\/(?<name>.+)?\.svg/;
+const extractRegex = /heroicons\/(?<res>[0-9]+)\/(?<style>[a-z]+)\/(?<name>[^/]+)\.svg$/;
 
 function heroiconsExtract(path: string) {
   const { res, style, name } = extractor(extractRegex)(path);
 
+  // For 20px icons, we treat them as mini variant
   if (res === "20") {
-    return { variant: "mini", name };
+    return { variant: "mini", name, res };
   }
 
-  if (style === "solid") {
-    return { variant: style, name };
+  // For other resolutions, we use the style as the variant
+  if (style === "solid" || style === "outline") {
+    return { variant: style, name, res };
   }
 
-  if (style === "outline") {
-    return { variant: style, name };
-  }
-
-  console.log(res, style, path);
-
-  throw new Error("");
+  throw new Error(`Unsupported Heroicons variant: ${style} in ${path}`);
 }
 
 export const heroiconsPack = definePack({
   name: "Heroicons",
   prefix: "Hi",
-  variants: { variant: ["solid", "outline", "mini"] },
-  defaultVariants: { variant: "solid" },
+  variants: { variant: ["solid", "outline", "mini"], res: ["20", "24"] },
+  defaultVariants: { variant: "solid", res: "24" },
   contents: {
     files: glob("node_modules/heroicons/*/*/*.svg"),
     extract: heroiconsExtract

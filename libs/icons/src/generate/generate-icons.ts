@@ -27,17 +27,22 @@ function getVariantPath(iconDashCase: string, pack: IconPackConfig) {
 function dashCase(input: string) {
   return input
     .replace(/(?<!^)[A-Z]/g, (match) => `-${match.toLowerCase()}`)
-    .replace(/ /g, "-")
+    .replace(/[^a-zA-Z0-9]/g, "-")
     .replace(/--+/g, "-")
+    .replace(/^-|-$/g, "")
     .toLowerCase();
 }
 
 export function camelCase(input: string) {
-  return input
-    .replace(/(?:^|[- _])+([a-z0-9])/g, (result) => {
-      return result.replace(/^[- _]+/, "").toUpperCase();
-    })
-    .replace(/[0-9][a-z]/g, (match) => match.toUpperCase());
+  return (
+    input
+      .replace(/(?:^|[- _])+([a-z0-9])/g, (result) => {
+        return result.replace(/^[- _]+/, "").toUpperCase();
+      })
+      .replace(/[0-9][a-z]/g, (match) => match.toUpperCase())
+      // Remove any remaining hyphens or special characters
+      .replace(/[^a-zA-Z0-9]/g, "")
+  );
 }
 
 function getIconVariantNames(path: string, pack: IconPackConfig) {
@@ -47,10 +52,18 @@ function getIconVariantNames(path: string, pack: IconPackConfig) {
     throw new Error(`Cannot resolve icon name for "${path}".`);
   }
 
-  const variantSuffix = Object.values(variants)
-    .filter(Boolean)
-    .map((value) => `-${value}`)
+  // For Heroicons, we need to ensure unique names for the same icon in different resolutions
+  const variantSuffix = Object.entries(variants)
+    .filter(([, value]) => value !== undefined)
+    .map(([key, value]) => {
+      // For Heroicons, if we have a resolution variant, include it in the name
+      if (key === "res" && value === "20") {
+        return "-mini";
+      }
+      return `-${value}`;
+    })
     .join("");
+
   const formatted = pack.prefix + camelCase(name) + variantSuffix;
 
   return {
