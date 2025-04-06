@@ -11,11 +11,10 @@ export const simpleIconsPack = definePack({
   defaultVariants: {},
   contents: {
     files: glob("node_modules/simple-icons/icons/*.svg"),
-    extract: extractor(/^.*\/(?<name>.+?)\.svg/),
+    extract: extractor(/^.*\/(?<name>.+?)\.svg/)
   },
   projectUrl: "https://simpleicons.org/",
   license: "CC0 1.0",
-  licenseUrl:
-    "https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md",
-  coloring: "fill",
+  licenseUrl: "https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md",
+  coloring: "fill"
 });

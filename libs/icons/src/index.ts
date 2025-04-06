@@ -1,5 +1,5 @@
-import * as allIcons from './icons/all';
+import * as allIcons from "./icons/all";
 
 export const Icon = {
-  ...allIcons,
+  ...allIcons
 };

@@ -10,11 +10,11 @@ export const ioniconsPack = definePack({
   contents: {
     files: glob("node_modules/ionicons/dist/svg/*.svg"),
     extract: extractor(/^.*\/(?<name>.+?)(-(?<variant>[a-z]+))?\.svg/, {
-      variant: "solid",
-    }),
+      variant: "solid"
+    })
   },
   projectUrl: "https://ionicons.com/",
   license: "MIT",
   licenseUrl: "https://github.com/ionic-team/ionicons/blob/master/LICENSE",
-  coloring: "fill",
+  coloring: "fill"
 });

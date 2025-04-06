@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeAll, vi } from "vitest";
 import { readFile, readdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import { run } from "../generate/generate-icons";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

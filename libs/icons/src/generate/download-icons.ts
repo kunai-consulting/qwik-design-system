@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { mkdir, rm, writeFile } from "node:fs/promises";
-import StreamZip from "node-stream-zip";
 import { join } from "node:path";
+import StreamZip from "node-stream-zip";
 import type { IconPackConfig } from "./config.interface";
 import { configs } from "./configs";
 

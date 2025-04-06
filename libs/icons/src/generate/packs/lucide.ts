@@ -9,10 +9,10 @@ export const lucidePack = definePack({
   defaultVariants: {},
   contents: {
     files: glob("node_modules/lucide-static/icons/*.svg"),
-    extract: extractor(/^.*\/(?<name>.+?)\.svg/),
+    extract: extractor(/^.*\/(?<name>.+?)\.svg/)
   },
   projectUrl: "https://lucide.dev/",
   license: "ISC",
   licenseUrl: "https://github.com/lucide-icons/lucide/blob/main/LICENSE",
-  coloring: "stroke",
+  coloring: "stroke"
 });

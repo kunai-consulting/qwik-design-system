@@ -18,20 +18,19 @@ export const fontAwesomeFreePack = definePack({
   name: "Font Awesome 6 Free",
   prefix: "Fa",
   variants: {
-    variant: ["solid", "regular"],
+    variant: ["solid", "regular"]
   },
   defaultVariants: {},
   download: {
     zip: "https://github.com/FortAwesome/Font-Awesome/archive/refs/heads/6.x.zip",
-    folder: "Font-Awesome-6.x/svgs",
+    folder: "Font-Awesome-6.x/svgs"
   },
   contents: {
     files: glob("download/Font Awesome 6 Free/*/*.svg"),
-    extract: extract,
+    extract: extract
   },
   projectUrl: "https://fontawesome.com/v6/icons/?o=r&m=free",
   license: "CC 4.0",
-  licenseUrl:
-    "https://github.com/FortAwesome/Font-Awesome/blob/6.x/LICENSE.txt",
-  coloring: "fill",
+  licenseUrl: "https://github.com/FortAwesome/Font-Awesome/blob/6.x/LICENSE.txt",
+  coloring: "fill"
 });
