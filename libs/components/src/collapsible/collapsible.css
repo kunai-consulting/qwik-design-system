@@ -1,3 +1,4 @@
 [data-qds-collapsible-content][data-closed] {
-	display: none;
+  height: 0px;
+  overflow: hidden;
 }
