@@ -3,9 +3,6 @@ name: Check Component Composition
 on:
   pull_request:
     branches: [ main ]
-    paths:
-      - '**/*.tsx'
-      - '**/*.jsx'
 
 jobs:
   check-composition:
