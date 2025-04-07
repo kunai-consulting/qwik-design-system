@@ -124,8 +124,17 @@ function renderTreeItem(item: TreeItemType) {
 						<LuChevronRight class="group-data-open:rotate-90" />
 					</Tree.ItemTrigger>
 				</div>
-				<Tree.ItemContent class="transition-all duration-200 group-data-open:h-auto h-0 transition-discrete overflow-clip">
-					{item.children.map((child) => renderTreeItem(child))}
+				<Tree.ItemContent
+					class={[
+						"grid transition-[grid-template-rows] duration-200",
+						"overflow-clip",
+						"grid-rows-[0fr]",
+						"group-data-open:grid-rows-[1fr] transition-discrete starting:grid-rows-[0fr] pl-4 transition-all",
+					].join(" ")}
+				>
+					<div class="min-h-0">
+						{item.children.map((child) => renderTreeItem(child))}
+					</div>
 				</Tree.ItemContent>
 			</Tree.Item>
 		);

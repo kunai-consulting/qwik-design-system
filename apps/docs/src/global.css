@@ -2,10 +2,6 @@
 
 @import "tailwindcss";
 
-html {
-	interpolate-size: allow-keywords;
-}
-
 body {
 	@apply max-w-screen-2xl mx-auto my-20 font-sans px-4 sm:px-6 overflow-x-hidden;
 }
