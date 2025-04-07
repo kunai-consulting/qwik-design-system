@@ -7,6 +7,7 @@ import {
   useSignal
 } from "@builder.io/qwik";
 import { type FileInfo, fileUploadContextId } from "./file-upload-context";
+import { withAsChild } from "../as-child/as-child";
 type HTMLDivProps = PropsOf<"div">;
 /**
  * Props specific to file upload functionality
@@ -23,7 +24,7 @@ type PublicRootProps = HTMLDivProps & PublicFileUploadProps;
  * Root component for file upload functionality
  * Provides context and state management for child components
  */
-export const FileUploadRoot = component$<PublicRootProps>((props) => {
+export const FileUploadRootBase = component$<PublicRootProps>((props) => {
   const inputRef = useSignal<HTMLInputElement>();
   const isDragging = useSignal(false);
   const files = useSignal<FileInfo[]>([]);
@@ -45,3 +46,5 @@ export const FileUploadRoot = component$<PublicRootProps>((props) => {
     </div>
   );
 });
+
+export const FileUploadRoot = withAsChild(FileUploadRootBase);

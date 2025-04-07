@@ -30,11 +30,11 @@ export const FileUploadInput = component$<PublicInputProps>((props) => {
   /**
    * Handle file selection change event
    */
-  const onChange$ = $((e: Event) => {
+  const onChange$ = $(async (e: Event) => {
     const input = e.target as HTMLInputElement;
     if (!input.files?.length) return;
 
-    processFiles$(Array.from(input.files));
+    await processFiles$(Array.from(input.files));
   });
 
   return (
