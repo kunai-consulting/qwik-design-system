@@ -1,10 +1,9 @@
 import {
   $,
   type NoSerialize,
-  type PropFunction,
-  type QRL,
   type Signal,
   noSerialize,
+  sync$,
   useComputed$,
   useSignal
 } from "@builder.io/qwik";
@@ -21,9 +20,7 @@ export interface UseFileUploadOptions {
   disabled?: boolean | Signal<boolean>;
   multiple?: boolean;
   debug?: boolean;
-  onFilesChange$?:
-    | PropFunction<(files: FileInfo[]) => void>
-    | QRL<(files: FileInfo[]) => void>;
+  onFilesChange$?: (files: FileInfo[]) => void;
 }
 
 /**
@@ -63,7 +60,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
     }
   });
 
-  const onDragEnter$ = $((e: DragEvent) => {
+  const onDragEnter$ = sync$((e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -77,7 +74,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
     }
   });
 
-  const onDragOver$ = $((e: DragEvent) => {
+  const onDragOver$ = sync$((e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -88,7 +85,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
     }
   });
 
-  const onDragLeave$ = $((e: DragEvent) => {
+  const onDragLeave$ = sync$((e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -108,7 +105,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
     }
   });
 
-  const onDrop$ = $((e: DragEvent) => {
+  const onDrop$ = sync$((e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -130,7 +127,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
     }
   });
 
-  const onWindowDragOver$ = $((e: DragEvent) => {
+  const onWindowDragOver$ = sync$((e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (e.dataTransfer) {
