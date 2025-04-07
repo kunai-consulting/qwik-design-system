@@ -73,7 +73,6 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       getFirstVisibleItem,
       getLastVisibleItem
     } = useTree();
-
     const currentItem = context.currentFocusEl.value;
 
     let nextItem: HTMLElement | null = null;
@@ -88,19 +87,15 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
         const isCollapsed = currentItem.hasAttribute("data-closed");
         if (isCollapsed) {
           isOpenSig.value = true;
-          return;
         }
-        nextItem = getNextVisibleItem(currentItem);
-        break;
+        return;
       }
       case "ArrowLeft": {
         const isExpanded = !currentItem.hasAttribute("data-closed");
         if (isExpanded) {
           isOpenSig.value = false;
-          return;
         }
-        nextItem = getPreviousVisibleItem(currentItem);
-        break;
+        return;
       }
       case "Home":
         nextItem = getFirstVisibleItem(treeRoot);
