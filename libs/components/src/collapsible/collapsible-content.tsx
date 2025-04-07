@@ -16,10 +16,12 @@ export const CollapsibleContentBase = component$((props: CollapsibleContentProps
       fallback="div"
       ref={context.contentRef}
       id={contentId}
-      data-collapsible-content
+      data-qds-collapsible-content
       data-disabled={context.disabled ? "" : undefined}
-      hidden={!context.isOpenSig.value}
+      data-open={context.isOpenSig.value}
+      data-closed={!context.isOpenSig.value}
       aria-labelledby={triggerId}
+      inert={!context.isOpenSig.value}
     >
       <Slot />
     </Render>

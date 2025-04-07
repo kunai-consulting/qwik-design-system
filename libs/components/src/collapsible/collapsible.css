@@ -1,0 +1,6 @@
+@layer qds {
+  [data-qds-collapsible-content][data-closed] {
+    height: 0px;
+    overflow: hidden;
+  }
+}

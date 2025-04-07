@@ -4,7 +4,7 @@ import { Render } from "../render/render";
 
 export const TreeItemLabelBase = component$((props: PropsOf<"span">) => {
   return (
-    <Render fallback="span" {...props}>
+    <Render fallback="span" tabIndex={-1} {...props}>
       <Slot />
     </Render>
   );
