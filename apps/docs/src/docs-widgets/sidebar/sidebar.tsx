@@ -118,10 +118,10 @@ function renderTreeItem(item: TreeItemType) {
 	if (item.children && item.children.length > 0) {
 		return (
 			<Tree.Item key={item.id}>
-				<div class="flex items-center gap-2">
+				<div class="flex items-center gap-2 hover:bg-neutral-accent transition-colors bg-inherit duration-200 justify-between">
 					<Tree.ItemLabel>{item.label}</Tree.ItemLabel>
-					<Tree.ItemTrigger class="tree-item-trigger">
-						<LuChevronRight />
+					<Tree.ItemTrigger class="group p-2 hover:bg-neutral-primary">
+						<LuChevronRight class="group-data-open:rotate-90" />
 					</Tree.ItemTrigger>
 				</div>
 				<Tree.ItemContent class="tree-item-content">
@@ -132,7 +132,10 @@ function renderTreeItem(item: TreeItemType) {
 	}
 
 	return (
-		<Tree.Item key={item.id}>
+		<Tree.Item
+			class="hover:bg-neutral-accent transition-colors bg-inherit duration-200"
+			key={item.id}
+		>
 			<Tree.ItemLabel>{item.label}</Tree.ItemLabel>
 		</Tree.Item>
 	);
