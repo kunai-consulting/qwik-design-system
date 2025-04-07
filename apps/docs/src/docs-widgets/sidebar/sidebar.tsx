@@ -134,12 +134,11 @@ function renderTreeItem(item: TreeItemType) {
     <Tree.Item
       class="hover:bg-neutral-accent transition-colors bg-inherit duration-200"
       key={item.id}
+      asChild
     >
-      <Tree.ItemLabel asChild>
-        <Link href={item.id} class="w-full block">
-          {item.label}
-        </Link>
-      </Tree.ItemLabel>
+      <Link href={item.id} class="w-full block">
+        <Tree.ItemLabel>{item.label}</Tree.ItemLabel>
+      </Link>
     </Tree.Item>
   );
 }

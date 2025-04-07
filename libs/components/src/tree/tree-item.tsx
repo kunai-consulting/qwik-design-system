@@ -150,6 +150,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       e.preventDefault();
     })
   );
+
   return (
     <CollapsibleRootBase
       {...props}
