@@ -1,58 +1,91 @@
 import { component$ } from "@builder.io/qwik";
 import { Link, useContent, useLocation } from "@builder.io/qwik-city";
+import { TreeItemType } from "~/routes/base/tree/examples/hero";
+import { LuChevronRight } from "@qwikest/icons/lucide";
+import { Tree } from "@kunai-consulting/qwik";
+import { useSignal } from "@builder.io/qwik";
 
 export const Sidebar = component$(() => {
-  const { menu } = useContent();
-  const loc = useLocation();
+	const treeData: TreeItemType[] = [
+		{
+			id: "/base",
+			label: "Base",
+			children: [
+				{ id: "/base/checkbox", label: "Checkbox" },
+				{ id: "/base/checklist", label: "Checklist" },
+				{ id: "/base/pagination", label: "Pagination" },
+				{ id: "/base/otp", label: "OTP" },
+				{ id: "/base/scroll-area", label: "Scroll Area" },
+				{ id: "/base/radio-group", label: "Radio Group" },
+				{ id: "/base/calendar", label: "Calendar" },
+				{ id: "/base/file-upload", label: "File Upload" },
+				{ id: "/base/qr-code", label: "QR Code" },
+				{ id: "/base/resizable", label: "Resizable" },
+				{ id: "/base/slider", label: "Slider" },
+				{ id: "/base/tree", label: "Tree" },
+			],
+		},
+		{
+			id: "/contributing",
+			label: "Contributing",
+			children: [
+				{ id: "/contributing/intro", label: "Intro" },
+				{ id: "/contributing/growth-mindset", label: "Growth Mindset" },
+				{ id: "/contributing/new-component", label: "New Components" },
+				{
+					id: "/contributing/component-structure",
+					label: "Component Structure",
+				},
+				{ id: "/contributing/composition", label: "Composition" },
+				{ id: "/contributing/research", label: "Research" },
+				{ id: "/contributing/state", label: "State" },
+				{ id: "/contributing/indexing", label: "Indexing" },
+				{ id: "/contributing/events", label: "Events" },
+				{ id: "/contributing/testing", label: "Testing" },
+				{ id: "/contributing/styling", label: "Styling" },
+				{ id: "/contributing/philosophy", label: "Philosophy" },
+				{ id: "/contributing/accessibility", label: "Accessibility" },
+				{ id: "/contributing/conventions", label: "Conventions" },
+				{ id: "/contributing/forms", label: "Forms" },
+				{ id: "/contributing/tradeoffs", label: "Tradeoffs" },
+			],
+		},
+		{
+			id: "/qwik-core",
+			label: "Qwik core (future)",
+			children: [{ id: "/qwik-core/tasks", label: "Tasks" }],
+		},
+	];
 
-  const isContributing = loc.url.pathname.startsWith("/contributing");
-  const isBase = !isContributing; // Default to base section if not in contributing
-
-  // Find the core section (always show this)
-  const coreSection = menu?.items?.find(
-    (section) => section.text === "Qwik core (future)"
-  );
-
-  // Filter sections based on current path
-  const filteredItems = menu?.items?.filter((section) => {
-    if (section.text === "Base" && isBase) return true;
-    if (section.text === "Contributing" && isContributing) return true;
-    if (section.text === "Qwik core (future)") return true;
-    return false;
-  });
-
-  return (
-    <nav class="flex-col gap-4 sticky top-20 hidden md:flex h-[calc(100vh-160px)]">
-      <div class="mb-4">
-        <Link
-          href={isContributing ? "/base/checkbox" : "/contributing/intro"}
-          class="hover:text-qwik-blue-300 hover:underline"
-        >
-          {isContributing ? "Go to docs" : "Go to contributing"}
-        </Link>
-      </div>
-
-      {filteredItems?.map((section) => (
-        <div key={section.text}>
-          <h5 class="mb-2 font-bold text-xl text-white">{section.text}</h5>
-          <ul class="flex flex-col">
-            {section.items?.map((item) => (
-              <li key={item.href} class="hover:bg-neutral-interactive transition-colors">
-                <Link
-                  href={item.href}
-                  class={`w-full h-full p-1 px-2 block ${
-                    loc.url.pathname === item.href
-                      ? "text-qwik-blue-300 bg-neutral-primary"
-                      : "text-neutral-foreground"
-                  }`}
-                >
-                  {item.text}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </nav>
-  );
+	return (
+		<nav class="flex-col gap-4 sticky top-20 hidden md:flex h-[calc(100vh-160px)]">
+			<Tree.Root class="tree-root">
+				{treeData.map((item) => renderTreeItem(item))}
+			</Tree.Root>
+		</nav>
+	);
 });
+
+function renderTreeItem(item: TreeItemType) {
+	if (item.children && item.children.length > 0) {
+		return (
+			<Tree.Item key={item.id}>
+				<div class="flex items-center gap-2">
+					<Tree.ItemLabel>{item.label}</Tree.ItemLabel>
+					<Tree.ItemTrigger class="tree-item-trigger">
+						<LuChevronRight />
+					</Tree.ItemTrigger>
+				</div>
+				<Tree.ItemContent class="tree-item-content">
+					{item.children.map((child) => renderTreeItem(child))}
+				</Tree.ItemContent>
+			</Tree.Item>
+		);
+	}
+
+	return (
+		<Tree.Item key={item.id}>
+			<Tree.ItemLabel>{item.label}</Tree.ItemLabel>
+		</Tree.Item>
+	);
+}
