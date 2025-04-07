@@ -52,6 +52,7 @@ To learn more about contributing to QDS, please visit our [contribution docs](ht
 </a>
 
 <br />
+<br />
 
 [Kunai](https://kunaico.com/) funds the work that makes Qwik Design System possible.
 
