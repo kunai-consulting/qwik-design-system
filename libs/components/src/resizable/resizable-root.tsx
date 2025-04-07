@@ -1,3 +1,4 @@
+// no-bound-signal
 import {
   type PropsOf,
   Slot,
