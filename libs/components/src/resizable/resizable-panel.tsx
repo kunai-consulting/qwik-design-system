@@ -25,7 +25,7 @@ interface PublicResizablePanelProps extends PropsOf<"div"> {
   // Whether the panel can be collapsed
   collapsible?: boolean;
   // Initial collapsed state
-  defaultCollapsed?: boolean;
+  collapsed?: boolean;
   // Width to collapse to (in pixels)
   collapsedSize?: number;
   collapseThreshold?: number;
@@ -34,7 +34,7 @@ interface PublicResizablePanelProps extends PropsOf<"div"> {
 export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) => {
   const context = useContext(resizableContextId);
   const isVertical = context.orientation.value === "vertical";
-  const isCollapsed = useSignal(!!props.defaultCollapsed);
+  const isCollapsed = useSignal(!!props.collapsed);
   const panelId = useId();
   const {
     width,

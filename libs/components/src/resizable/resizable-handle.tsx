@@ -255,10 +255,10 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
       data-dragging={context.isDragging.value}
       // Indicates whether the resizable handle is disabled
       data-disabled={context.disabled.value}
-      onPointerDown$={onPointerDown$}
-      onPointerMove$={onPointerMove$}
-      onPointerUp$={onPointerUp$}
-      onKeyDown$={onKeyDown$}
+      onPointerDown$={[onPointerDown$, props.onPointerDown$]}
+      onPointerMove$={[onPointerMove$, props.onPointerDown$]}
+      onPointerUp$={[onPointerUp$, props.onPointerUp$]}
+      onKeyDown$={[onKeyDown$, props.onKeyDown$]}
       role="separator"
       aria-orientation={context.orientation.value}
       aria-valuemin={currentValue.value?.min ?? 0}
