@@ -62,74 +62,56 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       return;
     }
 
-    const allTreeItems = Array.from(
-      treeRoot.querySelectorAll("[data-qds-tree-item]")
-    ) as HTMLElement[];
-    console.log("All tree items:", allTreeItems.length);
-
-    const visibleTreeItems = allTreeItems.filter((item) => {
-      const isInClosedContent = item.closest(
-        "[data-qds-collapsible-content][data-closed]"
-      );
-      return !isInClosedContent;
-    });
-    console.log("Visible tree items:", visibleTreeItems.length);
-
     if (!context.currentFocusEl.value) {
       console.log("No current focus element");
       return;
     }
 
-    const currentIndex = visibleTreeItems.indexOf(context.currentFocusEl.value);
-    console.log("Current index:", currentIndex);
+    const {
+      getNextVisibleItem,
+      getPreviousVisibleItem,
+      getFirstVisibleItem,
+      getLastVisibleItem
+    } = useTree();
 
-    if (currentIndex === -1) {
-      console.log("Current element not found in visible items");
-      return;
-    }
+    const currentItem = context.currentFocusEl.value;
 
-    let nextIndex: number;
+    let nextItem: HTMLElement | null = null;
     switch (e.key) {
       case "ArrowDown":
-        nextIndex = (currentIndex + 1) % visibleTreeItems.length;
+        nextItem = getNextVisibleItem(currentItem);
         break;
       case "ArrowUp":
-        nextIndex =
-          (currentIndex - 1 + visibleTreeItems.length) % visibleTreeItems.length;
+        nextItem = getPreviousVisibleItem(currentItem);
         break;
       case "ArrowRight": {
-        const currentItem = context.currentFocusEl.value;
-        const isCollapsed = currentItem?.hasAttribute("data-closed");
+        const isCollapsed = currentItem.hasAttribute("data-closed");
         if (isCollapsed) {
           isOpenSig.value = true;
           return;
         }
-        nextIndex = (currentIndex + 1) % visibleTreeItems.length;
+        nextItem = getNextVisibleItem(currentItem);
         break;
       }
       case "ArrowLeft": {
-        const currentItem = context.currentFocusEl.value;
-        const isExpanded = !currentItem?.hasAttribute("data-closed");
+        const isExpanded = !currentItem.hasAttribute("data-closed");
         if (isExpanded) {
           isOpenSig.value = false;
           return;
         }
-        nextIndex =
-          (currentIndex - 1 + visibleTreeItems.length) % visibleTreeItems.length;
+        nextItem = getPreviousVisibleItem(currentItem);
         break;
       }
       case "Home":
-        nextIndex = 0;
+        nextItem = getFirstVisibleItem(treeRoot);
         break;
       case "End":
-        nextIndex = visibleTreeItems.length - 1;
+        nextItem = getLastVisibleItem(treeRoot);
         break;
       default:
         return;
     }
 
-    console.log("Next index:", nextIndex, "Key pressed:", e.key);
-    const nextItem = visibleTreeItems[nextIndex];
     console.log("Next item to focus:", nextItem);
     nextItem?.focus();
   });
