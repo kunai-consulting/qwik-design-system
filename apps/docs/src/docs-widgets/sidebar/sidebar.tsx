@@ -124,7 +124,7 @@ function renderTreeItem(item: TreeItemType) {
 						<LuChevronRight class="group-data-open:rotate-90" />
 					</Tree.ItemTrigger>
 				</div>
-				<Tree.ItemContent class="transition-[height] duration-200 group-data-open:h-auto h-0">
+				<Tree.ItemContent class="transition-all duration-200 group-data-open:h-auto h-0 transition-discrete overflow-clip">
 					{item.children.map((child) => renderTreeItem(child))}
 				</Tree.ItemContent>
 			</Tree.Item>
