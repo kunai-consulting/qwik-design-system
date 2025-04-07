@@ -117,14 +117,14 @@ export const Sidebar = component$(() => {
 function renderTreeItem(item: TreeItemType) {
 	if (item.children && item.children.length > 0) {
 		return (
-			<Tree.Item key={item.id}>
+			<Tree.Item class="group" key={item.id}>
 				<div class="flex items-center gap-2 hover:bg-neutral-accent transition-colors bg-inherit duration-200 justify-between">
 					<Tree.ItemLabel>{item.label}</Tree.ItemLabel>
 					<Tree.ItemTrigger class="group p-2 hover:bg-neutral-primary">
 						<LuChevronRight class="group-data-open:rotate-90" />
 					</Tree.ItemTrigger>
 				</div>
-				<Tree.ItemContent class="tree-item-content">
+				<Tree.ItemContent class="transition-[height] duration-200 group-data-open:h-auto h-0">
 					{item.children.map((child) => renderTreeItem(child))}
 				</Tree.ItemContent>
 			</Tree.Item>
