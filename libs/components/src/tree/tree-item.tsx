@@ -129,6 +129,12 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
     })
   );
 
+  const handleClick$ = $((e: MouseEvent) => {
+    // TODO: fix the tree item trigger not opening because of this.
+    e.stopPropagation();
+    isOpenSig.value = !isOpenSig.value;
+  });
+
   return (
     <CollapsibleRootBase
       {...props}
@@ -137,6 +143,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       bind:open={isOpenSig}
       tabIndex={0}
       onFocus$={[handleFocus$, props.onFocus$]}
+      onClick$={[handleClick$, props.onClick$]}
       onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
       data-qds-tree-item
       data-level={level}
