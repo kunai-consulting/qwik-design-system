@@ -53,6 +53,9 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   });
 
   const handleKeyNavigation$ = $((e: KeyboardEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+
     const treeRoot = context.rootRef.value;
     if (!treeRoot) {
       console.log("No tree root found");
@@ -132,7 +135,8 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   });
 
   /**
-   *  Todo: Change this to a sync$ passed to the Render component once v2 is released (sync QRL serialization issue)
+   *  Todo: Change this to a sync$ passed to the Render component once v2 is 
+   released (sync QRL serialization issue)
    *
    */
   useOnWindow(
@@ -146,7 +150,6 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       e.preventDefault();
     })
   );
-
   return (
     <CollapsibleRootBase
       {...props}
