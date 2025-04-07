@@ -2,6 +2,7 @@ import { component$ } from "@builder.io/qwik";
 import type { TreeItemType } from "~/routes/base/tree/examples/hero";
 import { LuChevronRight } from "@qwikest/icons/lucide";
 import { Tree } from "@kunai-consulting/qwik";
+import { Link } from "@builder.io/qwik-city";
 
 export const Sidebar = component$(() => {
   const treeData: TreeItemType[] = [
@@ -134,7 +135,11 @@ function renderTreeItem(item: TreeItemType) {
       class="hover:bg-neutral-accent transition-colors bg-inherit duration-200"
       key={item.id}
     >
-      <Tree.ItemLabel>{item.label}</Tree.ItemLabel>
+      <Tree.ItemLabel asChild>
+        <Link href={item.id} class="w-full block">
+          {item.label}
+        </Link>
+      </Tree.ItemLabel>
     </Tree.Item>
   );
 }
