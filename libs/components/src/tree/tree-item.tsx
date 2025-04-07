@@ -94,6 +94,27 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
         nextIndex =
           (currentIndex - 1 + visibleTreeItems.length) % visibleTreeItems.length;
         break;
+      case "ArrowRight": {
+        const currentItem = context.currentFocusEl.value;
+        const isCollapsed = currentItem?.hasAttribute("data-closed");
+        if (isCollapsed) {
+          isOpenSig.value = true;
+          return;
+        }
+        nextIndex = (currentIndex + 1) % visibleTreeItems.length;
+        break;
+      }
+      case "ArrowLeft": {
+        const currentItem = context.currentFocusEl.value;
+        const isExpanded = !currentItem?.hasAttribute("data-closed");
+        if (isExpanded) {
+          isOpenSig.value = false;
+          return;
+        }
+        nextIndex =
+          (currentIndex - 1 + visibleTreeItems.length) % visibleTreeItems.length;
+        break;
+      }
       case "Home":
         nextIndex = 0;
         break;
