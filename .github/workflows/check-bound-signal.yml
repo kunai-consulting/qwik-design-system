@@ -3,8 +3,6 @@ name: Check useBoundSignal Usage
 on:
   pull_request:
     branches: [ main ]
-    paths:
-      - '**/*-root.tsx'
 
 jobs:
   check-bound-signal:
