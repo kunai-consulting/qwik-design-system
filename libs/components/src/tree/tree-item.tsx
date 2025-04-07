@@ -73,6 +73,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       getFirstVisibleItem,
       getLastVisibleItem
     } = useTree();
+
     const currentItem = context.currentFocusEl.value;
 
     let nextItem: HTMLElement | null = null;

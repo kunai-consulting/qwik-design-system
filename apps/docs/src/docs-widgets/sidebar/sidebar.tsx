@@ -120,7 +120,7 @@ function renderTreeItem(item: TreeItemType) {
         <div class="flex items-center gap-2 hover:bg-neutral-accent transition-colors bg-inherit duration-200 justify-between">
           <Tree.ItemLabel>{item.label}</Tree.ItemLabel>
           <Tree.ItemTrigger class="group p-2 hover:bg-neutral-primary">
-            <LuChevronRight class="group-data-open:rotate-90" />
+            <LuChevronRight class="group-data-open:rotate-90 transition-transform duration-200" />
           </Tree.ItemTrigger>
         </div>
         <Tree.ItemContent class="pl-4 transition-all overflow-hidden">
