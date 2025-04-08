@@ -1,1 +1,70 @@
-TODO: research
+# File Upload Research
+
+## Research Links:
+- [Ark UI File Upload](https://ark-ui.com/react/docs/components/file-upload)
+- [Radix UI File Drop](https://www.radix-ui.com/primitives/docs/components/file-drop)
+- [MUI File Upload](https://mui.com/material-ui/react-button/#file-upload)
+
+## Features:
+- [ ] Single file upload
+- [ ] Multiple file upload
+- [ ] Drag and drop support
+- [ ] File type validation
+- [ ] Error handling
+
+## Component Structure:
+- Root
+- Input
+- Dropzone
+- Trigger
+- ErrorMessage
+
+## Keyboard Interactions:
+- Space/Enter to activate upload
+- Tab navigation
+- Escape to cancel
+
+## Attributes:
+- role="button" (for dropzone)
+- aria-invalid
+- aria-describedby (for error messages)
+- accept attribute for file types
+
+## Use Cases:
+- Profile picture uploads
+- Document submission
+- Media galleries
+- Form attachments
+
+## API Design:
+
+### Root:
+```typescript
+interface PublicFileUploadProps {
+  multiple?: boolean;
+  accept?: string;
+  disabled?: boolean;
+  onFilesChange$?: PropFunction<(files: FileInfo[]) => void>;
+}
+```
+
+### FileInfo:
+```typescript
+interface FileInfo {
+  name: string;
+  size: number;
+  type: string;
+  lastModified: number;
+  file: NoSerialize<File>;
+}
+```
+
+## Known Issues:
+- Large file handling performance
+
+## Questions:
+- Should we provide built-in validation or leave it to consumers?
+- Should we add maxSize validation in the core API?
+- Do we need to implement client-side image previews?
+- Do we need to provide size limitation checks based on provided configs?
+- Would a progress indicator help clients for larger uploads?
