@@ -1,4 +1,4 @@
-import { component$, useStyles$ } from "@builder.io/qwik";
+import { $, component$, useStyles$ } from "@builder.io/qwik";
 import { Resizable } from "@kunai-consulting/qwik";
 import styles from "./resizable-custom.css?inline";
 
@@ -15,6 +15,12 @@ export default component$(() => {
           collapsible
           collapsedSize={50}
           collapseThreshold={0.05}
+          onCollapse$={$(() => {
+            console.log("Panel collapsed");
+          })}
+          onExpand$={$(() => {
+            console.log("Panel expanded");
+          })}
         >
           <div style={{ padding: "20px", color: "black" }}>
             Collapsible Panel (min: 150, collapsed: 50)

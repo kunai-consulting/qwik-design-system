@@ -1,15 +1,19 @@
 import {
   type PropsOf,
+  type QRL,
   Slot,
   component$,
   useContext,
   useId,
-  useSignal
+  useSignal,
+  useTask$
 } from "@builder.io/qwik";
+import { getNextIndex } from "../../utils/indexer";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { resizableContextId } from "./resizable-context";
-interface PublicResizablePanelProps extends PropsOf<"div"> {
+
+interface PublicResizablePanelProps extends Omit<PropsOf<"div">, "onResize$"> {
   // Default height of the panel (in pixels)
   height?: number;
   // Default width of the panel (in pixels)
@@ -29,6 +33,13 @@ interface PublicResizablePanelProps extends PropsOf<"div"> {
   // Width to collapse to (in pixels)
   collapsedSize?: number;
   collapseThreshold?: number;
+  // Callback fired when the panel is resized
+  onResize$?: QRL<(size: number) => void>;
+  // Callback fired when the panel is collapsed
+  onCollapse$?: QRL<() => void>;
+  // Callback fired when the panel is expanded
+  onExpand$?: QRL<() => void>;
+  _index?: number;
 }
 /** A resizable panel component that can be adjusted using a ResizableHandle */
 export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) => {
@@ -36,6 +47,8 @@ export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) 
   const isVertical = context.orientation.value === "vertical";
   const isCollapsed = useSignal(!!props.collapsed);
   const panelId = useId();
+  const panelRef = useSignal<HTMLElement>();
+
   const {
     width,
     height,
@@ -46,8 +59,24 @@ export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) 
     collapsible = false,
     collapsedSize = 0,
     collapseThreshold = 0.05,
+    onResize$,
+    _index,
     ...rest
   } = props;
+
+  useTask$(function getIndexOrder() {
+    if (_index === undefined) {
+      throw new Error("ResizablePanel cannot find its proper index.");
+    }
+
+    context.panels.value[_index] = {
+      ref: panelRef,
+      onResize$: props.onResize$,
+      onCollapse$: props.onCollapse$,
+      onExpand$: props.onExpand$
+    };
+  });
+
   const getPanelStyles = () => {
     const size = isVertical ? height : width;
     const minSize = isVertical ? minHeight : minWidth;
@@ -76,6 +105,7 @@ export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) 
       fallback="div"
       {...rest}
       id={panelId}
+      ref={panelRef}
       // The identifier for the resizable panel component
       data-qds-resizable-panel
       // Indicates the orientation of the resizable panel (vertical or horizontal)
@@ -94,4 +124,8 @@ export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) 
     </Render>
   );
 });
-export const ResizablePanel = withAsChild(ResizablePanelBase);
+export const ResizablePanel = withAsChild(ResizablePanelBase, (props) => {
+  const nextIndex = getNextIndex("resizable");
+  props._index = nextIndex;
+  return props;
+});

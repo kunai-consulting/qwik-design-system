@@ -34,7 +34,7 @@ type PublicPanelSizes = {
 /** A resizable handle component that allows users to drag and resize adjacent panels */
 export const ResizableHandleBase = component$<PublicResizableHandleProps>((props) => {
   const context = useContext(resizableContextId);
-  const elementRef = useSignal<HTMLElement>();
+  const handleRef = useSignal<HTMLElement>();
   const prevPanelId = useSignal<string>();
   const nextPanelId = useSignal<string>();
   const totalDragDistance = useSignal(0);
@@ -47,9 +47,9 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
     return Number.parseInt(element.dataset.minSize || "0", 10);
   });
   const getPanels = $(() => {
-    if (!elementRef.value) return null;
-    const prevPanel = elementRef.value.previousElementSibling as HTMLElement;
-    const nextPanel = elementRef.value.nextElementSibling as HTMLElement;
+    if (!handleRef.value) return null;
+    const prevPanel = handleRef.value.previousElementSibling as HTMLElement;
+    const nextPanel = handleRef.value.nextElementSibling as HTMLElement;
     const container = prevPanel?.parentElement as HTMLElement;
     if (!(prevPanel && nextPanel && container)) return null;
     return { prevPanel, nextPanel, container } as PublicPanels;
@@ -72,7 +72,7 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
         getMinSize(prevPanel),
         getMinSize(nextPanel)
       ]);
-      const handleSize = elementRef.value?.getBoundingClientRect()[sizeProp] || 0;
+      const handleSize = handleRef.value?.getBoundingClientRect()[sizeProp] || 0;
       const containerSize = container[clientSizeProp];
       const prevSize = prevPanel.getBoundingClientRect()[sizeProp];
       const nextSize = nextPanel.getBoundingClientRect()[sizeProp];
@@ -134,6 +134,15 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
           `${sizes.containerSize - prevCollapsedSize - sizes.handleSize}px`;
         totalDragDistance.value = 0;
 
+        // Trigger onCollapse callback
+        const prevIndex = context.panels.value.findIndex(
+          (p) => p.ref.value === panels.prevPanel
+        );
+        if (prevIndex !== -1) {
+          const prevPanel = context.panels.value[prevIndex];
+          await prevPanel.onCollapse$?.();
+        }
+
         context.startPosition.value = null;
         return true;
       }
@@ -148,6 +157,16 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
           panels.prevPanel.style[sizeProps.sizeProp] = `${sizes.prevMinSize}px`;
           panels.nextPanel.style[sizeProps.sizeProp] =
             `${sizes.containerSize - sizes.prevMinSize - sizes.handleSize}px`;
+
+          // Trigger onExpand callback
+          const prevIndex = context.panels.value.findIndex(
+            (p) => p.ref.value === panels.prevPanel
+          );
+          if (prevIndex !== -1) {
+            const prevPanel = context.panels.value[prevIndex];
+            await prevPanel.onExpand$?.();
+          }
+
           totalDragDistance.value = 0;
           return true;
         }
@@ -173,8 +192,8 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
     return false;
   });
   useTask$(async ({ track }) => {
-    track(() => elementRef.value);
-    if (!elementRef.value) return;
+    track(() => handleRef.value);
+    if (!handleRef.value) return;
     const panels = await getPanels();
     if (!panels) return;
     prevPanelId.value = panels.prevPanel.id;
@@ -183,13 +202,13 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
   });
   useTask$(async ({ track }) => {
     const isDragging = track(() => context.isDragging.value);
-    if (isDragging && elementRef.value) {
+    if (isDragging && handleRef.value) {
       currentValue.value = await calculateValue();
     }
   });
   const onPointerDown$ = $(async (e: PointerEvent) => {
-    if (!elementRef.value || context.disabled.value) return;
-    elementRef.value.setPointerCapture(e.pointerId);
+    if (!handleRef.value || context.disabled.value) return;
+    handleRef.value.setPointerCapture(e.pointerId);
     totalDragDistance.value = 0;
     const panels = await getPanels();
     if (!panels) return;
@@ -211,13 +230,37 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
       context.startPosition.value = currentPosition;
     }
   });
-  const onPointerUp$ = $(() => {
-    if (!elementRef.value) return;
+  const handleResize = $(async () => {
+    const panels = await getPanels();
+    if (!panels) return;
+    const sizeProps = await getSizeProperties();
+    const prevSize = panels.prevPanel.getBoundingClientRect()[sizeProps.sizeProp];
+    const nextSize = panels.nextPanel.getBoundingClientRect()[sizeProps.sizeProp];
+
+    const prevIndex = context.panels.value.findIndex(
+      (p) => p.ref.value === panels.prevPanel
+    );
+    const nextIndex = context.panels.value.findIndex(
+      (p) => p.ref.value === panels.nextPanel
+    );
+
+    if (prevIndex !== -1) {
+      const prevPanel = context.panels.value[prevIndex];
+      await prevPanel.onResize$?.(prevSize);
+    }
+    if (nextIndex !== -1) {
+      const nextPanel = context.panels.value[nextIndex];
+      await nextPanel.onResize$?.(nextSize);
+    }
+  });
+  const onPointerUp$ = $(async () => {
+    if (!handleRef.value) return;
     context.isDragging.value = false;
     context.startPosition.value = null;
+    await handleResize();
   });
   const onKeyDown$ = $(async (e: KeyboardEvent) => {
-    if (!elementRef.value || context.disabled.value) return;
+    if (!handleRef.value || context.disabled.value) return;
     const isVertical = context.orientation.value === "vertical";
     const panels = await getPanels();
     if (!panels) return;
@@ -231,6 +274,7 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
           ? sizes.prevMinSize
           : sizes.containerSize - sizes.handleSize - sizes.nextMinSize;
       await performResize(targetPrevSize - sizes.prevSize);
+      await handleResize();
     } else {
       const deltaMap = {
         ArrowLeft: !isVertical ? -step : 0,
@@ -239,14 +283,17 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
         ArrowDown: isVertical ? step : 0
       };
       const delta = deltaMap[e.key as keyof typeof deltaMap] || 0;
-      if (delta) await performResize(delta);
+      if (delta) {
+        await performResize(delta);
+        await handleResize();
+      }
     }
   });
   return (
     <Render
       fallback="div"
       {...props}
-      ref={elementRef}
+      ref={handleRef}
       // The identifier for the resizable handle component
       data-qds-resizable-handle
       // Indicates the orientation of the resizable handle (vertical or horizontal)
@@ -256,7 +303,7 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
       // Indicates whether the resizable handle is disabled
       data-disabled={context.disabled.value}
       onPointerDown$={[onPointerDown$, props.onPointerDown$]}
-      onPointerMove$={[onPointerMove$, props.onPointerDown$]}
+      onPointerMove$={[onPointerMove$, props.onPointerMove$]}
       onPointerUp$={[onPointerUp$, props.onPointerUp$]}
       onKeyDown$={[onKeyDown$, props.onKeyDown$]}
       role="separator"

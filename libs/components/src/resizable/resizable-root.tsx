@@ -10,9 +10,14 @@ import {
   useStyles$,
   useTask$
 } from "@builder.io/qwik";
+import { resetIndexes } from "../../utils/indexer";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-import { type ResizableContext, resizableContextId } from "./resizable-context";
+import {
+  type PanelRef,
+  type ResizableContext,
+  resizableContextId
+} from "./resizable-context";
 import styles from "./resizable.css?inline";
 type PublicResizableRootProps = {
   /** Direction in which the panels can be resized */
@@ -49,12 +54,14 @@ export const ResizableRootBase = component$<PublicResizableRootProps>((props) =>
     [key: string]: number;
   }>({});
   const startPosition = useSignal<number | null>(null);
+  const panels = useSignal<PanelRef[]>([]);
   const context: ResizableContext = {
     orientation: useSignal(orientation),
     disabled: useSignal(disabled),
     startPosition,
     isDragging,
-    initialSizes
+    initialSizes,
+    panels
   };
   useContextProvider(resizableContextId, context);
   useTask$(({ track }) => {
@@ -75,4 +82,7 @@ export const ResizableRootBase = component$<PublicResizableRootProps>((props) =>
     </Render>
   );
 });
-export const ResizableRoot = withAsChild(ResizableRootBase);
+export const ResizableRoot = withAsChild(ResizableRootBase, (props) => {
+  resetIndexes("resizable");
+  return props;
+});
