@@ -1,7 +1,9 @@
 import {
+  $,
   type Component,
   type PropsOf,
   component$,
+  useId,
   useSignal,
   useTask$
 } from "@builder.io/qwik";
@@ -10,6 +12,7 @@ import { metaGlobComponents, rawComponents } from "~/utils/component-import";
 
 import { useLocation } from "@builder.io/qwik-city";
 import { Highlight } from "./highlight";
+import { createStackblitzProject } from "./stackblitz";
 
 type ShowcaseProps = PropsOf<"div"> & {
   name?: string;
@@ -18,10 +21,21 @@ type ShowcaseProps = PropsOf<"div"> & {
 export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
   const location = useLocation();
   const componentPath = `/src/routes${location.url.pathname}examples/${name}.tsx`;
+  const id = useId();
+  const stackblitzContainerId = `stackblitz-container-${id}`;
+  const stackblitzParentContainerId = `stackblitz-parent-${id}`;
 
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const MetaGlobComponentSig = useSignal<Component<any>>();
   const componentCodeSig = useSignal<string>();
+
+  const openStackblitz$ = $(async () => {
+    await createStackblitzProject(
+      componentCodeSig.value || "",
+      stackblitzParentContainerId,
+      stackblitzContainerId
+    );
+  });
 
   useTask$(async () => {
     try {
@@ -41,6 +55,12 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
         <Carousel.Bullet class="data-[active]:bg-qwik-blue-800 data-[active]:!text-[#fff] p-2 hover:bg-qwik-blue-200 hover:text-qwik-neutral-700 transition-colors outline-qwik-blue-500">
           Code
         </Carousel.Bullet>
+        <Carousel.Bullet
+          onClick$={openStackblitz$}
+          class="data-[active]:bg-qwik-blue-800 data-[active]:!text-[#fff] p-2 hover:bg-qwik-blue-200 hover:text-qwik-neutral-700 transition-colors outline-qwik-blue-500"
+        >
+          New Project
+        </Carousel.Bullet>
       </Carousel.Pagination>
 
       <Carousel.Slide class="border border-neutral-primary">
@@ -50,6 +70,14 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
       </Carousel.Slide>
       <Carousel.Slide class="border border-neutral-primary overflow-clip text-sm">
         <Highlight code={componentCodeSig.value || ""} />
+      </Carousel.Slide>
+      <Carousel.Slide class="border border-neutral-primary overflow-clip text-sm">
+        <section
+          id={stackblitzParentContainerId}
+          class={"flex flex-col items-center *:flex-wrap"}
+        >
+          <div id={stackblitzContainerId} />
+        </section>
       </Carousel.Slide>
     </Carousel.Root>
   );

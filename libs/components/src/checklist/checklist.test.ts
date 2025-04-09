@@ -45,8 +45,14 @@ test.describe("Select All", () => {
         THEN the main checkbox should be partially checked`, async ({ page }) => {
     const d = await setup(page, "select-all");
 
-    await d.getTriggerAt(1).click();
-    await expect(d.getIndicatorAt(1)).toBeVisible();
+    // The first normal checkbox trigger.
+    // The select all main checkbox does not have the [data-qds-checkbox-trigger] locator, so it is not considered.
+    const triggerIndex = 0;
+    // The indicator index is the trigger index + 1, because we have to consider the select all main checkbox,
+    // since it has the [data-qds-checkbox-indicator] locator
+    const indicatorIndex = triggerIndex + 1;
+    await d.getTriggerAt(triggerIndex).click();
+    await expect(d.getIndicatorAt(indicatorIndex)).toBeVisible();
     await expect(d.getMainTrigger()).toHaveAttribute("aria-checked", "mixed");
   });
 
@@ -136,5 +142,21 @@ test.describe("a11y", () => {
 
     await expect(d.getTriggerAt(1)).toHaveAttribute("role", "checkbox");
     await expect(d.getTriggerAt(1)).toHaveAttribute("aria-checked", "false");
+  });
+});
+
+test.describe("Form integration", () => {
+  test(`GIVEN a checklist inside a form
+        WHEN items are checked and the form is submitted
+        THEN the checked items should be included in the form data`, async ({ page }) => {
+    const d = await setup(page, "form");
+
+    await d.getTriggerAt(1).click();
+    await d.getTriggerAt(2).click();
+    await d.getSubmitButton().click();
+
+    await expect(d.getSubmittedData()).toContainText(
+      '{ "events": "on", "fashion": "on" }'
+    );
   });
 });
