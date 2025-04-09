@@ -3,7 +3,6 @@ import {
   type NoSerialize,
   type Signal,
   noSerialize,
-  sync$,
   useComputed$,
   useSignal
 } from "@builder.io/qwik";
@@ -60,7 +59,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
     }
   });
 
-  const onDragEnter$ = sync$((e: DragEvent) => {
+  const onDragEnter$ = $((e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -74,7 +73,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
     }
   });
 
-  const onDragOver$ = sync$((e: DragEvent) => {
+  const onDragOver$ = $((e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -84,8 +83,8 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
       e.dataTransfer.dropEffect = "copy";
     }
   });
-
-  const onDragLeave$ = sync$((e: DragEvent) => {
+  // onDragLeave$={[handleDragLeaveSync$, handleDragLeave$, props.onDragLeave$]}
+  const onDragLeave$ = $((e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -105,7 +104,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
     }
   });
 
-  const onDrop$ = sync$((e: DragEvent) => {
+  const onDrop$ = $((e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -127,7 +126,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
     }
   });
 
-  const onWindowDragOver$ = sync$((e: DragEvent) => {
+  const onWindowDragOver$ = $((e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (e.dataTransfer) {
