@@ -28,8 +28,8 @@ import styles from "./popover.css?inline";
 export const popoverContextId = createContextId<PopoverContext>("qds-popover");
 
 type PopoverContext = {
-  panelRef: Signal<HTMLDivElement | undefined>;
-  triggerRef: Signal<HTMLButtonElement | undefined>;
+  contentRef: Signal<HTMLDivElement | undefined>;
+  anchorRef: Signal<HTMLButtonElement | undefined>;
   localId: string;
   isOpenSig: Signal<boolean>;
   canExternallyChangeSig: Signal<boolean>;
@@ -38,8 +38,8 @@ type PopoverContext = {
 
 export const PopoverRootBase = component$((props: PopoverRootProps) => {
   const { "bind:open": givenOpenSig, onChange$, ...rest } = props;
-  const panelRef = useSignal<HTMLDivElement>();
-  const triggerRef = useSignal<HTMLButtonElement>();
+  const contentRef = useSignal<HTMLDivElement>();
+  const anchorRef = useSignal<HTMLButtonElement>();
   const rootRef = useSignal<HTMLDivElement>();
   const localId = useId();
   const openPropSig = useComputed$(() => props.open);
@@ -64,8 +64,8 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
   });
 
   const context: PopoverContext = {
-    panelRef,
-    triggerRef,
+    contentRef,
+    anchorRef,
     localId,
     isOpenSig,
     canExternallyChangeSig,
@@ -76,12 +76,12 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
 
   const handleExternalToggle$ = $(async () => {
     if (!canExternallyChangeSig.value) return;
-    if (!panelRef.value) return;
+    if (!contentRef.value) return;
 
     if (isOpenSig.value) {
-      await panelRef.value.showPopover();
+      await contentRef.value.showPopover();
     } else {
-      await panelRef.value.hidePopover();
+      await contentRef.value.hidePopover();
     }
   });
 
@@ -123,7 +123,7 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
   const handleOpenOnRender$ = isInitiallyOpenSig.value
     ? $(async () => {
         await handlePolyfill$();
-        context.panelRef.value?.showPopover();
+        context.contentRef.value?.showPopover();
       })
     : undefined;
 
@@ -134,7 +134,6 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
       onQVisible$={handleOpenOnRender$}
       ref={rootRef}
       fallback="div"
-      style={`--qds-popover-id: ${localId}`}
       {...rest}
     >
       <Slot />

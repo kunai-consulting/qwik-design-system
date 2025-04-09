@@ -1,10 +1,10 @@
 @layer qds {
-  [data-qds-popover-trigger] {
-    anchor-name: var(--qds-popover-id);
+  [data-qds-popover-anchor] {
+    anchor-name: test-anchor;
   }
 
-  [data-qds-popover-panel] {
-    position-anchor: var(--qds-popover-id);
+  [data-qds-popover-content] {
+    position-anchor: test-anchor;
     position-try-fallbacks: top;
     position: absolute;
     top: anchor(bottom);

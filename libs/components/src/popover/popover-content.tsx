@@ -28,9 +28,9 @@ export const PopoverContentBase = component$((props: PropsOf<"div">) => {
       onToggle$={[handleToggle$, props.onToggle$]}
       popover="auto"
       id={panelId}
-      ref={context.panelRef}
+      ref={context.contentRef}
       fallback="div"
-      data-qds-popover-panel
+      data-qds-popover-content
       {...props}
     >
       <Slot />
