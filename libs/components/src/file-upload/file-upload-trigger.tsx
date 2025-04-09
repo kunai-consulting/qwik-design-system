@@ -5,8 +5,6 @@ type PublicTriggerProps = PropsOf<"button">;
  * Trigger component that opens the file selection dialog
  * Acts as a styled button that triggers the hidden file input
  */
-/** Trigger component that opens the file selection dialog
- * Acts as a styled button that triggers the hidden file input */
 export const FileUploadTrigger = component$<PublicTriggerProps>((props) => {
   const context = useContext(fileUploadContextId);
   /**
