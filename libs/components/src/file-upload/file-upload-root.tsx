@@ -6,8 +6,8 @@ import {
   useContextProvider,
   useSignal
 } from "@builder.io/qwik";
-import { type FileInfo, fileUploadContextId } from "./file-upload-context";
 import { withAsChild } from "../as-child/as-child";
+import { type FileInfo, fileUploadContextId } from "./file-upload-context";
 type HTMLDivProps = PropsOf<"div">;
 /**
  * Props specific to file upload functionality
@@ -38,10 +38,10 @@ export const FileUploadRootBase = component$<PublicRootProps>((props) => {
     onFilesChange$: props.onFilesChange$
   };
   useContextProvider(fileUploadContextId, context);
-  const { multiple, accept, disabled, onFilesChange$, ...htmlProps } = props;
+  const { multiple, accept, disabled, onFilesChange$, ...rest } = props;
   return (
     // The root container element for the entire file upload component
-    <div {...htmlProps} data-file-upload-root data-disabled={disabled ? "" : undefined}>
+    <div {...rest} data-file-upload-root data-disabled={disabled ? "" : undefined}>
       <Slot />
     </div>
   );
