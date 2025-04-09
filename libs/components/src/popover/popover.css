@@ -1,13 +1,8 @@
 @layer qds {
-  [data-qds-popover-anchor] {
-    anchor-name: test-anchor;
-  }
-
   [data-qds-popover-content] {
-    position-anchor: test-anchor;
-    position-try-fallbacks: top;
     position: absolute;
     top: anchor(bottom);
     left: anchor(left);
+    position-try-fallbacks: top;
   }
 }
