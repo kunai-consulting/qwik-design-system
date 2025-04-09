@@ -11,14 +11,12 @@
 - [ ] Multiple file upload
 - [ ] Drag and drop support
 - [ ] File type validation
-- [ ] Error handling
 
 ## Component Structure:
 - Root
 - Input
 - Dropzone
 - Trigger
-- ErrorMessage
 
 ## Keyboard Interactions:
 - Space/Enter to activate upload
@@ -28,7 +26,6 @@
 ## Attributes:
 - role="button" (for dropzone)
 - aria-invalid
-- aria-describedby (for error messages)
 - accept attribute for file types
 
 ## Use Cases:
@@ -64,8 +61,6 @@ interface FileInfo {
 - Large file handling performance
 
 ## Questions:
-- Should we provide built-in validation or leave it to consumers?
 - Should we add maxSize validation in the core API?
-- Do we need to implement client-side image previews?
 - Do we need to provide size limitation checks based on provided configs?
 - Would a progress indicator help clients for larger uploads?
