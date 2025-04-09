@@ -7,6 +7,7 @@ import {
   useSignal
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
 import { type FileInfo, fileUploadContextId } from "./file-upload-context";
 type HTMLDivProps = PropsOf<"div">;
 /**
@@ -41,9 +42,14 @@ export const FileUploadRootBase = component$<PublicRootProps>((props) => {
   const { multiple, accept, disabled, onFilesChange$, ...rest } = props;
   return (
     // The root container element for the entire file upload component
-    <div {...rest} data-file-upload-root data-disabled={disabled ? "" : undefined}>
+    <Render
+      fallback="div"
+      data-file-upload-root
+      data-disabled={disabled ? "" : undefined}
+      {...rest}
+    >
       <Slot />
-    </div>
+    </Render>
   );
 });
 
