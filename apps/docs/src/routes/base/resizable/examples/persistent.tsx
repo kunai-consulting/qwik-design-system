@@ -1,6 +1,6 @@
-import {component$, useStyles$} from "@builder.io/qwik";
+import { component$, useStyles$ } from "@builder.io/qwik";
 import { Resizable } from "@kunai-consulting/qwik";
-import styles from "./resizable-custom.css?inline"
+import styles from "./resizable-custom.css?inline";
 
 export default component$(() => {
   useStyles$(styles);

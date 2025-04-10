@@ -16,6 +16,7 @@ export interface ResizableContext {
   initialSizes: Signal<{ [key: string]: number }>;
   panels: Signal<PanelRef[]>;
   storageKey: Signal<string | undefined>;
+  saveState: QRL<(sizes: { [key: number]: number }) => void>;
 }
 
 export const resizableContextId = createContextId<ResizableContext>("resizable-context");

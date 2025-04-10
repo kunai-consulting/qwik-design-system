@@ -1,6 +1,6 @@
 import { component$, useStyles$ } from "@builder.io/qwik";
 import { Resizable } from "@kunai-consulting/qwik";
-import styles from "./resizable-custom.css?inline"
+import styles from "./resizable-custom.css?inline";
 
 export default component$(() => {
   useStyles$(styles);
@@ -19,7 +19,7 @@ export default component$(() => {
             Left Panel (min: 100, max: 500)
           </div>
         </Resizable.Panel>
-        <Resizable.Handle class="resizable-handle"/>
+        <Resizable.Handle class="resizable-handle" />
         <Resizable.Panel minWidth={150}>
           <div style={{ padding: "20px", color: "black" }}>Right Panel (min: 150)</div>
         </Resizable.Panel>

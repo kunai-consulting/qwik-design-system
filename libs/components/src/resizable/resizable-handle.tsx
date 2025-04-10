@@ -90,14 +90,7 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
       }
     }
 
-    try {
-      localStorage.setItem(
-        `resizable-${context.storageKey.value}`,
-        JSON.stringify(sizes)
-      );
-    } catch (e) {
-      console.warn("Failed to save layout:", e);
-    }
+    await context.saveState(sizes);
   });
 
   const getPanelSizes = $(

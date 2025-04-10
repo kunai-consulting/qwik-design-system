@@ -1,9 +1,12 @@
 // no-bound-signal
 import {
+  $,
   type PropsOf,
   Slot,
   component$,
+  createSignal,
   sync$,
+  useConstant,
   useContextProvider,
   useOnWindow,
   useSignal,
@@ -40,6 +43,8 @@ export const ResizableRootBase = component$<PublicResizableRootProps>((props) =>
   useStyles$(styles);
   const { orientation = "horizontal", disabled = false, storageKey } = props;
 
+  const storedSizes = useConstant(() => createSignal<{ [key: number]: number }>({}));
+
   useOnWindow(
     "keydown",
     sync$((event: KeyboardEvent) => {
@@ -61,21 +66,28 @@ export const ResizableRootBase = component$<PublicResizableRootProps>((props) =>
     })
   );
   const isDragging = useSignal(false);
-  const initialSizes = useSignal<{
-    [key: string]: number;
-  }>({});
   const startPosition = useSignal<number | null>(null);
   const panels = useSignal<PanelRef[]>([]);
+
+  const saveState = $((sizes: { [key: number]: number }) => {
+    if (typeof window !== "undefined" && storageKey) {
+      try {
+        localStorage.setItem(`resizable-${storageKey}`, JSON.stringify(sizes));
+        storedSizes.value = sizes;
+      } catch (e) {
+        console.warn("Failed to save layout:", e);
+      }
+    }
+  });
 
   useVisibleTask$(({ track }) => {
     track(() => storageKey);
 
-    if (storageKey) {
+    if (typeof window !== "undefined" && storageKey) {
       try {
         const saved = localStorage.getItem(`resizable-${storageKey}`);
         if (saved) {
-          const savedSizes = JSON.parse(saved) as { [key: number]: number };
-          initialSizes.value = savedSizes;
+          storedSizes.value = JSON.parse(saved);
         }
       } catch (e) {
         console.warn("Failed to load saved layout:", e);
@@ -91,9 +103,10 @@ export const ResizableRootBase = component$<PublicResizableRootProps>((props) =>
     disabled: useSignal(disabled),
     startPosition,
     isDragging,
-    initialSizes,
+    initialSizes: storedSizes,
     panels,
-    storageKey: useSignal(storageKey)
+    storageKey: useSignal(storageKey),
+    saveState
   };
 
   useContextProvider(resizableContextId, context);

@@ -1,12 +1,12 @@
 .resizable-handle {
-    background-color: #e0e0e0;
-    flex: 0 0 8px;
+  background-color: #e0e0e0;
+  flex: 0 0 8px;
 }
 
 .resizable-handle:hover {
-    background-color: #ccc;
+  background-color: #ccc;
 }
 
 .resizable-handle[data-disabled] {
-    opacity: 0.5;
+  opacity: 0.5;
 }
