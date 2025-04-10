@@ -5,6 +5,7 @@ export interface PanelRef {
   onResize$?: QRL<(size: number) => void>;
   onCollapse$?: QRL<() => void>;
   onExpand$?: QRL<() => void>;
+  _index: number;
 }
 
 export interface ResizableContext {
@@ -14,6 +15,7 @@ export interface ResizableContext {
   isDragging: Signal<boolean>;
   initialSizes: Signal<{ [key: string]: number }>;
   panels: Signal<PanelRef[]>;
+  storageKey: Signal<string | undefined>;
 }
 
 export const resizableContextId = createContextId<ResizableContext>("resizable-context");

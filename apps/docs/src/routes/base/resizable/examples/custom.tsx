@@ -18,7 +18,7 @@ export default component$(() => {
           <div style={{ padding: "20px", color: "black" }}>Left Panel</div>
         </Resizable.Panel>
 
-        <Resizable.Handle />
+        <Resizable.Handle class="resizable-handle" />
 
         <Resizable.Panel>
           <Resizable.Root orientation="vertical">
@@ -26,7 +26,7 @@ export default component$(() => {
               <div style={{ padding: "20px", color: "black" }}>Top Panel</div>
             </Resizable.Panel>
 
-            <Resizable.Handle />
+            <Resizable.Handle class="resizable-handle" />
 
             <Resizable.Panel>
               <div style={{ padding: "20px", color: "black" }}>Bottom Panel</div>

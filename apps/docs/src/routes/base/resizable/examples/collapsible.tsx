@@ -27,7 +27,7 @@ export default component$(() => {
           </div>
         </Resizable.Panel>
 
-        <Resizable.Handle />
+        <Resizable.Handle class="resizable-handle" />
 
         <Resizable.Panel minWidth={200}>
           <div style={{ padding: "20px", color: "black" }}>Regular Panel (min: 200)</div>

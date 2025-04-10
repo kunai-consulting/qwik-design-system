@@ -8,7 +8,8 @@ import {
   useOnWindow,
   useSignal,
   useStyles$,
-  useTask$
+  useTask$,
+  useVisibleTask$
 } from "@builder.io/qwik";
 import { resetIndexes } from "../../utils/indexer";
 import { withAsChild } from "../as-child/as-child";
@@ -19,16 +20,26 @@ import {
   resizableContextId
 } from "./resizable-context";
 import styles from "./resizable.css?inline";
+
 type PublicResizableRootProps = {
   /** Direction in which the panels can be resized */
   orientation?: "horizontal" | "vertical";
   /** When true, prevents resizing of panels */
   disabled?: boolean;
+  storageKey?: string;
 } & PropsOf<"div">;
+
 /** Root container component that manages the resizable panels and handles */
 export const ResizableRootBase = component$<PublicResizableRootProps>((props) => {
+  const rootRef = useSignal<HTMLElement>();
+  useStyles$(`
+    [data-qds-resizable-root]:not([data-hydrated="true"]) {
+      visibility: hidden;
+    }
+  `);
   useStyles$(styles);
-  const { orientation = "horizontal", disabled = false } = props;
+  const { orientation = "horizontal", disabled = false, storageKey } = props;
+
   useOnWindow(
     "keydown",
     sync$((event: KeyboardEvent) => {
@@ -55,15 +66,38 @@ export const ResizableRootBase = component$<PublicResizableRootProps>((props) =>
   }>({});
   const startPosition = useSignal<number | null>(null);
   const panels = useSignal<PanelRef[]>([]);
+
+  useVisibleTask$(({ track }) => {
+    track(() => storageKey);
+
+    if (storageKey) {
+      try {
+        const saved = localStorage.getItem(`resizable-${storageKey}`);
+        if (saved) {
+          const savedSizes = JSON.parse(saved) as { [key: number]: number };
+          initialSizes.value = savedSizes;
+        }
+      } catch (e) {
+        console.warn("Failed to load saved layout:", e);
+      }
+    }
+    if (rootRef.value) {
+      rootRef.value.setAttribute("data-hydrated", "true");
+    }
+  });
+
   const context: ResizableContext = {
     orientation: useSignal(orientation),
     disabled: useSignal(disabled),
     startPosition,
     isDragging,
     initialSizes,
-    panels
+    panels,
+    storageKey: useSignal(storageKey)
   };
+
   useContextProvider(resizableContextId, context);
+
   useTask$(({ track }) => {
     const isDisabled = track(() => props.disabled);
     context.disabled.value = isDisabled ?? false;
@@ -72,6 +106,7 @@ export const ResizableRootBase = component$<PublicResizableRootProps>((props) =>
     <Render
       fallback="div"
       {...props}
+      ref={rootRef}
       data-qds-resizable-root
       // Indicates the orientation of the resizable container (vertical or horizontal)
       data-orientation={orientation}

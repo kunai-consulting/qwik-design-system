@@ -5,7 +5,10 @@
     height: 100%;
     position: relative;
     box-sizing: border-box;
-    background: #fff;
+  }
+
+  [data-qds-resizable-root][data-disabled] {
+    pointer-events: none;
   }
 
   [data-qds-resizable-root][data-orientation="horizontal"] {
@@ -28,23 +31,15 @@
     min-width: 0;
     min-height: 0;
     overflow: hidden;
-  }
-
-  [data-qds-resizable-panel] > * {
-    flex: 1;
-    min-width: 0;
-    min-height: 0;
+    isolation: isolate;
   }
 
   [data-qds-resizable-handle] {
     position: relative;
-    flex: 0 0 8px;
-    background-color: #e0e0e0;
     touch-action: none;
     user-select: none;
     z-index: 1;
     box-sizing: border-box;
-    transition: background-color 0.15s ease;
   }
 
   [data-qds-resizable-root][data-orientation="horizontal"] [data-qds-resizable-handle] {
@@ -55,35 +50,8 @@
     cursor: row-resize;
   }
 
-  [data-qds-resizable-handle]:hover {
-    background-color: #ccc;
-  }
-
-  [data-qds-resizable-handle][data-dragging="true"] {
-    background-color: #999;
-  }
-
-  [data-qds-resizable-handle]::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.2);
-    transition: background-color 0.15s ease;
-  }
-
   [data-qds-resizable-handle][data-disabled] {
     cursor: not-allowed;
-    opacity: 0.5;
     pointer-events: none;
-  }
-
-  [data-qds-resizable-root][data-disabled] {
-    pointer-events: none;
-  }
-
-  [data-qds-resizable-panel] {
-    isolation: isolate;
   }
 }

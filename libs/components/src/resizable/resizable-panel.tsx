@@ -73,7 +73,8 @@ export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) 
       ref: panelRef,
       onResize$: props.onResize$,
       onCollapse$: props.onCollapse$,
-      onExpand$: props.onExpand$
+      onExpand$: props.onExpand$,
+      _index: _index
     };
   });
 
@@ -84,14 +85,20 @@ export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) 
     const sizeProp = isVertical ? "height" : "width";
     const minSizeProp = isVertical ? "minHeight" : "minWidth";
     const maxSizeProp = isVertical ? "maxHeight" : "maxWidth";
+
+    const savedSize =
+      _index !== undefined ? context.initialSizes.value[_index] : undefined;
+
     const styles: Record<string, string | undefined> = {
-      flex: size ? "0 0 auto" : "1",
-      position: "relative",
-      display: "flex"
+      flex: size || savedSize ? "0 0 auto" : "1"
     };
-    if (size) {
+
+    if (savedSize) {
+      styles[sizeProp] = `${savedSize}px`;
+    } else if (size) {
       styles[sizeProp] = `${size}px`;
     }
+
     if (minSize) {
       styles[minSizeProp] = `${minSize}px`;
     }
@@ -100,6 +107,7 @@ export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) 
     }
     return styles;
   };
+
   return (
     <Render
       fallback="div"
@@ -124,6 +132,7 @@ export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) 
     </Render>
   );
 });
+
 export const ResizablePanel = withAsChild(ResizablePanelBase, (props) => {
   const nextIndex = getNextIndex("resizable");
   props._index = nextIndex;
