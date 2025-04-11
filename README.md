@@ -43,8 +43,15 @@ To learn more about contributing to QDS, please visit our [contribution docs](ht
 
 <br />
 
-![Type=Full, Size=Large, Mode=Light ver2](https://github.com/user-attachments/assets/47c6d86a-5141-40c6-a0fb-5986266fa589)
+<a href="https://kunaico.com/" target="_blank" rel="noopener noreferrer">
+  <picture>
+    <source srcset="https://github.com/user-attachments/assets/47c6d86a-5141-40c6-a0fb-5986266fa589" media="(prefers-color-scheme: dark)">
+    <source srcset="https://github.com/user-attachments/assets/84bff951-ed35-43e4-9515-ebe07e8b09e4" media="(prefers-color-scheme: light)">
+    <img src="https://github.com/user-attachments/assets/84bff951-ed35-43e4-9515-ebe07e8b09e4" alt="Company logo">
+  </picture>
+</a>
 
+<br />
 <br />
 
 [Kunai](https://kunaico.com/) funds the work that makes Qwik Design System possible.
