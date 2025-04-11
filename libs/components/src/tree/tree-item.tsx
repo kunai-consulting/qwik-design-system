@@ -12,13 +12,13 @@ import {
   useId,
   useOnWindow,
   useSignal,
-  useTask$,
+  useTask$
 } from "@builder.io/qwik";
-import { withAsChild } from "../as-child/as-child";
-import { TreeRootContextId } from "./tree-root";
-import { CollapsibleRootBase } from "../collapsible/collapsible-root";
-import { useTree } from "./use-tree";
 import { useBoundSignal } from "../../utils/bound-signal";
+import { withAsChild } from "../as-child/as-child";
+import { CollapsibleRootBase } from "../collapsible/collapsible-root";
+import { TreeRootContextId } from "./tree-root";
+import { useTree } from "./use-tree";
 
 type TreeItemContext = {
   id: string;
@@ -47,7 +47,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   const itemContext: TreeItemContext = {
     id,
     level,
-    isOpenSig,
+    isOpenSig
   };
 
   useContextProvider(itemContextId, itemContext);
@@ -73,7 +73,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       getNextVisibleItem,
       getPreviousVisibleItem,
       getFirstVisibleItem,
-      getLastVisibleItem,
+      getLastVisibleItem
     } = useTree();
 
     const currentItem = context.currentFocusEl.value;
@@ -135,7 +135,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       if (!keys.includes(e.key)) return;
 
       e.preventDefault();
-    }),
+    })
   );
 
   return (

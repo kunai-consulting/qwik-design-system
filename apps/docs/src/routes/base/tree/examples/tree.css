@@ -1,21 +1,21 @@
 .tree-root {
-	padding: 1rem;
-	min-width: 15rem;
-	border: 1px solid #0f1317;
+  padding: 1rem;
+  min-width: 15rem;
+  border: 1px solid #0f1317;
 }
 
 .tree-item-trigger {
-	display: flex;
-	gap: 0.5rem;
-	align-items: center;
-	cursor: pointer;
-	width: 100%;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
 }
 
 .tree-item-trigger[data-open] svg {
-	transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 
 .tree-item-content {
-	padding-left: 1rem;
+  padding-left: 1rem;
 }

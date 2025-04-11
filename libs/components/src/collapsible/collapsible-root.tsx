@@ -7,18 +7,17 @@ import {
   useContextProvider,
   useId,
   useSignal,
-  useTask$,
+  useTask$
 } from "@builder.io/qwik";
 
 import { createContextId } from "@builder.io/qwik";
+import { useStyles$ } from "@builder.io/qwik";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-import { useStyles$ } from "@builder.io/qwik";
 import collapsibleStyles from "./collapsible.css?inline";
 
-export const collapsibleContextId =
-  createContextId<CollapsibleContext>("Collapsible");
+export const collapsibleContextId = createContextId<CollapsibleContext>("Collapsible");
 
 export interface CollapsibleContext {
   itemId: string;
@@ -77,7 +76,7 @@ export const CollapsibleRootBase = component$((props: CollapsibleRootProps) => {
     triggerRef,
     contentRef,
     disabled,
-    collapsible,
+    collapsible
   };
 
   useContextProvider(collapsibleContextId, context);

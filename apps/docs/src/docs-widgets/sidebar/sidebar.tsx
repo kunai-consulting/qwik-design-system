@@ -1,8 +1,8 @@
 import { component$ } from "@builder.io/qwik";
-import type { TreeItemType } from "~/routes/base/tree/examples/hero";
-import { LuChevronRight } from "@qwikest/icons/lucide";
-import { Tree } from "@kunai-consulting/qwik";
 import { Link } from "@builder.io/qwik-city";
+import { Tree } from "@kunai-consulting/qwik";
+import { LuChevronRight } from "@qwikest/icons/lucide";
+import type { TreeItemType } from "~/routes/base/tree/examples/hero";
 
 export const Sidebar = component$(() => {
   const treeData: TreeItemType[] = [

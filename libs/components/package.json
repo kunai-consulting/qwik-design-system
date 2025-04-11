@@ -1,42 +1,42 @@
 {
-	"name": "@kunai-consulting/qwik",
-	"version": "0.0.8",
-	"description": "Create a Qwik library",
-	"main": "./lib/index.qwik.mjs",
-	"qwik": "./lib/index.qwik.mjs",
-	"types": "./lib-types/index.d.ts",
-	"exports": {
-		".": {
-			"import": "./lib/index.qwik.mjs",
-			"require": "./lib/index.qwik.cjs",
-			"types": "./lib-types/src/index.d.ts"
-		}
-	},
-	"files": ["lib", "lib-types"],
-	"engines": {
-		"node": "^18.17.0 || ^20.3.0 || >=21.0.0"
-	},
-	"private": false,
-	"type": "module",
-	"scripts": {
-		"build": "qwik build",
-		"build.lib": "vite build --mode lib",
-		"build.types": "tsc --emitDeclarationOnly",
-		"dev": "vite --mode ssr",
-		"dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
-		"start": "vite --open --mode ssr",
-		"test": "echo \"No test specified\" && exit 0",
-		"qwik": "qwik"
-	},
-	"devDependencies": {
-		"@builder.io/qwik": "1.13",
-		"@qwik-ui/headless": "^0.6.5",
-		"@types/node": "20.14.11",
-		"typescript": "5.4.5",
-		"undici": "*",
-		"vite": "^5.4",
-		"vite-tsconfig-paths": "^4.2.1",
-		"@axe-core/playwright": "^4.9.1",
-		"uqr": "^0.1.2"
-	}
+  "name": "@kunai-consulting/qwik",
+  "version": "0.0.8",
+  "description": "Create a Qwik library",
+  "main": "./lib/index.qwik.mjs",
+  "qwik": "./lib/index.qwik.mjs",
+  "types": "./lib-types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/index.qwik.mjs",
+      "require": "./lib/index.qwik.cjs",
+      "types": "./lib-types/src/index.d.ts"
+    }
+  },
+  "files": ["lib", "lib-types"],
+  "engines": {
+    "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
+  },
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "build": "qwik build",
+    "build.lib": "vite build --mode lib",
+    "build.types": "tsc --emitDeclarationOnly",
+    "dev": "vite --mode ssr",
+    "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
+    "start": "vite --open --mode ssr",
+    "test": "echo \"No test specified\" && exit 0",
+    "qwik": "qwik"
+  },
+  "devDependencies": {
+    "@builder.io/qwik": "1.13",
+    "@qwik-ui/headless": "^0.6.5",
+    "@types/node": "20.14.11",
+    "typescript": "5.4.5",
+    "undici": "*",
+    "vite": "^5.4",
+    "vite-tsconfig-paths": "^4.2.1",
+    "@axe-core/playwright": "^4.9.1",
+    "uqr": "^0.1.2"
+  }
 }
