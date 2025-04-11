@@ -2,7 +2,7 @@ import {
   $,
   type JSXOutput,
   type QwikIntrinsicElements,
-  Signal,
+  type Signal,
   Slot,
   component$
 } from "@builder.io/qwik";
@@ -35,20 +35,23 @@ export const Render = component$(
     fallback;
     _jsxType;
     externalRef;
-    
+
     const Comp = props._jsxType ?? props.fallback;
 
     return (
-      <Comp {...rest} {...props._allProps} ref={$((el: HTMLElement) => {
-        if (props.ref) {
-          (props.ref as Signal<HTMLElement>).value = el;
-        }
+      <Comp
+        {...rest}
+        {...props._allProps}
+        ref={$((el: HTMLElement) => {
+          if (props.ref) {
+            (props.ref as Signal<HTMLElement>).value = el;
+          }
 
-        if (props.externalRef) {
-          (props.externalRef as Signal<HTMLElement>).value = el;
-        }
-        
-      })}>
+          if (props.externalRef) {
+            (props.externalRef as Signal<HTMLElement>).value = el;
+          }
+        })}
+      >
         <Slot />
       </Comp>
     );
