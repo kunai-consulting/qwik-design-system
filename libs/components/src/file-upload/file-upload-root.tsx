@@ -6,6 +6,8 @@ import {
   useContextProvider,
   useSignal
 } from "@builder.io/qwik";
+import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
 import { type FileInfo, fileUploadContextId } from "./file-upload-context";
 type HTMLDivProps = PropsOf<"div">;
 /**
@@ -23,9 +25,7 @@ type PublicRootProps = HTMLDivProps & PublicFileUploadProps;
  * Root component for file upload functionality
  * Provides context and state management for child components
  */
-/** Root component for file upload functionality
- * Provides context and state management for child components */
-export const FileUploadRoot = component$<PublicRootProps>((props) => {
+export const FileUploadRootBase = component$<PublicRootProps>((props) => {
   const inputRef = useSignal<HTMLInputElement>();
   const isDragging = useSignal(false);
   const files = useSignal<FileInfo[]>([]);
@@ -39,11 +39,18 @@ export const FileUploadRoot = component$<PublicRootProps>((props) => {
     onFilesChange$: props.onFilesChange$
   };
   useContextProvider(fileUploadContextId, context);
-  const { multiple, accept, disabled, onFilesChange$, ...htmlProps } = props;
+  const { multiple, accept, disabled, onFilesChange$, ...rest } = props;
   return (
     // The root container element for the entire file upload component
-    <div {...htmlProps} data-file-upload-root data-disabled={disabled ? "" : undefined}>
+    <Render
+      fallback="div"
+      data-file-upload-root
+      data-disabled={disabled ? "" : undefined}
+      {...rest}
+    >
       <Slot />
-    </div>
+    </Render>
   );
 });
+
+export const FileUploadRoot = withAsChild(FileUploadRootBase);
