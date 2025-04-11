@@ -13,7 +13,7 @@ export default component$(() => {
         background: "#f5f5f5"
       }}
     >
-      <Resizable.Root>
+      <Resizable.Root storageKey="my-layout">
         <Resizable.Panel width={200} minWidth={100} maxWidth={500}>
           <div style={{ padding: "20px", color: "black" }}>
             Left Panel (min: 100, max: 500)

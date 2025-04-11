@@ -1,4 +1,4 @@
-import { component$, useStyles$ } from "@builder.io/qwik";
+import { $, component$, useStyles$ } from "@builder.io/qwik";
 import { Resizable } from "@kunai-consulting/qwik";
 import styles from "./resizable-custom.css?inline";
 
@@ -14,13 +14,25 @@ export default component$(() => {
       }}
     >
       <Resizable.Root>
-        <Resizable.Panel width={200} minWidth={100} maxWidth={500}>
+        <Resizable.Panel
+          width={200}
+          minWidth={100}
+          maxWidth={500}
+          onResize$={$((size: number) => {
+            console.log("Left panel size:", `${size}px`);
+          })}
+        >
           <div style={{ padding: "20px", color: "black" }}>
             Left Panel (min: 100, max: 500)
           </div>
         </Resizable.Panel>
         <Resizable.Handle class="resizable-handle" />
-        <Resizable.Panel minWidth={150}>
+        <Resizable.Panel
+          minWidth={150}
+          onResize$={$((size: number) => {
+            console.log("Right panel size:", `${size}px`);
+          })}
+        >
           <div style={{ padding: "20px", color: "black" }}>Right Panel (min: 150)</div>
         </Resizable.Panel>
       </Resizable.Root>
