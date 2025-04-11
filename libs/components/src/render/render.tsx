@@ -1,6 +1,8 @@
 import {
+  $,
   type JSXOutput,
   type QwikIntrinsicElements,
+  type Signal,
   Slot,
   component$
 } from "@builder.io/qwik";
@@ -12,6 +14,7 @@ type AllowedFallbacks = "div" | "span" | "a" | "button" | "label";
 type RenderInternalProps<T extends AllowedFallbacks> = {
   /** The default element and types if a render prop is not provided */
   fallback: T;
+  externalRef?: unknown;
 } & QwikIntrinsicElements[T] &
   AsChildProps;
 
@@ -35,7 +38,19 @@ export const Render = component$(
     const Comp = props._jsxType ?? props.fallback;
 
     return (
-      <Comp {...rest} {...props._allProps}>
+      <Comp
+        {...rest}
+        {...props._allProps}
+        ref={$((el: Element) => {
+          if (props.ref) {
+            (props.ref as Signal<Element>).value = el;
+          }
+
+          if (props.externalRef) {
+            (props.externalRef as Signal<Element>).value = el;
+          }
+        })}
+      >
         <Slot />
       </Comp>
     );
