@@ -45,8 +45,9 @@ jobs:
             grep -A 20 "return (" "$file" > /tmp/return_blocks.txt || true
             
             if [ -s /tmp/return_blocks.txt ]; then
-              # Look for HTML tags in return blocks - any tag starting with <lowercase
-              tag_types=$(grep -o -E "<[a-z][a-zA-Z0-9]*" /tmp/return_blocks.txt | sort | uniq)
+              # Look for HTML tags in return blocks - only match lowercase elements (HTML elements)
+              # Custom components in Qwik start with uppercase letters
+              tag_types=$(grep -o -E "<[a-z][a-zA-Z0-9]*\b" /tmp/return_blocks.txt | sort | uniq)
               
               echo "Found HTML tags in return block:"
               echo "$tag_types"
