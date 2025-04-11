@@ -1,4 +1,10 @@
-import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
+import {
+  $,
+  type PropsOf,
+  Slot,
+  component$,
+  useContext,
+} from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { collapsibleContextId } from "./collapsible-root";
@@ -10,6 +16,11 @@ export const CollapsibleTriggerBase = component$<PropsOf<"button">>(
     const context = useContext(collapsibleContextId);
     const contentId = `${context.itemId}-content`;
     const triggerId = `${context.itemId}-trigger`;
+
+    const handleClick$ = $((e: MouseEvent) => {
+      e.stopPropagation();
+      context.isOpenSig.value = !context.isOpenSig.value;
+    });
 
     return (
       <Render
@@ -24,11 +35,12 @@ export const CollapsibleTriggerBase = component$<PropsOf<"button">>(
         data-closed={!context.isOpenSig.value}
         aria-expanded={context.isOpenSig.value}
         aria-controls={contentId}
+        onClick$={[handleClick$, onClick$]}
       >
         <Slot />
       </Render>
     );
-  }
+  },
 );
 
 export const CollapsibleTrigger = withAsChild(CollapsibleTriggerBase);

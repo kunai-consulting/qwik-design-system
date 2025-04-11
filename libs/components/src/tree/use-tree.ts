@@ -18,14 +18,14 @@ export function useTree() {
 
         // Skip items that are inside closed collapsible content
         const isInClosedContent = node.closest(
-          "[data-qds-collapsible-content][data-closed]"
+          "[data-qds-collapsible-content][data-closed]",
         );
         if (isInClosedContent) {
           return NodeFilter.FILTER_SKIP;
         }
 
         return NodeFilter.FILTER_ACCEPT;
-      }
+      },
     });
   }
 
@@ -85,6 +85,6 @@ export function useTree() {
     getNextVisibleItem,
     getPreviousVisibleItem,
     getFirstVisibleItem,
-    getLastVisibleItem
+    getLastVisibleItem,
   };
 }

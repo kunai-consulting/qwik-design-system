@@ -2,7 +2,7 @@ import {
   type Component,
   type JSXChildren,
   type NoSerialize,
-  noSerialize
+  noSerialize,
 } from "@builder.io/qwik";
 import type { FunctionComponent } from "@builder.io/qwik/jsx-runtime";
 
@@ -21,7 +21,7 @@ export function syncFixedInV2<T extends (...args: any[]) => unknown>(fn: T) {
 
 export function withAsChild<T>(
   BaseComponent: Component<T>,
-  fn?: (props: T & AsChildProps) => T & AsChildProps
+  fn?: (props: T & AsChildProps) => T & AsChildProps,
 ) {
   const count = 0;
 
@@ -46,15 +46,23 @@ export function withAsChild<T>(
 
     if (children.length > 1) {
       throw new Error(
-        "Qwik Design System: When using asChild, there can only be one descendant or children JSX Node. Look for the asChild prop and see where two nodes are."
+        "Qwik Design System: When using asChild, there can only be one descendant or children JSX Node. Look for the asChild prop and see where two nodes are.",
       );
     }
 
-    const allProps = {
-      ...children.props,
-      ...children.immutableProps
-    };
-    const { children: _, ...restProps } = allProps;
+    const uniqueProps: Record<string, unknown> = {};
+
+    for (const key in children.props) {
+      uniqueProps[key] = children.props[key];
+    }
+
+    for (const key in children.immutableProps) {
+      if (!(key in uniqueProps)) {
+        uniqueProps[key] = children.immutableProps[key];
+      }
+    }
+
+    const { children: _, ...restProps } = uniqueProps;
 
     const name = (children.type as { name: string }).name;
     let jsxType: string | FunctionComponent | NoSerialize<FunctionComponent>;

@@ -5,7 +5,7 @@ import {
   component$,
   createContextId,
   useContextProvider,
-  useSignal
+  useSignal,
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
@@ -33,7 +33,7 @@ export const TreeRootBase = component$((props: PropsOf<"div">) => {
 
   const context: TreeRootContext = {
     rootRef,
-    currentFocusEl
+    currentFocusEl,
   };
 
   useContextProvider(TreeRootContextId, context);

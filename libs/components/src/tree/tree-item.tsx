@@ -1,24 +1,29 @@
 import {
   $,
   type PropsOf,
+  type Signal,
   Slot,
   component$,
   createContextId,
+  isServer,
   sync$,
   useContext,
   useContextProvider,
   useId,
   useOnWindow,
-  useSignal
+  useSignal,
+  useTask$,
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { TreeRootContextId } from "./tree-root";
 import { CollapsibleRootBase } from "../collapsible/collapsible-root";
 import { useTree } from "./use-tree";
+import { useBoundSignal } from "../../utils/bound-signal";
 
 type TreeItemContext = {
   id: string;
   level: number;
+  isOpenSig: Signal<boolean>;
 };
 
 export const itemContextId = createContextId<TreeItemContext>("tree-item");
@@ -34,16 +39,15 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   const parentContext = useContext(itemContextId, null);
   const id = useId();
   const itemRef = useSignal<HTMLElement>();
-  const isOpenSig = useSignal(false);
-  const root = context.rootRef.value ?? document.body;
-
+  const isOpenSig = useBoundSignal(props["bind:open"], false);
   const { getCurrentLevel } = useTree();
-
+  const isHighlightedSig = useSignal(false);
   const level = getCurrentLevel(parentContext?.level);
 
   const itemContext: TreeItemContext = {
     id,
-    level
+    level,
+    isOpenSig,
   };
 
   useContextProvider(itemContextId, itemContext);
@@ -58,12 +62,10 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
 
     const treeRoot = context.rootRef.value;
     if (!treeRoot) {
-      console.log("No tree root found");
       return;
     }
 
     if (!context.currentFocusEl.value) {
-      console.log("No current focus element");
       return;
     }
 
@@ -71,7 +73,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       getNextVisibleItem,
       getPreviousVisibleItem,
       getFirstVisibleItem,
-      getLastVisibleItem
+      getLastVisibleItem,
     } = useTree();
 
     const currentItem = context.currentFocusEl.value;
@@ -108,8 +110,15 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
         return;
     }
 
-    console.log("Next item to focus:", nextItem);
     nextItem?.focus();
+  });
+
+  useTask$(({ track }) => {
+    track(() => context.currentFocusEl.value);
+
+    if (isServer) return;
+
+    isHighlightedSig.value = context.currentFocusEl.value === itemRef.value;
   });
 
   /**
@@ -126,14 +135,8 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       if (!keys.includes(e.key)) return;
 
       e.preventDefault();
-    })
+    }),
   );
-
-  const handleClick$ = $((e: MouseEvent) => {
-    // TODO: fix the tree item trigger not opening because of this.
-    e.stopPropagation();
-    isOpenSig.value = !isOpenSig.value;
-  });
 
   return (
     <CollapsibleRootBase
@@ -143,11 +146,11 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       bind:open={isOpenSig}
       tabIndex={0}
       onFocus$={[handleFocus$, props.onFocus$]}
-      onClick$={[handleClick$, props.onClick$]}
       onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
       data-qds-tree-item
       data-level={level}
       aria-level={level}
+      data-highlighted={isHighlightedSig.value}
       data-group
     >
       <Slot />
