@@ -4,7 +4,7 @@ export type DriverLocator = Locator | Page;
 
 export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   const getRoot = () => {
-    return rootLocator.locator("[data-collapsible]");
+    return rootLocator.locator("[data-qds-collapsible]");
   };
 
   const getTrigger = () => {
@@ -12,7 +12,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   };
 
   const getContent = () => {
-    return getRoot().locator("[data-collapsible-content]");
+    return getRoot().locator("[data-qds-collapsible-content]");
   };
 
   const openCollapsible = async (key: OpenKeys | "click") => {

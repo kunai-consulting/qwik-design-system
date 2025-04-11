@@ -2,6 +2,11 @@
 
 @import "tailwindcss";
 
+html {
+  /* biome-ignore lint/correctness/noUnknownProperty: this exists */
+  interpolate-size: allow-keywords;
+}
+
 body {
   @apply max-w-screen-2xl mx-auto my-20 font-sans px-4 sm:px-6 overflow-x-hidden;
 }
@@ -42,13 +47,13 @@ body {
   font-family: "Monaspace";
   override-colors:
     0 #b8c1cc /* curlies and tags */, 1 #a2bebe /* punctuation */,
-    2 #7ad6ff /* function */, 3 #c8d9d9 /* operators */,
-    4 #a2bebe /* parentheses */, 5 #dff3ff /* property name */,
-    6 #b8c1cc /* misc syntax */, 7 #e5d7fd /* numbers */,
-    8 #b9e7fe /* angle brackets */, 9 #d1b8fa /* keywords */,
-    10 #b9e7fe /* strings */, 11 #3b4c4f /* comments */,
-    12 #f1e9fe /* decorators */, 13 #34c2fc /* special characters */,
-    14 #e2ebeb /* doc strings */, 15 #7ad6ff /* class names */;
+    2 #7ad6ff /* function */, 3 #c8d9d9 /* operators */, 4
+    #a2bebe /* parentheses */, 5 #dff3ff /* property name */, 6
+    #b8c1cc /* misc syntax */, 7 #e5d7fd /* numbers */, 8
+    #b9e7fe /* angle brackets */, 9 #d1b8fa /* keywords */, 10
+    #b9e7fe /* strings */, 11 #3b4c4f /* comments */, 12
+    #f1e9fe /* decorators */, 13 #34c2fc /* special characters */, 14
+    #e2ebeb /* doc strings */, 15 #7ad6ff /* class names */;
   color: white;
   font-family: "Yusei Magic", "Adjusted Tahoma Fallback", sans-serif !important;
 }

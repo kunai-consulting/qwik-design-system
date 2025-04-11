@@ -1,58 +1,144 @@
 import { component$ } from "@builder.io/qwik";
-import { Link, useContent, useLocation } from "@builder.io/qwik-city";
+import { Link } from "@builder.io/qwik-city";
+import { Tree } from "@kunai-consulting/qwik";
+import { LuChevronRight } from "@qwikest/icons/lucide";
+import type { TreeItemType } from "~/routes/base/tree/examples/hero";
 
 export const Sidebar = component$(() => {
-  const { menu } = useContent();
-  const loc = useLocation();
-
-  const isContributing = loc.url.pathname.startsWith("/contributing");
-  const isBase = !isContributing; // Default to base section if not in contributing
-
-  // Find the core section (always show this)
-  const coreSection = menu?.items?.find(
-    (section) => section.text === "Qwik core (future)"
-  );
-
-  // Filter sections based on current path
-  const filteredItems = menu?.items?.filter((section) => {
-    if (section.text === "Base" && isBase) return true;
-    if (section.text === "Contributing" && isContributing) return true;
-    if (section.text === "Qwik core (future)") return true;
-    return false;
-  });
+  const treeData: TreeItemType[] = [
+    {
+      id: "/base",
+      label: "Base",
+      children: [
+        {
+          id: "/base/input",
+          label: "Input Components",
+          children: [
+            { id: "/base/checkbox", label: "Checkbox" },
+            { id: "/base/checklist", label: "Checklist" },
+            { id: "/base/otp", label: "OTP" },
+            { id: "/base/radio-group", label: "Radio Group" },
+            { id: "/base/slider", label: "Slider" }
+          ]
+        },
+        {
+          id: "/base/layout",
+          label: "Layout Components",
+          children: [
+            { id: "/base/scroll-area", label: "Scroll Area" },
+            { id: "/base/resizable", label: "Resizable" },
+            { id: "/base/tree", label: "Tree" }
+          ]
+        },
+        {
+          id: "/base/selection",
+          label: "Selection Components",
+          children: [
+            { id: "/base/calendar", label: "Calendar" },
+            { id: "/base/pagination", label: "Pagination" }
+          ]
+        },
+        {
+          id: "/base/media",
+          label: "Media Components",
+          children: [
+            { id: "/base/file-upload", label: "File Upload" },
+            { id: "/base/qr-code", label: "QR Code" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "/contributing",
+      label: "Contributing",
+      children: [
+        {
+          id: "/contributing/getting-started",
+          label: "Getting Started",
+          children: [
+            { id: "/contributing/intro", label: "Intro" },
+            { id: "/contributing/growth-mindset", label: "Growth Mindset" }
+          ]
+        },
+        {
+          id: "/contributing/development",
+          label: "Development",
+          children: [
+            { id: "/contributing/new-component", label: "New Components" },
+            {
+              id: "/contributing/component-structure",
+              label: "Component Structure"
+            },
+            { id: "/contributing/composition", label: "Composition" },
+            { id: "/contributing/research", label: "Research" }
+          ]
+        },
+        {
+          id: "/contributing/technical",
+          label: "Technical",
+          children: [
+            { id: "/contributing/state", label: "State" },
+            { id: "/contributing/indexing", label: "Indexing" },
+            { id: "/contributing/events", label: "Events" },
+            { id: "/contributing/testing", label: "Testing" },
+            { id: "/contributing/styling", label: "Styling" }
+          ]
+        },
+        {
+          id: "/contributing/guidelines",
+          label: "Guidelines",
+          children: [
+            { id: "/contributing/philosophy", label: "Philosophy" },
+            { id: "/contributing/accessibility", label: "Accessibility" },
+            { id: "/contributing/conventions", label: "Conventions" },
+            { id: "/contributing/forms", label: "Forms" },
+            { id: "/contributing/tradeoffs", label: "Tradeoffs" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "/qwik-core",
+      label: "Qwik core (future)",
+      children: [{ id: "/qwik-core/tasks", label: "Tasks" }]
+    }
+  ];
 
   return (
     <nav class="flex-col gap-4 sticky top-20 hidden md:flex h-[calc(100vh-160px)]">
-      <div class="mb-4">
-        <Link
-          href={isContributing ? "/base/checkbox" : "/contributing/intro"}
-          class="hover:text-qwik-blue-300 hover:underline"
-        >
-          {isContributing ? "Go to docs" : "Go to contributing"}
-        </Link>
-      </div>
-
-      {filteredItems?.map((section) => (
-        <div key={section.text}>
-          <h5 class="mb-2 font-bold text-xl text-white">{section.text}</h5>
-          <ul class="flex flex-col">
-            {section.items?.map((item) => (
-              <li key={item.href} class="hover:bg-neutral-interactive transition-colors">
-                <Link
-                  href={item.href}
-                  class={`w-full h-full p-1 px-2 block ${
-                    loc.url.pathname === item.href
-                      ? "text-qwik-blue-300 bg-neutral-primary"
-                      : "text-neutral-foreground"
-                  }`}
-                >
-                  {item.text}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+      <Tree.Root class="tree-root">
+        {treeData.map((item) => renderTreeItem(item))}
+      </Tree.Root>
     </nav>
   );
 });
+
+function renderTreeItem(item: TreeItemType) {
+  if (item.children && item.children.length > 0) {
+    return (
+      <Tree.Item class="group" key={item.id}>
+        <div class="flex items-center gap-2 hover:bg-neutral-accent transition-colors bg-inherit duration-200 justify-between">
+          <Tree.ItemLabel>{item.label}</Tree.ItemLabel>
+          <Tree.ItemTrigger class="group p-2 hover:bg-neutral-primary">
+            <LuChevronRight class="group-data-open:rotate-90 transition-transform duration-200" />
+          </Tree.ItemTrigger>
+        </div>
+        <Tree.ItemContent class="pl-4 transition-all overflow-hidden">
+          {item.children.map((child) => renderTreeItem(child))}
+        </Tree.ItemContent>
+      </Tree.Item>
+    );
+  }
+
+  return (
+    <Tree.Item
+      class="hover:bg-neutral-accent transition-colors bg-inherit duration-200"
+      key={item.id}
+      asChild
+    >
+      <Link href={item.id} class="w-full block">
+        <Tree.ItemLabel>{item.label}</Tree.ItemLabel>
+      </Link>
+    </Tree.Item>
+  );
+}

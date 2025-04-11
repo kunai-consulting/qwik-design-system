@@ -1,10 +1,34 @@
-import { $, type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
+import {
+  $,
+  type PropsOf,
+  type Signal,
+  Slot,
+  component$,
+  createContextId,
+  isServer,
+  sync$,
+  useContext,
+  useContextProvider,
+  useId,
+  useOnWindow,
+  useSignal,
+  useTask$
+} from "@builder.io/qwik";
+import { useBoundSignal } from "../../utils/bound-signal";
 import { withAsChild } from "../as-child/as-child";
-import { Render } from "../render/render";
-import { groupContextId } from "./tree-group";
+import { CollapsibleRootBase } from "../collapsible/collapsible-root";
 import { TreeRootContextId } from "./tree-root";
+import { useTree } from "./use-tree";
 
-interface TreeItemProps extends PropsOf<"div"> {
+type TreeItemContext = {
+  id: string;
+  level: number;
+  isOpenSig: Signal<boolean>;
+};
+
+export const itemContextId = createContextId<TreeItemContext>("tree-item");
+
+interface TreeItemProps extends PropsOf<typeof CollapsibleRootBase> {
   _index?: number;
   groupTrigger?: boolean;
   groupId?: string;
@@ -12,130 +36,125 @@ interface TreeItemProps extends PropsOf<"div"> {
 
 export const TreeItemBase = component$((props: TreeItemProps) => {
   const context = useContext(TreeRootContextId);
-  const root = context.rootRef.value ?? document.body;
-  const groupContext = useContext(groupContextId, null);
+  const parentContext = useContext(itemContextId, null);
+  const id = useId();
+  const itemRef = useSignal<HTMLElement>();
+  const isOpenSig = useBoundSignal(props["bind:open"], false);
+  const { getCurrentLevel } = useTree();
+  const isHighlightedSig = useSignal(false);
+  const level = getCurrentLevel(parentContext?.level);
 
-  const handleKeyNavigation$ = $((e: KeyboardEvent) => {
-    const visibilityCache = new WeakMap<HTMLElement, boolean>();
-    const treeWalker = document.createTreeWalker(
-      context.rootRef.value ?? document.body,
-      NodeFilter.SHOW_ELEMENT,
-      {
-        acceptNode(node) {
-          return (node as Element).hasAttribute("data-qds-tree-item")
-            ? NodeFilter.FILTER_ACCEPT
-            : NodeFilter.FILTER_SKIP;
-        }
-      }
-    );
+  const itemContext: TreeItemContext = {
+    id,
+    level,
+    isOpenSig
+  };
 
-    const isNodeVisible = (node: HTMLElement): boolean => {
-      if (visibilityCache.has(node)) {
-        return visibilityCache.get(node) ?? false;
-      }
-
-      let current: HTMLElement | null = node;
-      while (current) {
-        if (current.hasAttribute("data-collapsible-content") && current.hidden) {
-          visibilityCache.set(node, false);
-          return false;
-        }
-        current = current.parentElement;
-      }
-
-      visibilityCache.set(node, true);
-      return true;
-    };
-
-    if (!context.currentFocusEl.value) return;
-    treeWalker.currentNode = context.currentFocusEl.value;
-
-    switch (e.key) {
-      case "ArrowDown": {
-        let nextNode = treeWalker.nextNode();
-        while (nextNode && !isNodeVisible(nextNode as HTMLElement)) {
-          nextNode = treeWalker.nextNode();
-        }
-        if (nextNode) {
-          (nextNode as HTMLElement).focus();
-        }
-        break;
-      }
-
-      case "ArrowUp": {
-        let prevNode = treeWalker.previousNode();
-        while (prevNode && !isNodeVisible(prevNode as HTMLElement)) {
-          prevNode = treeWalker.previousNode();
-        }
-        if (prevNode) {
-          (prevNode as HTMLElement).focus();
-        }
-        break;
-      }
-
-      case "Home": {
-        treeWalker.currentNode = root;
-        let firstNode = treeWalker.nextNode();
-        while (firstNode && !isNodeVisible(firstNode as HTMLElement)) {
-          firstNode = treeWalker.nextNode();
-        }
-        if (firstNode) {
-          (firstNode as HTMLElement).focus();
-        }
-        break;
-      }
-
-      case "End": {
-        let lastVisibleNode: Node | null = null;
-
-        treeWalker.currentNode = root;
-        let node = treeWalker.nextNode();
-
-        while (node) {
-          if (isNodeVisible(node as HTMLElement)) {
-            lastVisibleNode = node;
-          }
-          node = treeWalker.nextNode();
-        }
-
-        if (lastVisibleNode) {
-          (lastVisibleNode as HTMLElement).focus();
-        }
-        break;
-      }
-    }
-  });
+  useContextProvider(itemContextId, itemContext);
 
   const handleFocus$ = $((e: FocusEvent) => {
     context.currentFocusEl.value = e.target as HTMLElement;
   });
 
-  function getLevel() {
-    if (!groupContext?.level) {
-      return 1;
+  const handleKeyNavigation$ = $((e: KeyboardEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const treeRoot = context.rootRef.value;
+    if (!treeRoot) {
+      return;
     }
 
-    if (props.groupTrigger) {
-      return groupContext?.level;
+    if (!context.currentFocusEl.value) {
+      return;
     }
 
-    return groupContext?.level + 1;
-  }
+    const {
+      getNextVisibleItem,
+      getPreviousVisibleItem,
+      getFirstVisibleItem,
+      getLastVisibleItem
+    } = useTree();
+
+    const currentItem = context.currentFocusEl.value;
+
+    let nextItem: HTMLElement | null = null;
+    switch (e.key) {
+      case "ArrowDown":
+        nextItem = getNextVisibleItem(currentItem);
+        break;
+      case "ArrowUp":
+        nextItem = getPreviousVisibleItem(currentItem);
+        break;
+      case "ArrowRight": {
+        const isCollapsed = currentItem.hasAttribute("data-closed");
+        if (isCollapsed) {
+          isOpenSig.value = true;
+        }
+        return;
+      }
+      case "ArrowLeft": {
+        const isExpanded = !currentItem.hasAttribute("data-closed");
+        if (isExpanded) {
+          isOpenSig.value = false;
+        }
+        return;
+      }
+      case "Home":
+        nextItem = getFirstVisibleItem(treeRoot);
+        break;
+      case "End":
+        nextItem = getLastVisibleItem(treeRoot);
+        break;
+      default:
+        return;
+    }
+
+    nextItem?.focus();
+  });
+
+  useTask$(({ track }) => {
+    track(() => context.currentFocusEl.value);
+
+    if (isServer) return;
+
+    isHighlightedSig.value = context.currentFocusEl.value === itemRef.value;
+  });
+
+  /**
+   *  Todo: Change this to a sync$ passed to the Render component once v2 is 
+   released (sync QRL serialization issue)
+   *
+   */
+  useOnWindow(
+    "keydown",
+    sync$((e: KeyboardEvent) => {
+      if (!(e.target as Element)?.hasAttribute("data-qds-tree-item")) return;
+      const keys = ["ArrowDown", "ArrowUp", "Home", "End"];
+
+      if (!keys.includes(e.key)) return;
+
+      e.preventDefault();
+    })
+  );
 
   return (
-    <Render
+    <CollapsibleRootBase
       {...props}
-      role="gridcell"
-      fallback="div"
+      ref={itemRef}
+      role="treeitem"
+      bind:open={isOpenSig}
       tabIndex={0}
-      onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
       onFocus$={[handleFocus$, props.onFocus$]}
+      onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
       data-qds-tree-item
-      data-level={getLevel()}
+      data-level={level}
+      aria-level={level}
+      data-highlighted={isHighlightedSig.value}
       data-group
     >
       <Slot />
-    </Render>
+    </CollapsibleRootBase>
   );
 });
 
