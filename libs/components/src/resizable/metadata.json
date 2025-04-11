@@ -1,50 +1,47 @@
 {
   "features": [
-    "Resizable panels with drag handles",
-    "Horizontal and vertical orientation support",
-    "Keyboard accessibility with arrow keys and Home/End",
-    "Fine control with Shift key modifier (10x step)",
-    "Minimum and maximum size constraints",
-    "Live resizing with smooth updates",
-    "Focus management and ARIA attributes",
-    "Mouse/touch pointer events handling",
-    "Responsive flex-based layout",
-    "Customizable panel dimensions",
-    "Pixel-perfect size calculations",
-    "Global keyboard event prevention",
-    "Multiple panel support",
-    "Disabled state handling",
-    "Size persistence between drag operations"
+    "WAI ARIA Separator pattern implementation",
+    "Keyboard navigation with arrow keys and Home/End",
+    "Collapsible panels with custom thresholds",
+    "Layout persistence with local storage",
+    "Responsive resizing with min/max constraints",
+    "Panel size synchronization across handles",
+    "Dynamic orientation (horizontal/vertical)",
+    "Fine-grained resizing control with Shift key",
+    "Progressive size adjustments with step values",
+    "Custom collapse/expand behaviors with callbacks",
+    "Flexible initial sizing with auto-distribution",
+    "Accessible resize handles with ARIA attributes"
   ],
   "keyboard": {
-    "keyboard_interactions": [
+    "shortcuts": [
       {
         "key": "ArrowLeft",
-        "comment": "When focus is on the handle and orientation is horizontal, decreases the size of the previous panel and increases the size of the next panel"
+        "comment": "When focus is on the handle and orientation is horizontal, decreases size of previous panel by 1%"
       },
       {
         "key": "ArrowRight",
-        "comment": "When focus is on the handle and orientation is horizontal, increases the size of the previous panel and decreases the size of the next panel"
+        "comment": "When focus is on the handle and orientation is horizontal, increases size of previous panel by 1%"
       },
       {
         "key": "ArrowUp",
-        "comment": "When focus is on the handle and orientation is vertical, decreases the size of the previous panel and increases the size of the next panel"
+        "comment": "When focus is on the handle and orientation is vertical, decreases size of previous panel by 1%"
       },
       {
         "key": "ArrowDown",
-        "comment": "When focus is on the handle and orientation is vertical, increases the size of the previous panel and decreases the size of the next panel"
+        "comment": "When focus is on the handle and orientation is vertical, increases size of previous panel by 1%"
       },
       {
-        "key": "Shift+ArrowKeys",
-        "comment": "When focus is on the handle, increases the resizing step to 10% (default step is 1%)"
+        "key": "Shift + Arrow keys",
+        "comment": "When focus is on the handle, adjusts panel size by 10% instead of 1%"
       },
       {
         "key": "Home",
-        "comment": "When focus is on the handle, collapses the previous panel to its minimum size"
+        "comment": "When focus is on the handle, collapses previous panel to its minimum size"
       },
       {
         "key": "End",
-        "comment": "When focus is on the handle, expands the previous panel to its maximum size while respecting the next panel's minimum size"
+        "comment": "When focus is on the handle, expands previous panel to its maximum size"
       }
     ]
   }

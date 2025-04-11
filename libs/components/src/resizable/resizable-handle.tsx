@@ -80,7 +80,9 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
     if (!(panels && context.storageKey.value)) return;
 
     const sizeProps = await getSizeProperties();
-    const sizes: { [key: number]: number } = {};
+    const sizes: {
+      [key: number]: number;
+    } = {};
 
     for (const panel of context.panels.value) {
       const element = panel.ref.value;

@@ -43,7 +43,11 @@ export const ResizableRootBase = component$<PublicResizableRootProps>((props) =>
   useStyles$(styles);
   const { orientation = "horizontal", disabled = false, storageKey } = props;
 
-  const storedSizes = useConstant(() => createSignal<{ [key: number]: number }>({}));
+  const storedSizes = useConstant(() =>
+    createSignal<{
+      [key: number]: number;
+    }>({})
+  );
 
   useOnWindow(
     "keydown",
@@ -69,8 +73,11 @@ export const ResizableRootBase = component$<PublicResizableRootProps>((props) =>
   const startPosition = useSignal<number | null>(null);
   const panels = useSignal<PanelRef[]>([]);
 
-  const saveState = $((sizes: { [key: number]: number }) => {
-    if (typeof window !== "undefined" && storageKey) {
+  const saveState = $(
+    (sizes: {
+      [key: number]: number;
+    }) => {
+      if (!storageKey) return;
       try {
         localStorage.setItem(`resizable-${storageKey}`, JSON.stringify(sizes));
         storedSizes.value = sizes;
@@ -78,7 +85,7 @@ export const ResizableRootBase = component$<PublicResizableRootProps>((props) =>
         console.warn("Failed to save layout:", e);
       }
     }
-  });
+  );
 
   useVisibleTask$(({ track }) => {
     track(() => storageKey);
