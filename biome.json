@@ -10,7 +10,8 @@
       "apps/docs/public/pagefind",
       "lib-types",
       "libs/components/lib/*",
-      ".vscode"
+      ".vscode",
+      "test-results"
     ]
   },
 

@@ -42,6 +42,14 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator("[data-qds-checkbox-error-message]");
   };
 
+  const getSubmitButton = () => {
+    return rootLocator.locator(".submit-button");
+  };
+
+  const getSubmittedData = () => {
+    return rootLocator.locator(".submitted-data");
+  };
+
   return {
     ...rootLocator,
     locator: rootLocator,
@@ -54,6 +62,8 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getErrorMessage,
     getMainCheckbox,
     getMainTrigger,
-    getMainIndicator
+    getMainIndicator,
+    getSubmitButton,
+    getSubmittedData
   };
 }

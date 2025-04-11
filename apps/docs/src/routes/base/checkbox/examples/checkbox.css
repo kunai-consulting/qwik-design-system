@@ -1,9 +1,3 @@
-.checklist-root {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
 .checkbox-root {
   display: flex;
   align-items: center;
@@ -26,6 +20,11 @@
   opacity: 0.5;
 }
 
+.checkbox-indicator[data-mixed] {
+  display: flex;
+  justify-content: center;
+}
+
 .checkbox-indicator[data-checked] {
   display: flex;
   justify-content: center;
@@ -34,6 +33,14 @@
   align-items: center;
   background: #0a4d70;
   border-radius: 8px;
+}
+
+/* ** CSS for Checklist examples ** */
+
+.checklist-root {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .select-all-trigger [data-check-icon],
@@ -47,4 +54,12 @@
 
 .select-all-trigger[data-mixed] [data-minus-icon] {
   display: block;
+}
+
+.submit-button {
+  margin: 8px 0;
+  background-color: #626262;
+  padding: 3px 12px;
+  cursor: pointer;
+  border-radius: 8px;
 }
