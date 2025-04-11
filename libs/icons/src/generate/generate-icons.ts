@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { optimize } from "svgo";
 import type { IconPackConfig } from "./config.interface";
 import { configs } from "./configs";
+import { generateSymbolName } from "./utils";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const iconLimit = process.env.ICON_LIMIT;
@@ -14,7 +15,7 @@ const pageOutputPath = join(basePath, "src", "page");
 const getOutputPath = (pack: IconPackConfig, name: string, ext: string) =>
   join(baseOutputPath, pack.prefix.toLowerCase(), `${name}${ext}`);
 
-const ext = ".tsx";
+const ext = ".jsx";
 
 function getIndexPath(pack: IconPackConfig, ext: string) {
   return getOutputPath(pack, pack.prefix.toLowerCase(), ext);
@@ -113,18 +114,14 @@ async function generateIconVariant(file: string, pack: IconPackConfig) {
     .replace(">", " {...props} >")
     .replace(/<!--.*?-->/g, "");
 
-  const fileContent = [
-    `import { component$, type PropsOf } from '@builder.io/qwik';`,
-    `export const ${names.camelCase} = component$((props: PropsOf<"svg">) => {`,
-    `  return (${svgElement});`,
-    "});"
-  ].join("\n");
+  const symbolName = generateSymbolName(names.camelCase);
+  const fileContent = `export const ${symbolName} = props => ${svgElement}`;
 
   const path = getVariantPath(names.dashCase, pack);
 
   await mkdir(dirname(path), { recursive: true });
   await writeFile(path, fileContent);
-  return { path, symbolName: names.camelCase, names };
+  return { path, symbolName, names };
 }
 
 export async function generateIcons(pack: IconPackConfig) {
@@ -166,13 +163,15 @@ export async function generateIcons(pack: IconPackConfig) {
 
   console.log(`[${pack.name}] Creating index file...`);
   const indexContent = [
+    'import { componentQrl, qrl } from "@builder.io/qwik";',
     ...variantsResult.map((variant) => {
       const relative = `./${variant?.names.dashCase}`;
-      return `export { ${variant?.symbolName} } from '${relative}';`;
+      return `
+      export const ${variant?.names.camelCase} = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(() => import('${relative}.jsx'), "${variant.symbolName}"));`;
     })
   ].join("\n");
 
-  await writeFile(getIndexPath(pack, ".ts"), indexContent);
+  await writeFile(getIndexPath(pack, ".js"), indexContent);
   console.log(`[${pack.name}] Index file created`);
 
   console.timeEnd(`[${pack.name}] Total generation time`);
@@ -208,7 +207,7 @@ async function createRootIndex(packs: IconPackConfig[]) {
     "// Export all icon namespaces",
     ...packs.map(
       (pack) =>
-        `export * as ${pack.name} from './${pack.prefix.toLowerCase()}/${pack.prefix.toLowerCase()}';`
+        `export * as ${pack.name} from './${pack.prefix.toLowerCase()}/${pack.prefix.toLowerCase()}.js';`
     ),
     "",
     "// Export types for each namespace",
