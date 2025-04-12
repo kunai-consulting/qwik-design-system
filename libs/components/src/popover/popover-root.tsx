@@ -132,6 +132,7 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
       data-open={isOpenSig.value}
       data-closed={!isOpenSig.value}
       onQVisible$={handleOpenOnRender$}
+      data-qds-popover-root
       ref={rootRef}
       fallback="div"
       {...rest}

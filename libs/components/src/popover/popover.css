@@ -1,5 +1,14 @@
 @layer qds {
+  [data-qds-popover-root] {
+    anchor-scope: --qds-popover;
+  }
+
+  [data-qds-popover-anchor] {
+    anchor-name: --qds-popover;
+  }
+
   [data-qds-popover-content] {
+    position-anchor: --qds-popover;
     position: absolute;
     top: anchor(bottom);
     left: anchor(left);
