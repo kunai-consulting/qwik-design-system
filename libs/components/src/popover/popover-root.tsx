@@ -24,7 +24,7 @@ type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
 };
 
 // Do not inline this file, it will break the anchor positioning
-import "./popover.css";
+import "./anchor-logic.css";
 
 export const popoverContextId = createContextId<PopoverContext>("qds-popover");
 
@@ -92,7 +92,9 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
     const isPolyfill = !("anchorName" in document.documentElement.style);
 
     if (isPolyfill) {
-      await polyfill();
+      await polyfill({
+        elements: [anchorRef.value, contentRef.value] as HTMLElement[]
+      });
       isPolyfillExecutedSig.value = true;
     }
 

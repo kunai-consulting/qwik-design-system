@@ -1,3 +1,4 @@
+/* content-type: text/css */
 @layer qds {
   [data-qds-popover-root] {
     anchor-scope: --qds-popover;
@@ -9,10 +10,10 @@
 
   [data-qds-popover-content] {
     inset: auto;
-    position-anchor: --qds-popover;
     position: absolute;
     position-area: bottom;
     width: anchor-size(--qds-popover width);
     margin: 0;
+    position-try: normal flip-block;
   }
 }
