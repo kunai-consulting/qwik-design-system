@@ -11,7 +11,7 @@
 
   [data-qds-popover-content] {
     position-anchor: --qds-popover;
-    width: anchor-size(--qds-popover width);
+    width: anchor-size(width);
     margin: unset;
     top: anchor(bottom);
     left: anchor(left);
