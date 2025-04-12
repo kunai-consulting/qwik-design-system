@@ -3,11 +3,13 @@ import { Popover } from "@kunai-consulting/qwik";
 
 export default component$(() => {
   return (
-    <Popover.Root>
+    <>
       <div style={{ height: "2000px" }} />
-      <Popover.Anchor>Open Popover</Popover.Anchor>
-      <Popover.Content>Popover Panel</Popover.Content>
+      <Popover.Root>
+        <Popover.Anchor>Open Popover</Popover.Anchor>
+        <Popover.Content>Popover Panel</Popover.Content>
+      </Popover.Root>
       <div style={{ height: "2000px" }} />
-    </Popover.Root>
+    </>
   );
 });

@@ -18,6 +18,9 @@ importers:
         specifier: 1.2.0
         version: 1.2.0
     devDependencies:
+      '@axe-core/playwright':
+        specifier: ^4.10.1
+        version: 4.10.1(playwright-core@1.46.0)
       '@biomejs/biome':
         specifier: 1.9.4
         version: 1.9.4
@@ -40,11 +43,11 @@ importers:
   apps/component-tests:
     devDependencies:
       '@builder.io/qwik':
-        specifier: https://pkg.pr.new/@builder.io/qwik@7362
-        version: https://pkg.pr.new/@builder.io/qwik@7362(vite@5.4.8(@types/node@20.14.11)(lightningcss@1.29.2))
+        specifier: '1.13'
+        version: 1.13.0(vite@5.4.8(@types/node@20.14.11)(lightningcss@1.29.2))
       '@builder.io/qwik-city':
-        specifier: https://pkg.pr.new/@builder.io/qwik-city@7362
-        version: https://pkg.pr.new/@builder.io/qwik-city@7362(rollup@4.20.0)(typescript@5.4.5)(vite@5.4.8(@types/node@20.14.11)(lightningcss@1.29.2))
+        specifier: '1.13'
+        version: 1.13.0(rollup@4.20.0)(typescript@5.4.5)(vite@5.4.8(@types/node@20.14.11)(lightningcss@1.29.2))
       '@types/node':
         specifier: 20.14.11
         version: 20.14.11
@@ -185,6 +188,11 @@ packages:
   '@anthropic-ai/sdk@0.37.0':
     resolution: {integrity: sha512-tHjX2YbkUBwEgg0JZU3EFSSAQPoK4qQR/NFYa8Vtzd5UAyXzZksCw2In69Rml4R/TyHPBfRYaLK35XiOe33pjw==}
 
+  '@axe-core/playwright@4.10.1':
+    resolution: {integrity: sha512-EV5t39VV68kuAfMKqb/RL+YjYKhfuGim9rgIaQ6Vntb2HgaCaau0h98Y3WEUqW1+PbdzxDtDNjFAipbtZuBmEA==}
+    peerDependencies:
+      playwright-core: '>= 1.0.0'
+
   '@babel/runtime@7.25.0':
     resolution: {integrity: sha512-7dRy4DwXwtzBrPbZflqxnvfxLF8kdZXPkhymtDeFoFqE6ldzjQFgYTtYIFARcLEYDrqfBfYcZt1WqFxRoyC9Rw==}
     engines: {node: '>=6.9.0'}
@@ -248,23 +256,8 @@ packages:
     peerDependencies:
       vite: ^5
 
-  '@builder.io/qwik-city@https://pkg.pr.new/@builder.io/qwik-city@7362':
-    resolution: {tarball: https://pkg.pr.new/@builder.io/qwik-city@7362}
-    version: 1.12.1
-    engines: {node: '>=16.8.0 <18.0.0 || >=18.11'}
-    peerDependencies:
-      vite: ^5
-
   '@builder.io/qwik@1.13.0':
     resolution: {integrity: sha512-dElfs3V91h+x12ftGWzAKO0pbO36kohfDd9ukr+YFSb/CP66WnTgjTTXJjlzkmFw18O9Bh9ObjqShpkEz02+Kg==}
-    engines: {node: '>=16.8.0 <18.0.0 || >=18.11'}
-    hasBin: true
-    peerDependencies:
-      vite: ^5
-
-  '@builder.io/qwik@https://pkg.pr.new/@builder.io/qwik@7362':
-    resolution: {tarball: https://pkg.pr.new/@builder.io/qwik@7362}
-    version: 1.12.1
     engines: {node: '>=16.8.0 <18.0.0 || >=18.11'}
     hasBin: true
     peerDependencies:
@@ -1209,6 +1202,10 @@ packages:
     hasBin: true
     peerDependencies:
       postcss: ^8.1.0
+
+  axe-core@4.10.3:
+    resolution: {integrity: sha512-Xm7bpRXnDSX2YE2YFfBk2FnF0ep6tmG7xPh8iHee8MIcrgq762Nkce856dYtJYLkuIoYZvGfTs/PbZhideTcEg==}
+    engines: {node: '>=4'}
 
   bail@2.0.2:
     resolution: {integrity: sha512-0xO6mYd7JB2YesxDKplafRpsiOzPt9V02ddPCLbY1xYGPOX24NTyN50qnUxgCPcSoYMhKpAuBTjQoRZCAkUDRw==}
@@ -2847,6 +2844,11 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@axe-core/playwright@4.10.1(playwright-core@1.46.0)':
+    dependencies:
+      axe-core: 4.10.3
+      playwright-core: 1.46.0
+
   '@babel/runtime@7.25.0':
     dependencies:
       regenerator-runtime: 0.14.1
@@ -2903,23 +2905,6 @@ snapshots:
       - supports-color
       - typescript
 
-  '@builder.io/qwik-city@https://pkg.pr.new/@builder.io/qwik-city@7362(rollup@4.20.0)(typescript@5.4.5)(vite@5.4.8(@types/node@20.14.11)(lightningcss@1.29.2))':
-    dependencies:
-      '@mdx-js/mdx': 3.0.1
-      '@types/mdx': 2.0.13
-      source-map: 0.7.4
-      svgo: 3.3.2
-      undici: 6.19.7
-      valibot: 0.42.1(typescript@5.4.5)
-      vfile: 6.0.2
-      vite: 5.4.8(@types/node@20.14.11)(lightningcss@1.29.2)
-      vite-imagetools: 7.0.4(rollup@4.20.0)
-      zod: 3.22.4
-    transitivePeerDependencies:
-      - rollup
-      - supports-color
-      - typescript
-
   '@builder.io/qwik@1.13.0(vite@5.4.8(@types/node@20.14.11)(lightningcss@1.29.2))':
     dependencies:
       csstype: 3.1.3
@@ -2929,11 +2914,6 @@ snapshots:
     dependencies:
       csstype: 3.1.3
       vite: 5.4.9(@types/node@20.14.11)(lightningcss@1.29.2)
-
-  '@builder.io/qwik@https://pkg.pr.new/@builder.io/qwik@7362(vite@5.4.8(@types/node@20.14.11)(lightningcss@1.29.2))':
-    dependencies:
-      csstype: 3.1.3
-      vite: 5.4.8(@types/node@20.14.11)(lightningcss@1.29.2)
 
   '@changesets/apply-release-plan@7.0.4':
     dependencies:
@@ -3795,6 +3775,8 @@ snapshots:
       picocolors: 1.0.1
       postcss: 8.4.41
       postcss-value-parser: 4.2.0
+
+  axe-core@4.10.3: {}
 
   bail@2.0.2: {}
 
