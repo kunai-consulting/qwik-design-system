@@ -95,9 +95,7 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
     const isPolyfill = !("anchorName" in document.documentElement.style);
 
     if (isPolyfill) {
-      await polyfill({
-        elements: [anchorRef.value, contentRef.value] as HTMLElement[]
-      });
+      await polyfill();
       isPolyfillExecutedSig.value = true;
     }
 

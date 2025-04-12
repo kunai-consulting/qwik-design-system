@@ -6,14 +6,16 @@
 
   [data-qds-popover-anchor] {
     anchor-name: --qds-popover;
+    width: 100em;
   }
 
   [data-qds-popover-content] {
     inset: auto;
     position: absolute;
-    position-area: bottom;
+    position-anchor: --qds-popover;
+    top: anchor(bottom);
+    left: anchor(left);
     width: anchor-size(--qds-popover width);
-    margin: 0;
-    position-try: normal flip-block;
+    margin: unset;
   }
 }
