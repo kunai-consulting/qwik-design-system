@@ -8,16 +8,20 @@ import { Image } from "~/docs-widgets/image/image";
 import bestImg from '~/assets/docs/best-qwik-img.png';
 import banzai from '~/assets/docs/banzai.png';
 
-<div class="relative">
+<div class="relative w-full max-w-[500px] mx-auto ">
   <Image 
     src={bestImg} 
     alt="Best Qwik" 
-    class="border-none mix-blend-difference max-w-[800px]" 
+    class="border-none mix-blend-difference w-full mt-0" 
   />
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#030405_90%)] pointer-events-none"></div>
   <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#030405] via-[50%] pointer-events-none"></div>
-  <div class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#030405] via-[80%] pointer-events-none"></div>
-  <div class="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-[#030405] via-[80%] pointer-events-none"></div>
+  <div class="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-[#030405] via-[85%] pointer-events-none"></div>
 </div>
+
+<a class="bg-qwik-blue-700 block mx-auto w-fit p-2 mt-2" href="/base/checkbox" target="_blank">
+  Go to docs
+</a>
 
 # Production Ready
 
@@ -29,7 +33,7 @@ import banzai from '~/assets/docs/banzai.png';
     <Image 
       src={banzai} 
       alt="Best Qwik" 
-      class="border-none mix-blend-difference max-w-[200px]" 
+      class="border-none mix-blend-difference max-w-[200px] mask-b-from-9 mask-t-from-9" 
     />
   </div>
 </div>

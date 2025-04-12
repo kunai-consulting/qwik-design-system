@@ -50,11 +50,19 @@ export function withAsChild<T>(
       );
     }
 
-    const allProps = {
-      ...children.props,
-      ...children.immutableProps
-    };
-    const { children: _, ...restProps } = allProps;
+    const uniqueProps: Record<string, unknown> = {};
+
+    for (const key in children.props) {
+      uniqueProps[key] = children.props[key];
+    }
+
+    for (const key in children.immutableProps) {
+      if (!(key in uniqueProps)) {
+        uniqueProps[key] = children.immutableProps[key];
+      }
+    }
+
+    const { children: _, ...restProps } = uniqueProps;
 
     const name = (children.type as { name: string }).name;
     let jsxType: string | FunctionComponent | NoSerialize<FunctionComponent>;
