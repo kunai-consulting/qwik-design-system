@@ -10,6 +10,7 @@ import {
   useContextProvider,
   useId,
   useSignal,
+  useStyles$,
   useTask$
 } from "@builder.io/qwik";
 import polyfill from "@oddbird/css-anchor-positioning/fn";
@@ -23,8 +24,7 @@ type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   onChange$?: (open: boolean) => void;
 };
 
-// Do not inline this file, it will break the anchor positioning
-import "./anchor-logic.css";
+import anchorStyles from "./anchor-logic.css?inline";
 
 export const popoverContextId = createContextId<PopoverContext>("qds-popover");
 
@@ -39,6 +39,9 @@ type PopoverContext = {
 
 export const PopoverRootBase = component$((props: PopoverRootProps) => {
   const { "bind:open": givenOpenSig, onChange$, ...rest } = props;
+
+  useStyles$(anchorStyles);
+
   const contentRef = useSignal<HTMLDivElement>();
   const anchorRef = useSignal<HTMLButtonElement>();
   const rootRef = useSignal<HTMLDivElement>();
