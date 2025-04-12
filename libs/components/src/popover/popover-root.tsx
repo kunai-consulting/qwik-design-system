@@ -10,7 +10,6 @@ import {
   useContextProvider,
   useId,
   useSignal,
-  useStyles$,
   useTask$
 } from "@builder.io/qwik";
 import polyfill from "@oddbird/css-anchor-positioning/fn";
@@ -24,7 +23,7 @@ type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   onChange$?: (open: boolean) => void;
 };
 
-import styles from "./popover.css?inline";
+import "./popover.css";
 export const popoverContextId = createContextId<PopoverContext>("qds-popover");
 
 type PopoverContext = {
@@ -48,7 +47,6 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
     openPropSig.value ?? givenOpenSig?.value ?? false,
     openPropSig
   );
-  useStyles$(styles);
 
   const isInitialRenderSig = useSignal(true);
   const canExternallyChangeSig = useSignal(true);
@@ -78,7 +76,10 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
     if (!canExternallyChangeSig.value) return;
     if (!contentRef.value) return;
 
+    console.log("handleExternalToggle$", isOpenSig.value);
+
     if (isOpenSig.value) {
+      console.log("showPopover");
       await contentRef.value.showPopover();
     } else {
       await contentRef.value.hidePopover();

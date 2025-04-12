@@ -8,10 +8,11 @@
   }
 
   [data-qds-popover-content] {
+    inset: auto;
     position-anchor: --qds-popover;
     position: absolute;
-    top: anchor(bottom);
-    left: anchor(left);
+    position-area: bottom;
     width: anchor-size(--qds-popover width);
+    margin: 0;
   }
 }
