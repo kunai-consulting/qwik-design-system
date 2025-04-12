@@ -12,6 +12,6 @@
     position: absolute;
     top: anchor(bottom);
     left: anchor(left);
-    position-try-fallbacks: top;
+    width: anchor-size(--qds-popover width);
   }
 }
