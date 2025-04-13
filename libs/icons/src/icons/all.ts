@@ -4,18 +4,18 @@ import type { Component, PropsOf } from '@builder.io/qwik';
 type IconComponent = Component<PropsOf<"svg">>;
 
 // Export all icon namespaces
-export * as Bootstrap from './bs/bs.qwik.js';
-export * as Flowbite from './fl/fl.qwik.js';
-export * as FontAwesome from './fa/fa.qwik.js';
-export * as HeroIcons from './hi/hi.qwik.js';
-export * as Iconoir from './in/in.qwik.js';
-export * as Ionicons from './io/io.qwik.js';
-export * as Lucide from './lu/lu.qwik.js';
-export * as MaterialIcons from './mat/mat.qwik.js';
-export * as MonoIcons from './mo/mo.qwik.js';
-export * as Octicons from './go/go.qwik.js';
-export * as SimpleIcons from './si/si.qwik.js';
-export * as TablerIcons from './tb/tb.qwik.js';
+export * as Bootstrap from './bs/bs.js';
+export * as Flowbite from './fl/fl.js';
+export * as FontAwesome from './fa/fa.js';
+export * as HeroIcons from './hi/hi.js';
+export * as Iconoir from './in/in.js';
+export * as Ionicons from './io/io.js';
+export * as Lucide from './lu/lu.js';
+export * as MaterialIcons from './mat/mat.js';
+export * as MonoIcons from './mo/mo.js';
+export * as Octicons from './go/go.js';
+export * as SimpleIcons from './si/si.js';
+export * as TablerIcons from './tb/tb.js';
 
 // Export types for each namespace
 export type BootstrapIcons = Record<string, IconComponent>;

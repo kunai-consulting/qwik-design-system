@@ -5,6 +5,7 @@ import { optimize } from "svgo";
 import type { IconPackConfig } from "./config.interface";
 import { configs } from "./configs";
 import { generateSymbolName } from "./utils";
+import { transform } from "esbuild";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const iconLimit = process.env.ICON_LIMIT;
@@ -15,7 +16,7 @@ const pageOutputPath = join(basePath, "src", "page");
 const getOutputPath = (pack: IconPackConfig, name: string, ext: string) =>
   join(baseOutputPath, pack.prefix.toLowerCase(), `${name}${ext}`);
 
-const ext = ".jsx";
+const ext = ".js";
 
 function getIndexPath(pack: IconPackConfig, ext: string) {
   return getOutputPath(pack, pack.prefix.toLowerCase(), ext);
@@ -115,12 +116,32 @@ async function generateIconVariant(file: string, pack: IconPackConfig) {
     .replace(/<!--.*?-->/g, "");
 
   const symbolName = generateSymbolName(names.camelCase);
-  const fileContent = `export const ${symbolName} = props => ${svgElement}`;
+
+  const jsxSource = `
+  import { jsx } from "@builder.io/qwik/jsx-runtime";
+  
+  export const ${symbolName} = props => jsx('svg', {
+    ...${JSON.stringify(colorAttributes)},
+    width: "1em",
+    height: "1em",
+    "data-qds-icon": "",
+    ...props,
+    dangerouslySetInnerHTML: ${JSON.stringify(svgElement?.replace(/<svg[^>]*>|<\/svg>/g, ""))}
+  });
+  `;
+
+  const result = await transform(jsxSource, {
+    loader: "jsx",
+    jsxFactory: "jsx",
+    jsxImportSource: "@builder.io/qwik",
+    target: "es2020",
+    format: "esm"
+  });
 
   const path = getVariantPath(names.dashCase, pack);
 
   await mkdir(dirname(path), { recursive: true });
-  await writeFile(path, fileContent);
+  await writeFile(path, result.code);
   return { path, symbolName, names };
 }
 
@@ -167,7 +188,7 @@ export async function generateIcons(pack: IconPackConfig) {
     ...variantsResult.map((variant) => {
       const relative = `./${variant?.names.dashCase}`;
       return `
-      export const ${variant?.names.camelCase} = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(() => import('${relative}.jsx'), "${variant.symbolName}"));`;
+      export const ${variant?.names.camelCase} = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(() => import('${relative}.js'), "${variant?.symbolName}"));`;
     })
   ].join("\n");
 
