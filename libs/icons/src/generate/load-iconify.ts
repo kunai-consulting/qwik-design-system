@@ -3,10 +3,9 @@ import { getIcons } from "@iconify/utils";
 import type { IconifyJSON } from "@iconify/types";
 import { log } from "./config";
 import { readdir } from "node:fs/promises";
-import { join } from "node:path";
 
 export async function loadIconSets(): Promise<Record<string, IconifyJSON>> {
-  const collections = await getInstalledCollections();
+  const collections = await scanIconifyPackages();
   log(`Found ${collections.length} Iconify collections`);
 
   const iconSets: Record<string, IconifyJSON> = {};
@@ -30,13 +29,15 @@ export async function loadIconSets(): Promise<Record<string, IconifyJSON>> {
   return iconSets;
 }
 
-async function getInstalledCollections(): Promise<string[]> {
+async function scanIconifyPackages(): Promise<string[]> {
   try {
-    const nodeModulesPath = join(process.cwd(), "node_modules/@iconify-json");
-    const collections = await readdir(nodeModulesPath);
+    const modulesPath = new URL("../../node_modules/@iconify", import.meta.url);
+    log(`Scanning for Iconify packages in: ${modulesPath.pathname}`);
+
+    const collections = await readdir(modulesPath);
     return collections;
   } catch (error) {
-    console.error("Error reading iconify collections:", error);
+    console.error("Error scanning for Iconify packages:", error);
     return [];
   }
 }
