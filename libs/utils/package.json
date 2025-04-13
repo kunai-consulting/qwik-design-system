@@ -1,5 +1,5 @@
 {
-  "name": "@kunai-consulting/qwik-icons",
+  "name": "@kunai-consulting/qwik-utils",
   "version": "0.0.1",
   "description": "Create a Qwik library",
   "main": "./lib/index.qwik.mjs",
@@ -22,21 +22,22 @@
     "build": "qwik build",
     "build.lib": "vite build --mode lib",
     "build.types": "tsc --emitDeclarationOnly",
-    "download-icons": "tsx ./src/generate/download-icons.ts",
-    "generate-icons": "tsx ./src/generate/generate-icons.ts",
     "dev": "vite --mode ssr",
+    "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
+    "fmt": "prettier --write .",
+    "fmt.check": "prettier --check .",
+    "lint": "eslint \"src/**/*.ts*\"",
+    "release": "np",
+    "start": "vite --open --mode ssr",
+    "test": "echo \"No test specified\" && exit 0",
     "qwik": "qwik"
   },
   "devDependencies": {
     "@builder.io/qwik": "1.13.0",
-    "@iconify/json": "^2.2.326",
-    "@iconify/types": "^2.0.0",
-    "@iconify/utils": "^2.3.0",
     "@types/node": "22.14.0",
     "typescript": "5.4.5",
     "undici": "*",
     "vite": "5.3.5",
-    "vite-tsconfig-paths": "^4.2.1",
-    "@kunai-consulting/qwik-utils": "workspace:*"
+    "vite-tsconfig-paths": "^4.2.1"
   }
 }

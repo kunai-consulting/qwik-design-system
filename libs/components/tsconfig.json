@@ -15,7 +15,11 @@
     "skipLibCheck": true,
     "incremental": true,
     "isolatedModules": true,
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "paths": {
+      "@kunai-consulting/qwik-utils": ["../utils/src"],
+      "@kunai-consulting/qwik-utils/*": ["../utils/src/*"]
+    }
   },
   "include": ["src"]
 }

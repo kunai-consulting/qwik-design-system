@@ -1,12 +1,9 @@
-import { qwikVite } from "@builder.io/qwik/optimizer";
 import { defineConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 import pkg from "./package.json";
+import { qwikVite } from "@builder.io/qwik/optimizer";
+import tsconfigPaths from "vite-tsconfig-paths";
 
-const { dependencies = {}, peerDependencies = {} } = pkg as unknown as {
-  dependencies: Record<string, string>;
-  peerDependencies: Record<string, string>;
-};
+const { dependencies = {}, peerDependencies = {} } = pkg as any;
 const makeRegex = (dep) => new RegExp(`^${dep}(/.*)?$`);
 const excludeAll = (obj) => Object.keys(obj).map(makeRegex);
 
