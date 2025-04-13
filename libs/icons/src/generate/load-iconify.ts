@@ -5,8 +5,8 @@ import { log } from "./config";
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
 
-export async function loadIconifyCollections(): Promise<Record<string, IconifyJSON>> {
-  const collections = await findInstalledCollections();
+export async function loadIconSets(): Promise<Record<string, IconifyJSON>> {
+  const collections = await getInstalledCollections();
   log(`Found ${collections.length} Iconify collections`);
 
   const iconSets: Record<string, IconifyJSON> = {};
@@ -30,7 +30,7 @@ export async function loadIconifyCollections(): Promise<Record<string, IconifyJS
   return iconSets;
 }
 
-async function findInstalledCollections(): Promise<string[]> {
+async function getInstalledCollections(): Promise<string[]> {
   try {
     const nodeModulesPath = join(process.cwd(), "node_modules/@iconify-json");
     const collections = await readdir(nodeModulesPath);
@@ -41,14 +41,14 @@ async function findInstalledCollections(): Promise<string[]> {
   }
 }
 
-export function getIconsFromCollection(
+export function createIconSubset(
   collection: IconifyJSON,
   iconNames: string[]
 ): IconifyJSON {
   if (iconNames.includes("*")) return collection;
   const result = getIcons(collection, iconNames);
   if (!result) {
-    log(`No icons grabbed from ${collection.prefix} in getIconsFromCollection`);
+    log(`No icons found in ${collection.prefix} matching the requested names`);
     return {
       prefix: collection.prefix,
       icons: {}
