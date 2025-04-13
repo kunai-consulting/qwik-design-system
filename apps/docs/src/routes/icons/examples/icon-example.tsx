@@ -1,6 +1,6 @@
 import { component$ } from "@builder.io/qwik";
-import { Lucide } from "@kunai-consulting/qwik-icons";
+import { LuCheck } from "@kunai-consulting/qwik-icons";
 
 export default component$(() => {
-  return <Lucide.LuArrowBigDown />;
+  return <LuCheck />;
 });
