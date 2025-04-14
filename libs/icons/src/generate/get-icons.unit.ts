@@ -1,9 +1,9 @@
-import { loadIconSets } from "./load-icons";
+import { getIconSets } from "./get-icons";
 import { describe, it, expect } from "vitest";
 
 describe("loadIconSets", () => {
   it("smoke test - should load at least one icon set without errors", async () => {
-    const iconSets = await loadIconSets();
+    const iconSets = await getIconSets();
 
     expect(iconSets).toBeDefined();
     expect(typeof iconSets).toBe("object");

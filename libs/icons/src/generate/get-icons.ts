@@ -2,7 +2,7 @@ import { lookupCollections, lookupCollection } from "@iconify/json";
 import type { IconifyJSON } from "@iconify/types";
 import { debug } from "../../config";
 
-export async function loadIconSets(): Promise<Record<string, IconifyJSON>> {
+export async function getIconSets(): Promise<Record<string, IconifyJSON>> {
   const iconSets: Record<string, IconifyJSON> = {};
 
   const collections = await lookupCollections();
