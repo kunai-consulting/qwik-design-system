@@ -2,10 +2,10 @@ import { type Signal, useComputed$ } from "@builder.io/qwik";
 import { useBoundSignal } from "./bound-signal";
 
 /**
- * Props that support both value and signal binding
+ * Props that support both value based and signal based state
  *
  * @example
- * <Component value="direct" />
+ * <Component value="jim" /> // value={signal.value}, value={store.property}
  * <Component bind:value={mySignal} />
  */
 export type BindableProps<T> = {
@@ -16,16 +16,20 @@ export type BindableProps<T> = {
 
 /**
  * Signals returned by useBindings with Sig suffix
+ *
+ * @example
+ * If T is { value: string, disabled: boolean }
+ * Then SignalResults<T> is { valueSig: Signal<string>, disabledSig: Signal<boolean> }
  */
 export type SignalResults<T> = {
   [K in keyof T as `${string & K}Sig`]: Signal<T[K]>;
 };
 
 /**
- * Creates bound signals for component properties
+ * Creates synchronized signals that support both signal based state and resolved value state
  *
- * @param props Component props (both regular and bind: variants)
- * @param defaults Default values
+ * @param props Component props
+ * @param initialValues
  * @returns Object with signals for each property (with Sig suffix)
  *
  * @example
@@ -36,11 +40,11 @@ export type SignalResults<T> = {
  */
 export function useBindings<T extends object>(
   props: BindableProps<T>,
-  defaults: T
+  initialValues: T
 ): SignalResults<T> {
   const result = {} as SignalResults<T>;
 
-  for (const key in defaults) {
+  for (const key in initialValues) {
     type PropType = T[typeof key];
     type PropSignal = Signal<PropType>;
     type BindSignal = PropSignal | undefined;
@@ -52,7 +56,7 @@ export function useBindings<T extends object>(
     const resultKey = `${key}Sig` as keyof SignalResults<T>;
 
     const bindSignal = props[bindKey as keyof typeof props] as BindSignal;
-    const initialValue = bindSignal?.value ?? propSig.value ?? defaults[key];
+    const initialValue = bindSignal?.value ?? propSig.value ?? initialValues[key];
 
     result[resultKey] = useBoundSignal(
       bindSignal,
