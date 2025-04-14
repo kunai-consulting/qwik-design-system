@@ -195,6 +195,9 @@ importers:
       change-case:
         specifier: ^5.4.4
         version: 5.4.4
+      esbuild:
+        specifier: ^0.25.2
+        version: 0.25.2
       typescript:
         specifier: 5.4.5
         version: 5.4.5
