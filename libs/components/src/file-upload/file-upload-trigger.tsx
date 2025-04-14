@@ -12,7 +12,7 @@ export const FileUploadTrigger = component$<PublicTriggerProps>((props) => {
    * Programmatically triggers click on the hidden file input
    */
   const onClick$ = $(() => {
-    if (context.disabled) return;
+    if (context.isDisabledSig.value) return;
     context.inputRef.value?.click();
   });
 
@@ -23,7 +23,7 @@ export const FileUploadTrigger = component$<PublicTriggerProps>((props) => {
       onClick$={[onClick$, props.onClick$]}
       // The button element that triggers the file selection dialog
       data-file-upload-trigger
-      disabled={context.disabled}
+      disabled={context.isDisabledSig.value}
     >
       <Slot />
     </button>

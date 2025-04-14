@@ -20,6 +20,7 @@ export interface FileUploadContext {
   multiple: boolean;
   accept?: string;
   disabled?: boolean;
+  isDisabledSig: Signal<boolean>;
   onFilesChange$?: PropFunction<(files: FileInfo[]) => void>;
 }
 
