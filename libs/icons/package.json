@@ -12,7 +12,10 @@
       "types": "./lib-types/index.d.ts"
     }
   },
-  "files": ["lib", "lib-types"],
+  "files": [
+    "lib",
+    "lib-types"
+  ],
   "engines": {
     "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
   },
@@ -34,6 +37,7 @@
     "@iconify/utils": "^2.3.0",
     "@kunai-consulting/qwik-utils": "workspace:*",
     "@types/node": "22.14.0",
+    "change-case": "^5.4.4",
     "typescript": "5.4.5",
     "undici": "*",
     "vite": "5.3.5",
