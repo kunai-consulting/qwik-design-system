@@ -7,6 +7,7 @@ interface FormState {
   value: string;
   disabled: boolean;
   required: boolean;
+  helloTest: string;
 }
 
 type TextInputProps = PropsOf<"input"> & BindableProps<FormState>;
@@ -17,7 +18,8 @@ export const TextInput = component$<TextInputProps>((props) => {
   const { valueSig, disabledSig, requiredSig } = useBindings(props, {
     value: "",
     disabled: false,
-    required: false
+    required: false,
+    helloTest: ""
   });
 
   return (

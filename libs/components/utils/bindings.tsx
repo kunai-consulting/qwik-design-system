@@ -17,7 +17,7 @@ export type BindableProps<T> = {
 /**
  * Signals returned by useBindings with Sig suffix
  */
-type SignalResults<T> = {
+export type SignalResults<T> = {
   [K in keyof T as `${string & K}Sig`]: Signal<T[K]>;
 };
 
@@ -34,27 +34,31 @@ type SignalResults<T> = {
  *   value: ""
  * });
  */
-export function useBindings<T extends Record<string, unknown>>(
+export function useBindings<T extends object>(
   props: BindableProps<T>,
-  defaults: { [K in keyof T]: T[K] }
+  defaults: T
 ): SignalResults<T> {
   const result = {} as SignalResults<T>;
 
   for (const key in defaults) {
-    const propSig = useComputed$(
-      () => props[key as keyof typeof props] as T[typeof key] | undefined
+    type PropType = T[typeof key];
+    type PropSignal = Signal<PropType>;
+    type BindSignal = PropSignal | undefined;
+
+    const propSig = useComputed$<PropType | undefined>(
+      () => props[key] as PropType | undefined
     );
+    const bindKey = `bind:${key}`;
+    const resultKey = `${key}Sig` as keyof SignalResults<T>;
 
-    const bindKey = `bind:${key}` as `bind:${string & typeof key}`;
+    const bindSignal = props[bindKey as keyof typeof props] as BindSignal;
+    const initialValue = bindSignal?.value ?? propSig.value ?? defaults[key];
 
-    const resultKey = `${String(key)}Sig` as keyof SignalResults<T>;
     result[resultKey] = useBoundSignal(
-      props[bindKey] as Signal<T[typeof key]> | undefined,
-      (props[bindKey] as Signal<T[typeof key]> | undefined)?.value ??
-        propSig.value ??
-        defaults[key],
+      bindSignal,
+      initialValue,
       propSig
-    ) as SignalResults<T>[keyof SignalResults<T>];
+    ) as SignalResults<T>[typeof resultKey];
   }
 
   return result;
