@@ -1,6 +1,6 @@
 import { getIconSets } from "./get-icons";
 import { describe, it, expect, beforeAll } from "vitest";
-import type { IconifyJSON, IconifyIcon } from "@iconify/types";
+import type { IconifyJSON } from "@iconify/types";
 
 // Smoke test to ensure the icon sets are loaded correctly
 describe("getIconSets", () => {
@@ -52,7 +52,7 @@ describe("getIconSets", () => {
 
       const iconKeys = Object.keys(firstSet.icons);
       const sampleIconKey = iconKeys[0];
-      const sampleIcon = firstSet.icons[sampleIconKey] as IconifyIcon;
+      const sampleIcon = firstSet.icons[sampleIconKey];
 
       expect(sampleIcon).toHaveProperty("body");
       expect(typeof sampleIcon.body).toBe("string");
@@ -65,7 +65,7 @@ describe("getIconSets", () => {
 
       const iconKeys = Object.keys(firstSet.icons);
       const sampleIconKey = iconKeys[0];
-      const sampleIcon = firstSet.icons[sampleIconKey] as IconifyIcon;
+      const sampleIcon = firstSet.icons[sampleIconKey];
 
       const width = sampleIcon.width || firstSet.width;
       const height = sampleIcon.height || firstSet.height;
