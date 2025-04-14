@@ -26,5 +26,5 @@ export const log = (message: string) => {
 export const config: QwikIconConfig = {
   debug: true,
   iconLimit: process.env.ICON_LIMIT ? Number.parseInt(process.env.ICON_LIMIT) : undefined,
-  collectionsDir: resolve("node_modules/@iconify")
+  collectionsDir: resolve("node_modules/@iconify/json/json")
 };
