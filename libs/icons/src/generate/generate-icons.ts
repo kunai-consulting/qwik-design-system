@@ -18,10 +18,7 @@ interface GeneratedIcon {
 }
 
 async function generateIcon(prefix: string, iconName: string, iconData: IconifyIcon) {
-  const result = iconToSVG(iconData, {
-    height: "1em",
-    width: "1em"
-  });
+  const result = iconToSVG(iconData);
 
   const formattedName = prefix + pascalCase(iconName);
   const camelCaseName = camelCase(formattedName);
@@ -33,8 +30,6 @@ async function generateIcon(prefix: string, iconName: string, iconData: IconifyI
   
   export const ${symbolName} = props => jsx('svg', {
     ...${JSON.stringify(result.attributes)},
-    width: "1em",
-    height: "1em",
     "data-qds-icon": "",
     ...props,
     dangerouslySetInnerHTML: ${JSON.stringify(result.body)}
