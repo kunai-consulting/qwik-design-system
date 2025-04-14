@@ -1,7 +1,7 @@
+import { log, config } from "../../config";
 import { loadCollectionFromFS } from "@iconify/utils/lib/loader/fs";
 import { getIcons } from "@iconify/utils";
 import type { IconifyJSON } from "@iconify/types";
-import { log } from "./config";
 import { readdir } from "node:fs/promises";
 
 export async function loadIconSets(): Promise<Record<string, IconifyJSON>> {
@@ -31,10 +31,8 @@ export async function loadIconSets(): Promise<Record<string, IconifyJSON>> {
 
 async function scanIconifyPackages(): Promise<string[]> {
   try {
-    const modulesPath = new URL("../../node_modules/@iconify", import.meta.url);
-    log(`Scanning for Iconify packages in: ${modulesPath.pathname}`);
-
-    const collections = await readdir(modulesPath);
+    log(`Scanning for Iconify packages in: ${config.collectionsDir}`);
+    const collections = await readdir(config.collectionsDir);
     return collections;
   } catch (error) {
     console.error("Error scanning for Iconify packages:", error);

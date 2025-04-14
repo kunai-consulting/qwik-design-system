@@ -1,3 +1,7 @@
+import { createResolver } from "@kunai-consulting/qwik-utils";
+
+const { resolve } = createResolver(import.meta.url);
+
 export interface QwikIconConfig {
   /**
    * Enable debug logging
@@ -12,13 +16,7 @@ export interface QwikIconConfig {
   /**
    * Source configuration
    */
-  sources: {
-    /**
-     * Directory containing Iconify JSON collection packages
-     * Default: "../node_modules/@iconify-json"
-     */
-    collectionsDir: string;
-  };
+  collectionsDir: string;
 }
 
 export const log = (message: string) => {
@@ -28,7 +26,5 @@ export const log = (message: string) => {
 export const config: QwikIconConfig = {
   debug: true,
   iconLimit: process.env.ICON_LIMIT ? Number.parseInt(process.env.ICON_LIMIT) : undefined,
-  sources: {
-    collectionsDir: "./node_modules/@iconify-json"
-  }
+  collectionsDir: resolve("node_modules/@iconify-json")
 };
