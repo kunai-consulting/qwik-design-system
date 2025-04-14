@@ -17,7 +17,11 @@ interface GeneratedIcon {
   symbolName: string;
 }
 
-async function generateIcon(prefix: string, iconName: string, iconData: IconifyIcon) {
+export async function generateIcon(
+  prefix: string,
+  iconName: string,
+  iconData: IconifyIcon
+) {
   const result = iconToSVG(iconData);
 
   const formattedName = prefix + pascalCase(iconName);
