@@ -2,6 +2,7 @@ import { getIconSets } from "./get-icons";
 import { describe, it, expect, beforeAll } from "vitest";
 import type { IconifyJSON, IconifyIcon } from "@iconify/types";
 
+// Smoke test to ensure the icon sets are loaded correctly
 describe("getIconSets", () => {
   let iconSets: Record<string, IconifyJSON>;
 
