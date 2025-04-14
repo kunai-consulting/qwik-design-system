@@ -8,12 +8,10 @@ export default component$(() => {
     <div
       style={{
         width: "100%",
-        height: "250px",
-        padding: "20px",
-        background: "#f5f5f5"
+        height: "250px"
       }}
     >
-      <Resizable.Root>
+      <Resizable.Root class="resizable-root">
         <Resizable.Panel
           width={200}
           minWidth={100}

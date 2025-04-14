@@ -1,6 +1,9 @@
+.resizable-root {
+  background-color: #f5f5f5;
+}
+
 .resizable-handle {
-  background-color: #e0e0e0;
-  flex: 0 0 8px;
+  width: 8px;
 }
 
 .resizable-handle:hover {

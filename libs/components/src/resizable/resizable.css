@@ -40,6 +40,11 @@
     user-select: none;
     z-index: 1;
     box-sizing: border-box;
+    width: 4px;
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    background-color: #e0e0e0;
   }
 
   [data-qds-resizable-root][data-orientation="horizontal"] [data-qds-resizable-handle] {
