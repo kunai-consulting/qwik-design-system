@@ -3,10 +3,6 @@ import { useBoundSignal } from "./bound-signal";
 
 /**
  * Props that support both value based and signal based state
- *
- * @example
- * <Component value="jim" /> // value={signal.value}, value={store.property}
- * <Component bind:value={mySignal} />
  */
 export type BindableProps<T> = {
   [K in keyof T]?: T[K];
@@ -37,6 +33,10 @@ export type SignalResults<T> = {
  *   disabled: false,
  *   value: ""
  * });
+ *
+ *  * @example
+ * <Component value="jim" /> // value={signal.value}, value={store.property}
+ * <Component bind:value={mySignal} />
  */
 export function useBindings<T extends object>(
   props: BindableProps<T>,
