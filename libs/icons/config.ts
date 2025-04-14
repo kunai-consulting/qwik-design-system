@@ -19,7 +19,7 @@ export interface QwikIconConfig {
   collectionsDir: string;
 }
 
-export const log = (message: string) => {
+export const debug = (message: string) => {
   if (config.debug) console.log(message);
 };
 

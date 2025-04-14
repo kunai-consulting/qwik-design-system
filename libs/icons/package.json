@@ -32,11 +32,11 @@
     "@iconify/json": "^2.2.326",
     "@iconify/types": "^2.0.0",
     "@iconify/utils": "^2.3.0",
+    "@kunai-consulting/qwik-utils": "workspace:*",
     "@types/node": "22.14.0",
     "typescript": "5.4.5",
     "undici": "*",
     "vite": "5.3.5",
-    "vite-tsconfig-paths": "^4.2.1",
-    "@kunai-consulting/qwik-utils": "workspace:*"
+    "vite-tsconfig-paths": "^4.2.1"
   }
 }
