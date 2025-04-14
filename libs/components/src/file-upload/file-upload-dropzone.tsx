@@ -14,9 +14,8 @@ type PublicDropzoneProps = PropsOf<"div">;
 /** Component that handles drag and drop file upload functionality */
 export const FileUploadDropzone = component$<PublicDropzoneProps>((props) => {
   const context = useContext(fileUploadContextId);
-
   const { dropzoneRef, isDragging, handlers, processFiles$ } = useFileUpload({
-    disabled: context.disabled,
+    disabled: context.isDisabledSig,
     multiple: context.multiple,
     debug: import.meta.env.DEV,
     onFilesChange$: $((files: FileInfo[]) => {
@@ -38,7 +37,7 @@ export const FileUploadDropzone = component$<PublicDropzoneProps>((props) => {
   });
 
   const onQdsfiledrop$ = $((e: CustomEvent<{ fileInfos: FileInfo[] }>) => {
-    if (context.disabled) return;
+    if (context.isDisabledSig.value) return;
 
     const files = e.detail.fileInfos.map((info) => info.file);
     if (files.length) {
@@ -62,7 +61,7 @@ export const FileUploadDropzone = component$<PublicDropzoneProps>((props) => {
       onDrop$={[handlers.onDrop$, props.onDrop$]}
       data-file-upload-dropzone
       data-dragging={isDragging.value ? "" : undefined}
-      data-disabled={context.disabled ? "" : undefined}
+      data-disabled={context.isDisabledSig.value ? "" : undefined}
     >
       <Slot />
     </div>

@@ -11,7 +11,7 @@ export const FileUploadInput = component$<PublicInputProps>((props) => {
   const context = useContext(fileUploadContextId);
 
   const { processFiles$ } = useFileUpload({
-    disabled: context.disabled,
+    disabled: context.isDisabledSig,
     multiple: context.multiple,
     debug: import.meta.env.DEV,
     onFilesChange$: $((files: FileInfo[]) => {
@@ -46,7 +46,7 @@ export const FileUploadInput = component$<PublicInputProps>((props) => {
       onChange$={[onChange$, props.onChange$]}
       multiple={context.multiple}
       accept={context.accept}
-      disabled={context.disabled}
+      disabled={context.isDisabledSig.value}
       data-file-upload-input
     />
   );
