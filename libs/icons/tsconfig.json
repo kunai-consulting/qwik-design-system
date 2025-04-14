@@ -1,5 +1,8 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "rootDir": "./",
+    "composite": true,
     "allowJs": true,
     "target": "ES2017",
     "module": "ES2020",
@@ -15,12 +18,9 @@
     "skipLibCheck": true,
     "incremental": true,
     "isolatedModules": true,
-    "types": ["vite/client"],
-    "paths": {
-      "@kunai-consulting/qwik-utils": ["../utils/src"],
-      "@kunai-consulting/qwik-utils/*": ["../utils/src/*"]
-    }
+    "types": ["vite/client"]
   },
-  "include": ["src"],
-  "exclude": ["src/icons/**/*", "src/downloads/**/*", "src/page/**/*"]
+  "include": ["src", "config.ts"],
+  "exclude": ["src/icons/**/*", "src/downloads/**/*", "src/page/**/*"],
+  "references": [{ "path": "../utils" }]
 }
