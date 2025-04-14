@@ -20,7 +20,7 @@
     "isolatedModules": true,
     "types": ["vite/client"]
   },
-  "include": ["src", "config.ts"],
+  "include": ["src", "config.ts", "package.json"],
   "exclude": ["src/icons/**/*", "src/downloads/**/*", "src/page/**/*"],
   "references": [{ "path": "../utils" }]
 }
