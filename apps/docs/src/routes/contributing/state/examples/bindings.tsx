@@ -1,6 +1,6 @@
-import { component$, type PropsOf, useSignal, useStyles$ } from "@builder.io/qwik";
+import { type PropsOf, component$, useSignal, useStyles$ } from "@builder.io/qwik";
 import { Slot } from "@builder.io/qwik";
-import { useBindings, type BindableProps } from "@kunai-consulting/qwik";
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik";
 import styles from "./form.css?inline";
 
 interface FormState {

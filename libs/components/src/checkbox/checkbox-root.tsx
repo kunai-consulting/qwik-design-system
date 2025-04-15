@@ -8,10 +8,10 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
+import { type BindableProps, useBindings } from "../../utils/bindings";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
-import { type BindableProps, useBindings } from "../../utils/bindings";
 
 export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   /** Event handler called when the checkbox state changes */
