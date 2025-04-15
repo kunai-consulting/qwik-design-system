@@ -1,7 +1,3 @@
-import { createResolver } from "@kunai-consulting/qwik-utils";
-
-const { resolve } = createResolver(import.meta.url);
-
 export interface QwikIconConfig {
   /**
    * Enable debug logging
@@ -9,7 +5,7 @@ export interface QwikIconConfig {
   debug: boolean;
 
   /**
-   * Limit number of icons to process per collection (for testing)
+   * Limit number of icons to process per collection (for testing). Change in package.json script
    */
   iconLimit?: number;
 }

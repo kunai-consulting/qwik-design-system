@@ -153,3 +153,5 @@ export async function generateIcons() {
 export async function run() {
   await generateIcons();
 }
+
+run().catch(console.error);
