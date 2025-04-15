@@ -54,6 +54,8 @@ Without `useBindings`, component authors often face challenges:
 3. **Edge case handling** 🐛 - Missing synchronization scenarios leads to subtle bugs
 4. **Inconsistent updates** 🔄❌ - Properties update but internal state doesn't reflect changes
 
+> Note: Our CI workflow checks that all root components use `useBindings`. If your component doesn't need it, add a `// no-bindings` comment to exempt it from the check.
+
 > For a more in-depth example of seeing `useBindings` in action, look at the `checkbox-root.tsx` file in the `libs/components` folder.
 
 #### useBoundSignal (internal)
