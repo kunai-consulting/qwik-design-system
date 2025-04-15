@@ -31,10 +31,10 @@ Target features. Some are essential, others are nice to have. Checked items are 
 Here are some resources that can inform and inspire our implementation
 
 ### Native HTML
-HTML includes an `<input type="date" />` [element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date) 
-and the `<input type="datetime-local" />` [element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local). 
-Different browsers provide different date picking UIs. Many applications use a custom implementation to provide a 
-consistent experience across browsers.
+HTML includes an `<input type="date" />` [element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date) and the `<input type="datetime-local" />` [element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local). 
+Different browsers provide different date picking UIs for these components. These built-in UIs are inconsistent, 
+difficult to style, and lacking in features like internationalization. 
+For these reasons many applications use a library component or a custom implementation.
 
 ## Official accessibility guidance:
 The [ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/) 
@@ -48,7 +48,7 @@ Otherwise, the focus is placed on the day in the calendar that matches the value
 The guide also provides a [Combobox Date Picker example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-datepicker/)
 that is worth consulting.
 
-### Other libraries:
+### Other component libraries:
 - [Ark UI Date Picker](https://ark-ui.com/react/docs/components/date-picker)
   - Ark UI provides a Date Picker component that supports single, multiple, and range date selection.
   - It includes month and year views for day and month selection, respectively.
@@ -62,7 +62,10 @@ that is worth consulting.
   DatePicker for the combination of DateField and Calendar, RangeCalendar for selecting a range, and DateRangePicker for
   the combination of DateField and RangeCalendar. This is a composable approach and avoids having to handle various 
   modes within a single component.
-  - Strong Internationalization support
+  - [DateField](https://react-spectrum.adobe.com/react-aria/DateField.html) has a pleasant user experience. It breaks 
+  the input into three parts: month, day, and year. Each has a clear placeholder and the ability to increment/decrement 
+  the value using the up and down arrows.
+  - Strong Internationalization support with the help of [@internationalized/date](https://www.npmjs.com/package/@internationalized/date)
   - Can specify the first day of the week
 - [flux Date Picker](https://fluxui.dev/components/date-picker) and [Calendar](https://fluxui.dev/components/calendar)
   - Flux is a styled component library for Laravel with fully-featured Date Picker and Calendar components. It is 
@@ -87,9 +90,38 @@ Some comparable headless component libraries have no calendar component. These i
 [Ariakit](https://ariakit.org/components) [Dice UI](https://www.diceui.com/), [Kobalte](https://kobalte.dev/), [Base UI](https://base-ui.com/),
 [HeadlessUI](https://headlessui.com/), [Radix UI](https://www.radix-ui.com), [melt](https://next.melt-ui.com/), [Dice UI](https://www.diceui.com/).
 
+### Date utility libraries
+We need to consider whether or not to use a third-party library for date parsing, formatting, validation, manipulation, etc.
+
+In my experience, few time-oriented web development teams build exclusively with the native JS Date object.
+
+This comment from the @internationalized/date docs seems summarizes it:
+> By default, JavaScript represents dates and times using the [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) object. However, Date has many problems, including a very difficult to use API, lack of all internationalization support, and more. The [Temporal](https://tc39.es/proposal-temporal/docs/index.html) proposal will eventually address this in the language
+
+As of now Temporal [has almost zero browser support](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal#browser_compatibility), and no clear expected date.
+
+If we do use a library, here are some options:
+
+- [date-fns](https://date-fns.org/)
+  - Modular, immutable, TypeScript-first date utility library with excellent tree-shaking support.
+- [dayjs](https://day.js.org/)
+  - Minimalist library with a Moment.js-compatible API but much smaller size.
+- [Luxon](https://moment.github.io/luxon/)
+  - Powerful, immutable date library with built-in timezone handling from the same team that maintains Moment.js.
+- [@internationalized/date](https://www.npmjs.com/package/@internationalized/date)
+
+Of these, I think date-fns is the best option for our needs, since it's TypeScript, immutable, and tree-shakeable.
+
+For Internationalization, we can likely use the browser's native [Intl.DateTimeFormat API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat), which is widely supported.
 
 ## Component Structure
 - Root
+  - Header
+    - Previous
+    - Title
+    - Next
+  - Grid
+    - GridDay
 
 ## Keyboard Interactions
 - Arrow keys, page up/down, home/end for navigation within the calendar grid
@@ -118,4 +150,5 @@ Implementer needs to create their own CSS to handle placement and styling of the
 ## Known Issues
 
 ## Questions
-- Will we use native JS Date functionality for date parsing and formatting, or a third-party library?
+- Will we use native JS Date functionality for date parsing and formatting, or a third-party library, or a combo?
+- What specific localization and internationalization features should we include?
