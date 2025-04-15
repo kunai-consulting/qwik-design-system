@@ -16,8 +16,6 @@ import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
 export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   /** Event handler called when the checkbox state changes */
   onChange$?: (checked: T) => void;
-  /** Whether the checkbox is disabled */
-  disabled?: boolean;
   /** Whether the checkbox has a description */
   description?: boolean;
   /** Name attribute for the hidden input element */
@@ -30,22 +28,15 @@ export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   BindableProps<CheckboxBinds>;
 
 type CheckboxBinds = {
+  /* Determines whether the checkbox is checked */
   checked: boolean | "mixed";
+  /** Whether the checkbox is disabled */
   disabled: boolean;
 };
 
 /** Root component that provides context and state management for the checkbox */
 export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
-  const {
-    "bind:checked": givenCheckedSig,
-    onClick$,
-    onChange$,
-    description,
-    name,
-    required,
-    value,
-    ...rest
-  } = props;
+  const { onChange$, description, name, required, value, ...rest } = props;
 
   const { checkedSig, disabledSig: isDisabledSig } = useBindings<CheckboxBinds>(props, {
     checked: false,
