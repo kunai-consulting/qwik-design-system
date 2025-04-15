@@ -1,0 +1,46 @@
+name: Generate Icons
+
+on:
+  workflow_dispatch:  # Manual trigger
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday at midnight
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: true
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Update @iconify/json package
+        run: pnpm update @iconify/json --filter @kunai-consulting/qwik-icons
+
+      - name: Generate icons
+        run: pnpm --filter @kunai-consulting/qwik-icons generate-icons
+        env:
+          NODE_OPTIONS: "--max-old-space-size=8192"
+
+      - name: Build icons library
+        run: pnpm --filter @kunai-consulting/qwik-icons build
+
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "Update and build icons package" -a || echo "No changes to commit"
+          git push
