@@ -9,18 +9,18 @@ export const CheckboxHiddenInput = component$(
     // In the case where the native checkbox is checked, but the state is not, we need to update the state
     const handleChange$ = $((e: InputEvent) => {
       const target = e.target as HTMLInputElement;
-      if (target.checked === context.checkedStateSig.value) {
+      if (target.checked === context.checkedSig.value) {
         return;
       }
-      context.checkedStateSig.value = target.checked;
+      context.checkedSig.value = target.checked;
     });
     return (
       <VisuallyHidden>
         <input
           type="checkbox"
           tabIndex={-1}
-          checked={context.checkedStateSig.value === true}
-          indeterminate={context.checkedStateSig.value === "mixed"}
+          checked={context.checkedSig.value === true}
+          indeterminate={context.checkedSig.value === "mixed"}
           // Identifier for the hidden native checkbox input element
           data-qds-checkbox-hidden-input
           name={context.name ?? props.name ?? undefined}
