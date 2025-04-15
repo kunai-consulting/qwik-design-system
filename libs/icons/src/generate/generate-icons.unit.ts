@@ -83,7 +83,7 @@ describe("generate-icons", () => {
 
       const result = await generateIcon("mdi", "home-variant", mockIcon);
 
-      expect(result.camelCaseName).toBe("mdiHomeVariant");
+      expect(result.pascalCaseName).toBe("MdiHomeVariant");
       expect(result.kebabCaseName).toBe("mdi-home-variant");
     });
   });

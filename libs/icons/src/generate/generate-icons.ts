@@ -2,7 +2,7 @@ import { mkdir, writeFile, rm } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { iconToSVG } from "@iconify/utils";
 import { transform } from "esbuild";
-import { camelCase, kebabCase, pascalCase } from "change-case";
+import { kebabCase, pascalCase } from "change-case";
 import { getIconSets } from "./get-icons";
 import { debug, config } from "../../config";
 import type { IconifyIcon } from "@iconify/types";
@@ -12,7 +12,7 @@ const baseOutputPath = join(process.cwd(), "src", "icons");
 
 interface GeneratedIcon {
   path: string;
-  camelCaseName: string;
+  pascalCaseName: string;
   kebabCaseName: string;
   symbolName: string;
 }
@@ -24,10 +24,15 @@ export async function generateIcon(
 ) {
   const result = iconToSVG(iconData);
 
-  const formattedName = prefix + pascalCase(iconName);
-  const camelCaseName = camelCase(formattedName);
-  const kebabCaseName = kebabCase(camelCaseName);
-  const symbolName = createSymbolName(camelCaseName);
+  let pascalCaseName = pascalCase(iconName);
+
+  // TODO: fix icons starting with numbers
+  if (/^\d/.test(pascalCaseName)) {
+    pascalCaseName = `Icon${pascalCaseName}`;
+  }
+
+  const kebabCaseName = kebabCase(pascalCaseName);
+  const symbolName = createSymbolName(pascalCaseName);
 
   const jsxSource = `
   import { jsx } from "@builder.io/qwik/jsx-runtime";
@@ -55,7 +60,7 @@ export async function generateIcon(
 
   return {
     path: outputPath,
-    camelCaseName,
+    pascalCaseName,
     kebabCaseName,
     symbolName
   };
@@ -72,7 +77,7 @@ async function generateIndexFile(prefix: string, icons: GeneratedIcon[]) {
     'import { componentQrl, qrl } from "@builder.io/qwik";',
     ...icons.map((icon) => {
       const relativePath = `./${icon.kebabCaseName}`;
-      return `export const ${icon.camelCaseName} = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(() => import('${relativePath}.js'), "${icon.symbolName}"));`;
+      return `export const ${icon.pascalCaseName} = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(() => import('${relativePath}.js'), "${icon.symbolName}"));`;
     })
   ].join("\n");
 
@@ -80,23 +85,47 @@ async function generateIndexFile(prefix: string, icons: GeneratedIcon[]) {
   debug(`Created index file for ${prefix} with ${icons.length} icons`);
 }
 
-async function generateRootIndex(prefixes: string[]) {
+async function generateRootIndex(
+  prefixes: string[],
+  iconsByPrefix: Record<string, GeneratedIcon[]>
+) {
   const rootIndexPath = join(baseOutputPath, "all.js");
 
   const content = [
-    ...prefixes.flatMap((prefix) => [
-      "/**",
-      ` * ${prefix} icon collection`,
-      " * @typedef {import('@builder.io/qwik').Component<import('@builder.io/qwik').PropsOf<'svg'>>} IconComponent",
-      " * @type {Object.<string, IconComponent>}",
-      " */",
-      `export * as ${pascalCase(prefix)} from './${prefix.toLowerCase()}/${prefix.toLowerCase()}.js';`
-    ]),
+    ...prefixes.flatMap((prefix) => {
+      const icons = iconsByPrefix[prefix] || [];
+      const iconExamples = icons
+        .slice(0, 10)
+        .map((icon) => `* - ${icon.pascalCaseName}`)
+        .join("\n");
+
+      return [
+        "/**",
+        ` * ${prefix} icon collection`,
+        " * @typedef {import('@builder.io/qwik').Component<import('@builder.io/qwik').PropsOf<'svg'>>} IconComponent",
+        " * @type {Object.<string, IconComponent>}",
+        " * @example",
+        " * Available icons include:",
+        iconExamples ? iconExamples : " * (No icons available)",
+        " */",
+        `export * as ${pascalCase(prefix)} from './${prefix.toLowerCase()}/${prefix.toLowerCase()}.js';`
+      ];
+    }),
     "",
-    ...prefixes.map(
-      (prefix) =>
-        `/**\n * @typedef {Object.<string, IconComponent>} ${pascalCase(prefix)}Icons\n */`
-    )
+    ...prefixes.map((prefix) => {
+      const icons = iconsByPrefix[prefix] || [];
+      const iconExamples = icons
+        .slice(0, 10)
+        .map((icon) => `* - ${icon.pascalCaseName}`)
+        .join("\n");
+
+      return `/**
+ * @typedef {Object.<string, IconComponent>} ${pascalCase(prefix)}Icons
+ * @example
+ * Available icons:
+${iconExamples ? iconExamples : " * (No icons available)"}
+ */`;
+    })
   ].join("\n");
 
   await writeFile(rootIndexPath, content);
@@ -112,6 +141,8 @@ export async function generateIcons() {
   const iconSets = await getIconSets();
   const prefixes = Object.keys(iconSets);
   debug(`Processing ${prefixes.length} icon sets`);
+
+  const iconsByPrefix: Record<string, GeneratedIcon[]> = {};
 
   for (const prefix of prefixes) {
     debug(`Processing icon set: ${prefix}`);
@@ -139,6 +170,8 @@ export async function generateIcons() {
       (icon): icon is GeneratedIcon => icon !== null
     );
 
+    iconsByPrefix[prefix] = validIcons;
+
     if (validIcons.length > 0) {
       await generateIndexFile(prefix, validIcons);
     }
@@ -146,7 +179,7 @@ export async function generateIcons() {
     debug(`Completed ${prefix}: ${validIcons.length} icons generated`);
   }
 
-  await generateRootIndex(prefixes);
+  await generateRootIndex(prefixes, iconsByPrefix);
 
   debug("Icon generation complete");
 }
