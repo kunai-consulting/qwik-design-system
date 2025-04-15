@@ -8,6 +8,7 @@ on:
 # Add explicit permissions
 permissions:
   contents: write
+  packages: write
 
 jobs:
   generate:
@@ -16,12 +17,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          ref: alternate-icon-api  # Checkout the alternate-icon-api branch
+          ref: main  # Checkout the main branch
+          fetch-depth: 0  # Fetch all history for tags
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
@@ -42,11 +45,36 @@ jobs:
 
       - name: Build icons library
         run: pnpm --filter @kunai-consulting/qwik-icons build
-
-      - name: Commit and push if changed
+      
+      - name: Create changeset
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add -A
-          git commit -m "Update and build icons package" -a || echo "No changes to commit"
-          git push origin alternate-icon-api
+          DATE=$(date +"%Y-%m-%d")
+          # Create a changeset file manually
+          mkdir -p .changeset
+          cat > .changeset/icon-update-$DATE.md << EOL
+          ---
+          "@kunai-consulting/qwik-icons": patch
+          ---
+          
+          Update icons from Iconify on $DATE
+          EOL
+
+      - name: Setup Git user
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+
+      - name: Version and publish with changesets
+        run: |
+          # Apply version changes from the changeset
+          pnpm changeset version
+          
+          # Publish the package
+          pnpm changeset publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push changes
+        run: |
+          git push --follow-tags origin main
