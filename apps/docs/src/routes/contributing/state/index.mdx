@@ -47,6 +47,38 @@ It looks at what the user passed to your component - whether it's a plain value 
 
 <Showcase name="bindings" />
 
+#### Usage
+
+1. Import the necessary types and hook:
+   ```tsx
+   import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
+   ```
+
+2. Define your bindable properties:
+   ```tsx
+   type ExampleComponentBind = {
+     value: string;
+     disabled: boolean;
+   };
+   ```
+
+3. Create component props with BindableProps:
+   ```tsx
+   export type MyComponentProps = {
+     // Regular props here
+   } & BindableProps<ExampleComponentBind>;
+   ```
+
+4. Use the hook in your component:
+   ```tsx
+   const { valueSig, disabledSig } = useBindings(props, {
+     value: "",
+     disabled: false
+   });
+   
+   return <input value={valueSig.value} disabled={disabledSig.value} />;
+   ```
+
 Without `useBindings`, component authors often face challenges:
 
 1. **Stale state issues** 🕒 - Components can get out of sync with consumers' signals
