@@ -5,12 +5,18 @@ on:
   schedule:
     - cron: '0 0 * * 0'  # Weekly on Sunday at midnight
 
+# Add explicit permissions
+permissions:
+  contents: write
+
 jobs:
   generate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          ref: alternate-icon-api  # Checkout the alternate-icon-api branch
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -43,4 +49,4 @@ jobs:
           git config --local user.name "GitHub Action"
           git add -A
           git commit -m "Update and build icons package" -a || echo "No changes to commit"
-          git push
+          git push origin alternate-icon-api
