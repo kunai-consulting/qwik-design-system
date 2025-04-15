@@ -116,6 +116,52 @@ describe("generate-icons", () => {
         .mock.calls.filter((call) => (call[0] as string).endsWith("all.ts"));
       expect(indexCalls.length).toBe(1);
     }, 10000);
+
+    it("should use PascalCase for exports in the root index file", async () => {
+      vi.mocked(getIconSets).mockResolvedValue({
+        "rivet-icons": {
+          prefix: "rivet-icons",
+          icons: {
+            "some-icon": {
+              body: '<path d="M10 10h4v4h-4z"/>',
+              width: 24,
+              height: 24
+            }
+          }
+        },
+        "material-symbols": {
+          prefix: "material-symbols",
+          icons: {
+            "home": {
+              body: '<path d="M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8h5z"/>',
+              width: 24,
+              height: 24
+            }
+          }
+        }
+      });
+
+      await generateIcons();
+
+      const indexCall = vi
+        .mocked(writeFile)
+        .mock.calls.find((call) => (call[0] as string).endsWith("all.ts"));
+
+      expect(indexCall).toBeDefined();
+      const content = indexCall?.[1] as string;
+
+      // Check for PascalCase exports
+      expect(content).toContain("export * as RivetIcons from");
+      expect(content).toContain("export * as MaterialSymbols from");
+      expect(content).not.toContain("export * as rivet-icons from");
+      expect(content).not.toContain("export * as material-symbols from");
+
+      // Check for PascalCase type exports
+      expect(content).toContain("export type RivetIconsIcons =");
+      expect(content).toContain("export type MaterialSymbolsIcons =");
+      expect(content).not.toContain("export type rivet-iconsIcons =");
+      expect(content).not.toContain("export type material-symbolsIcons =");
+    });
   });
 
   describe("generateIcons with controlled data", () => {

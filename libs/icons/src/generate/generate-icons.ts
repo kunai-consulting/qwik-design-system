@@ -88,13 +88,17 @@ async function generateRootIndex(prefixes: string[]) {
     "",
     'type IconComponent = Component<PropsOf<"svg">>;',
     "",
-    ...prefixes.map(
-      (prefix) =>
-        `export * as ${prefix} from './${prefix.toLowerCase()}/${prefix.toLowerCase()}.js';`
-    ),
+    ...prefixes.flatMap((prefix) => [
+      "/**",
+      ` * ${prefix} icon collection`,
+      " * @type {Object.<string, IconComponent>}",
+      " */",
+      `export * as ${pascalCase(prefix)} from './${prefix.toLowerCase()}/${prefix.toLowerCase()}.js';`
+    ]),
     "",
     ...prefixes.map(
-      (prefix) => `export type ${prefix}Icons = Record<string, IconComponent>;`
+      (prefix) =>
+        `export type ${pascalCase(prefix)}Icons = Record<string, IconComponent>;`
     )
   ].join("\n");
 
