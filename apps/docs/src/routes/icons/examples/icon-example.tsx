@@ -1,6 +1,6 @@
 import { component$ } from "@builder.io/qwik";
-import { LuCheck } from "@kunai-consulting/qwik-icons";
+import { Lucide } from "@kunai-consulting/qwik-icons";
 
 export default component$(() => {
-  return <LuCheck />;
+  return <Lucide.lucideAlarmClock />;
 });

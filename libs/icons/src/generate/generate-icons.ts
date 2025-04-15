@@ -81,16 +81,13 @@ async function generateIndexFile(prefix: string, icons: GeneratedIcon[]) {
 }
 
 async function generateRootIndex(prefixes: string[]) {
-  const rootIndexPath = join(baseOutputPath, "all.ts");
+  const rootIndexPath = join(baseOutputPath, "all.js");
 
   const content = [
-    "import type { Component, PropsOf } from '@builder.io/qwik';",
-    "",
-    'type IconComponent = Component<PropsOf<"svg">>;',
-    "",
     ...prefixes.flatMap((prefix) => [
       "/**",
       ` * ${prefix} icon collection`,
+      " * @typedef {import('@builder.io/qwik').Component<import('@builder.io/qwik').PropsOf<'svg'>>} IconComponent",
       " * @type {Object.<string, IconComponent>}",
       " */",
       `export * as ${pascalCase(prefix)} from './${prefix.toLowerCase()}/${prefix.toLowerCase()}.js';`
@@ -98,7 +95,7 @@ async function generateRootIndex(prefixes: string[]) {
     "",
     ...prefixes.map(
       (prefix) =>
-        `export type ${pascalCase(prefix)}Icons = Record<string, IconComponent>;`
+        `/**\n * @typedef {Object.<string, IconComponent>} ${pascalCase(prefix)}Icons\n */`
     )
   ].join("\n");
 
