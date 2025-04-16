@@ -1,0 +1,29 @@
+@layer qds {
+  [data-qds-switch-root] {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  [data-qds-switch-root][data-disabled] {
+    cursor: not-allowed;
+  }
+
+  [data-qds-switch-control] {
+    display: flex;
+    position: relative;
+    cursor: pointer;
+  }
+
+  [data-qds-switch-control][data-disabled] {
+    cursor: not-allowed;
+  }
+
+  [data-qds-switch-thumb] {
+    position: absolute;
+  }
+
+  [data-qds-switch-description] {
+    cursor: default;
+  }
+}

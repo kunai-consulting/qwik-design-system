@@ -78,6 +78,8 @@ test.describe("description", () => {
     const description = d.getDescription();
 
     await expect(description).toBeVisible();
-    await expect(description).toHaveText("Receive notifications about important updates");
+    await expect(description).toHaveText(
+      "(Receive notifications about important updates)"
+    );
   });
 });

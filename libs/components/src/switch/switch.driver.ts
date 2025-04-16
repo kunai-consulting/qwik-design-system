@@ -23,7 +23,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   };
 
   const getHiddenInput = () => {
-    return rootLocator.locator("input[type='checkbox']");
+    return rootLocator.locator('input[type="checkbox"]');
   };
 
   return {
@@ -36,4 +36,4 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getDescription,
     getHiddenInput
   };
-} 
+}

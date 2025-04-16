@@ -1,0 +1,39 @@
+.switch-root {
+  gap: 0.5rem;
+}
+
+.switch-root[data-disabled] {
+  opacity: 0.5;
+}
+
+.switch-control {
+  width: 2.5rem;
+  height: 1.5rem;
+  border-radius: 9999px;
+  background-color: grey;
+  transition: background-color 0.2s ease;
+  border: none;
+  padding: 0;
+}
+
+.switch-control[data-checked] {
+  background-color: blue;
+}
+
+.switch-thumb {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 9999px;
+  background-color: white;
+  top: 0.125rem;
+  left: 0.125rem;
+  transition: transform 0.2s ease;
+}
+
+.switch-control[data-checked] .switch-thumb {
+  transform: translateX(1rem);
+}
+
+.switch-description {
+  color: grey;
+}
