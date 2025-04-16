@@ -1,0 +1,80 @@
+name: Generate Icons
+
+on:
+  workflow_dispatch:  # Manual trigger
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday at midnight
+
+# Add explicit permissions
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: main  # Checkout the main branch
+          fetch-depth: 0  # Fetch all history for tags
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: true
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Update @iconify/json package
+        run: pnpm update @iconify/json --filter @kunai-consulting/qwik-icons
+
+      - name: Generate icons
+        run: pnpm --filter @kunai-consulting/qwik-icons generate-icons
+        env:
+          NODE_OPTIONS: "--max-old-space-size=8192"
+
+      - name: Build icons library
+        run: pnpm --filter @kunai-consulting/qwik-icons build
+      
+      - name: Create changeset
+        run: |
+          DATE=$(date +"%Y-%m-%d")
+          # Create a changeset file manually
+          mkdir -p .changeset
+          cat > .changeset/icon-update-$DATE.md << EOL
+          ---
+          "@kunai-consulting/qwik-icons": patch
+          ---
+          
+          Update icons from Iconify on $DATE
+          EOL
+
+      - name: Setup Git user
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+
+      - name: Version and publish with changesets
+        run: |
+          # Apply version changes from the changeset
+          pnpm changeset version
+          
+          # Publish the package
+          pnpm changeset publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push changes
+        run: |
+          git push --follow-tags origin main
