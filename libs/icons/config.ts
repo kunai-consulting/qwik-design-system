@@ -1,3 +1,7 @@
+import { createResolver } from "@kunai-consulting/qwik-utils";
+
+export const { resolve: resolver } = createResolver(import.meta.url);
+
 export interface QwikIconConfig {
   /**
    * Enable debug logging
