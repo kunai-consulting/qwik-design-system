@@ -20,6 +20,6 @@
     "isolatedModules": true
   },
   "include": ["src", "config.ts", "package.json"],
-  "exclude": ["src/icons/**/*", "src/downloads/**/*", "src/page/**/*"],
+  "exclude": ["src/icons/**/*"],
   "references": [{ "path": "../utils" }]
 }
