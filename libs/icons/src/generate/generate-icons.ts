@@ -8,8 +8,6 @@ import { transform } from "esbuild";
 import { config, debug } from "../../config";
 import { getIconSets } from "./get-icons";
 
-const baseOutputPath = join(process.cwd(), "src", "icons");
-
 interface GeneratedIcon {
   path: string;
   pascalCaseName: string;
@@ -53,7 +51,7 @@ export async function generateIcon(
     format: "esm"
   });
 
-  const outputPath = join(baseOutputPath, prefix.toLowerCase(), `${kebabCaseName}.js`);
+  const outputPath = join(config.iconsDir, prefix.toLowerCase(), `${kebabCaseName}.js`);
 
   await mkdir(dirname(outputPath), { recursive: true });
   await writeFile(outputPath, compiled.code);
@@ -68,7 +66,7 @@ export async function generateIcon(
 
 async function generateIndexFile(prefix: string, icons: GeneratedIcon[]) {
   const indexPath = join(
-    baseOutputPath,
+    config.iconsDir,
     prefix.toLowerCase(),
     `${prefix.toLowerCase()}.js`
   );
@@ -89,7 +87,7 @@ async function generateRootIndex(
   prefixes: string[],
   iconsByPrefix: Record<string, GeneratedIcon[]>
 ) {
-  const rootIndexPath = join(baseOutputPath, "all.js");
+  const rootIndexPath = join(config.iconsDir, "all.js");
 
   const content = [
     ...prefixes.flatMap((prefix) => {
@@ -135,8 +133,8 @@ ${iconExamples ? iconExamples : " * (No icons available)"}
 export async function generateIcons() {
   debug("Starting icon generation...");
 
-  await rm(baseOutputPath, { recursive: true, force: true });
-  await mkdir(baseOutputPath, { recursive: true });
+  await rm(config.iconsDir, { recursive: true, force: true });
+  await mkdir(config.iconsDir, { recursive: true });
 
   const iconSets = await getIconSets();
   const prefixes = Object.keys(iconSets);

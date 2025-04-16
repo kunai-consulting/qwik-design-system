@@ -12,6 +12,10 @@ export interface QwikIconConfig {
    * Limit number of icons to process per collection (for testing). Change in package.json script
    */
   iconLimit?: number;
+  /**
+   *  A path to where the icons get generated, including their exports and barrel files
+   */
+  iconsDir: string;
 }
 
 export const debug = (message: string) => {
@@ -20,5 +24,6 @@ export const debug = (message: string) => {
 
 export const config: QwikIconConfig = {
   debug: true,
-  iconLimit: process.env.ICON_LIMIT ? Number.parseInt(process.env.ICON_LIMIT) : undefined
+  iconLimit: process.env.ICON_LIMIT ? Number.parseInt(process.env.ICON_LIMIT) : undefined,
+  iconsDir: resolver("./src/icons")
 };
