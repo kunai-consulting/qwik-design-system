@@ -2,31 +2,241 @@
   "resizable": [
     {
       "Resizable Handle": {
-        "inheritsFrom": "button"
+        "inheritsFrom": "button",
+        "dataAttributes": [
+          {
+            "name": "data-orientation",
+            "type": "\"horizontal\" | \"vertical\"",
+            "comment": "The orientation of the handle"
+          },
+          {
+            "name": "data-dragging",
+            "type": "boolean",
+            "comment": "Indicates whether the handle is being dragged"
+          },
+          {
+            "name": "data-disabled",
+            "type": "boolean",
+            "comment": "Indicates whether the handle is disabled"
+          }
+        ]
       }
     },
     {
       "Resizable Panel": {
-        "inheritsFrom": "div"
+        "inheritsFrom": "div",
+        "types": [
+          {
+            "PublicPanelProps": [
+              {
+                "comment": "Default width of the panel (in pixels)",
+                "prop": "width",
+                "type": "number"
+              },
+              {
+                "comment": "Default height of the panel (in pixels)",
+                "prop": "height",
+                "type": "number"
+              },
+              {
+                "comment": "Minimum width constraint (in pixels)",
+                "prop": "minWidth",
+                "type": "number"
+              },
+              {
+                "comment": "Maximum width constraint (in pixels)",
+                "prop": "maxWidth",
+                "type": "number"
+              },
+              {
+                "comment": "Minimum height constraint (in pixels)",
+                "prop": "minHeight",
+                "type": "number"
+              },
+              {
+                "comment": "Maximum height constraint (in pixels)",
+                "prop": "maxHeight",
+                "type": "number"
+              },
+              {
+                "comment": "Whether the panel can be collapsed",
+                "prop": "collapsible",
+                "type": "boolean"
+              },
+              {
+                "comment": "Initial collapsed state",
+                "prop": "collapsed",
+                "type": "boolean"
+              },
+              {
+                "comment": "Width to collapse to (in pixels)",
+                "prop": "collapsedSize",
+                "type": "number"
+              },
+              {
+                "comment": "Threshold for collapse trigger",
+                "prop": "collapseThreshold",
+                "type": "number"
+              },
+              {
+                "comment": "Callback fired when the panel is resized",
+                "prop": "onResize$",
+                "type": "QRL<(size: number) => void>"
+              },
+              {
+                "comment": "Callback fired when the panel is collapsed",
+                "prop": "onCollapse$",
+                "type": "QRL<() => void>"
+              },
+              {
+                "comment": "Callback fired when the panel is expanded",
+                "prop": "onExpand$",
+                "type": "QRL<() => void>"
+              }
+            ]
+          }
+        ],
+        "dataAttributes": [
+          {
+            "name": "data-orientation",
+            "type": "\"horizontal\" | \"vertical\"",
+            "comment": "The orientation of the panel"
+          },
+          {
+            "name": "data-min-size",
+            "type": "number",
+            "comment": "Minimum size constraint for the panel"
+          },
+          {
+            "name": "data-max-size",
+            "type": "number",
+            "comment": "Maximum size constraint for the panel"
+          },
+          {
+            "name": "data-collapsible",
+            "type": "boolean",
+            "comment": "Indicates whether the panel is collapsible"
+          },
+          {
+            "name": "data-collapsed-size",
+            "type": "number",
+            "comment": "Size when panel is collapsed"
+          },
+          {
+            "name": "data-collapse-threshold",
+            "type": "number",
+            "comment": "Threshold for triggering collapse"
+          },
+          {
+            "name": "data-is-collapsed",
+            "type": "boolean",
+            "comment": "Current collapsed state of the panel"
+          }
+        ]
       }
     },
     {
       "Resizable Root": {
-        "inheritsFrom": "div"
+        "inheritsFrom": "div",
+        "types": [
+          {
+            "PublicRootProps": [
+              {
+                "comment": "Direction in which the panels can be resized",
+                "prop": "orientation",
+                "type": "\"horizontal\" | \"vertical\""
+              },
+              {
+                "comment": "When true, prevents resizing of panels",
+                "prop": "disabled",
+                "type": "boolean"
+              },
+              {
+                "comment": "Key for persisting layout in localStorage",
+                "prop": "storageKey",
+                "type": "string"
+              }
+            ]
+          }
+        ],
+        "dataAttributes": [
+          {
+            "name": "data-orientation",
+            "type": "\"horizontal\" | \"vertical\"",
+            "comment": "The orientation of the resizable container"
+          },
+          {
+            "name": "data-disabled",
+            "type": "boolean",
+            "comment": "Indicates whether resizing is disabled"
+          },
+          {
+            "name": "data-hydrated",
+            "type": "boolean",
+            "comment": "Indicates whether the component is hydrated"
+          }
+        ]
       }
     }
   ],
   "anatomy": [
     {
-      "name": "Resizable.Root"
+      "name": "Resizable.Root",
+      "description": "Container component that manages the resizable layout and state"
     },
     {
-      "name": "Resizable.Panel"
+      "name": "Resizable.Panel",
+      "description": "Individual panel component that can be resized"
     },
     {
-      "name": "Resizable.Handle"
+      "name": "Resizable.Handle",
+      "description": "Interactive handle component for resizing adjacent panels"
     }
   ],
-  "keyboardInteractions": [],
-  "features": []
+  "features": [
+    "WAI ARIA Separator pattern implementation",
+    "Keyboard navigation with arrow keys and Home/End",
+    "Collapsible panels with custom thresholds",
+    "Layout persistence with local storage",
+    "Responsive resizing with min/max constraints",
+    "Panel size synchronization across handles",
+    "Dynamic orientation (horizontal/vertical)",
+    "Fine-grained resizing control with Shift key",
+    "Progressive size adjustments with step values",
+    "Custom collapse/expand behaviors with callbacks",
+    "Flexible initial sizing with auto-distribution",
+    "Accessible resize handles with ARIA attributes"
+  ],
+  "keyboardInteractions": {
+    "shortcuts": [
+      {
+        "key": "ArrowLeft",
+        "comment": "When focus is on the handle and orientation is horizontal, decreases size of previous panel by 1%"
+      },
+      {
+        "key": "ArrowRight",
+        "comment": "When focus is on the handle and orientation is horizontal, increases size of previous panel by 1%"
+      },
+      {
+        "key": "ArrowUp",
+        "comment": "When focus is on the handle and orientation is vertical, decreases size of previous panel by 1%"
+      },
+      {
+        "key": "ArrowDown",
+        "comment": "When focus is on the handle and orientation is vertical, increases size of previous panel by 1%"
+      },
+      {
+        "key": "Shift + Arrow keys",
+        "comment": "When focus is on the handle, adjusts panel size by 10% instead of 1%"
+      },
+      {
+        "key": "Home",
+        "comment": "When focus is on the handle, collapses previous panel to its minimum size"
+      },
+      {
+        "key": "End",
+        "comment": "When focus is on the handle, expands previous panel to its maximum size"
+      }
+    ]
+  }
 }

@@ -1,99 +1,166 @@
-Features
+# Resizable Research
 
-- [ ] Horizontal resizing
-- [ ] Vertical resizing
-- [ ] Panel size management (min/max sizes)
-- [ ] Collapsible panel
-- [ ] SSR
-- [ ] CSR
-- [ ] Layout persistence (new primitive?)
+## Overview
+Resizable component allows users to adjust the size of panels by dragging handles between them.
+The component is fully accessible, supports keyboard navigation, and complies with the WAI-ARIA specification for window splitters.
+
+## Research Links:
+- [W3C WAI-ARIA Window Splitter Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/)
+- [Corvu Resizable](https://corvu.dev/docs/primitives/resizable/)
+- [React Resizable Panels](https://react-resizable-panels.vercel.app/)
+- [React Resizable Layout Issues](https://github.com/RyoSogawa/react-resizable-layout/issues/38)
+
+---
+
+## Features:
+- [x] Horizontal resizing
+- [x] Vertical resizing
+- [x] Panel size management (min/max sizes)
+- [x] Collapsible panels
+- [x] Keyboard navigation
+- [x] ARIA attributes
+- [x] Custom styles support
+- [x] Layout persistence
+- [ ] Intersection
 - [ ] Nested handles (Dashboard layouts)
 - [ ] Bound state (access to internal state)
-- [ ] asChild
+- [ ] RTL support
+- [x] asChild pattern support
+- [x] Callbacks (onResize$, onCollapse$, onExpand$)
 
-Pieces:
+---
 
-- Root
-- Panel
-- Handle
+## Behavior
 
-Keyboard interactions
+The component consists of three main pieces:
+- Root: Container that manages the resizable panels
+- Panel: Individual resizable sections
+- Handle: Draggable divider between panels
 
-- Left / Right for horizontal
-- Up / Down for Vertical
-- Shift + Arrow for collapsible
-- Resizing with Alt key
-- Home key to collapse preceding panels
-- End key to expand preceding panels
-- Enter to toggle collapse/expand (for collapsible panels)
+---
 
-Attributes:
+### States
 
-role="separator"
+- Default: Panels at their initial sizes
+- Resizing: User is dragging a handle
+- Collapsed: Panel is in collapsed state (if collapsible)
+- Disabled: Resizing is prevented
 
+---
+
+## Keyboard Interactions:
+- Left/Right: Resize horizontally
+- Up/Down: Resize vertically
+- Shift + Arrow: Move in larger increments
+- Alt + Arrow: More precise movement
+- Home: Collapse preceding panels
+- End: Expand preceding panels
+- Enter: Toggle collapse/expand (for collapsible panels)
+
+---
+
+## Attributes:
+- role="separator" (handle)
+- aria-orientation
 - aria-valuemin
-- aria-value-max
+- aria-valuemax
 - aria-valuenow
-
-potential ones:
-
 - aria-controls
+- data-qds-resizable-root
+- data-qds-resizable-panel
+- data-qds-resizable-handle
+- data-orientation
+- data-dragging
+- data-disabled
+- data-collapsible
+- data-collapsed
+- data-min-size
+- data-max-size
 
-Use cases:
+---
 
-- Code Sandboxes
-- Before and after widgets
+## Use Cases:
+- Code editors and IDEs with adjustable panels
+- File explorers with resizable navigation
+- Dashboard layouts with customizable widget sizes
+- Image comparison sliders (before/after)
+- Documentation sites with resizable navigation/content areas
+- Chat applications with adjustable conversation/sidebar panels
+- Data tables with resizable columns
+- Code playgrounds with adjustable preview areas
 
-Important CSS:
+---
 
-cursor: row-resize
+## API:
 
-API's
+### Root:
+```typescript
+interface ResizableRootProps {
+  orientation?: 'horizontal' | 'vertical';
+  disabled?: boolean;
+  onChange$?: (sizes: { [key: string]: number }) => void;
+}
+```
 
-Root:
+### Panel:
+```typescript
+interface ResizablePanelProps {
+  width?: number;
+  height?: number;
+  minWidth?: number;
+  maxWidth?: number;
+  minHeight?: number;
+  maxHeight?: number;
+  collapsible?: boolean;
+  collapsed?: boolean;
+  collapsedSize?: number;
+  collapseThreshold?: number;
+}
+```
 
-orientation
+### Handle:
+```typescript
+interface ResizableHandleProps {
+  onResizeStart$?: () => void;
+  onResize$?: (delta: number) => void;
+  onResizeEnd$?: () => void;
+  step?: number;
+}
+```
 
-onChange$ -> fires when one of the handles is moved
+## Important CSS:
 
-disabled -> disable resizing
+```css
+/* Required CSS */
+[data-qds-resizable-root] {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
 
-Panel:
+[data-qds-resizable-root][data-orientation="horizontal"] {
+  flex-direction: row;
+}
 
-width or height prop, and that affects their styles in css.
+[data-qds-resizable-root][data-orientation="vertical"] {
+  flex-direction: column;
+}
 
-CSS determines layout allocation
+[data-qds-resizable-panel] {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+}
 
-maxWidth -> max size
-minWidth -> min size
+[data-qds-resizable-handle] {
+  position: relative;
+  touch-action: none;
+  user-select: none;
+}
 
-collapseTo -> size when collapsed
-collapseAt -> when to collapse
-
-onCollapseChange$ -> fired when collapse changes
-
-Handle:
-
-step -> how far each handle or resize should go
-
-onResizeStart$ -> starts moving
-
-onResize$ -> called when handle is moved
-
-onResizeEnd$ -> stopped moving
-
-asChild on all
-
-snap -> rather than dragging, it snaps to a certain size
-
-Known issues in other libs:
-
-- Preventing text selection
-
-https://github.com/RyoSogawa/react-resizable-layout/issues/38
-
-Questions:
-
-What's a collapsible panel?
-
-https://react-resizable-panels-git-panelgroup-layout-val-2424f0-bvaughn.vercel.app/examples/collapsible
+[data-qds-resizable-root][data-dragging="true"] {
+  user-select: none;
+}
+```
