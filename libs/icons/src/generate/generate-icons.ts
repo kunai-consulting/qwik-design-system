@@ -83,6 +83,25 @@ async function generateIndexFile(prefix: string, icons: GeneratedIcon[]) {
   debug(`Created index file for ${prefix} with ${icons.length} icons`);
 }
 
+async function generateDeclarationFile(prefix: string, icons: GeneratedIcon[]) {
+  const declarationPath = join(
+    config.iconsDir,
+    prefix.toLowerCase(),
+    `${prefix.toLowerCase()}.d.ts`
+  );
+
+  const declarationContent = [
+    'import { Component, PropsOf } from "@builder.io/qwik";',
+    "",
+    ...icons.map((icon) => {
+      return `export declare const ${icon.pascalCaseName}: Component<PropsOf<'svg'>>;`;
+    })
+  ].join("\n");
+
+  await writeFile(declarationPath, declarationContent);
+  debug(`Created declaration file for ${prefix} with ${icons.length} icons`);
+}
+
 async function generateRootIndex(
   prefixes: string[],
   iconsByPrefix: Record<string, GeneratedIcon[]>
@@ -91,43 +110,35 @@ async function generateRootIndex(
 
   const content = [
     ...prefixes.flatMap((prefix) => {
-      const icons = iconsByPrefix[prefix] || [];
-      const iconExamples = icons
-        .slice(0, 10)
-        .map((icon) => `* - ${icon.pascalCaseName}`)
-        .join("\n");
-
       return [
-        "/**",
-        ` * ${prefix} icon collection`,
-        " * @typedef {import('@builder.io/qwik').Component<import('@builder.io/qwik').PropsOf<'svg'>>} IconComponent",
-        " * @type {Object.<string, IconComponent>}",
-        " * @example",
-        " * Available icons include:",
-        iconExamples ? iconExamples : " * (No icons available)",
-        " */",
         `export * as ${pascalCase(prefix)} from './${prefix.toLowerCase()}/${prefix.toLowerCase()}.js';`
       ];
-    }),
-    "",
-    ...prefixes.map((prefix) => {
-      const icons = iconsByPrefix[prefix] || [];
-      const iconExamples = icons
-        .slice(0, 10)
-        .map((icon) => `* - ${icon.pascalCaseName}`)
-        .join("\n");
-
-      return `/**
- * @typedef {Object.<string, IconComponent>} ${pascalCase(prefix)}Icons
- * @example
- * Available icons:
-${iconExamples ? iconExamples : " * (No icons available)"}
- */`;
     })
   ].join("\n");
 
   await writeFile(rootIndexPath, content);
   debug("Created root index file");
+}
+
+async function generateRootDeclaration(
+  prefixes: string[],
+  iconsByPrefix: Record<string, GeneratedIcon[]>
+) {
+  const rootDeclarationPath = join(config.iconsDir, "all.d.ts");
+
+  const content = [
+    'import { Component, PropsOf } from "@builder.io/qwik";',
+    "",
+    ...prefixes.map((prefix) => {
+      return `export declare namespace ${pascalCase(prefix)} {
+  export type IconComponent = Component<PropsOf<'svg'>>;
+  ${iconsByPrefix[prefix].map((icon) => `  export const ${icon.pascalCaseName}: IconComponent;`).join("\n  ")}
+}`;
+    })
+  ].join("\n\n");
+
+  await writeFile(rootDeclarationPath, content);
+  debug("Created root declaration file");
 }
 
 export async function generateIcons() {
@@ -172,12 +183,14 @@ export async function generateIcons() {
 
     if (validIcons.length > 0) {
       await generateIndexFile(prefix, validIcons);
+      await generateDeclarationFile(prefix, validIcons);
     }
 
     debug(`Completed ${prefix}: ${validIcons.length} icons generated`);
   }
 
   await generateRootIndex(prefixes, iconsByPrefix);
+  await generateRootDeclaration(prefixes, iconsByPrefix);
 
   debug("Icon generation complete");
 }
