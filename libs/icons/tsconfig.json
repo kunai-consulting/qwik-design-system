@@ -17,8 +17,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "incremental": true,
-    "isolatedModules": true,
-    "types": ["vite/client"]
+    "isolatedModules": true
   },
   "include": ["src", "config.ts", "package.json"],
   "exclude": ["src/icons/**/*", "src/downloads/**/*", "src/page/**/*"],
