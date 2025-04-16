@@ -39,3 +39,4 @@
 ## Qwik core (future)
 
 - [Tasks](/qwik-core/tasks)
+- [useConstant](/qwik-core/use-constant)
