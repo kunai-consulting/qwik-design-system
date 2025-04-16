@@ -1,12 +1,12 @@
-import { mkdir, writeFile, rm } from "node:fs/promises";
+import { mkdir, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { iconToSVG } from "@iconify/utils";
-import { transform } from "esbuild";
-import { kebabCase, pascalCase } from "change-case";
-import { getIconSets } from "./get-icons";
-import { debug, config } from "../../config";
 import type { IconifyIcon } from "@iconify/types";
+import { iconToSVG } from "@iconify/utils";
 import { createSymbolName } from "@kunai-consulting/qwik-utils";
+import { kebabCase, pascalCase } from "change-case";
+import { transform } from "esbuild";
+import { config, debug } from "../../config";
+import { getIconSets } from "./get-icons";
 
 const baseOutputPath = join(process.cwd(), "src", "icons");
 

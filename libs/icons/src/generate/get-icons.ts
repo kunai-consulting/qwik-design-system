@@ -1,4 +1,4 @@
-import { lookupCollections, lookupCollection } from "@iconify/json";
+import { lookupCollection, lookupCollections } from "@iconify/json";
 import type { IconifyJSON } from "@iconify/types";
 import { debug } from "../../config";
 

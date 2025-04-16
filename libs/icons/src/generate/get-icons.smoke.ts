@@ -1,6 +1,6 @@
-import { getIconSets } from "./get-icons";
-import { describe, it, expect, beforeAll } from "vitest";
 import type { IconifyJSON } from "@iconify/types";
+import { beforeAll, describe, expect, it } from "vitest";
+import { getIconSets } from "./get-icons";
 
 // Smoke test to ensure the icon sets are loaded correctly
 describe("getIconSets", () => {

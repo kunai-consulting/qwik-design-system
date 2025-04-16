@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { mkdir, writeFile, rm } from "node:fs/promises";
-import { getIconSets } from "./get-icons";
-import { generateIcon, generateIcons } from "./generate-icons";
+import { mkdir, rm, writeFile } from "node:fs/promises";
 import type { IconifyIcon } from "@iconify/types";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { generateIcon, generateIcons } from "./generate-icons";
+import { getIconSets } from "./get-icons";
 
 vi.mock("node:fs/promises", () => ({
   mkdir: vi.fn().mockResolvedValue(undefined),

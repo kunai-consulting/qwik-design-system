@@ -1,8 +1,8 @@
 import { qwikCity } from "@builder.io/qwik-city/vite";
 import { qwikVite } from "@builder.io/qwik/optimizer";
 import tailwindcss from "@tailwindcss/vite";
-import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { resolve } from "pathe";
+import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 
 /**
  * This is the base config for vite.

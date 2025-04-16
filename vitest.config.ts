@@ -1,5 +1,5 @@
-import { defineConfig } from "vitest/config";
 import { resolve } from "pathe";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   resolve: {
