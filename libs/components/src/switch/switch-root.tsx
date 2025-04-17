@@ -6,6 +6,7 @@ import {
   component$,
   sync$,
   useContextProvider,
+  useId,
   useOnWindow,
   useStyles$,
   useTask$
@@ -27,11 +28,12 @@ type SwitchBinds = {
 type PublicRootProps = PropsOf<"div"> & {
   /** Callback when the switch state changes */
   onChange$?: (checked: boolean) => void;
+  isError?: boolean;
 } & BindableProps<SwitchBinds>;
 
 const SwitchRootBase = component$<PublicRootProps>((props) => {
   useStyles$(styles);
-  const { onChange$, ...restProps } = props;
+  const { onChange$, isError, ...restProps } = props;
 
   const { checkedSig, disabledSig, requiredSig, nameSig, valueSig } =
     useBindings<SwitchBinds>(props, {
@@ -66,6 +68,12 @@ const SwitchRootBase = component$<PublicRootProps>((props) => {
     })
   );
 
+  const baseId = useId();
+  const controlId = `${baseId}-control`;
+  const labelId = `${baseId}-label`;
+  const descriptionId = `${baseId}-description`;
+  const errorId = `${baseId}-error`;
+
   const context: SwitchContext = {
     checked: checkedSig,
     disabled: disabledSig,
@@ -77,7 +85,12 @@ const SwitchRootBase = component$<PublicRootProps>((props) => {
       if (!disabledSig.value) {
         checkedSig.value = !checkedSig.value;
       }
-    })
+    }),
+    controlId,
+    labelId,
+    descriptionId,
+    errorId,
+    isError
   };
 
   useContextProvider(switchContextId, context);
@@ -90,9 +103,13 @@ const SwitchRootBase = component$<PublicRootProps>((props) => {
       aria-checked={checkedSig.value}
       aria-disabled={disabledSig.value}
       aria-required={requiredSig.value}
+      aria-labelledby={labelId}
+      aria-describedby={descriptionId}
+      aria-errormessage={isError ? errorId : undefined}
       data-qds-switch-root
       data-checked={checkedSig.value}
       data-disabled={disabledSig.value}
+      data-error={isError ? "" : undefined}
       onChange$={[onChange$, props.onChange$]}
     >
       <Slot />

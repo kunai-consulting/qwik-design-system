@@ -26,13 +26,17 @@ const SwitchControlBase = component$<PropsOf<"button">>((props) => {
       {...restProps}
       fallback="button"
       ref={controlRef}
+      id={context.controlId}
       type="button"
       disabled={context.disabled.value}
       data-qds-switch-control
       data-checked={context.checked.value}
-      data-disabled={context.disabled.value}
-      onClick$={context.toggle$}
-      onKeyDown$={handleKeyDown$}
+      data-disabled={context.disabled.value ? "" : undefined}
+      onClick$={[context.toggle$, props.onClick$]}
+      onKeyDown$={[handleKeyDown$, props.onKeyDown$]}
+      aria-labelledby={context.labelId}
+      aria-describedby={context.descriptionId}
+      aria-invalid={context.isError}
     >
       <Slot />
     </Render>

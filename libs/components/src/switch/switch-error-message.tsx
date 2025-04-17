@@ -3,7 +3,7 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { switchContextId } from "./switch-context";
 
-const SwitchDescriptionBase = component$<PropsOf<"div">>((props) => {
+const SwitchErrorMessageBase = component$<PropsOf<"div">>((props) => {
   const { ...restProps } = props;
   const context = useContext(switchContextId);
 
@@ -11,14 +11,15 @@ const SwitchDescriptionBase = component$<PropsOf<"div">>((props) => {
     <Render
       {...restProps}
       fallback="div"
-      id={context.descriptionId}
-      data-qds-switch-description
-      data-checked={context.checked.value}
-      data-disabled={context.disabled.value}
+      id={context.errorId}
+      role="alert"
+      data-qds-switch-error-message
+      data-visible={context.isError}
+      aria-hidden={!context.isError}
     >
       <Slot />
     </Render>
   );
 });
 
-export const SwitchDescription = withAsChild(SwitchDescriptionBase);
+export const SwitchErrorMessage = withAsChild(SwitchErrorMessageBase);

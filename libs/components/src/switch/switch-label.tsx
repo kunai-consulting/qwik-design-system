@@ -11,10 +11,11 @@ const SwitchLabelBase = component$<PropsOf<"label">>((props) => {
     <Render
       {...restProps}
       fallback="label"
+      id={context.labelId}
       data-qds-switch-label
       data-checked={context.checked.value}
       data-disabled={context.disabled.value}
-      onClick$={context.toggle$}
+      onClick$={[context.toggle$, props.onClick$]}
     >
       <Slot />
     </Render>

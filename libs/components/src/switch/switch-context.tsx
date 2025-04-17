@@ -8,6 +8,11 @@ export interface SwitchContext {
   value?: Signal<string>;
   onChange$?: (checked: boolean) => void;
   toggle$: () => void;
+  controlId: string;
+  labelId: string;
+  descriptionId: string;
+  errorId: string;
+  isError?: boolean;
 }
 
 export const switchContextId = createContextId<SwitchContext>("switch-context");

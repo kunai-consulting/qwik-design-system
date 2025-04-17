@@ -26,6 +26,10 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator('input[type="checkbox"]');
   };
 
+  const getErrorMessage = () => {
+    return rootLocator.locator("[data-qds-switch-error-message]");
+  };
+
   return {
     ...rootLocator,
     locator: rootLocator,
@@ -34,6 +38,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getThumb,
     getLabel,
     getDescription,
-    getHiddenInput
+    getHiddenInput,
+    getErrorMessage
   };
 }

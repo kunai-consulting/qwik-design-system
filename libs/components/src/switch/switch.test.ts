@@ -53,7 +53,7 @@ test.describe("disabled state", () => {
     const control = d.getControl();
 
     await expect(d.getRoot()).toHaveAttribute("aria-disabled", "true");
-    await control.click();
+    await expect(control).toBeDisabled();
     await expect(d.getRoot()).toHaveAttribute("aria-checked", "false");
   });
 });
@@ -67,6 +67,89 @@ test.describe("form integration", () => {
 
     await expect(input).toHaveAttribute("name", "notifications");
     await expect(input).toHaveAttribute("value", "enabled");
+  });
+});
+
+test.describe("form validation", () => {
+  test(`GIVEN a required Switch in a form
+      WHEN submitting without checking
+      THEN form should be invalid`, async ({ page }) => {
+    const d = await setup(page, "form");
+    const submitButton = page.locator('button[type="submit"]');
+
+    await submitButton.click();
+
+    await expect(d.getRoot()).toHaveAttribute("data-error", "");
+    await expect(d.getErrorMessage()).toBeVisible();
+    await expect(d.getErrorMessage()).toHaveText("This field is required");
+  });
+
+  test(`GIVEN a required Switch with error
+        WHEN checking the switch
+        THEN error should be cleared`, async ({ page }) => {
+    const d = await setup(page, "form");
+    const submitButton = page.locator('button[type="submit"]');
+
+    await submitButton.click();
+    await expect(d.getErrorMessage()).toBeVisible();
+
+    await d.getControl().click();
+    await expect(d.getErrorMessage()).not.toBeVisible();
+  });
+});
+
+test.describe("error message", () => {
+  test(`GIVEN a Switch with error
+        WHEN rendered
+        THEN error message should be correctly associated`, async ({ page }) => {
+    const d = await setup(page, "form");
+    const submitButton = page.locator('button[type="submit"]');
+
+    await submitButton.click();
+    const errorId = await d.getErrorMessage().getAttribute("id");
+    await expect(d.getRoot()).toHaveAttribute("aria-errormessage", String(errorId));
+  });
+});
+
+test.describe("keyboard navigation", () => {
+  test(`GIVEN a Switch
+        WHEN pressing Enter
+        THEN the state should toggle`, async ({ page }) => {
+    const d = await setup(page, "hero");
+    const control = d.getControl();
+
+    await control.focus();
+    await page.keyboard.press("Enter");
+    await expect(d.getRoot()).toHaveAttribute("aria-checked", "true");
+    await page.keyboard.press("Enter");
+    await expect(d.getRoot()).toHaveAttribute("aria-checked", "false");
+  });
+
+  test(`GIVEN a disabled Switch
+        WHEN using keyboard
+        THEN the state should not change`, async ({ page }) => {
+    const d = await setup(page, "disabled");
+    const control = d.getControl();
+
+    await control.focus();
+    await page.keyboard.press("Space");
+    await expect(d.getRoot()).toHaveAttribute("aria-checked", "false");
+    await page.keyboard.press("Enter");
+    await expect(d.getRoot()).toHaveAttribute("aria-checked", "false");
+  });
+});
+
+test.describe("label interaction", () => {
+  test(`GIVEN a Switch with label
+        WHEN clicking the label
+        THEN the switch should toggle`, async ({ page }) => {
+    const d = await setup(page, "hero");
+    const label = d.getLabel();
+
+    await label.click();
+    await expect(d.getRoot()).toHaveAttribute("aria-checked", "true");
+    await label.click();
+    await expect(d.getRoot()).toHaveAttribute("aria-checked", "false");
   });
 });
 

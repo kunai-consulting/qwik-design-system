@@ -34,6 +34,15 @@
   transform: translateX(1rem);
 }
 
+.switch-control:focus-visible {
+  outline: 1px solid blue;
+  outline-offset: 2px;
+}
+
 .switch-description {
   color: grey;
+}
+
+.switch-error-message {
+  color: red;
 }
