@@ -4,7 +4,8 @@ import {
   useContext,
   $,
   useVisibleTask$,
-  useSignal
+  useSignal,
+  useTask$
 } from "@builder.io/qwik";
 import { dateInputContextId } from "./date-input-context";
 import type { DateSegment } from "./types";
@@ -21,6 +22,63 @@ export const DateInputSegment = component$(
     const context = useContext(dateInputContextId);
     const inputId = `${context.localId}-trigger`;
 
+    const updateActiveDate = $(() => {
+      // After a segment updates, we need to update the activeDate
+      // by combining all three segments into a valid date string
+      const year = context.yearSegmentSig.value.numericValue;
+      const month = context.monthSegmentSig.value.numericValue;
+      const day = context.dayOfMonthSegmentSig.value.numericValue;
+
+      if (year && month && day) {
+        const date = new Date(year, month - 1, day);
+        const isValidDate = date.toString() !== "Invalid Date";
+        if (isValidDate) {
+          // Update the activeDate in yyyy-mm-dd format
+          context.activeDate.value = `${year}-${month}-${day}`;
+        } else {
+          // Try updating the day of the month to the last day of the month
+          const lastDayOfMonth = new Date(year, month - 1, 0).getDate();
+          context.dayOfMonthSegmentSig.value = {
+            ...context.dayOfMonthSegmentSig.value,
+            numericValue: lastDayOfMonth,
+            displayValue: `${lastDayOfMonth}`
+          } as DateSegment;
+        }
+      } else {
+        context.activeDate.value = null;
+      }
+    });
+    useTask$(({ track }) => {
+      track(() => segmentSig.value);
+      updateActiveDate();
+    });
+
+    const updateDayOfMonthSegmentForYearAndMonth = $(
+      (year: number | undefined, month: number | undefined) => {
+        const currentDayOfMonthSegment = context.dayOfMonthSegmentSig.value;
+        let updatedDayOfMonthSegment: DateSegment;
+        if (year && month) {
+          const lastDayOfMonth = new Date(year, month, 0).getDate();
+          const updatedDayOfMonth =
+            (currentDayOfMonthSegment.numericValue ?? -1) > lastDayOfMonth
+              ? lastDayOfMonth
+              : currentDayOfMonthSegment.numericValue;
+          updatedDayOfMonthSegment = {
+            ...currentDayOfMonthSegment,
+            max: lastDayOfMonth,
+            numericValue: updatedDayOfMonth,
+            displayValue: updatedDayOfMonth ? `${updatedDayOfMonth}` : undefined
+          };
+        } else {
+          updatedDayOfMonthSegment = {
+            ...currentDayOfMonthSegment,
+            max: 31
+          };
+        }
+        context.dayOfMonthSegmentSig.value = updatedDayOfMonthSegment;
+      }
+    );
+
     const incrementYearValue = $((changeBy: number) => {
       const currentValue = segmentSig.value?.numericValue;
       const newValue = currentValue ? currentValue + changeBy : new Date().getFullYear();
@@ -31,6 +89,8 @@ export const DateInputSegment = component$(
         numericValue: newValue,
         displayValue: `${newValue}`
       } as DateSegment;
+      const month = context.monthSegmentSig.value.numericValue;
+      updateDayOfMonthSegmentForYearAndMonth(newValue, month);
     });
 
     const incrementMonthValue = $((changeBy: number) => {
@@ -52,6 +112,8 @@ export const DateInputSegment = component$(
         numericValue: newValue,
         displayValue
       } as DateSegment;
+      const year = context.yearSegmentSig.value.numericValue;
+      updateDayOfMonthSegmentForYearAndMonth(year, newValue);
     });
 
     const incrementDayValue = $((changeBy: number) => {
@@ -114,7 +176,7 @@ export const DateInputSegment = component$(
         numericValue = segment.max;
       }
       segmentSig.value = {
-        ...segmentSig.value,
+        ...segment,
         isPlaceholder: false,
         numericValue: numericValue,
         displayValue:
@@ -124,6 +186,15 @@ export const DateInputSegment = component$(
             ? `0${numericValue}`
             : `${numericValue}`
       } as DateSegment;
+
+      if (segment.type === "month") {
+        const year = context.yearSegmentSig.value.numericValue;
+        updateDayOfMonthSegmentForYearAndMonth(year, numericValue);
+      }
+      if (segment.type === "year") {
+        const month = context.monthSegmentSig.value.numericValue;
+        updateDayOfMonthSegmentForYearAndMonth(numericValue, month);
+      }
     });
 
     const updateSegmentToPlaceholder = $(() => {
@@ -134,11 +205,6 @@ export const DateInputSegment = component$(
         numericValue: undefined,
         displayValue: undefined
       } as DateSegment;
-    });
-
-    const updateActiveDate = $(() => {
-      // const segment = segmentSig.value;
-      // activeDate.value = `${yearToRender.value}-${monthToRender.value}-${segment.numericValue}`;
     });
 
     // Get a reference to the span to manually sync content with Qwik state
