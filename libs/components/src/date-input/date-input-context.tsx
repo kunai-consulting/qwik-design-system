@@ -2,7 +2,9 @@ import { type Signal, createContextId } from "@builder.io/qwik";
 import type { DateFormat, LocalDate, Locale, Month, Separator } from "../calendar/types";
 import type { DateSegment } from "./types";
 
-export const dateInputContextId = createContextId<DateInputContext>("qds-date-input-context");
+export const dateInputContextId = createContextId<DateInputContext>(
+  "qds-date-input-context"
+);
 
 export type DateInputContext = {
   locale: Locale;
