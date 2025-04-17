@@ -12,8 +12,11 @@ export const getSeparatorFromFormat = (format?: DateFormat): Separator => {
   if (format?.includes(".")) return ".";
   return "/";
 };
-  
-export const getSegmentsFromFormat = (format: DateFormat, separator: Separator): DateSegment[] => {
+
+export const getSegmentsFromFormat = (
+  format: DateFormat,
+  separator: Separator
+): DateSegment[] => {
   const segments = format.split(separator);
   return segments.map((segment) => {
     const type = segment.includes("y") ? "year" : segment.includes("d") ? "day" : "month";
@@ -21,8 +24,8 @@ export const getSegmentsFromFormat = (format: DateFormat, separator: Separator):
       placeholderText: segment,
       type,
       isPlaceholder: true,
-      min: type === 'year' ? MIN_YEAR : 1,
-      max: type === 'year' ? MAX_YEAR : type === 'month' ? 12 : 31
+      min: type === "year" ? MIN_YEAR : 1,
+      max: type === "year" ? MAX_YEAR : type === "month" ? 12 : 31
     } as DateSegment;
   });
 };
