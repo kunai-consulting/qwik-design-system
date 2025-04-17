@@ -45,7 +45,7 @@ export const DateInputRoot = component$<PublicDateInputRootProps>(
     const segments = getSegmentsFromFormat(dateFormat, separator).map((s) =>
       useSignal(s)
     );
-    
+
     // biome-ignore lint/style/noNonNullAssertion: valid format will always include day
     const dayOfMonthSegmentSig = segments.find((s) => s.value.type === "day")!;
     // biome-ignore lint/style/noNonNullAssertion: valid format will always include month
