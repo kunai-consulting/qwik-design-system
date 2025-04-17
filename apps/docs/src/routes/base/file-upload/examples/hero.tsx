@@ -1,4 +1,5 @@
 import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
+import { LuTrash2 } from "@qwikest/icons/lucide";
 import { FileUpload } from "@kunai-consulting/qwik";
 import styles from "./file-upload.css?inline";
 
@@ -13,6 +14,14 @@ export default component$(() => {
   useStyles$(styles);
   const filePreviewsSig = useSignal<FilePreview[]>([]);
 
+  const removeFile$ = $((index: number) => {
+    const newFiles = [...filePreviewsSig.value];
+    
+    // Remove the file from the array
+    newFiles.splice(index, 1);
+    filePreviewsSig.value = newFiles;
+  });
+
   return (
     <div class="file-upload-container">
       
@@ -20,9 +29,9 @@ export default component$(() => {
         multiple
         accept="image/*" // Accept only image files
         onFilesChange$={$((files) => {
-          // Process each uploaded file and create previews
           const newPreviews: FilePreview[] = [];
           
+          // Process each uploaded file and create previews
           for (const fileInfo of files) {
             if (fileInfo.file) {
               // Create URL for preview
@@ -66,6 +75,14 @@ export default component$(() => {
                   <p class="file-preview-name">{file.name}</p>
                   <p class="file-preview-size">{(file.size / 1024).toFixed(2)} KB</p>
                 </div>
+                <button 
+                  type="button" 
+                  class="file-remove-button" 
+                  onClick$={() => removeFile$(index)}
+                  aria-label={`Remove ${file.name}`}
+                >
+                  <LuTrash2 />
+                </button>
               </div>
             ))}
           </div>
