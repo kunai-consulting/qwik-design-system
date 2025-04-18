@@ -35,9 +35,9 @@ export default component$(() => {
         }}
       >
         <div class="flex gap-2">
-          <Switch.Control class="switch-control">
+          <Switch.Trigger class="switch-trigger">
             <Switch.Thumb class="switch-thumb" />
-          </Switch.Control>
+          </Switch.Trigger>
           <Switch.Label>Enable notifications</Switch.Label>
           <Switch.HiddenInput />
         </div>

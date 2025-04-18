@@ -6,8 +6,8 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator("[data-qds-switch-root]");
   };
 
-  const getControl = () => {
-    return rootLocator.locator("[data-qds-switch-control]");
+  const getTrigger = () => {
+    return rootLocator.locator("[data-qds-switch-trigger]");
   };
 
   const getThumb = () => {
@@ -34,7 +34,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     ...rootLocator,
     locator: rootLocator,
     getRoot,
-    getControl,
+    getTrigger,
     getThumb,
     getLabel,
     getDescription,

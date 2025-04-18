@@ -9,9 +9,9 @@ export default component$(() => {
   return (
     <div>
       <Switch.Root class="switch-root" bind:checked={isCheckedSig}>
-        <Switch.Control class="switch-control">
+        <Switch.Trigger class="switch-trigger">
           <Switch.Thumb class="switch-thumb" />
-        </Switch.Control>
+        </Switch.Trigger>
         <Switch.Label>Enable notifications</Switch.Label>
       </Switch.Root>
 

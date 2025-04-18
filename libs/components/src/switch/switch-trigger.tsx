@@ -10,7 +10,7 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { switchContextId } from "./switch-context";
 
-const SwitchControlBase = component$<PropsOf<"button">>((props) => {
+const SwitchTriggerBase = component$<PropsOf<"button">>((props) => {
   const { ...restProps } = props;
   const context = useContext(switchContextId);
   const controlRef = useSignal<HTMLButtonElement>();
@@ -26,10 +26,10 @@ const SwitchControlBase = component$<PropsOf<"button">>((props) => {
       {...restProps}
       fallback="button"
       ref={controlRef}
-      id={context.controlId}
+      id={context.triggerId}
       type="button"
       disabled={context.disabled.value}
-      data-qds-switch-control
+      data-qds-switch-trigger
       data-checked={context.checked.value}
       data-disabled={context.disabled.value ? "" : undefined}
       onClick$={[context.toggle$, props.onClick$]}
@@ -43,4 +43,4 @@ const SwitchControlBase = component$<PropsOf<"button">>((props) => {
   );
 });
 
-export const SwitchControl = withAsChild(SwitchControlBase);
+export const SwitchTrigger = withAsChild(SwitchTriggerBase);

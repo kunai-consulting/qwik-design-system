@@ -23,11 +23,11 @@ test.describe("interaction", () => {
         WHEN clicking on the control
         THEN the state should toggle`, async ({ page }) => {
     const d = await setup(page, "hero");
-    const control = d.getControl();
+    const trigger = d.getTrigger();
 
-    await control.click();
+    await trigger.click();
     await expect(d.getRoot()).toHaveAttribute("aria-checked", "true");
-    await control.click();
+    await trigger.click();
     await expect(d.getRoot()).toHaveAttribute("aria-checked", "false");
   });
 
@@ -35,9 +35,9 @@ test.describe("interaction", () => {
         WHEN using keyboard navigation
         THEN the state should toggle`, async ({ page }) => {
     const d = await setup(page, "hero");
-    const control = d.getControl();
+    const trigger = d.getTrigger();
 
-    await control.focus();
+    await trigger.focus();
     await page.keyboard.press("Space");
     await expect(d.getRoot()).toHaveAttribute("aria-checked", "true");
     await page.keyboard.press("Space");
@@ -50,10 +50,10 @@ test.describe("disabled state", () => {
         WHEN clicking on the control
         THEN the state should not change`, async ({ page }) => {
     const d = await setup(page, "disabled");
-    const control = d.getControl();
+    const trigger = d.getTrigger();
 
     await expect(d.getRoot()).toHaveAttribute("aria-disabled", "true");
-    await expect(control).toBeDisabled();
+    await expect(trigger).toBeDisabled();
     await expect(d.getRoot()).toHaveAttribute("aria-checked", "false");
   });
 });
@@ -93,7 +93,7 @@ test.describe("form validation", () => {
     await submitButton.click();
     await expect(d.getErrorMessage()).toBeVisible();
 
-    await d.getControl().click();
+    await d.getTrigger().click();
     await expect(d.getErrorMessage()).not.toBeVisible();
   });
 });
@@ -116,9 +116,9 @@ test.describe("keyboard navigation", () => {
         WHEN pressing Enter
         THEN the state should toggle`, async ({ page }) => {
     const d = await setup(page, "hero");
-    const control = d.getControl();
+    const trigger = d.getTrigger();
 
-    await control.focus();
+    await trigger.focus();
     await page.keyboard.press("Enter");
     await expect(d.getRoot()).toHaveAttribute("aria-checked", "true");
     await page.keyboard.press("Enter");
@@ -129,9 +129,9 @@ test.describe("keyboard navigation", () => {
         WHEN using keyboard
         THEN the state should not change`, async ({ page }) => {
     const d = await setup(page, "disabled");
-    const control = d.getControl();
+    const trigger = d.getTrigger();
 
-    await control.focus();
+    await trigger.focus();
     await page.keyboard.press("Space");
     await expect(d.getRoot()).toHaveAttribute("aria-checked", "false");
     await page.keyboard.press("Enter");

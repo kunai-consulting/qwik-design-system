@@ -57,7 +57,7 @@ const SwitchRootBase = component$<PublicRootProps>((props) => {
     "keydown",
     sync$((event: KeyboardEvent) => {
       const activeElement = document.activeElement;
-      const isWithinSwitch = activeElement?.closest("[data-qds-switch-control]");
+      const isWithinSwitch = activeElement?.closest("[data-qds-switch-trigger]");
 
       if (!isWithinSwitch) return;
 
@@ -69,7 +69,7 @@ const SwitchRootBase = component$<PublicRootProps>((props) => {
   );
 
   const baseId = useId();
-  const controlId = `${baseId}-control`;
+  const triggerId = `${baseId}-trigger`;
   const labelId = `${baseId}-label`;
   const descriptionId = `${baseId}-description`;
   const errorId = `${baseId}-error`;
@@ -86,7 +86,7 @@ const SwitchRootBase = component$<PublicRootProps>((props) => {
         checkedSig.value = !checkedSig.value;
       }
     }),
-    controlId,
+    triggerId,
     labelId,
     descriptionId,
     errorId,

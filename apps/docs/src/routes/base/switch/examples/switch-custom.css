@@ -6,7 +6,7 @@
   opacity: 0.5;
 }
 
-.switch-control {
+.switch-trigger {
   width: 2.5rem;
   height: 1.5rem;
   border-radius: 9999px;
@@ -16,7 +16,7 @@
   padding: 0;
 }
 
-.switch-control[data-checked] {
+.switch-trigger[data-checked] {
   background-color: blue;
 }
 
@@ -30,11 +30,11 @@
   transition: transform 0.2s ease;
 }
 
-.switch-control[data-checked] .switch-thumb {
+.switch-trigger[data-checked] .switch-thumb {
   transform: translateX(1rem);
 }
 
-.switch-control:focus-visible {
+.switch-trigger:focus-visible {
   outline: 1px solid blue;
   outline-offset: 2px;
 }

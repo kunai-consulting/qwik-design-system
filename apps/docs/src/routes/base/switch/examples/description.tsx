@@ -6,9 +6,9 @@ export default component$(() => {
   useStyles$(styles);
   return (
     <Switch.Root class="switch-root">
-      <Switch.Control class="switch-control">
+      <Switch.Trigger class="switch-trigger">
         <Switch.Thumb class="switch-thumb" />
-      </Switch.Control>
+      </Switch.Trigger>
       <Switch.Label>Enable notifications</Switch.Label>
       <Switch.Description class="switch-description">
         (Receive notifications about important updates)

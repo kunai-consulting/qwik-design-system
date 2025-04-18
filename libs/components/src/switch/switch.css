@@ -9,13 +9,13 @@
     cursor: not-allowed;
   }
 
-  [data-qds-switch-control] {
+  [data-qds-switch-trigger] {
     display: flex;
     position: relative;
     cursor: pointer;
   }
 
-  [data-qds-switch-control][data-disabled] {
+  [data-qds-switch-trigger][data-disabled] {
     cursor: not-allowed;
   }
 
