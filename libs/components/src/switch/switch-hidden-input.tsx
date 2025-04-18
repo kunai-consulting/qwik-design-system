@@ -7,7 +7,11 @@ type PublicHiddenInputProps = Omit<
   PropsOf<"input">,
   "type" | "checked" | "form" | "style"
 >;
-
+/**
+ * Hidden input component that maintains form control functionality.
+ * Uses checkbox type as Switch represents a boolean state (on/off)
+ * according to WAI-ARIA switch pattern.
+ */
 export const SwitchHiddenInput = component$((props: PublicHiddenInputProps) => {
   const context = useContext(switchContextId);
   const { onChange$, required, ...restProps } = props;

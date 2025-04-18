@@ -10,6 +10,7 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { switchContextId } from "./switch-context";
 
+/** Interactive element that toggles the switch state */
 const SwitchTriggerBase = component$<PropsOf<"button">>((props) => {
   const { ...restProps } = props;
   const context = useContext(switchContextId);
@@ -30,7 +31,9 @@ const SwitchTriggerBase = component$<PropsOf<"button">>((props) => {
       type="button"
       disabled={context.disabled.value}
       data-qds-switch-trigger
+      // Indicates whether the switch is currently checked
       data-checked={context.checked.value}
+      // Indicates whether the switch is currently disabled
       data-disabled={context.disabled.value ? "" : undefined}
       onClick$={[context.toggle$, props.onClick$]}
       onKeyDown$={[handleKeyDown$, props.onKeyDown$]}
