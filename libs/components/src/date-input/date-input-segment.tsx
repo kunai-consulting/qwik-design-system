@@ -35,7 +35,7 @@ export const DateInputSegment = component$(
         const isValidDate = date.toString() !== "Invalid Date";
         if (isValidDate) {
           // Update the activeDate in yyyy-mm-dd format
-          context.activeDate.value = `${year}-${month}-${day}`;
+          context.activeDateSig.value = `${year}-${month}-${day}`;
         } else {
           // Try updating the day of the month to the last day of the month
           const lastDayOfMonth = new Date(year, month - 1, 0).getDate();
@@ -46,7 +46,7 @@ export const DateInputSegment = component$(
           } as DateSegment;
         }
       } else {
-        context.activeDate.value = null;
+        context.activeDateSig.value = null;
       }
     });
     useTask$(({ track }) => {
