@@ -1,0 +1,16 @@
+@layer qds {
+  input[data-qds-date-input-segment] {
+    border: none;
+    padding: 0 1px;
+  }
+  [data-qds-date-input-segment-small] {
+    width: 2ch;
+  }
+  /* specific rule for month placeholder since mm is usually wider than 00 in non-monospace fonts */
+  [data-qds-date-input-segment-month][data-qds-date-input-segment-small][data-qds-date-input-segment-placeholder] {
+    width: calc(2ch * 1.5);
+  }
+  [data-qds-date-input-segment-large] {
+    width: 4ch;
+  }
+}

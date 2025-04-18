@@ -1,5 +1,5 @@
 import type { DateFormat, LocalDate, Separator } from "../calendar/types";
-import { MIN_YEAR, MAX_YEAR } from "./constants";
+import { MAX_YEAR, MIN_YEAR } from "./constants";
 import type { DateSegment } from "./types";
 
 export const getLocalDate = (date: Date) => {
