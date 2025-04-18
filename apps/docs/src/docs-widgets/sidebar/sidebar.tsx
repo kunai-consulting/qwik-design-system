@@ -18,7 +18,8 @@ export const Sidebar = component$(() => {
             { id: "/base/checklist", label: "Checklist" },
             { id: "/base/otp", label: "OTP" },
             { id: "/base/radio-group", label: "Radio Group" },
-            { id: "/base/slider", label: "Slider" }
+            { id: "/base/slider", label: "Slider" },
+            { id: "/base/switch", label: "Switch" }
           ]
         },
         {
