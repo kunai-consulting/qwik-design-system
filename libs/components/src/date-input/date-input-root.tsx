@@ -11,47 +11,38 @@ import {
   useTask$
 } from "@builder.io/qwik";
 import { ARIA_LABELS, MONTHS_LG } from "../calendar/constants";
-import type { DateFormat, ISODate, LocalDate, Locale } from "../calendar/types";
+import type { DateFormat, ISODate, Locale } from "../calendar/types";
 import type { DateInputContext } from "./date-input-context";
 import { dateInputContextId } from "./date-input-context";
-import {
-  getISODate,
-  getLocalDate,
-  getSegmentsFromFormat,
-  getSeparatorFromFormat
-} from "./utils";
+import { getISODate, getSegmentsFromFormat, getSeparatorFromFormat } from "./utils";
 export type PublicDateInputRootProps = PropsOf<"div"> & {
   /** The locale used for formatting dates and text */
   locale?: Locale;
   /** The initial date to display when the calendar first loads */
   defaultDate?: Date | ISODate;
   /** The currently selected date */
-  date?: LocalDate;
+  date?: ISODate;
   /** The format of the date. Controls the appearance of the date input. Defaults to "mm/dd/yyyy". */
   format?: DateFormat;
   /** Event handler called when a date is selected */
-  onDateChange$?: QRL<(date: LocalDate | null) => void>;
+  onDateChange$?: QRL<(date: ISODate | null) => void>;
 };
 const regex = /^\d{4}-(0[1-9]|1[0-2])-\d{2}$/;
 /** The root Date Input component that manages state and provides context */
 export const DateInputRoot = component$<PublicDateInputRootProps>(
   ({ date: dateProp, locale = "en", format, onDateChange$, ...props }) => {
     const labelStr = props["aria-label"] ?? ARIA_LABELS[locale].root;
-    const date = new Date();
-    const currentDate = getLocalDate(date);
     const defaultDate =
       props.defaultDate && props.defaultDate instanceof Date
         ? getISODate(props.defaultDate)
         : props.defaultDate;
-    const activeDateSig = useSignal<LocalDate | null>(null);
+    const activeDateSig = useSignal<ISODate | null>(null);
     const localId = useId();
     const dateFormat = format ?? "mm/dd/yyyy";
     const separator = getSeparatorFromFormat(dateFormat);
     const segments = getSegmentsFromFormat(dateFormat, separator, defaultDate).map((s) =>
       useSignal(s)
     );
-
-    // signal to track the active segment index
     const activeSegmentIndex = useSignal<number>(-1);
 
     // biome-ignore lint/style/noNonNullAssertion: valid format will always include day
@@ -75,7 +66,6 @@ export const DateInputRoot = component$<PublicDateInputRootProps>(
       locale,
       defaultDate,
       activeDateSig,
-      currentDate,
       localId,
       format: dateFormat,
       separator,
