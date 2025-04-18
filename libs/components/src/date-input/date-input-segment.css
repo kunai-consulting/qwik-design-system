@@ -6,11 +6,15 @@
   [data-qds-date-input-segment-small] {
     width: 2ch;
   }
+  [data-qds-date-input-segment-large] {
+    width: 4ch;
+  }
   /* specific rule for month placeholder since mm is usually wider than 00 in non-monospace fonts */
   [data-qds-date-input-segment-month][data-qds-date-input-segment-small][data-qds-date-input-segment-placeholder] {
     width: calc(2ch * 1.5);
   }
-  [data-qds-date-input-segment-large] {
-    width: 4ch;
+  /* specific rule for year placeholder since yyyy is usually narrower than 0000 in non-monospace fonts */
+  [data-qds-date-input-segment-year][data-qds-date-input-segment-large][data-qds-date-input-segment-placeholder] {
+    width: calc(4ch * 0.9);
   }
 }
