@@ -7,13 +7,12 @@ import {
   useContextProvider,
   useId,
   useSignal,
-  useTask$,
-  useVisibleTask$
+  useTask$
 } from "@builder.io/qwik";
-import type { DateInputContext } from "./date-input-context";
-import { dateInputContextId } from "./date-input-context";
 import { ARIA_LABELS, MONTHS_LG } from "../calendar/constants";
 import type { DateFormat, LocalDate, Locale, Month } from "../calendar/types";
+import type { DateInputContext } from "./date-input-context";
+import { dateInputContextId } from "./date-input-context";
 import { getLocalDate, getSegmentsFromFormat, getSeparatorFromFormat } from "./utils";
 export type PublicDateInputRootProps = PropsOf<"div"> & {
   /** The locale used for formatting dates and text */
@@ -89,29 +88,9 @@ export const DateInputRoot = component$<PublicDateInputRootProps>(
       }
     });
 
-    useVisibleTask$(({ track, cleanup }) => {
-      // track(() => datesArray.value);
-      // if (datesArray.value.flat().includes(dateToFocus.value)) {
-      //   const btn = document.querySelector(
-      //     `button[data-value="${dateToFocus.value}"]`
-      //   ) as HTMLButtonElement | null;
-      //   btn?.focus();
-      //   btn?.setAttribute("tabindex", "0");
-      // }
-      // cleanup(() => {
-      //   const btn = document.querySelector(
-      //     `button[data-value="${dateToFocus.value}"]`
-      //   ) as HTMLButtonElement | null;
-      //   btn?.setAttribute("tabindex", "-1");
-      //   btn?.blur();
-      // });
-    });
-
     return (
       <div
-        // The root container of the Date Input component
         data-qds-date-input-root
-        // Controls the visual theme of the Date Input
         data-theme="light"
         aria-label={labelSignal.value}
         {...props}

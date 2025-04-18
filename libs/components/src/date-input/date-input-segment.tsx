@@ -1,17 +1,17 @@
 import {
+  $,
   type PropsOf,
   component$,
   useContext,
-  $,
-  useVisibleTask$,
-  useSignal,
+  useStyles$,
   useTask$
 } from "@builder.io/qwik";
-import { dateInputContextId } from "./date-input-context";
-import type { DateSegment } from "./types";
 import type { Signal } from "@builder.io/qwik";
+import { dateInputContextId } from "./date-input-context";
+import styles from "./date-input-segment.css?inline";
+import type { DateSegment } from "./types";
 
-type PublicDateInputSegmentProps = PropsOf<"span"> & {
+type PublicDateInputSegmentProps = PropsOf<"input"> & {
   segmentSig: Signal<DateSegment>;
   isEditable: boolean;
 };
@@ -21,6 +21,7 @@ export const DateInputSegment = component$(
   ({ segmentSig, isEditable, ...otherProps }: PublicDateInputSegmentProps) => {
     const context = useContext(dateInputContextId);
     const inputId = `${context.localId}-trigger`;
+    useStyles$(styles);
 
     const updateActiveDate = $(() => {
       // After a segment updates, we need to update the activeDate
@@ -207,27 +208,6 @@ export const DateInputSegment = component$(
       } as DateSegment;
     });
 
-    // Get a reference to the span to manually sync content with Qwik state
-    const spanRef = useSignal<HTMLSpanElement>();
-
-    // Force synchronization between segment state and DOM
-    useVisibleTask$(({ track }) => {
-      // Track changes to the placeholder state and value
-      track(() => segmentSig.value.isPlaceholder);
-      track(() => segmentSig.value.numericValue);
-
-      if (!spanRef.value) return;
-
-      // Qwik struggles with contentEditable spans, so we need to manually sync here
-      // to make sure we always show the correct content
-      if (segmentSig.value.isPlaceholder) {
-        spanRef.value.textContent = segmentSig.value.placeholderText;
-      } else if (segmentSig.value.numericValue !== undefined) {
-        // Set the text content to the value when not in placeholder state
-        spanRef.value.textContent = String(segmentSig.value.displayValue);
-      }
-    });
-
     // Handler to handle keydown events (arrow keys, numeric input)
     const onKeyDown$ = $((event: KeyboardEvent) => {
       // Allow navigation keys (arrows, backspace, delete, tab)
@@ -254,48 +234,54 @@ export const DateInputSegment = component$(
       }
     });
 
-    // Handler to ensure we update our segment and date values properly
+    // Process input and update our segment and date values accordingly
     const onInput$ = $((event: InputEvent) => {
-      const target = event.target as HTMLSpanElement;
-      const content = target.textContent || "";
+      const segment = segmentSig.value;
+      const target = event.target as HTMLInputElement;
+      const content = target.value || "";
       const numericContent = content.replace(/\D/g, "");
+
+      // If the format specifies leading zeros and the input is 0, allow it
+      if (segment.placeholderText.length > 1 && numericContent === "0") {
+        return;
+      }
 
       if (numericContent.length > 0) {
         updateSegmentWithValue(numericContent);
       } else {
         updateSegmentToPlaceholder();
-
-        // Ensure the textContent is cleared if we're setting placeholder state
-        // This prevents any lingering content from staying in the contentEditable span
-        if (target.textContent !== "") {
-          target.textContent = "";
-        }
       }
-
-      event.preventDefault();
     });
 
     return (
-      <span
+      <input
         {...otherProps}
-        ref={spanRef}
+        type="text"
         data-qds-date-input-segment
-        data-placeholder={segmentSig.value.isPlaceholder}
-        data-type={segmentSig.value.type}
-        contentEditable={isEditable ? "true" : "false"}
-        inputMode="numeric"
-        tabIndex={0}
-        role="spinbutton"
+        data-qds-date-input-segment-placeholder={segmentSig.value.isPlaceholder}
+        data-qds-date-input-segment-day={segmentSig.value.type === "day"}
+        data-qds-date-input-segment-month={segmentSig.value.type === "month"}
+        data-qds-date-input-segment-year={segmentSig.value.type === "year"}
+        data-qds-date-input-segment-small={
+          !(
+            segmentSig.value.type === "year" &&
+            segmentSig.value.placeholderText.length === 4
+          )
+        }
+        data-qds-date-input-segment-large={
+          segmentSig.value.type === "year" &&
+          segmentSig.value.placeholderText.length === 4
+        }
+        value={segmentSig.value.displayValue}
+        onKeyDown$={isEditable ? onKeyDown$ : undefined}
+        onInput$={isEditable ? onInput$ : undefined}
+        placeholder={segmentSig.value.placeholderText}
+        aria-label={`${segmentSig.value.type} input`}
         aria-valuemax={segmentSig.value.max}
         aria-valuemin={segmentSig.value.min}
         aria-valuenow={segmentSig.value.numericValue}
-        onKeyDown$={isEditable ? onKeyDown$ : undefined}
-        onInput$={isEditable ? onInput$ : undefined}
-      >
-        {segmentSig.value.isPlaceholder
-          ? segmentSig.value.placeholderText
-          : segmentSig.value.displayValue}
-      </span>
+        disabled={!isEditable}
+      />
     );
   }
 );
