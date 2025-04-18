@@ -1,5 +1,11 @@
 import { type Signal, createContextId } from "@builder.io/qwik";
-import type { DateFormat, LocalDate, Locale, Month, Separator } from "../calendar/types";
+import type {
+  DateFormat,
+  ISODate,
+  LocalDate,
+  Locale,
+  Separator
+} from "../calendar/types";
 import type { DateSegment } from "./types";
 
 export const dateInputContextId = createContextId<DateInputContext>(
@@ -8,11 +14,8 @@ export const dateInputContextId = createContextId<DateInputContext>(
 
 export type DateInputContext = {
   locale: Locale;
-  defaultDate: LocalDate;
-  activeDate: Signal<LocalDate | null>;
-  maxDayOfMonth: Signal<number>;
-  monthToRender: Signal<Month>;
-  yearToRender: Signal<number>;
+  defaultDate?: ISODate;
+  activeDateSig: Signal<LocalDate | null>;
   dayOfMonthSegmentSig: Signal<DateSegment>;
   monthSegmentSig: Signal<DateSegment>;
   yearSegmentSig: Signal<DateSegment>;

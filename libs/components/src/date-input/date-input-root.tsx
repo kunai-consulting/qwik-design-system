@@ -10,18 +10,23 @@ import {
   useTask$
 } from "@builder.io/qwik";
 import { ARIA_LABELS, MONTHS_LG } from "../calendar/constants";
-import type { DateFormat, LocalDate, Locale, Month } from "../calendar/types";
+import type { DateFormat, ISODate, LocalDate, Locale } from "../calendar/types";
 import type { DateInputContext } from "./date-input-context";
 import { dateInputContextId } from "./date-input-context";
-import { getLocalDate, getSegmentsFromFormat, getSeparatorFromFormat } from "./utils";
+import {
+  getISODate,
+  getLocalDate,
+  getSegmentsFromFormat,
+  getSeparatorFromFormat
+} from "./utils";
 export type PublicDateInputRootProps = PropsOf<"div"> & {
   /** The locale used for formatting dates and text */
   locale?: Locale;
   /** The initial date to display when the calendar first loads */
-  defaultDate?: LocalDate;
+  defaultDate?: Date | ISODate;
   /** The currently selected date */
   date?: LocalDate;
-  /** The format of the date */
+  /** The format of the date. Controls the appearance of the date input. Defaults to "mm/dd/yyyy". */
   format?: DateFormat;
   /** Event handler called when a date is selected */
   onDateChange$?: QRL<(date: LocalDate | null) => void>;
@@ -33,15 +38,15 @@ export const DateInputRoot = component$<PublicDateInputRootProps>(
     const labelStr = props["aria-label"] ?? ARIA_LABELS[locale].root;
     const date = new Date();
     const currentDate = getLocalDate(date);
-    const defaultDate = props.defaultDate ?? currentDate;
-    const activeDate = useSignal<LocalDate | null>(null);
-    const monthToRender = useSignal<Month>(defaultDate.split("-")[1] as Month);
-    const yearToRender = useSignal<number>(+defaultDate.split("-")[0]);
+    const defaultDate =
+      props.defaultDate && props.defaultDate instanceof Date
+        ? getISODate(props.defaultDate)
+        : props.defaultDate;
+    const activeDateSig = useSignal<LocalDate | null>(null);
     const localId = useId();
-    const maxDayOfMonth = useSignal<number>(31);
     const dateFormat = format ?? "mm/dd/yyyy";
     const separator = getSeparatorFromFormat(dateFormat);
-    const segments = getSegmentsFromFormat(dateFormat, separator).map((s) =>
+    const segments = getSegmentsFromFormat(dateFormat, separator, defaultDate).map((s) =>
       useSignal(s)
     );
 
@@ -54,11 +59,8 @@ export const DateInputRoot = component$<PublicDateInputRootProps>(
 
     const context: DateInputContext = {
       locale,
-      monthToRender,
-      yearToRender,
-      maxDayOfMonth,
       defaultDate,
-      activeDate,
+      activeDateSig,
       currentDate,
       localId,
       format: dateFormat,
@@ -72,17 +74,18 @@ export const DateInputRoot = component$<PublicDateInputRootProps>(
     useContextProvider(dateInputContextId, context);
 
     const labelSignal = useComputed$(() => {
-      if (!activeDate.value) return labelStr;
-      const [year, month] = activeDate.value.split("-");
+      if (!activeDateSig.value) return labelStr;
+      const [year, month] = activeDateSig.value.split("-");
 
       return `${labelStr} ${MONTHS_LG[locale][+month - 1]} ${year}`;
     });
 
-    if (!regex.test(defaultDate))
+    if (defaultDate && !regex.test(defaultDate)) {
       throw new Error("Invalid date format. Please use yyyy-mm-dd format.");
+    }
 
     useTask$(({ track }) => {
-      const date = track(() => activeDate.value);
+      const date = track(() => activeDateSig.value);
       if (onDateChange$) {
         onDateChange$(date);
       }
