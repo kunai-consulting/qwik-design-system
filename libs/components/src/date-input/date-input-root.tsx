@@ -1,4 +1,5 @@
 import {
+  $,
   type PropsOf,
   type QRL,
   Slot,
@@ -50,12 +51,25 @@ export const DateInputRoot = component$<PublicDateInputRootProps>(
       useSignal(s)
     );
 
+    // signal to track the active segment index
+    const activeSegmentIndex = useSignal<number>(-1);
+
     // biome-ignore lint/style/noNonNullAssertion: valid format will always include day
     const dayOfMonthSegmentSig = segments.find((s) => s.value.type === "day")!;
     // biome-ignore lint/style/noNonNullAssertion: valid format will always include month
     const monthSegmentSig = segments.find((s) => s.value.type === "month")!;
     // biome-ignore lint/style/noNonNullAssertion: valid format will always include year
     const yearSegmentSig = segments.find((s) => s.value.type === "year")!;
+
+    const focusNextSegment$ = $(() => {
+      if (
+        activeSegmentIndex.value >= 0 &&
+        activeSegmentIndex.value < segments.length - 1
+      ) {
+        // Move to the next segment
+        activeSegmentIndex.value++;
+      }
+    });
 
     const context: DateInputContext = {
       locale,
@@ -68,7 +82,9 @@ export const DateInputRoot = component$<PublicDateInputRootProps>(
       orderedSegments: segments,
       dayOfMonthSegmentSig,
       monthSegmentSig,
-      yearSegmentSig
+      yearSegmentSig,
+      activeSegmentIndex,
+      focusNextSegment$
     };
 
     useContextProvider(dateInputContextId, context);
