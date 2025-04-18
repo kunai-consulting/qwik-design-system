@@ -248,6 +248,41 @@ export const DateInputSegment = component$(
 
       if (numericContent.length > 0) {
         updateSegmentWithValue(numericContent);
+
+        // Check if the segment is fully entered and move focus to the next segment
+        const isYearFull = segment.type === "year" && numericContent.length >= 4;
+        const isMonthOrDayFull =
+          (segment.type === "month" || segment.type === "day") &&
+          numericContent.length >= (segment.max >= 10 ? 2 : 1);
+
+        if (isYearFull || isMonthOrDayFull) {
+          // Find next segment, but only within the same DateInputRoot component
+          const currentInput = target;
+          // Find the parent DateInputRoot element using the localId from context
+          const parentRoot =
+            document.querySelector(
+              `[data-qds-date-input-root][id="${context.localId}"]`
+            ) || currentInput.closest("[data-qds-date-input-root]");
+
+          // Only search for segments within this parent root
+          const allSegments = parentRoot
+            ? Array.from(parentRoot.querySelectorAll("[data-qds-date-input-segment]"))
+            : [];
+
+          const currentIndex = allSegments.indexOf(currentInput);
+
+          // If there's a next segment, focus it
+          if (currentIndex >= 0 && currentIndex < allSegments.length - 1) {
+            const nextSegment = allSegments[currentIndex + 1] as HTMLElement;
+            setTimeout(() => {
+              nextSegment.focus();
+              // Select all text in the next segment if it has a value
+              if (nextSegment.tagName === "INPUT") {
+                (nextSegment as HTMLInputElement).select();
+              }
+            }, 0);
+          }
+        }
       } else {
         updateSegmentToPlaceholder();
       }
