@@ -9,9 +9,11 @@ import {
   useTask$
 } from "@builder.io/qwik";
 import type { Signal } from "@builder.io/qwik";
+import type { DayOfMonth, Month } from "../calendar/types";
 import { dateInputContextId } from "./date-input-context";
 import styles from "./date-input-segment.css?inline";
 import type { DateSegment } from "./types";
+import { getLastDayOfMonth } from "./utils";
 
 type PublicDateInputSegmentProps = PropsOf<"input"> & {
   segmentSig: Signal<DateSegment>;
@@ -22,31 +24,20 @@ type PublicDateInputSegmentProps = PropsOf<"input"> & {
 export const DateInputSegment = component$(
   ({ segmentSig, isEditable, ...otherProps }: PublicDateInputSegmentProps) => {
     const context = useContext(dateInputContextId);
-    const inputId = `${context.localId}-trigger`;
+    const inputId = `${context.localId}-segment-${segmentSig.value.type}`;
     useStyles$(styles);
 
     const updateActiveDate = $(() => {
       // After a segment updates, we need to update the activeDate
       // by combining all three segments into a valid date string
       const year = context.yearSegmentSig.value.numericValue;
-      const month = context.monthSegmentSig.value.numericValue;
-      const day = context.dayOfMonthSegmentSig.value.numericValue;
+      const month = context.monthSegmentSig.value.displayValue as Month | undefined;
+      const day = context.dayOfMonthSegmentSig.value.displayValue as
+        | DayOfMonth
+        | undefined;
 
       if (year && month && day) {
-        const date = new Date(year, month - 1, day);
-        const isValidDate = date.toString() !== "Invalid Date";
-        if (isValidDate) {
-          // Update the activeDate in yyyy-mm-dd format
-          context.activeDateSig.value = `${year}-${month}-${day}`;
-        } else {
-          // Try updating the day of the month to the last day of the month
-          const lastDayOfMonth = new Date(year, month - 1, 0).getDate();
-          context.dayOfMonthSegmentSig.value = {
-            ...context.dayOfMonthSegmentSig.value,
-            numericValue: lastDayOfMonth,
-            displayValue: `${lastDayOfMonth}`
-          } as DateSegment;
-        }
+        context.activeDateSig.value = `${year}-${month}-${day}`;
       } else {
         context.activeDateSig.value = null;
       }
@@ -61,7 +52,7 @@ export const DateInputSegment = component$(
         const currentDayOfMonthSegment = context.dayOfMonthSegmentSig.value;
         let updatedDayOfMonthSegment: DateSegment;
         if (year && month) {
-          const lastDayOfMonth = new Date(year, month, 0).getDate();
+          const lastDayOfMonth = getLastDayOfMonth(year, month);
           const updatedDayOfMonth =
             (currentDayOfMonthSegment.numericValue ?? -1) > lastDayOfMonth
               ? lastDayOfMonth
@@ -298,6 +289,7 @@ export const DateInputSegment = component$(
       <input
         {...otherProps}
         ref={inputRef}
+        id={inputId}
         type="text"
         data-qds-date-input-segment
         data-qds-date-input-segment-placeholder={segmentSig.value.isPlaceholder}

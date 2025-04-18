@@ -4,6 +4,21 @@ Note: Consult the [Calendar research document](../calendar/research.md), which i
 
 ## Features
 Target features. Some are essential, others are nice to have. Checked items are already implemented in our component.
+- [x] Year, month and date entry
+- [x] Customizable entry format (e.g. "mm/dd/yyyy", "yyyy-mm-dd", "dd/mm/yyyy")
+- [x] Placeholder text
+- [x] Increment/decrement using up and down arrows
+- [x] Automatically move focus to the next segment when a segment is fully entered
+- [x] Label
+- [x] ARIA attributes
+- [x] Keyboard navigation
+- [x] Hidden input
+- [x] Default date
+- [ ] Bound date
+- [ ] Error messages
+- [ ] Disabled state
+- [ ] Required state
+- [ ] Default format based on locale
 
 ## Component Structure
 - Root
