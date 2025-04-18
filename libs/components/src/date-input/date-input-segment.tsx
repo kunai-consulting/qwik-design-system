@@ -2,7 +2,9 @@ import {
   $,
   type PropsOf,
   component$,
+  useComputed$,
   useContext,
+  useSignal,
   useStyles$,
   useTask$
 } from "@builder.io/qwik";
@@ -208,6 +210,32 @@ export const DateInputSegment = component$(
       } as DateSegment;
     });
 
+    // Create a ref for this specific input
+    const inputRef = useSignal<HTMLInputElement>();
+
+    // Find index of current segment in orderedSegments
+    const segmentIndex = useComputed$(() => {
+      return context.orderedSegments.findIndex(
+        (s) => s.value.type === segmentSig.value.type
+      );
+    });
+
+    // Watch for activeSegmentIndex changes and focus this segment when it matches
+    useTask$(({ track }) => {
+      const activeIndex = track(() => context.activeSegmentIndex.value);
+      const thisIndex = track(() => segmentIndex.value);
+
+      if (activeIndex === thisIndex && inputRef.value) {
+        // Focus on next render cycle
+        setTimeout(() => {
+          if (document.activeElement !== inputRef.value) {
+            inputRef.value?.focus();
+            inputRef.value?.select();
+          }
+        }, 0);
+      }
+    });
+
     // Handler to handle keydown events (arrow keys, numeric input)
     const onKeyDown$ = $((event: KeyboardEvent) => {
       // Allow navigation keys (arrows, backspace, delete, tab)
@@ -251,37 +279,15 @@ export const DateInputSegment = component$(
 
         // Check if the segment is fully entered and move focus to the next segment
         const isYearFull = segment.type === "year" && numericContent.length >= 4;
-        const isMonthOrDayFull =
-          (segment.type === "month" || segment.type === "day") &&
-          numericContent.length >= (segment.max >= 10 ? 2 : 1);
-
-        if (isYearFull || isMonthOrDayFull) {
-          // Find next segment, but only within the same DateInputRoot component
-          const currentInput = target;
-          // Find the parent DateInputRoot element using the localId from context
-          const parentRoot =
-            document.querySelector(
-              `[data-qds-date-input-root][id="${context.localId}"]`
-            ) || currentInput.closest("[data-qds-date-input-root]");
-
-          // Only search for segments within this parent root
-          const allSegments = parentRoot
-            ? Array.from(parentRoot.querySelectorAll("[data-qds-date-input-segment]"))
-            : [];
-
-          const currentIndex = allSegments.indexOf(currentInput);
-
-          // If there's a next segment, focus it
-          if (currentIndex >= 0 && currentIndex < allSegments.length - 1) {
-            const nextSegment = allSegments[currentIndex + 1] as HTMLElement;
-            setTimeout(() => {
-              nextSegment.focus();
-              // Select all text in the next segment if it has a value
-              if (nextSegment.tagName === "INPUT") {
-                (nextSegment as HTMLInputElement).select();
-              }
-            }, 0);
-          }
+        const isMonthFull =
+          segment.type === "month" &&
+          (numericContent.length >= 2 || +numericContent >= 2);
+        const isDayFull =
+          segment.type === "day" && (numericContent.length >= 2 || +numericContent >= 4);
+        if (isYearFull || isMonthFull || isDayFull) {
+          // Use the Qwik context function to move to the next segment
+          context.activeSegmentIndex.value = segmentIndex.value;
+          context.focusNextSegment$();
         }
       } else {
         updateSegmentToPlaceholder();
@@ -291,6 +297,7 @@ export const DateInputSegment = component$(
     return (
       <input
         {...otherProps}
+        ref={inputRef}
         type="text"
         data-qds-date-input-segment
         data-qds-date-input-segment-placeholder={segmentSig.value.isPlaceholder}
@@ -310,6 +317,14 @@ export const DateInputSegment = component$(
         value={segmentSig.value.displayValue}
         onKeyDown$={isEditable ? onKeyDown$ : undefined}
         onInput$={isEditable ? onInput$ : undefined}
+        onClick$={
+          isEditable
+            ? $((_, element) => {
+                // Update active segment index when clicked
+                context.activeSegmentIndex.value = segmentIndex.value;
+              })
+            : undefined
+        }
         placeholder={segmentSig.value.placeholderText}
         aria-label={`${segmentSig.value.type} input`}
         aria-valuemax={segmentSig.value.max}

@@ -1,4 +1,4 @@
-import { type Signal, createContextId } from "@builder.io/qwik";
+import { type QRL, type Signal, createContextId } from "@builder.io/qwik";
 import type {
   DateFormat,
   ISODate,
@@ -28,4 +28,6 @@ export type DateInputContext = {
   required?: boolean;
   value?: string;
   format: DateFormat;
+  activeSegmentIndex: Signal<number>;
+  focusNextSegment$: QRL<() => void>;
 };
