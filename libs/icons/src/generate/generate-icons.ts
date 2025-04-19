@@ -162,7 +162,7 @@ async function generateRootDeclaration(
   const iconTypesPath = join(config.iconsDir, "..", "icon-types.d.ts");
 
   const imports: string[] = [
-    "import type { Component, ComponentProps } from '@builder.io/qwik';" // Need component types here
+    "import type { Component, PropsOf } from '@builder.io/qwik';"
   ];
   const exports: string[] = [];
 
@@ -174,7 +174,7 @@ async function generateRootDeclaration(
 
     // Generate property declarations for the pack type
     const properties = icons
-      .map((icon) => `  ${icon.pascalCaseName}: Component<ComponentProps<'svg'>>;`)
+      .map((icon) => `  ${icon.pascalCaseName}: Component<PropsOf<\'svg\'>>;`)
       .join("\n");
 
     // Declare the final exported pack type
@@ -186,7 +186,7 @@ async function generateRootDeclaration(
   const allDtsContent = [...imports, "", ...exports].join("\n");
 
   await writeFile(declarationPath, allDtsContent);
-  debug("Created root all.d.ts declaring final pack object types");
+  debug("Created root all.d.ts declaring final pack object types using PropsOf");
 
   const indexDtsContent = [
     "export type { Icon } from './icon-types';",
@@ -255,14 +255,17 @@ export async function generateIcons() {
   }
 
   // Filter out 'carbon' (temporary test from previous step, keep for now)
-  const filteredPrefixes = prefixes.filter((p) => p.toLowerCase() !== "carbon");
+  // const filteredPrefixes = prefixes.filter((p) => p.toLowerCase() !== "carbon");
   debug(
-    `Generating root files for ${filteredPrefixes.length} prefixes (excluding carbon)`
+    // `Generating root files for ${filteredPrefixes.length} prefixes (excluding carbon)`
+    `Generating root files for ${prefixes.length} prefixes` // Use original prefixes count
   );
 
   // Pass iconsByPrefix to the root generation functions
-  await generateRootIndex(filteredPrefixes, iconsByPrefix);
-  await generateRootDeclaration(filteredPrefixes, iconsByPrefix);
+  // await generateRootIndex(filteredPrefixes, iconsByPrefix);
+  // await generateRootDeclaration(filteredPrefixes, iconsByPrefix);
+  await generateRootIndex(prefixes, iconsByPrefix); // Use original prefixes
+  await generateRootDeclaration(prefixes, iconsByPrefix); // Use original prefixes
 
   debug("Icon generation complete");
 }
