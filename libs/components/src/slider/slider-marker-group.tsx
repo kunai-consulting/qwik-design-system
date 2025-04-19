@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
 
 /** A container component for slider markers */
 export const SliderMarkerGroup = component$((props: PropsOf<"div">) => {

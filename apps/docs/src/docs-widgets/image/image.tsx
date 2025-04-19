@@ -1,4 +1,4 @@
-import { type PropsOf, component$ } from "@builder.io/qwik";
+import { type PropsOf, component$ } from "@qwik.dev/core";
 import { cn } from "~/utils/cn";
 
 export const Image = component$<PropsOf<"img">>(({ alt, ...props }) => {

@@ -7,7 +7,7 @@ import {
   useContext,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { getNextIndex } from "../../utils/indexer";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";

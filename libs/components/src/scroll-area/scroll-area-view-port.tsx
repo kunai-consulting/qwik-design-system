@@ -7,7 +7,7 @@ import {
   sync$,
   useContext,
   useOnDocument
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { scrollAreaContextId } from "./scroll-area-context";
 type PublicViewPortProps = PropsOf<"div"> & {
   /** Event handler for scroll events */

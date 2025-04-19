@@ -16,11 +16,11 @@ const packageJson = `{
     "vite": "^5.4"
   },
   "dependencies": {
-    "@builder.io/qwik": "^1.12.1"
+    "@qwik.dev/core": "^1.12.1"
   }
 }`;
 
-const entryDevTsx = `import { render, type RenderOptions } from '@builder.io/qwik';
+const entryDevTsx = `import { render, type RenderOptions } from '@qwik.dev/core';
 import Root from './root';
 
 export default function(opts: RenderOptions) {
@@ -30,7 +30,7 @@ export default function(opts: RenderOptions) {
 const entrySsrTsx = `import {
   renderToStream,
   type RenderToStreamOptions,
-} from '@builder.io/qwik/server';
+} from '@qwik.dev/core/server';
 import { manifest } from '@qwik-client-manifest';
 import Root from './root';
 
@@ -41,7 +41,7 @@ export default function (opts: RenderToStreamOptions) {
   });
 }`;
 
-const rootTsx = `import { component$ } from '@builder.io/qwik';
+const rootTsx = `import { component$ } from '@qwik.dev/core';
 import App from './app';
 
 export default component$(() => {
@@ -85,7 +85,7 @@ const tsconfigAppJson = `{
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
-    "jsxImportSource": "@builder.io/qwik",
+    "jsxImportSource": "@qwik.dev/core",
 
     /* Linting */
     "strict": true,
@@ -130,7 +130,7 @@ const tsconfigJson = `{
 }`;
 
 const viteConfigTs = `import { defineConfig } from 'vite'
-import { qwikVite } from '@builder.io/qwik/optimizer'
+import { qwikVite } from '@qwik.dev/core/optimizer'
 
 export default defineConfig({
   plugins: [

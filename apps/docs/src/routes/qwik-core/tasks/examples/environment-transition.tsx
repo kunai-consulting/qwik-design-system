@@ -1,4 +1,4 @@
-import { component$, isServer, useSignal, useTask$ } from "@builder.io/qwik";
+import { component$, isServer, useSignal, useTask$ } from "@qwik.dev/core";
 
 export default component$(() => {
   const isClicked = useSignal(false);

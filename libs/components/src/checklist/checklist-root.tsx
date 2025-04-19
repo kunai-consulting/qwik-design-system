@@ -4,7 +4,7 @@ import {
   component$,
   useContextProvider,
   useSignal
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { resetIndexes } from "..";
 import { withAsChild } from "../as-child/as-child";
 import { CheckboxRootBase } from "../checkbox/checkbox-root";

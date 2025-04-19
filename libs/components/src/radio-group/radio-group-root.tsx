@@ -12,7 +12,7 @@ import {
   useSignal,
   useStyles$,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { resetIndexes } from "../../utils/indexer";
 import { withAsChild } from "../as-child/as-child";

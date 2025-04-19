@@ -11,7 +11,7 @@ import {
   useSignal,
   useStyles$,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { type SliderValue, type ThumbType, sliderContextId } from "./slider-context";
 import styles from "./slider.css?inline";
 type DivProps = Omit<PropsOf<"div">, "value" | "min" | "max" | "step" | "disabled">;

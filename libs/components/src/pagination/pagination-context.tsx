@@ -3,7 +3,7 @@ import {
   type QRL,
   type Signal,
   createContextId
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 
 export const paginationContextId = createContextId<PaginationContext>(
   "qds-pagination-context"

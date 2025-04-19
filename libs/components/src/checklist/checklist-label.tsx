@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
 import { CheckboxLabelBase } from "../checkbox/checkbox-label";
 
 // no-as-child TODO: remove this comment

@@ -13,7 +13,7 @@ import {
   useOnWindow,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { withAsChild } from "../as-child/as-child";
 import { CollapsibleRootBase } from "../collapsible/collapsible-root";

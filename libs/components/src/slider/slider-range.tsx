@@ -1,4 +1,4 @@
-import { type PropsOf, component$, useComputed$, useContext } from "@builder.io/qwik";
+import { type PropsOf, component$, useComputed$, useContext } from "@qwik.dev/core";
 import { sliderContextId } from "./slider-context";
 
 /** Component that displays the filled range between min value and current value */

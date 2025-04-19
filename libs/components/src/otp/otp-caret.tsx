@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
 import { OTPContextId } from "./otp-context";
 import { itemContextId } from "./otp-item";
 

@@ -5,7 +5,7 @@ import {
   Slot,
   component$,
   useContext
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { calendarContextId } from "./calendar-context";
 import type { LocalDate, Locale, Month } from "./types";
 type PublicCalendarGridProps = PropsOf<"table"> & {

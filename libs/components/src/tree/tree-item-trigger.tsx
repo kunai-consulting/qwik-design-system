@@ -1,4 +1,4 @@
-import { type Component, type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { type Component, type PropsOf, Slot, component$ } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { CollapsibleTrigger } from "../collapsible/collapsible-trigger";
 

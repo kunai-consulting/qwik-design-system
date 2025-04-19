@@ -7,7 +7,7 @@ import {
   useId,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { type BindableProps, useBindings } from "../../utils/bindings";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";

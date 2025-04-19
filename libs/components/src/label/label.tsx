@@ -1,4 +1,4 @@
-import { $, type PropsOf, Slot, component$, sync$ } from "@builder.io/qwik";
+import { $, type PropsOf, Slot, component$, sync$ } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 

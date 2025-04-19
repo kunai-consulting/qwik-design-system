@@ -1,5 +1,5 @@
-import { type PropsOf, component$, useSignal, useStyles$ } from "@builder.io/qwik";
-import { Slot } from "@builder.io/qwik";
+import { type PropsOf, component$, useSignal, useStyles$ } from "@qwik.dev/core";
+import { Slot } from "@qwik.dev/core";
 import { type BindableProps, useBindings } from "@kunai-consulting/qwik";
 import styles from "./form.css?inline";
 

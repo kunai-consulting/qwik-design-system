@@ -1,5 +1,5 @@
-import { component$ } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
+import { component$ } from "@qwik.dev/core";
+import { Link } from "@qwik.dev/router";
 import { Tree } from "@kunai-consulting/qwik";
 import { LuChevronRight } from "@qwikest/icons/lucide";
 import type { TreeItemType } from "~/routes/base/tree/examples/hero";

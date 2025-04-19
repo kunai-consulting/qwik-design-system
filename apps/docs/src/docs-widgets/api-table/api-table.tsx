@@ -1,4 +1,4 @@
-import { component$, useContext, useTask$ } from "@builder.io/qwik";
+import { component$, useContext, useTask$ } from "@qwik.dev/core";
 import type {
   AnatomyItem,
   ComponentEntry,

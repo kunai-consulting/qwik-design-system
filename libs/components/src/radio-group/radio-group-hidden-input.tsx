@@ -1,5 +1,5 @@
 // no-as-child
-import { $, type PropsOf, component$, useContext } from "@builder.io/qwik";
+import { $, type PropsOf, component$, useContext } from "@qwik.dev/core";
 import { VisuallyHidden } from "@qwik-ui/headless";
 import { radioGroupContextId } from "./radio-group-context";
 import { radioGroupItemContextId } from "./radio-group-item";

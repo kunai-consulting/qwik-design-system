@@ -9,7 +9,7 @@ import {
   useId,
   useSignal,
   useVisibleTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 
 import { useBoundSignal } from "../../utils/bound-signal";
 import type { CalendarContext } from "./calendar-context";

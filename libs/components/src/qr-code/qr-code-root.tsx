@@ -6,7 +6,7 @@ import {
   useSignal,
   useStyles$,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { encode } from "uqr";
 import { qrCodeContextId } from "./qr-code-context";
 import styles from "./qr-code.css?inline";

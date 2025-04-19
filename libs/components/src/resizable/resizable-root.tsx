@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$, useStyles$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$, useStyles$ } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import styles from "./resizable.css?inline";
