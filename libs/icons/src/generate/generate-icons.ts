@@ -1,4 +1,4 @@
-import { mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, rm, writeFile, copyFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import type { IconifyIcon } from "@iconify/types";
 import { iconToSVG } from "@iconify/utils";
@@ -71,16 +71,17 @@ async function generateIndexFile(prefix: string, icons: GeneratedIcon[]) {
     `${prefix.toLowerCase()}.js`
   );
 
-  const indexContent = [
-    'import { componentQrl, qrl } from "@builder.io/qwik";',
-    ...icons.map((icon) => {
-      const relativePath = `./${icon.kebabCaseName}`;
-      return `export const ${icon.pascalCaseName} = /* @__PURE__ */ componentQrl(/* @__PURE__ */ qrl(() => import('${relativePath}.js'), "${icon.symbolName}"));`;
-    })
-  ].join("\n");
+  const qrlExports = icons.map((icon) => {
+    const relativePath = `./${icon.kebabCaseName}`;
+    return `export const ${icon.pascalCaseName}Qrl = /* @__PURE__ */ qrl(() => import('./${relativePath}.js'), "${icon.symbolName}");`;
+  });
+
+  const indexContent = ['import { qrl } from "@builder.io/qwik";', ...qrlExports].join(
+    "\n"
+  );
 
   await writeFile(indexPath, indexContent);
-  debug(`Created index file for ${prefix} with ${icons.length} icons`);
+  debug(`Created index file for ${prefix} with direct QRL exports`);
 }
 
 async function generateDeclarationFile(prefix: string, icons: GeneratedIcon[]) {
@@ -90,55 +91,119 @@ async function generateDeclarationFile(prefix: string, icons: GeneratedIcon[]) {
     `${prefix.toLowerCase()}.d.ts`
   );
 
+  const qrlDeclarations = icons.map(
+    (icon) =>
+      `export declare const ${icon.pascalCaseName}Qrl: QRL<Component<ComponentProps<'svg'>>>;`
+  );
+
   const declarationContent = [
-    'import { Component, PropsOf } from "@builder.io/qwik";',
-    "",
-    ...icons.map((icon) => {
-      return `export declare const ${icon.pascalCaseName}: Component<PropsOf<'svg'>>;`;
-    })
+    "import type { Component, ComponentProps, QRL } from '@builder.io/qwik';",
+    ...qrlDeclarations,
+    ""
   ].join("\n");
 
   await writeFile(declarationPath, declarationContent);
-  debug(`Created declaration file for ${prefix} with ${icons.length} icons`);
+  debug(`Created declaration file for ${prefix} with direct QRL type exports`);
 }
 
 async function generateRootIndex(
   prefixes: string[],
   iconsByPrefix: Record<string, GeneratedIcon[]>
 ) {
-  const rootIndexPath = join(config.iconsDir, "all.js");
+  const indexPath = join(config.iconsDir, "all.js");
+  const rootIndexPath = join(config.iconsDir, "..", "index.qwik.mjs");
 
-  const content = [
-    ...prefixes.flatMap((prefix) => {
-      return [
-        `export * as ${pascalCase(prefix)} from './${prefix.toLowerCase()}/${prefix.toLowerCase()}.js';`
-      ];
-    })
-  ].join("\n");
+  const imports: string[] = [
+    'import { componentQrl } from "@builder.io/qwik";' // Need componentQrl
+  ];
+  const exports: string[] = [];
 
-  await writeFile(rootIndexPath, content);
-  debug("Created root index file");
+  for (const prefix of prefixes) {
+    const icons = iconsByPrefix[prefix];
+    if (!icons || icons.length === 0) continue; // Skip empty packs
+
+    const packPascalCase = pascalCase(prefix);
+    // Import the QRLs for this pack
+    imports.push(
+      `import * as ${packPascalCase}Qrls from './${prefix.toLowerCase()}/${prefix.toLowerCase()}.js';`
+    );
+
+    // Build the object properties string with inline componentQrl wrapping
+    const packObjectProperties = icons
+      .map(
+        (icon) =>
+          // Wrap the QRL directly within the object property definition
+          `  ${icon.pascalCaseName}: /* @__PURE__ */ componentQrl(${packPascalCase}Qrls.${icon.pascalCaseName}Qrl)`
+      )
+      .join(",\n"); // Join properties with comma and newline
+
+    // Export the complete object directly
+    const packObjectExport = `export const ${packPascalCase} = {\n${packObjectProperties}\n};`;
+
+    exports.push(packObjectExport, ""); // Add blank line after each object export
+  }
+
+  const allJsContent = [...imports, "", ...exports].join("\n");
+
+  await writeFile(indexPath, allJsContent);
+  debug("Created root all.js with inline QRL wrapping in exported objects");
+
+  const indexContent = `export * from './icons/all.js';`;
+  await writeFile(rootIndexPath, indexContent);
+  debug("Created final index.qwik.mjs re-exporting all.js");
 }
 
 async function generateRootDeclaration(
   prefixes: string[],
   iconsByPrefix: Record<string, GeneratedIcon[]>
 ) {
-  const rootDeclarationPath = join(config.iconsDir, "all.d.ts");
+  const declarationPath = join(config.iconsDir, "all.d.ts");
+  const rootDeclarationPath = join(config.iconsDir, "..", "index.d.ts");
+  const iconTypesPath = join(config.iconsDir, "..", "icon-types.d.ts");
 
-  const content = [
-    'import { Component, PropsOf } from "@builder.io/qwik";',
-    "",
-    ...prefixes.map((prefix) => {
-      return `export declare namespace ${pascalCase(prefix)} {
-  export type IconComponent = Component<PropsOf<'svg'>>;
-  ${iconsByPrefix[prefix].map((icon) => `  export const ${icon.pascalCaseName}: IconComponent;`).join("\n  ")}
-}`;
-    })
-  ].join("\n\n");
+  const imports: string[] = [
+    "import type { Component, ComponentProps } from '@builder.io/qwik';" // Need component types here
+  ];
+  const exports: string[] = [];
 
-  await writeFile(rootDeclarationPath, content);
-  debug("Created root declaration file");
+  for (const prefix of prefixes) {
+    const icons = iconsByPrefix[prefix];
+    if (!icons || icons.length === 0) continue;
+
+    const packPascalCase = pascalCase(prefix);
+
+    // Generate property declarations for the pack type
+    const properties = icons
+      .map((icon) => `  ${icon.pascalCaseName}: Component<ComponentProps<'svg'>>;`)
+      .join("\n");
+
+    // Declare the final exported pack type
+    const packTypeExport = `export declare const ${packPascalCase}: {\n${properties}\n};`;
+
+    exports.push(packTypeExport, ""); // Add blank line
+  }
+
+  const allDtsContent = [...imports, "", ...exports].join("\n");
+
+  await writeFile(declarationPath, allDtsContent);
+  debug("Created root all.d.ts declaring final pack object types");
+
+  const indexDtsContent = [
+    "export type { Icon } from './icon-types';",
+    "export * from './icons/all';"
+  ].join("\n");
+  await writeFile(rootDeclarationPath, indexDtsContent);
+  debug("Created final index.d.ts re-exporting all.d.ts and Icon type");
+
+  const iconTypeSource = join(__dirname, "..", "icon-types.d.ts");
+  try {
+    await copyFile(iconTypeSource, iconTypesPath);
+    debug(`Copied icon-types.d.ts to ${iconTypesPath}`);
+  } catch (err) {
+    console.error(
+      `Error copying icon-types.d.ts: ${err}. Please ensure it exists at ${iconTypeSource}`
+    );
+  }
 }
 
 export async function generateIcons() {
@@ -148,8 +213,8 @@ export async function generateIcons() {
   await mkdir(config.iconsDir, { recursive: true });
 
   const iconSets = await getIconSets();
-  const prefixes = Object.keys(iconSets);
-  debug(`Processing ${prefixes.length} icon sets`);
+  const prefixes = Object.keys(iconSets); // Get initial prefixes
+  debug(`Processing ${prefixes.length} icon sets initially`);
 
   const iconsByPrefix: Record<string, GeneratedIcon[]> = {};
 
@@ -189,8 +254,15 @@ export async function generateIcons() {
     debug(`Completed ${prefix}: ${validIcons.length} icons generated`);
   }
 
-  await generateRootIndex(prefixes, iconsByPrefix);
-  await generateRootDeclaration(prefixes, iconsByPrefix);
+  // Filter out 'carbon' (temporary test from previous step, keep for now)
+  const filteredPrefixes = prefixes.filter((p) => p.toLowerCase() !== "carbon");
+  debug(
+    `Generating root files for ${filteredPrefixes.length} prefixes (excluding carbon)`
+  );
+
+  // Pass iconsByPrefix to the root generation functions
+  await generateRootIndex(filteredPrefixes, iconsByPrefix);
+  await generateRootDeclaration(filteredPrefixes, iconsByPrefix);
 
   debug("Icon generation complete");
 }
