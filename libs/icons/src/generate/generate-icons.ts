@@ -1,7 +1,8 @@
 import { mkdir, rm, writeFile, copyFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import type { IconifyIcon } from "@iconify/types";
-import { iconToSVG } from "@iconify/utils";
+import { fileURLToPath } from "node:url";
+import type { IconifyJSON } from "@iconify/types";
+import { iconToSVG, getIconData } from "@iconify/utils";
 import { createSymbolName } from "@kunai-consulting/qwik-utils";
 import { kebabCase, pascalCase } from "change-case";
 import { transform } from "esbuild";
@@ -18,9 +19,16 @@ interface GeneratedIcon {
 export async function generateIcon(
   prefix: string,
   iconName: string,
-  iconData: IconifyIcon
+  collection: IconifyJSON
 ) {
-  const result = iconToSVG(iconData);
+  const fullIconData = getIconData(collection, iconName);
+
+  if (!fullIconData) {
+    console.warn(`Icon or alias ${prefix}:${iconName} not found in collection.`);
+    return null;
+  }
+
+  const result = iconToSVG(fullIconData);
 
   let pascalCaseName = pascalCase(iconName);
 
@@ -195,7 +203,14 @@ async function generateRootDeclaration(
   await writeFile(rootDeclarationPath, indexDtsContent);
   debug("Created final index.d.ts re-exporting all.d.ts and Icon type");
 
+  // Get current directory using import.meta.url for ES Modules
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+
+  // Revert to original path calculation
+  // const iconTypeSource = join(__dirname, "..", "..", "src", "icon-types.d.ts");
   const iconTypeSource = join(__dirname, "..", "icon-types.d.ts");
+
   try {
     await copyFile(iconTypeSource, iconTypesPath);
     debug(`Copied icon-types.d.ts to ${iconTypesPath}`);
@@ -232,7 +247,7 @@ export async function generateIcons() {
     const generatedIcons = await Promise.all(
       limitedIconNames.map(async (iconName) => {
         try {
-          return await generateIcon(prefix, iconName, collection.icons[iconName]);
+          return await generateIcon(prefix, iconName, collection);
         } catch (error) {
           console.error(`Error generating icon ${prefix}:${iconName}:`, error);
           return null;
