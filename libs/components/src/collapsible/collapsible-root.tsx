@@ -11,9 +11,11 @@ import {
 } from "@builder.io/qwik";
 
 import { createContextId } from "@builder.io/qwik";
+import { useStyles$ } from "@builder.io/qwik";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
+import collapsibleStyles from "./collapsible.css?inline";
 
 export const collapsibleContextId = createContextId<CollapsibleContext>("Collapsible");
 
@@ -46,6 +48,8 @@ export const CollapsibleRootBase = component$((props: CollapsibleRootProps) => {
     open,
     ...rest
   } = props;
+
+  useStyles$(collapsibleStyles);
 
   const isOpenSig = useBoundSignal(givenIsOpenSig, open ?? false);
 
@@ -81,10 +85,10 @@ export const CollapsibleRootBase = component$((props: CollapsibleRootProps) => {
     <Render
       id={itemId}
       fallback="div"
-      data-collapsible
+      data-qds-collapsible
       data-disabled={context.disabled ? "" : undefined}
-      data-open={context.isOpenSig.value ? "" : undefined}
-      data-closed={!context.isOpenSig.value ? "" : undefined}
+      data-open={context.isOpenSig.value}
+      data-closed={!context.isOpenSig.value}
       aria-live="polite"
       {...rest}
     >

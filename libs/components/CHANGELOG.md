@@ -1,5 +1,16 @@
 # @kunai-consulting/qwik-headless
 
+## 0.0.10
+
+## 0.0.9
+
+### Patch Changes
+
+- 6cc9c96: Replace Kunai logo with the dark and light mode in the Created By Kunai section
+- 192d983: Added Stackblitz integration for each component example in the docs.
+- a527c1d: Add native form support to Checklist
+- 4a5cfb9: feat: support tree item navigation
+
 ## 0.0.8
 
 ### Patch Changes

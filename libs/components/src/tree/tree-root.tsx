@@ -6,9 +6,7 @@ import {
   Slot,
   component$,
   createContextId,
-  sync$,
   useContextProvider,
-  useOnWindow,
   useSignal
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
@@ -21,6 +19,16 @@ type TreeRootContext = {
 
 export const TreeRootContextId = createContextId<TreeRootContext>("tree-root");
 
+export type TreeNode = {
+  id: string;
+  level: number;
+  index: number;
+  ref: Signal<HTMLElement | undefined>;
+  isOpen?: Signal<boolean>;
+  parentId?: string;
+  children?: Record<number, TreeNode>;
+};
+
 export const TreeRootBase = component$((props: PropsOf<"div">) => {
   const rootRef = useSignal<HTMLDivElement>();
   const currentFocusEl = useSignal<HTMLElement>();
@@ -29,22 +37,6 @@ export const TreeRootBase = component$((props: PropsOf<"div">) => {
     rootRef,
     currentFocusEl
   };
-
-  /**
-   *  Todo: Change this to a sync$ passed to the Render component once v2 is released (sync QRL serialization issue)
-   *
-   */
-  useOnWindow(
-    "keydown",
-    sync$((e: KeyboardEvent) => {
-      if (!(e.target as Element)?.hasAttribute("data-qds-tree-item")) return;
-      const keys = ["ArrowDown", "ArrowUp", "Home", "End"];
-
-      if (!keys.includes(e.key)) return;
-
-      e.preventDefault();
-    })
-  );
 
   useContextProvider(TreeRootContextId, context);
 

@@ -39,9 +39,60 @@ In Qwik, you can use `bind:value` or `bind:checked` to pass your own signal stat
 
 This is [two-way data binding](https://www.geeksforgeeks.org/two-way-data-binding-in-javascript/). Unlike traditional two-way binding that can be performance-heavy in other frameworks, Qwik's signals make it efficient by updating **only what needs to change**, with no unnecessary re-renders.
 
-#### useBoundSignal
+### useBindings (important)
 
-Qwik Design System provides a hook to combine signals to one source of truth.
+The `useBindings` helper intends to simplify state management from multiple sources. 
+
+It looks at what the user passed to your component - whether it's a plain value like `value="hello"` or a reactive signal like `bind:value={mySignal}`. Then it creates a simple signal for you to use in your component that automatically stays in sync with whatever the user provided.
+
+<Showcase name="bindings" />
+
+#### Usage
+
+1. Import the necessary types and hook:
+   ```tsx
+   import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
+   ```
+
+2. Define your bindable properties:
+   ```tsx
+   type ExampleComponentBind = {
+     value: string;
+     disabled: boolean;
+   };
+   ```
+
+3. Create component props with BindableProps:
+   ```tsx
+   export type MyComponentProps = {
+     // Regular props here
+   } & BindableProps<ExampleComponentBind>;
+   ```
+
+4. Use the hook in your component:
+   ```tsx
+   const { valueSig, disabledSig } = useBindings(props, {
+     value: "",
+     disabled: false
+   });
+   
+   return <input value={valueSig.value} disabled={disabledSig.value} />;
+   ```
+
+Without `useBindings`, component authors often face challenges:
+
+1. **Stale state issues** 🕒 - Components can get out of sync with consumers' signals
+2. **Repetitive code** 🔄 - Writing similar synchronization logic for each property
+3. **Edge case handling** 🐛 - Missing synchronization scenarios leads to subtle bugs
+4. **Inconsistent updates** 🔄❌ - Properties update but internal state doesn't reflect changes
+
+> Note: Our CI workflow checks that all root components use `useBindings`. If your component doesn't need it, add a `// no-bindings` comment to exempt it from the check.
+
+> For a more in-depth example of seeing `useBindings` in action, look at the `checkbox-root.tsx` file in the `libs/components` folder.
+
+#### useBoundSignal (internal)
+
+`useBindings` uses this hook under the hood, `useBoundSignals` what combines the signals.
 
 ```tsx
 export const SelectRoot = component$((props: SelectRootProps) => {
