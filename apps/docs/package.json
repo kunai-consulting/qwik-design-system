@@ -29,7 +29,6 @@
     "@kunai-consulting/code-notate": "0.0.2",
     "@kunai-consulting/code-notate-core": "0.0.2",
     "@kunai-consulting/qwik": "workspace:*",
-    "@kunai-consulting/qwik-icons": "workspace:*",
     "@qwik-ui/headless": "^0.6.4",
     "@qwikest/icons": "^0.0.13",
     "@tailwindcss/vite": "^4.1.3",
