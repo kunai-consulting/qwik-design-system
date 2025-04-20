@@ -1,7 +1,7 @@
-import { mkdir, copyFile, readdir, rm, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
+import { copyFile, mkdir, readdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { resolver, debug } from "../config";
+import { debug, resolver } from "../config";
 
 const libDir = resolver("./lib");
 const typesDir = resolver("./lib-types");

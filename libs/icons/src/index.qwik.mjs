@@ -1,1 +1,1 @@
-export * from './icons/all.js';
+export * from "./icons/all.js";

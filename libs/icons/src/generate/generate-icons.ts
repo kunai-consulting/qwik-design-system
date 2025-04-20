@@ -1,8 +1,8 @@
-import { mkdir, rm, writeFile, copyFile } from "node:fs/promises";
+import { copyFile, mkdir, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { IconifyJSON } from "@iconify/types";
-import { iconToSVG, getIconData } from "@iconify/utils";
+import { getIconData, iconToSVG } from "@iconify/utils";
 import { createSymbolName } from "@kunai-consulting/qwik-utils";
 import { kebabCase, pascalCase } from "change-case";
 import { transform } from "esbuild";
