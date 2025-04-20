@@ -15,6 +15,7 @@
 - [Resizable](/base/resizable)
 - [Slider](/base/slider)
 - [Tree](/base/tree)
+- [Icons (moving later)](/icons)
 
 ## Contributing
 
@@ -33,6 +34,7 @@
 - [Accessibility](/contributing/accessibility)
 - [Conventions](/contributing/conventions)
 - [Forms](/contributing/forms)
+- [Icons](/contributing/icons)
 - [Tradeoffs](/contributing/tradeoffs)
 
 ## Qwik core (future)
