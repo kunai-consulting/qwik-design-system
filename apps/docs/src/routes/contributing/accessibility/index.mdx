@@ -173,7 +173,7 @@ export const CarouselSlideBase = component$((props) => {
 
   return (
     <Render
-      ref={slideRef}
+      internalRef={slideRef}
       role="tabpanel"
       aria-hidden={context.currentIndex.value !== props._index}
     >
