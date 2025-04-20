@@ -3,7 +3,7 @@
   "compilerOptions": {
     "rootDir": "./",
     "composite": true,
-    "allowJs": true,
+    "allowJs": false,
     "target": "ES2017",
     "module": "ES2020",
     "lib": ["es2020", "DOM"],
@@ -17,10 +17,9 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "incremental": true,
-    "isolatedModules": true,
-    "types": ["vite/client"]
+    "isolatedModules": true
   },
   "include": ["src", "config.ts", "package.json"],
-  "exclude": ["src/icons/**/*", "src/downloads/**/*", "src/page/**/*"],
+  "exclude": ["src/icons/**/*", "lib/icons"],
   "references": [{ "path": "../utils" }]
 }

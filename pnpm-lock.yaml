@@ -99,6 +99,9 @@ importers:
       '@kunai-consulting/qwik':
         specifier: workspace:*
         version: link:../../libs/components
+      '@kunai-consulting/qwik-icons':
+        specifier: workspace:*
+        version: link:../../libs/icons
       '@qwik-ui/headless':
         specifier: ^0.6.4
         version: 0.6.4(@builder.io/qwik@1.13.0(vite@5.4.8(@types/node@22.14.0)(lightningcss@1.29.2)))
@@ -173,7 +176,7 @@ importers:
     devDependencies:
       '@builder.io/qwik':
         specifier: 1.13.0
-        version: 1.13.0(vite@5.3.5(@types/node@22.14.0)(lightningcss@1.29.2))
+        version: 1.13.0(vite@5.4.9(@types/node@22.14.0)(lightningcss@1.29.2))
       '@iconify/json':
         specifier: ^2.2.326
         version: 2.2.326
@@ -201,12 +204,6 @@ importers:
       undici:
         specifier: '*'
         version: 6.19.7
-      vite:
-        specifier: 5.3.5
-        version: 5.3.5(@types/node@22.14.0)(lightningcss@1.29.2)
-      vite-tsconfig-paths:
-        specifier: ^4.2.1
-        version: 4.3.2(typescript@5.4.5)(vite@5.3.5(@types/node@22.14.0)(lightningcss@1.29.2))
 
   libs/utils:
     devDependencies:
