@@ -30,20 +30,20 @@ export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps
     return labels.join(" ") || undefined;
   });
   const handleClick$ = $(() => {
-    if (context.checkedSig.value === "mixed") {
-      context.checkedSig.value = true;
+    if (context.checkedStateSig.value === "mixed") {
+      context.checkedStateSig.value = true;
     } else {
-      context.checkedSig.value = !context.checkedSig.value;
+      context.checkedStateSig.value = !context.checkedStateSig.value;
     }
   });
 
-  useOnWindow(
+  const handleKeyDownSync$ = useOnWindow(
     "keydown",
-    sync$((e: KeyboardEvent) => {
+    sync$((e: KeyboardEvent, el: HTMLButtonElement) => {
       if (e.key !== "Enter") return;
-      if (document.activeElement?.hasAttribute("data-qds-checkbox-trigger")) {
-        e.preventDefault();
-      }
+      if (!el.hasAttribute("data-qds-checkbox-trigger")) return;
+
+      e.preventDefault();
     })
   );
 
@@ -54,7 +54,7 @@ export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps
       type="button"
       role="checkbox"
       fallback="button"
-      aria-checked={`${context.checkedSig.value}`}
+      aria-checked={`${context.checkedStateSig.value}`}
       aria-describedby={describedByLabels ? describedByLabels.value : undefined}
       aria-invalid={context.isErrorSig.value}
       disabled={context.isDisabledSig.value}

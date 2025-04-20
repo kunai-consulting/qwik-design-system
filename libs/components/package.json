@@ -1,6 +1,6 @@
 {
   "name": "@kunai-consulting/qwik",
-  "version": "0.0.10",
+  "version": "0.0.9",
   "description": "Create a Qwik library",
   "main": "./lib/index.qwik.mjs",
   "qwik": "./lib/index.qwik.mjs",
@@ -31,7 +31,7 @@
   "devDependencies": {
     "@builder.io/qwik": "1.13",
     "@qwik-ui/headless": "^0.6.5",
-    "@types/node": "22.14.0",
+    "@types/node": "20.14.11",
     "typescript": "5.4.5",
     "undici": "*",
     "uqr": "^0.1.2",

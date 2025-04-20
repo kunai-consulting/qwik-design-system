@@ -1,7 +1,5 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "rootDir": "./",
     "allowJs": true,
     "target": "ES2017",
     "module": "ES2022",
@@ -19,8 +17,10 @@
     "outDir": "tmp",
     "noEmit": true,
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "@/styled/*": ["./styled-copy-paste/*"],
+      "@kunai-consulting/qwik": ["../../libs/components/src"]
     }
   },
-  "include": ["src", "./*.d.ts", "./*.config.ts", "docs-widgets", "mdx"]
+  "include": ["src", "./*.d.ts", "./*.config.ts", "styled-copy-paste"]
 }

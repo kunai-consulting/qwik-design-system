@@ -10,12 +10,6 @@
       "apps/docs/public/pagefind",
       "lib-types",
       "libs/components/lib/*",
-      "libs/components/node_modules",
-      "libs/icons/lib/*",
-      "libs/icons/node_modules",
-      "libs/icons/src/downloads",
-      "libs/icons/src/icons",
-      "libs/icons/src/page",
       ".vscode",
       "test-results"
     ]

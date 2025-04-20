@@ -1,9 +1,3 @@
 packages:
   - libs/*
   - apps/*
-ignoredBuiltDependencies:
-  - yarn
-onlyBuiltDependencies:
-  - '@biomejs/biome'
-  - esbuild
-  - sharp

@@ -1,7 +1,6 @@
 import { qwikCity } from "@builder.io/qwik-city/vite";
 import { qwikVite } from "@builder.io/qwik/optimizer";
 import tailwindcss from "@tailwindcss/vite";
-import { resolve } from "pathe";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 
 /**
@@ -83,11 +82,6 @@ export default defineConfig(({ command, mode }): UserConfig => {
       headers: {
         // Do cache the server response in preview (non-adapter production build)
         "Cache-Control": "public, max-age=600"
-      }
-    },
-    resolve: {
-      alias: {
-        "~": resolve(__dirname, "src")
       }
     }
   };

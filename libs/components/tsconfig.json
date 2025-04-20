@@ -1,8 +1,5 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "rootDir": "./",
-    "composite": true,
     "allowJs": true,
     "target": "ES2017",
     "module": "ES2020",
@@ -20,5 +17,5 @@
     "isolatedModules": true,
     "types": ["vite/client"]
   },
-  "include": ["src", "utils"]
+  "include": ["src"]
 }

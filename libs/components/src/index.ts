@@ -16,4 +16,3 @@ export * as Tree from "./tree";
 export { Render } from "./render/render";
 export { withAsChild } from "./as-child/as-child";
 export { resetIndexes, getNextIndex } from "../utils/indexer";
-export { useBindings, type BindableProps } from "../utils/bindings";

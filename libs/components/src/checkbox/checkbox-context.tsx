@@ -3,7 +3,7 @@ import { type Signal, createContextId } from "@builder.io/qwik";
 export const checkboxContextId = createContextId<CheckboxContext>("qds-checkbox-context");
 
 export type CheckboxContext = {
-  checkedSig: Signal<boolean | "mixed">;
+  checkedStateSig: Signal<boolean | "mixed">;
   isDisabledSig: Signal<boolean | undefined>;
   isErrorSig: Signal<boolean | undefined>;
   localId: string;
