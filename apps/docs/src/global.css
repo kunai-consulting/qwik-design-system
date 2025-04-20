@@ -3,7 +3,6 @@
 @import "tailwindcss";
 
 html {
-  /* biome-ignore lint/correctness/noUnknownProperty: this exists */
   interpolate-size: allow-keywords;
 }
 

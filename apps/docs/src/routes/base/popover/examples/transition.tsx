@@ -6,8 +6,10 @@ export default component$(() => {
 
   return (
     <Popover.Root>
-      <Popover.Anchor>Open Popover</Popover.Anchor>
-      <Popover.Content class="popover-transition">Popover</Popover.Content>
+      <Popover.Anchor class="popover-anchor">Open Popover</Popover.Anchor>
+      <Popover.Content class="popover-content popover-transition">
+        Popover
+      </Popover.Content>
     </Popover.Root>
   );
 });
