@@ -14,7 +14,7 @@ export const CollapsibleContentBase = component$((props: CollapsibleContentProps
     <Render
       {...props}
       fallback="div"
-      ref={context.contentRef}
+      internalRef={context.contentRef}
       id={contentId}
       data-qds-collapsible-content
       data-disabled={context.disabled ? "" : undefined}

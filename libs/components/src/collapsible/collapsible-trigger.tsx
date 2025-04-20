@@ -21,7 +21,7 @@ export const CollapsibleTriggerBase = component$<PropsOf<"button">>(
         {...props}
         fallback="button"
         id={triggerId}
-        ref={context.triggerRef}
+        internalRef={context.triggerRef}
         disabled={context.disabled}
         data-disabled={context.disabled ? "" : undefined}
         aria-disabled={context.disabled ? "true" : "false"}
