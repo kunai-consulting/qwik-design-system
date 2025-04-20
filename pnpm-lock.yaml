@@ -99,9 +99,6 @@ importers:
       '@kunai-consulting/qwik':
         specifier: workspace:*
         version: link:../../libs/components
-      '@kunai-consulting/qwik-icons':
-        specifier: workspace:*
-        version: link:../../libs/icons
       '@qwik-ui/headless':
         specifier: ^0.6.4
         version: 0.6.4(@builder.io/qwik@1.13.0(vite@5.4.8(@types/node@22.14.0)(lightningcss@1.29.2)))
