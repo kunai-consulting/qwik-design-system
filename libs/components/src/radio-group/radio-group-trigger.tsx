@@ -63,7 +63,7 @@ export const RadioGroupTriggerBase = component$((props: PublicTriggerProps) => {
     <Render
       fallback="button"
       {...restProps}
-      ref={triggerRef}
+      internalRef={triggerRef}
       type="button"
       role="radio"
       aria-checked={itemContext.isSelectedSig.value}

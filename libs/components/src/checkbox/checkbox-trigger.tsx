@@ -50,7 +50,7 @@ export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps
   return (
     <Render
       id={triggerId}
-      ref={context.triggerRef}
+      internalRef={context.triggerRef}
       type="button"
       role="checkbox"
       fallback="button"

@@ -180,7 +180,7 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
     <Render
       {...rest}
       fallback="div"
-      ref={rootRef}
+      internalRef={rootRef}
       role="radiogroup"
       data-qds-radio-group-root
       data-orientation={props.orientation || "vertical"}
