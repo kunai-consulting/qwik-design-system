@@ -26,7 +26,7 @@ const SwitchTriggerBase = component$<PropsOf<"button">>((props) => {
     <Render
       {...restProps}
       fallback="button"
-      ref={triggerRef}
+      internalRef={triggerRef}
       id={context.triggerId}
       type="button"
       disabled={context.disabled.value}
