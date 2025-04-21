@@ -42,6 +42,7 @@ const SwitchRootBase = component$<PublicRootProps>((props) => {
   useStyles$(styles);
   const { onChange$, hasError, ...restProps } = props;
   const isInitialLoadSig = useSignal(true);
+  const hasErrorMessageSig = useSignal(false);
 
   const { checkedSig, disabledSig, requiredSig, nameSig, valueSig } =
     useBindings<SwitchBinds>(props, {
@@ -102,6 +103,7 @@ const SwitchRootBase = component$<PublicRootProps>((props) => {
     labelId,
     descriptionId,
     errorId,
+    hasErrorMessage: hasErrorMessageSig,
     hasError
   };
 
@@ -117,7 +119,7 @@ const SwitchRootBase = component$<PublicRootProps>((props) => {
       aria-required={requiredSig.value}
       aria-labelledby={labelId}
       aria-describedby={descriptionId}
-      aria-errormessage={hasError ? errorId : undefined}
+      aria-errormessage={hasErrorMessageSig.value ? errorId : undefined}
       data-qds-switch-root
       // Indicates whether the switch is currently checked
       data-checked={checkedSig.value}

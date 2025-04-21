@@ -13,6 +13,7 @@ export interface SwitchContext {
   descriptionId: string;
   errorId: string;
   hasError?: boolean;
+  hasErrorMessage: Signal<boolean>;
 }
 
 export const switchContextId = createContextId<SwitchContext>("switch-context");

@@ -39,7 +39,7 @@ const SwitchTriggerBase = component$<PropsOf<"button">>((props) => {
       onKeyDown$={[handleKeyDown$, props.onKeyDown$]}
       aria-labelledby={context.labelId}
       aria-describedby={context.descriptionId}
-      aria-invalid={context.hasError}
+      aria-invalid={context.hasErrorMessage.value}
     >
       <Slot />
     </Render>

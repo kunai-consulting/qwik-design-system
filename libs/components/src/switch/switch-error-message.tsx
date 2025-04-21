@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$, useContext, useTask$ } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { switchContextId } from "./switch-context";
@@ -7,6 +7,13 @@ import { switchContextId } from "./switch-context";
 const SwitchErrorMessageBase = component$<PropsOf<"div">>((props) => {
   const { ...restProps } = props;
   const context = useContext(switchContextId);
+
+  useTask$(() => {
+    context.hasErrorMessage.value = true;
+    return () => {
+      context.hasErrorMessage.value = false;
+    };
+  });
 
   return (
     <Render
