@@ -1,0 +1,259 @@
+{
+  "switch": [
+    {
+      "Switch Root": {
+        "types": [
+          {
+            "SwitchBinds": [
+              {
+                "comment": "Initial checked state of the switch",
+                "prop": "checked",
+                "type": "boolean",
+                "defaultValue": "false"
+              },
+              {
+                "comment": "Whether the switch is disabled",
+                "prop": "disabled",
+                "type": "boolean",
+                "defaultValue": "false"
+              },
+              {
+                "comment": "Whether the switch is required",
+                "prop": "required",
+                "type": "boolean",
+                "defaultValue": "false"
+              },
+              {
+                "comment": "Name attribute for the hidden input element",
+                "prop": "name",
+                "type": "string",
+                "defaultValue": "\"\""
+              },
+              {
+                "comment": "Value attribute for the hidden input element",
+                "prop": "value",
+                "type": "string",
+                "defaultValue": "\"\""
+              }
+            ]
+          },
+          {
+            "PublicRootProps": [
+              {
+                "comment": "Callback when the switch state changes",
+                "prop": "onChange$",
+                "type": "(checked: boolean) => void"
+              },
+              {
+                "comment": "Whether the switch is in an error state",
+                "prop": "isError",
+                "type": "boolean"
+              }
+            ]
+          }
+        ],
+        "inheritsFrom": "div",
+        "dataAttributes": [
+          {
+            "name": "data-qds-switch-root",
+            "type": "boolean",
+            "comment": "Present on the root element"
+          },
+          {
+            "name": "data-checked",
+            "type": "boolean",
+            "comment": "Indicates whether the switch is currently checked"
+          },
+          {
+            "name": "data-disabled",
+            "type": "boolean",
+            "comment": "Indicates whether the switch is currently disabled"
+          },
+          {
+            "name": "data-error",
+            "type": "boolean",
+            "comment": "Indicates whether the switch is in an error state"
+          }
+        ]
+      }
+    },
+    {
+      "Switch Trigger": {
+        "inheritsFrom": "button",
+        "dataAttributes": [
+          {
+            "name": "data-qds-switch-trigger",
+            "type": "boolean",
+            "comment": "Present on the trigger element"
+          },
+          {
+            "name": "data-checked",
+            "type": "boolean",
+            "comment": "Indicates whether the switch is currently checked"
+          },
+          {
+            "name": "data-disabled",
+            "type": "boolean",
+            "comment": "Indicates whether the switch is currently disabled"
+          }
+        ]
+      }
+    },
+    {
+      "Switch Thumb": {
+        "inheritsFrom": "div",
+        "dataAttributes": [
+          {
+            "name": "data-qds-switch-thumb",
+            "type": "boolean",
+            "comment": "Present on the thumb element"
+          },
+          {
+            "name": "data-checked",
+            "type": "boolean",
+            "comment": "Indicates whether the switch is currently checked"
+          },
+          {
+            "name": "data-disabled",
+            "type": "boolean",
+            "comment": "Indicates whether the switch is currently disabled"
+          }
+        ]
+      }
+    },
+    {
+      "Switch Label": {
+        "inheritsFrom": "label",
+        "dataAttributes": [
+          {
+            "name": "data-qds-switch-label",
+            "type": "boolean",
+            "comment": "Present on the label element"
+          }
+        ]
+      }
+    },
+    {
+      "Switch Description": {
+        "inheritsFrom": "div",
+        "dataAttributes": [
+          {
+            "name": "data-qds-switch-description",
+            "type": "boolean",
+            "comment": "Present on the description element"
+          }
+        ]
+      }
+    },
+    {
+      "Switch Error Message": {
+        "inheritsFrom": "div",
+        "dataAttributes": [
+          {
+            "name": "data-qds-switch-error-message",
+            "type": "boolean",
+            "comment": "Present on the error message element"
+          }
+        ]
+      }
+    },
+    {
+      "Switch Hidden Input": {
+        "inheritsFrom": "input",
+        "types": [
+          {
+            "PublicProps": [
+              {
+                "comment": "Type of the input, always 'checkbox'",
+                "prop": "type",
+                "type": "\"checkbox\"",
+                "defaultValue": "\"checkbox\""
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Switch.Root",
+      "description": "Root component that manages the switch state and context"
+    },
+    {
+      "name": "Switch.Trigger",
+      "description": "Interactive element that toggles the switch state"
+    },
+    {
+      "name": "Switch.Thumb",
+      "description": "Visual indicator that moves to reflect the checked state"
+    },
+    {
+      "name": "Switch.Label",
+      "description": "Text label associated with the switch"
+    },
+    {
+      "name": "Switch.Description",
+      "description": "Additional descriptive text for the switch"
+    },
+    {
+      "name": "Switch.ErrorMessage",
+      "description": "Error message displayed when the switch is in an error state"
+    },
+    {
+      "name": "Switch.HiddenInput",
+      "description": "Hidden native input for form integration"
+    }
+  ],
+  "keyboardInteractions": {
+    "keyboardShortcuts": [
+      {
+        "key": "Space",
+        "comment": "When focus is on the switch trigger, toggles the switch state"
+      },
+      {
+        "key": "Enter",
+        "comment": "When focus is on the switch trigger, toggles the switch state"
+      },
+      {
+        "key": "Tab",
+        "comment": "Moves focus to the switch trigger"
+      }
+    ]
+  },
+  "features": [
+    "WAI ARIA Switch design pattern",
+    "Hidden native input for form integration",
+    "Controlled and uncontrolled state management",
+    "Error state handling with aria-errormessage",
+    "Support for required/disabled states",
+    "Custom labels and descriptions with ARIA support",
+    "Keyboard navigation (Space/Enter)",
+    "Form binding support",
+    "Toggle animation support via thumb component",
+    "Customizable styling through data attributes"
+  ],
+  "ariaRoles": [
+    {
+      "element": "Switch.Root",
+      "role": "switch",
+      "attributes": [
+        "aria-checked",
+        "aria-disabled",
+        "aria-required",
+        "aria-labelledby",
+        "aria-describedby",
+        "aria-errormessage"
+      ]
+    },
+    {
+      "element": "Switch.Trigger",
+      "role": "button",
+      "attributes": [
+        "aria-labelledby",
+        "aria-describedby",
+        "aria-invalid"
+      ]
+    }
+  ]
+}
