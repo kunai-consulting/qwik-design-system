@@ -20,7 +20,7 @@ test.describe("critical functionality", () => {
 
 test.describe("interaction", () => {
   test(`GIVEN a Switch component
-        WHEN clicking on the control
+        WHEN clicking on the trigger
         THEN the state should toggle`, async ({ page }) => {
     const d = await setup(page, "hero");
     const trigger = d.getTrigger();
@@ -47,7 +47,7 @@ test.describe("interaction", () => {
 
 test.describe("disabled state", () => {
   test(`GIVEN a disabled Switch component
-        WHEN clicking on the control
+        WHEN clicking on the trigger
         THEN the state should not change`, async ({ page }) => {
     const d = await setup(page, "disabled");
     const trigger = d.getTrigger();

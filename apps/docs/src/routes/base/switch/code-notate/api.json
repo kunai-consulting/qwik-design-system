@@ -46,7 +46,7 @@
               },
               {
                 "comment": "Whether the switch is in an error state",
-                "prop": "isError",
+                "prop": "hasError",
                 "type": "boolean"
               }
             ]
@@ -249,11 +249,7 @@
     {
       "element": "Switch.Trigger",
       "role": "button",
-      "attributes": [
-        "aria-labelledby",
-        "aria-describedby",
-        "aria-invalid"
-      ]
+      "attributes": ["aria-labelledby", "aria-describedby", "aria-invalid"]
     }
   ]
 }

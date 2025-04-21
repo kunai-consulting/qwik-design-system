@@ -4,15 +4,15 @@ export interface SwitchContext {
   checked: Signal<boolean>;
   disabled: Signal<boolean>;
   required: Signal<boolean>;
-  name?: Signal<string>;
-  value?: Signal<string>;
+  name?: Signal<string | undefined>;
+  value?: Signal<string | undefined>;
   onChange$?: (checked: boolean) => void;
   toggle$: () => void;
   triggerId: string;
   labelId: string;
   descriptionId: string;
   errorId: string;
-  isError?: boolean;
+  hasError?: boolean;
 }
 
 export const switchContextId = createContextId<SwitchContext>("switch-context");

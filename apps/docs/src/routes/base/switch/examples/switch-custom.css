@@ -17,7 +17,7 @@
 }
 
 .switch-trigger[data-checked] {
-  background-color: blue;
+  background-color: #045c88;
 }
 
 .switch-thumb {
@@ -25,17 +25,17 @@
   height: 1.25rem;
   border-radius: 9999px;
   background-color: white;
-  top: 0.125rem;
-  left: 0.125rem;
+  top: 2px;
+  left: 2px;
   transition: transform 0.2s ease;
 }
 
 .switch-trigger[data-checked] .switch-thumb {
-  transform: translateX(1rem);
+  left: -2px;
 }
 
 .switch-trigger:focus-visible {
-  outline: 1px solid blue;
+  outline: 1px solid #045c88;
   outline-offset: 2px;
 }
 

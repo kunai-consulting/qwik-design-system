@@ -17,8 +17,8 @@ const SwitchErrorMessageBase = component$<PropsOf<"div">>((props) => {
       // The identifier for the switch error message element
       data-qds-switch-error-message
       // Controls the visibility of the error message
-      data-visible={context.isError}
-      aria-hidden={!context.isError}
+      data-visible={context.hasError}
+      aria-hidden={!context.hasError}
     >
       <Slot />
     </Render>

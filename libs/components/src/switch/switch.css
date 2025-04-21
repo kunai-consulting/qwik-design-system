@@ -21,6 +21,11 @@
 
   [data-qds-switch-thumb] {
     position: absolute;
+    transform: translateX(0%);
+  }
+
+  [data-qds-switch-trigger][data-checked] [data-qds-switch-thumb] {
+    transform: translateX(100%);
   }
 
   [data-qds-switch-description] {

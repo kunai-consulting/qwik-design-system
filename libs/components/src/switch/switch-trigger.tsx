@@ -14,7 +14,7 @@ import { switchContextId } from "./switch-context";
 const SwitchTriggerBase = component$<PropsOf<"button">>((props) => {
   const { ...restProps } = props;
   const context = useContext(switchContextId);
-  const controlRef = useSignal<HTMLButtonElement>();
+  const triggerRef = useSignal<HTMLButtonElement>();
 
   const handleKeyDown$ = $((event: KeyboardEvent) => {
     if (event.key === " " || event.key === "Enter") {
@@ -26,7 +26,7 @@ const SwitchTriggerBase = component$<PropsOf<"button">>((props) => {
     <Render
       {...restProps}
       fallback="button"
-      ref={controlRef}
+      ref={triggerRef}
       id={context.triggerId}
       type="button"
       disabled={context.disabled.value}
@@ -39,7 +39,7 @@ const SwitchTriggerBase = component$<PropsOf<"button">>((props) => {
       onKeyDown$={[handleKeyDown$, props.onKeyDown$]}
       aria-labelledby={context.labelId}
       aria-describedby={context.descriptionId}
-      aria-invalid={context.isError}
+      aria-invalid={context.hasError}
     >
       <Slot />
     </Render>

@@ -1,13 +1,13 @@
 import {
   $,
   type PropsOf,
-  type Signal,
   Slot,
   component$,
   sync$,
   useContextProvider,
   useId,
   useOnWindow,
+  useSignal,
   useStyles$,
   useTask$
 } from "@builder.io/qwik";
@@ -34,13 +34,14 @@ type PublicRootProps = PropsOf<"div"> & {
   /** Callback when the switch state changes */
   onChange$?: (checked: boolean) => void;
   /** Whether the switch is in an error state */
-  isError?: boolean;
+  hasError?: boolean;
 } & BindableProps<SwitchBinds>;
 
 /** Root component that manages the switch state and context */
 const SwitchRootBase = component$<PublicRootProps>((props) => {
   useStyles$(styles);
-  const { onChange$, isError, ...restProps } = props;
+  const { onChange$, hasError, ...restProps } = props;
+  const isInitialLoadSig = useSignal(true);
 
   const { checkedSig, disabledSig, requiredSig, nameSig, valueSig } =
     useBindings<SwitchBinds>(props, {
@@ -51,12 +52,16 @@ const SwitchRootBase = component$<PublicRootProps>((props) => {
       value: ""
     });
 
-  // Track changes to checkedSig and call onChange$
-  useTask$(({ track }) => {
+  useTask$(async function handleChange({ track, cleanup }) {
     const checked = track(() => checkedSig.value);
-    if (onChange$ && !disabledSig.value) {
+
+    if (!isInitialLoadSig.value && onChange$ && !disabledSig.value) {
       onChange$(checked);
     }
+
+    cleanup(() => {
+      isInitialLoadSig.value = false;
+    });
   });
 
   // Prevent default behavior for Space and Enter keys at window level
@@ -85,9 +90,9 @@ const SwitchRootBase = component$<PublicRootProps>((props) => {
     checked: checkedSig,
     disabled: disabledSig,
     required: requiredSig,
-    name: nameSig as Signal<string> | undefined,
-    value: valueSig as Signal<string> | undefined,
-    onChange$: onChange$,
+    name: nameSig,
+    value: valueSig,
+    onChange$,
     toggle$: $(() => {
       if (!disabledSig.value) {
         checkedSig.value = !checkedSig.value;
@@ -97,7 +102,7 @@ const SwitchRootBase = component$<PublicRootProps>((props) => {
     labelId,
     descriptionId,
     errorId,
-    isError
+    hasError
   };
 
   useContextProvider(switchContextId, context);
@@ -112,14 +117,14 @@ const SwitchRootBase = component$<PublicRootProps>((props) => {
       aria-required={requiredSig.value}
       aria-labelledby={labelId}
       aria-describedby={descriptionId}
-      aria-errormessage={isError ? errorId : undefined}
+      aria-errormessage={hasError ? errorId : undefined}
       data-qds-switch-root
       // Indicates whether the switch is currently checked
       data-checked={checkedSig.value}
       // Indicates whether the switch is currently disabled
       data-disabled={disabledSig.value}
       // Indicates whether the switch is in an error state
-      data-error={isError ? "" : undefined}
+      data-error={hasError ? "" : undefined}
       onChange$={[onChange$, props.onChange$]}
     >
       <Slot />

@@ -4,16 +4,15 @@ import styles from "./switch-custom.css?inline";
 
 export default component$(() => {
   useStyles$(styles);
-  const isError = useSignal(false);
+  const hasError = useSignal(false);
 
   const handleSubmit$ = $((e: SubmitEvent) => {
     const form = e.target as HTMLFormElement;
     if (!form.checkValidity()) {
-      isError.value = true;
-      e.preventDefault();
+      hasError.value = true;
     } else {
-      isError.value = false;
-      console.log("Form submitted successfully");
+      hasError.value = false;
+      console.log("Form submitted successfully!!!!!");
     }
   });
 
@@ -26,12 +25,12 @@ export default component$(() => {
     >
       <Switch.Root
         required
-        isError={isError.value}
+        hasError={hasError.value}
         name="notifications"
         value="enabled"
         class="flex-col"
         onChange$={() => {
-          isError.value = false;
+          hasError.value = false;
         }}
       >
         <div class="flex gap-2">
@@ -42,7 +41,7 @@ export default component$(() => {
           <Switch.HiddenInput />
         </div>
 
-        {isError.value && (
+        {hasError.value && (
           <Switch.ErrorMessage class="switch-error-message">
             This field is required
           </Switch.ErrorMessage>
