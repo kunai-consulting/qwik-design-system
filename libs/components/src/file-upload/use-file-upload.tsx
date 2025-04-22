@@ -4,7 +4,8 @@ import {
   type Signal,
   noSerialize,
   useComputed$,
-  useSignal
+  useSignal,
+  useVisibleTask$
 } from "@builder.io/qwik";
 
 export interface FileInfo {
@@ -30,7 +31,6 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
   const dropzoneRef = useSignal<HTMLElement>();
   const isDragging = useSignal(false);
   const files = useSignal<FileInfo[]>([]);
-
   const processedFiles = useSignal<Record<string, boolean>>({});
 
   const isDisabled = useComputed$(() => {
@@ -40,7 +40,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
     return options.disabled?.value ?? false;
   });
 
-  const processFiles$ = $((newFiles: File[]) => {
+  const processFiles = $((newFiles: File[]) => {
     if (isDisabled.value) return;
 
     const fileInfos: FileInfo[] = [];
@@ -114,6 +114,100 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
     }
   });
 
+  // Setup drag and drop event handlers after hydration
+  useVisibleTask$(({ cleanup }) => {
+    const dropzone = dropzoneRef.value;
+    if (!dropzone) return;
+
+    const handleDragEnter = (e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (isDisabled.value) return;
+
+      isDragging.value = true;
+
+      if (e.dataTransfer) {
+        e.dataTransfer.effectAllowed = "all";
+        e.dataTransfer.dropEffect = "copy";
+      }
+    };
+
+    const handleDragOver = (e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (isDisabled.value) return;
+
+      if (e.dataTransfer) {
+        e.dataTransfer.dropEffect = "copy";
+      }
+    };
+
+    const handleDragLeave = (e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (isDisabled.value) return;
+
+      const rect = dropzone.getBoundingClientRect();
+      if (rect) {
+        const { clientX, clientY } = e;
+        if (
+          clientX <= rect.left ||
+          clientX >= rect.right ||
+          clientY <= rect.top ||
+          clientY >= rect.bottom
+        ) {
+          isDragging.value = false;
+        }
+      }
+    };
+
+    const handleDrop = (e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (isDisabled.value) return;
+
+      isDragging.value = false;
+
+      const dt = e.dataTransfer;
+      if (!dt) return;
+
+      if (dt.files?.length) {
+        const droppedFiles = Array.from(dt.files);
+        processFiles(droppedFiles);
+      }
+    };
+
+    const handleWindowDragOver = (e: DragEvent) => {
+      e.preventDefault();
+      if (e.dataTransfer) {
+        e.dataTransfer.dropEffect = "copy";
+      }
+    };
+
+    // Add event listeners
+    dropzone.addEventListener("dragenter", handleDragEnter);
+    dropzone.addEventListener("dragover", handleDragOver);
+    dropzone.addEventListener("dragleave", handleDragLeave);
+    dropzone.addEventListener("drop", handleDrop);
+    window.addEventListener("dragover", handleWindowDragOver);
+    window.addEventListener("drop", (e) => e.preventDefault());
+
+    // Clean up event listeners
+    cleanup(() => {
+      dropzone.removeEventListener("dragenter", handleDragEnter);
+      dropzone.removeEventListener("dragover", handleDragOver);
+      dropzone.removeEventListener("dragleave", handleDragLeave);
+      dropzone.removeEventListener("drop", handleDrop);
+      window.removeEventListener("dragover", handleWindowDragOver);
+      window.removeEventListener("drop", (e) => e.preventDefault());
+    });
+  });
+
+  // Return handlers for direct binding in case needed
   const onDragEnter$ = $((e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -170,14 +264,9 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
     const dt = e.dataTransfer;
     if (!dt) return;
 
-    let files: File[] = [];
-
     if (dt.files?.length) {
-      files = Array.from(dt.files);
-    }
-
-    if (files.length) {
-      processFiles$(files);
+      const droppedFiles = Array.from(dt.files);
+      processFiles(droppedFiles);
     }
   });
 
@@ -201,7 +290,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
       onDrop$,
       onWindowDragOver$
     },
-    processFiles$,
+    processFiles,
     removeFile$
   };
 }

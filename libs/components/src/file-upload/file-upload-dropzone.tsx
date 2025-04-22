@@ -14,7 +14,7 @@ type PublicDropzoneProps = PropsOf<"div">;
 /** Component that handles drag and drop file upload functionality */
 export const FileUploadDropzone = component$<PublicDropzoneProps>((props) => {
   const context = useContext(fileUploadContextId);
-  const { dropzoneRef, isDragging, handlers, processFiles$ } = useFileUpload({
+  const { dropzoneRef, isDragging, handlers, processFiles } = useFileUpload({
     disabled: context.isDisabledSig,
     multiple: context.multiple,
     debug: import.meta.env.DEV,
@@ -41,7 +41,7 @@ export const FileUploadDropzone = component$<PublicDropzoneProps>((props) => {
 
     const files = e.detail.fileInfos.map((info) => info.file);
     if (files.length) {
-      processFiles$(files as unknown as File[]);
+      processFiles(files as unknown as File[]);
     }
   });
 

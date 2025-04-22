@@ -10,7 +10,7 @@ type PublicInputProps = PropsOf<"input">;
 export const FileUploadInput = component$<PublicInputProps>((props) => {
   const context = useContext(fileUploadContextId);
 
-  const { processFiles$ } = useFileUpload({
+  const { processFiles } = useFileUpload({
     disabled: context.isDisabledSig,
     multiple: context.multiple,
     debug: import.meta.env.DEV,
@@ -34,7 +34,7 @@ export const FileUploadInput = component$<PublicInputProps>((props) => {
     const input = e.target as HTMLInputElement;
     if (!input.files?.length) return;
 
-    await processFiles$(Array.from(input.files));
+    await processFiles(Array.from(input.files));
   });
 
   return (
