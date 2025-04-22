@@ -1,0 +1,124 @@
+# Switch Research
+
+## Overview
+A Switch is an interactive button that works like a modern light switch - it smoothly slides between two states: ON and OFF.
+When interacting with it, the switch's thumb (the moving part) slides from one side to the other, giving clear
+visual feedback about whether something is enabled or disabled. It provides a visual representation similar to a
+physical switch and is commonly used for enabling/disabling settings or features.
+
+## Research Links
+- [WAI-ARIA Switch Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/switch/)
+- [Ark UI Switch](https://ark-ui.com/react/docs/components/switch)
+- [Kobalte Switch](https://kobalte.dev/docs/core/components/switch)
+- [Radix UI Switch](https://www.radix-ui.com/primitives/docs/components/switch)
+- [React Aria Switch](https://react-spectrum.adobe.com/react-aria/Switch.html)
+
+## Features
+- [x] Toggle between on/off states
+- [x] Keyboard navigation support
+- [x] Form control integration
+- [x] Disabled state
+- [x] Required state
+- [x] Focus management
+- [x] Label support
+- [x] Description/Help text
+- [x] Custom styling support
+- [x] Proper ARIA attributes
+
+## Component Structure
+
+Pieces:
+- Root (container)
+- Trigger (the switch itself)
+- Thumb (moving part)
+- Label
+- Description
+- HiddenInput (for form integration)
+
+## Keyboard Interactions
+- Tab: Focus the switch
+- Space: Toggle the switch state
+- Enter: Toggle the switch state
+
+## Attributes
+- role="switch"
+- aria-checked
+- aria-disabled
+- aria-label or aria-labelledby
+- aria-describedby (for description)
+- aria-required
+- aria-invalid
+- data-qds-switch-root
+- data-qds-switch-trigger
+- data-qds-switch-thumb
+- data-qds-switch-label
+- data-qds-switch-description
+- data-checked
+- data-disabled
+- data-focused
+
+## Use Cases
+- Theme toggles (light/dark mode)
+- Feature toggles
+- Settings panels
+- Form inputs
+- Privacy preferences
+- Notification settings
+- Accessibility options
+- Mobile menu toggles
+
+## CSS Considerations
+
+Important CSS:
+```css
+.switch {
+  position: relative;
+  display: inline-flex;
+}
+
+.trigger {
+  position: relative;
+  cursor: pointer;
+}
+
+.thumb {
+  position: absolute;
+  transition: transform;
+}
+
+[data-disabled] {
+  cursor: not-allowed;
+}
+```
+
+## API Design
+
+### Root:
+- checked: boolean
+- onChange$: (checked: boolean) => void
+- disabled: boolean
+- required: boolean
+- name: string
+- value: string
+
+### Trigger:
+- No specific props, inherits button props
+
+### Thumb:
+- No specific props, inherits div props
+
+### Label:
+- Inherits label props
+
+### Description:
+- Inherits div props
+
+### HiddenInput:
+- name: string
+- value: string
+- form: string
+
+### Questions
+- How to handle loading states?
+- Should we support different sizes out of the box?
+- How to handle RTL layouts?

@@ -1,0 +1,30 @@
+{
+  "features": [
+    "WAI ARIA Switch design pattern",
+    "Hidden native input for form integration",
+    "Controlled and uncontrolled state management",
+    "Error state handling with aria-errormessage",
+    "Support for required/disabled states",
+    "Custom labels and descriptions with ARIA support",
+    "Keyboard navigation (Space/Enter)",
+    "Form binding support",
+    "Toggle animation support via thumb component",
+    "Customizable styling through data attributes"
+  ],
+  "keyboard": {
+    "keyboard": [
+      {
+        "key": "Space",
+        "comment": "When focus is on the switch trigger, toggles the switch state"
+      },
+      {
+        "key": "Enter",
+        "comment": "When focus is on the switch trigger, toggles the switch state"
+      },
+      {
+        "key": "Tab",
+        "comment": "Moves focus to the switch trigger"
+      }
+    ]
+  }
+}
