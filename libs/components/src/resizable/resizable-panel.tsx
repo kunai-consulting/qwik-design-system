@@ -1,6 +1,5 @@
 import {
   type PropsOf,
-  type QRL,
   Slot,
   component$,
   useContext,
@@ -34,11 +33,11 @@ interface PublicResizablePanelProps extends Omit<PropsOf<"div">, "onResize$"> {
   collapsedSize?: number;
   collapseThreshold?: number;
   // Callback fired when the panel is resized
-  onResize$?: QRL<(size: number) => void>;
+  onResize$?: (size: number) => void;
   // Callback fired when the panel is collapsed
-  onCollapse$?: QRL<() => void>;
+  onCollapse$?: () => void;
   // Callback fired when the panel is expanded
-  onExpand$?: QRL<() => void>;
+  onExpand$?: () => void;
   _index?: number;
 }
 /** A resizable panel component that can be adjusted using a ResizableHandle */
@@ -122,10 +121,10 @@ export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) 
       data-min-size={isVertical ? minHeight : minWidth}
       // Specifies the maximum size constraint for the panel
       data-max-size={isVertical ? maxHeight : maxWidth}
-      data-collapsible={collapsible ? "true" : "false"}
+      data-collapsible={collapsible}
       data-collapsed-size={collapsedSize}
       data-collapse-threshold={collapseThreshold}
-      data-is-collapsed={isCollapsed.value.toString()}
+      data-is-collapsed={isCollapsed.value}
       style={getPanelStyles()}
     >
       <Slot />

@@ -173,7 +173,7 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
         );
         if (prevIndex !== -1) {
           const prevPanel = context.panels.value[prevIndex];
-          await prevPanel.onCollapse$?.();
+          prevPanel.onCollapse$?.();
         }
 
         context.startPosition.value = null;
@@ -197,7 +197,7 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
           );
           if (prevIndex !== -1) {
             const prevPanel = context.panels.value[prevIndex];
-            await prevPanel.onExpand$?.();
+            prevPanel.onExpand$?.();
           }
 
           totalDragDistance.value = 0;
@@ -284,11 +284,11 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
 
     if (prevIndex !== -1) {
       const prevPanel = context.panels.value[prevIndex];
-      await prevPanel.onResize$?.(prevSize);
+      prevPanel.onResize$?.(prevSize);
     }
     if (nextIndex !== -1) {
       const nextPanel = context.panels.value[nextIndex];
-      await nextPanel.onResize$?.(nextSize);
+      nextPanel.onResize$?.(nextSize);
     }
   });
 

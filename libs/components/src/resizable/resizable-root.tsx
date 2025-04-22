@@ -11,9 +11,9 @@ import {
   useOnWindow,
   useSignal,
   useStyles$,
-  useTask$,
   useVisibleTask$
 } from "@builder.io/qwik";
+import { useBindings } from "../../utils/bindings";
 import { resetIndexes } from "../../utils/indexer";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
@@ -41,7 +41,11 @@ export const ResizableRootBase = component$<PublicResizableRootProps>((props) =>
     }
   `);
   useStyles$(styles);
-  const { orientation = "horizontal", disabled = false, storageKey } = props;
+  const { orientation = "horizontal", storageKey } = props;
+
+  const { disabledSig } = useBindings(props, {
+    disabled: false
+  });
 
   const storedSizes = useConstant(() =>
     createSignal<{
@@ -107,7 +111,7 @@ export const ResizableRootBase = component$<PublicResizableRootProps>((props) =>
 
   const context: ResizableContext = {
     orientation: useSignal(orientation),
-    disabled: useSignal(disabled),
+    disabled: disabledSig,
     startPosition,
     isDragging,
     initialSizes: storedSizes,
@@ -118,10 +122,6 @@ export const ResizableRootBase = component$<PublicResizableRootProps>((props) =>
 
   useContextProvider(resizableContextId, context);
 
-  useTask$(({ track }) => {
-    const isDisabled = track(() => props.disabled);
-    context.disabled.value = isDisabled ?? false;
-  });
   return (
     <Render
       fallback="div"
@@ -131,7 +131,7 @@ export const ResizableRootBase = component$<PublicResizableRootProps>((props) =>
       // Indicates the orientation of the resizable container (vertical or horizontal)
       data-orientation={orientation}
       // Indicates whether the resizable container is disabled
-      data-disabled={disabled}
+      data-disabled={disabledSig.value}
     >
       <Slot />
     </Render>

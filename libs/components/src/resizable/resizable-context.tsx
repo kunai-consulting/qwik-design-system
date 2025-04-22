@@ -2,9 +2,9 @@ import { type QRL, type Signal, createContextId } from "@builder.io/qwik";
 
 export interface PanelRef {
   ref: Signal<HTMLElement | undefined>;
-  onResize$?: QRL<(size: number) => void>;
-  onCollapse$?: QRL<() => void>;
-  onExpand$?: QRL<() => void>;
+  onResize$?: (size: number) => void;
+  onCollapse$?: () => void;
+  onExpand$?: () => void;
   _index: number;
 }
 

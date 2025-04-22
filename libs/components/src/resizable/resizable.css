@@ -40,9 +40,7 @@
     user-select: none;
     z-index: 1;
     box-sizing: border-box;
-    width: 4px;
-    flex-grow: 0;
-    flex-shrink: 0;
+    flex: 0 0 4px;
 
     background-color: #e0e0e0;
   }
