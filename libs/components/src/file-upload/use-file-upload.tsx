@@ -8,6 +8,7 @@ import {
 } from "@builder.io/qwik";
 
 export interface FileInfo {
+  id: string;
   name: string;
   size: number;
   type: string;
@@ -30,6 +31,8 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
   const isDragging = useSignal(false);
   const files = useSignal<FileInfo[]>([]);
 
+  const processedFiles = useSignal<Record<string, boolean>>({});
+
   const isDisabled = useComputed$(() => {
     if (typeof options.disabled === "boolean") {
       return options.disabled;
@@ -40,19 +43,71 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
   const processFiles$ = $((newFiles: File[]) => {
     if (isDisabled.value) return;
 
-    const fileInfos = newFiles.map((file) => ({
-      name: file.name,
-      size: file.size,
-      type: file.type,
-      lastModified: file.lastModified,
-      file: noSerialize(file)
-    }));
+    const fileInfos: FileInfo[] = [];
+
+    for (const file of newFiles) {
+      const fileKey = `${file.name}-${file.size}`;
+
+      if (processedFiles.value[fileKey] && options.multiple) {
+        if (options.debug) {
+          console.log(`Skipping duplicate file: ${file.name}`);
+        }
+        continue;
+      }
+
+      processedFiles.value = {
+        ...processedFiles.value,
+        [fileKey]: true
+      };
+
+      const id = `${file.name}-${file.size}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+      fileInfos.push({
+        id,
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        lastModified: file.lastModified,
+        file: noSerialize(file)
+      });
+    }
+
+    if (fileInfos.length === 0) {
+      return;
+    }
 
     if (options.multiple) {
       files.value = [...files.value, ...fileInfos];
     } else {
-      files.value = fileInfos.slice(0, 1);
+      processedFiles.value = {};
+
+      for (const fileInfo of fileInfos) {
+        const fileKey = `${fileInfo.name}-${fileInfo.size}`;
+        processedFiles.value[fileKey] = true;
+      }
+
+      files.value = fileInfos;
     }
+
+    if (options.onFilesChange$) {
+      options.onFilesChange$(files.value);
+    }
+  });
+
+  const removeFile$ = $((fileId: string) => {
+    const fileIndex = files.value.findIndex((f) => f.id === fileId);
+    if (fileIndex === -1) return;
+
+    const fileToRemove = files.value[fileIndex];
+
+    const fileKey = `${fileToRemove.name}-${fileToRemove.size}`;
+    const newProcessed = { ...processedFiles.value };
+    delete newProcessed[fileKey];
+    processedFiles.value = newProcessed;
+
+    const newFiles = [...files.value];
+    newFiles.splice(fileIndex, 1);
+    files.value = newFiles;
 
     if (options.onFilesChange$) {
       options.onFilesChange$(files.value);
@@ -83,7 +138,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
       e.dataTransfer.dropEffect = "copy";
     }
   });
-  // onDragLeave$={[handleDragLeaveSync$, handleDragLeave$, props.onDragLeave$]}
+
   const onDragLeave$ = $((e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -146,6 +201,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
       onDrop$,
       onWindowDragOver$
     },
-    processFiles$
+    processFiles$,
+    removeFile$
   };
 }

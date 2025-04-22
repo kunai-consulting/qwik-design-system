@@ -16,7 +16,7 @@ export default component$(() => {
 
   const removeFile$ = $((index: number) => {
     const newFiles = [...filePreviewsSig.value];
-    
+
     // Remove the file from the array
     newFiles.splice(index, 1);
     filePreviewsSig.value = newFiles;
@@ -24,19 +24,18 @@ export default component$(() => {
 
   return (
     <div class="file-upload-container">
-      
       <FileUpload.Root
         multiple
         accept="image/*" // Accept only image files
         onFilesChange$={$((files) => {
           const newPreviews: FilePreview[] = [];
-          
+
           // Process each uploaded file and create previews
           for (const fileInfo of files) {
             if (fileInfo.file) {
               // Create URL for preview
               const url = URL.createObjectURL(fileInfo.file);
-              
+
               // Add to previews
               newPreviews.push({
                 name: fileInfo.name,
@@ -46,7 +45,7 @@ export default component$(() => {
               });
             }
           }
-          
+
           // Update previews signal
           filePreviewsSig.value = newPreviews;
         })}
@@ -62,7 +61,7 @@ export default component$(() => {
           </div>
         </FileUpload.Dropzone>
       </FileUpload.Root>
-      
+
       {/* File Preview Section */}
       {filePreviewsSig.value.length > 0 && (
         <div class="file-preview-container">
@@ -75,9 +74,9 @@ export default component$(() => {
                   <p class="file-preview-name">{file.name}</p>
                   <p class="file-preview-size">{(file.size / 1024).toFixed(2)} KB</p>
                 </div>
-                <button 
-                  type="button" 
-                  class="file-remove-button" 
+                <button
+                  type="button"
+                  class="file-remove-button"
                   onClick$={() => removeFile$(index)}
                   aria-label={`Remove ${file.name}`}
                 >
@@ -91,4 +90,3 @@ export default component$(() => {
     </div>
   );
 });
-
