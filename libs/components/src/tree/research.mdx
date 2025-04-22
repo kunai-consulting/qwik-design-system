@@ -1,90 +1,179 @@
-Research:
+# Research: Tree Component Primitive (Treegrid Pattern)
 
-- Ark UI (https://ark-ui.com/react/docs/components/tree-view)
+This document focuses on the research for a **base Tree component primitive**, aligning with the WAI-ARIA **`treegrid`** pattern. This pattern is chosen to support common use cases like sidebars, file systems, and layer panels where nodes may contain interactive elements (e.g., buttons, toggles) alongside the primary label, requiring focus management *within* nodes.
 
-- Material UI (https://mui.com/x/react-tree-view/?srsltid=AfmBOor5Lu38zUPxWS633qeArjpzz9IK_DuLrAtQxqsjy33VUa5EyI3l)
 
-- React Headless Tree (https://headless-tree.lukasbach.com/storybook/react/index.html?path=/story/react-async-data-loading--async-data-loading)
+## Research is not a one time thing
 
-- React Arborist (https://github.com/brimdata/react-arborist)
+This document should evolve as the primitive is developed and refined based on implementation experience and testing against the `treegrid` pattern.
 
-Features
+## Inspiration & Core Patterns
 
-- [ ] Keyboard navigation
-- [ ] Nested items (recursion)
-- [ ] CSR
-- [ ] SSR
-- [ ] Tree Search
+The goal is to create a reusable primitive for representing and interacting with hierarchical data, specifically enabling interactive content within each node.
+
+- **WAI-ARIA Treegrid Pattern:** The primary pattern for hierarchical grids where rows can contain multiple interactive cells and can be expanded/collapsed. Suitable for structures where nodes are not just single navigation targets. **Crucially, rows and cells within them must be focusable or contain focusable elements** to ensure screen reader compatibility in application mode.
+    - [WAI-ARIA APG Treegrid Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/treegrid/)
+- **Comparison with `treeview`:** While `treeview` is simpler (single target per node), `treegrid` provides the necessary structure (`role="row"`, `role="gridcell"`) and interaction model for nodes containing multiple focusable elements.
+    - [WAI-ARIA APG Treeview Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/)
+
+### Key Library References (Supporting `treegrid` or similar patterns)
+
+- [React Aria Tree](https://react-spectrum.adobe.com/react-aria/Tree.html) (Explicitly uses `treegrid` to support interactive children)
+- [Material UI Tree View (Rich variant)](https://mui.com/x/react-tree-view/rich-tree-view/getting-started/)
+- [React Arborist](https://github.com/brimdata/react-arborist)
+- [Ark UI Tree View](https://ark-ui.com/react/docs/components/tree-view)
+- [Melt UI Tree](https://next.melt-ui.com/components/tree/)
+
+## Core `treegrid` Features (Primitive Scope - Based on APG)
+
+Essential features for the base `treegrid` primitive:
+
+- [x] **Hierarchical Structure:** Representing nested data via expandable rows.
+- [x] **ARIA Roles:** Correct `role="treegrid"`, `role="row"`, `role="gridcell"` (or `columnheader`, `rowheader`).
+- [x] **Keyboard Navigation (Treegrid Pattern):**
+    - [x] **Row Navigation:** `ArrowDown`/`ArrowUp` move focus between rows (maintaining column context). `Home`/`End` move to first/last row (or cell). `Ctrl+Home/End` move to first/last row in the same column.
+    - [x] **Cell Navigation:** `ArrowRight`/`ArrowLeft` move focus between cells within a row.
+    - [x] **Expand/Collapse:** Typically `ArrowRight` expands, `ArrowLeft` collapses (when focus is on the row or designated cell). `Enter` may also toggle if on the correct cell.
+    - [ ] **Intra-Row Interaction:** `Tab`/`Shift+Tab` navigate between *focusable elements* within a row, distinct from arrow key navigation between cells. Standard `Enter`/`Space` activates the focused cell/element.
+- [x] **Expansion State:** Manage `aria-expanded` for parent rows. Must be present on parent rows.
+- [x] **Focus Management:** Manage focus between rows *and* between cells/elements within rows. Requires a clear strategy (e.g., roving tabindex on rows, standard focus within rows).
+- [ ] **Selection State:** Manage `aria-selected` on rows/cells (single or multiple). `aria-multiselectable` on root. Requires clear visual distinction between focus and selection.
+- [ ] **Activation:** Define row/cell activation logic (via `Enter`/`Space`).
+- [ ] **Disabled State:** Support `aria-disabled` on rows/cells.
+- [ ] **Readonly State:** Support `aria-readonly` if content editing is possible but disabled.
+- [x] **Basic SSR/CSR Compatibility.**
+
+### Potential Advanced Features (Beyond Initial Primitive)
+
+- [ ] Multi-select (`aria-multiselectable="true"` and associated keyboard commands like `Shift+Space`, `Ctrl+Space`, `Ctrl+A`, `Shift+Arrows`)
+- [ ] Typeahead navigation
+- [ ] Column support (multiple `gridcell`s per row, `columnheader` roles, `aria-colindex`, `aria-colcount`)
 - [ ] Drag and drop
-- [ ] Multi-select
-- [ ] Renaming
-- [ ] Expand All
+- [ ] Virtualization (`aria-rowcount`, `aria-colcount`)
+- [ ] Inline editing / Renaming
+- [ ] Async data loading
+- [ ] Checkbox selection (often implemented as a `gridcell`)
+- [ ] Sorting (`aria-sort` on headers)
 
+## Component Structure (Primitive Parts - `treegrid` focused)
 
+Core parts needed to implement the `treegrid` pattern:
 
-Pieces:
+-   **Root:** Container (`role="treegrid"`). Requires `aria-label` or `aria-labelledby`. Manages context, overall state (expansion, selection), keyboard navigation between rows, focus management strategy. Sets `aria-multiselectable`, `aria-readonly` (if applicable).
+-   **ItemRow / Item:** Represents a node (`role="row"`). Requires `aria-level`. Requires `aria-expanded` if parent. Optional `aria-selected`, `aria-disabled`, `aria-posinset`, `aria-setsize`. Contains one or more cells. May participate in roving tabindex among rows.
+-   **ItemCell:** Represents a cell (`role="gridcell"`, `columnheader`, or `rowheader`). Contains the actual content or interactive element. Handles intra-row navigation and activation. Optional `aria-selected` (for multi-select), `aria-disabled`, `aria-readonly`, `aria-colspan`, `aria-rowspan`, `aria-colindex`, `aria-rowindex`.
+-   **(Conceptual) ExpandCollapseTrigger:** A specific interactive element/cell responsible for toggling `aria-expanded`.
 
+## Keyboard Interactions (`treegrid` standard - simplified for single-column initially)
 
-Keyboard interactions:
+*(Detailed breakdown based on APG)*
 
-Down Arrow -> next item or folder Down
+-   **`Tab`**: Moves focus *between focusable elements within the focused row*. If on last element, moves focus out of the grid. (Enters grid focusing first interactive element/cell).
+-   **`Shift+Tab`**: Moves focus backwards *between focusable elements within the focused row*. If on first element, moves focus out of the grid.
+-   **`ArrowDown`**: Moves focus to the corresponding cell in the next focusable row.
+-   **`ArrowUp`**: Moves focus to the corresponding cell in the previous focusable row.
+-   **`ArrowRight`**:
+    -   On a closed row (or designated cell): Expands it.
+    -   On an open row/cell: Moves focus to the next focusable cell/element in the current row.
+    -   On the right-most cell/element: No-op.
+    -   *(APG Note: If focus is on the row itself and it's open, moves to first cell)*
+-   **`ArrowLeft`**:
+    -   On an open row (or designated cell): Collapses it.
+    -   On a child row: Moves focus to the parent row's corresponding cell.
+    -   On the left-most cell/element: Moves focus to the previous focusable cell/element, potentially moving focus *to the row itself* if row focus is supported and focus was on the first cell.
+-   **`Home`**: Moves focus to the first focusable cell/element in the current row.
+-   **`End`**: Moves focus to the last focusable cell/element in the current row.
+-   **`Ctrl+Home`**: Moves focus to the corresponding cell in the *first* row.
+-   **`Ctrl+End`**: Moves focus to the corresponding cell in the *last* row.
+-   **`Enter` / `Space`**: Activates the element with focus (e.g., toggles checkbox, clicks button, potentially toggles expansion if on designated cell).
 
-Up Arrow -> previous item or folder Up
+## Core ARIA Attributes
 
+**Root:**
 
+-   `role="treegrid"` (Required)
+-   `aria-label` / `aria-labelledby` (Required)
+-   `aria-multiselectable` (Optional, `false` default)
+-   `aria-readonly` (Optional, if applicable to whole grid)
+-   `aria-colcount` / `aria-rowcount` (Recommended if dynamic)
+
+**ItemRow / Item:**
+
+-   `role="row"` (Required)
+-   `aria-level` (Required)
+-   `aria-expanded` (Required for parent rows)
+-   `aria-selected` (Optional, required if selection supported)
+-   `aria-disabled` (Optional)
+-   `aria-setsize` / `aria-posinset` (Optional but recommended for context)
+-   `id` (Required for relationships)
+
+**ItemCell:**
+
+-   `role="gridcell"` / `columnheader` / `rowheader` (Required)
+-   `aria-selected` (Optional, required if multi-select supported)
+-   `aria-disabled` (Optional)
+-   `aria-readonly` (Optional, if cell is editable but disabled)
+-   `aria-colindex` / `aria-rowindex` (Recommended if dynamic/multi-column)
+-   `aria-colspan` / `aria-rowspan` (Optional, if applicable)
+
+## Headless API Considerations (Conceptual - `treegrid` focused)
+
+**Root Exports (Example Hook/Context):**
+
+-   `gridProps`: Props for the root grid element (`role`, `aria-attributes`, keyboard handlers for row navigation).
+-   `getRowProps(rowId)`: Returns props for a row element (`role`, `aria-attributes`).
+-   `getCellProps(rowId, cellId)`: Returns props for a cell element (`role`, event handlers for cell navigation/activation).
+-   `getRowState(rowId)`: Returns state like `isExpanded`, `isSelected`, `isFocused`, `level`.
+-   `getCellState(rowId, cellId)`: Returns state like `isFocused`.
+-   Functions: `expand(rowId)`, `collapse(rowId)`, `select(rowId)`, `activateCell(rowId, cellId)`, `focusRow(rowId)`, `focusCell(rowId, cellId)`.
+-   Callbacks: `onExpansionChange`, `onSelectionChange`, `onCellActivation`, `onFocusChange`.
+
+## CSS Considerations (Primitive-focused)
+
+-   Styling based on `data-` attributes on rows and cells (`data-expanded`, `data-selected`, `data-focused`, `data-disabled`).
+-   Indentation handled by consumer based on `aria-level` on the row.
+-   Focus indicators (`outline`) potentially needed on rows and cells/interactive elements within cells.
+
+## Questions for Primitive Design (`treegrid`)
+
+-   **Focus Strategy:** Roving tabindex on rows? Or direct focus to cells/interactive elements? How exactly do `Tab` and `Arrows` interact for intra-row navigation? (Needs precise definition, APG suggests `Tab` for interactive elements, Arrows for cell-to-cell).
+-   **Initial Scope:** Single column (`gridcell`) per row assumed initially?
+-   **Expand/Collapse Trigger:** Which cell/element handles this? (Often the first cell or a dedicated button cell).
+-   **Row Focus vs Cell Focus:** Does the `role="row"` element itself ever receive focus, or only elements/cells within it? (APG allows for both models).
+-   Controlled vs. Uncontrolled state management strategy.
+
+## Keyboard Interactions
+
+- **Down Arrow**: Move focus to the next visible row/item
+- **Up Arrow**: Move focus to the previous visible row/item
+- **Right Arrow**: 
+  - When focus is on a collapsed node, expands the node
+  - When focus is on an expanded node, moves focus to the first child node
+  - When focus is on an end node (no children), does nothing
+- **Left Arrow**:
+  - When focus is on an expanded node, collapses the node
+  - When focus is on a child node that is also a collapsed node or end node, moves focus to its parent node
+- **Home**: Moves focus to the first node in the tree
+- **End**: Moves focus to the last visible node in the tree
+- **Enter/Space**: Activates the focused node (typically expands/collapses if possible)
+- **Type-ahead**: Typing characters should navigate to items that match the typed prefix
 
 Attributes:
 
-
 potential ones:
-
 
 Use cases:
 
-
 Important CSS:
 
-API's
+## API's
 
-<Tree.Root>
-  <Tree.Item>
-    <Tree.ItemIndicator>🔹</Tree.ItemIndicator>
-    <Tree.ItemLabel>Single Item</Tree.ItemLabel>
-  </Tree.Item>
-  
-  <Tree.Group>
-    <Tree.GroupLabel>Group Label</Tree.GroupLabel>
-    
-    <Tree.Item>
-      <Tree.ItemIndicator>🔹</Tree.ItemIndicator>
-      <Tree.ItemLabel>Item 1</Tree.ItemLabel>
-    </Tree.Item>
-    
-    <Tree.Item>
-      <Tree.ItemIndicator>🔹</Tree.ItemIndicator>
-      <Tree.ItemLabel>Item 2</Tree.ItemLabel>
-    </Tree.Item>
-    
-    {/* Nested groups */}
-    <Tree.Group>
-      <Tree.GroupLabel>Nested Group</Tree.GroupLabel>
-      
-      <Tree.Item>
-        <Tree.ItemIndicator>🔹</Tree.ItemIndicator>
-        <Tree.ItemLabel>Nested Item 1</Tree.ItemLabel>
-      </Tree.Item>
-      
-      <Tree.Item>
-        <Tree.ItemIndicator>🔹</Tree.ItemIndicator>
-        <Tree.ItemLabel>Nested Item 2</Tree.ItemLabel>
-      </Tree.Item>
-    </Tree.Group>
-  </Tree.Group>
-</Tree.Root>
-
-
-Questions:
-
+- **Root**: The main container for the tree structure
+- **Item**: Individual tree node that can contain children
+- **ItemIndicator**: Visual indicator for the item's state (expanded/collapsed)
+- **ItemLabel**: Text or content label for the tree item
+- **ItemContent**: Container for the item's children content
+- **ItemTrigger**: Interactive element to expand/collapse the item
 
 ## Sample Data Structure and Mapping
 
@@ -144,10 +233,14 @@ Here's how you would map this data structure to our Tree component:
 function renderTreeItem(item: TreeItemType) {
   if (item.children && item.children.length > 0) {
     return (
-      <Tree.Group key={item.id}>
-        <Tree.GroupLabel>{item.label}</Tree.GroupLabel>
-        {item.children.map(child => renderTreeItem(child))}
-      </Tree.Group>
+      <Tree.Item key={item.id}>
+        <Tree.ItemTrigger>
+          <Tree.ItemLabel>{item.label}</Tree.ItemLabel>
+        </Tree.ItemTrigger>
+        <Tree.ItemContent>
+          {item.children.map(child => renderTreeItem(child))}
+        </Tree.ItemContent>
+      </Tree.Item>
     );
   }
   
