@@ -1,9 +1,19 @@
 import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
-import { LuTrash2 } from "@qwikest/icons/lucide";
 import { FileUpload } from "@kunai-consulting/qwik";
+import { LuTrash2 } from "@qwikest/icons/lucide";
 import styles from "./file-upload.css?inline";
 
+interface FileInfo {
+  id: string;
+  name: string;
+  size: number;
+  type: string;
+  file?: File;
+  lastModified: number;
+}
+
 interface FilePreview {
+  id: string;
   name: string;
   size: number;
   type: string;
@@ -13,13 +23,20 @@ interface FilePreview {
 export default component$(() => {
   useStyles$(styles);
   const filePreviewsSig = useSignal<FilePreview[]>([]);
+  const processedIdsSig = useSignal<Set<string>>(new Set());
 
   const removeFile$ = $((index: number) => {
     const newFiles = [...filePreviewsSig.value];
 
-    // Remove the file from the array
+    const fileId = filePreviewsSig.value[index].id;
+    URL.revokeObjectURL(filePreviewsSig.value[index].url);
+
     newFiles.splice(index, 1);
     filePreviewsSig.value = newFiles;
+
+    const newProcessedIds = new Set(processedIdsSig.value);
+    newProcessedIds.delete(fileId);
+    processedIdsSig.value = newProcessedIds;
   });
 
   return (
@@ -27,27 +44,34 @@ export default component$(() => {
       <FileUpload.Root
         multiple
         accept="image/*" // Accept only image files
-        onFilesChange$={$((files) => {
-          const newPreviews: FilePreview[] = [];
+        onFilesChange$={$((files: FileInfo[]) => {
+          for (const preview of filePreviewsSig.value) {
+            URL.revokeObjectURL(preview.url);
+          }
 
-          // Process each uploaded file and create previews
+          const newPreviews: FilePreview[] = [];
+          const newProcessedIds = new Set<string>();
+
           for (const fileInfo of files) {
             if (fileInfo.file) {
-              // Create URL for preview
-              const url = URL.createObjectURL(fileInfo.file);
+              if (!newProcessedIds.has(fileInfo.id)) {
+                const url = URL.createObjectURL(fileInfo.file);
 
-              // Add to previews
-              newPreviews.push({
-                name: fileInfo.name,
-                size: fileInfo.size,
-                type: fileInfo.type,
-                url
-              });
+                newPreviews.push({
+                  id: fileInfo.id,
+                  name: fileInfo.name,
+                  size: fileInfo.size,
+                  type: fileInfo.type,
+                  url
+                });
+
+                newProcessedIds.add(fileInfo.id);
+              }
             }
           }
 
-          // Update previews signal
           filePreviewsSig.value = newPreviews;
+          processedIdsSig.value = newProcessedIds;
         })}
         class="file-upload-root"
       >
@@ -68,7 +92,7 @@ export default component$(() => {
           <h3>Uploaded Files</h3>
           <div class="file-preview-grid">
             {filePreviewsSig.value.map((file, index) => (
-              <div key={`${file.name}-${index}`} class="file-preview-item">
+              <div key={file.id} class="file-preview-item">
                 <img src={file.url} alt={file.name} class="file-preview-image" />
                 <div class="file-preview-info">
                   <p class="file-preview-name">{file.name}</p>

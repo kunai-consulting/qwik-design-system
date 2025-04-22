@@ -6,6 +6,7 @@ import {
 } from "@builder.io/qwik";
 
 export interface FileInfo {
+  id: string;
   name: string;
   size: number;
   type: string;
