@@ -27,7 +27,7 @@
   background-color: white;
   top: 2px;
   left: 2px;
-  transition: transform 0.2s ease;
+  transition: 0.2s linear;
 }
 
 .switch-trigger[data-checked] .switch-thumb {

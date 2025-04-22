@@ -1,28 +1,22 @@
 import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
-import { Render } from "../render/render";
+import { LabelBase } from "../label/label";
 import { switchContextId } from "./switch-context";
+type PublicCheckboxLabelProps = PropsOf<typeof LabelBase>;
 
 /** Label component for the switch that can be clicked to toggle the state */
-const SwitchLabelBase = component$<PropsOf<"label">>((props) => {
-  const { ...restProps } = props;
+const SwitchLabelBase = component$((props: PublicCheckboxLabelProps) => {
   const context = useContext(switchContextId);
-
   return (
-    <Render
-      {...restProps}
-      fallback="label"
+    <LabelBase
+      {...props}
       id={context.labelId}
       // The identifier for the switch label element
       data-qds-switch-label
-      // Indicates whether the switch is currently checked
-      data-checked={context.checked.value}
-      // Indicates whether the switch is currently disabled
-      data-disabled={context.disabled.value}
-      onClick$={[context.toggle$, props.onClick$]}
+      for={context.triggerId}
     >
       <Slot />
-    </Render>
+    </LabelBase>
   );
 });
 
