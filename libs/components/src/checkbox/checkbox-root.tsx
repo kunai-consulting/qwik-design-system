@@ -1,6 +1,5 @@
 import {
   type PropsOf,
-  type Signal,
   Slot,
   component$,
   useComputed$,
@@ -9,19 +8,14 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import { useBoundSignal } from "../../utils/bound-signal";
+import { type BindableProps, useBindings } from "../../utils/bindings";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
 
 export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
-  "bind:checked"?: Signal<boolean | "mixed">;
-  /** Initial checked state of the checkbox */
-  checked?: T;
   /** Event handler called when the checkbox state changes */
   onChange$?: (checked: T) => void;
-  /** Whether the checkbox is disabled */
-  disabled?: boolean;
   /** Whether the checkbox has a description */
   description?: boolean;
   /** Name attribute for the hidden input element */
@@ -30,53 +24,44 @@ export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   required?: boolean;
   /** Value attribute for the hidden input element */
   value?: string;
-} & Omit<PropsOf<"div">, "onChange$">;
+} & Omit<PropsOf<"div">, "onChange$"> &
+  BindableProps<CheckboxBinds>;
 
-// changing checkbox root
+type CheckboxBinds = {
+  /* Determines whether the checkbox is checked */
+  checked: boolean | "mixed";
+  /** Whether the checkbox is disabled */
+  disabled: boolean;
+};
 
 /** Root component that provides context and state management for the checkbox */
 export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
-  const {
-    "bind:checked": givenCheckedSig,
-    onClick$,
-    onChange$,
-    description,
-    name,
-    required,
-    value,
-    ...rest
-  } = props;
+  const { onChange$, description, name, required, value, ...rest } = props;
 
-  const checkedPropSig = useComputed$(() => props.checked);
-  const checkedStateSig = useBoundSignal<boolean | "mixed">(
-    // 2 way binding
-    givenCheckedSig,
-    // initial value
-    givenCheckedSig?.value ?? checkedPropSig.value ?? false,
-    // value based signal
-    checkedPropSig
-  );
+  const { checkedSig, disabledSig: isDisabledSig } = useBindings<CheckboxBinds>(props, {
+    checked: false,
+    disabled: false
+  });
 
   const isInitialLoadSig = useSignal(true);
-  const isDisabledSig = useComputed$(() => props.disabled);
   const isErrorSig = useSignal(false);
   const localId = useId();
   const triggerRef = useSignal<HTMLButtonElement>();
 
   const isCheckedSig = useComputed$(() => {
-    return checkedStateSig.value === true;
+    return checkedSig.value === true;
   });
 
   const dataAttributes = useComputed$(() => {
     return {
       "data-checked": isCheckedSig.value ? "" : undefined,
-      "data-mixed": checkedStateSig.value === "mixed" ? "" : undefined,
+      "data-mixed": checkedSig.value === "mixed" ? "" : undefined,
       "data-disabled": isDisabledSig.value ? "" : undefined
     };
   });
 
   const context: CheckboxContext = {
-    checkedStateSig,
+    checkedSig,
     isDisabledSig,
     localId,
     description,
@@ -91,10 +76,10 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
   useContextProvider(checkboxContextId, context);
 
   useTask$(async function handleChange({ track, cleanup }) {
-    track(() => checkedStateSig.value);
+    track(() => checkedSig.value);
 
     if (!isInitialLoadSig.value) {
-      await onChange$?.(checkedStateSig.value as boolean);
+      await onChange$?.(checkedSig.value as boolean);
     }
 
     cleanup(() => {

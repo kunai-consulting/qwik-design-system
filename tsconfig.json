@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@kunai-consulting/qwik": ["libs/components/src"],
+      "@kunai-consulting/qwik-icons": ["libs/icons/src"],
+      "@kunai-consulting/qwik-utils": ["libs/utils/src"]
+    }
+  },
+  "references": [
+    { "path": "./libs/components" },
+    { "path": "./libs/icons" },
+    { "path": "./libs/utils" }
+  ]
+}
