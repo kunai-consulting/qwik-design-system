@@ -35,13 +35,13 @@ jobs:
             while IFS= read -r line; do
               line_num=$((line_num + 1))
               
-              # Match event handlers like onXxx$={...} but exclude any with "qds" in the name (case insensitive)
+              # Match event handlers like onXxx$={...} but exclude any with "qds" in the name (case insensitive) or specifically "onQVisible$"
               if [[ "$line" =~ on[A-Z][a-zA-Z0-9]*\$= ]]; then
                 # Extract the event name
                 event_name=$(echo "$line" | grep -o 'on[A-Za-z0-9]*\$=' | sed 's/\$=//')
                 
-                # Skip if the event name contains "qds" (case insensitive)
-                if [[ "${event_name,,}" =~ qds ]]; then
+                # Skip if the event name contains "qds" (case insensitive) or is exactly "onQVisible$"
+                if [[ "${event_name,,}" =~ qds ]] || [[ "$event_name" == "onQVisible$" ]]; then
                   continue
                 fi
                 
@@ -77,6 +77,7 @@ jobs:
             echo ""
             echo "If this is a custom event that doesn't need the array pattern, you can:"
             echo "- Include 'qds' in your event name (e.g., onQdsCustomEvent$ or onCustomQdsEvent$)"
+            echo "- Use the specific event name 'onQVisible$'"
             echo "::endgroup::"
             
             exit 1
