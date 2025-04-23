@@ -14,7 +14,6 @@ import {
   useTask$
 } from "@builder.io/qwik";
 import polyfill from "@oddbird/css-anchor-positioning/fn";
-import { useBoundSignal } from "../../utils/bound-signal";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 
@@ -25,6 +24,7 @@ type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
 };
 
 import anchorStyles from "./anchor-logic.css?inline";
+import { useBindings } from "../../utils/bindings";
 
 export const popoverContextId = createContextId<PopoverContext>("qds-popover");
 
@@ -46,12 +46,9 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
   const anchorRef = useSignal<HTMLButtonElement>();
   const rootRef = useSignal<HTMLDivElement>();
   const localId = useId();
-  const openPropSig = useComputed$(() => props.open);
-  const isOpenSig = useBoundSignal(
-    givenOpenSig,
-    openPropSig.value ?? givenOpenSig?.value ?? false,
-    openPropSig
-  );
+  const { openSig: isOpenSig } = useBindings(props, {
+    open: false
+  });
 
   const isInitialRenderSig = useSignal(true);
   const canExternallyChangeSig = useSignal(true);

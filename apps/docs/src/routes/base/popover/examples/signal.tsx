@@ -6,14 +6,14 @@ export default component$(() => {
 
   return (
     <>
-      <Popover.Root bind:open={isOpen}>
-        <Popover.Anchor>Open Popover</Popover.Anchor>
-        <Popover.Content>Popover Panel</Popover.Content>
-      </Popover.Root>
       <p>Is open: {isOpen.value ? "true" : "false"}</p>
       <button type="button" onClick$={() => (isOpen.value = !isOpen.value)}>
         Toggle popover
       </button>
+      <Popover.Root bind:open={isOpen}>
+        <Popover.Anchor class="popover-anchor">Open Popover</Popover.Anchor>
+        <Popover.Content class="popover-content">Popover Panel</Popover.Content>
+      </Popover.Root>
     </>
   );
 });

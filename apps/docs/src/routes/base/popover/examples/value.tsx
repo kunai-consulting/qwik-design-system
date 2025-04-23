@@ -6,6 +6,7 @@ export default component$(() => {
 
   return (
     <>
+      <p>Is open: {isOpen.value ? "true" : "false"}</p>
       <Popover.Root
         open={isOpen.value}
         onChange$={(open: boolean) => {
@@ -16,7 +17,6 @@ export default component$(() => {
         <Popover.Anchor class="popover-anchor">Open Popover</Popover.Anchor>
         <Popover.Content class="popover-content">Popover Panel</Popover.Content>
       </Popover.Root>
-      <p>Is open: {isOpen.value ? "true" : "false"}</p>
     </>
   );
 });
