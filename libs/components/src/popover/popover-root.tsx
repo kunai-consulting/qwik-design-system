@@ -13,10 +13,10 @@ import {
   useStyles$,
   useTask$
 } from "@builder.io/qwik";
+import polyfill from "@oddbird/css-anchor-positioning/fn";
 import { useBoundSignal } from "../../utils/bound-signal";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-import polyfill from "@oddbird/css-anchor-positioning/fn";
 
 type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   "bind:open"?: Signal<boolean>;
