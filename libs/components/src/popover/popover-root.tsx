@@ -23,8 +23,8 @@ type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   onChange$?: (open: boolean) => void;
 };
 
-import anchorStyles from "./anchor-logic.css?inline";
 import { useBindings } from "../../utils/bindings";
+import anchorStyles from "./anchor-logic.css?inline";
 
 export const popoverContextId = createContextId<PopoverContext>("qds-popover");
 
