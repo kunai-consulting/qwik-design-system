@@ -15,6 +15,8 @@
 - [Resizable](/base/resizable)
 - [Slider](/base/slider)
 - [Tree](/base/tree)
+- [Icons (moving later)](/icons)
+- [Switch](/base/switch)
 
 ## Contributing
 

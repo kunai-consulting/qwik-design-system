@@ -1,0 +1,34 @@
+@layer qds {
+  [data-qds-switch-root] {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  [data-qds-switch-root][data-disabled] {
+    cursor: not-allowed;
+  }
+
+  [data-qds-switch-trigger] {
+    display: flex;
+    position: relative;
+    cursor: pointer;
+  }
+
+  [data-qds-switch-trigger][data-disabled] {
+    cursor: not-allowed;
+  }
+
+  [data-qds-switch-thumb] {
+    position: absolute;
+    transform: translateX(0%);
+  }
+
+  [data-qds-switch-trigger][data-checked] [data-qds-switch-thumb] {
+    transform: translateX(100%);
+  }
+
+  [data-qds-switch-description] {
+    cursor: default;
+  }
+}

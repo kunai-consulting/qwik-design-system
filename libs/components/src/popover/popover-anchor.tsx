@@ -9,8 +9,7 @@ export const PopoverAnchorBase = component$((props: PropsOf<"button">) => {
 
   return (
     <Render
-      ref={context.anchorRef}
-      externalRef={props.ref}
+      internalRef={context.anchorRef}
       popovertarget={panelId}
       data-qds-popover-anchor
       fallback="button"

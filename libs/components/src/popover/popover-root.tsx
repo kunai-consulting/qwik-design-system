@@ -16,6 +16,7 @@ import {
 import { useBoundSignal } from "../../utils/bound-signal";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
+import polyfill from "@oddbird/css-anchor-positioning/fn";
 
 type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   "bind:open"?: Signal<boolean>;
@@ -94,11 +95,6 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
     const isPolyfill = !("anchorName" in document.documentElement.style);
 
     if (isPolyfill) {
-      // TODO: use the regular dependency once the flip-block issue is fixed
-      const { default: polyfill } = await import(
-        "https://deploy-preview-318--anchor-polyfill.netlify.app/css-anchor-positioning-fn.js"
-      );
-
       await polyfill();
       isPolyfillExecutedSig.value = true;
     }
@@ -140,7 +136,7 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
       data-closed={!isOpenSig.value}
       onQVisible$={handleOpenOnRender$}
       data-qds-popover-root
-      ref={rootRef}
+      internalRef={rootRef}
       fallback="div"
       {...rest}
     >

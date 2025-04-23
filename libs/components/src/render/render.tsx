@@ -14,7 +14,10 @@ type AllowedFallbacks = "div" | "span" | "a" | "button" | "label";
 type RenderInternalProps<T extends AllowedFallbacks> = {
   /** The default element and types if a render prop is not provided */
   fallback: T;
-  externalRef?: unknown;
+  /**
+   *  Library authors use this to pass refs to the component. Consumers of this library use the standard ref prop.
+   */
+  internalRef?: Signal<HTMLElement | undefined>;
 } & QwikIntrinsicElements[T] &
   AsChildProps;
 
@@ -30,10 +33,11 @@ type RenderInternalProps<T extends AllowedFallbacks> = {
  */
 export const Render = component$(
   <T extends AllowedFallbacks>(props: RenderInternalProps<T>): JSXOutput => {
-    const { fallback, _jsxType, _allProps, asChild, ...rest } = props;
+    const { fallback, _jsxType, _allProps, asChild, internalRef, ...rest } = props;
 
     fallback;
     _jsxType;
+    internalRef;
 
     const Comp = props._jsxType ?? props.fallback;
 
@@ -41,13 +45,13 @@ export const Render = component$(
       <Comp
         {...rest}
         {...props._allProps}
-        ref={$((el: Element) => {
+        ref={$((el: HTMLElement) => {
           if (props.ref) {
-            (props.ref as Signal<Element>).value = el;
+            (props.ref as Signal<HTMLElement>).value = el;
           }
 
-          if (props.externalRef) {
-            (props.externalRef as Signal<Element>).value = el;
+          if (props.internalRef) {
+            props.internalRef.value = el;
           }
         })}
       >

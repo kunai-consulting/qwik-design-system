@@ -1,0 +1,48 @@
+.switch-root {
+  gap: 0.5rem;
+}
+
+.switch-root[data-disabled] {
+  opacity: 0.5;
+}
+
+.switch-trigger {
+  width: 2.5rem;
+  height: 1.5rem;
+  border-radius: 9999px;
+  background-color: grey;
+  transition: background-color 0.2s ease;
+  border: none;
+  padding: 0;
+}
+
+.switch-trigger[data-checked] {
+  background-color: #045c88;
+}
+
+.switch-thumb {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 9999px;
+  background-color: white;
+  top: 2px;
+  left: 2px;
+  transition: 0.2s linear;
+}
+
+.switch-trigger[data-checked] .switch-thumb {
+  left: -2px;
+}
+
+.switch-trigger:focus-visible {
+  outline: 1px solid #045c88;
+  outline-offset: 2px;
+}
+
+.switch-description {
+  color: grey;
+}
+
+.switch-error-message {
+  color: red;
+}
