@@ -35,13 +35,14 @@ jobs:
             while IFS= read -r line; do
               line_num=$((line_num + 1))
               
-              # Match event handlers like onXxx$={...} but exclude any with "qds" in the name (case insensitive) or specifically "onQVisible$"
+              # Match event handlers like onXxx$={...}
               if [[ "$line" =~ on[A-Z][a-zA-Z0-9]*\$= ]]; then
-                # Extract the event name
+                # Extract the event name (without the trailing $=)
                 event_name=$(echo "$line" | grep -o 'on[A-Za-z0-9]*\$=' | sed 's/\$=//')
                 
-                # Skip if the event name contains "qds" (case insensitive) or is exactly "onQVisible$"
-                if [[ "${event_name,,}" =~ qds ]] || [[ "$event_name" == "onQVisible$" ]]; then
+                # Skip if the event name contains "qds" (case insensitive) or is exactly "onQVisible"
+                # Note: Comparison is now against "onQVisible" because sed removes the '$='
+                if [[ "${event_name,,}" =~ qds ]] || [[ "$event_name" == "onQVisible" ]]; then
                   continue
                 fi
                 
