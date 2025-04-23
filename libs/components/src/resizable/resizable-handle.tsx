@@ -139,7 +139,7 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
     const sizeProps = await getSizeProperties();
     const sizes = await getPanelSizes(panels, sizeProps);
 
-    const isPrevCollapsible = panels.prevPanel.dataset.collapsible === "true";
+    const isPrevCollapsible = panels.prevPanel.dataset.collapsible === "";
 
     const newPrevSize = sizes.prevSize + delta;
     const newNextSize = sizes.nextSize - delta;
