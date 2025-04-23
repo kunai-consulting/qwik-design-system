@@ -8,7 +8,7 @@ export * as Calendar from "./calendar";
 export * as FileUpload from "./file-upload";
 export * as QRCode from "./qr-code";
 export * as Slider from "./slider";
-export * as Toast from "./toast";
+export * as Popover from "./popover";
 export * as Resizable from "./resizable";
 export * as Tree from "./tree";
 export * as Switch from "./switch";
