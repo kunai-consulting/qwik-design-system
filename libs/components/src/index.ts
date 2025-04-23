@@ -12,6 +12,7 @@ export * as Popover from "./popover";
 export * as Resizable from "./resizable";
 export * as Tree from "./tree";
 export * as Switch from "./switch";
+export * as Toaster from "./toaster";
 
 export { Render } from "./render/render";
 export { withAsChild } from "./as-child/as-child";

@@ -1,0 +1,259 @@
+---
+title: Toast Research
+description: Research for the headless Toast component.
+---
+
+# Toast Research
+
+Research into the requirements and implementation details for a headless Toast component.
+
+## Research Links
+
+-   [Radix UI Toast](https://www.radix-ui.com/primitives/docs/components/toast)
+-   [Ark UI Toast](https://ark-ui.com/react/docs/components/toast)
+-   [Melt UI Toast](https://melt-ui.com/docs/builders/toast)
+-   [React Aria useToast](https://react-spectrum.adobe.com/react-aria/useToast.html)
+-   [Sonner](https://sonner.emilkowal.ski/) (Not headless, but good feature/API inspiration)
+-   [WAI-ARIA Patterns - Alert/Status](https://www.w3.org/WAI/ARIA/apg/patterns/alert/)
+-   [MDN Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) (Foundation for the implementation)
+
+## Common Themes Summary
+
+Analysis of headless libraries (Radix, Ark, Melt, React Aria) reveals consistent patterns:
+- **Centralized Management:** A `Provider` or `Toaster` component manages global state, configuration (duration, position), and renders toasts, often via a portal.
+- **Positioning Container:** A dedicated `Viewport` or `Region` component handles fixed positioning on the screen and the layout/stacking of multiple toasts.
+- **Structured Items:** Each toast is a `Root` element containing standard parts like `Title`, `Description`, `Action`, and `Close`.
+- **Programmatic API:** Essential for imperatively creating (`add`/`show`), updating, and dismissing toasts, usually exposed via a hook or context.
+- **Core Features:** Headless nature, accessibility (ARIA roles/live regions), auto-dismissal, pause on interaction, queueing, and dismissal controls are standard.
+
+## Features
+
+-   [x] **Headless and Unstyled:** Core principle. Provide structure and state, not styles. *(Common)*
+-   [ ] **Built on Popover:** Leverage existing primitive, adapting for fixed positioning. *(Qwik-DS Specific)*
+-   [x] **State Management:** Central provider manages visibility, queueing, timing. *(Common)*
+-   [x] **Programmatic API:** Imperative control (`add`, `update`, `dismiss`). *(Common)*
+-   [x] **User Dismissal:** Via `Close` component/button. *(Common)*
+-   [x] **Accessibility:** ARIA roles (`status`/`alert`), `aria-live`, `aria-atomic`, focus management considerations. *(Common)*
+-   [ ] **Variants:** Support for different types (info, success, etc.) via props/data attributes. *(Common)*
+-   [x] **Custom Duration:** Configurable auto-dismissal time, including indefinite. *(Common)*
+-   [x] **Positioning:** Multiple fixed viewport positions (top-right, etc.) via Viewport/Region. *(Common)*
+-   [ ] **Actions:** Support for interactive elements within a toast via `Action` component. *(Common)*
+-   [x] **Pause on Interact:** Pause timer on hover/focus. *(Common)*
+-   [ ] **Limit Visible:** Control the maximum number of toasts shown simultaneously. *(Common)*
+-   [ ] **Queueing:** Manage order and display of multiple toasts. *(Common)*
+-   [ ] **Swipe to Dismiss:** Optional gesture support. *(Less Common, nice-to-have)*
+
+## Component Structure
+
+*Refined based on user suggestion and common patterns:*
+```md
+Pieces:
+
+- Toaster (Manages global state, configuration, renders Items, handles positioning)
+- Item (Represents a single toast notification, contains ARIA attributes, data states)
+- ItemTitle (Structured content part)
+- ItemDescription (Structured content part)
+- ItemClose (Dismissal element, usually a button trigger)
+- ItemProgressTrack (Visual container for the progress bar)
+- ItemProgressFill (The visual fill representing remaining time)
+```
+
+## Keyboard Interactions
+
+-   Focus Management:
+    -   When a toast appears, focus should ideally remain on the triggering element unless the toast requires immediate action.
+    -   If interaction is required (e.g., toast with an action), focus might move to the toast or the first focusable element within it. Consider `aria-modal="true"` for such cases? (Needs investigation, might conflict with non-modal nature of toasts).
+    -   When a toast is dismissed, focus should return to the element that triggered it, if possible, or a logical preceding element.
+    -   Allow keyboard navigation within the toast if it contains interactive elements (Action, Close).
+-   `Escape`: Dismisses the focused toast (if focus is within it).
+
+## Attributes
+
+-   `Provider/Toaster`: Manages the list of toasts. Could be a `div` or fragment.
+-   `Root`:
+    -   `role="status"` (for polite announcements, default) or `role="alert"` (for assertive announcements, e.g., errors). Use `alert` sparingly.
+    -   `aria-live="polite"` or `aria-live="assertive"` (matching the role).
+    -   `aria-atomic="true"` (Ensure the entire toast content is announced).
+    -   `tabindex="-1"` (Potentially needed for programmatic focus, TBD).
+    -   Data attributes for state (e.g., `data-state="open|closed"`).
+    -   Data attributes for type/variant (e.g., `data-variant="info|error"`).
+    -   Data attributes for position (e.g., `data-position="top-right"`).
+-   `Action`: Typically a `<button>`.
+-   `Close`: Typically a `<button>` with `aria-label="Close"`.
+-   `Title`: Needs an `id` referenced by `aria-labelledby` on the Root? Or just part of the content? (Investigate Radix/Ark).
+-   `Description`: Needs an `id` referenced by `aria-describedby` on the Root? Or just part of the content? (Investigate Radix/Ark).
+
+*Note:* Verify Popover primitive attributes vs. Toast needs (`role`, `aria-live`).
+
+## Use Cases
+
+-   Form submission success/error feedback.
+-   Action confirmations (e.g., "Item added to cart").
+-   System notifications (e.g., "New message received").
+-   Validation warnings.
+-   Loading/processing indicators (though usually transient).
+
+## CSS Considerations
+
+-   `position: fixed` for the `Viewport/Region`.
+-   `z-index` management for stacking toasts and ensuring visibility above other content.
+-   Using `transform` for positioning within the fixed container (e.g., `translate(50%, 0)` for center).
+-   Transitions for enter/exit animations (opacity, transform).
+-   Handling `pointer-events` (allow interaction with toast, but potentially `none` on the container if empty).
+-   Viewport spacing/margins.
+
+## API Design
+
+*Refined based on common patterns, user suggested naming, and Qwik conventions:*
+
+```ts
+import { type QRL, type Signal, type Component } from '@builder.io/qwik';
+
+// --- Toaster (Global Config, State & Positioning) ---
+// Rendered once in the application.
+export interface ToasterProps {
+  /** Default duration (ms) for toasts. Can be overridden per toast.
+   * @default 5000
+   */
+  duration?: number;
+  /** Pause dismissal timer on hover/focus within the toast area.
+   * @default true
+   */
+  pauseOnInteraction?: boolean;
+  /** Maximum number of toasts displayed simultaneously.
+   * @default 3
+   */
+  maxVisible?: number;
+  /** Optional signal of an element to portal toasts into.
+   * @default document.body
+   */
+  container?: Signal<Element | undefined>;
+  /** CSS Gap between Items (user CSS might be better).
+   * @default undefined
+   */
+  // gap?: number;
+  /** Position of the toast area within the viewport.
+   * @default 'bottom-right'
+   */
+  position?: 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
+  /** Optional CSS class */
+  class?: string;
+}
+
+// --- Programmatic API (via hook/context `useToast`) ---
+// Example Hook Signature (Implementation details TBD)
+// export function useToast(): ToastApi;
+
+export interface ToastApi {
+  /** Creates and displays a toast, returns its unique ID. */
+  add$: QRL<(options: ToastOptions) => string>;
+  /** Updates an existing toast by ID. */
+  update$: QRL<(id: string, options: Partial<ToastOptions>) => void>;
+  /** Dismisses a specific toast by ID. */
+  dismiss$: QRL<(id: string) => void>;
+  /** Dismisses all toasts. */
+  dismissAll$: QRL<() => void>;
+  // TODO: Potentially methods to pause/resume timers programmatically?
+}
+
+// Options for creating/updating a toast
+export interface ToastOptions {
+  /** Provide custom ID, otherwise generated. */
+  id?: string;
+  /** Main title content for the toast. */
+  title?: Component<any> | string;
+  /** Main description content for the toast. */
+  description?: Component<any> | string;
+  /** Optional Action component (e.g., a button). Receives onClick$. */
+  action?: Component<{ onClick$: QRL<() => void> }>;
+  /** Required accessibility label for the action component. */
+  actionAltText?: string;
+  /** Show the default close button?
+   * @default true
+   */
+  closeButton?: boolean;
+  /** Optional custom Close component (e.g., a button). Receives onClick$. Overrides default if `closeButton` is true. */
+  close?: Component<{ onClick$: QRL<() => void> }>;
+  /** Override Toaster default duration (ms). 0 for indefinite. */
+  duration?: number;
+  /** ARIA role for the toast item.
+   * @default 'status'
+   */
+  role?: 'status' | 'alert';
+  /** Show the progress bar visually?
+   * @default false
+   */
+  showProgress?: boolean;
+  /** Callback QRL executed when dismissed by any means (user, timer, programmatic). */
+  onDismiss$?: QRL<(toastId: string) => void>;
+  /** Callback QRL executed specifically when the dismiss timer completes. */
+  onAutoClose$?: QRL<(toastId: string) => void>;
+  /** Optional CSS class for the Toast Item. Users can add classes here for variant styling. */
+  class?: string;
+}
+
+
+// --- Component API (Structure for content when passing components/slots) ---
+// These components are primarily used internally by the Toaster based on `add` options,
+// but might be exported for advanced manual composition scenarios.
+
+// Toast.Item (Internal representation, props passed by Toaster)
+export interface ToastItemProps {
+  // Internal props: id, variant, role, data-state, class etc.
+}
+
+// Toast.ItemTitle
+export interface ToastItemTitleProps { class?: string; }
+
+// Toast.ItemDescription
+export interface ToastItemDescriptionProps { class?: string; }
+
+// Toast.ItemAction
+export interface ToastItemActionProps {
+  /** For aria-label */
+  altText: string;
+  class?: string;
+  // onClick$ provided by Toaster
+}
+
+// Toast.ItemClose
+export interface ToastItemCloseProps {
+  /** For aria-label 
+   * @default "Close"
+   */
+  altText?: string;
+  class?: string;
+  // onClick$ provided by Toaster
+}
+
+// Toast.ItemProgressTrack
+export interface ToastItemProgressTrackProps { class?: string; }
+
+// Toast.ItemProgressFill 
+export interface ToastItemProgressFillProps {
+  class?: string;
+  // Internal props related to animation/state likely passed via context or direct binding
+}
+```
+
+## Known Issues / Challenges
+
+-   Managing focus reliably, especially return focus.
+-   Handling multiple providers/toasters on one page (should generally be avoided).
+-   Complex animations/transitions performance.
+-   Stacking context issues (`z-index`).
+-   Accessibility nuances between `status` and `alert` roles and `aria-live` levels.
+-   Server-Side Rendering (SSR) considerations for initial toasts.
+-   Interaction with underlying Popover API quirks, especially regarding manual positioning and dismissal.
+
+## Questions
+
+-   How should the programmatic API (`addToast`, etc.) be exposed? A global store, a hook requiring the provider?
+-   Should the `Provider` use a Portal by default? (Likely yes, for reliable fixed positioning).
+-   Confirm exact ARIA attribute mapping needed based on chosen roles (`status` vs `alert`).
+-   How to best handle focus management when toasts appear/disappear without being disruptive?
+-   What's the best way to manage the queue and visibility limits?
+-   Does the underlying Popover component need modification to better support fixed positioning and programmatic control without an anchor? (Initial thought: maybe just overriding styles/props).
+-   How to best expose `ToastApi`? (Context hook `useToast` seems standard).
+-   Confirm underlying Popover can be controlled programmatically (show/hide) *without* an anchor element and using fixed positioning? (Need to investigate Popover implementation details).
+-   Optimal focus management strategy (avoid stealing vs. focus actionable items)?

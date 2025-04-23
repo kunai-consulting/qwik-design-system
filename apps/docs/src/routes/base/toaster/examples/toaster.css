@@ -1,0 +1,29 @@
+/* Basic layout for example controls */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 1rem;
+  border: 1px dashed #ccc;
+  border-radius: 4px;
+}
+
+.controls p {
+  margin: 0;
+  margin-right: 1rem;
+}
+
+.controls button {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.controls button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Add any specific styles needed for toaster examples */
