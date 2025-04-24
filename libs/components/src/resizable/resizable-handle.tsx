@@ -225,14 +225,16 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
     return false;
   });
 
-  useTask$(async ({ track }) => {
-    track(() => handleRef.value);
+  useTask$(async () => {
     if (!handleRef.value) return;
-    const panels = await getPanels();
-    if (!panels) return;
-    prevPanelId.value = panels.prevPanel.id;
-    nextPanelId.value = panels.nextPanel.id;
-    currentValue.value = await calculateValue();
+
+    const prevPanel = handleRef.value.previousElementSibling as HTMLElement;
+    const nextPanel = handleRef.value.nextElementSibling as HTMLElement;
+
+    if (!(prevPanel && nextPanel)) return;
+
+    prevPanelId.value = prevPanel.id;
+    nextPanelId.value = nextPanel.id;
   });
 
   useTask$(async ({ track }) => {
