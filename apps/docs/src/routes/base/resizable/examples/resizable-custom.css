@@ -1,0 +1,15 @@
+.resizable-root {
+  background-color: #f5f5f5;
+}
+
+.resizable-handle {
+  flex: 0 0 8px;
+}
+
+.resizable-handle:hover {
+  background-color: #ccc;
+}
+
+.resizable-handle[data-disabled] {
+  opacity: 0.5;
+}
