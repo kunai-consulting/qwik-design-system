@@ -1,0 +1,24 @@
+@layer qds {
+  [data-qds-popover-root] {
+    /* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
+    anchor-scope: --qds-popover;
+  }
+
+  [data-qds-popover-anchor] {
+    anchor-name: --qds-popover;
+    width: 10em;
+  }
+
+  [data-qds-popover-content] {
+    /* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
+    position-anchor: --qds-popover;
+    width: anchor-size(width);
+    margin: unset;
+    top: anchor(bottom);
+    left: anchor(left);
+    right: auto;
+    bottom: auto;
+    position: absolute;
+    position-try: normal flip-block;
+  }
+}

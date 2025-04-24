@@ -1,0 +1,22 @@
+import { component$, useSignal } from "@builder.io/qwik";
+import { Popover } from "@kunai-consulting/qwik";
+
+export default component$(() => {
+  const isOpen = useSignal(false);
+
+  return (
+    <>
+      <p>Is open: {isOpen.value ? "true" : "false"}</p>
+      <Popover.Root
+        open={isOpen.value}
+        onChange$={(open: boolean) => {
+          console.log("hey", open);
+          isOpen.value = open;
+        }}
+      >
+        <Popover.Anchor class="popover-anchor">Open Popover</Popover.Anchor>
+        <Popover.Content class="popover-content">Popover Panel</Popover.Content>
+      </Popover.Root>
+    </>
+  );
+});
