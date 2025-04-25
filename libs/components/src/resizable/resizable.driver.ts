@@ -51,10 +51,6 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     };
   };
 
-  async function getLocalStorage(page: Page, key: string) {
-    return await page.evaluate((key) => localStorage.getItem(key), key);
-  }
-
   const dragHandleBy = async (handle: Locator, dx: number, dy: number) => {
     const orientation = await getOrientation();
     const box = await handle.boundingBox();
@@ -73,10 +69,6 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     await page.mouse.up();
 
     await page.waitForTimeout(100);
-  };
-
-  const isHydrated = async () => {
-    return (await getRoot().getAttribute("data-hydrated")) === "true";
   };
 
   const getHandleAriaValues = async (handle: Locator) => {
@@ -101,9 +93,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     isRootDisabled,
     getOrientation,
     getPanelConstraints,
-    getLocalStorage,
     dragHandleBy,
-    isHydrated,
     getHandleAriaValues
   };
 }

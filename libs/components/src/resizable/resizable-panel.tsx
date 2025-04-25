@@ -85,16 +85,11 @@ export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) 
     const minSizeProp = isVertical ? "minHeight" : "minWidth";
     const maxSizeProp = isVertical ? "maxHeight" : "maxWidth";
 
-    const savedSize =
-      _index !== undefined ? context.initialSizes.value[_index] : undefined;
-
     const styles: Record<string, string | undefined> = {
-      flex: size || savedSize ? "0 0 auto" : "1"
+      flex: size ? "0 0 auto" : "1"
     };
 
-    if (savedSize) {
-      styles[sizeProp] = `${savedSize}px`;
-    } else if (size) {
+    if (size) {
       styles[sizeProp] = `${size}px`;
     }
 

@@ -169,11 +169,6 @@
             "name": "data-disabled",
             "type": "boolean",
             "comment": "Indicates whether resizing is disabled"
-          },
-          {
-            "name": "data-hydrated",
-            "type": "boolean",
-            "comment": "Indicates whether the component is hydrated"
           }
         ]
       }
@@ -197,7 +192,6 @@
     "WAI ARIA Separator pattern implementation",
     "Keyboard navigation with arrow keys and Home/End",
     "Collapsible panels with custom thresholds",
-    "Layout persistence with local storage",
     "Responsive resizing with min/max constraints",
     "Panel size synchronization across handles",
     "Dynamic orientation (horizontal/vertical)",
