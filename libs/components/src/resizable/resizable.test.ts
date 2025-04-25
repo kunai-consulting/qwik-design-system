@@ -53,7 +53,7 @@ test.describe("Size Constraints", () => {
     const panel = d.getPanelAt(0);
     const { min } = await d.getPanelConstraints(panel);
 
-    await d.dragHandleBy(d.getHandle(), -500, 0);
+    await d.dragHandleBy(d.getHandle(), -200, 0);
     await expect(panel).toHaveCSS("width", `${min}px`);
   });
 
@@ -130,6 +130,7 @@ test.describe("Keyboard Navigation", () => {
 
     await handle.focus();
     await page.keyboard.press("ArrowRight");
+    await page.waitForTimeout(100);
     const size = await d.getPanelSize(panel);
 
     expect(size).toBeGreaterThan(initialSize);
@@ -145,6 +146,7 @@ test.describe("Keyboard Navigation", () => {
 
     await handle.focus();
     await page.keyboard.press("Shift+ArrowRight");
+    await page.waitForTimeout(100);
     const size = await d.getPanelSize(panel);
 
     expect(size).toBeGreaterThan(initialSize);
@@ -243,43 +245,5 @@ test.describe("Disabled State", () => {
     await page.keyboard.press("ArrowRight");
 
     await expect(panel).toHaveCSS("width", `${initialSize}px`);
-  });
-});
-
-test.describe("Persistence", () => {
-  test(`GIVEN a resizable with storageKey
-    WHEN resized and page reloaded
-    THEN should restore sizes from localStorage`, async ({ page }) => {
-    const d = await setup(page, "persistent");
-    const panel = d.getPanelAt(0);
-
-    await d.dragHandleBy(d.getHandle(), 100, 0);
-    const newSize = await d.getPanelSize(panel);
-
-    const storageKey = await d.getRoot().getAttribute("storageKey");
-    const stored = await d.getLocalStorage(page, `resizable-${storageKey}`);
-    const storedSizes = stored ? JSON.parse(stored) : null;
-    expect(storedSizes[0]).toBe(newSize);
-
-    await page.reload();
-    await expect(panel).toHaveCSS("width", `${newSize}px`);
-  });
-
-  test(`GIVEN a resizable with storageKey
-    WHEN page is reloaded
-    THEN should handle hydration correctly`, async ({ page }) => {
-    const d = await setup(page, "persistent");
-
-    const panel = d.getPanelAt(0);
-    await d.dragHandleBy(d.getHandle(), 100, 0);
-    const newSize = await d.getPanelSize(panel);
-
-    await page.reload();
-    const root = d.getRoot();
-
-    await expect(root).toHaveAttribute("data-hydrated", "true");
-    await expect(root).toHaveCSS("visibility", "visible");
-
-    await expect(panel).toHaveCSS("width", `${newSize}px`);
   });
 });

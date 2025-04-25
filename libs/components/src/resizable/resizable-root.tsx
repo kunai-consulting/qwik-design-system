@@ -1,16 +1,12 @@
 import {
-  $,
   type PropsOf,
   Slot,
   component$,
-  createSignal,
   sync$,
-  useConstant,
   useContextProvider,
   useOnWindow,
   useSignal,
-  useStyles$,
-  useVisibleTask$
+  useStyles$
 } from "@builder.io/qwik";
 import { useBindings } from "../../utils/bindings";
 import { resetIndexes } from "../../utils/indexer";
@@ -28,29 +24,17 @@ type PublicResizableRootProps = {
   orientation?: "horizontal" | "vertical";
   /** When true, prevents resizing of panels */
   disabled?: boolean;
-  storageKey?: string;
 } & PropsOf<"div">;
 
 /** Root container component that manages the resizable panels and handles */
 export const ResizableRootBase = component$<PublicResizableRootProps>((props) => {
   const rootRef = useSignal<HTMLElement>();
-  useStyles$(`
-    [data-qds-resizable-root]:not([data-hydrated="true"]) {
-      visibility: hidden;
-    }
-  `);
   useStyles$(styles);
-  const { orientation = "horizontal", storageKey } = props;
+  const { orientation = "horizontal" } = props;
 
   const { disabledSig } = useBindings(props, {
     disabled: false
   });
-
-  const storedSizes = useConstant(() =>
-    createSignal<{
-      [key: number]: number;
-    }>({})
-  );
 
   useOnWindow(
     "keydown",
@@ -76,47 +60,12 @@ export const ResizableRootBase = component$<PublicResizableRootProps>((props) =>
   const startPosition = useSignal<number | null>(null);
   const panels = useSignal<PanelRef[]>([]);
 
-  const saveState = $(
-    (sizes: {
-      [key: number]: number;
-    }) => {
-      if (!storageKey) return;
-      try {
-        localStorage.setItem(`resizable-${storageKey}`, JSON.stringify(sizes));
-        storedSizes.value = sizes;
-      } catch (e) {
-        console.warn("Failed to save layout:", e);
-      }
-    }
-  );
-
-  useVisibleTask$(({ track }) => {
-    track(() => storageKey);
-
-    if (typeof window !== "undefined" && storageKey) {
-      try {
-        const saved = localStorage.getItem(`resizable-${storageKey}`);
-        if (saved) {
-          storedSizes.value = JSON.parse(saved);
-        }
-      } catch (e) {
-        console.warn("Failed to load saved layout:", e);
-      }
-    }
-    if (rootRef.value) {
-      rootRef.value.setAttribute("data-hydrated", "true");
-    }
-  });
-
   const context: ResizableContext = {
     orientation: useSignal(orientation),
     disabled: disabledSig,
     startPosition,
     isDragging,
-    initialSizes: storedSizes,
-    panels,
-    storageKey: useSignal(storageKey),
-    saveState
+    panels
   };
 
   useContextProvider(resizableContextId, context);

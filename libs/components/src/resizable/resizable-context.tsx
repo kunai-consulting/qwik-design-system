@@ -1,4 +1,4 @@
-import { type QRL, type Signal, createContextId } from "@builder.io/qwik";
+import { type Signal, createContextId } from "@builder.io/qwik";
 
 export interface PanelRef {
   ref: Signal<HTMLElement | undefined>;
@@ -13,10 +13,7 @@ export interface ResizableContext {
   disabled: Signal<boolean>;
   startPosition: Signal<number | null>;
   isDragging: Signal<boolean>;
-  initialSizes: Signal<{ [key: string]: number }>;
   panels: Signal<PanelRef[]>;
-  storageKey: Signal<string | undefined>;
-  saveState: QRL<(sizes: { [key: number]: number }) => void>;
 }
 
 export const resizableContextId = createContextId<ResizableContext>("resizable-context");

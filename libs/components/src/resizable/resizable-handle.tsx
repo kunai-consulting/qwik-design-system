@@ -73,28 +73,6 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
     } as PublicSizeProperties;
   });
 
-  const savePanelSizes = $(async () => {
-    if (typeof window === "undefined") return;
-
-    const panels = await getPanels();
-    if (!(panels && context.storageKey.value)) return;
-
-    const sizeProps = await getSizeProperties();
-    const sizes: {
-      [key: number]: number;
-    } = {};
-
-    for (const panel of context.panels.value) {
-      const element = panel.ref.value;
-      if (element) {
-        const size = element.getBoundingClientRect()[sizeProps.sizeProp];
-        sizes[panel._index] = size;
-      }
-    }
-
-    await context.saveState(sizes);
-  });
-
   const getPanelSizes = $(
     async (panels: PublicPanels, sizeProps: PublicSizeProperties) => {
       const { sizeProp, clientSizeProp } = sizeProps;
@@ -299,7 +277,6 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
     context.isDragging.value = false;
     context.startPosition.value = null;
     await handleResize();
-    await savePanelSizes();
   });
 
   const onKeyDown$ = $(async (e: KeyboardEvent) => {
@@ -318,7 +295,6 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
           : sizes.containerSize - sizes.handleSize - sizes.nextMinSize;
       await performResize(targetPrevSize - sizes.prevSize);
       await handleResize();
-      await savePanelSizes();
     } else {
       const deltaMap = {
         ArrowLeft: !isVertical ? -step : 0,
@@ -330,7 +306,6 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
       if (delta) {
         await performResize(delta);
         await handleResize();
-        await savePanelSizes();
       }
     }
   });
