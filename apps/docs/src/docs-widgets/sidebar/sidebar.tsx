@@ -4,18 +4,15 @@ import { Tree } from "@kunai-consulting/qwik";
 import { LuChevronRight } from "@qwikest/icons/lucide";
 import { useSignal } from "@builder.io/qwik";
 
-// Define TreeItemType locally
 type TreeItemType = {
   id: string;
   label: string;
   children?: TreeItemType[];
 };
 
-// Main Sidebar Component
 export const Sidebar = component$((props: PropsOf<"nav">) => {
   const { renderTreeItem } = useSidebar();
 
-  // Hardcoded data remains for now
   const treeData: TreeItemType[] = [
     {
       id: "/base",
@@ -28,6 +25,7 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
             { id: "/base/checkbox", label: "Checkbox" },
             { id: "/base/checklist", label: "Checklist" },
             { id: "/base/otp", label: "OTP" },
+            { id: "/base/popover", label: "Popover" },
             { id: "/base/radio-group", label: "Radio Group" },
             { id: "/base/slider", label: "Slider" },
             { id: "/base/switch", label: "Switch" }
@@ -37,8 +35,8 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
           id: "/base/layout",
           label: "Layout Components",
           children: [
-            { id: "/base/scroll-area", label: "Scroll Area" },
             { id: "/base/resizable", label: "Resizable" },
+            { id: "/base/scroll-area", label: "Scroll Area" },
             { id: "/base/tree", label: "Tree" }
           ]
         },
@@ -76,11 +74,8 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
           id: "/contributing/development",
           label: "Development",
           children: [
-            { id: "/contributing/new-component", label: "New Components" },
-            {
-              id: "/contributing/component-structure",
-              label: "Component Structure"
-            },
+            { id: "/contributing/new-component", label: "New Component" },
+            { id: "/contributing/component-structure", label: "Component Structure" },
             { id: "/contributing/composition", label: "Composition" },
             { id: "/contributing/research", label: "Research" }
           ]
@@ -104,6 +99,7 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
             { id: "/contributing/accessibility", label: "Accessibility" },
             { id: "/contributing/conventions", label: "Conventions" },
             { id: "/contributing/forms", label: "Forms" },
+            { id: "/contributing/icons", label: "Icons" },
             { id: "/contributing/tradeoffs", label: "Tradeoffs" }
           ]
         }
@@ -111,8 +107,11 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
     },
     {
       id: "/qwik-core",
-      label: "Qwik core (future)",
-      children: [{ id: "/qwik-core/tasks", label: "Tasks" }]
+      label: "Qwik Core",
+      children: [
+        { id: "/qwik-core/tasks", label: "Tasks" },
+        { id: "/qwik-core/use-constant", label: "Use Constant" }
+      ]
     }
   ];
 
@@ -129,7 +128,6 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
   );
 });
 
-// Branch Component (for items with children)
 export const TreeBranch = component$<{
   node: TreeItemType;
 }>(({ node }) => {
@@ -140,7 +138,11 @@ export const TreeBranch = component$<{
     "text-sm uppercase w-full select-none h-full flex items-center leading-[150%] tracking-[1.92px] font-sans-semi-bold";
 
   return (
-    <Tree.Item class="group" key={node.id} bind:open={isOpen}>
+    <Tree.Item
+      class="group focus-visible:outline-qwik-blue-500 focus-visible:-outline-offset-2"
+      key={node.id}
+      bind:open={isOpen}
+    >
       <div class="flex items-start gap-2 hover:bg-neutral-accent transition-colors bg-inherit duration-200 justify-between pl-2">
         <Tree.ItemTrigger class="group w-full cursor-pointer flex items-center justify-between">
           <Tree.ItemLabel class={labelStyles}>{node.label}</Tree.ItemLabel>
