@@ -1,8 +1,8 @@
-import { $, component$, type PropsOf } from "@builder.io/qwik";
+import { $, type PropsOf, component$ } from "@builder.io/qwik";
+import { useSignal } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import { Tree } from "@kunai-consulting/qwik";
 import { LuChevronRight } from "@qwikest/icons/lucide";
-import { useSignal } from "@builder.io/qwik";
 
 type TreeItemType = {
   id: string;
