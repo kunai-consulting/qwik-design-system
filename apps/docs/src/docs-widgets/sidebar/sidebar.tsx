@@ -1,10 +1,21 @@
-import { component$ } from "@builder.io/qwik";
+import { $, component$, type PropsOf } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import { Tree } from "@kunai-consulting/qwik";
 import { LuChevronRight } from "@qwikest/icons/lucide";
-import type { TreeItemType } from "~/routes/base/tree/examples/hero";
+import { useSignal } from "@builder.io/qwik";
 
-export const Sidebar = component$(() => {
+// Define TreeItemType locally
+type TreeItemType = {
+  id: string;
+  label: string;
+  children?: TreeItemType[];
+};
+
+// Main Sidebar Component
+export const Sidebar = component$((props: PropsOf<"nav">) => {
+  const { renderTreeItem } = useSidebar();
+
+  // Hardcoded data remains for now
   const treeData: TreeItemType[] = [
     {
       id: "/base",
@@ -106,40 +117,75 @@ export const Sidebar = component$(() => {
   ];
 
   return (
-    <nav class="flex-col gap-4 sticky top-20 hidden md:flex h-[calc(100vh-160px)]">
-      <Tree.Root class="tree-root">
-        {treeData.map((item) => renderTreeItem(item))}
+    // Adjusted classes for consistency with example structure
+    <nav
+      class="sticky top-20 hidden lg:flex flex-col h-[calc(100vh-160px)] overflow-y-auto"
+      {...props}
+    >
+      <Tree.Root class="flex flex-col p-2">
+        {treeData.map((node) => renderTreeItem(node))}
       </Tree.Root>
     </nav>
   );
 });
 
-function renderTreeItem(item: TreeItemType) {
-  if (item.children && item.children.length > 0) {
-    return (
-      <Tree.Item class="group" key={item.id}>
-        <div class="flex items-center gap-2 hover:bg-neutral-accent transition-colors bg-inherit duration-200 justify-between">
-          <Tree.ItemLabel>{item.label}</Tree.ItemLabel>
-          <Tree.ItemTrigger class="group p-2 hover:bg-neutral-primary">
-            <LuChevronRight class="group-data-open:rotate-90 transition-transform duration-200" />
-          </Tree.ItemTrigger>
-        </div>
-        <Tree.ItemContent class="pl-4 transition-all overflow-hidden">
-          {item.children.map((child) => renderTreeItem(child))}
-        </Tree.ItemContent>
-      </Tree.Item>
-    );
-  }
+// Branch Component (for items with children)
+export const TreeBranch = component$<{
+  node: TreeItemType;
+}>(({ node }) => {
+  const { renderTreeItem } = useSidebar();
+  const isOpen = useSignal(false);
+
+  const labelStyles =
+    "text-sm uppercase w-full select-none h-full flex items-center leading-[150%] tracking-[1.92px] font-sans-semi-bold";
 
   return (
-    <Tree.Item
-      class="hover:bg-neutral-accent transition-colors bg-inherit duration-200"
-      key={item.id}
-      asChild
-    >
-      <Link href={item.id} class="w-full block">
-        <Tree.ItemLabel>{item.label}</Tree.ItemLabel>
+    <Tree.Item class="group" key={node.id} bind:open={isOpen}>
+      <div class="flex items-start gap-2 hover:bg-neutral-accent transition-colors bg-inherit duration-200 justify-between pl-2">
+        <Tree.ItemTrigger class="group w-full cursor-pointer flex items-center justify-between">
+          <Tree.ItemLabel class={labelStyles}>{node.label}</Tree.ItemLabel>
+          <span class="p-2 hover:bg-neutral-primary transition-colors duration-200">
+            <LuChevronRight
+              data-open={isOpen.value}
+              class="data-open:rotate-90 transition-transform duration-200"
+            />
+          </span>
+        </Tree.ItemTrigger>
+      </div>
+      <Tree.ItemContent class="pl-4 transition-all overflow-hidden">
+        {node.children?.map((child: TreeItemType) => renderTreeItem(child))}
+      </Tree.ItemContent>
+    </Tree.Item>
+  );
+});
+
+export const TreeLeaves = component$<{
+  node: TreeItemType;
+}>(({ node }) => {
+  const labelStyles = "capitalize w-full select-none h-full flex items-center";
+
+  const linkStyles =
+    "flex w-full items-center justify-between gap-2 px-2 group text-left transition-colors duration-200 py-2 hover:bg-neutral-accent focus-visible:outline-qwik-blue-500 focus-visible:-outline-offset-2";
+
+  return (
+    <Tree.Item class="transition-colors bg-inherit duration-200" key={node.id} asChild>
+      <Link href={node.id} class={linkStyles}>
+        <Tree.ItemLabel class={labelStyles}>{node.label}</Tree.ItemLabel>
       </Link>
     </Tree.Item>
   );
+});
+
+function useSidebar() {
+  const renderTreeItem = $((node: TreeItemType) => {
+    const hasChildren = node.children && node.children.length > 0;
+
+    if (!hasChildren) {
+      return <TreeLeaves node={node} />;
+    }
+
+    return <TreeBranch node={node} />;
+  });
+
+  return { renderTreeItem };
 }
