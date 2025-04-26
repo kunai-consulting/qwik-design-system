@@ -41,6 +41,7 @@ export const ToggleRootBase = component$((props: ToggleRootProps) => {
   return (
     <Render
       {...props}
+      type="button"
       fallback="button"
       onClick$={[handlePress$, props.onClick$]}
       disabled={isDisabledSig.value}
