@@ -1,18 +1,43 @@
-// import { component$, type PropsOf, Slot } from "@builder.io/qwik";
-// import { withAsChild } from "../as-child/as-child";
-// import { Render } from "../render/render";
-// import { useBindings } from "@kunai-consulting/qwik-utils";
+import {
+  component$,
+  createContextId,
+  type PropsOf,
+  type Signal,
+  Slot,
+  useContextProvider
+} from "@builder.io/qwik";
+import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 
-// type ToggleRootProps = PropsOf<"button">;
+type ToggleRootProps = PropsOf<"button"> &
+  BindableProps<{ pressed: boolean; disabled: boolean }>;
 
-// export const ToggleRootBase = component$((props: ToggleRootProps) => {
-//   const { pressedSig: isPressedSig } = useBi
+type ToggleContext = {
+  isPressedSig: Signal<boolean>;
+  isDisabledSig: Signal<boolean>;
+};
 
-//   return (
-//     <Render fallback="button" {...props}>
-//       <Slot />
-//     </Render>
-//   );
-// });
+export const toggleContextId = createContextId<ToggleContext>("toggle");
 
-// export const ToggleRoot = withAsChild(ToggleRootBase);
+export const ToggleRootBase = component$((props: ToggleRootProps) => {
+  const { pressedSig: isPressedSig, disabledSig: isDisabledSig } = useBindings(props, {
+    pressed: false,
+    disabled: false
+  });
+
+  const context: ToggleContext = {
+    isPressedSig,
+    isDisabledSig
+  };
+
+  useContextProvider(toggleContextId, context);
+
+  return (
+    <Render fallback="button" {...props}>
+      <Slot />
+    </Render>
+  );
+});
+
+export const ToggleRoot = withAsChild(ToggleRootBase);
