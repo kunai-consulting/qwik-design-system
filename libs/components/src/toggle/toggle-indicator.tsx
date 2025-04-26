@@ -29,6 +29,7 @@ export const ToggleIndicatorBase = component$((props: ToggleIndicatorProps) => {
       fallback="span"
       data-disabled={context.isDisabledSig.value}
       data-pressed={context.isPressedSig.value}
+      data-qds-toggle-indicator
     >
       {isFallbackSig.value ? fallback : <Slot />}
     </Render>
