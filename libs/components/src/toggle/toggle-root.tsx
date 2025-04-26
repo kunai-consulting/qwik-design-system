@@ -1,4 +1,5 @@
 import {
+  $,
   component$,
   createContextId,
   type PropsOf,
@@ -33,8 +34,20 @@ export const ToggleRootBase = component$((props: ToggleRootProps) => {
 
   useContextProvider(toggleContextId, context);
 
+  const handlePress$ = $(() => {
+    isPressedSig.value = !isPressedSig.value;
+  });
+
   return (
-    <Render fallback="button" {...props}>
+    <Render
+      {...props}
+      fallback="button"
+      onClick$={[handlePress$, props.onClick$]}
+      disabled={isDisabledSig.value}
+      data-disabled={isDisabledSig.value}
+      data-pressed={isPressedSig.value}
+      aria-pressed={isPressedSig.value}
+    >
       <Slot />
     </Render>
   );
