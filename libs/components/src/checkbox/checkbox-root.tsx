@@ -8,7 +8,7 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import { type BindableProps, useBindings } from "../../utils/bindings";
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { type CheckboxContext, checkboxContextId } from "./checkbox-context";

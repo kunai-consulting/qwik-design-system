@@ -1,4 +1,4 @@
-import { createResolver } from "@kunai-consulting/qwik-utils";
+import { createResolver } from "./src/resolver";
 
 export const resolver = createResolver(import.meta.url);
 

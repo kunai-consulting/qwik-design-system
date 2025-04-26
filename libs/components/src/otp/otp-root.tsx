@@ -11,8 +11,11 @@ import {
   useStyles$,
   useTask$
 } from "@builder.io/qwik";
-import { useBoundSignal } from "../../utils/bound-signal";
-import { findComponent, processChildren } from "../../utils/inline-component";
+import {
+  findComponent,
+  processChildren,
+  useBoundSignal
+} from "@kunai-consulting/qwik-utils";
 import { OTPContextId } from "./otp-context";
 import { OtpItem } from "./otp-item";
 import styles from "./otp.css?inline";

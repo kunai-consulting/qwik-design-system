@@ -4,7 +4,7 @@
   "description": "Create a Qwik library",
   "main": "./lib/index.qwik.mjs",
   "qwik": "./lib/index.qwik.mjs",
-  "types": "./lib-types/index.d.ts",
+  "types": "./lib-types/src/index.d.ts",
   "exports": {
     ".": {
       "import": "./lib/index.qwik.mjs",
