@@ -55,7 +55,7 @@ test.describe("Keyboard Behavior", () => {
   test("GIVEN a pressed toggle WHEN pressing 'Space' THEN it should not be pressed", async ({
     page
   }) => {
-    const { driver: d } = await setup(page, "pressed");
+    const { driver: d } = await setup(page, "initial");
 
     await expect(d.getRoot()).toHaveAttribute("aria-pressed", "true");
     await expect(d.getRoot()).toHaveAttribute("data-pressed", "");
@@ -83,7 +83,7 @@ test.describe("Keyboard Behavior", () => {
   test("GIVEN a pressed toggle WHEN pressing 'Enter' THEN it should not be pressed", async ({
     page
   }) => {
-    const { driver: d } = await setup(page, "pressed");
+    const { driver: d } = await setup(page, "initial");
 
     await expect(d.getRoot()).toHaveAttribute("aria-pressed", "true");
     await expect(d.getRoot()).toHaveAttribute("data-pressed", "");
