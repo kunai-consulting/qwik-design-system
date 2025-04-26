@@ -1,0 +1,30 @@
+.toggle-root {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid gray;
+  background-color: #f0f0f0;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.toggle-root:focus-visible {
+  outline: 2px solid dodgerblue;
+  outline-offset: 2px;
+}
+
+.toggle-root[data-disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #e0e0e0;
+  border-color: #cccccc;
+}
+
+.toggle-root[data-pressed] {
+  background-color: #0a4d70;
+  border-color: #083a5a;
+  color: white;
+}
