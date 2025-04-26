@@ -1,0 +1,76 @@
+# Toggle Research
+
+## Research Links
+- [Kobalte Toggle Button](https://kobalte.dev/docs/core/components/toggle-button)
+- [React Aria Toggle Button](https://react-spectrum.adobe.com/react-aria/ToggleButton.html)
+- [Radix UI Toggle](https://www.radix-ui.com/primitives/docs/components/toggle)
+- [Press Buttons](https://open-ui.org/components/press-button.explainer/)
+- [Headless Toggle Lesson](https://scrimba.com/s03d8h3)
+
+## Features
+- [ ] Toggle pressing state
+- [ ] Change event handler
+- [ ] Indicator logic
+- [ ] Handle fallback state
+
+## Component Structure
+
+- Toggle.Root
+- Toggle.On
+- Toggle.Off
+
+## Keyboard Interactions
+- Space key to toggle
+- Enter key to toggle
+
+## Attributes
+- aria-pressed
+- data-pressed
+
+## Use Cases
+- Mute or unmute
+- Bold in text editor
+- Enable chunks visual on Qwik homepage
+
+## CSS Considerations
+
+None given this special scenario of a button element.
+
+What's expected from the consumer:
+
+- Using the `data-pressed` attribute for styling the pressed state
+- Focus styles for keyboard navigation
+- Transition properties for smooth state changes
+- Consider size variants through CSS custom properties
+- Respect user's reduced motion preferences
+
+## API Design
+
+Root:
+- `pressed` -> boolean
+- `bind:pressed` -> `Signal<boolean>`
+- `disabled` -> boolean
+- `bind:disabled` -> `Signal<boolean>`
+- `onChange$` -> `() => void`
+
+## Known Issues
+
+- If using `asChild` with a non-button element (like `<div>`), the component internally *must* correctly implement all button behaviors (keyboard events, focusability, `role="button"`). Using it with inherently interactive elements like `<a>` is generally discouraged due to conflicting semantics and accessibility issues.
+
+- The state prop name `pressed` (aligned with `aria-pressed`) has a different grammatical tense than state props like `open` (used in components like Collapsible). While conventional, this inconsistency requires clear documentation. (Mitigated for styling via `data-state` if adopted).
+
+## Common Gotchas / Developer Considerations
+
+- **`Toggle.Root` Renders the Button:** Unlike some component patterns where `Root` might be a non-interactive wrapper, `Toggle.Root` directly renders the interactive `<button>` element for simplicity and directness. Apply ARIA labeling (`aria-label`, `aria-labelledby`) and other button-specific attributes directly to `Toggle.Root`.
+
+> **Rationale:** We made `Toggle.Root` the button element itself rather than a wrapper. This is more intuitive for developers, simplifies the API, and reduces unnecessary nesting that would be required with a separate `<Toggle.Trigger>` component.
+
+- As a headless component, `Toggle` provides no visual styling by default. Consumers are responsible for all CSS, including base styles, pressed state styles, disabled styles, and **crucially, focus-visible styles** for accessibility.
+
+- Consumers should leverage the `data-pressed` attribute for state-based styling.
+
+## Questions
+
+- What is the best way to document the `pressed` vs. `open` naming rationale to prevent developer confusion?
+
+- Is a dedicated `Toggle.Label` component necessary, or can we rely on the consumer doing the right thing with `aria-labelledby` / `aria-label` practices? (Consider potential HTML streaming order challenges). Edit: No, we should not expose a `Toggle.Label` component.
