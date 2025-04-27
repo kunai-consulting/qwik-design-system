@@ -1,0 +1,64 @@
+# Adding or changing a package
+
+## Vite Config
+
+Whenever you add or change a package, you need to update the `vite.config.ts` file for the docs app, in particular the `resolve.alias` and `dedupe` options.
+
+```
+    resolve: {
+      alias: {
+        "@kunai-consulting/qwik": resolve(__dirname, "../../libs/components/src"),
+        "@kunai-consulting/qwik-utils": resolve(__dirname, "../../libs/utils/src"),
+        "@kunai-consulting/qwik-icons": resolve(__dirname, "../../libs/icons/src"),
+        "~": resolve(__dirname, "src")
+      },
+      dedupe: ["@builder.io/qwik", "@builder.io/qwik-city"]
+    }
+```
+
+## Root TSConfig
+
+We also have a Root tsconfig file with all the packages included. When a new one is added, it must be added to the root tsconfig file.
+
+The package will extend it using TypeScript's `extends` keyword.
+
+## Package Dependencies
+
+You can use the `workspace:*` syntax to refer to the package in other packages as dependencies.
+
+For TypeScript, you need to add the `references` section to the package's tsconfig file.
+
+Here is an example of the components package's tsconfig file at the time of writing:
+
+```ts
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./",
+    "composite": true,
+    "allowJs": true,
+    "target": "ES2017",
+    "module": "ES2020",
+    "lib": ["es2020", "DOM"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "@builder.io/qwik",
+    "strict": true,
+    "declaration": true,
+    "declarationDir": "lib-types",
+    "resolveJsonModule": true,
+    "moduleResolution": "Bundler",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "incremental": true,
+    "isolatedModules": true,
+    "types": ["vite/client"]
+  },
+  "include": ["src"],
+  "references": [{ "path": "../utils" }]
+}
+```
+
+
+
+
+
