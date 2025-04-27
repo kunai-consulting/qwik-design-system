@@ -10,8 +10,8 @@ import {
 } from "@builder.io/qwik";
 import {
   type BindableProps,
-  useBindings,
-  resetIndexes
+  resetIndexes,
+  useBindings
 } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";

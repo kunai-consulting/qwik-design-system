@@ -7,8 +7,8 @@ import {
   useContextProvider,
   useSignal
 } from "@builder.io/qwik";
-import { getNextIndex, resetIndexes } from "@kunai-consulting/qwik-utils";
 import { Render, withAsChild } from "@kunai-consulting/qwik";
+import { getNextIndex, resetIndexes } from "@kunai-consulting/qwik-utils";
 
 export default component$(() => {
   const isRenderedSig = useSignal(false);

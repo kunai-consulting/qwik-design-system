@@ -1,17 +1,17 @@
 import {
   $,
-  component$,
-  createContextId,
   type PropsOf,
   type Signal,
   Slot,
+  component$,
+  createContextId,
   useContextProvider,
   useSignal,
   useTask$
 } from "@builder.io/qwik";
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 
 type ToggleRootProps = Omit<PropsOf<"button">, "onChange$"> &
   BindableProps<{ pressed: boolean; disabled: boolean }> & {

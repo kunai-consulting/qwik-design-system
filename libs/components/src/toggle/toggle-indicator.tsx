@@ -1,8 +1,8 @@
 import {
-  component$,
   type JSXOutput,
   type PropsOf,
   Slot,
+  component$,
   useComputed$,
   useContext
 } from "@builder.io/qwik";
