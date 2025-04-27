@@ -118,6 +118,30 @@ The Vite configuration for the consuming application (`apps/docs`) is critical f
 
 Maintaining the `resolve.alias` in `apps/docs/vite.config.ts` is the key step to ensure HMR works correctly when editing files within the `libs/*` packages during development.
 
+## 5. Vitest Configuration (apps/docs/vitest.config.ts)
+For testing with Vitest, we need to ensure proper path resolution for local packages:
+
+*   **Action:** When adding a new package, update the `resolve.alias` in the Vitest configuration:
+    ```typescript:vitest.config.ts
+    import { resolve } from "pathe";
+    
+    export default defineConfig({
+      resolve: {
+        alias: {
+          "@kunai-consulting/qwik-utils": resolve(__dirname, "libs/utils/src"),
+          "@kunai-consulting/qwik-components": resolve(__dirname, "libs/components/src"),
+          "@kunai-consulting/qwik-icons": resolve(__dirname, "libs/icons/src"),
+          "@kunai-consulting/new-package": resolve(__dirname, "libs/new-package/src")
+        }
+      },
+      test: {
+        include: ["**/*.unit.ts", "**/*.smoke.ts"]
+      }
+    });
+    ```
+
+This ensures that tests can properly resolve imports from local packages in the monorepo.
+
 ## Further Learning
 
 *   [PNPM Workspaces](https://pnpm.io/workspaces)
