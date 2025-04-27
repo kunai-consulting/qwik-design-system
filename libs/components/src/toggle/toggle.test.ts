@@ -148,15 +148,18 @@ test.describe("Signal based state", () => {
     page
   }) => {
     const { driver: d } = await setup(page, "signal");
-    await d.locator.getByRole("button", { name: "Toggle Signal" }).click();
 
     await expect(d.getRoot()).toHaveAttribute("aria-pressed", "true");
     await expect(d.getRoot()).toHaveAttribute("data-pressed", "");
 
+    await expect(d.locator.getByText("true")).toBeVisible();
+
     await d.locator.getByRole("button", { name: "Toggle Signal" }).click();
 
-    await expect(d.getRoot()).toHaveAttribute("aria-pressed", "false");
     await expect(d.getRoot()).not.toHaveAttribute("data-pressed", "");
+    await expect(d.getRoot()).toHaveAttribute("aria-pressed", "false");
+
+    await expect(d.locator.getByText("false")).toBeVisible();
   });
 });
 
