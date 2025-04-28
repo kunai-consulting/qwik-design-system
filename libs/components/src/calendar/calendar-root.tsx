@@ -10,8 +10,7 @@ import {
   useSignal,
   useVisibleTask$
 } from "@builder.io/qwik";
-
-import { useBoundSignal } from "../../utils/bound-signal";
+import { useBoundSignal } from "@kunai-consulting/qwik-utils";
 import type { CalendarContext } from "./calendar-context";
 import { calendarContextId } from "./calendar-context";
 import { ARIA_LABELS, MONTHS_LG, WEEKDAYS } from "./constants";

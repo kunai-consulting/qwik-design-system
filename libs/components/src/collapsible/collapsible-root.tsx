@@ -12,7 +12,7 @@ import {
 
 import { createContextId } from "@builder.io/qwik";
 import { useStyles$ } from "@builder.io/qwik";
-import { useBoundSignal } from "../../utils/bound-signal";
+import { useBoundSignal } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import collapsibleStyles from "./collapsible.css?inline";

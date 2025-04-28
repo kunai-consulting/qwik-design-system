@@ -10,8 +10,11 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import { useBoundSignal } from "../../utils/bound-signal";
-import { findComponent, processChildren } from "../../utils/inline-component";
+import {
+  findComponent,
+  processChildren,
+  useBoundSignal
+} from "@kunai-consulting/qwik-utils";
 import { type PaginationContext, paginationContextId } from "./pagination-context";
 import { PaginationPage } from "./pagination-page";
 import { getPaginationItems } from "./utils";

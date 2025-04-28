@@ -7,7 +7,7 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import { getNextIndex } from "../../utils/indexer";
+import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { resizableContextId } from "./resizable-context";

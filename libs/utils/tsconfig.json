@@ -20,6 +20,5 @@
     "isolatedModules": true,
     "types": ["vite/client", "node"]
   },
-  "include": ["src"],
-  "references": [{ "path": "../icons" }]
+  "include": ["src"]
 }

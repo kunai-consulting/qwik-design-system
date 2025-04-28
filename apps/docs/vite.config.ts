@@ -87,8 +87,12 @@ export default defineConfig(({ command, mode }): UserConfig => {
     },
     resolve: {
       alias: {
+        "@kunai-consulting/qwik": resolve(__dirname, "../../libs/components/src"),
+        "@kunai-consulting/qwik-utils": resolve(__dirname, "../../libs/utils/src"),
+        "@kunai-consulting/qwik-icons": resolve(__dirname, "../../libs/icons/src"),
         "~": resolve(__dirname, "src")
-      }
+      },
+      dedupe: ["@builder.io/qwik", "@builder.io/qwik-city"]
     }
   };
 });

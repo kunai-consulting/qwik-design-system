@@ -99,6 +99,9 @@ importers:
       '@kunai-consulting/qwik':
         specifier: workspace:*
         version: link:../../libs/components
+      '@kunai-consulting/qwik-utils':
+        specifier: workspace:*
+        version: link:../../libs/utils
       '@qwik-ui/headless':
         specifier: ^0.6.4
         version: 0.6.4(@builder.io/qwik@1.13.0(vite@5.4.8(@types/node@22.14.0)(lightningcss@1.29.2)))
@@ -151,6 +154,9 @@ importers:
       '@builder.io/qwik':
         specifier: '1.13'
         version: 1.13.0(vite@5.4.8(@types/node@22.14.0)(lightningcss@1.29.2))
+      '@kunai-consulting/qwik-utils':
+        specifier: workspace:*
+        version: link:../utils
       '@qwik-ui/headless':
         specifier: ^0.6.5
         version: 0.6.5(@builder.io/qwik@1.13.0(vite@5.4.8(@types/node@22.14.0)(lightningcss@1.29.2)))

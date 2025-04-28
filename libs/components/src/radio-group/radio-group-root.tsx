@@ -13,8 +13,7 @@ import {
   useStyles$,
   useTask$
 } from "@builder.io/qwik";
-import { useBoundSignal } from "../../utils/bound-signal";
-import { resetIndexes } from "../../utils/indexer";
+import { resetIndexes, useBoundSignal } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";

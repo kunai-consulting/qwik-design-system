@@ -14,7 +14,7 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import { useBoundSignal } from "../../utils/bound-signal";
+import { useBoundSignal } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { CollapsibleRootBase } from "../collapsible/collapsible-root";
 import { TreeRootContextId } from "./tree-root";

@@ -18,12 +18,10 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 
 type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
-  "bind:open"?: Signal<boolean>;
-  open?: boolean;
   onChange$?: (open: boolean) => void;
-};
+} & BindableProps<{ open: boolean }>;
 
-import { useBindings } from "../../utils/bindings";
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import anchorStyles from "./anchor-logic.css?inline";
 
 export const popoverContextId = createContextId<PopoverContext>("qds-popover");

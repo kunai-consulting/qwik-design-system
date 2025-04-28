@@ -6,7 +6,7 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import { getNextIndex } from "../../utils/indexer";
+import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { CheckboxRootBase } from "../checkbox/checkbox-root";
 import { checklistContextId } from "./checklist-context";
