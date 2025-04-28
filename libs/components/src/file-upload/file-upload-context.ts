@@ -6,6 +6,7 @@ import {
 } from "@builder.io/qwik";
 
 export interface FileInfo {
+  id: string;
   name: string;
   size: number;
   type: string;
@@ -20,6 +21,7 @@ export interface FileUploadContext {
   multiple: boolean;
   accept?: string;
   disabled?: boolean;
+  isDisabledSig: Signal<boolean>;
   onFilesChange$?: PropFunction<(files: FileInfo[]) => void>;
 }
 
