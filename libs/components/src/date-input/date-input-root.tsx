@@ -10,6 +10,7 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { ARIA_LABELS, MONTHS_LG } from "../calendar/constants";
 import type { DateFormat, ISODate, Locale } from "../calendar/types";
 import type { DateInputContext } from "./date-input-context";
@@ -20,28 +21,34 @@ export type PublicDateInputRootProps = PropsOf<"div"> & {
   locale?: Locale;
   /** The initial date to display when the calendar first loads */
   defaultDate?: Date | ISODate;
-  /** The currently selected date */
-  date?: ISODate;
   /** The format of the date. Controls the appearance of the date input. Defaults to "mm/dd/yyyy". */
   format?: DateFormat;
   /** Event handler called when a date is selected */
-  onDateChange$?: QRL<(date: ISODate | null) => void>;
+  onChange$?: QRL<(date: ISODate | null) => void>;
+} & BindableProps<DateInputBoundProps>;
+export type DateInputBoundProps = {
+  /** The currently selected date */
+  date: ISODate | null;
 };
+
 const regex = /^\d{4}-(0[1-9]|1[0-2])-\d{2}$/;
 /** The root Date Input component that manages state and provides context */
 export const DateInputRoot = component$<PublicDateInputRootProps>(
-  ({ date: dateProp, locale = "en", format, onDateChange$, ...props }) => {
+  ({ date: dateProp, locale = "en", format, onChange$: onDateChange$, ...props }) => {
     const labelStr = props["aria-label"] ?? ARIA_LABELS[locale].root;
     const defaultDate =
       props.defaultDate && props.defaultDate instanceof Date
         ? getISODate(props.defaultDate)
         : props.defaultDate;
-    const activeDateSig = useSignal<ISODate | null>(null);
+    const { dateSig } = useBindings<DateInputBoundProps>(props, {
+      date: defaultDate ?? null
+    });
+
     const localId = useId();
     const dateFormat = format ?? "mm/dd/yyyy";
     const separator = getSeparatorFromFormat(dateFormat);
-    const segments = getSegmentsFromFormat(dateFormat, separator, defaultDate).map((s) =>
-      useSignal(s)
+    const segments = getSegmentsFromFormat(dateFormat, separator, dateSig.value).map(
+      (s) => useSignal(s)
     );
     const activeSegmentIndex = useSignal<number>(-1);
 
@@ -65,7 +72,7 @@ export const DateInputRoot = component$<PublicDateInputRootProps>(
     const context: DateInputContext = {
       locale,
       defaultDate,
-      activeDateSig,
+      dateSig,
       localId,
       format: dateFormat,
       separator,
@@ -80,8 +87,8 @@ export const DateInputRoot = component$<PublicDateInputRootProps>(
     useContextProvider(dateInputContextId, context);
 
     const labelSignal = useComputed$(() => {
-      if (!activeDateSig.value) return labelStr;
-      const [year, month] = activeDateSig.value.split("-");
+      if (!dateSig.value) return labelStr;
+      const [year, month] = dateSig.value.split("-");
 
       return `${labelStr} ${MONTHS_LG[locale][+month - 1]} ${year}`;
     });
@@ -90,8 +97,77 @@ export const DateInputRoot = component$<PublicDateInputRootProps>(
       throw new Error("Invalid date format. Please use yyyy-mm-dd format.");
     }
 
+    /**
+     * Updates the segments with the new date value.
+     *
+     * @param date - The new date value or null
+     *
+     * This method is used to react to updates to the date signal, particularly those originating from outside the component,
+     * to make sure the segments match the date value.
+     */
+    const updateSegmentsWithNewDateValue = $((date: ISODate | null) => {
+      if (date !== null) {
+        const [year, month, day] = date.split("-");
+        if (yearSegmentSig.value.numericValue !== +year) {
+          yearSegmentSig.value = {
+            ...yearSegmentSig.value,
+            numericValue: +year,
+            displayValue: year,
+            isPlaceholder: false
+          };
+        }
+        if (monthSegmentSig.value.numericValue !== +month) {
+          monthSegmentSig.value = {
+            ...monthSegmentSig.value,
+            numericValue: +month,
+            displayValue: month,
+            isPlaceholder: false
+          };
+        }
+        if (dayOfMonthSegmentSig.value.numericValue !== +day) {
+          dayOfMonthSegmentSig.value = {
+            ...dayOfMonthSegmentSig.value,
+            numericValue: +day,
+            displayValue: day,
+            isPlaceholder: false
+          };
+        }
+      } else {
+        // When the date goes to null, reset all segments to placeholder.
+        // This makes sense when the bound signal is changed to null from outside.
+        // This behavior is less than ideal when the user wants to clear only one segment,
+        // since it results in clearing all segments.
+        if (!yearSegmentSig.value.isPlaceholder) {
+          yearSegmentSig.value = {
+            ...yearSegmentSig.value,
+            numericValue: undefined,
+            displayValue: undefined,
+            isPlaceholder: true
+          };
+        }
+        if (!monthSegmentSig.value.isPlaceholder) {
+          monthSegmentSig.value = {
+            ...monthSegmentSig.value,
+            numericValue: undefined,
+            displayValue: undefined,
+            isPlaceholder: true
+          };
+        }
+        if (!dayOfMonthSegmentSig.value.isPlaceholder) {
+          dayOfMonthSegmentSig.value = {
+            ...dayOfMonthSegmentSig.value,
+            numericValue: undefined,
+            displayValue: undefined,
+            isPlaceholder: true
+          };
+        }
+        context.activeSegmentIndex.value = -1;
+      }
+    });
+
     useTask$(({ track }) => {
-      const date = track(() => activeDateSig.value);
+      const date = track(() => dateSig.value);
+      updateSegmentsWithNewDateValue(date);
       if (onDateChange$) {
         onDateChange$(date);
       }

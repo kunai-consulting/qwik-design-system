@@ -13,7 +13,7 @@ import type { DayOfMonth, Month } from "../calendar/types";
 import { dateInputContextId } from "./date-input-context";
 import styles from "./date-input-segment.css?inline";
 import type { DateSegment } from "./types";
-import { getLastDayOfMonth } from "./utils";
+import { getDisplayValue, getLastDayOfMonth } from "./utils";
 
 type PublicDateInputSegmentProps = PropsOf<"input"> & {
   segmentSig: Signal<DateSegment>;
@@ -28,7 +28,7 @@ export const DateInputSegment = component$(
     useStyles$(styles);
 
     const updateActiveDate = $(() => {
-      // After a segment updates, we need to update the activeDate
+      // After a segment updates, we need to update the active date
       // by combining all three segments into a valid date string
       const year = context.yearSegmentSig.value.numericValue;
       const month = context.monthSegmentSig.value.displayValue as Month | undefined;
@@ -37,14 +37,22 @@ export const DateInputSegment = component$(
         | undefined;
 
       if (year && month && day) {
-        context.activeDateSig.value = `${year}-${month}-${day}`;
+        context.dateSig.value = `${year}-${month}-${day}`;
       } else {
-        context.activeDateSig.value = null;
+        context.dateSig.value = null;
       }
     });
+
     useTask$(({ track }) => {
       track(() => segmentSig.value);
       updateActiveDate();
+    });
+
+    // The index of the current segment in orderedSegments
+    const segmentIndex = useComputed$(() => {
+      return context.orderedSegments.findIndex(
+        (s) => s.value.type === segmentSig.value.type
+      );
     });
 
     const updateDayOfMonthSegmentForYearAndMonth = $(
@@ -61,7 +69,10 @@ export const DateInputSegment = component$(
             ...currentDayOfMonthSegment,
             max: lastDayOfMonth,
             numericValue: updatedDayOfMonth,
-            displayValue: updatedDayOfMonth ? `${updatedDayOfMonth}` : undefined
+            displayValue: getDisplayValue(
+              updatedDayOfMonth,
+              currentDayOfMonthSegment.placeholderText
+            )
           };
         } else {
           updatedDayOfMonthSegment = {
@@ -88,24 +99,22 @@ export const DateInputSegment = component$(
     });
 
     const incrementMonthValue = $((changeBy: number) => {
-      const currentValue = segmentSig.value?.numericValue;
+      const segment = segmentSig.value;
+      const currentValue = segment?.numericValue;
       let newValue = currentValue ? currentValue + changeBy : new Date().getMonth();
-      if (newValue < segmentSig.value.min) {
-        newValue = segmentSig.value.max;
+      if (newValue < segment.min) {
+        newValue = segment.max;
       }
-      if (newValue > segmentSig.value.max) {
-        newValue = segmentSig.value.min;
+      if (newValue > segment.max) {
+        newValue = segment.min;
       }
-      const displayValue =
-        segmentSig.value.placeholderText.length === 2 && newValue < 10
-          ? `0${newValue}`
-          : `${newValue}`;
+      const displayValue = getDisplayValue(newValue, segment.placeholderText);
       segmentSig.value = {
-        ...segmentSig.value,
+        ...segment,
         isPlaceholder: false,
         numericValue: newValue,
         displayValue
-      } as DateSegment;
+      };
       const year = context.yearSegmentSig.value.numericValue;
       updateDayOfMonthSegmentForYearAndMonth(year, newValue);
     });
@@ -120,16 +129,13 @@ export const DateInputSegment = component$(
       if (newValue > segment.max) {
         newValue = segment.min;
       }
-      const displayValue =
-        segment.placeholderText.length === 2 && newValue < 10
-          ? `0${newValue}`
-          : `${newValue}`;
+      const displayValue = getDisplayValue(newValue, segment.placeholderText);
       segmentSig.value = {
         ...segment,
         isPlaceholder: false,
         numericValue: newValue,
         displayValue
-      } as DateSegment;
+      };
     });
 
     const incrementValue = $(() => {
@@ -144,6 +150,7 @@ export const DateInputSegment = component$(
           incrementDayValue(1);
           break;
       }
+      context.activeSegmentIndex.value = segmentIndex.value;
     });
 
     const decrementValue = $(() => {
@@ -158,6 +165,7 @@ export const DateInputSegment = component$(
           incrementDayValue(-1);
           break;
       }
+      context.activeSegmentIndex.value = segmentIndex.value;
     });
 
     const updateSegmentWithValue = $((textValue: string) => {
@@ -174,12 +182,10 @@ export const DateInputSegment = component$(
         isPlaceholder: false,
         numericValue: numericValue,
         displayValue:
-          segment.type !== "year" &&
-          segment.placeholderText.length === 2 &&
-          numericValue < 10
-            ? `0${numericValue}`
+          segment.type !== "year"
+            ? getDisplayValue(numericValue, segment.placeholderText)
             : `${numericValue}`
-      } as DateSegment;
+      };
 
       if (segment.type === "month") {
         const year = context.yearSegmentSig.value.numericValue;
@@ -203,13 +209,6 @@ export const DateInputSegment = component$(
 
     // Create a ref for this specific input
     const inputRef = useSignal<HTMLInputElement>();
-
-    // Find index of current segment in orderedSegments
-    const segmentIndex = useComputed$(() => {
-      return context.orderedSegments.findIndex(
-        (s) => s.value.type === segmentSig.value.type
-      );
-    });
 
     // Watch for activeSegmentIndex changes and focus this segment when it matches
     useTask$(({ track }) => {
@@ -276,7 +275,7 @@ export const DateInputSegment = component$(
         const isDayFull =
           segment.type === "day" && (numericContent.length >= 2 || +numericContent >= 4);
         if (isYearFull || isMonthFull || isDayFull) {
-          // Use the Qwik context function to move to the next segment
+          // Use the context function to move to the next segment
           context.activeSegmentIndex.value = segmentIndex.value;
           context.focusNextSegment$();
         }

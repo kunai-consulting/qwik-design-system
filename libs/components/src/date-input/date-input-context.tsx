@@ -9,7 +9,7 @@ export const dateInputContextId = createContextId<DateInputContext>(
 export type DateInputContext = {
   locale: Locale;
   defaultDate?: ISODate;
-  activeDateSig: Signal<ISODate | null>;
+  dateSig: Signal<ISODate | null>;
   dayOfMonthSegmentSig: Signal<DateSegment>;
   monthSegmentSig: Signal<DateSegment>;
   yearSegmentSig: Signal<DateSegment>;
