@@ -20,7 +20,7 @@ export const getSeparatorFromFormat = (format?: DateFormat): Separator => {
 export const getSegmentsFromFormat = (
   format: DateFormat,
   separator: Separator,
-  defaultDate?: ISODate
+  defaultDate?: ISODate | null
 ): DateSegment[] => {
   const sections = format.split(separator);
   const placeholderSegments = sections.map((segment) => {
@@ -53,4 +53,15 @@ export const getLastDayOfMonth = (year: number, month: number) => {
   // The Date constructor month is 0-indexed, but we can use our 1-based month value along with the 0 day value,
   // which 'underflows' to the last day of the target month
   return new Date(year, month, 0).getDate();
+};
+
+export const getDisplayValue = (
+  numericValue: number | undefined,
+  placeholderText: string
+) => {
+  if (numericValue === undefined) return undefined;
+  if (placeholderText.length === 2 && numericValue < 10) {
+    return `0${numericValue}`;
+  }
+  return `${numericValue}`;
 };
