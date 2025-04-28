@@ -25,7 +25,6 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
             { id: "/base/checkbox", label: "Checkbox" },
             { id: "/base/checklist", label: "Checklist" },
             { id: "/base/otp", label: "OTP" },
-            { id: "/base/popover", label: "Popover" },
             { id: "/base/radio-group", label: "Radio Group" },
             { id: "/base/slider", label: "Slider" },
             { id: "/base/switch", label: "Switch" }
@@ -37,7 +36,8 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
           children: [
             { id: "/base/resizable", label: "Resizable" },
             { id: "/base/scroll-area", label: "Scroll Area" },
-            { id: "/base/tree", label: "Tree" }
+            { id: "/base/tree", label: "Tree" },
+            { id: "/base/popover", label: "Popover" }
           ]
         },
         {
@@ -45,7 +45,8 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
           label: "Selection Components",
           children: [
             { id: "/base/calendar", label: "Calendar" },
-            { id: "/base/pagination", label: "Pagination" }
+            { id: "/base/pagination", label: "Pagination" },
+            { id: "/base/toggle", label: "Toggle" }
           ]
         },
         {
@@ -88,7 +89,8 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
             { id: "/contributing/indexing", label: "Indexing" },
             { id: "/contributing/events", label: "Events" },
             { id: "/contributing/testing", label: "Testing" },
-            { id: "/contributing/styling", label: "Styling" }
+            { id: "/contributing/styling", label: "Styling" },
+            { id: "/contributing/monorepo", label: "Monorepo" }
           ]
         },
         {
