@@ -12,7 +12,7 @@ export const DateInputDateEntryBase = component$(
     const context = useContext(dateInputContextId);
     const inputId = `${context.localId}-entry`;
     return (
-      <div {...props} data-qds-date-input-date-entry role="group">
+      <div {...props} data-qds-date-input-date-entry role="group" id={inputId}>
         {context.orderedSegments.map((segmentSig, index) => (
           <span key={inputId + segmentSig.value.type}>
             <DateInputSegment segmentSig={segmentSig} isEditable={true} />
