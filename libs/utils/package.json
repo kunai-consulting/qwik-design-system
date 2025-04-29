@@ -12,6 +12,7 @@
       "types": "./lib-types/src/index.d.ts"
     }
   },
+  "license": "MIT",
   "files": ["lib", "lib-types"],
   "engines": {
     "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
