@@ -1,5 +1,14 @@
 # @kunai-consulting/qwik-headless
 
+## 0.0.11
+
+### Patch Changes
+
+- 9f6ad22: Work on resizable component - initial version
+- 0ca0492: Work on the Switch component.
+- a9f479d: DS-415 Resizable component. Remove unnecessary.
+- 28b38c9: feat: add license
+
 ## 0.0.10
 
 ## 0.0.9
