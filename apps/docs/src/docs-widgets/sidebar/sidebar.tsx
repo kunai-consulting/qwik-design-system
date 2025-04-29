@@ -1,6 +1,6 @@
 import { $, type PropsOf, component$ } from "@builder.io/qwik";
 import { useSignal } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
+import { Link, useNavigate } from "@builder.io/qwik-city";
 import { Tree } from "@kunai-consulting/qwik";
 import { LuChevronRight } from "@qwikest/icons/lucide";
 
@@ -76,7 +76,10 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
           label: "Development",
           children: [
             { id: "/contributing/new-component", label: "New Component" },
-            { id: "/contributing/component-structure", label: "Component Structure" },
+            {
+              id: "/contributing/component-structure",
+              label: "Component Structure"
+            },
             { id: "/contributing/composition", label: "Composition" },
             { id: "/contributing/research", label: "Research" }
           ]
@@ -166,6 +169,7 @@ export const TreeBranch = component$<{
 export const TreeLeaves = component$<{
   node: TreeItemType;
 }>(({ node }) => {
+  const navigate = useNavigate();
   const labelStyles = "capitalize w-full select-none h-full flex items-center";
 
   const linkStyles =
@@ -173,7 +177,17 @@ export const TreeLeaves = component$<{
 
   return (
     <Tree.Item class="transition-colors bg-inherit duration-200" key={node.id} asChild>
-      <Link href={node.id} class={linkStyles}>
+      <Link
+        href={node.id}
+        class={linkStyles}
+        // this fixes the one time or first time enter key activation
+        onKeyDown$={(event: KeyboardEvent) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            navigate(node.id);
+          }
+        }}
+      >
         <Tree.ItemLabel class={labelStyles}>{node.label}</Tree.ItemLabel>
       </Link>
     </Tree.Item>
