@@ -18,6 +18,7 @@
   },
   "private": false,
   "type": "module",
+  "license": "MIT",
   "scripts": {
     "build": "qwik build",
     "build.lib": "vite build --mode lib",
