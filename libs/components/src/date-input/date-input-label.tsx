@@ -7,7 +7,7 @@ type PublicDateInputLabelProps = PropsOf<typeof LabelBase>;
 /** Label component for the Date Input */
 export const DateInputLabelBase = component$((props: PublicDateInputLabelProps) => {
   const context = useContext(dateInputContextId);
-  const inputId = `${context.localId}-trigger`;
+  const inputId = `${context.localId}-entry`;
   return (
     // Identifier for the Date Input label element
     <LabelBase {...props} data-qds-date-input-label for={inputId}>

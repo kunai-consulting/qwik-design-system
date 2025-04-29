@@ -15,6 +15,6 @@
   }
   /* specific rule for year placeholder since yyyy is usually narrower than 0000 in non-monospace fonts */
   [data-qds-date-input-segment-year][data-qds-date-input-segment-large][data-qds-date-input-segment-placeholder] {
-    width: calc(4ch * 0.9);
+    width: calc(4ch * 0.95);
   }
 }

@@ -56,5 +56,6 @@ export type DayOfMonth =
   | "30"
   | "31";
 
-// ISO 8601 date format. The number representation for year works as long as the year is >= 1000 and <= 9999
+// ISO 8601 date format. The number representation for year works as long as the year is >= 1000 and <= 9999.
+// This range is adequate for most date entry use cases.
 export type ISODate = `${number}-${Month}-${DayOfMonth}`;
