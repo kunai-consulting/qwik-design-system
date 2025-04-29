@@ -5,7 +5,7 @@ import {
   useContextProvider,
   useId
 } from "@builder.io/qwik";
-import { type BindableProps, useBindings } from "../../utils/bindings";
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";
 import { type DropdownContext, dropdownContextId } from "./dropdown-context";
