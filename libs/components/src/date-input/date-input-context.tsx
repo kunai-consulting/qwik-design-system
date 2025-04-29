@@ -23,4 +23,5 @@ export type DateInputContext = {
   format: DateFormat;
   activeSegmentIndex: Signal<number>;
   focusNextSegment$: QRL<() => void>;
+  isInternalSegmentClearance: Signal<boolean>;
 };
