@@ -199,12 +199,13 @@ export const DateInputSegment = component$(
 
     const updateSegmentToPlaceholder = $(() => {
       const segment = segmentSig.value;
+      context.isInternalSegmentClearance.value = true;
       segmentSig.value = {
         ...segment,
         isPlaceholder: true,
         numericValue: undefined,
         displayValue: undefined
-      } as DateSegment;
+      };
     });
 
     // Create a ref for this specific input

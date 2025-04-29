@@ -51,6 +51,7 @@ export const DateInputRoot = component$<PublicDateInputRootProps>(
       (s) => useSignal(s)
     );
     const activeSegmentIndex = useSignal<number>(-1);
+    const isInternalSegmentClearance = useSignal<boolean>(false);
 
     // biome-ignore lint/style/noNonNullAssertion: valid format will always include day
     const dayOfMonthSegmentSig = segments.find((s) => s.value.type === "day")!;
@@ -81,7 +82,8 @@ export const DateInputRoot = component$<PublicDateInputRootProps>(
       monthSegmentSig,
       yearSegmentSig,
       activeSegmentIndex,
-      focusNextSegment$
+      focusNextSegment$,
+      isInternalSegmentClearance
     };
 
     useContextProvider(dateInputContextId, context);
@@ -132,11 +134,7 @@ export const DateInputRoot = component$<PublicDateInputRootProps>(
             isPlaceholder: false
           };
         }
-      } else {
-        // When the date goes to null, reset all segments to placeholder.
-        // This makes sense when the bound signal is changed to null from outside.
-        // This behavior is less than ideal when the user wants to clear only one segment,
-        // since it results in clearing all segments.
+      } else if (!context.isInternalSegmentClearance.value) {
         if (!yearSegmentSig.value.isPlaceholder) {
           yearSegmentSig.value = {
             ...yearSegmentSig.value,
@@ -163,6 +161,7 @@ export const DateInputRoot = component$<PublicDateInputRootProps>(
         }
         context.activeSegmentIndex.value = -1;
       }
+      context.isInternalSegmentClearance.value = false;
     });
 
     useTask$(({ track }) => {
