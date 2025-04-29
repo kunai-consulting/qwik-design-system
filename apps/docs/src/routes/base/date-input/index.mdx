@@ -1,17 +1,193 @@
+import api from "./code-notate/api.json";
+
 # Date Input
-A component for entering a date.
+A segmented input field for selecting dates with keyboard navigation and format customization.
 <Showcase name="hero" />
-
+## Features
+<Features api={api} />
+## Anatomy
+<AnatomyTable api={api} />
 ## Examples
-
-### Watching changes
-<Showcase name="change" />
-
-### Setting a default value
-<Showcase name="default-value" />
-
-### Reactive two-way binding
+### Basic Usage
+The Date Input component provides a structured way to input dates with separate segments for day, month, and year. This example shows the basic setup with the required components.
+<Showcase name="form" />
+In this example:
+- `<DateInput.Root>` is the main container that manages state and context
+- `<DateInput.Label>` provides an accessible label for the input
+- `<DateInput.DateEntry>` renders the segmented date input fields
+- `<DateInput.HiddenInput>` provides a hidden native input for form submission
+### Visual Features
+#### Custom Date Format
+You can customize the date format using the `format` prop on the `<DateInput.Root>` component. This allows you to display dates in different formats like "mm/dd/yyyy", "dd-mm-yyyy", or "yyyy-mm-dd".
+<Showcase name="format" />
+In this example, we're using the "dd-mm-yyyy" format, which changes the order of the segments and uses hyphens as separators. The component automatically adjusts the segments and their behavior based on the specified format.
+### Advanced Usage
+#### Reactive Date Binding
+You can bind the date value to a signal using the `bind:date` prop, which creates a two-way binding between the component state and your application state.
 <Showcase name="reactive" />
+This example demonstrates how the date input can be bound to a signal, allowing you to:
+- Initialize the date input with a pre-selected date
+- React to changes made within the input
+- Programmatically update the date from outside the component
+#### Change Event Handling
+For more control over date changes, you can use the `onChange$` prop to handle date selection events.
+<Showcase name="change" />
+The `onChange$` handler receives the selected date (or null if cleared) as an argument, allowing you to:
+- Track when the date changes
+- Perform validation or other operations when a date is selected
+- Update other parts of your application based on the selected date
 
-### Value-based binding
-<Showcase name="value-based" />
+## Component State
+### Using Component State
+The Date Input component provides several ways to manage and interact with its state. You can control the component through props and respond to state changes.
+#### Setting Initial Date Values
+As shown in the Value-Based example above, you can set an initial date value using the `date` prop on the `<DateInput.Root>` component:
+```tsx
+<DateInput.Root date="2021-01-01">
+  <DateInput.Label>Choose your date:</DateInput.Label>
+  <DateInput.DateEntry />
+</DateInput.Root>
+```
+The date must be provided in ISO format (`yyyy-mm-dd`).
+#### Custom Date Format
+You can customize how the date is displayed and entered by using the `format` prop as shown in the Value-Based example. The component supports various date formats:
+- `mm/dd/yyyy` (default)
+- `dd/mm/yyyy`
+- `yyyy-mm-dd`
+- And other combinations with different separators (/, -, .)
+The format affects both the visual presentation and the order of segments when navigating with keyboard.
+### State Interactions
+#### Two-way Data Binding
+As demonstrated in the Reactive example, you can create a two-way binding between your application state and the Date Input component using the `bind:date` prop:
+```tsx
+const selectedDate = useSignal<DateInput.ISODate | null>("1999-12-31");
+<DateInput.Root bind:date={selectedDate}>
+  <DateInput.Label>Party like it's:</DateInput.Label>
+  <DateInput.DateEntry />
+</DateInput.Root>
+```
+This allows you to:
+- Read the current date value from your application state
+- Update the date programmatically from outside the component
+- Automatically sync changes made within the component to your application state
+#### Responding to Date Changes
+As shown in the Change example, you can use the `onChange$` prop to respond to date changes:
+```tsx
+<DateInput.Root
+  date={selectedDate.value}
+  onChange$={(date) => {
+    // Handle the date change
+    selectedDate.value = date;
+  }}
+>
+  <DateInput.Label>Choose your date:</DateInput.Label>
+  <DateInput.DateEntry />
+</DateInput.Root>
+```
+The `onChange$` handler receives the selected date (or `null` if cleared) as an argument, allowing you to:
+- Track when the date changes
+- Perform validation or other operations when a date is selected
+- Update other parts of your application based on the selected date
+#### Form Integration
+As shown in the Form example, you can integrate the Date Input with forms using the `<DateInput.HiddenInput>` component:
+```tsx
+<DateInput.Root>
+  <DateInput.Label>Appointment Date</DateInput.Label>
+  <DateInput.DateEntry />
+  <DateInput.HiddenInput name="appointment-date" />
+</DateInput.Root>
+```
+The hidden input will contain the selected date value in the format required for form submission.
+
+## Configuration
+### Date Format
+The Date Input component allows you to customize the format of the date display using the `format` prop on the `<DateInput.Root>` component.
+```tsx
+<DateInput.Root format="yyyy-mm-dd">
+  {/* ... */}
+</DateInput.Root>
+```
+The component supports several date formats:
+- `mm/dd/yyyy` (default)
+- `dd/mm/yyyy`
+- `yyyy-mm-dd`
+- And other combinations with different separators (/, -, .)
+As shown in the Value-Based example above, the format affects both the visual presentation and the order of segments when navigating with keyboard.
+### Date Constraints
+The Date Input component enforces several constraints to ensure valid date entry:
+- Years are constrained between 0 and 10000
+- Months are constrained between 1 and 12
+- Days are constrained based on the selected month and year (accounting for leap years)
+The component automatically adjusts the maximum day value based on the selected month and year. For example, if February is selected in a non-leap year, the maximum day value will be 28.
+### Locale Support
+You can specify the locale for the Date Input component using the `locale` prop:
+```tsx
+<DateInput.Root locale="en">
+  {/* ... */}
+</DateInput.Root>
+```
+Currently, the component primarily supports the `en` locale, which affects the formatting and accessibility labels.
+### Form Integration
+As shown in the Form example above, the Date Input component can be integrated with forms using the `<DateInput.HiddenInput>` component. This creates a hidden native input that contains the selected date value in ISO format (`yyyy-mm-dd`).
+The hidden input accepts standard HTML input attributes like `name` and `required`:
+```tsx
+<DateInput.HiddenInput name="date-field" required />
+```
+### Input Validation
+The Date Input component performs validation to ensure that:
+1. The entered date is valid (e.g., February 30th is not allowed)
+2. The date format follows the ISO standard (`yyyy-mm-dd`) when provided as a prop.
+If an invalid date format is provided to the `date` prop, the component will throw an error:
+```
+Error: Invalid date format. Please use yyyy-mm-dd format.
+```
+## Advanced Configuration
+### Segment Behavior
+The Date Input component breaks down the date into individual segments (day, month, year) that can be navigated and edited independently. Each segment has its own constraints and behavior:
+- **Day segment**: Automatically adjusts its maximum value based on the selected month and year
+- **Month segment**: Constrained between 1 and 12
+- **Year segment**: Constrained between 0 and 10000
+When a segment is fully entered (e.g., typing "12" for the month), focus automatically moves to the next segment, improving the user experience.
+### Keyboard Navigation
+The Date Input component provides comprehensive keyboard navigation between segments:
+- Arrow keys (Up/Down) increment/decrement the value of the focused segment
+- Arrow keys (Left/Right) navigate between segments
+- Tab key moves focus to the next segment or element
+- Numeric keys (0-9) input values directly into the focused segment
+- Backspace and Delete keys clear the focused segment
+This behavior is automatically configured and doesn't require additional setup.
+
+## Form Integration
+The Date Input component provides seamless integration with forms through the `<DateInput.HiddenInput>` component, which creates a hidden native input field for form submission.
+<Showcase name="form" />
+In this example, the Date Input is integrated into a form with:
+- `<DateInput.Root>` as the main container
+- `<DateInput.Label>` providing an accessible label
+- `<DateInput.DateEntry>` rendering the segmented date input fields
+- `<DateInput.HiddenInput>` creating a hidden input with the `name` attribute for form submission
+The `<DateInput.HiddenInput>` component accepts standard HTML input attributes like `name` and `required`, making it compatible with both native form submissions and JavaScript-based form handling.
+### Form Submission
+When the form is submitted, the date value is included in the form data with the name specified in the `name` attribute of the `<DateInput.HiddenInput>` component. The date is submitted in ISO format (`yyyy-mm-dd`).
+As shown in the form example above, you can access the submitted date value like any other form field:
+```javascript
+const formData = Object.fromEntries(new FormData(form));
+// formData["appointment-date"] contains the selected date
+```
+
+## Environment Considerations
+The Date Input component is designed to work seamlessly in both server-side rendering (SSR) and client-side rendering (CSR) environments, as is standard for Qwik components.
+### Client-Side Behavior
+The Date Input component relies on client-side JavaScript for its interactive features, including:
+- Keyboard navigation between segments
+- Date segment validation and constraints
+- Focus management
+- Dynamic date construction
+All examples shown above demonstrate the component functioning in a client-side context where these interactions are essential to the user experience.
+### Server-Side Rendering
+When server-side rendered, the Date Input component will:
+1. Generate the initial HTML structure with proper accessibility attributes
+2. Hydrate seamlessly when JavaScript is available
+3. Maintain its form integration capabilities through the hidden input
+The component is designed to minimize hydration costs through Qwik's resumability model, making it efficient even in server-rendered applications.
+
+<APITable api={api} />

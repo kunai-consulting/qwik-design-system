@@ -20,6 +20,7 @@ Target features. Some are essential, others are nice to have. Checked items are 
 - [ ] Disabled state
 - [ ] Required state
 - [ ] Default format based on locale
+- [ ] Support two-digit date entry (e.g. "12/31/26" instead of "12/31/2026")
 
 ## Component Structure
 - Root
