@@ -24,6 +24,7 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
           children: [
             { id: "/base/checkbox", label: "Checkbox" },
             { id: "/base/checklist", label: "Checklist" },
+            { id: "/base/dropdown", label: "Dropdown" },
             { id: "/base/otp", label: "OTP" },
             { id: "/base/radio-group", label: "Radio Group" },
             { id: "/base/slider", label: "Slider" },
