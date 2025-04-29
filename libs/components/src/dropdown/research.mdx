@@ -1,0 +1,136 @@
+# Dropdown Research
+
+## Overview
+A Dropdown component provides a button that reveals a list of options when clicked. It follows the WAI-ARIA menu pattern,
+providing an accessible way to display a list of actions or options that can be triggered by the user.
+
+## Research Links
+- [WAI-ARIA Menu Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)
+- [Ark UI Menu](https://ark-ui.com/docs/components/menu)
+- [Kobalte Dropdown Menu](https://kobalte.dev/docs/core/components/dropdown-menu)
+- [CSS Anchor Positioning Spec](https://developer.mozilla.org/en-US/docs/Web/CSS/anchor)
+
+## Features
+- [ ] Toggle dropdown visibility
+- [ ] Keyboard navigation
+- [ ] Focus management
+- [ ] CSS Anchor positioning
+- [ ] Item selection
+- [ ] Disabled states
+- [ ] Custom trigger support
+- [ ] Custom content support
+- [ ] Proper ARIA attributes
+- [ ] Nested dropdowns (submenus)
+- [ ] Type-ahead functionality
+- [ ] RTL support
+
+## Component Structure
+
+Pieces:
+- Root (container and state management)
+- Trigger (button to toggle dropdown)
+- Content (positioned container for items)
+- Item (individual menu items)
+- ItemLabel (text/content within items)
+
+## Keyboard Interactions
+- Enter/Space: Open dropdown (when trigger focused)
+- Escape: Close dropdown
+- Arrow Down: Move focus to next item
+- Arrow Up: Move focus to previous item
+- Home: Move focus to first item
+- End: Move focus to last item
+- Enter/Space: Select focused item
+- Tab: Move focus out of dropdown (and close)
+
+## Attributes
+- role="menu" (content)
+- role="menuitem" (items)
+- role="button" (trigger)
+- aria-haspopup="true" (trigger)
+- aria-expanded (trigger)
+- aria-labelledby (content references trigger)
+- aria-disabled
+- data-qds-dropdown-root
+- data-qds-dropdown-trigger
+- data-qds-dropdown-content
+- data-qds-dropdown-item
+- data-qds-dropdown-item-label
+- data-state (open/closed)
+- data-disabled
+- data-highlighted
+
+## Use Cases
+- Navigation menus
+- Action menus
+- Selection menus
+- Settings dropdowns
+- User profile menus
+- Language selectors
+- Filter menus
+- Context menus
+
+## CSS Considerations
+
+Important CSS:
+```css
+.content {
+  position: absolute;
+  /* Use anchor positioning */
+  anchor-name: --dropdown;
+}
+
+.trigger {
+  /* Establish anchor element */
+  anchor-default: --dropdown;
+}
+
+[data-state="open"] {
+  display: block;
+}
+
+[data-state="closed"] {
+  display: none;
+}
+
+[data-disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+```
+
+## API Design
+
+### Root:
+```tsx
+interface DropdownRootProps {
+defaultOpen?: boolean;
+open?: boolean;
+onOpenChange$?: (open: boolean) => void;
+disabled?: boolean;
+}
+```
+
+### Trigger:
+- Inherits button props
+
+### Content:
+```tsx
+interface DropdownContentProps {
+align?: 'start' | 'center' | 'end';
+side?: 'top' | 'right' | 'bottom' | 'left';
+sideOffset?: number;
+alignOffset?: number;
+}
+```
+
+### Item:
+```tsx
+interface DropdownItemProps {
+disabled?: boolean;
+onSelect$?: () => void;
+}
+```
+
+### ItemLabel:
+- No specific props, inherits div props
