@@ -14,7 +14,8 @@ Target features. Some are essential, others are nice to have. Checked items are 
 - [x] Keyboard navigation
 - [x] Hidden input
 - [x] Default date
-- [ ] Bound date
+- [x] Change event handling
+- [x] Bound date
 - [ ] Error messages
 - [ ] Disabled state
 - [ ] Required state
