@@ -31,8 +31,8 @@ export const DropdownItemBase = component$<DropdownItemProps>(
         role="menuitem"
         fallback="div"
         tabIndex={disabled ? -1 : 0}
-        onClick$={handleClick}
-        onKeyDown$={handleKeyDown}
+        onClick$={[handleClick, props.onClick$]}
+        onKeyDown$={[handleKeyDown, props.onKeyDown$]}
         aria-disabled={disabled}
         data-disabled={disabled ? "" : undefined}
         data-qds-dropdown-item
