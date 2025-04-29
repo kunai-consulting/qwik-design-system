@@ -1,19 +1,16 @@
-import { $, component$, useSignal } from "@builder.io/qwik";
+import { component$, useSignal } from "@builder.io/qwik";
 
 import { DateInput } from "@kunai-consulting/qwik";
 
 export default component$(() => {
-  const selectedDate = useSignal<DateInput.ISODate | null>();
-  const handleDateChange$ = $((date: DateInput.ISODate | null) => {
-    selectedDate.value = date;
-  });
+  const selectedDate = useSignal<DateInput.ISODate | null>(null);
 
   return (
     <div class="flex flex-col gap-10">
       <DateInput.Root
         class="w-full flex flex-col gap-2 max-w-[300px]"
         format="yyyy-mm-dd"
-        onChange$={handleDateChange$}
+        bind:date={selectedDate}
       >
         <DateInput.Label class="flex items-center justify-between">
           My date input

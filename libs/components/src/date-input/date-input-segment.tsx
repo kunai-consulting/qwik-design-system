@@ -101,7 +101,7 @@ export const DateInputSegment = component$(
     const incrementMonthValue = $((changeBy: number) => {
       const segment = segmentSig.value;
       const currentValue = segment?.numericValue;
-      let newValue = currentValue ? currentValue + changeBy : new Date().getMonth();
+      let newValue = currentValue ? currentValue + changeBy : new Date().getMonth() + 1; // +1 because months are 0-indexed
       if (newValue < segment.min) {
         newValue = segment.max;
       }

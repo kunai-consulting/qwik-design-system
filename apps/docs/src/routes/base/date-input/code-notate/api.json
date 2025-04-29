@@ -10,15 +10,19 @@
     },
     {
       "key": "ArrowLeft",
-      "comment": "When focus is on a segment, allows navigation to the previous segment"
+      "comment": "Moves cursor left within the current segment"
     },
     {
       "key": "ArrowRight",
-      "comment": "When focus is on a segment, allows navigation to the next segment"
+      "comment": "Moves cursor right within the current segment"
     },
     {
       "key": "Tab",
       "comment": "Moves focus to the next segment or element"
+    },
+    {
+      "key": "Shift + Tab",
+      "comment": "Moves focus to the previous segment or element"
     },
     {
       "key": "Digits (0-9)",
