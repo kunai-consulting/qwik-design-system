@@ -21,7 +21,6 @@ export const DropdownItemBase = component$<DropdownItemProps>(
     const handleKeyDown = $((event: KeyboardEvent) => {
       if (disabled) return;
       if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault(); //TODO HERE!!!
         handleClick();
       }
     });
@@ -34,7 +33,7 @@ export const DropdownItemBase = component$<DropdownItemProps>(
         onClick$={[handleClick, props.onClick$]}
         onKeyDown$={[handleKeyDown, props.onKeyDown$]}
         aria-disabled={disabled}
-        data-disabled={disabled ? "" : undefined}
+        data-disabled={disabled}
         data-qds-dropdown-item
         {...props}
       >

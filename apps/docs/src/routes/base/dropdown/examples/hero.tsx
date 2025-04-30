@@ -1,30 +1,30 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, useSignal, useStyles$ } from "@builder.io/qwik";
 import { Dropdown } from "@kunai-consulting/qwik";
+import styles from "./dropdown-custom.css?inline";
 
 export default component$(() => {
+  useStyles$(styles);
+  const selectedItem = useSignal(0);
+
   return (
-    <div
-      style={{
-        padding: "50px",
-        height: "300px",
-        border: "1px dashed gray",
-        position: "relative"
-      }}
-    >
+    <div>
       <Dropdown.Root>
-        <Dropdown.Trigger>Open Menu</Dropdown.Trigger>
+        <Dropdown.Trigger class="bg-qwik-blue-700 p-1">Open Menu</Dropdown.Trigger>
         <Dropdown.Content>
-          <Dropdown.Item onSelect$={() => console.log("Selected Item 1")}>
-            <Dropdown.ItemLabel>Item 1</Dropdown.ItemLabel>
+          <Dropdown.Item onSelect$={() => (selectedItem.value = 1)} class="dropdown-item">
+            <Dropdown.ItemLabel class="dropdown-item-label">Item 1</Dropdown.ItemLabel>
           </Dropdown.Item>
-          <Dropdown.Item onSelect$={() => console.log("Selected Item 2")}>
-            <Dropdown.ItemLabel>Item 2</Dropdown.ItemLabel>
+          <Dropdown.Item onSelect$={() => (selectedItem.value = 2)} class="dropdown-item">
+            <Dropdown.ItemLabel class="dropdown-item-label">Item 2</Dropdown.ItemLabel>
           </Dropdown.Item>
-          <Dropdown.Item disabled>
-            <Dropdown.ItemLabel>Item 3 (Disabled)</Dropdown.ItemLabel>
+          <Dropdown.Item disabled class="dropdown-item">
+            <Dropdown.ItemLabel class="dropdown-item-label">
+              Item 3 (Disabled)
+            </Dropdown.ItemLabel>
           </Dropdown.Item>
         </Dropdown.Content>
       </Dropdown.Root>
+      {selectedItem.value > 0 && <span>Selected item: {selectedItem.value}</span>}
     </div>
   );
 });
