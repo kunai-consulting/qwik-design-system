@@ -4,12 +4,12 @@ import { PopoverAnchorBase } from "../popover/popover-anchor";
 import { popoverContextId } from "../popover/popover-root";
 import { dropdownContextId } from "./dropdown-context";
 
-export type DropdownTriggerProps = Omit<
+export type PublicDropdownTriggerProps = Omit<
   PropsOf<typeof PopoverAnchorBase>,
   "popovertarget"
 >;
-
-export const DropdownTriggerBase = component$<DropdownTriggerProps>((props) => {
+/** Button that triggers the dropdown menu to open/close */
+export const DropdownTriggerBase = component$<PublicDropdownTriggerProps>((props) => {
   const context = useContext(dropdownContextId);
   const popoverContext = useContext(popoverContextId);
 
@@ -21,6 +21,7 @@ export const DropdownTriggerBase = component$<DropdownTriggerProps>((props) => {
       aria-expanded={context.isOpenSig.value}
       aria-controls={context.isOpenSig.value ? context.contentId : undefined}
       ref={popoverContext.anchorRef}
+      // The identifier for the dropdown trigger button
       data-qds-dropdown-trigger
       type="button"
       {...props}
