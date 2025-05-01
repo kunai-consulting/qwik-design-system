@@ -14,7 +14,7 @@ export type Toast = {
 export type ToastContext = {
   localId: string;
   currentToast: Signal<Toast | null>;
-  defaultDuration: Signal<number>;
+  duration: Signal<number>;
   pauseOnHover: Signal<boolean>;
   show$: (toast: Omit<Toast, "id">) => void;
   hide$: () => void;

@@ -28,7 +28,7 @@ export const ToasterTriggerBase = component$((props: ToasterTriggerProps) => {
       type: toastType,
       title,
       description,
-      duration: duration || context.defaultDuration.value,
+      duration: duration || context.duration.value,
       dismissible: true
     });
   });

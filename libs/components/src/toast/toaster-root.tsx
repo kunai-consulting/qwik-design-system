@@ -12,22 +12,21 @@ import { Render } from "../render/render";
 import { type Toast, type ToastContext, toastContextId } from "./toast-context";
 
 export type ToasterRootProps = {
-  defaultDuration?: number;
+  duration?: number;
   pauseOnHover?: boolean;
 };
 
-/** Root component that provides context and state management for the toaster */
 export const ToasterRootBase = component$((props: ToasterRootProps) => {
-  const { defaultDuration = 5000, pauseOnHover = true, ...rest } = props;
+  const { duration = 5000, pauseOnHover = true, ...rest } = props;
   const localId = useId();
 
   const currentToast = useSignal<Toast | null>(null);
-  const defaultDurationSig = useSignal(defaultDuration);
+  const durationSig = useSignal(duration);
   const pauseOnHoverSig = useSignal(pauseOnHover);
 
   useTask$(({ track }) => {
-    track(() => defaultDuration);
-    defaultDurationSig.value = defaultDuration;
+    track(() => duration);
+    durationSig.value = duration;
   });
 
   useTask$(({ track }) => {
@@ -47,7 +46,7 @@ export const ToasterRootBase = component$((props: ToasterRootProps) => {
   const context: ToastContext = {
     localId,
     currentToast,
-    defaultDuration: defaultDurationSig,
+    duration: durationSig,
     pauseOnHover: pauseOnHoverSig,
     show$,
     hide$

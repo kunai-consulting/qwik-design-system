@@ -6,7 +6,7 @@ export default component$(() => {
   useStyles$(styles);
 
   return (
-    <Toaster.Root defaultDuration={5000} pauseOnHover>
+    <Toaster.Root duration={5000} pauseOnHover>
       <Toaster.View />
 
       <div class="flex flex-wrap gap-2">
