@@ -1,13 +1,13 @@
 # Resizable Research
 
 ## Overview
-Resizable component allows users to adjust the size of panels by dragging handles between them.
+Resizable component allows users to adjust the size of contents by dragging handles between them.
 The component is fully accessible, supports keyboard navigation, and complies with the WAI-ARIA specification for window splitters.
 
 ## Research Links:
 - [W3C WAI-ARIA Window Splitter Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/)
 - [Corvu Resizable](https://corvu.dev/docs/primitives/resizable/)
-- [React Resizable Panels](https://react-resizable-panels.vercel.app/)
+- [React Resizable Contents](https://react-resizable-contents.vercel.app/)
 - [React Resizable Layout Issues](https://github.com/RyoSogawa/react-resizable-layout/issues/38)
 
 ---
@@ -15,8 +15,8 @@ The component is fully accessible, supports keyboard navigation, and complies wi
 ## Features:
 - [x] Horizontal resizing
 - [x] Vertical resizing
-- [x] Panel size management (min/max sizes)
-- [x] Collapsible panels
+- [x] Content size management (min/max sizes)
+- [x] Collapsible contents
 - [x] Keyboard navigation
 - [x] ARIA attributes
 - [x] Custom styles support
@@ -33,17 +33,17 @@ The component is fully accessible, supports keyboard navigation, and complies wi
 ## Behavior
 
 The component consists of three main pieces:
-- Root: Container that manages the resizable panels
-- Panel: Individual resizable sections
-- Handle: Draggable divider between panels
+- Root: Container that manages the resizable contents
+- Content: Individual resizable sections
+- Handle: Draggable divider between contents
 
 ---
 
 ### States
 
-- Default: Panels at their initial sizes
+- Default: Contents at their initial sizes
 - Resizing: User is dragging a handle
-- Collapsed: Panel is in collapsed state (if collapsible)
+- Collapsed: Content is in collapsed state (if collapsible)
 - Disabled: Resizing is prevented
 
 ---
@@ -53,9 +53,9 @@ The component consists of three main pieces:
 - Up/Down: Resize vertically
 - Shift + Arrow: Move in larger increments
 - Alt + Arrow: More precise movement
-- Home: Collapse preceding panels
-- End: Expand preceding panels
-- Enter: Toggle collapse/expand (for collapsible panels)
+- Home: Collapse preceding contents
+- End: Expand preceding contents
+- Enter: Toggle collapse/expand (for collapsible contents)
 
 ---
 
@@ -67,7 +67,7 @@ The component consists of three main pieces:
 - aria-valuenow
 - aria-controls
 - data-qds-resizable-root
-- data-qds-resizable-panel
+- data-qds-resizable-content
 - data-qds-resizable-handle
 - data-orientation
 - data-dragging
@@ -80,12 +80,12 @@ The component consists of three main pieces:
 ---
 
 ## Use Cases:
-- Code editors and IDEs with adjustable panels
+- Code editors and IDEs with adjustable contents
 - File explorers with resizable navigation
 - Dashboard layouts with customizable widget sizes
 - Image comparison sliders (before/after)
 - Documentation sites with resizable navigation/content areas
-- Chat applications with adjustable conversation/sidebar panels
+- Chat applications with adjustable conversation/sidebar contents
 - Data tables with resizable columns
 - Code playgrounds with adjustable preview areas
 
@@ -102,9 +102,9 @@ interface ResizableRootProps {
 }
 ```
 
-### Panel:
+### Content:
 ```typescript
-interface ResizablePanelProps {
+interface ResizableContentProps {
   width?: number;
   height?: number;
   minWidth?: number;
@@ -147,7 +147,7 @@ interface ResizableHandleProps {
   flex-direction: column;
 }
 
-[data-qds-resizable-panel] {
+[data-qds-resizable-content] {
   position: relative;
   display: flex;
   min-width: 0;

@@ -1,6 +1,6 @@
 import { type Signal, createContextId } from "@builder.io/qwik";
 
-export interface PanelRef {
+export interface ContentRef {
   ref: Signal<HTMLElement | undefined>;
   onResize$?: (size: number) => void;
   onCollapse$?: () => void;
@@ -13,7 +13,7 @@ export interface ResizableContext {
   disabled: Signal<boolean>;
   startPosition: Signal<number | null>;
   isDragging: Signal<boolean>;
-  panels: Signal<PanelRef[]>;
+  contents: Signal<ContentRef[]>;
 }
 
 export const resizableContextId = createContextId<ResizableContext>("resizable-context");
