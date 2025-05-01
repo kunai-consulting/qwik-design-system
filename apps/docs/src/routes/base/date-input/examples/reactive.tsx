@@ -18,12 +18,22 @@ export default component$(() => {
         </DateInput.Label>
         <DateInput.DateEntry />
       </DateInput.Root>
-      <p>Bound date: {boundDate.value}</p>
+      <p>
+        Bound date: <span class="external-value">{boundDate.value}</span>
+      </p>
       <div class="flex gap-2">
-        <button onClick$={() => (boundDate.value = "2099-12-31")} type="button">
+        <button
+          onClick$={() => (boundDate.value = "2099-12-31")}
+          type="button"
+          class="set-value-button"
+        >
           Set to 2099-12-31
         </button>
-        <button onClick$={() => (boundDate.value = null)} type="button">
+        <button
+          onClick$={() => (boundDate.value = null)}
+          type="button"
+          class="set-null-button"
+        >
           Clear
         </button>
       </div>
