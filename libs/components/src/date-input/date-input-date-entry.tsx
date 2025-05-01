@@ -6,6 +6,9 @@ type PublicDateInputDateEntryProps = PropsOf<"div"> & {
   value?: string;
 };
 
+// no-composition-check
+// This component presents three segments as one unified entry experience.
+// The composition here simplifies the API for the developer consuming the library.
 /** Date entry component for the Date Input */
 export const DateInputDateEntryBase = component$(
   (props: PublicDateInputDateEntryProps) => {
@@ -15,7 +18,10 @@ export const DateInputDateEntryBase = component$(
       <div {...props} data-qds-date-input-date-entry role="group" id={inputId}>
         {context.orderedSegments.map((segmentSig, index) => (
           <span key={inputId + segmentSig.value.type}>
-            <DateInputSegment segmentSig={segmentSig} isEditable={true} />
+            <DateInputSegment
+              segmentSig={segmentSig}
+              isEditable={!context.disabledSig.value}
+            />
             {index !== context.orderedSegments.length - 1 && (
               <span data-qds-date-input-separator>{context.separator}</span>
             )}

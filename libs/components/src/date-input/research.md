@@ -16,8 +16,8 @@ Target features. Some are essential, others are nice to have. Checked items are 
 - [x] Default date
 - [x] Change event handling
 - [x] Bound date
+- [x] Disabled state
 - [ ] Error messages
-- [ ] Disabled state
 - [ ] Required state
 - [ ] Default format based on locale
 - [ ] Support two-digit date entry (e.g. "12/31/26" instead of "12/31/2026")

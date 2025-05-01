@@ -20,6 +20,7 @@ export type DateInputContext = {
   required?: boolean;
   value?: string;
   format: DateFormat;
+  disabledSig: Signal<boolean>;
   activeSegmentIndex: Signal<number>;
   focusNextSegment$: QRL<() => void>;
   isInternalSegmentClearance: Signal<boolean>;
