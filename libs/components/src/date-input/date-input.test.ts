@@ -6,6 +6,16 @@ async function setup(page: Page, exampleName: string) {
   return createTestDriver(page);
 }
 
+function getToday() {
+  const today = new Date().toISOString().split("T")[0];
+  return {
+    today,
+    yearText: today.split("-")[0],
+    monthText: today.split("-")[1],
+    dayText: today.split("-")[2]
+  };
+}
+
 test.describe("Label", () => {
   test("GIVEN a date input with a label THEN the for attribute of the label should match the id of the entry component", async ({
     page
@@ -82,7 +92,7 @@ test.describe("Form integration", () => {
 });
 
 test.describe("Input/Output", () => {
-  test("GIVEN a bound date THEN the input should have the initial value", async ({
+  test("GIVEN a bound date with an initial value THEN the segments should match the initial value", async ({
     page
   }) => {
     const d = await setup(page, "reactive");
@@ -125,5 +135,89 @@ test.describe("Input/Output", () => {
     await expect(yearSegment).toBe("2099");
     await expect(monthSegment).toBe("12");
     await expect(daySegment).toBe("31");
+  });
+
+  test("GIVEN a bound date input WHEN the date is cleared externally THEN the segments should be cleared", async ({
+    page
+  }) => {
+    const d = await setup(page, "reactive");
+    await d.getSetNullButton().click();
+    const externalValue = await d.getExternalValue();
+    await expect(externalValue).toBeEmpty();
+
+    const yearSegment = await d.getYearSegment().inputValue();
+    const monthSegment = await d.getMonthSegment().inputValue();
+    const daySegment = await d.getDaySegment().inputValue();
+    await expect(yearSegment).toEqual("");
+    await expect(monthSegment).toEqual("");
+    await expect(daySegment).toEqual("");
+  });
+
+  test("GIVEN a value-based date input with an initial value THEN the segments should match the initial value", async ({
+    page
+  }) => {
+    const d = await setup(page, "value-based");
+
+    const yearSegment = await d.getYearSegment().inputValue();
+    const monthSegment = await d.getMonthSegment().inputValue();
+    const daySegment = await d.getDaySegment().inputValue();
+    await expect(yearSegment).toEqual("2021");
+    await expect(monthSegment).toEqual("01");
+    await expect(daySegment).toEqual("01");
+  });
+
+  test("GIVEN a value-based date input WHEN the date is cleared externally THEN the segments should be cleared", async ({
+    page
+  }) => {
+    const d = await setup(page, "value-based");
+
+    let externalValue = await d.getExternalValue();
+    await expect(externalValue).toHaveText("2021-01-01");
+
+    await d.getSetNullButton().click();
+    externalValue = await d.getExternalValue();
+    await expect(externalValue).toBeEmpty();
+
+    const yearSegment = await d.getYearSegment().inputValue();
+    const monthSegment = await d.getMonthSegment().inputValue();
+    const daySegment = await d.getDaySegment().inputValue();
+    await expect(yearSegment).toEqual("");
+    await expect(monthSegment).toEqual("");
+    await expect(daySegment).toEqual("");
+  });
+
+  test("GIVEN a value-based date input WHEN the date is updated externally THEN the segments should match the updated value", async ({
+    page
+  }) => {
+    const d = await setup(page, "value-based");
+
+    let externalValue = await d.getExternalValue();
+    await expect(externalValue).toHaveText("2021-01-01");
+
+    await d.getSetValueButton().click(); // sets to today
+    const { today, yearText, monthText, dayText } = getToday();
+    externalValue = await d.getExternalValue();
+    await expect(externalValue).toHaveText(today);
+
+    const yearSegment = await d.getYearSegment().inputValue();
+    const monthSegment = await d.getMonthSegment().inputValue();
+    const daySegment = await d.getDaySegment().inputValue();
+    await expect(yearSegment).toEqual(yearText);
+    await expect(monthSegment).toEqual(monthText);
+    await expect(daySegment).toEqual(dayText);
+  });
+
+  test("GIVEN a value-based date input WHEN the date is changed internally THEN the external can be updated via onChange$", async ({
+    page
+  }) => {
+    const d = await setup(page, "value-based");
+    await d.getYearSegment().fill("2022");
+    await d.getMonthSegment().fill("02");
+    await d.getDaySegment().fill("14");
+    const externalValue = await d.getExternalValue();
+    await expect(externalValue).toHaveText("2022-02-14");
+
+    await d.getYearSegment().fill("2024");
+    await expect(externalValue).toHaveText("2024-02-14");
   });
 });
