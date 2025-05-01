@@ -1,12 +1,15 @@
 import {
+  $,
   Slot,
   component$,
+  useContextProvider,
   useId,
   useSignal,
   useTask$
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
+import { type Toast, type ToastContext, toastContextId } from "./toast-context";
 
 export type ToasterRootProps = {
   defaultDuration?: number;
@@ -18,6 +21,7 @@ export const ToasterRootBase = component$((props: ToasterRootProps) => {
   const { defaultDuration = 5000, pauseOnHover = true, ...rest } = props;
   const localId = useId();
   
+  const currentToast = useSignal<Toast | null>(null);
   const defaultDurationSig = useSignal(defaultDuration);
   const pauseOnHoverSig = useSignal(pauseOnHover);
 
@@ -31,6 +35,25 @@ export const ToasterRootBase = component$((props: ToasterRootProps) => {
     pauseOnHoverSig.value = pauseOnHover;
   });
 
+  const show$ = $((toast: Omit<Toast, "id">) => {
+    const id = `toast-${Math.random().toString(36).substring(2, 9)}`;
+    currentToast.value = { ...toast, id };
+  });
+
+  const hide$ = $(() => {
+    currentToast.value = null;
+  });
+
+  const context: ToastContext = {
+    localId,
+    currentToast,
+    defaultDuration: defaultDurationSig,
+    pauseOnHover: pauseOnHoverSig,
+    show$,
+    hide$
+  };
+
+  useContextProvider(toastContextId, context);
 
   return (
     <Render 
