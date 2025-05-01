@@ -65,8 +65,8 @@ return (
   <>
     <button 
       onClick$={[handleClick$, props.onClick$]}
-      aria-pressed={isPressedSig.value}
-      data-pressed={isPressedSig.value ? '' : undefined}
+      aria-pressed={`${isPressedSig.value}`} // Will be the text "true" or "false"
+      data-pressed={isPressedSig.value} // Will exist if true, otherwise undefined
     >
       Toggle
     </button>
