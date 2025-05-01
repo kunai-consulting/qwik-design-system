@@ -3,15 +3,15 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { popoverContextId } from "./popover-root";
 
-export const PopoverAnchorBase = component$((props: PropsOf<"button">) => {
+export const PopoverTriggerBase = component$((props: PropsOf<"button">) => {
   const context = useContext(popoverContextId);
   const panelId = `${context.localId}-panel`;
 
   return (
     <Render
-      internalRef={context.anchorRef}
+      internalRef={context.triggerRef}
       popovertarget={panelId}
-      data-qds-popover-anchor
+      data-qds-popover-trigger
       fallback="button"
       {...props}
     >
@@ -20,4 +20,4 @@ export const PopoverAnchorBase = component$((props: PropsOf<"button">) => {
   );
 });
 
-export const PopoverAnchor = withAsChild(PopoverAnchorBase);
+export const PopoverTrigger = withAsChild(PopoverTriggerBase);
