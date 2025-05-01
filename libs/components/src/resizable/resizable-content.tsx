@@ -12,10 +12,10 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { resizableContextId } from "./resizable-context";
 
-interface PublicResizablePanelProps extends Omit<PropsOf<"div">, "onResize$"> {
-  // Default height of the panel (in pixels)
+interface PublicResizableContentProps extends Omit<PropsOf<"div">, "onResize$"> {
+  // Default height of the content (in pixels)
   height?: number;
-  // Default width of the panel (in pixels)
+  // Default width of the content (in pixels)
   width?: number;
   // Minimum width constraint (in pixels)
   minWidth?: number;
@@ -25,28 +25,28 @@ interface PublicResizablePanelProps extends Omit<PropsOf<"div">, "onResize$"> {
   minHeight?: number;
   // Maximum height constraint (in pixels)
   maxHeight?: number;
-  // Whether the panel can be collapsed
+  // Whether the content can be collapsed
   collapsible?: boolean;
   // Initial collapsed state
   collapsed?: boolean;
   // Width to collapse to (in pixels)
   collapsedSize?: number;
   collapseThreshold?: number;
-  // Callback fired when the panel is resized
+  // Callback fired when the content is resized
   onResize$?: (size: number) => void;
-  // Callback fired when the panel is collapsed
+  // Callback fired when the content is collapsed
   onCollapse$?: () => void;
-  // Callback fired when the panel is expanded
+  // Callback fired when the content is expanded
   onExpand$?: () => void;
   _index?: number;
 }
-/** A resizable panel component that can be adjusted using a ResizableHandle */
-export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) => {
+/** A resizable content component that can be adjusted using a ResizableHandle */
+export const ResizableContentBase = component$<PublicResizableContentProps>((props) => {
   const context = useContext(resizableContextId);
   const isVertical = context.orientation.value === "vertical";
   const isCollapsed = useSignal(!!props.collapsed);
-  const panelId = useId();
-  const panelRef = useSignal<HTMLElement>();
+  const contentId = useId();
+  const contentRef = useSignal<HTMLElement>();
 
   const {
     width,
@@ -65,11 +65,11 @@ export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) 
 
   useTask$(function getIndexOrder() {
     if (_index === undefined) {
-      throw new Error("ResizablePanel cannot find its proper index.");
+      throw new Error("ResizableContent cannot find its proper index.");
     }
 
-    context.panels.value[_index] = {
-      ref: panelRef,
+    context.contents.value[_index] = {
+      ref: contentRef,
       onResize$: props.onResize$,
       onCollapse$: props.onCollapse$,
       onExpand$: props.onExpand$,
@@ -77,7 +77,7 @@ export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) 
     };
   });
 
-  const getPanelStyles = () => {
+  const getContentStyles = () => {
     const size = isVertical ? height : width;
     const minSize = isVertical ? minHeight : minWidth;
     const maxSize = isVertical ? maxHeight : maxWidth;
@@ -106,28 +106,28 @@ export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) 
     <Render
       fallback="div"
       {...rest}
-      id={panelId}
-      ref={panelRef}
-      // The identifier for the resizable panel component
-      data-qds-resizable-panel
-      // Indicates the orientation of the resizable panel (vertical or horizontal)
+      id={contentId}
+      ref={contentRef}
+      // The identifier for the resizable content component
+      data-qds-resizable-content
+      // Indicates the orientation of the resizable content (vertical or horizontal)
       data-orientation={context.orientation.value}
-      // Specifies the minimum size constraint for the panel
+      // Specifies the minimum size constraint for the content
       data-min-size={isVertical ? minHeight : minWidth}
-      // Specifies the maximum size constraint for the panel
+      // Specifies the maximum size constraint for the content
       data-max-size={isVertical ? maxHeight : maxWidth}
       data-collapsible={collapsible}
       data-collapsed-size={collapsedSize}
       data-collapse-threshold={collapseThreshold}
       data-is-collapsed={isCollapsed.value}
-      style={getPanelStyles()}
+      style={getContentStyles()}
     >
       <Slot />
     </Render>
   );
 });
 
-export const ResizablePanel = withAsChild(ResizablePanelBase, (props) => {
+export const ResizableContent = withAsChild(ResizableContentBase, (props) => {
   const nextIndex = getNextIndex("resizable");
   props._index = nextIndex;
   return props;

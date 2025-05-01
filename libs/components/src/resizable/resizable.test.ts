@@ -19,53 +19,53 @@ test.describe("Basic Functionality", () => {
     await expect(handle).toHaveAttribute("tabindex", "0");
   });
 
-  test(`GIVEN a resizable panel with initial width
+  test(`GIVEN a resizable content with initial width
       WHEN rendered
       THEN should have correct initial size`, async ({ page }) => {
     const d = await setup(page, "hero");
-    const panel = d.getPanelAt(0);
+    const content = d.getContentAt(0);
 
-    await expect(panel).toHaveCSS("width", "200px"); // Initial width from props
+    await expect(content).toHaveCSS("width", "200px"); // Initial width from props
   });
 
-  test(`GIVEN a resizable panel
+  test(`GIVEN a resizable content
       WHEN the handle is dragged horizontally
-      THEN panels should resize proportionally`, async ({ page }) => {
+      THEN contents should resize proportionally`, async ({ page }) => {
     const d = await setup(page, "hero");
-    const firstPanel = d.getPanelAt(0);
-    const secondPanel = d.getPanelAt(1);
+    const firstContent = d.getContentAt(0);
+    const secondContent = d.getContentAt(1);
 
-    const initialFirstWidth = await d.getPanelSize(firstPanel);
-    const initialSecondWidth = await d.getPanelSize(secondPanel);
+    const initialFirstWidth = await d.getContentSize(firstContent);
+    const initialSecondWidth = await d.getContentSize(secondContent);
 
     await d.dragHandleBy(d.getHandle(), 100, 0);
 
-    await expect(firstPanel).toHaveCSS("width", `${initialFirstWidth + 100}px`);
-    await expect(secondPanel).toHaveCSS("width", `${initialSecondWidth - 100}px`);
+    await expect(firstContent).toHaveCSS("width", `${initialFirstWidth + 100}px`);
+    await expect(secondContent).toHaveCSS("width", `${initialSecondWidth - 100}px`);
   });
 });
 
 test.describe("Size Constraints", () => {
-  test(`GIVEN a resizable panel with minWidth
+  test(`GIVEN a resizable content with minWidth
       WHEN dragged below minimum
       THEN should not resize below minimum`, async ({ page }) => {
     const d = await setup(page, "hero");
-    const panel = d.getPanelAt(0);
-    const { min } = await d.getPanelConstraints(panel);
+    const content = d.getContentAt(0);
+    const { min } = await d.getContentConstraints(content);
 
     await d.dragHandleBy(d.getHandle(), -200, 0);
-    await expect(panel).toHaveCSS("width", `${min}px`);
+    await expect(content).toHaveCSS("width", `${min}px`);
   });
 
-  test(`GIVEN a resizable panel with maxWidth
+  test(`GIVEN a resizable content with maxWidth
       WHEN dragged above maximum
       THEN should not resize above maximum`, async ({ page }) => {
     const d = await setup(page, "hero");
-    const panel = d.getPanelAt(0);
-    const { max } = await d.getPanelConstraints(panel);
+    const content = d.getContentAt(0);
+    const { max } = await d.getContentConstraints(content);
 
     await d.dragHandleBy(d.getHandle(), 500, 0);
-    await expect(panel).toHaveCSS("width", `${max}px`);
+    await expect(content).toHaveCSS("width", `${max}px`);
   });
 });
 
@@ -81,41 +81,41 @@ test.describe("Vertical Orientation", () => {
 
   test(`GIVEN a vertical resizable
       WHEN handle is dragged vertically
-      THEN panels should resize vertically`, async ({ page }) => {
+      THEN contents should resize vertically`, async ({ page }) => {
     const d = await setup(page, "vertical");
-    const panel = d.getPanelAt(0);
-    const initialHeight = await d.getPanelSize(panel);
+    const content = d.getContentAt(0);
+    const initialHeight = await d.getContentSize(content);
 
     await d.dragHandleBy(d.getHandle(), 0, 20);
-    await expect(panel).toHaveCSS("height", `${initialHeight + 20}px`);
+    await expect(content).toHaveCSS("height", `${initialHeight + 20}px`);
   });
 });
 
-test.describe("Collapsible Panels", () => {
-  test(`GIVEN a collapsible panel
+test.describe("Collapsible Contents", () => {
+  test(`GIVEN a collapsible content
       WHEN dragged below collapse threshold
       THEN should collapse to collapsedSize`, async ({ page }) => {
     const d = await setup(page, "collapsible");
-    const panel = d.getPanelAt(0);
-    const { threshold, collapsed } = await d.getPanelConstraints(panel);
+    const content = d.getContentAt(0);
+    const { threshold, collapsed } = await d.getContentConstraints(content);
 
     await d.dragHandleBy(d.getHandle(), -(threshold * 2000), 0);
 
-    expect(await d.isPanelCollapsed(panel)).toBe(true);
-    await expect(panel).toHaveCSS("width", `${collapsed}px`);
+    expect(await d.isContentCollapsed(content)).toBe(true);
+    await expect(content).toHaveCSS("width", `${collapsed}px`);
   });
 
-  test(`GIVEN a collapsed panel
+  test(`GIVEN a collapsed content
       WHEN dragged to expand
       THEN should expand and fire callback`, async ({ page }) => {
     const d = await setup(page, "collapsible");
-    const panel = d.getPanelAt(0);
+    const content = d.getContentAt(0);
 
     await d.dragHandleBy(d.getHandle(), -200, 0);
-    expect(await d.isPanelCollapsed(panel)).toBe(true);
+    expect(await d.isContentCollapsed(content)).toBe(true);
 
     await d.dragHandleBy(d.getHandle(), 200, 0);
-    expect(await d.isPanelCollapsed(panel)).toBe(false);
+    expect(await d.isContentCollapsed(content)).toBe(false);
   });
 });
 
@@ -124,14 +124,14 @@ test.describe("Keyboard Navigation", () => {
       WHEN arrow keys are pressed
       THEN should resize by step`, async ({ page }) => {
     const d = await setup(page, "hero");
-    const panel = d.getPanelAt(0);
+    const content = d.getContentAt(0);
     const handle = d.getHandle();
-    const initialSize = await d.getPanelSize(panel);
+    const initialSize = await d.getContentSize(content);
 
     await handle.focus();
     await page.keyboard.press("ArrowRight");
     await page.waitForTimeout(100);
-    const size = await d.getPanelSize(panel);
+    const size = await d.getContentSize(content);
 
     expect(size).toBeGreaterThan(initialSize);
   });
@@ -140,14 +140,14 @@ test.describe("Keyboard Navigation", () => {
       WHEN Shift+Arrow is pressed
       THEN should resize by larger step`, async ({ page }) => {
     const d = await setup(page, "hero");
-    const panel = d.getPanelAt(0);
+    const content = d.getContentAt(0);
     const handle = d.getHandle();
-    const initialSize = await d.getPanelSize(panel);
+    const initialSize = await d.getContentSize(content);
 
     await handle.focus();
     await page.keyboard.press("Shift+ArrowRight");
     await page.waitForTimeout(100);
-    const size = await d.getPanelSize(panel);
+    const size = await d.getContentSize(content);
 
     expect(size).toBeGreaterThan(initialSize);
   });
@@ -156,28 +156,28 @@ test.describe("Keyboard Navigation", () => {
       WHEN Home/End keys are pressed
       THEN should collapse/expand to limits`, async ({ page }) => {
     const d = await setup(page, "hero");
-    const panel = d.getPanelAt(0);
+    const content = d.getContentAt(0);
     const handle = d.getHandle();
-    const { min, max } = await d.getPanelConstraints(panel);
+    const { min, max } = await d.getContentConstraints(content);
 
     await handle.focus();
     await page.keyboard.press("Home");
-    await expect(panel).toHaveCSS("width", `${min}px`);
+    await expect(content).toHaveCSS("width", `${min}px`);
 
     await page.keyboard.press("End");
-    await expect(panel).toHaveCSS("width", `${max}px`);
+    await expect(content).toHaveCSS("width", `${max}px`);
   });
 });
 
 test.describe("Callbacks", () => {
-  test(`GIVEN a panel with onResize$
+  test(`GIVEN a content with onResize$
     WHEN resized
     THEN callback should fire with new size`, async ({ page }) => {
     const d = await setup(page, "callback");
 
     const waitForLog = new Promise((resolve) => {
       page.on("console", (msg) => {
-        if (msg.text().includes("Left panel size:")) {
+        if (msg.text().includes("Left content size:")) {
           resolve(msg.text());
         }
       });
@@ -186,18 +186,18 @@ test.describe("Callbacks", () => {
     await d.dragHandleBy(d.getHandle(), 100, 0);
 
     const logMessage = await waitForLog;
-    expect(logMessage).toContain("Left panel size:");
+    expect(logMessage).toContain("Left content size:");
     expect(logMessage).toContain("300px");
   });
 
-  test(`GIVEN a collapsible panel with callbacks
+  test(`GIVEN a collapsible content with callbacks
     WHEN collapsed/expanded
     THEN callbacks should fire`, async ({ page }) => {
     const d = await setup(page, "collapsible");
 
     const waitForCollapse = new Promise((resolve) => {
       page.on("console", (msg) => {
-        if (msg.text() === "Panel collapsed") {
+        if (msg.text() === "Content collapsed") {
           resolve(true);
         }
       });
@@ -205,7 +205,7 @@ test.describe("Callbacks", () => {
 
     const waitForExpand = new Promise((resolve) => {
       page.on("console", (msg) => {
-        if (msg.text() === "Panel expanded") {
+        if (msg.text() === "Content expanded") {
           resolve(true);
         }
       });
@@ -222,28 +222,28 @@ test.describe("Callbacks", () => {
 test.describe("Disabled State", () => {
   test(`GIVEN a disabled resizable
       WHEN attempting to drag
-      THEN panels should not resize`, async ({ page }) => {
+      THEN contents should not resize`, async ({ page }) => {
     const d = await setup(page, "disabled");
-    const panel = d.getPanelAt(0);
-    const initialSize = await d.getPanelSize(panel);
+    const content = d.getContentAt(0);
+    const initialSize = await d.getContentSize(content);
 
     expect(await d.isRootDisabled()).toBe(true);
     await d.dragHandleBy(d.getHandle(), 100, 0);
 
-    await expect(panel).toHaveCSS("width", `${initialSize}px`);
+    await expect(content).toHaveCSS("width", `${initialSize}px`);
   });
 
   test(`GIVEN a disabled resizable
       WHEN using keyboard navigation
-      THEN panels should not resize`, async ({ page }) => {
+      THEN contents should not resize`, async ({ page }) => {
     const d = await setup(page, "disabled");
-    const panel = d.getPanelAt(0);
+    const content = d.getContentAt(0);
     const handle = d.getHandle();
-    const initialSize = await d.getPanelSize(panel);
+    const initialSize = await d.getContentSize(content);
 
     await handle.focus();
     await page.keyboard.press("ArrowRight");
 
-    await expect(panel).toHaveCSS("width", `${initialSize}px`);
+    await expect(content).toHaveCSS("width", `${initialSize}px`);
   });
 });

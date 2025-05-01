@@ -10,21 +10,21 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator("[data-qds-resizable-handle]").nth(index);
   };
 
-  const getPanelAt = (index: number) => {
-    return rootLocator.locator("[data-qds-resizable-panel]").nth(index);
+  const getContentAt = (index: number) => {
+    return rootLocator.locator("[data-qds-resizable-content]").nth(index);
   };
 
   const getHandleAt = (index: number) => {
     return rootLocator.locator("[data-qds-resizable-handle]").nth(index);
   };
 
-  const isPanelCollapsed = async (panel: Locator) => {
-    return (await panel.getAttribute("data-is-collapsed")) === "true";
+  const isContentCollapsed = async (content: Locator) => {
+    return (await content.getAttribute("data-is-collapsed")) === "true";
   };
 
-  const getPanelSize = async (panel: Locator) => {
+  const getContentSize = async (content: Locator) => {
     const orientation = await getRoot().getAttribute("data-orientation");
-    const rect = await panel.evaluate((el) => el.getBoundingClientRect());
+    const rect = await content.evaluate((el) => el.getBoundingClientRect());
     return orientation === "vertical" ? rect.height : rect.width;
   };
 
@@ -42,12 +42,12 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
       | "vertical";
   };
 
-  const getPanelConstraints = async (panel: Locator) => {
+  const getContentConstraints = async (content: Locator) => {
     return {
-      min: Number(await panel.getAttribute("data-min-size")) || 0,
-      max: Number(await panel.getAttribute("data-max-size")) || 1000,
-      collapsed: Number(await panel.getAttribute("data-collapsed-size")) || 0,
-      threshold: Number(await panel.getAttribute("data-collapse-threshold")) || 0
+      min: Number(await content.getAttribute("data-min-size")) || 0,
+      max: Number(await content.getAttribute("data-max-size")) || 1000,
+      collapsed: Number(await content.getAttribute("data-collapsed-size")) || 0,
+      threshold: Number(await content.getAttribute("data-collapse-threshold")) || 0
     };
   };
 
@@ -85,14 +85,14 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     locator: rootLocator,
     getRoot,
     getHandle,
-    getPanelAt,
+    getContentAt,
     getHandleAt,
-    isPanelCollapsed,
-    getPanelSize,
+    isContentCollapsed,
+    getContentSize,
     isHandleDisabled,
     isRootDisabled,
     getOrientation,
-    getPanelConstraints,
+    getContentConstraints,
     dragHandleBy,
     getHandleAriaValues
   };

@@ -24,7 +24,7 @@
     user-select: none;
   }
 
-  [data-qds-resizable-panel] {
+  [data-qds-resizable-content] {
     position: relative;
     display: flex;
     box-sizing: border-box;

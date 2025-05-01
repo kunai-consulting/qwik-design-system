@@ -6,7 +6,7 @@ export default component$(() => {
 
   return (
     <Popover.Root>
-      <Popover.Anchor class="popover-anchor">Open Popover</Popover.Anchor>
+      <Popover.Trigger class="popover-trigger">Open Popover</Popover.Trigger>
       <Popover.Content class="popover-content popover-transition">
         Popover
       </Popover.Content>

@@ -1,14 +1,14 @@
 .popover-content,
-.popover-anchor {
+.popover-trigger {
   border: 1px solid #19b5f6;
   padding: 0.5rem;
 }
 
-.popover-anchor {
+.popover-trigger {
   transition: background-color 0.3s ease;
   cursor: pointer;
 }
 
-.popover-anchor:hover {
+.popover-trigger:hover {
   background-color: #07304a;
 }
