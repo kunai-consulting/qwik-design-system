@@ -17,7 +17,7 @@ export const DateInputDateEntryBase = component$(
           <span key={inputId + segmentSig.value.type}>
             <DateInputSegment segmentSig={segmentSig} isEditable={true} />
             {index !== context.orderedSegments.length - 1 && (
-              <span>{context.separator}</span>
+              <span data-qds-date-input-separator>{context.separator}</span>
             )}
           </span>
         ))}

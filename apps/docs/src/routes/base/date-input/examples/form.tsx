@@ -20,8 +20,14 @@ export default component$(() => {
         <DateInput.DateEntry />
         <DateInput.HiddenInput name="appointment-date" />
       </DateInput.Root>
-      <button type="submit">Submit</button>
-      {formData.value && <div>Submitted: {JSON.stringify(formData.value, null, 2)}</div>}
+      <button type="submit" class="submit-button">
+        Submit
+      </button>
+      {formData.value && (
+        <div class="submitted-data">
+          Submitted: {JSON.stringify(formData.value, null, 2)}
+        </div>
+      )}
     </form>
   );
 });

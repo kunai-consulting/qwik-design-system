@@ -21,7 +21,9 @@ export default component$(() => {
       </DateInput.Root>
 
       <div>
-        <p>Selected date: {selectedDate.value}</p>
+        <p>
+          Selected date: <span class="external-value">{selectedDate.value}</span>
+        </p>
       </div>
     </div>
   );
