@@ -285,6 +285,10 @@ export const DateInputSegment = component$(
       }
     });
 
+    const onClick$ = $(() => {
+      context.activeSegmentIndex.value = segmentIndex.value;
+    });
+
     return (
       <input
         {...otherProps}
@@ -309,14 +313,8 @@ export const DateInputSegment = component$(
         value={segmentSig.value.displayValue}
         onKeyDown$={isEditable ? onKeyDown$ : undefined}
         onInput$={isEditable ? onInput$ : undefined}
-        onClick$={
-          isEditable
-            ? $((_, element) => {
-                // Update active segment index when clicked
-                context.activeSegmentIndex.value = segmentIndex.value;
-              })
-            : undefined
-        }
+        onClick$={isEditable ? onClick$ : undefined}
+        stoppropagation:change
         placeholder={segmentSig.value.placeholderText}
         aria-label={`${segmentSig.value.type} input`}
         aria-valuemax={segmentSig.value.max}

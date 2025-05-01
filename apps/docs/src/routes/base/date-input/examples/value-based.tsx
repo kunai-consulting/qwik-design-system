@@ -22,7 +22,11 @@ export default component$(() => {
         </DateInput.Label>
         <DateInput.DateEntry />
       </DateInput.Root>
-      <p>Selected date: {selectedDate.value}</p>
+
+      <p>
+        Selected date: <span class="external-value">{selectedDate.value}</span>
+      </p>
+
       <div class="flex gap-2">
         <button
           onClick$={() =>
@@ -31,10 +35,15 @@ export default component$(() => {
               .split("T")[0] as DateInput.ISODate)
           }
           type="button"
+          class="set-value-button"
         >
           Set to today
         </button>
-        <button onClick$={() => (selectedDate.value = null)} type="button">
+        <button
+          onClick$={() => (selectedDate.value = null)}
+          type="button"
+          class="set-null-button"
+        >
           Clear
         </button>
       </div>
