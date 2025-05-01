@@ -27,7 +27,8 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
             { id: "/base/otp", label: "OTP" },
             { id: "/base/radio-group", label: "Radio Group" },
             { id: "/base/slider", label: "Slider" },
-            { id: "/base/switch", label: "Switch" }
+            { id: "/base/switch", label: "Switch" },
+            { id: "/base/toaster", label: "Toaster" }
           ]
         },
         {

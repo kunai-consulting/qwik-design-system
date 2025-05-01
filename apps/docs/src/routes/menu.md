@@ -16,6 +16,7 @@
 - [Tree](/base/tree)
 - [Icons (moving later)](/icons)
 - [Switch](/base/switch)
+- [Toaster](/base/toaster)
 
 ## Contributing
 
