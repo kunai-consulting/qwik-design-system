@@ -7,7 +7,7 @@ export default component$(() => {
   return (
     <div style={{ width: "100%", height: "350px" }}>
       <Resizable.Root orientation="horizontal" class="resizable-root">
-        <Resizable.Panel
+        <Resizable.Content
           width={200}
           minWidth={150}
           collapsible
@@ -23,13 +23,13 @@ export default component$(() => {
           <div style={{ padding: "20px", color: "black" }}>
             Collapsible Panel (min: 150, collapsed: 50)
           </div>
-        </Resizable.Panel>
+        </Resizable.Content>
 
         <Resizable.Handle class="resizable-handle" />
 
-        <Resizable.Panel minWidth={200}>
+        <Resizable.Content minWidth={200}>
           <div style={{ padding: "20px", color: "black" }}>Regular Panel (min: 200)</div>
-        </Resizable.Panel>
+        </Resizable.Content>
       </Resizable.Root>
     </div>
   );

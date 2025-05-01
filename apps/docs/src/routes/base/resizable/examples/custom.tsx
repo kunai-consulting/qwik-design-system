@@ -12,25 +12,25 @@ export default component$(() => {
       }}
     >
       <Resizable.Root orientation="horizontal" class="resizable-root">
-        <Resizable.Panel width={200}>
+        <Resizable.Content width={200}>
           <div style={{ padding: "20px", color: "black" }}>Left Panel</div>
-        </Resizable.Panel>
+        </Resizable.Content>
 
         <Resizable.Handle class="resizable-handle" />
 
-        <Resizable.Panel>
+        <Resizable.Content>
           <Resizable.Root orientation="vertical">
-            <Resizable.Panel height={200}>
+            <Resizable.Content height={200}>
               <div style={{ padding: "20px", color: "black" }}>Top Panel</div>
-            </Resizable.Panel>
+            </Resizable.Content>
 
             <Resizable.Handle class="resizable-handle" />
 
-            <Resizable.Panel>
+            <Resizable.Content>
               <div style={{ padding: "20px", color: "black" }}>Bottom Panel</div>
-            </Resizable.Panel>
+            </Resizable.Content>
           </Resizable.Root>
-        </Resizable.Panel>
+        </Resizable.Content>
       </Resizable.Root>
     </div>
   );

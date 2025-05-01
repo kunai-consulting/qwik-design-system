@@ -12,15 +12,15 @@ export default component$(() => {
       }}
     >
       <Resizable.Root storageKey="my-layout" class="resizable-root">
-        <Resizable.Panel width={200} minWidth={100} maxWidth={500}>
+        <Resizable.Content width={200} minWidth={100} maxWidth={500}>
           <div style={{ padding: "20px", color: "black" }}>
             Left Panel (min: 100, max: 500)
           </div>
-        </Resizable.Panel>
+        </Resizable.Content>
         <Resizable.Handle class="resizable-handle" />
-        <Resizable.Panel minWidth={150}>
+        <Resizable.Content minWidth={150}>
           <div style={{ padding: "20px", color: "black" }}>Right Panel (min: 150)</div>
-        </Resizable.Panel>
+        </Resizable.Content>
       </Resizable.Root>
     </div>
   );

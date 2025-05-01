@@ -41,7 +41,7 @@ interface PublicResizablePanelProps extends Omit<PropsOf<"div">, "onResize$"> {
   _index?: number;
 }
 /** A resizable panel component that can be adjusted using a ResizableHandle */
-export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) => {
+export const ResizableContentBase = component$<PublicResizablePanelProps>((props) => {
   const context = useContext(resizableContextId);
   const isVertical = context.orientation.value === "vertical";
   const isCollapsed = useSignal(!!props.collapsed);
@@ -127,7 +127,7 @@ export const ResizablePanelBase = component$<PublicResizablePanelProps>((props) 
   );
 });
 
-export const ResizablePanel = withAsChild(ResizablePanelBase, (props) => {
+export const ResizableContent = withAsChild(ResizableContentBase, (props) => {
   const nextIndex = getNextIndex("resizable");
   props._index = nextIndex;
   return props;
