@@ -59,7 +59,7 @@ export const ToasterBase = component$((props: PropsOf<"div">) => {
       }}
     >
       {/* Hidden anchor - not visible but required for popover */}
-      <Popover.Anchor style={{ display: "none" }} />
+      <Popover.Trigger style={{ display: "none" }} />
 
       {/* Custom positioned popover content */}
       <Popover.Content
