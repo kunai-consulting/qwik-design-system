@@ -1,10 +1,10 @@
 import { $, component$, useSignal } from "@builder.io/qwik";
-import { useStyles$ } from "@builder.io/qwik";
+import { useStylesScoped$ } from "@builder.io/qwik";
 import { DateInput } from "@kunai-consulting/qwik";
 import styles from "./date-input.css?inline";
 
 export default component$(() => {
-  useStyles$(styles);
+  useStylesScoped$(styles);
   const selectedDate = useSignal<DateInput.ISODate | null>("2021-01-01");
   const handleChange$ = $((date: DateInput.ISODate | null) => {
     selectedDate.value = date;

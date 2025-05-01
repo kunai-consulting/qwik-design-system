@@ -1,8 +1,8 @@
-import { component$, useSignal, useStyles$ } from "@builder.io/qwik";
+import { component$, useSignal, useStylesScoped$ } from "@builder.io/qwik";
 import { DateInput } from "@kunai-consulting/qwik";
 
 export default component$(() => {
-  useStyles$(styles);
+  useStylesScoped$(styles);
 
   const formData = useSignal<Record<string, FormDataEntryValue>>();
 

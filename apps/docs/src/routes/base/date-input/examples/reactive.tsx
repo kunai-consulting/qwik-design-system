@@ -1,10 +1,10 @@
 import { component$, useSignal } from "@builder.io/qwik";
-import { useStyles$ } from "@builder.io/qwik";
+import { useStylesScoped$ } from "@builder.io/qwik";
 import { DateInput } from "@kunai-consulting/qwik";
 import styles from "./date-input.css?inline";
 
 export default component$(() => {
-  useStyles$(styles);
+  useStylesScoped$(styles);
   const boundDate = useSignal<DateInput.ISODate | null>("1999-12-31");
 
   return (
