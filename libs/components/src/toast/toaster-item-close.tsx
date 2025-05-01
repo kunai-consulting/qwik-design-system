@@ -17,7 +17,7 @@ export interface ToasterItemCloseProps extends PropsOf<"button"> {
 export const ToasterItemCloseBase = component$((props: ToasterItemCloseProps) => {
   const { label = "Close", ...rest } = props;
   const context = useContext(toastContextId);
-  
+
   const ariaLabel = useComputed$(() => {
     return props["aria-label"] || label;
   });
@@ -40,4 +40,4 @@ export const ToasterItemCloseBase = component$((props: ToasterItemCloseProps) =>
   );
 });
 
-export const ToasterItemClose = withAsChild(ToasterItemCloseBase); 
+export const ToasterItemClose = withAsChild(ToasterItemCloseBase);

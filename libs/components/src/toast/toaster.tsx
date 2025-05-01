@@ -1,19 +1,19 @@
 import {
   $,
-  component$,
   type PropsOf,
+  component$,
   useContext,
   useOnDocument,
   useSignal,
   useVisibleTask$
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
+import * as Popover from "../popover";
 import { toastContextId } from "./toast-context";
 import { ToasterItem } from "./toaster-item";
-import { ToasterItemTitle } from "./toaster-item-title";
-import { ToasterItemDescription } from "./toaster-item-description";
 import { ToasterItemClose } from "./toaster-item-close";
-import * as Popover from "../popover";
+import { ToasterItemDescription } from "./toaster-item-description";
+import { ToasterItemTitle } from "./toaster-item-title";
 
 export const ToasterBase = component$((props: PropsOf<"div">) => {
   const { ...rest } = props;
@@ -36,11 +36,11 @@ export const ToasterBase = component$((props: PropsOf<"div">) => {
     if (context.currentToast.value) {
       const toast = document.querySelector("[data-qds-toaster-item]");
       if (!toast) return;
-      
+
       const focusableElements = toast.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
-      
+
       if (focusableElements.length > 0) {
         (focusableElements[0] as HTMLElement).focus();
       } else {

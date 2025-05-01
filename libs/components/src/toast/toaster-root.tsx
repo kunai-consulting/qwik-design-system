@@ -20,7 +20,7 @@ export type ToasterRootProps = {
 export const ToasterRootBase = component$((props: ToasterRootProps) => {
   const { defaultDuration = 5000, pauseOnHover = true, ...rest } = props;
   const localId = useId();
-  
+
   const currentToast = useSignal<Toast | null>(null);
   const defaultDurationSig = useSignal(defaultDuration);
   const pauseOnHoverSig = useSignal(pauseOnHover);
@@ -56,12 +56,7 @@ export const ToasterRootBase = component$((props: ToasterRootProps) => {
   useContextProvider(toastContextId, context);
 
   return (
-    <Render 
-      {...rest} 
-      fallback="div"
-      data-qds-toaster-root
-      aria-live="polite"
-    >
+    <Render {...rest} fallback="div" data-qds-toaster-root aria-live="polite">
       <Slot />
     </Render>
   );

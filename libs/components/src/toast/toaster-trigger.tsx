@@ -45,4 +45,4 @@ export const ToasterTriggerBase = component$((props: ToasterTriggerProps) => {
   );
 });
 
-export const ToasterTrigger = withAsChild(ToasterTriggerBase); 
+export const ToasterTrigger = withAsChild(ToasterTriggerBase);

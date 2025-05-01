@@ -8,7 +8,7 @@ export default component$(() => {
   return (
     <Toaster.Root defaultDuration={5000} pauseOnHover>
       <Toaster.View />
-      
+
       <div class="flex flex-wrap gap-2">
         <Toaster.Trigger
           toastType="success"
@@ -18,7 +18,7 @@ export default component$(() => {
         >
           Success Toast
         </Toaster.Trigger>
-        
+
         <Toaster.Trigger
           toastType="error"
           title="Error!"
@@ -27,7 +27,7 @@ export default component$(() => {
         >
           Error Toast
         </Toaster.Trigger>
-        
+
         <Toaster.Trigger
           toastType="info"
           title="Information"
@@ -36,7 +36,7 @@ export default component$(() => {
         >
           Info Toast
         </Toaster.Trigger>
-        
+
         <Toaster.Trigger
           toastType="warning"
           title="Warning"
@@ -48,4 +48,4 @@ export default component$(() => {
       </div>
     </Toaster.Root>
   );
-}); 
+});

@@ -4,14 +4,10 @@ import { Render } from "../render/render";
 
 export const ToasterItemDescriptionBase = component$((props: PropsOf<"div">) => {
   return (
-    <Render
-      {...props}
-      fallback="div"
-      data-qds-toaster-item-description
-    >
+    <Render {...props} fallback="div" data-qds-toaster-item-description>
       <Slot />
     </Render>
   );
 });
 
-export const ToasterItemDescription = withAsChild(ToasterItemDescriptionBase); 
+export const ToasterItemDescription = withAsChild(ToasterItemDescriptionBase);
