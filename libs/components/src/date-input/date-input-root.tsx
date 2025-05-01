@@ -22,8 +22,6 @@ export type PublicDateInputRootProps = PropsOf<"div"> & {
   locale?: Locale;
   /** The format of the date. Controls the appearance of the date input. Defaults to "mm/dd/yyyy". */
   format?: DateFormat;
-  /** When enabled prevents the user from entering a date */
-  disabled?: boolean;
   /** Event handler called when a date is selected */
   onChange$?: QRL<(date: ISODate | null) => void>;
 } & BindableProps<DateInputBoundProps>;
@@ -31,6 +29,8 @@ export type PublicDateInputRootProps = PropsOf<"div"> & {
 export type DateInputBoundProps = {
   /** The currently selected date */
   date: ISODate | null;
+  /** When enabled prevents the user from interacting with the date input */
+  disabled: boolean;
 };
 
 const regex = /^\d{4}-(0[1-9]|1[0-2])-\d{2}$/;
@@ -41,10 +41,10 @@ export const DateInputRoot = component$<PublicDateInputRootProps>((props) => {
   const format = props.format;
   const onDateChange$ = props.onChange$;
   const labelStr = props["aria-label"] ?? ARIA_LABELS[locale].root;
-  const { dateSig } = useBindings<DateInputBoundProps>(props, {
-    date: props.date ?? null
+  const { dateSig, disabledSig } = useBindings<DateInputBoundProps>(props, {
+    date: props.date ?? null,
+    disabled: false
   });
-  const disabledSig = useSignal(props.disabled ?? false);
 
   const localId = useId();
   const dateFormat = format ?? "mm/dd/yyyy";
