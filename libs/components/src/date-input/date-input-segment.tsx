@@ -311,9 +311,9 @@ export const DateInputSegment = component$(
           segmentSig.value.placeholderText.length === 4
         }
         value={segmentSig.value.displayValue}
-        onKeyDown$={isEditable ? onKeyDown$ : undefined}
-        onInput$={isEditable ? onInput$ : undefined}
-        onClick$={isEditable ? onClick$ : undefined}
+        onKeyDown$={isEditable ? [onKeyDown$, otherProps.onKeyDown$] : undefined}
+        onInput$={isEditable ? [onInput$, otherProps.onInput$] : undefined}
+        onClick$={isEditable ? [onClick$, otherProps.onClick$] : undefined}
         stoppropagation:change
         placeholder={segmentSig.value.placeholderText}
         aria-label={`${segmentSig.value.type} input`}
