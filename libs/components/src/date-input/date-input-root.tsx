@@ -47,7 +47,7 @@ export const DateInputRoot = component$<PublicDateInputRootProps>((props) => {
   });
 
   const localId = useId();
-  const dateFormat = format ?? "mm/dd/yyyy";
+  const dateFormat = format ?? "m/d/yyyy";
   const separator = getSeparatorFromFormat(dateFormat);
   const segments = getSegmentsFromFormat(dateFormat, separator, dateSig.value).map((s) =>
     useSignal(s)

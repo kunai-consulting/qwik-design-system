@@ -49,10 +49,15 @@ export const DateInputSegment = component$(
     });
 
     // The index of the current segment in orderedSegments
-    const segmentIndex = useComputed$(() => {
+    const segmentIndexSig = useComputed$(() => {
       return context.orderedSegments.findIndex(
         (s) => s.value.type === segmentSig.value.type
       );
+    });
+
+    const segmentLengthSig = useComputed$(() => {
+      const placeholderLength = segmentSig.value.placeholderText.length;
+      return placeholderLength < 2 ? 2 : placeholderLength;
     });
 
     const updateDayOfMonthSegmentForYearAndMonth = $(
@@ -150,7 +155,7 @@ export const DateInputSegment = component$(
           incrementDayValue(1);
           break;
       }
-      context.activeSegmentIndex.value = segmentIndex.value;
+      context.activeSegmentIndex.value = segmentIndexSig.value;
     });
 
     const decrementValue = $(() => {
@@ -165,7 +170,7 @@ export const DateInputSegment = component$(
           incrementDayValue(-1);
           break;
       }
-      context.activeSegmentIndex.value = segmentIndex.value;
+      context.activeSegmentIndex.value = segmentIndexSig.value;
     });
 
     const updateSegmentWithValue = $((textValue: string) => {
@@ -214,7 +219,7 @@ export const DateInputSegment = component$(
     // Watch for activeSegmentIndex changes and focus this segment when it matches
     useTask$(({ track }) => {
       const activeIndex = track(() => context.activeSegmentIndex.value);
-      const thisIndex = track(() => segmentIndex.value);
+      const thisIndex = track(() => segmentIndexSig.value);
 
       if (activeIndex === thisIndex && inputRef.value) {
         // Focus on next render cycle
@@ -277,7 +282,7 @@ export const DateInputSegment = component$(
           segment.type === "day" && (numericContent.length >= 2 || +numericContent >= 4);
         if (isYearFull || isMonthFull || isDayFull) {
           // Use the context function to move to the next segment
-          context.activeSegmentIndex.value = segmentIndex.value;
+          context.activeSegmentIndex.value = segmentIndexSig.value;
           context.focusNextSegment$();
         }
       } else {
@@ -286,7 +291,7 @@ export const DateInputSegment = component$(
     });
 
     const onClick$ = $(() => {
-      context.activeSegmentIndex.value = segmentIndex.value;
+      context.activeSegmentIndex.value = segmentIndexSig.value;
     });
 
     return (
@@ -321,6 +326,7 @@ export const DateInputSegment = component$(
         aria-valuemin={segmentSig.value.min}
         aria-valuenow={segmentSig.value.numericValue}
         disabled={!isEditable}
+        maxLength={segmentLengthSig.value}
       />
     );
   }
