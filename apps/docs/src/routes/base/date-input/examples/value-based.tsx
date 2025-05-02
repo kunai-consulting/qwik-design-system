@@ -1,25 +1,22 @@
 import { $, component$, useSignal } from "@builder.io/qwik";
-import { useStylesScoped$ } from "@builder.io/qwik";
+import { useStyles$ } from "@builder.io/qwik";
 import { DateInput } from "@kunai-consulting/qwik";
-import styles from "./date-input.css?inline";
 
 export default component$(() => {
-  useStylesScoped$(styles);
+  useStyles$(styles);
   const selectedDate = useSignal<DateInput.ISODate | null>("2021-01-01");
   const handleChange$ = $((date: DateInput.ISODate | null) => {
     selectedDate.value = date;
   });
 
   return (
-    <div class="flex flex-col gap-10">
+    <div class="date-input-container">
       <DateInput.Root
-        class="w-full flex gap-2 max-w-[300px]"
+        class="date-input-root-col"
         date={selectedDate.value}
         onChange$={handleChange$}
       >
-        <DateInput.Label class="flex items-center justify-between">
-          Choose your date:
-        </DateInput.Label>
+        <DateInput.Label>Choose your date:</DateInput.Label>
         <DateInput.DateEntry />
       </DateInput.Root>
 
@@ -27,7 +24,7 @@ export default component$(() => {
         Selected date: <span class="external-value">{selectedDate.value}</span>
       </p>
 
-      <div class="flex gap-2">
+      <div class="date-input-button-container">
         <button
           onClick$={() =>
             (selectedDate.value = new Date()
@@ -50,3 +47,6 @@ export default component$(() => {
     </div>
   );
 });
+
+// example styles
+import styles from "./date-input.css?inline";

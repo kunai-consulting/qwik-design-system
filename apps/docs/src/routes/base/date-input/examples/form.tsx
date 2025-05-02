@@ -1,8 +1,8 @@
-import { component$, useSignal, useStylesScoped$ } from "@builder.io/qwik";
+import { component$, useSignal, useStyles$ } from "@builder.io/qwik";
 import { DateInput } from "@kunai-consulting/qwik";
 
 export default component$(() => {
-  useStylesScoped$(styles);
+  useStyles$(styles);
 
   const formData = useSignal<Record<string, FormDataEntryValue>>();
 
@@ -13,16 +13,18 @@ export default component$(() => {
         const form = e.target as HTMLFormElement;
         formData.value = Object.fromEntries(new FormData(form));
       }}
-      style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+      class="date-input-container"
     >
       <DateInput.Root>
         <DateInput.Label>Appointment Date</DateInput.Label>
         <DateInput.DateEntry />
         <DateInput.HiddenInput name="appointment-date" />
       </DateInput.Root>
-      <button type="submit" class="submit-button">
-        Submit
-      </button>
+      <div class="date-input-button-container">
+        <button type="submit" class="submit-button">
+          Submit
+        </button>
+      </div>
       {formData.value && (
         <div class="submitted-data">
           Submitted: {JSON.stringify(formData.value, null, 2)}
