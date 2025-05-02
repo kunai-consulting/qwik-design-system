@@ -1,39 +1,202 @@
 {
+  "components": [
+    {
+      "Dropdown Root": {
+        "inheritsFrom": "PopoverRoot",
+        "types": [
+          {
+            "PublicDropdownRootProps": [
+              {
+                "comment": "Whether the dropdown is open by default (uncontrolled).",
+                "prop": "open",
+                "type": "boolean",
+                "defaultValue": "false"
+              },
+              {
+                "comment": "Controlled open state signal.",
+                "prop": "bind:open",
+                "type": "Signal<boolean>"
+              }
+            ]
+          }
+        ],
+        "dataAttributes": [
+          {
+            "name": "data-qds-dropdown-root",
+            "comment": "Present on the root element."
+          },
+          {
+            "name": "data-open",
+            "comment": "Present when the dropdown is open."
+          },
+          {
+            "name": "data-closed",
+            "comment": "Present when the dropdown is closed."
+          }
+        ]
+      }
+    },
+    {
+      "Dropdown Trigger": {
+        "inheritsFrom": "PopoverTrigger",
+        "ariaAttributes": [
+          {
+            "name": "aria-haspopup",
+            "value": "menu"
+          },
+          {
+            "name": "aria-expanded",
+            "value": "boolean"
+          },
+          {
+            "name": "aria-controls",
+            "value": "string (ID of content element)"
+          }
+        ],
+        "dataAttributes": [
+          {
+            "name": "data-qds-dropdown-trigger",
+            "comment": "Present on the trigger element."
+          }
+        ]
+      }
+    },
+    {
+      "Dropdown Content": {
+        "inheritsFrom": "PopoverContent",
+        "ariaAttributes": [
+          {
+            "name": "role",
+            "value": "menu"
+          },
+          {
+            "name": "aria-labelledby",
+            "value": "string (ID of trigger element)"
+          }
+        ],
+        "dataAttributes": [
+          {
+            "name": "data-qds-dropdown-content",
+            "comment": "Present on the content element."
+          }
+        ]
+      }
+    },
+    {
+      "Dropdown Item": {
+        "inheritsFrom": "div",
+        "types": [
+          {
+            "PublicDropdownItemProps": [
+              {
+                "comment": "Whether the item is interactive.",
+                "prop": "disabled",
+                "type": "boolean"
+              },
+              {
+                "comment": "Callback fired when the item is selected.",
+                "prop": "onSelect$",
+                "type": "(() => void)"
+              }
+            ]
+          }
+        ],
+        "ariaAttributes": [
+          {
+            "name": "role",
+            "value": "menuitem"
+          },
+          {
+            "name": "aria-disabled",
+            "value": "boolean"
+          }
+        ],
+        "dataAttributes": [
+          {
+            "name": "data-qds-dropdown-item",
+            "comment": "Present on the item element."
+          },
+          {
+            "name": "data-disabled",
+            "comment": "Present when the item is disabled."
+          },
+          {
+            "name": "data-highlighted",
+            "comment": "Present when the item is highlighted via keyboard navigation."
+          }
+        ]
+      }
+    },
+    {
+      "Dropdown ItemLabel": {
+        "inheritsFrom": "span",
+        "dataAttributes": [
+          {
+            "name": "data-qds-dropdown-item-label",
+            "comment": "Present on the item label element."
+          }
+        ]
+      }
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Dropdown.Root",
+      "description": "Root container for the dropdown, manages state and context."
+    },
+    {
+      "name": "Dropdown.Trigger",
+      "description": "The button element that toggles the dropdown visibility."
+    },
+    {
+      "name": "Dropdown.Content",
+      "description": "The container element for the menu items, positioned relative to the trigger."
+    },
+    {
+      "name": "Dropdown.Item",
+      "description": "An interactive menu item within the dropdown."
+    },
+    {
+      "name": "Dropdown.ItemLabel",
+      "description": "The text content or label for a Dropdown.Item."
+    }
+  ],
   "keyboardInteractions": [
     {
       "key": "Enter",
-      "comment": "When focus is on a dropdown item, selects the item and closes the dropdown"
+      "comment": "When focus is on a dropdown item, selects the item and closes the dropdown."
     },
     {
       "key": "Space",
-      "comment": "When focus is on a dropdown item, selects the item and closes the dropdown"
+      "comment": "When focus is on a dropdown item, selects the item and closes the dropdown."
     },
     {
       "key": "ArrowDown",
-      "comment": "When focus is within the dropdown content, moves focus to the next menu item"
+      "comment": "When focus is within the dropdown content, moves focus/highlight to the next menu item."
     },
     {
       "key": "ArrowUp",
-      "comment": "When focus is within the dropdown content, moves focus to the previous menu item"
+      "comment": "When focus is within the dropdown content, moves focus/highlight to the previous menu item."
     },
     {
       "key": "Escape",
-      "comment": "When the dropdown is open, closes the dropdown"
+      "comment": "When the dropdown is open, closes the dropdown."
     },
     {
       "key": "Tab",
-      "comment": "Moves focus to the next focusable element and closes the dropdown when focus leaves"
+      "comment": "Moves focus to the next focusable element; closes the dropdown when focus leaves."
     }
   ],
   "features": [
     "WAI ARIA Menu design pattern",
-    "Keyboard navigation with Enter/Space selection",
+    "Keyboard navigation with item highlighting",
+    "Enter/Space selection",
     "Support for disabled items",
-    "Custom popover positioning",
-    "Floating UI overlay positioning",
+    "Leverages Popover for positioning and state",
+    "Floating UI overlay positioning (via Popover)",
     "Bindable open/close state",
     "Focus management and keyboard interactions",
     "Accessible labeling and ARIA attributes",
-    "Customizable trigger and content rendering"
+    "Composable component parts"
   ]
 }
