@@ -1,8 +1,9 @@
-import { $, component$, useSignal } from "@builder.io/qwik";
+import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
 
 import { DateInput } from "@kunai-consulting/qwik";
 
 export default component$(() => {
+  useStyles$(styles);
   const selectedDate = useSignal<DateInput.ISODate | null>();
   const numChanges = useSignal(0);
   const handleChange$ = $((date: DateInput.ISODate | null) => {
@@ -11,14 +12,9 @@ export default component$(() => {
   });
 
   return (
-    <div class="flex flex-col gap-10">
-      <DateInput.Root
-        class="w-full flex flex-col gap-2 max-w-[300px]"
-        onChange$={handleChange$}
-      >
-        <DateInput.Label class="flex items-center justify-between">
-          My date input
-        </DateInput.Label>
+    <div class="date-input-container">
+      <DateInput.Root class="date-input-root-col" onChange$={handleChange$}>
+        <DateInput.Label>My date input</DateInput.Label>
         <DateInput.DateEntry />
       </DateInput.Root>
 
@@ -29,3 +25,6 @@ export default component$(() => {
     </div>
   );
 });
+
+// example styles
+import styles from "./date-input.css?inline";

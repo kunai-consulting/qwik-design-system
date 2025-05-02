@@ -1,12 +1,16 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, useStyles$ } from "@builder.io/qwik";
 
 import { DateInput } from "@kunai-consulting/qwik";
 
 export default component$(() => {
+  useStyles$(styles);
   return (
-    <DateInput.Root class="w-full flex gap-2 max-w-[300px]" format="dd-mm-yyyy">
-      <DateInput.Label class="flex items-center">Day-first date entry:</DateInput.Label>
+    <DateInput.Root class="date-input-root-row" format="dd-mm-yyyy">
+      <DateInput.Label>Day-first date entry:</DateInput.Label>
       <DateInput.DateEntry />
     </DateInput.Root>
   );
 });
+
+// example styles
+import styles from "./date-input.css?inline";
