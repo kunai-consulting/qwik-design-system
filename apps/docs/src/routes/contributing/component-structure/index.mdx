@@ -37,7 +37,9 @@ export const dropdownContextId = createContextId<DropdownContext>('qds-dropdown'
 
 // The component pieces
 export const DropdownRoot = component$((props) => {
-  const isPopoverOpenSig = useSignal(false);
+  const { openSig: isPopoverOpenSig } = useBindings(props, {
+    open: false,
+  });
  
   const context = {
     isPopoverOpenSig,
@@ -72,7 +74,7 @@ export const DropdownTrigger = component$((props) => {
 The Dropdown builds on top of the Popover component, another composable primitive.
 
 ```tsx
-export const DropdownPopover = component$((props) => {
+export const DropdownContent = component$((props) => {
   const context = useContext(dropdownContextId);
 
   useTask$(() => {
@@ -83,9 +85,9 @@ export const DropdownPopover = component$((props) => {
   })
 
   return (
-    <Popover.Panel {...props}>
+    <Popover.Content {...props}>
       <Slot />
-    </Popover.Panel>
+    </Popover.Content>
   );
 });
 ```
@@ -100,15 +102,13 @@ export const DropdownItem = component$((props) => {
 });
 ```
 
-Creating the namespace with pieces in `index.ts`
+Exporting the pieces in the component's `index.ts` file:
 
 ```tsx
-export const Dropdown = {
-  Root: DropdownRoot,
-  Trigger: DropdownTrigger,
-  Item: DropdownItem,
-  Popover: DropdownPopover
-};
+export { DropdownRoot as Root } from './root';
+export { DropdownTrigger as Trigger } from './trigger';
+export { DropdownItem as Item } from './item';
+export { DropdownContent as Content } from './content';
 ```
 
 This enables developers to use the component like this:
@@ -116,11 +116,11 @@ This enables developers to use the component like this:
 ```tsx
 <Dropdown.Root>
   <Dropdown.Trigger>Actions</Dropdown.Trigger>
-  <Dropdown.Popover>
+  <Dropdown.Content>
     <Dropdown.Item href="/profile">Profile</Dropdown.Item>
     <Dropdown.Item href="/settings">Settings</Dropdown.Item>
     <Dropdown.Item href="/logout">Logout</Dropdown.Item>
-  </Dropdown.Popover>
+  </Dropdown.Content>
 </Dropdown.Root>
 ```
 
@@ -141,11 +141,11 @@ export const UserActionsDropdown = component$(({ user }) => {
   return (
     <Dropdown.Root>
       <Dropdown.Trigger>User Actions</Dropdown.Trigger>
-      <Dropdown.Popover>
+      <Dropdown.Content>
         <Dropdown.Item href={`/user/${user.id}/profile`}>Profile</Dropdown.Item>
         <Dropdown.Item href={`/user/${user.id}/settings`}>Settings</Dropdown.Item>
         <Dropdown.Item href="/logout">Logout</Dropdown.Item>
-      </Dropdown.Popover>
+      </Dropdown.Content>
     </Dropdown.Root>
   );
 });
@@ -164,7 +164,7 @@ libs/components/src/dropdown/
 ├── index.ts           # Main export file that creates the namespace
 ├── dropdown-root.tsx           # Root component piece
 ├── dropdown-trigger.tsx        # Trigger component piece
-├── dropdown-menu.tsx           # Menu component piece
+├── dropdown-content.tsx        # Content component piece
 ├── dropdown-item.tsx           # Item component piece
 └── research.mdx       # Research and documentation
 ```
@@ -174,7 +174,7 @@ The component folder's `index.ts` file exports the pieces:
 ```tsx
 export { DropdownRoot as Root } from './root';
 export { DropdownTrigger as Trigger } from './trigger';
-export { DropdownMenu as Menu } from './menu';
+export { DropdownContent as Content } from './content';
 export { DropdownItem as Item } from './item';
 ```
 
@@ -191,6 +191,7 @@ export * as Calendar from "./calendar";
 export * as FileUpload from "./file-upload";
 export * as QRCode from "./qr-code";
 export * as Resizable from "./resizable";
+export * as Dropdown from "./dropdown";
 ```
 
 ## Benefits of This Structure

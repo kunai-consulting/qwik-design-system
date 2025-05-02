@@ -23,18 +23,18 @@
       }
     },
     {
-      "Resizable Panel": {
+      "Resizable Content": {
         "inheritsFrom": "div",
         "types": [
           {
-            "PublicPanelProps": [
+            "PublicContentProps": [
               {
-                "comment": "Default width of the panel (in pixels)",
+                "comment": "Default width of the content (in pixels)",
                 "prop": "width",
                 "type": "number"
               },
               {
-                "comment": "Default height of the panel (in pixels)",
+                "comment": "Default height of the content (in pixels)",
                 "prop": "height",
                 "type": "number"
               },
@@ -59,7 +59,7 @@
                 "type": "number"
               },
               {
-                "comment": "Whether the panel can be collapsed",
+                "comment": "Whether the content can be collapsed",
                 "prop": "collapsible",
                 "type": "boolean"
               },
@@ -79,17 +79,17 @@
                 "type": "number"
               },
               {
-                "comment": "Callback fired when the panel is resized",
+                "comment": "Callback fired when the content is resized",
                 "prop": "onResize$",
                 "type": "QRL<(size: number) => void>"
               },
               {
-                "comment": "Callback fired when the panel is collapsed",
+                "comment": "Callback fired when the content is collapsed",
                 "prop": "onCollapse$",
                 "type": "QRL<() => void>"
               },
               {
-                "comment": "Callback fired when the panel is expanded",
+                "comment": "Callback fired when the content is expanded",
                 "prop": "onExpand$",
                 "type": "QRL<() => void>"
               }
@@ -100,27 +100,27 @@
           {
             "name": "data-orientation",
             "type": "\"horizontal\" | \"vertical\"",
-            "comment": "The orientation of the panel"
+            "comment": "The orientation of the content"
           },
           {
             "name": "data-min-size",
             "type": "number",
-            "comment": "Minimum size constraint for the panel"
+            "comment": "Minimum size constraint for the content"
           },
           {
             "name": "data-max-size",
             "type": "number",
-            "comment": "Maximum size constraint for the panel"
+            "comment": "Maximum size constraint for the content"
           },
           {
             "name": "data-collapsible",
             "type": "boolean",
-            "comment": "Indicates whether the panel is collapsible"
+            "comment": "Indicates whether the content is collapsible"
           },
           {
             "name": "data-collapsed-size",
             "type": "number",
-            "comment": "Size when panel is collapsed"
+            "comment": "Size when content is collapsed"
           },
           {
             "name": "data-collapse-threshold",
@@ -130,7 +130,7 @@
           {
             "name": "data-is-collapsed",
             "type": "boolean",
-            "comment": "Current collapsed state of the panel"
+            "comment": "Current collapsed state of the content"
           }
         ]
       }
@@ -142,12 +142,12 @@
           {
             "PublicRootProps": [
               {
-                "comment": "Direction in which the panels can be resized",
+                "comment": "Direction in which the contents can be resized",
                 "prop": "orientation",
                 "type": "\"horizontal\" | \"vertical\""
               },
               {
-                "comment": "When true, prevents resizing of panels",
+                "comment": "When true, prevents resizing of contents",
                 "prop": "disabled",
                 "type": "boolean"
               },
@@ -180,20 +180,20 @@
       "description": "Container component that manages the resizable layout and state"
     },
     {
-      "name": "Resizable.Panel",
-      "description": "Individual panel component that can be resized"
+      "name": "Resizable.Content",
+      "description": "Individual content component that can be resized"
     },
     {
       "name": "Resizable.Handle",
-      "description": "Interactive handle component for resizing adjacent panels"
+      "description": "Interactive handle component for resizing adjacent contents"
     }
   ],
   "features": [
     "WAI ARIA Separator pattern implementation",
     "Keyboard navigation with arrow keys and Home/End",
-    "Collapsible panels with custom thresholds",
+    "Collapsible contents with custom thresholds",
     "Responsive resizing with min/max constraints",
-    "Panel size synchronization across handles",
+    "Content size synchronization across handles",
     "Dynamic orientation (horizontal/vertical)",
     "Fine-grained resizing control with Shift key",
     "Progressive size adjustments with step values",
@@ -205,31 +205,31 @@
     "shortcuts": [
       {
         "key": "ArrowLeft",
-        "comment": "When focus is on the handle and orientation is horizontal, decreases size of previous panel by 1%"
+        "comment": "When focus is on the handle and orientation is horizontal, decreases size of previous content by 1%"
       },
       {
         "key": "ArrowRight",
-        "comment": "When focus is on the handle and orientation is horizontal, increases size of previous panel by 1%"
+        "comment": "When focus is on the handle and orientation is horizontal, increases size of previous content by 1%"
       },
       {
         "key": "ArrowUp",
-        "comment": "When focus is on the handle and orientation is vertical, decreases size of previous panel by 1%"
+        "comment": "When focus is on the handle and orientation is vertical, decreases size of previous content by 1%"
       },
       {
         "key": "ArrowDown",
-        "comment": "When focus is on the handle and orientation is vertical, increases size of previous panel by 1%"
+        "comment": "When focus is on the handle and orientation is vertical, increases size of previous content by 1%"
       },
       {
         "key": "Shift + Arrow keys",
-        "comment": "When focus is on the handle, adjusts panel size by 10% instead of 1%"
+        "comment": "When focus is on the handle, adjusts content size by 10% instead of 1%"
       },
       {
         "key": "Home",
-        "comment": "When focus is on the handle, collapses previous panel to its minimum size"
+        "comment": "When focus is on the handle, collapses previous content to its minimum size"
       },
       {
         "key": "End",
-        "comment": "When focus is on the handle, expands previous panel to its maximum size"
+        "comment": "When focus is on the handle, expands previous content to its maximum size"
       }
     ]
   }

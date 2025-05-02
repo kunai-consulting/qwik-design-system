@@ -69,7 +69,8 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
           label: "Getting Started",
           children: [
             { id: "/contributing/intro", label: "Intro" },
-            { id: "/contributing/growth-mindset", label: "Growth Mindset" }
+            { id: "/contributing/growth-mindset", label: "Growth Mindset" },
+            { id: "/contributing/terminology", label: "Terminology" }
           ]
         },
         {

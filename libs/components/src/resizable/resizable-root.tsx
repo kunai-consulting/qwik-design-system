@@ -16,22 +16,22 @@ import {
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import {
-  type PanelRef,
+  type ContentRef,
   type ResizableContext,
   resizableContextId
 } from "./resizable-context";
 import styles from "./resizable.css?inline";
 
 type PublicResizableRootProps = {
-  /** Direction in which the panels can be resized */
+  /** Direction in which the contents can be resized */
   orientation?: "horizontal" | "vertical";
 } & PropsOf<"div"> &
   BindableProps<{
-    /** When true, prevents resizing of panels */
+    /** When true, prevents resizing of contents */
     disabled: boolean;
   }>;
 
-/** Root container component that manages the resizable panels and handles */
+/** Root container component that manages the resizable contents and handles */
 export const ResizableRootBase = component$<PublicResizableRootProps>((props) => {
   const rootRef = useSignal<HTMLElement>();
   useStyles$(styles);
@@ -63,14 +63,14 @@ export const ResizableRootBase = component$<PublicResizableRootProps>((props) =>
   );
   const isDragging = useSignal(false);
   const startPosition = useSignal<number | null>(null);
-  const panels = useSignal<PanelRef[]>([]);
+  const contents = useSignal<ContentRef[]>([]);
 
   const context: ResizableContext = {
     orientation: useSignal(orientation),
     disabled: disabledSig,
     startPosition,
     isDragging,
-    panels
+    contents
   };
 
   useContextProvider(resizableContextId, context);

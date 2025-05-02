@@ -2,9 +2,9 @@
   "features": [
     "WAI ARIA Separator pattern implementation",
     "Keyboard navigation with arrow keys and Home/End",
-    "Collapsible panels with custom thresholds",
+    "Collapsible contents with custom thresholds",
     "Responsive resizing with min/max constraints",
-    "Panel size synchronization across handles",
+    "Content size synchronization across handles",
     "Dynamic orientation (horizontal/vertical)",
     "Fine-grained resizing control with Shift key",
     "Progressive size adjustments with step values",
@@ -16,31 +16,31 @@
     "shortcuts": [
       {
         "key": "ArrowLeft",
-        "comment": "When focus is on the handle and orientation is horizontal, decreases size of previous panel by 1%"
+        "comment": "When focus is on the handle and orientation is horizontal, decreases size of previous content by 1%"
       },
       {
         "key": "ArrowRight",
-        "comment": "When focus is on the handle and orientation is horizontal, increases size of previous panel by 1%"
+        "comment": "When focus is on the handle and orientation is horizontal, increases size of previous content by 1%"
       },
       {
         "key": "ArrowUp",
-        "comment": "When focus is on the handle and orientation is vertical, decreases size of previous panel by 1%"
+        "comment": "When focus is on the handle and orientation is vertical, decreases size of previous content by 1%"
       },
       {
         "key": "ArrowDown",
-        "comment": "When focus is on the handle and orientation is vertical, increases size of previous panel by 1%"
+        "comment": "When focus is on the handle and orientation is vertical, increases size of previous content by 1%"
       },
       {
         "key": "Shift + Arrow keys",
-        "comment": "When focus is on the handle, adjusts panel size by 10% instead of 1%"
+        "comment": "When focus is on the handle, adjusts content size by 10% instead of 1%"
       },
       {
         "key": "Home",
-        "comment": "When focus is on the handle, collapses previous panel to its minimum size"
+        "comment": "When focus is on the handle, collapses previous content to its minimum size"
       },
       {
         "key": "End",
-        "comment": "When focus is on the handle, expands previous panel to its maximum size"
+        "comment": "When focus is on the handle, expands previous content to its maximum size"
       }
     ]
   }

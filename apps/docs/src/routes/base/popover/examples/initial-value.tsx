@@ -4,7 +4,7 @@ import { Popover } from "@kunai-consulting/qwik";
 export default component$(() => {
   return (
     <Popover.Root open={true}>
-      <Popover.Anchor class="popover-anchor">Open Popover</Popover.Anchor>
+      <Popover.Trigger class="popover-trigger">Open Popover</Popover.Trigger>
       <Popover.Content class="popover-content">Popover Panel</Popover.Content>
     </Popover.Root>
   );

@@ -28,7 +28,7 @@ export const popoverContextId = createContextId<PopoverContext>("qds-popover");
 
 type PopoverContext = {
   contentRef: Signal<HTMLDivElement | undefined>;
-  anchorRef: Signal<HTMLButtonElement | undefined>;
+  triggerRef: Signal<HTMLButtonElement | undefined>;
   localId: string;
   isOpenSig: Signal<boolean>;
   canExternallyChangeSig: Signal<boolean>;
@@ -41,7 +41,7 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
   useStyles$(anchorStyles);
 
   const contentRef = useSignal<HTMLDivElement>();
-  const anchorRef = useSignal<HTMLButtonElement>();
+  const triggerRef = useSignal<HTMLButtonElement>();
   const rootRef = useSignal<HTMLDivElement>();
   const localId = useId();
 
@@ -64,7 +64,7 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
 
   const context: PopoverContext = {
     contentRef,
-    anchorRef,
+    triggerRef,
     localId,
     isOpenSig,
     canExternallyChangeSig,

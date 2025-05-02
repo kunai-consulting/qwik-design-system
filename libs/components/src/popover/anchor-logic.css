@@ -4,7 +4,7 @@
     anchor-scope: --qds-popover;
   }
 
-  [data-qds-popover-anchor] {
+  [data-qds-popover-trigger] {
     anchor-name: --qds-popover;
     width: 10em;
   }

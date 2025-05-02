@@ -22,6 +22,18 @@ The question to ask yourself is:
 
 > Documenting things is a small sacrifice for a big benefit down the road. Whether that's for your future self, career, or for others.
 
+## Prop Naming
+
+### No `default` in the prop name
+
+Do **NOT** use `default` in the prop name.
+
+```tsx
+<Select.Root defaultOpen={false} />
+```
+
+Default is a React convention, based on the limitations of one way data flow. Qwik does not have this limitation. Instead, it would be `open` in this case for value based state, and `bind:open` for signal based state.
+
 
 ## Sig Suffix
 
@@ -98,5 +110,51 @@ Each component should have an identifier data attribute.
 Ex: `data-qds-select-root`
 
 We use this both for styling (layout / behavioral css), and for testing.
+
+### Attributes based on existence
+
+**Important Convention:** For data attributes representing a boolean (true/false) state like `data-disabled` or `data-checked`, the attribute should **only be present** on the HTML element when the state is **true**. It should be completely absent when the state is false.
+
+**Example: `data-disabled`**
+
+*   ✅ **Good:**
+    *   `disabled = true`  -> `<button data-disabled ...>`
+    *   `disabled = false` -> `<button ...>` (Attribute is missing)
+*   ❌ **Bad:**
+    *   `<button data-disabled="true" ...>` (Avoid setting value to "true")
+    *   `<button data-disabled="false" ...>` (Do not add the attribute when false)
+
+**Example: `data-checked`**
+
+*   ✅ **Good:**
+    *   `checked = true`  -> `<div data-checked ...>`
+    *   `checked = false` -> `<div ...>` (Attribute is missing)
+*   ❌ **Bad:**
+    *   `<div data-checked="true" ...>` (Avoid setting value to "true")
+    *   `<div data-checked="false" ...>` (Do not add the attribute when false)
+
+Styling should rely on the presence or absence of the attribute:
+
+```css
+/* Style for when the button IS disabled */
+.checkbox-trigger[data-disabled] {
+  opacity: 0.5;
+}
+
+/* Style for when the checkbox IS checked */
+.checkbox-trigger[data-checked] {
+  background-color: blue;
+}
+```
+
+*   ❌ **Bad:**
+
+Do **NOT** prefix any attributes with `data-state`. Not only is it verbose, but it's not the convention we use.
+
+
+
+
+
+
 
 

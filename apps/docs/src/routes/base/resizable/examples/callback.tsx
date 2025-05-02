@@ -15,7 +15,7 @@ export default component$(() => {
       }}
     >
       <Resizable.Root class="resizable-root">
-        <Resizable.Panel
+        <Resizable.Content
           width={200}
           minWidth={100}
           maxWidth={500}
@@ -27,9 +27,9 @@ export default component$(() => {
           <div style={{ padding: "20px", color: "black" }}>
             Left Panel (min: 100, max: 500)
           </div>
-        </Resizable.Panel>
+        </Resizable.Content>
         <Resizable.Handle class="resizable-handle" />
-        <Resizable.Panel
+        <Resizable.Content
           minWidth={150}
           onResize$={$((size: number) => {
             console.log("Right panel size:", `${size}px`);
@@ -37,7 +37,7 @@ export default component$(() => {
           })}
         >
           <div style={{ padding: "20px", color: "black" }}>Right Panel (min: 150)</div>
-        </Resizable.Panel>
+        </Resizable.Content>
       </Resizable.Root>
       {leftPanelSize.value > 0 && rightPanelSize.value > 0 && (
         <>

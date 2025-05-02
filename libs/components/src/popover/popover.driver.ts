@@ -11,7 +11,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   };
 
   const getTrigger = () => {
-    return rootLocator.locator("[data-qds-popover-anchor]");
+    return rootLocator.locator("[data-qds-popover-trigger]");
   };
 
   const openPopover = async (key: PopoverOpenKeys | "click", index?: number) => {
