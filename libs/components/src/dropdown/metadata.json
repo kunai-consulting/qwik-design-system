@@ -1,0 +1,39 @@
+{
+  "features": [
+    "WAI ARIA Menu design pattern",
+    "Keyboard navigation with Enter/Space selection",
+    "Support for disabled items",
+    "Custom popover positioning",
+    "Floating UI overlay positioning",
+    "Bindable open/close state",
+    "Focus management and keyboard interactions",
+    "Accessible labeling and ARIA attributes",
+    "Customizable trigger and content rendering"
+  ],
+  "keyboard": [
+    {
+      "key": "Enter",
+      "comment": "When focus is on a dropdown item, selects the item and closes the dropdown"
+    },
+    {
+      "key": "Space",
+      "comment": "When focus is on a dropdown item, selects the item and closes the dropdown"
+    },
+    {
+      "key": "ArrowDown",
+      "comment": "When focus is within the dropdown content, moves focus to the next menu item"
+    },
+    {
+      "key": "ArrowUp",
+      "comment": "When focus is within the dropdown content, moves focus to the previous menu item"
+    },
+    {
+      "key": "Escape",
+      "comment": "When the dropdown is open, closes the dropdown"
+    },
+    {
+      "key": "Tab",
+      "comment": "Moves focus to the next focusable element and closes the dropdown when focus leaves"
+    }
+  ]
+}
