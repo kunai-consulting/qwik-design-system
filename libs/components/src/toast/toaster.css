@@ -1,0 +1,5 @@
+@layer toaster {
+   [data-qds-toaster] {
+    position: fixed; 
+   } 
+}

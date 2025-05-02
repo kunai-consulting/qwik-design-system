@@ -7,6 +7,7 @@ The toast component will leverage our [popover component](https://qwik.design/ba
 - [Base-ui Toast & Toaster](https://base-ui.com/react/components/toast)
 - [Toaster Example and Usage inspiration](https://kobalte.dev/docs/core/components/toast)
 - [Toaster Accessibility Example](https://www.radix-ui.com/primitives/docs/components/toast#accessibility)
+- [Toaster toaster example](https://next.melt-ui.com/components/toaster)
 
 ## Features
 - [ ] `Auto-dismiss` - Automatically close after configurable duration
@@ -19,6 +20,7 @@ The toast component will leverage our [popover component](https://qwik.design/ba
 - `Toaster.ItemTitle`
 - `Toaster.ItemDescription`
 - `Toaster.ItemClose`
+- `Toaster`
 
 ## Keyboard Interactions
 - `Escape` - Dismiss the currently focused toast

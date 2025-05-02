@@ -5,6 +5,7 @@ import {
   useContext,
   useOnDocument,
   useSignal,
+  useStyles$,
   useVisibleTask$
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
@@ -14,8 +15,10 @@ import { ToasterItem } from "./toaster-item";
 import { ToasterItemClose } from "./toaster-item-close";
 import { ToasterItemDescription } from "./toaster-item-description";
 import { ToasterItemTitle } from "./toaster-item-title";
+import styles from "./toaster.css?inline";
 
 export const ToasterBase = component$((props: PropsOf<"div">) => {
+  useStyles$(styles);
   const { ...rest } = props;
   const context = useContext(toastContextId);
   const isOpen = useSignal(!!context.currentToast.value);
@@ -49,6 +52,7 @@ export const ToasterBase = component$((props: PropsOf<"div">) => {
     }
   });
 
+
   return (
     <Popover.Root
       open={isOpen.value}
@@ -58,19 +62,11 @@ export const ToasterBase = component$((props: PropsOf<"div">) => {
         }
       }}
     >
-      {/* Hidden anchor - not visible but required for popover */}
-      <Popover.Trigger style={{ display: "none" }} />
 
       {/* Custom positioned popover content */}
       <Popover.Content
         {...rest}
         data-qds-toaster
-        style={`
-          position: fixed; 
-          z-index: 9999; 
-          max-width: 100%; 
-          width: 360px;
-        `}
       >
         {context.currentToast.value && (
           <ToasterItem toast={context.currentToast.value}>

@@ -5,7 +5,7 @@
   cursor: pointer;
   border: none;
   outline: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -73,30 +73,12 @@
 }
 
 [data-qds-toaster-item] {
-  border-radius: 0.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   padding: 1rem;
   max-width: 350px;
   width: 100%;
+  margin: 0.5rem;
   display: flex;
   flex-direction: column;
-  border-left: 4px solid;
-}
-
-[data-qds-toaster-item][data-type="success"] {
-  border-left-color: #10b981;
-}
-
-[data-qds-toaster-item][data-type="error"] {
-  border-left-color: #ef4444;
-}
-
-[data-qds-toaster-item][data-type="info"] {
-  border-left-color: #3b82f6;
-}
-
-[data-qds-toaster-item][data-type="warning"] {
-  border-left-color: #f59e0b;
 }
 
 [data-qds-toaster-item-title] {
