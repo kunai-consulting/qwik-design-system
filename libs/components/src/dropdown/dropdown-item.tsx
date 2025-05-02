@@ -11,6 +11,7 @@ import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { dropdownContextId } from "./dropdown-context";
+
 export type PublicDropdownItemProps = PropsOf<"div"> & {
   /** Whether the dropdown item is disabled */
   disabled?: boolean;
@@ -25,14 +26,22 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
     const context = useContext(dropdownContextId);
     const itemRef = useSignal<HTMLElement>();
 
-    useTask$(function getIndexOrder() {
-      if (_index === undefined) {
-        throw new Error("DropdownItem cannot find its proper index.");
+    useTask$(function manageItemRef({ track }) {
+      track(() => _index);
+      track(() => itemRef.value);
+
+      if (typeof _index !== "number") {
+        console.error("DropdownItem received invalid index:", _index);
+        return;
       }
 
-      context.itemRefs.value[_index] = {
-        ref: itemRef
-      };
+      if (itemRef.value) {
+        while (context.itemRefs.value.length <= _index) {
+          context.itemRefs.value.push({ ref: { value: null } });
+        }
+
+        context.itemRefs.value[_index] = { ref: itemRef };
+      }
     });
 
     const handleClick = $(() => {

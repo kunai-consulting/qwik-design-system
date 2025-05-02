@@ -48,11 +48,11 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
     sync$((event: KeyboardEvent) => {
       // we have to do this on a window event due to v1 serialization issues
       const activeElement = document.activeElement;
-      const isWithinDropdown = activeElement?.closest("[data-qds-dropdown-root]");
+      const isWithinDropdown = activeElement?.closest("[data-qds-popover-content]");
 
       if (!isWithinDropdown) return;
 
-      const preventKeys = ["ArrowUp", "ArrowDown"];
+      const preventKeys = ["ArrowUp", "ArrowDown", " "];
       if (preventKeys.includes(event.key)) {
         event.preventDefault();
       }
