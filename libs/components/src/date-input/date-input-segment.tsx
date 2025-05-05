@@ -185,7 +185,7 @@ export const DateInputSegment = component$(
       segmentSig.value = {
         ...segment,
         isPlaceholder: false,
-        numericValue: numericValue,
+        numericValue,
         displayValue:
           segment.type !== "year"
             ? getDisplayValue(numericValue, segment.placeholderText)
