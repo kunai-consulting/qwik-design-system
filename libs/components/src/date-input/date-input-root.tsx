@@ -52,6 +52,11 @@ export const DateInputRoot = component$<PublicDateInputRootProps>((props) => {
   const separator = getSeparatorFromFormat(dateFormat);
   const segments = getSegmentsFromFormat(dateFormat, separator, dateSig.value);
   const activeSegmentIndex = useSignal<number>(-1);
+
+  // This flag helps maintain two behaviors when the date changes to null.
+  // 1. When the date signal changes to null programmatically, we want to clear all segments.
+  // 2. When the date is cleared via keyboard input on an individual segment, we leave the other segments unchanged.
+  // See usage in updateSegmentsWithNewDateValue
   const isInternalSegmentClearance = useSignal<boolean>(false);
 
   // biome-ignore lint/style/noNonNullAssertion: valid format will always include day
