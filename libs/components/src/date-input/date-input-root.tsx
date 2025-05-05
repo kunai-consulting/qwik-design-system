@@ -33,6 +33,7 @@ export type DateInputBoundProps = {
   disabled: boolean;
 };
 
+// Regular expression for validating ISO date format (yyyy-mm-dd)
 const regex = /^\d{4}-(0[1-9]|1[0-2])-\d{2}$/;
 
 /** The root Date Input component that manages state and provides context */
@@ -49,9 +50,7 @@ export const DateInputRoot = component$<PublicDateInputRootProps>((props) => {
   const localId = useId();
   const dateFormat = format ?? "m/d/yyyy";
   const separator = getSeparatorFromFormat(dateFormat);
-  const segments = getSegmentsFromFormat(dateFormat, separator, dateSig.value).map((s) =>
-    useSignal(s)
-  );
+  const segments = getSegmentsFromFormat(dateFormat, separator, dateSig.value);
   const activeSegmentIndex = useSignal<number>(-1);
   const isInternalSegmentClearance = useSignal<boolean>(false);
 

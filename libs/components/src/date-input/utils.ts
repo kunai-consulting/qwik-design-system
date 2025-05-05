@@ -1,3 +1,4 @@
+import { type Signal, createSignal } from "@builder.io/qwik";
 import type { DateFormat, ISODate, LocalDate, Separator } from "../calendar/types";
 import { MAX_YEAR, MIN_YEAR } from "./constants";
 import type { DateSegment } from "./types";
@@ -21,9 +22,9 @@ export const getSegmentsFromFormat = (
   format: DateFormat,
   separator: Separator,
   defaultDate?: ISODate | null
-): DateSegment[] => {
+): Signal<DateSegment>[] => {
   const sections = format.split(separator);
-  const placeholderSegments = sections.map((segment) => {
+  let segments = sections.map((segment) => {
     const type = segment.includes("y") ? "year" : segment.includes("d") ? "day" : "month";
     return {
       placeholderText: segment,
@@ -35,7 +36,7 @@ export const getSegmentsFromFormat = (
   });
   if (defaultDate) {
     const [year, month, day] = defaultDate.split("-");
-    return placeholderSegments.map((segment) => {
+    segments = segments.map((segment) => {
       const type = segment.type;
       return {
         ...segment,
@@ -46,7 +47,7 @@ export const getSegmentsFromFormat = (
       } as DateSegment;
     });
   }
-  return placeholderSegments;
+  return segments.map((segment) => createSignal(segment));
 };
 
 export const getLastDayOfMonth = (year: number, month: number) => {
