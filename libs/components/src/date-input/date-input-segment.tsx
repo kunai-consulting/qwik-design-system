@@ -60,32 +60,51 @@ export const DateInputSegment = component$(
       return placeholderLength < 2 ? 2 : placeholderLength;
     });
 
+    /**
+     * Updates the max value of the day segment based on the year and month.
+     * If the current value is greater than the max, it updates the value of the day segment to the max value.
+     * If we do not have both a month and a year, the max is simply set to 31.
+     *
+     * For example, if the date is set to 2024-03-30, and the month is changed to 2,
+     * the day segment's max and value will be updated to 29.
+     */
     const updateDayOfMonthSegmentForYearAndMonth = $(
       (year: number | undefined, month: number | undefined) => {
         const currentDayOfMonthSegment = context.dayOfMonthSegmentSig.value;
-        let updatedDayOfMonthSegment: DateSegment;
+
         if (year && month) {
           const lastDayOfMonth = getLastDayOfMonth(year, month);
-          const updatedDayOfMonth =
-            (currentDayOfMonthSegment.numericValue ?? -1) > lastDayOfMonth
-              ? lastDayOfMonth
-              : currentDayOfMonthSegment.numericValue;
-          updatedDayOfMonthSegment = {
-            ...currentDayOfMonthSegment,
-            max: lastDayOfMonth,
-            numericValue: updatedDayOfMonth,
-            displayValue: getDisplayValue(
-              updatedDayOfMonth,
-              currentDayOfMonthSegment.placeholderText
-            )
-          };
-        } else {
-          updatedDayOfMonthSegment = {
-            ...currentDayOfMonthSegment,
-            max: 31
-          };
+
+          // If the current day value is greater than the last day of the new month,
+          // update the max and the value to the last day of the month
+          if ((currentDayOfMonthSegment.numericValue ?? -1) > lastDayOfMonth) {
+            context.dayOfMonthSegmentSig.value = {
+              ...currentDayOfMonthSegment,
+              max: lastDayOfMonth,
+              numericValue: lastDayOfMonth,
+              displayValue: getDisplayValue(
+                lastDayOfMonth,
+                currentDayOfMonthSegment.placeholderText
+              )
+            };
+            return;
+          }
+
+          // Otherwise, update the max if it has changed
+          if (currentDayOfMonthSegment.max !== lastDayOfMonth) {
+            context.dayOfMonthSegmentSig.value = {
+              ...currentDayOfMonthSegment,
+              max: lastDayOfMonth
+            };
+          }
+          return;
         }
-        context.dayOfMonthSegmentSig.value = updatedDayOfMonthSegment;
+
+        // Not enough info, so let the user enter up to 31
+        context.dayOfMonthSegmentSig.value = {
+          ...currentDayOfMonthSegment,
+          max: 31
+        };
       }
     );
 
