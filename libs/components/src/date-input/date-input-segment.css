@@ -2,19 +2,27 @@
   input[data-qds-date-input-segment] {
     border: none;
     padding: 0 1px;
+    box-sizing: border-box;
+    grid-area: 1 / 1;
+    width: 100%;
+    min-width: 1ch;
   }
-  [data-qds-date-input-segment-small] {
-    width: 2ch;
+
+  input[data-qds-date-input-segment]::placeholder {
+    text-align: center;
   }
-  [data-qds-date-input-segment-large] {
-    width: 4ch;
+
+  .qds-date-input-segment-container {
+    display: inline-grid;
+    width: min-content;
   }
-  /* specific rule for month placeholder since mm is usually wider than 00 in non-monospace fonts */
-  [data-qds-date-input-segment-month][data-qds-date-input-segment-small][data-qds-date-input-segment-placeholder] {
-    width: calc(2ch * 1.5);
-  }
-  /* specific rule for year placeholder since yyyy is usually narrower than 0000 in non-monospace fonts */
-  [data-qds-date-input-segment-year][data-qds-date-input-segment-large][data-qds-date-input-segment-placeholder] {
-    width: calc(4ch * 0.95);
+
+  .qds-date-input-width-measurement {
+    grid-area: 1 / 1;
+    visibility: hidden;
+    white-space: pre;
+    font: inherit;
+    letter-spacing: inherit;
+    padding: 0 1px;
   }
 }

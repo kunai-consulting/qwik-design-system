@@ -294,40 +294,55 @@ export const DateInputSegment = component$(
       context.activeSegmentIndex.value = segmentIndexSig.value;
     });
 
+    const usePlaceholderWidth = useComputed$(() => {
+      return (
+        segmentSig.value.placeholderText.length >
+        (segmentSig.value.displayValue?.length ?? 0)
+      );
+    });
+
     return (
-      <input
-        {...otherProps}
-        ref={inputRef}
-        id={inputId}
-        type="text"
-        data-qds-date-input-segment
-        data-qds-date-input-segment-placeholder={segmentSig.value.isPlaceholder}
-        data-qds-date-input-segment-day={segmentSig.value.type === "day"}
-        data-qds-date-input-segment-month={segmentSig.value.type === "month"}
-        data-qds-date-input-segment-year={segmentSig.value.type === "year"}
-        data-qds-date-input-segment-small={
-          !(
-            segmentSig.value.type === "year" &&
-            segmentSig.value.placeholderText.length === 4
-          )
-        }
-        data-qds-date-input-segment-large={
-          segmentSig.value.type === "year" &&
-          segmentSig.value.placeholderText.length === 4
-        }
-        value={segmentSig.value.displayValue}
-        onKeyDown$={isEditable ? [onKeyDown$, otherProps.onKeyDown$] : undefined}
-        onInput$={isEditable ? [onInput$, otherProps.onInput$] : undefined}
-        onClick$={isEditable ? [onClick$, otherProps.onClick$] : undefined}
-        stoppropagation:change
-        placeholder={segmentSig.value.placeholderText}
-        aria-label={`${segmentSig.value.type} input`}
-        aria-valuemax={segmentSig.value.max}
-        aria-valuemin={segmentSig.value.min}
-        aria-valuenow={segmentSig.value.numericValue}
-        disabled={!isEditable}
-        maxLength={segmentLengthSig.value}
-      />
+      <>
+        <div class="qds-date-input-segment-container">
+          <span
+            class={[
+              "qds-date-input-width-measurement",
+              usePlaceholderWidth.value
+                ? "qds-date-input-width-measurement-placeholder"
+                : ""
+            ]}
+            aria-hidden="true"
+          >
+            {usePlaceholderWidth.value
+              ? segmentSig.value.placeholderText
+              : segmentSig.value.displayValue}
+          </span>
+
+          <input
+            {...otherProps}
+            ref={inputRef}
+            id={inputId}
+            type="text"
+            data-qds-date-input-segment
+            data-qds-date-input-segment-placeholder={segmentSig.value.isPlaceholder}
+            data-qds-date-input-segment-day={segmentSig.value.type === "day"}
+            data-qds-date-input-segment-month={segmentSig.value.type === "month"}
+            data-qds-date-input-segment-year={segmentSig.value.type === "year"}
+            value={segmentSig.value.displayValue}
+            onKeyDown$={isEditable ? [onKeyDown$, otherProps.onKeyDown$] : undefined}
+            onInput$={isEditable ? [onInput$, otherProps.onInput$] : undefined}
+            onClick$={isEditable ? [onClick$, otherProps.onClick$] : undefined}
+            stoppropagation:change
+            placeholder={segmentSig.value.placeholderText}
+            aria-label={`${segmentSig.value.type} input`}
+            aria-valuemax={segmentSig.value.max}
+            aria-valuemin={segmentSig.value.min}
+            aria-valuenow={segmentSig.value.numericValue}
+            disabled={!isEditable}
+            maxLength={segmentLengthSig.value}
+          />
+        </div>
+      </>
     );
   }
 );
