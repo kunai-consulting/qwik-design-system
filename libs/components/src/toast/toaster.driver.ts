@@ -7,13 +7,23 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   };
 
   const getTrigger = () => {
-    return rootLocator.locator("[data-qds-toast-trigger]");
+    return rootLocator.locator("[data-qds-toaster-trigger]");
+  };
+
+  const getItem = () => {
+    return rootLocator.locator("[data-qds-toaster-item]");
+  };
+
+  const getClose = () => {
+    return rootLocator.locator("[data-qds-toaster-item-close]");
   };
 
   return {
     ...rootLocator,
     locator: rootLocator,
     getRoot,
-    getTrigger
+    getTrigger,
+    getItem,
+    getClose
   };
 }

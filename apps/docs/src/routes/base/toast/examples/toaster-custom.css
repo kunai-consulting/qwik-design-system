@@ -29,24 +29,14 @@
 
 [data-qds-toaster-trigger][data-type="success"],
 [data-qds-toaster-trigger].success {
-  background-color: #10b981;
+  background-color: var(--color-qwik-blue-800);
   color: white;
 }
 
 [data-qds-toaster-trigger][data-type="success"]:hover,
 [data-qds-toaster-trigger].success:hover {
-  background-color: #059669;
-}
-
-[data-qds-toaster-trigger][data-type="error"],
-[data-qds-toaster-trigger].error {
-  background-color: #ef4444;
-  color: white;
-}
-
-[data-qds-toaster-trigger][data-type="error"]:hover,
-[data-qds-toaster-trigger].error:hover {
-  background-color: #dc2626;
+  background-color: var(--color-qwik-blue-200);
+  color: var(--color-qwik-neutral-700);
 }
 
 [data-qds-toaster-item] {

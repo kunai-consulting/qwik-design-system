@@ -35,19 +35,11 @@ export default component$(() => {
     <Toaster.Root duration={3000} pauseOnHover>
       <div class="flex flex-wrap gap-2">
         <Toaster.Trigger
-          title="Success!"
-          description="Your action has been completed successfully."
+          title="Example Toast"
+          description="This is an example toast."
           class="success"
         >
-          Success Toast
-        </Toaster.Trigger>
-
-        <Toaster.Trigger
-          title="Error!"
-          description="There was a problem with your action."
-          class="error"
-        >
-          Error Toast
+          Example Toast
         </Toaster.Trigger>
       </div>
 

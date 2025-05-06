@@ -99,9 +99,6 @@ export const ToasterItemBase = component$((props: ToasterItemProps) => {
 
   return (
     <Popover.Root open={true}>
-      {/* Hidden trigger element for positioning */}
-      <Popover.Trigger ref={triggerRef} aria-hidden="true" tabIndex={-1} />
-
       <Popover.Content
         ref={contentRef}
         role="status"
