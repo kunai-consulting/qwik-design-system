@@ -11,8 +11,10 @@ import {
   useTask$
 } from "@builder.io/qwik";
 import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
+import { withAsChild } from "../as-child/as-child";
 import { ARIA_LABELS, MONTHS_LG } from "../calendar/constants";
 import type { DateFormat, ISODate, Locale } from "../calendar/types";
+import { Render } from "../render/render";
 import type { DateInputContext } from "./date-input-context";
 import { dateInputContextId } from "./date-input-context";
 import { getSegmentsFromFormat, getSeparatorFromFormat } from "./utils";
@@ -37,7 +39,7 @@ export type DateInputBoundProps = {
 const regex = /^\d{4}-(0[1-9]|1[0-2])-\d{2}$/;
 
 /** The root Date Input component that manages state and provides context */
-export const DateInputRoot = component$<PublicDateInputRootProps>((props) => {
+export const DateInputRootBase = component$<PublicDateInputRootProps>((props) => {
   const locale = props.locale || "en";
   const format = props.format;
   const onDateChange$ = props.onChange$;
@@ -176,13 +178,16 @@ export const DateInputRoot = component$<PublicDateInputRootProps>((props) => {
   });
 
   return (
-    <div
+    <Render
+      fallback="div"
       data-qds-date-input-root
       data-theme="light"
       aria-label={labelSignal.value}
       {...props}
     >
       <Slot />
-    </div>
+    </Render>
   );
 });
+
+export const DateInputRoot = withAsChild(DateInputRootBase);
