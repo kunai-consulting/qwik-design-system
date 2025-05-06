@@ -1,4 +1,6 @@
 import {
+  $,
+  type PropsOf,
   Slot,
   component$,
   useContext,
@@ -12,7 +14,7 @@ import * as Popover from "../popover";
 import { type Toast, toastContextId } from "./toast-context";
 import styles from "./toaster.css?inline";
 
-export interface ToasterItemProps {
+export type ToasterItemProps = PropsOf<"div"> & {
   toast: Toast;
 }
 
@@ -86,10 +88,22 @@ export const ToasterItemBase = component$((props: ToasterItemProps) => {
     }
   });
 
+  const handleMouseEnter$ = $(() => {
+    isPaused.value = true;
+  });
+
+  const handleMouseLeave$ = $(() => {
+    isPaused.value = false;
+  });
+
   return (
     <Popover.Root open={true}>
       {/* Hidden trigger element for positioning */}
-      <Popover.Trigger ref={triggerRef} aria-hidden="true" tabIndex={-1} />
+      <Popover.Trigger
+        ref={triggerRef}
+        aria-hidden="true"
+        tabIndex={-1}
+      />
 
       <Popover.Content
         ref={contentRef}
@@ -97,12 +111,8 @@ export const ToasterItemBase = component$((props: ToasterItemProps) => {
         data-qds-toaster-item
         data-state="open"
         tabIndex={0}
-        onMouseEnter$={() => {
-          isPaused.value = true;
-        }}
-        onMouseLeave$={() => {
-          isPaused.value = false;
-        }}
+        onMouseEnter$={[handleMouseEnter$, props.onMouseEnter$]}
+        onMouseLeave$={[handleMouseLeave$, props.onMouseLeave$]}
       >
         <Slot />
       </Popover.Content>
