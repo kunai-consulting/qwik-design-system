@@ -167,11 +167,11 @@ export const DateInputRoot = component$<PublicDateInputRootProps>((props) => {
     context.isInternalSegmentClearance.value = false;
   });
 
-  useTask$(({ track }) => {
+  useTask$(async ({ track }) => {
     const date = track(() => dateSig.value);
-    updateSegmentsWithNewDateValue(date);
+    await updateSegmentsWithNewDateValue(date);
     if (onDateChange$) {
-      onDateChange$(date);
+      await onDateChange$(date);
     }
   });
 
