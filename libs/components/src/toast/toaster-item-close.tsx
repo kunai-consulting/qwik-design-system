@@ -3,10 +3,13 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { toastContextId } from "./toast-context";
 
-export type ToasterItemCloseProps = PropsOf<"button">;
+export type ToasterItemCloseProps = {
+  label?: string;
+} & PropsOf<"button">;
 
+/** Close button for toast items */
 export const ToasterItemCloseBase = component$((props: ToasterItemCloseProps) => {
-  const { ...rest } = props;
+  const { label = "Close", ...rest } = props;
   const context = useContext(toastContextId);
 
   const handleClick$ = $(() => {
@@ -17,12 +20,11 @@ export const ToasterItemCloseBase = component$((props: ToasterItemCloseProps) =>
     <Render
       {...rest}
       fallback="button"
-      type="button"
-      aria-label="Close"
       data-qds-toaster-item-close
       onClick$={[handleClick$, props.onClick$]}
+      aria-label={rest["aria-label"] || label}
     >
-      {props.children ? <Slot /> : "✕"}
+      <Slot />
     </Render>
   );
 });

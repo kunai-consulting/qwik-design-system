@@ -84,7 +84,12 @@ export const ToasterRootBase = component$((props: ToasterRootProps) => {
   useContextProvider(toastContextId, context);
 
   return (
-    <Render {...rest} fallback="div" data-qds-toaster-root aria-live="polite">
+    <Render
+      {...rest}
+      fallback="div"
+      data-qds-toaster-root
+      aria-live={rest["aria-live"] || "polite"}
+    >
       <Slot />
     </Render>
   );

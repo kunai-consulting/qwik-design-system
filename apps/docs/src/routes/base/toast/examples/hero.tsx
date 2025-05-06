@@ -1,5 +1,6 @@
 import { component$, useContext, useStyles$ } from "@builder.io/qwik";
 import { Toaster } from "@kunai-consulting/qwik";
+import { LuX } from "@qwikest/icons/lucide";
 import styles from "./toaster-custom.css?inline";
 
 // Create a component to display toasts
@@ -20,7 +21,11 @@ export const ToastDisplay = component$(() => {
                 {context.currentToast.value.description}
               </Toaster.ItemDescription>
             )}
-            {context.currentToast.value.dismissible && <Toaster.ItemClose />}
+            {context.currentToast.value.dismissible && (
+              <Toaster.ItemClose aria-label="Dismiss toast">
+                <LuX />
+              </Toaster.ItemClose>
+            )}
           </Toaster.Item>
         </div>
       )}
@@ -32,7 +37,7 @@ export default component$(() => {
   useStyles$(styles);
 
   return (
-    <Toaster.Root duration={3000} pauseOnHover>
+    <Toaster.Root duration={55000} pauseOnHover>
       <div class="flex flex-wrap gap-2">
         <Toaster.Trigger
           title="Example Toast"
