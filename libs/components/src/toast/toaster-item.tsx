@@ -3,11 +3,11 @@ import {
   type PropsOf,
   Slot,
   component$,
+  isBrowser,
   useContext,
   useSignal,
   useStyles$,
-  useTask$,
-  useVisibleTask$
+  useTask$
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import * as Popover from "../popover";
@@ -32,7 +32,8 @@ export const ToasterItemBase = component$((props: ToasterItemProps) => {
   const isShown = useSignal(false);
 
   // Set up auto-dismiss timer
-  useVisibleTask$(({ cleanup }) => {
+  useTask$(({ cleanup }) => {
+    if (!isBrowser) return;
     if (!toast.duration) return;
 
     // Show the popover once mounted
