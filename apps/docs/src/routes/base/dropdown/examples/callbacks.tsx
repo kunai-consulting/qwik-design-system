@@ -9,7 +9,9 @@ export default component$(() => {
 
   return (
     <div>
-      <p id="openChangeCallbackValue">Dropdown is {isOpen.value ? "opened" : "closed"}.</p>
+      <p id="openChangeCallbackValue">
+        Dropdown is {isOpen.value ? "opened" : "closed"}.
+      </p>
       <Dropdown.Root
         open={isOpen.value}
         onOpenChange$={(open: boolean) => {

@@ -17,7 +17,9 @@ export default component$(() => {
             onSelect$={() => (selectedItem.value = "1")}
             class="dropdown-item"
           >
-            <Dropdown.ItemLabel class="dropdown-item-label">Item 1 (closeOnSelect = false)</Dropdown.ItemLabel>
+            <Dropdown.ItemLabel class="dropdown-item-label">
+              Item 1 (closeOnSelect = false)
+            </Dropdown.ItemLabel>
           </Dropdown.Item>
           <Dropdown.Item
             onSelect$={() => (selectedItem.value = "2")}
