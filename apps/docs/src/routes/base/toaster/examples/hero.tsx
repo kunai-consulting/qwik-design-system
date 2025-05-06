@@ -32,7 +32,7 @@ export default component$(() => {
   useStyles$(styles);
 
   return (
-    <Toaster.Root duration={50000} pauseOnHover>
+    <Toaster.Root duration={3000} pauseOnHover>
       <div class="flex flex-wrap gap-2">
         <Toaster.Trigger
           title="Success!"
