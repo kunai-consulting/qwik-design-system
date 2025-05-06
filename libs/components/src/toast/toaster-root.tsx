@@ -1,20 +1,27 @@
 import {
   $,
+  type PropsOf,
   Slot,
   component$,
   useContextProvider,
   useId,
-  useSignal
+  useSignal,
+  useTask$
 } from "@builder.io/qwik";
+import { useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-import { type Toast, type ToastContext, toastContextId } from "./toast-context";
-import { useBindings } from "@kunai-consulting/qwik-utils";
+import {
+  type Toast,
+  type ToastContext,
+  type ToastQueue,
+  toastContextId
+} from "./toast-context";
 
 export type ToasterRootProps = {
   duration?: number;
   pauseOnHover?: boolean;
-};
+} & PropsOf<"div">;
 
 type ToasterRootBinds = {
   /* Duration of the toast */
@@ -32,11 +39,32 @@ export const ToasterRootBase = component$((props: ToasterRootProps) => {
     pauseOnHover: true
   });
 
+  const toastQueue = useSignal<ToastQueue>([]);
   const currentToast = useSignal<Toast | null>(null);
+
+  // Process queue when currentToast changes
+  useTask$(({ track }) => {
+    track(() => currentToast.value);
+    track(() => toastQueue.value.length);
+
+    // If no current toast and queue has items, show next toast
+    if (!currentToast.value && toastQueue.value.length > 0) {
+      currentToast.value = toastQueue.value[0];
+      toastQueue.value = toastQueue.value.slice(1);
+    }
+  });
 
   const show$ = $((toast: Omit<Toast, "id">) => {
     const id = `toast-${Math.random().toString(36).substring(2, 9)}`;
-    currentToast.value = { ...toast, id };
+    const newToast = { ...toast, id };
+
+    if (!currentToast.value) {
+      // If no toast is showing, display immediately
+      currentToast.value = newToast;
+    } else {
+      // Otherwise add to queue
+      toastQueue.value = [...toastQueue.value, newToast];
+    }
   });
 
   const hide$ = $(() => {
@@ -45,6 +73,7 @@ export const ToasterRootBase = component$((props: ToasterRootProps) => {
 
   const context: ToastContext = {
     localId,
+    toastQueue,
     currentToast,
     duration: durationSig,
     pauseOnHover: pauseOnHoverSig,
@@ -53,6 +82,7 @@ export const ToasterRootBase = component$((props: ToasterRootProps) => {
   };
 
   useContextProvider(toastContextId, context);
+
   return (
     <Render {...rest} fallback="div" data-qds-toaster-root aria-live="polite">
       <Slot />

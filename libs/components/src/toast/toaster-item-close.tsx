@@ -1,9 +1,9 @@
 import {
   $,
+  type PropFunction,
   type PropsOf,
   Slot,
   component$,
-  useComputed$,
   useContext
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
@@ -11,16 +11,12 @@ import { Render } from "../render/render";
 import { toastContextId } from "./toast-context";
 
 export interface ToasterItemCloseProps extends PropsOf<"button"> {
-  label?: string;
+  onClick$?: PropFunction<() => void>;
 }
 
 export const ToasterItemCloseBase = component$((props: ToasterItemCloseProps) => {
-  const { label = "Close", ...rest } = props;
+  const { onClick$, ...rest } = props;
   const context = useContext(toastContextId);
-
-  const ariaLabel = useComputed$(() => {
-    return props["aria-label"] || label;
-  });
 
   const handleClick$ = $(() => {
     context.hide$();
@@ -31,11 +27,11 @@ export const ToasterItemCloseBase = component$((props: ToasterItemCloseProps) =>
       {...rest}
       fallback="button"
       type="button"
-      aria-label={ariaLabel.value}
+      aria-label="Close"
       data-qds-toaster-item-close
-      onClick$={[handleClick$, props.onClick$]}
+      onClick$={[handleClick$, onClick$]}
     >
-      <Slot />
+      {props.children ? <Slot /> : "✕"}
     </Render>
   );
 });

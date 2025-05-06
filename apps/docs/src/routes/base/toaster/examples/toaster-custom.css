@@ -50,28 +50,6 @@
   background-color: #dc2626;
 }
 
-[data-qds-toaster-trigger][data-type="info"],
-[data-qds-toaster-trigger].info {
-  background-color: #3b82f6;
-  color: white;
-}
-
-[data-qds-toaster-trigger][data-type="info"]:hover,
-[data-qds-toaster-trigger].info:hover {
-  background-color: #2563eb;
-}
-
-[data-qds-toaster-trigger][data-type="warning"],
-[data-qds-toaster-trigger].warning {
-  background-color: #f59e0b;
-  color: white;
-}
-
-[data-qds-toaster-trigger][data-type="warning"]:hover,
-[data-qds-toaster-trigger].warning:hover {
-  background-color: #d97706;
-}
-
 [data-qds-toaster-item] {
   padding: 1rem;
   max-width: 350px;
@@ -79,6 +57,8 @@
   margin: 0.5rem;
   display: flex;
   flex-direction: column;
+  top: 1rem;
+  left: 1rem;
 }
 
 [data-qds-toaster-item-title] {

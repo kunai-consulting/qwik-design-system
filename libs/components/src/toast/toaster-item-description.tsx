@@ -1,10 +1,10 @@
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { Slot, component$ } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 
-export const ToasterItemDescriptionBase = component$((props: PropsOf<"div">) => {
+export const ToasterItemDescriptionBase = component$(() => {
   return (
-    <Render {...props} fallback="div" data-qds-toaster-item-description>
+    <Render data-qds-toaster-item-description fallback="div">
       <Slot />
     </Render>
   );

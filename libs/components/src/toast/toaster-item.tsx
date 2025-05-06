@@ -1,15 +1,16 @@
 import {
-  $,
   Slot,
   component$,
   useContext,
   useSignal,
+  useStyles$,
   useTask$,
   useVisibleTask$
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
-import { Render } from "../render/render";
+import * as Popover from "../popover";
 import { type Toast, toastContextId } from "./toast-context";
+import styles from "./toaster.css?inline";
 
 export interface ToasterItemProps {
   toast: Toast;
@@ -17,17 +18,38 @@ export interface ToasterItemProps {
 
 /** Individual toast component */
 export const ToasterItemBase = component$((props: ToasterItemProps) => {
+  // Apply global styles for fixed positioning
+  useStyles$(styles);
+
   const { toast } = props;
   const context = useContext(toastContextId);
   const isPaused = useSignal(false);
   const timerId = useSignal<number | undefined>(undefined);
+  const contentRef = useSignal<HTMLDivElement>();
+  const triggerRef = useSignal<HTMLButtonElement>();
+  const isShown = useSignal(false);
 
+  // Set up auto-dismiss timer
   useVisibleTask$(({ cleanup }) => {
     if (!toast.duration) return;
 
+    // Show the popover once mounted
+    if (contentRef.value) {
+      contentRef.value.showPopover();
+      isShown.value = true;
+    }
+
     const startTimer = () => {
       timerId.value = window.setTimeout(() => {
-        context.hide$();
+        if (contentRef.value) {
+          contentRef.value.hidePopover();
+          // Give time for animation before removing from state
+          setTimeout(() => {
+            context.hide$();
+          }, 300);
+        } else {
+          context.hide$();
+        }
       }, toast.duration);
     };
 
@@ -40,6 +62,7 @@ export const ToasterItemBase = component$((props: ToasterItemProps) => {
     });
   });
 
+  // Handle pause on hover
   useTask$(({ track }) => {
     track(() => isPaused.value);
 
@@ -50,40 +73,40 @@ export const ToasterItemBase = component$((props: ToasterItemProps) => {
       timerId.value = undefined;
     } else if (!(isPaused.value || timerId.value)) {
       timerId.value = window.setTimeout(() => {
-        context.hide$();
+        if (contentRef.value) {
+          contentRef.value.hidePopover();
+          // Give time for animation before removing from state
+          setTimeout(() => {
+            context.hide$();
+          }, 300);
+        } else {
+          context.hide$();
+        }
       }, toast.duration);
     }
   });
 
-  const getRole = () => {
-    return toast.type === "error" || toast.type === "warning" ? "alert" : "status";
-  };
-
-  const handleKeyDown$ = $((event: KeyboardEvent) => {
-    if (event.key === "Escape") {
-      event.preventDefault();
-      context.hide$();
-    }
-  });
-
   return (
-    <Render
-      role={getRole()}
-      data-qds-toaster-item
-      data-type={toast.type}
-      data-state="open"
-      tabIndex={0}
-      onMouseEnter$={() => {
-        isPaused.value = true;
-      }}
-      onMouseLeave$={() => {
-        isPaused.value = false;
-      }}
-      onKeyDown$={handleKeyDown$}
-      fallback="div"
-    >
-      <Slot />
-    </Render>
+    <Popover.Root open={true}>
+      {/* Hidden trigger element for positioning */}
+      <Popover.Trigger ref={triggerRef} aria-hidden="true" tabIndex={-1} />
+
+      <Popover.Content
+        ref={contentRef}
+        role="status"
+        data-qds-toaster-item
+        data-state="open"
+        tabIndex={0}
+        onMouseEnter$={() => {
+          isPaused.value = true;
+        }}
+        onMouseLeave$={() => {
+          isPaused.value = false;
+        }}
+      >
+        <Slot />
+      </Popover.Content>
+    </Popover.Root>
   );
 });
 

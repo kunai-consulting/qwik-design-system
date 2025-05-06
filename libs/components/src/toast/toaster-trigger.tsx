@@ -1,6 +1,5 @@
 import {
   $,
-  type PropFunction,
   type PropsOf,
   Slot,
   component$,
@@ -8,28 +7,27 @@ import {
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-import { type ToastType, toastContextId } from "./toast-context";
+import { toastContextId } from "./toast-context";
 
-export interface ToasterTriggerProps extends PropsOf<"button"> {
-  toastType?: ToastType;
+export type ToasterTriggerProps = PropsOf<"button"> & {
   title?: string;
   description?: string;
   duration?: number;
-  onClick$?: PropFunction<() => void>;
+  dismissible?: boolean
 }
 
 /** Component that triggers a toast when clicked */
 export const ToasterTriggerBase = component$((props: ToasterTriggerProps) => {
-  const { toastType, title, description, duration, onClick$, ...rest } = props;
+  const { title, description, duration, dismissible = true, ...rest } = props;
+
   const context = useContext(toastContextId);
 
   const handleClick$ = $(() => {
     context.show$({
-      type: toastType,
       title,
       description,
-      duration: duration || context.duration.value,
-      dismissible: true
+      duration: duration !== undefined ? duration : context.duration.value,
+      dismissible
     });
   });
 
@@ -38,7 +36,7 @@ export const ToasterTriggerBase = component$((props: ToasterTriggerProps) => {
       {...rest}
       fallback="button"
       data-qds-toaster-trigger
-      onClick$={[handleClick$, onClick$]}
+      onClick$={[handleClick$, props.onClick$]}
     >
       <Slot />
     </Render>

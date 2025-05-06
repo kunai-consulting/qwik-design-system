@@ -20,7 +20,6 @@ The toast component will leverage our [popover component](https://qwik.design/ba
 - `Toaster.ItemTitle`
 - `Toaster.ItemDescription`
 - `Toaster.ItemClose`
-- `Toaster`
 
 ## Keyboard Interactions
 - `Escape` - Dismiss the currently focused toast
@@ -38,7 +37,7 @@ The toast component will leverage our [popover component](https://qwik.design/ba
 - [Temporary alerts - Information that doesn't require action](https://blueprintjs.com/docs/#core/components/toast)
 
 ## CSS Considerations
-- Implementer needs to create their own CSS to handle placement and styling of checkboxes and labels.
+
 
 ## API Design
 ```
