@@ -4,6 +4,7 @@ import {
   type QRL,
   Slot,
   component$,
+  createSignal,
   useComputed$,
   useContextProvider,
   useId,
@@ -52,7 +53,9 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
   const localId = useId();
   const dateFormat = format ?? "m/d/yyyy";
   const separator = getSeparatorFromFormat(dateFormat);
-  const segments = getSegmentsFromFormat(dateFormat, separator, dateSig.value);
+  const segments = getSegmentsFromFormat(dateFormat, separator, dateSig.value).map(
+    (segment) => createSignal(segment)
+  );
   const activeSegmentIndex = useSignal<number>(-1);
 
   // This flag helps maintain two behaviors when the date changes to null.

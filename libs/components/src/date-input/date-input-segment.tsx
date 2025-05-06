@@ -249,23 +249,24 @@ export const DateInputSegment = component$(
       }
     });
 
-    // Handler to handle keydown events (arrow keys, numeric input)
-    const onKeyDownSync$ = sync$(async (event: KeyboardEvent) => {
-      // Allow navigation keys (arrows, backspace, delete, tab)
-      const allowedKeys = ["ArrowLeft", "ArrowRight", "Backspace", "Delete", "Tab"];
-      if (allowedKeys.includes(event.key)) {
-        return;
-      }
-
+    // Our own custom key handlers
+    const onKeyDown$ = $(async (event: KeyboardEvent) => {
       if (event.key === "ArrowUp") {
         await incrementValue();
-        event.preventDefault();
         return;
       }
 
       if (event.key === "ArrowDown") {
         await decrementValue();
-        event.preventDefault();
+        return;
+      }
+    });
+
+    // Use sync$ to filter keyboard events
+    const onKeyDownSync$ = sync$((event: KeyboardEvent) => {
+      // Allow navigation keys (arrows, backspace, delete, tab)
+      const allowedKeys = ["ArrowLeft", "ArrowRight", "Backspace", "Delete", "Tab"];
+      if (allowedKeys.includes(event.key)) {
         return;
       }
 
@@ -346,7 +347,9 @@ export const DateInputSegment = component$(
             data-qds-date-input-segment-month={segmentSig.value.type === "month"}
             data-qds-date-input-segment-year={segmentSig.value.type === "year"}
             value={segmentSig.value.displayValue}
-            onKeyDown$={isEditable ? [onKeyDownSync$, otherProps.onKeyDown$] : undefined}
+            onKeyDown$={
+              isEditable ? [onKeyDownSync$, onKeyDown$, otherProps.onKeyDown$] : undefined
+            }
             onInput$={isEditable ? [onInput$, otherProps.onInput$] : undefined}
             onClick$={isEditable ? [onClick$, otherProps.onClick$] : undefined}
             stoppropagation:change

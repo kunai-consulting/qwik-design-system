@@ -1,15 +1,6 @@
-import { type Signal, createSignal } from "@builder.io/qwik";
-import type { DateFormat, ISODate, LocalDate, Separator } from "../calendar/types";
+import type { DateFormat, ISODate, Separator } from "../calendar/types";
 import { MAX_YEAR, MIN_YEAR } from "./constants";
 import type { DateSegment } from "./types";
-
-export const getLocalDate = (date: Date) => {
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}` as LocalDate;
-};
-
-export const getISODate = (date: Date) => {
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}` as ISODate;
-};
 
 export const getSeparatorFromFormat = (format?: DateFormat): Separator => {
   if (format?.includes("/")) return "/";
@@ -22,7 +13,7 @@ export const getSegmentsFromFormat = (
   format: DateFormat,
   separator: Separator,
   defaultDate?: ISODate | null
-): Signal<DateSegment>[] => {
+): DateSegment[] => {
   const sections = format.split(separator);
   let segments = sections.map((segment) => {
     const type = segment.includes("y") ? "year" : segment.includes("d") ? "day" : "month";
@@ -47,7 +38,7 @@ export const getSegmentsFromFormat = (
       } as DateSegment;
     });
   }
-  return segments.map((segment) => createSignal(segment));
+  return segments;
 };
 
 export const getLastDayOfMonth = (year: number, month: number) => {
