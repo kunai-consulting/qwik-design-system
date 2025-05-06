@@ -1,10 +1,4 @@
-import {
-  $,
-  type PropsOf,
-  Slot,
-  component$,
-  useContext
-} from "@builder.io/qwik";
+import { $, type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { toastContextId } from "./toast-context";
@@ -13,8 +7,8 @@ export type ToasterTriggerProps = PropsOf<"button"> & {
   title?: string;
   description?: string;
   duration?: number;
-  dismissible?: boolean
-}
+  dismissible?: boolean;
+};
 
 /** Component that triggers a toast when clicked */
 export const ToasterTriggerBase = component$((props: ToasterTriggerProps) => {

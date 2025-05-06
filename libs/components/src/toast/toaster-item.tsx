@@ -16,7 +16,7 @@ import styles from "./toaster.css?inline";
 
 export type ToasterItemProps = PropsOf<"div"> & {
   toast: Toast;
-}
+};
 
 /** Individual toast component */
 export const ToasterItemBase = component$((props: ToasterItemProps) => {
@@ -99,11 +99,7 @@ export const ToasterItemBase = component$((props: ToasterItemProps) => {
   return (
     <Popover.Root open={true}>
       {/* Hidden trigger element for positioning */}
-      <Popover.Trigger
-        ref={triggerRef}
-        aria-hidden="true"
-        tabIndex={-1}
-      />
+      <Popover.Trigger ref={triggerRef} aria-hidden="true" tabIndex={-1} />
 
       <Popover.Content
         ref={contentRef}
