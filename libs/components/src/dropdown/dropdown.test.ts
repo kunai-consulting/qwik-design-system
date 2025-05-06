@@ -147,4 +147,72 @@ test.describe("Dropdown Component", () => {
 
     await expect(lastEnabledItem).toBeFocused(); // Wraps to last enabled item
   });
+
+  test(`GIVEN an open Dropdown with focus on any item
+        WHEN Home key is pressed
+        THEN focus should move to the first item`, async ({ page }) => {
+    const driver = await setup(page, "hero");
+    const trigger = driver.getTrigger();
+    await trigger.click();
+    const items = await driver.getItems().all();
+    await items[1].waitFor({ state: "visible" });
+    await items[1].focus();
+    await expect(items[1]).toBeFocused();
+
+    await items[1].press("Home");
+
+    await expect(items[0]).toBeFocused();
+  });
+
+  test(`GIVEN an open Dropdown with focus on any item
+        WHEN End key is pressed
+        THEN focus should move to the last enabled item`, async ({ page }) => {
+    const driver = await setup(page, "hero");
+    const trigger = driver.getTrigger();
+    await trigger.click();
+    const items = await driver.getItems().all();
+
+    await items[0].waitFor({ state: "visible" });
+    await items[0].focus();
+    await expect(items[0]).toBeFocused();
+
+    await items[0].press("End");
+
+    const lastEnabledItem = items[items.length - 2];
+
+    await expect(lastEnabledItem).toBeFocused();
+  });
+
+  test(`GIVEN a Dropdown with onOpenChange$ callback
+        WHEN the open state changes
+        THEN the callback should be triggered`, async ({ page }) => {
+    const driver = await setup(page, "callbacks");
+    const trigger = driver.getTrigger();
+
+    const callbackIndicator = page.locator("#openChangeCallbackValue");
+    await expect(callbackIndicator).toHaveText("Dropdown is closed.");
+
+    await trigger.click();
+
+    await expect(callbackIndicator).toHaveText("Dropdown is opened.");
+
+    await driver.getTrigger().click();
+
+    await expect(callbackIndicator).toHaveText("Dropdown is closed.");
+  });
+
+  test(`GIVEN a Dropdown Item with closeOnSelect=false
+        WHEN the item is clicked
+        THEN the dropdown should remain open`, async ({ page }) => {
+    const driver = await setup(page, "close-on-select");
+    const trigger = driver.getTrigger();
+    const content = driver.getContent();
+    await trigger.click();
+    await expect(content).toBeVisible();
+    const items = await driver.getItems().all();
+
+    await items[0].waitFor({ state: "visible" });
+    await items[0].click();
+    await expect(content).toBeVisible();
+  });
 });

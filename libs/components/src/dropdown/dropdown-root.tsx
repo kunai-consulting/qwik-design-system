@@ -7,7 +7,8 @@ import {
   useContextProvider,
   useId,
   useOnWindow,
-  useSignal
+  useSignal,
+  useTask$
 } from "@builder.io/qwik";
 import {
   type BindableProps,
@@ -28,7 +29,10 @@ type DropdownRootBaseProps = Omit<
 export type PublicDropdownRootProps = DropdownRootBaseProps &
   BindableProps<{
     open: boolean;
-  }>;
+  }> & {
+    /** Callback fired when dropdown open state changes */
+    onOpenChange$?: (open: boolean) => void;
+  };
 
 interface ItemRef {
   ref: Signal;
@@ -42,6 +46,13 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
       open: false
     }
   );
+
+  useTask$(({ track }) => {
+    const isOpen = track(() => isOpenSig.value);
+    if (props.onOpenChange$) {
+      props.onOpenChange$(isOpen);
+    }
+  });
 
   useOnWindow(
     "keydown",

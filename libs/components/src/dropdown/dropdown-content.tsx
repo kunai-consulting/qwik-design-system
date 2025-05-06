@@ -12,7 +12,8 @@ export const DropdownContentBase = component$<DropdownContentProps>((props) => {
 
   const handleKeyDown = $((event: KeyboardEvent) => {
     const { key } = event;
-    if (key !== "ArrowDown" && key !== "ArrowUp") return;
+    if (key !== "ArrowDown" && key !== "ArrowUp" && key !== "Home" && key !== "End")
+      return;
 
     // Get elements from refs, filter out disabled ones
     const enabledItems = context.itemRefs.value
@@ -29,7 +30,11 @@ export const DropdownContentBase = component$<DropdownContentProps>((props) => {
 
     let nextIndex: number;
 
-    if (key === "ArrowDown") {
+    if (key === "Home") {
+      nextIndex = 0;
+    } else if (key === "End") {
+      nextIndex = enabledItems.length - 1;
+    } else if (key === "ArrowDown") {
       nextIndex = currentIndex >= enabledItems.length - 1 ? 0 : currentIndex + 1;
     } else {
       nextIndex = currentIndex <= 0 ? enabledItems.length - 1 : currentIndex - 1;

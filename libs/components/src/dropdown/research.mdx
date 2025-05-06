@@ -17,8 +17,6 @@ providing an accessible way to display a list of actions or options that can be 
 - [ ] CSS Anchor positioning
 - [ ] Item selection
 - [ ] Disabled states
-- [ ] Custom trigger support
-- [ ] Custom content support
 - [ ] Proper ARIA attributes
 - [ ] Nested dropdowns (submenus)
 - [ ] RTL support
@@ -33,14 +31,12 @@ Pieces:
 - ItemLabel (text/content within items)
 
 ## Keyboard Interactions
-- Enter/Space: Open dropdown (when trigger focused)
-- Escape: Close dropdown
 - Arrow Down: Move focus to next item
 - Arrow Up: Move focus to previous item
 - Home: Move focus to first item
 - End: Move focus to last item
 - Enter/Space: Select focused item
-- Tab: Move focus out of dropdown (and close)
+- Tab: Move focus out of dropdown
 
 ## Attributes
 - role="menu" (content)
@@ -55,7 +51,6 @@ Pieces:
 - data-qds-dropdown-content
 - data-qds-dropdown-item
 - data-qds-dropdown-item-label
-- data-state (open/closed)
 - data-disabled
 - data-highlighted
 
@@ -69,41 +64,11 @@ Pieces:
 - Filter menus
 - Context menus
 
-## CSS Considerations
-
-Important CSS:
-```css
-.content {
-  position: absolute;
-  /* Use anchor positioning */
-  anchor-name: --dropdown;
-}
-
-.trigger {
-  /* Establish anchor element */
-  anchor-default: --dropdown;
-}
-
-[data-state="open"] {
-  display: block;
-}
-
-[data-state="closed"] {
-  display: none;
-}
-
-[data-disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-```
-
 ## API Design
 
 ### Root:
 ```tsx
 interface DropdownRootProps {
-defaultOpen?: boolean;
 open?: boolean;
 onOpenChange$?: (open: boolean) => void;
 disabled?: boolean;
@@ -114,20 +79,14 @@ disabled?: boolean;
 - Inherits button props
 
 ### Content:
-```tsx
-interface DropdownContentProps {
-align?: 'start' | 'center' | 'end';
-side?: 'top' | 'right' | 'bottom' | 'left';
-sideOffset?: number;
-alignOffset?: number;
-}
-```
+- No specific props, inherits div props
 
 ### Item:
 ```tsx
 interface DropdownItemProps {
 disabled?: boolean;
 onSelect$?: () => void;
+closeOnSelect?: boolean;
 }
 ```
 

@@ -17,12 +17,14 @@ export type PublicDropdownItemProps = PropsOf<"div"> & {
   disabled?: boolean;
   /** Event handler called when the item is selected */
   onSelect$?: () => void;
+  /** Whether to close the dropdown when the item is selected (default: true) */
+  closeOnSelect?: boolean;
   _index?: number;
 };
 
 /** Interactive item within a dropdown menu */
 export const DropdownItemBase = component$<PublicDropdownItemProps>(
-  ({ disabled, onSelect$, _index, ...props }) => {
+  ({ disabled, onSelect$, closeOnSelect = true, _index, ...props }) => {
     const context = useContext(dropdownContextId);
     const itemRef = useSignal<HTMLElement>();
 
@@ -44,16 +46,18 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
       }
     });
 
-    const handleClick = $(() => {
+    const handleSelect = $(() => {
       if (disabled) return;
       onSelect$?.();
-      context.isOpenSig.value = false;
+      if (closeOnSelect) {
+        context.isOpenSig.value = false;
+      }
     });
 
-    const handleKeyDown = $((event: KeyboardEvent) => {
+    const handleKeyDown = $(async (event: KeyboardEvent) => {
       if (disabled) return;
       if (event.key === "Enter" || event.key === " ") {
-        handleClick();
+        await handleSelect();
       }
     });
 
@@ -63,7 +67,7 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
         fallback="div"
         internalRef={itemRef}
         tabIndex={disabled ? -1 : 0}
-        onClick$={[handleClick, props.onClick$]}
+        onClick$={[handleSelect, props.onClick$]}
         onKeyDown$={[handleKeyDown, props.onKeyDown$]}
         aria-disabled={disabled}
         // Indicates whether the dropdown item is disabled
