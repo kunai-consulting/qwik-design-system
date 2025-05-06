@@ -2,6 +2,7 @@ import {
   $,
   type PropsOf,
   component$,
+  sync$,
   useComputed$,
   useContext,
   useSignal,
@@ -43,9 +44,9 @@ export const DateInputSegment = component$(
       }
     });
 
-    useTask$(({ track }) => {
+    useTask$(async ({ track }) => {
       track(() => segmentSig.value);
-      updateActiveDate();
+      await updateActiveDate();
     });
 
     // The index of the current segment in orderedSegments
@@ -108,7 +109,7 @@ export const DateInputSegment = component$(
       }
     );
 
-    const incrementYearValue = $((changeBy: number) => {
+    const incrementYearValue = $(async (changeBy: number) => {
       const currentValue = segmentSig.value?.numericValue;
       const newValue = currentValue ? currentValue + changeBy : new Date().getFullYear();
 
@@ -119,10 +120,10 @@ export const DateInputSegment = component$(
         displayValue: `${newValue}`
       } as DateSegment;
       const month = context.monthSegmentSig.value.numericValue;
-      updateDayOfMonthSegmentForYearAndMonth(newValue, month);
+      await updateDayOfMonthSegmentForYearAndMonth(newValue, month);
     });
 
-    const incrementMonthValue = $((changeBy: number) => {
+    const incrementMonthValue = $(async (changeBy: number) => {
       const segment = segmentSig.value;
       const currentValue = segment?.numericValue;
       let newValue = currentValue ? currentValue + changeBy : new Date().getMonth() + 1; // +1 because months are 0-indexed
@@ -140,7 +141,7 @@ export const DateInputSegment = component$(
         displayValue
       };
       const year = context.yearSegmentSig.value.numericValue;
-      updateDayOfMonthSegmentForYearAndMonth(year, newValue);
+      await updateDayOfMonthSegmentForYearAndMonth(year, newValue);
     });
 
     const incrementDayValue = $((changeBy: number) => {
@@ -162,37 +163,37 @@ export const DateInputSegment = component$(
       };
     });
 
-    const incrementValue = $(() => {
+    const incrementValue = $(async () => {
       switch (segmentSig.value.type) {
         case "year":
-          incrementYearValue(1);
+          await incrementYearValue(1);
           break;
         case "month":
-          incrementMonthValue(1);
+          await incrementMonthValue(1);
           break;
         case "day":
-          incrementDayValue(1);
+          await incrementDayValue(1);
           break;
       }
       context.activeSegmentIndex.value = segmentIndexSig.value;
     });
 
-    const decrementValue = $(() => {
+    const decrementValue = $(async () => {
       switch (segmentSig.value.type) {
         case "year":
-          incrementYearValue(-1);
+          await incrementYearValue(-1);
           break;
         case "month":
-          incrementMonthValue(-1);
+          await incrementMonthValue(-1);
           break;
         case "day":
-          incrementDayValue(-1);
+          await incrementDayValue(-1);
           break;
       }
       context.activeSegmentIndex.value = segmentIndexSig.value;
     });
 
-    const updateSegmentWithValue = $((textValue: string) => {
+    const updateSegmentWithValue = $(async (textValue: string) => {
       const segment = segmentSig.value;
       let numericValue = +textValue;
 
@@ -213,11 +214,11 @@ export const DateInputSegment = component$(
 
       if (segment.type === "month") {
         const year = context.yearSegmentSig.value.numericValue;
-        updateDayOfMonthSegmentForYearAndMonth(year, numericValue);
+        await updateDayOfMonthSegmentForYearAndMonth(year, numericValue);
       }
       if (segment.type === "year") {
         const month = context.monthSegmentSig.value.numericValue;
-        updateDayOfMonthSegmentForYearAndMonth(numericValue, month);
+        await updateDayOfMonthSegmentForYearAndMonth(numericValue, month);
       }
     });
 
@@ -241,18 +242,15 @@ export const DateInputSegment = component$(
       const thisIndex = track(() => segmentIndexSig.value);
 
       if (activeIndex === thisIndex && inputRef.value) {
-        // Focus on next render cycle
-        setTimeout(() => {
-          if (document.activeElement !== inputRef.value) {
-            inputRef.value?.focus();
-            inputRef.value?.select();
-          }
-        }, 0);
+        if (document.activeElement !== inputRef.value) {
+          inputRef.value?.focus();
+          inputRef.value?.select();
+        }
       }
     });
 
     // Handler to handle keydown events (arrow keys, numeric input)
-    const onKeyDown$ = $((event: KeyboardEvent) => {
+    const onKeyDownSync$ = sync$(async (event: KeyboardEvent) => {
       // Allow navigation keys (arrows, backspace, delete, tab)
       const allowedKeys = ["ArrowLeft", "ArrowRight", "Backspace", "Delete", "Tab"];
       if (allowedKeys.includes(event.key)) {
@@ -260,13 +258,13 @@ export const DateInputSegment = component$(
       }
 
       if (event.key === "ArrowUp") {
-        incrementValue();
+        await incrementValue();
         event.preventDefault();
         return;
       }
 
       if (event.key === "ArrowDown") {
-        decrementValue();
+        await decrementValue();
         event.preventDefault();
         return;
       }
@@ -278,7 +276,7 @@ export const DateInputSegment = component$(
     });
 
     // Process input and update our segment and date values accordingly
-    const onInput$ = $((event: InputEvent) => {
+    const onInput$ = $(async (event: InputEvent) => {
       const segment = segmentSig.value;
       const target = event.target as HTMLInputElement;
       const content = target.value || "";
@@ -290,7 +288,7 @@ export const DateInputSegment = component$(
       }
 
       if (numericContent.length > 0) {
-        updateSegmentWithValue(numericContent);
+        await updateSegmentWithValue(numericContent);
 
         // Check if the segment is fully entered and move focus to the next segment
         const isYearFull = segment.type === "year" && numericContent.length >= 4;
@@ -302,10 +300,10 @@ export const DateInputSegment = component$(
         if (isYearFull || isMonthFull || isDayFull) {
           // Use the context function to move to the next segment
           context.activeSegmentIndex.value = segmentIndexSig.value;
-          context.focusNextSegment$();
+          await context.focusNextSegment$();
         }
       } else {
-        updateSegmentToPlaceholder();
+        await updateSegmentToPlaceholder();
       }
     });
 
@@ -348,7 +346,7 @@ export const DateInputSegment = component$(
             data-qds-date-input-segment-month={segmentSig.value.type === "month"}
             data-qds-date-input-segment-year={segmentSig.value.type === "year"}
             value={segmentSig.value.displayValue}
-            onKeyDown$={isEditable ? [onKeyDown$, otherProps.onKeyDown$] : undefined}
+            onKeyDown$={isEditable ? [onKeyDownSync$, otherProps.onKeyDown$] : undefined}
             onInput$={isEditable ? [onInput$, otherProps.onInput$] : undefined}
             onClick$={isEditable ? [onClick$, otherProps.onClick$] : undefined}
             stoppropagation:change
