@@ -104,10 +104,10 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
         tabIndex={disabled ? -1 : 0}
         onClick$={[handleSelect, props.onClick$]}
         onKeyDown$={[handleKeyDown, props.onKeyDown$]}
-        onMouseEnter$={[() => (isHoveredSig.value = true), props.onMouseEnter$]}
-        onMouseLeave$={[() => (isHoveredSig.value = false), props.onMouseLeave$]}
-        onFocus$={[() => (isFocusedSig.value = true), props.onFocus$]}
-        onBlur$={[() => (isFocusedSig.value = false), props.onBlur$]}
+        onMouseEnter$={[$(() => (isHoveredSig.value = true)), props.onMouseEnter$]}
+        onMouseLeave$={[$(() => (isHoveredSig.value = false)), props.onMouseLeave$]}
+        onFocus$={[$(() => (isFocusedSig.value = true)), props.onFocus$]}
+        onBlur$={[$(() => (isFocusedSig.value = false)), props.onBlur$]}
         aria-disabled={disabled}
         // Indicates whether the dropdown item is disabled
         data-disabled={disabled}
