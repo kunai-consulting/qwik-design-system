@@ -57,3 +57,17 @@ export const getDisplayValue = (
   }
   return `${numericValue}`;
 };
+
+/**
+ * Pads a numeric value with a leading zero if it is less than 10.
+ * Used for formatting month and day values to be two digits, consistent with ISO date format.
+ * @param numericValue The numeric value to pad
+ * @returns The padded numeric value
+ */
+export const getTwoDigitPaddedValue = (numericValue: number | undefined) => {
+  if (numericValue === undefined) return undefined;
+  if (numericValue < 10) {
+    return `0${numericValue}`;
+  }
+  return `${numericValue}`;
+};

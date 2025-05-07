@@ -20,7 +20,7 @@ import type { DateInputContext } from "./date-input-context";
 import { dateInputContextId } from "./date-input-context";
 import { getSegmentsFromFormat, getSeparatorFromFormat } from "./utils";
 
-export type PublicDateInputRootProps = PropsOf<"div"> & {
+export type PublicDateInputRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   /** The locale used for formatting dates and text */
   locale?: Locale;
   /** The format of the date. Controls the appearance of the date input. Defaults to "mm/dd/yyyy". */
@@ -41,9 +41,10 @@ const regex = /^\d{4}-(0[1-9]|1[0-2])-\d{2}$/;
 
 /** The root Date Input component that manages state and provides context */
 export const DateInputRootBase = component$<PublicDateInputRootProps>((props) => {
+  const { onChange$, ...rest } = props;
+  const isInitialLoadSig = useSignal(true);
   const locale = props.locale || "en";
   const format = props.format;
-  const onDateChange$ = props.onChange$;
   const labelStr = props["aria-label"] ?? ARIA_LABELS[locale].root;
   const { dateSig, disabledSig } = useBindings<DateInputBoundProps>(props, {
     date: props.date ?? null,
@@ -172,12 +173,15 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
     context.isInternalSegmentClearance.value = false;
   });
 
-  useTask$(async ({ track }) => {
+  useTask$(async ({ track, cleanup }) => {
     const date = track(() => dateSig.value);
     await updateSegmentsWithNewDateValue(date);
-    if (onDateChange$) {
-      await onDateChange$(date);
+    if (!isInitialLoadSig.value && onChange$) {
+      await onChange$(date);
     }
+    cleanup(() => {
+      isInitialLoadSig.value = false;
+    });
   });
 
   return (
@@ -186,7 +190,7 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
       data-qds-date-input-root
       data-theme="light"
       aria-label={labelSignal.value}
-      {...props}
+      {...rest}
     >
       <Slot />
     </Render>
