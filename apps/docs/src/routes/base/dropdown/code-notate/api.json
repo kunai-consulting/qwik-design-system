@@ -16,6 +16,11 @@
                 "comment": "Controlled open state signal.",
                 "prop": "bind:open",
                 "type": "Signal<boolean>"
+              },
+              {
+                "comment": "Callback fired when dropdown open state changes.",
+                "prop": "onOpenChange$",
+                "type": "(open: boolean) => void"
               }
             ]
           }
@@ -97,6 +102,12 @@
                 "comment": "Callback fired when the item is selected.",
                 "prop": "onSelect$",
                 "type": "(() => void)"
+              },
+              {
+                "comment": "Whether to close the dropdown when the item is selected",
+                "prop": "closeOnSelect",
+                "type": "boolean",
+                "defaultValue": "true"
               }
             ]
           }
@@ -185,18 +196,26 @@
     {
       "key": "Tab",
       "comment": "Moves focus to the next focusable element; closes the dropdown when focus leaves."
+    },
+    {
+      "key": "Home",
+      "comment": "When focus is on a dropdown item, moves focus to the first enabled item in the dropdown"
+    },
+    {
+      "key": "End",
+      "comment": "When focus is on a dropdown item, moves focus to the last enabled item in the dropdown"
     }
   ],
   "features": [
-    "WAI ARIA Menu design pattern",
-    "Keyboard navigation with item highlighting",
-    "Enter/Space selection",
-    "Support for disabled items",
-    "Leverages Popover for positioning and state",
-    "Floating UI overlay positioning (via Popover)",
-    "Bindable open/close state",
-    "Focus management and keyboard interactions",
-    "Accessible labeling and ARIA attributes",
-    "Composable component parts"
+    "WAI ARIA Menu design pattern compliance",
+    "Arrow key navigation between items",
+    "Home/End key support for first/last item navigation",
+    "Disabled item states and handling",
+    "Keyboard selection with Enter/Space",
+    "Custom close behavior per item",
+    "Focus management between items",
+    "Automatic ARIA labeling and relationships",
+    "Event callbacks for open state changes",
+    "Popover positioning system integration"
   ]
 }

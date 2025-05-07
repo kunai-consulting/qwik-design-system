@@ -56,9 +56,42 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
 
     const handleKeyDown = $(async (event: KeyboardEvent) => {
       if (disabled) return;
-      if (event.key === "Enter" || event.key === " ") {
+      const { key } = event;
+      if (key === "Enter" || key === " ") {
         await handleSelect();
+        return;
       }
+      if (key !== "ArrowDown" && key !== "ArrowUp" && key !== "Home" && key !== "End") {
+        return;
+      }
+      // Get elements from refs, filter out disabled ones
+      const enabledItems = context.itemRefs.value
+        .map((itemRefObj) => itemRefObj.ref.value)
+        .filter(
+          (el): el is HTMLElement =>
+            // Indicates whether the dropdown item is disabled
+            !!el && !el.hasAttribute("data-disabled") && !el.hasAttribute("disabled")
+        );
+      if (enabledItems.length === 0) return;
+
+      let nextIndex: number;
+      const currentIndex = enabledItems.findIndex((item) => item === itemRef.value);
+
+      if (currentIndex === -1) {
+        enabledItems[0]?.focus();
+        return;
+      }
+      if (key === "Home") {
+        nextIndex = 0;
+      } else if (key === "End") {
+        nextIndex = enabledItems.length - 1;
+      } else if (key === "ArrowDown") {
+        nextIndex = currentIndex >= enabledItems.length - 1 ? 0 : currentIndex + 1;
+      } else {
+        // ArrowUp
+        nextIndex = currentIndex <= 0 ? enabledItems.length - 1 : currentIndex - 1;
+      }
+      enabledItems[nextIndex]?.focus();
     });
 
     return (

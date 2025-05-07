@@ -28,6 +28,7 @@ type DropdownRootBaseProps = Omit<
 /** Initial open state of the dropdown */
 export type PublicDropdownRootProps = DropdownRootBaseProps &
   BindableProps<{
+    /** Initial open state of the dropdown */
     open: boolean;
   }> & {
     /** Callback fired when dropdown open state changes */
@@ -63,7 +64,7 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
 
       if (!isWithinDropdown) return;
 
-      const preventKeys = ["ArrowUp", "ArrowDown", " "];
+      const preventKeys = ["ArrowUp", "ArrowDown", " ", "Home", "End"];
       if (preventKeys.includes(event.key)) {
         event.preventDefault();
       }

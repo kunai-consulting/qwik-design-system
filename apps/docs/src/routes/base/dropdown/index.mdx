@@ -1,39 +1,47 @@
 import api from "./code-notate/api.json";
 
 # Dropdown
-A menu that opens from a trigger button to display a list of selectable options.
+A menu that appears below a trigger button, containing selectable options for user interaction.
 <Showcase name="hero" />
+
 ## Features
 <Features api={api} />
+
 ## Anatomy
 <AnatomyTable api={api} />
+
 ## Examples
+
 ### Basic Usage
-The dropdown menu provides a simple way to present a list of selectable options. The example below demonstrates the core functionality using `Dropdown.Root`, `Dropdown.Trigger`, `Dropdown.Content`, `Dropdown.Item`, and `Dropdown.ItemLabel` components.
+The dropdown menu provides a simple way to show a list of selectable options. The menu opens when clicking the trigger button and closes when selecting an item or clicking outside.
 
 <Showcase name="hero" />
+This example demonstrates:
+- Using `Dropdown.Root` as the container
+- `Dropdown.Trigger` to toggle the menu
+- `Dropdown.Content` to wrap menu items
+- `Dropdown.Item` for selectable options
+- `Dropdown.ItemLabel` for item text content
+
+### Open State Callbacks
+Track the dropdown's open state using the `onOpenChange$` callback.
+<Showcase name="callbacks" />
 This example highlights:
-- Menu structure with trigger and content
-- Selectable items with `onSelect$` handlers
-- Disabled state for menu items
-- Keyboard navigation between items
-- WAI-ARIA compliant menu pattern
-- Focus management when navigating items
-- Automatic closing when an item is selected
+- `onOpenChange$` prop to monitor open/close state
+- `open` prop for controlled state management
 
-The dropdown automatically handles:
-- Arrow key navigation between items
-- Enter/Space to select items
-- Escape to close the menu
-- Click outside to dismiss
-- Focus management
-- ARIA attributes for accessibility
-
-Note: The example shows how to track selected items using a signal, but the dropdown can be used with any state management approach.
+### Item Selection Behavior
+Control whether items close the dropdown on selection using the `closeOnSelect` prop.
+<Showcase name="close-on-select" />
+This example demonstrates:
+- `closeOnSelect={false}` to keep dropdown open after selection
+- Default behavior where items close the dropdown when selected
+- `disabled` prop to make items non-interactive
 
 ## Component State
-### Using Component State
-As shown in the Basic Usage example above, the dropdown's open state can be controlled in two ways:
+
+### State Management
+The dropdown's open state can be controlled in two ways:
 1. Uncontrolled state using the `open` prop:
 ```typescript
 <Dropdown.Root open={false}>
@@ -41,49 +49,26 @@ As shown in the Basic Usage example above, the dropdown's open state can be cont
   <Dropdown.Content>...</Dropdown.Content>
 </Dropdown.Root>
 ```
-2. Controlled state using the `bind:open` prop:
-```typescript
-<Dropdown.Root bind:open={isOpenSignal}>
-  <Dropdown.Trigger>Menu</Dropdown.Trigger>
-  <Dropdown.Content>...</Dropdown.Content>
-</Dropdown.Root>
-```
-### State Interactions
-The dropdown provides several ways to interact with its state:
-1. Item Selection:
-As demonstrated in the Basic Usage example, use the `onSelect$` prop on `Dropdown.Item` to handle selection:
-```typescript
-<Dropdown.Item
-  onSelect$={() => {
-    // Handle selection
-  }}
->
-  <Dropdown.ItemLabel>Option</Dropdown.ItemLabel>
-</Dropdown.Item>
-```
-2. Disabled State:
-Items can be disabled by setting the `disabled` prop:
-```typescript
-<Dropdown.Item disabled>
-  <Dropdown.ItemLabel>Disabled Option</Dropdown.ItemLabel>
-</Dropdown.Item>
-```
-When an item is disabled:
-- It cannot be selected
-- It cannot receive focus
-- It is skipped during keyboard navigation
-- The `onSelect$` handler will not fire
-
+2. Controlled state using bind:open prop to bind the dropdown's open state to a reactive value.
 The dropdown automatically manages its open state in response to:
 - Clicking the trigger button (toggles open/closed)
-- Selecting an item (closes the dropdown)
-- Clicking outside (closes the dropdown)
-- Pressing Escape (closes the dropdown)
+- Selecting an item (closes by default)
+- Clicking outside (closes)
+- Pressing Escape (closes)
 
-Based on the provided implementation and examples, I'll document the core configuration aspects of the Dropdown component.
+### Item Interaction
+Items can be configured in several ways:
+- **Selection Behavior:** Use `closeOnSelect` prop to control whether the dropdown closes after item selection
+- **Disabled State:** Use the `disabled` prop to make items non-interactive. Disabled items:
+  - Cannot be selected or receive focus
+  - Are skipped during keyboard navigation
+  - Have `tabIndex={-1}`
+  - Have appropriate ARIA attributes
+  - Will not trigger `onSelect$` handler
+
 ## Core Configuration
 ### Menu Structure
-The Dropdown component requires a specific component hierarchy to function correctly:
+The Dropdown component requires a specific component hierarchy:
 ```typescript
 <Dropdown.Root>
   <Dropdown.Trigger />
@@ -100,43 +85,21 @@ Each component serves a specific purpose:
 - `Content`: The container for dropdown items
 - `Item`: Individual selectable options
 - `ItemLabel`: Text or content within items
-### Item Configuration
-As shown in the hero example above, items can be configured with:
-- `disabled`: Boolean prop to disable selection
-- `onSelect$`: Handler called when item is selected
-- `class`: Custom CSS classes for styling
-### Keyboard Navigation
-The dropdown implements a circular navigation pattern:
-- When focus is on the last enabled item, pressing ArrowDown moves focus to the first item
-- When focus is on the first item, pressing ArrowUp moves focus to the last enabled item
-- Disabled items are automatically skipped during keyboard navigation
-### Technical Constraints
-1. Item References:
-- Items must be direct children of `Dropdown.Content`
-- Items are indexed automatically for keyboard navigation
-- Dynamic items must maintain stable references
-2. Focus Management:
-- Focus is contained within the dropdown when open
+
+## Technical Constraints
+
+### Positioning
+The dropdown menu positioning is handled by the underlying Popover component. The content will automatically position
+itself relative to the trigger button, adjusting for available viewport space.
+
+### Focus Management
+The component maintains a strict focus management system:
+- Focus is trapped within the dropdown menu when open
+- Arrow keys navigate between enabled items only
+- Home/End keys move focus to first/last enabled items
 - Focus returns to trigger when closed
-- Only enabled items receive focus
-3. Event Handling:
-- Click outside automatically closes dropdown
-- Escape key closes dropdown
-- Selection automatically closes dropdown
-### Default Behaviors
-The dropdown implements these default behaviors:
-1. Initial State:
-- Closed by default
-- Can be controlled via `open` or `bind:open` props
-2. Positioning:
-- Uses Floating UI for overlay positioning
-- Automatically adjusts to viewport edges
-- Maintains trigger alignment
-3. Selection:
-- Single item selection
-- Closes after selection
-- Disabled items cannot be selected
-These configurations provide a foundation for building accessible dropdown menus while maintaining flexibility for custom implementations.
+
+These behaviors are built into the component and cannot be disabled to maintain accessibility compliance.
 
 
 
