@@ -27,6 +27,8 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
   ({ disabled, onSelect$, closeOnSelect = true, _index, ...props }) => {
     const context = useContext(dropdownContextId);
     const itemRef = useSignal<HTMLElement>();
+    const isHoveredSig = useSignal(false);
+    const isFocusedSig = useSignal(false);
 
     useTask$(function manageItemRef({ track }) {
       track(() => _index);
@@ -102,11 +104,17 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
         tabIndex={disabled ? -1 : 0}
         onClick$={[handleSelect, props.onClick$]}
         onKeyDown$={[handleKeyDown, props.onKeyDown$]}
+        onMouseEnter$={() => (isHoveredSig.value = true)}
+        onMouseLeave$={() => (isHoveredSig.value = false)}
+        onFocus$={() => (isFocusedSig.value = true)}
+        onBlur$={() => (isFocusedSig.value = false)}
         aria-disabled={disabled}
         // Indicates whether the dropdown item is disabled
         data-disabled={disabled}
         // The identifier for the dropdown item element
         data-qds-dropdown-item
+        data-hovered={isHoveredSig.value}
+        data-focused={isFocusedSig.value}
         {...props}
       >
         <Slot />
