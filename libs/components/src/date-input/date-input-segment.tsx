@@ -14,7 +14,7 @@ import type { DayOfMonth, Month } from "../calendar/types";
 import { dateInputContextId } from "./date-input-context";
 import styles from "./date-input-segment.css?inline";
 import type { DateSegment } from "./types";
-import { getDisplayValue, getLastDayOfMonth } from "./utils";
+import { getDisplayValue, getLastDayOfMonth, getTwoDigitPaddedValue } from "./utils";
 
 type PublicDateInputSegmentProps = PropsOf<"input"> & {
   segmentSig: Signal<DateSegment>;
@@ -32,10 +32,12 @@ export const DateInputSegment = component$(
       // After a segment updates, we need to update the active date
       // by combining all three segments into a valid date string
       const year = context.yearSegmentSig.value.numericValue;
-      const month = context.monthSegmentSig.value.displayValue as Month | undefined;
-      const day = context.dayOfMonthSegmentSig.value.displayValue as
-        | DayOfMonth
+      const month = getTwoDigitPaddedValue(context.monthSegmentSig.value.numericValue) as
+        | Month
         | undefined;
+      const day = getTwoDigitPaddedValue(
+        context.dayOfMonthSegmentSig.value.numericValue
+      ) as DayOfMonth | undefined;
 
       if (year && month && day) {
         context.dateSig.value = `${year}-${month}-${day}`;
