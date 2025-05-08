@@ -10,6 +10,7 @@ export type AsChildProps = {
   _allProps?: object;
   _jsxType?: Component | string;
   asChild?: boolean;
+  componentFlags?: Record<string, boolean>;
 };
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
