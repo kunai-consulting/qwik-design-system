@@ -10,13 +10,14 @@ import {
 } from "@builder.io/qwik";
 import {
   type BindableProps,
-  findSpecificComponents,
+  getComponentFlags,
   useBindings
 } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
 import { CheckboxDescription } from "./checkbox-description";
+import { CheckboxLabel } from "./checkbox-label";
 
 export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   /** Event handler called when the checkbox state changes */
@@ -108,13 +109,14 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
 });
 
 export const CheckboxRoot = withAsChild(CheckboxRootBase, (props) => {
-  const componentsToSearch = new Set([CheckboxDescription]);
+  const componentFlagMap = {
+    hasDescription: CheckboxDescription,
+    hasLabel: CheckboxLabel
+  };
 
-  const foundComponents = findSpecificComponents(props.children, componentsToSearch, {
+  const componentFlags = getComponentFlags(props.children, componentFlagMap, {
     debug: true
   });
 
-  console.log(foundComponents);
-
-  return props;
+  console.log(componentFlags);
 });

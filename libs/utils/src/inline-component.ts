@@ -1,43 +1,65 @@
-import type { JSXChildren, JSXNode } from "@builder.io/qwik";
+import type { FunctionComponent, JSXChildren, JSXNode } from "@builder.io/qwik";
 
 /**
- * Optimized function to find specific component types within a JSX tree.
- * It checks for the existence of one or more unique component references.
+ * Checks if specific components exist within a component's visible tree.
  *
- * @param initialChildren The JSX children to search within.
- * @param targetComponentTypes A ReadonlySet of component references to look for.
- * @returns A Set containing the references of the target components that were found.
+ * This utility helps component roots detect if required child components are present.
+ * If a component isn't found in the visible tree, you should
+ * throw an error in the specific component (e.g. CheckboxDescription) instructing users to pass a prop to the root component to handle
+ * the missing component case.
+ *
+ * This is useful for conditional logic based on whether a component is present or not from the user.
+ *
+ * @param initialChildren The JSX children to search within
+ * @param targets Map of component flags to component references to check for
+ * @param config Optional configuration options
+ * @returns Object with boolean flags indicating if each component was found
  */
-export function findSpecificComponents(
+export function getComponentFlags(
   initialChildren: JSXChildren,
-  targetComponentTypes: ReadonlySet<any>,
+  targets: Record<string, FunctionComponent>,
   config?: { debug?: boolean }
-): Set<any> {
-  const foundComponents = new Set<any>();
+): Record<string, boolean> {
+  // Return type is also an object
+  const targetKeys = Object.keys(targets);
+  const targetReferences = Object.values(targets);
+
+  const results: Record<string, boolean> = {};
+  for (const key of targetKeys) {
+    results[key] = false;
+  }
+
+  let numTargetsSuccessfullyFound = 0;
   let startTime = 0;
 
   if (config?.debug) {
     startTime = performance.now();
   }
 
-  // Stack for iterative DFS-like traversal. It will hold JSXChildren items.
-  // Start with initialChildren, as it could be a single node, an array, or primitive.
-  const toProcess: JSXChildren[] = [initialChildren];
+  // Handle the case of empty targets object immediately
+  if (targetKeys.length === 0) {
+    if (config?.debug) {
+      const endTime = performance.now();
+      console.log(
+        `findSpecificComponents: Debug: Traversal took ${(endTime - startTime).toFixed(2)}ms for 0 iterations. Targets (0): [none]. Result: {}.`
+      );
+    }
+    return {};
+  }
 
+  const toProcess: JSXChildren[] = [initialChildren];
   let iterations = 0;
-  // Safety break for very deep/complex structures or potential cycles in dynamic JSX.
   const MAX_ITERATIONS = 50000;
 
   while (toProcess.length > 0 && iterations < MAX_ITERATIONS) {
     iterations++;
-    // Optimization: if all target component types have been found, stop.
-    if (foundComponents.size === targetComponentTypes.size) {
+    // Optimization: if all target flags are true, stop.
+    if (numTargetsSuccessfullyFound === targetKeys.length) {
       break;
     }
 
-    const currentChild = toProcess.pop(); // LIFO for DFS-like behavior
+    const currentChild = toProcess.pop();
 
-    // Skip primitives or empty values that cannot be components or contain children.
     if (
       !currentChild ||
       typeof currentChild === "boolean" ||
@@ -47,8 +69,6 @@ export function findSpecificComponents(
       continue;
     }
 
-    // If currentChild is an array, push its elements onto the stack.
-    // Elements are pushed in reverse order to maintain a more natural DFS traversal.
     if (Array.isArray(currentChild)) {
       for (let i = currentChild.length - 1; i >= 0; i--) {
         toProcess.push(currentChild[i]);
@@ -56,45 +76,53 @@ export function findSpecificComponents(
       continue;
     }
 
-    // At this point, currentChild should be a JSXNode-like object.
-    // We perform duck-typing, assuming it has 'type' and 'children' properties.
     const node = currentChild as JSXNode;
 
-    // Check if the node's type is one of the target component references.
-    // Component types are functions or QRL objects (not strings).
     if (node.type && typeof node.type !== "string") {
-      if (targetComponentTypes.has(node.type)) {
-        foundComponents.add(node.type);
-        // Continue processing, as other distinct target components might be nested
-        // or siblings. The main loop condition will break if all are found.
+      // Check if this node.type matches any of our target references
+      for (let i = 0; i < targetReferences.length; i++) {
+        if (targetReferences[i] === node.type) {
+          const key = targetKeys[i]; // Get the corresponding key for this reference
+          if (!results[key]) {
+            // Only mark and count if not already found for this key
+            results[key] = true;
+            numTargetsSuccessfullyFound++;
+          }
+          // A single node.type could still match multiple *target references* if the user
+          // passed the same component reference multiple times with different keys.
+          // e.g., targets = { MyDesc1: DescCmp, MyDesc2: DescCmp }
+          // The outer loop (targetReferences.length) handles this correctly.
+        }
       }
     }
 
-    // Always process the children of the current node, regardless of its type,
-    // unless all target components have already been found.
-    // This ensures searching within intrinsic elements (divs), non-target components,
-    // and target components (for other potential distinct targets nested within).
-    if (node.children && foundComponents.size < targetComponentTypes.size) {
+    // Continue processing children if not all distinct targets are found yet
+    if (node.children && numTargetsSuccessfullyFound < targetKeys.length) {
       toProcess.push(node.children);
     }
   }
 
   if (config?.debug) {
     const endTime = performance.now();
+    const targetNamesForLog = targetKeys.join(", ") || "none";
+    const resultLog = JSON.stringify(results); // Show the results object
     console.log(
-      `findSpecificComponents: Debug: Traversal took ${(endTime - startTime).toFixed(2)}ms for ${iterations} iterations.`
+      `findSpecificComponents: Debug: Traversal took ${(endTime - startTime).toFixed(2)}ms for ${iterations} iterations. Targets (${targetKeys.length}): [${targetNamesForLog}]. Result: ${resultLog}.`
     );
   }
 
   if (iterations >= MAX_ITERATIONS) {
+    const targetNamesForLog = targetKeys.join(", ") || "none";
+    const resultLog = JSON.stringify(results);
     console.warn(
-      `findSpecificComponents: Traversal halted after ${MAX_ITERATIONS} iterations. This might indicate an excessively deep, complex, or cyclical JSX structure. Found components: ${foundComponents.size}/${targetComponentTypes.size}`
+      `findSpecificComponents: Traversal halted after ${MAX_ITERATIONS} iterations. Targets (${targetKeys.length}): [${targetNamesForLog}]. Partial Result: ${resultLog}. This might indicate an excessively deep, complex, or cyclical JSX structure.`
     );
   }
 
-  return foundComponents;
+  return results;
 }
 
+// ... (rest of the file: processChildren, componentRegistry, findComponent, ComponentProcessor)
 /**
  *
  * This function allows us to process the children of an inline component. We can look into the children and get the proper index, pass data, or make certain API decisions.
