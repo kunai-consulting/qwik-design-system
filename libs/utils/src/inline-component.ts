@@ -10,21 +10,20 @@ import type { FunctionComponent, JSXChildren, JSXNode } from "@builder.io/qwik";
  *
  * This is useful for conditional logic based on whether a component is present or not from the user.
  *
- * @param initialChildren The JSX children to search within
+ * @param children The JSX children to search within
  * @param targets Map of component flags to component references to check for
  * @param config Optional configuration options
  * @returns Object with boolean flags indicating if each component was found
  */
-export function getComponentFlags(
-  initialChildren: JSXChildren,
-  targets: Record<string, FunctionComponent>,
+export function getComponentFlags<T extends Record<string, FunctionComponent>>(
+  children: JSXChildren,
+  targets: T,
   config?: { debug?: boolean }
-): Record<string, boolean> {
-  // Return type is also an object
-  const targetKeys = Object.keys(targets);
+): { [K in keyof T]: boolean } {
+  const targetKeys = Object.keys(targets) as Array<keyof T>;
   const targetReferences = Object.values(targets);
 
-  const results: Record<string, boolean> = {};
+  const results = {} as { [K in keyof T]: boolean };
   for (const key of targetKeys) {
     results[key] = false;
   }
@@ -44,10 +43,10 @@ export function getComponentFlags(
         `findSpecificComponents: Debug: Traversal took ${(endTime - startTime).toFixed(2)}ms for 0 iterations. Targets (0): [none]. Result: {}.`
       );
     }
-    return {};
+    return {} as { [K in keyof T]: boolean };
   }
 
-  const toProcess: JSXChildren[] = [initialChildren];
+  const toProcess: JSXChildren[] = [children];
   let iterations = 0;
   const MAX_ITERATIONS = 50000;
 
