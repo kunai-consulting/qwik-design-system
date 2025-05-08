@@ -38,18 +38,15 @@ export function getComponentFlags<T extends Record<string, FunctionComponent>>(
 
   // Handle the case of empty targets object immediately
   if (targetKeys.length === 0) {
-    if (config?.debug) {
-      const endTime = performance.now();
-      console.log(
-        `[${config.componentName}] Qwik Design System: Debug: Traversal took ${(endTime - startTime).toFixed(2)}ms for 0 iterations. Targets (0): [none]. Result: {}.`
-      );
-    }
-    return {} as { [K in keyof T]: boolean };
+    throw new Error(
+      `[${config?.componentName}] Qwik Design System: No targets provided to getComponentFlags.`
+    );
   }
 
   const toProcess: JSXChildren[] = [children];
   let iterations = 0;
   const MAX_ITERATIONS = 50000;
+  const WARNING_THRESHOLD = 201;
 
   while (toProcess.length > 0 && iterations < MAX_ITERATIONS) {
     iterations++;
@@ -58,7 +55,7 @@ export function getComponentFlags<T extends Record<string, FunctionComponent>>(
       break;
     }
 
-    if (iterations === 201) {
+    if (iterations === WARNING_THRESHOLD) {
       const cleanedTargetKeys = targetKeys.map((key) => {
         const k = String(key); // Ensure key is a string
         // Remove 'has' prefix and ensure the next char is not lowercased if it was, e.g. hasDescription -> Description
@@ -66,7 +63,7 @@ export function getComponentFlags<T extends Record<string, FunctionComponent>>(
       });
       const finalTargetNamesForLog = cleanedTargetKeys.join(", ") || "none";
       console.warn(
-        `Qwik Design System: Exceeded 200 iterations in the ${config?.componentName} component searching for the existence of the ${config?.componentName} ${finalTargetNamesForLog}. This may indicate a performance issue.`
+        `Qwik Design System: Exceeded ${WARNING_THRESHOLD - 1} iterations in the ${config?.componentName} component searching for the existence of the ${config?.componentName} ${finalTargetNamesForLog}. `
       );
     }
 
