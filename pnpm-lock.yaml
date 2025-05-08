@@ -145,8 +145,8 @@ importers:
   libs/components:
     dependencies:
       '@oddbird/css-anchor-positioning':
-        specifier: ^0.5.2
-        version: 0.5.2
+        specifier: ^0.6
+        version: 0.6.0
     devDependencies:
       '@axe-core/playwright':
         specifier: ^4.9.1
@@ -873,8 +873,8 @@ packages:
     resolution: {integrity: sha512-19sX+tHyR6M24GHbnedqqtk6w9QBgFZoa1y4zPmHf6VYaBeBmMBaq2dsLsdG0zv8LnWxaqguocICoxZTrV9f6A==}
     engines: {node: '>=18.0.0'}
 
-  '@oddbird/css-anchor-positioning@0.5.2':
-    resolution: {integrity: sha512-8QNyAY/zqAYbHyLf/cYaITjcFE7uCuudmgKGRdhEF2k8/2xz74P/gKB+MXJ7KtkGhI2cIPXDs0gc3T+0jOsjUg==}
+  '@oddbird/css-anchor-positioning@0.6.0':
+    resolution: {integrity: sha512-5r6AhCHSW/bU45gCwOdaei04WPn2E7oeztC8o0z6euyAPBbAeiYQda5ByIiMRfOf13sa8rVqiCsKpwx/QNyHbw==}
 
   '@oddbird/popover-polyfill@0.4.3':
     resolution: {integrity: sha512-kBS0ZAwH8kZqFl0mV89KPK4cLYl2ZoKSfYngK4dz1eLAhKzTK0yu4LrvLdMeM7JhjWK6GxBtiY+cl1s6vR2pUg==}
@@ -3500,7 +3500,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@oddbird/css-anchor-positioning@0.5.2':
+  '@oddbird/css-anchor-positioning@0.6.0':
     dependencies:
       '@floating-ui/dom': 1.6.13
       '@types/css-tree': 2.3.10
