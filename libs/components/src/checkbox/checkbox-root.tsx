@@ -8,10 +8,15 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
+import {
+  type BindableProps,
+  findSpecificComponents,
+  useBindings
+} from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
+import { CheckboxDescription } from "./checkbox-description";
 
 export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   /** Event handler called when the checkbox state changes */
@@ -102,4 +107,14 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
   );
 });
 
-export const CheckboxRoot = withAsChild(CheckboxRootBase);
+export const CheckboxRoot = withAsChild(CheckboxRootBase, (props) => {
+  const componentsToSearch = new Set([CheckboxDescription]);
+
+  const foundComponents = findSpecificComponents(props.children, componentsToSearch, {
+    debug: true
+  });
+
+  console.log(foundComponents);
+
+  return props;
+});

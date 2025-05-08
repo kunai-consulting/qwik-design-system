@@ -8,6 +8,7 @@ export const CheckboxDescriptionBase = component$(
   (props: PublicCheckboxDescriptionProps) => {
     const context = useContext(checkboxContextId);
     const descriptionId = `${context.localId}-description`;
+
     useTask$(() => {
       if (!context.description) {
         console.warn(
@@ -15,6 +16,7 @@ export const CheckboxDescriptionBase = component$(
         );
       }
     });
+
     return (
       // Identifier for the checkbox description element
       <Render fallback="div" id={descriptionId} data-qds-checkbox-description {...props}>
