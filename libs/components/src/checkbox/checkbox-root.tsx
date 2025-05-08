@@ -114,10 +114,9 @@ export const CheckboxRoot = withAsChild(CheckboxRootBase, (props) => {
     hasLabel: CheckboxLabel
   };
 
-  console.log(props);
-
   const componentFlags = getComponentFlags(props.children, componentFlagMap, {
-    debug: true
+    debug: true,
+    componentName: "Checkbox"
   });
 
   props.componentFlags = componentFlags;

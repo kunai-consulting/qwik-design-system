@@ -12,13 +12,14 @@ import type { FunctionComponent, JSXChildren, JSXNode } from "@builder.io/qwik";
  *
  * @param children The JSX children to search within
  * @param targets Map of component flags to component references to check for
+ * @param componentName The name of the component calling this function, used for logging.
  * @param config Optional configuration options
  * @returns Object with boolean flags indicating if each component was found
  */
 export function getComponentFlags<T extends Record<string, FunctionComponent>>(
   children: JSXChildren,
   targets: T,
-  config?: { debug?: boolean }
+  config?: { debug?: boolean; componentName: string }
 ): { [K in keyof T]: boolean } {
   const targetKeys = Object.keys(targets) as Array<keyof T>;
   const targetReferences = Object.values(targets);
@@ -40,7 +41,7 @@ export function getComponentFlags<T extends Record<string, FunctionComponent>>(
     if (config?.debug) {
       const endTime = performance.now();
       console.log(
-        `findSpecificComponents: Debug: Traversal took ${(endTime - startTime).toFixed(2)}ms for 0 iterations. Targets (0): [none]. Result: {}.`
+        `[${config.componentName}] Qwik Design System: Debug: Traversal took ${(endTime - startTime).toFixed(2)}ms for 0 iterations. Targets (0): [none]. Result: {}.`
       );
     }
     return {} as { [K in keyof T]: boolean };
@@ -55,6 +56,18 @@ export function getComponentFlags<T extends Record<string, FunctionComponent>>(
     // Optimization: if all target flags are true, stop.
     if (numTargetsSuccessfullyFound === targetKeys.length) {
       break;
+    }
+
+    if (iterations === 201) {
+      const cleanedTargetKeys = targetKeys.map((key) => {
+        const k = String(key); // Ensure key is a string
+        // Remove 'has' prefix and ensure the next char is not lowercased if it was, e.g. hasDescription -> Description
+        return k.startsWith("has") && k.length > 3 ? k.substring(3) : k;
+      });
+      const finalTargetNamesForLog = cleanedTargetKeys.join(", ") || "none";
+      console.warn(
+        `Qwik Design System: Exceeded 200 iterations in the ${config?.componentName} component searching for the existence of the ${config?.componentName} ${finalTargetNamesForLog}. This may indicate a performance issue.`
+      );
     }
 
     const currentChild = toProcess.pop();
@@ -104,17 +117,17 @@ export function getComponentFlags<T extends Record<string, FunctionComponent>>(
   if (config?.debug) {
     const endTime = performance.now();
     const targetNamesForLog = targetKeys.join(", ") || "none";
-    const resultLog = JSON.stringify(results); // Show the results object
+    const resultLog = JSON.stringify(results);
     console.log(
-      `findSpecificComponents: Debug: Traversal took ${(endTime - startTime).toFixed(2)}ms for ${iterations} iterations. Targets (${targetKeys.length}): [${targetNamesForLog}]. Result: ${resultLog}.`
+      `[${config?.componentName}] Qwik Design System: Debug: Traversal took ${(endTime - startTime).toFixed(2)}ms for ${iterations} iterations. Targets (${targetKeys.length}): [${targetNamesForLog}]. Result: ${resultLog}.`
     );
   }
 
   if (iterations >= MAX_ITERATIONS) {
     const targetNamesForLog = targetKeys.join(", ") || "none";
     const resultLog = JSON.stringify(results);
-    console.warn(
-      `findSpecificComponents: Traversal halted after ${MAX_ITERATIONS} iterations. Targets (${targetKeys.length}): [${targetNamesForLog}]. Partial Result: ${resultLog}. This might indicate an excessively deep, complex, or cyclical JSX structure.`
+    throw new Error(
+      `[${config?.componentName}] Qwik Design System: Traversal halted after ${MAX_ITERATIONS} iterations. Targets (${targetKeys.length}): [${targetNamesForLog}]. Partial Result: ${resultLog}. This might indicate an excessively deep, complex, or cyclical JSX structure.`
     );
   }
 
