@@ -1,0 +1,5 @@
+@layer qds {
+  [data-qds-toaster-item][data-qds-popover-content] {
+    position: fixed;
+  }
+}
