@@ -110,8 +110,8 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
 
 export const CheckboxRoot = withAsChild(CheckboxRootBase, (props) => {
   const componentFlagMap = {
-    hasDescription: CheckboxDescription,
-    hasLabel: CheckboxLabel
+    description: CheckboxDescription,
+    label: CheckboxLabel
   };
 
   const componentFlags = getComponentFlags(props.children, componentFlagMap, {

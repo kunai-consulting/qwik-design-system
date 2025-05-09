@@ -56,12 +56,7 @@ export function getComponentFlags<T extends Record<string, FunctionComponent>>(
     }
 
     if (iterations === WARNING_THRESHOLD) {
-      const cleanedTargetKeys = targetKeys.map((key) => {
-        const k = String(key); // Ensure key is a string
-        // Remove 'has' prefix and ensure the next char is not lowercased if it was, e.g. hasDescription -> Description
-        return k.startsWith("has") && k.length > 3 ? k.substring(3) : k;
-      });
-      const finalTargetNamesForLog = cleanedTargetKeys.join(", ") || "none";
+      const finalTargetNamesForLog = targetKeys.join(", and ") || "none";
       console.warn(
         `Qwik Design System: Exceeded ${WARNING_THRESHOLD - 1} iterations in the ${config?.componentName} component searching for the existence of the ${config?.componentName} ${finalTargetNamesForLog}. `
       );
