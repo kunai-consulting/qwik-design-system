@@ -29,8 +29,7 @@ export type ComponentCheckerProps<
   componentChecker?: ComponentCheckerData<{ [K in keyof FlagMap]: boolean }>;
 };
 
-export type ComponentCheckerData<TResults> = {
-  results: TResults;
+export type ComponentCheckerData<TResults extends Record<string, boolean>> = TResults & {
   name: string;
 };
 
@@ -53,7 +52,7 @@ export type ComponentCheckerData<TResults> = {
  * with the results of the component detection, which can be used by child components
  * to verify they're properly connected to their parent.
  */
-export function setComponentFlags<T extends Record<string, FunctionComponent>>(
+export function setComponentChecker<T extends Record<string, FunctionComponent>>(
   props: Record<string, unknown> & {
     children?: JSXChildren;
     componentChecker?: ComponentCheckerData<{ [K in keyof T]: boolean }>;
@@ -105,7 +104,7 @@ export function setComponentFlags<T extends Record<string, FunctionComponent>>(
   // Handle the case of empty targets object immediately
   if (targetKeys.length === 0) {
     throw new Error(
-      `[${config?.componentName}] Qwik Design System: No targets provided to setComponentFlags.`
+      `[${config?.componentName}] Qwik Design System: No targets provided to setComponentChecker.`
     );
   }
 
@@ -216,7 +215,7 @@ To improve performance, consider these options for ${config?.componentName}:
   }
 
   props.componentChecker = {
-    results: results,
+    ...results,
     name: config.componentName
   };
 
@@ -247,23 +246,24 @@ export type AssertConfig<TResults extends Record<string, boolean>> = {
 
 export function assertComponentPresence<TResults extends Record<string, boolean>>(
   componentChecker: ComponentCheckerData<TResults> | undefined,
-  config: AssertConfig<TResults> // Updated parameter
+  config: AssertConfig<TResults>
 ): void {
-  // Destructure from config object
   const { flagKey, componentName } = config;
 
   if (!componentChecker) {
     console.warn(
-      `Qwik Design System Warning: \`${componentName}\` called \`assertComponentIsPresent\` but the \`componentChecker\` data was not provided. Ensure the parent root component correctly uses \`setComponentFlags\` and that its \`componentChecker\` data is passed to this function.`
+      `Qwik Design System Warning: \`${componentName}\` called \`assertComponentPresence\` but the \`componentChecker\` data was not provided. Ensure the parent root component correctly uses \`setComponentChecker\` and that its \`componentChecker\` data is passed to this function.`
     );
     return;
   }
 
-  const { results, name: namespace } = componentChecker;
+  const namespace = componentChecker.name;
+  const flagValue = (componentChecker as Record<keyof TResults | "name", unknown>)[
+    flagKey
+  ];
 
-  if (results && (results as Record<string, boolean>)[flagKey as string] === false) {
+  if (flagValue === false) {
     const componentPropName = `${flagKey as string}Component`;
-
     throw new Error(
       `[Qwik Design System] ${namespace}.Root could not find the rendered ${componentName} piece.
 

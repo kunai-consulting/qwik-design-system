@@ -11,7 +11,7 @@ import {
 import {
   type BindableProps,
   type ComponentCheckerProps,
-  setComponentFlags,
+  setComponentChecker,
   useBindings
 } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
@@ -23,8 +23,6 @@ import { CheckboxLabel } from "./checkbox-label";
 export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   /** Event handler called when the checkbox state changes */
   onChange$?: (checked: T) => void;
-  /** Whether the checkbox has a description */
-  description?: boolean;
   /** Name attribute for the hidden input element */
   name?: string;
   /** Whether the checkbox is required */
@@ -49,7 +47,7 @@ export type CheckboxPieces = {
 
 /** Root component that provides context and state management for the checkbox */
 export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
-  const { onChange$, description, name, required, value, ...rest } = props;
+  const { onChange$, name, required, value, componentChecker, ...rest } = props;
 
   const { checkedSig, disabledSig: isDisabledSig } = useBindings<CheckboxBinds>(props, {
     checked: false,
@@ -77,14 +75,13 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
     checkedSig,
     isDisabledSig,
     localId,
-    description,
     name,
     required,
     value,
     isErrorSig,
     triggerRef,
     dataAttributes,
-    componentChecker: props.componentChecker
+    componentChecker
   };
 
   useContextProvider(checkboxContextId, context);
@@ -117,12 +114,12 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
 });
 
 export const CheckboxRoot = withAsChild(CheckboxRootBase, (props) => {
-  const componentFlagMap: CheckboxPieces = {
+  const components: CheckboxPieces = {
     description: CheckboxDescription,
     label: CheckboxLabel
   };
 
-  setComponentFlags(props, componentFlagMap, {
+  setComponentChecker(props, components, {
     debug: false,
     componentName: "Checkbox"
   });
