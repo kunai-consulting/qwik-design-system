@@ -14,12 +14,19 @@ import type { FunctionComponent, JSXChildren, JSXNode } from "@builder.io/qwik";
  * - `skip<CapitalizedKey>Check`: An optional boolean. If true, the existence check for the component associated with `Key` might be skipped.
  * - `<key>Component`: An optional Qwik component. If provided, this component can be used as an alternative to the default component associated with `Key`.
  */
-export type ComponentOverrideProps<
+export type ComponentCheckerProps<
   FlagMap extends Record<string, FunctionComponent<Record<string, unknown>>>
 > = {
   [K in keyof FlagMap as `skip${Capitalize<K & string>}Check`]?: boolean;
 } & {
   [K in keyof FlagMap as `${K & string}Component`]?: FlagMap[K];
+} & {
+  componentChecker?: ComponentCheckerData<{ [K in keyof FlagMap]: boolean }>;
+};
+
+export type ComponentCheckerData<TResults> = {
+  results: TResults;
+  name: string;
 };
 
 /**
@@ -38,8 +45,11 @@ export type ComponentOverrideProps<
  * @param config Optional configuration options
  * @returns Object with boolean flags indicating if each component was found
  */
-export function getComponentFlags<T extends Record<string, FunctionComponent>>(
-  props: Record<string, unknown> & { children?: JSXChildren } & ComponentOverrideProps<T>,
+export function setComponentFlags<T extends Record<string, FunctionComponent>>(
+  props: Record<string, unknown> & {
+    children?: JSXChildren;
+    componentChecker?: ComponentCheckerData<{ [K in keyof T]: boolean }>;
+  } & ComponentCheckerProps<T>,
   flagMap: T,
   config: { debug?: boolean; componentName: string }
 ): { [K in keyof T]: boolean } {
@@ -53,9 +63,9 @@ export function getComponentFlags<T extends Record<string, FunctionComponent>>(
   for (const key of targetKeys) {
     const capitalizedKey =
       (key as string).charAt(0).toUpperCase() + (key as string).slice(1);
-    const skipPropName = `skip${capitalizedKey}Check` as keyof ComponentOverrideProps<T>;
+    const skipPropName = `skip${capitalizedKey}Check` as keyof ComponentCheckerProps<T>;
 
-    if ((props as ComponentOverrideProps<T>)[skipPropName] === true) {
+    if ((props as ComponentCheckerProps<T>)[skipPropName] === true) {
       results[key] = true;
       numTargetsSuccessfullyFound++;
     } else {
@@ -73,7 +83,7 @@ export function getComponentFlags<T extends Record<string, FunctionComponent>>(
   // Handle the case of empty targets object immediately
   if (targetKeys.length === 0) {
     throw new Error(
-      `[${config?.componentName}] Qwik Design System: No targets provided to getComponentFlags.`
+      `[${config?.componentName}] Qwik Design System: No targets provided to setComponentFlags.`
     );
   }
 
@@ -182,6 +192,11 @@ To improve performance, consider these options for ${config?.componentName}:
       `[${config?.componentName}] Qwik Design System: Traversal halted after ${MAX_ITERATIONS} iterations. Actively Searched Targets (${activelySearchedTargetKeys.length}): [${errorTargetNamesForLog}]. Partial Result: ${resultLog}. This might indicate an excessively deep, complex, or cyclical JSX structure.`
     );
   }
+
+  props.componentChecker = {
+    results: results,
+    name: config.componentName
+  };
 
   return results;
 }

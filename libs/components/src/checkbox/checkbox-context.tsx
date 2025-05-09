@@ -1,4 +1,6 @@
 import { type Signal, createContextId } from "@builder.io/qwik";
+import type { ComponentCheckerProps } from "@kunai-consulting/qwik-utils";
+import type { CheckboxPieces } from "./checkbox-root";
 
 export const checkboxContextId = createContextId<CheckboxContext>("qds-checkbox-context");
 
@@ -16,4 +18,4 @@ export type CheckboxContext = {
     "data-checked": string | undefined;
     "data-mixed": string | undefined;
   }>;
-};
+} & ComponentCheckerProps<CheckboxPieces>;

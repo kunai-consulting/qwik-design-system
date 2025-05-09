@@ -10,8 +10,8 @@ import {
 } from "@builder.io/qwik";
 import {
   type BindableProps,
-  type ComponentOverrideProps,
-  getComponentFlags,
+  type ComponentCheckerProps,
+  setComponentFlags,
   useBindings
 } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
@@ -33,7 +33,7 @@ export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   value?: string;
 } & Omit<PropsOf<"div">, "onChange$"> &
   BindableProps<CheckboxBinds> &
-  ComponentOverrideProps<CheckboxPieces>;
+  ComponentCheckerProps<CheckboxPieces>;
 
 type CheckboxBinds = {
   /* Determines whether the checkbox is checked */
@@ -42,7 +42,7 @@ type CheckboxBinds = {
   disabled: boolean;
 };
 
-type CheckboxPieces = {
+export type CheckboxPieces = {
   description: typeof CheckboxDescription;
   label: typeof CheckboxLabel;
 };
@@ -83,7 +83,8 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
     value,
     isErrorSig,
     triggerRef,
-    dataAttributes
+    dataAttributes,
+    componentChecker: props.componentChecker
   };
 
   useContextProvider(checkboxContextId, context);
@@ -121,12 +122,10 @@ export const CheckboxRoot = withAsChild(CheckboxRootBase, (props) => {
     label: CheckboxLabel
   };
 
-  const componentFlags = getComponentFlags(props, componentFlagMap, {
+  setComponentFlags(props, componentFlagMap, {
     debug: true,
     componentName: "Checkbox"
   });
-
-  props.componentFlags = componentFlags;
 
   return props;
 });

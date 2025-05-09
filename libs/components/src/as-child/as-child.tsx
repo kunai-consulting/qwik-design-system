@@ -5,12 +5,13 @@ import {
   noSerialize
 } from "@builder.io/qwik";
 import type { FunctionComponent } from "@builder.io/qwik/jsx-runtime";
+import type { ComponentCheckerData } from "@kunai-consulting/qwik-utils";
 
 export type AsChildProps = {
   _allProps?: object;
   _jsxType?: Component | string;
   asChild?: boolean;
-  componentFlags?: Record<string, boolean>;
+  componentChecker?: ComponentCheckerData<Record<string, boolean>>;
 };
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
