@@ -1,4 +1,5 @@
 import {
+  $,
   type PropsOf,
   type Signal,
   Slot,
@@ -60,7 +61,7 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
     sync$((event: KeyboardEvent) => {
       // we have to do this on a window event due to v1 serialization issues
       const activeElement = document.activeElement;
-      const isWithinDropdown = activeElement?.closest("[data-qds-popover-content]");
+      const isWithinDropdown = activeElement?.closest("[data-qds-popover-root]");
 
       if (!isWithinDropdown) return;
 
@@ -77,11 +78,21 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
   const triggerId = `${id}-trigger`;
   const itemRefs = useSignal<ItemRef[]>([]);
 
+  const getEnabledItems = $(() =>
+    itemRefs.value
+      .map((itemRefObj) => itemRefObj.ref.value)
+      .filter(
+        (el): el is HTMLElement =>
+          !!el && !el.hasAttribute("data-disabled") && !el.hasAttribute("disabled")
+      )
+  );
+
   const context: DropdownContext = {
     isOpenSig,
     contentId,
     triggerId,
-    itemRefs
+    itemRefs,
+    getEnabledItems
   };
 
   useContextProvider(dropdownContextId, context);

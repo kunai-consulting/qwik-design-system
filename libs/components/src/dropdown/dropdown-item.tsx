@@ -77,13 +77,7 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
         return;
       }
       // Get elements from refs, filter out disabled ones
-      const enabledItems = context.itemRefs.value
-        .map((itemRefObj) => itemRefObj.ref.value)
-        .filter(
-          (el): el is HTMLElement =>
-            // Indicates whether the dropdown item is disabled
-            !!el && !el.hasAttribute("data-disabled") && !el.hasAttribute("disabled")
-        );
+      const enabledItems = await context.getEnabledItems();
       if (enabledItems.length === 0) return;
 
       let nextIndex: number;
