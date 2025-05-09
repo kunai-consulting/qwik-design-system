@@ -39,7 +39,7 @@ export type ComponentOverrideProps<
  * @returns Object with boolean flags indicating if each component was found
  */
 export function getComponentFlags<T extends Record<string, FunctionComponent>>(
-  props: Record<string, unknown> & { children?: JSXChildren },
+  props: Record<string, unknown> & { children?: JSXChildren } & ComponentOverrideProps<T>,
   flagMap: T,
   config: { debug?: boolean; componentName: string }
 ): { [K in keyof T]: boolean } {
@@ -47,11 +47,23 @@ export function getComponentFlags<T extends Record<string, FunctionComponent>>(
   const targetReferences = Object.values(flagMap);
 
   const results = {} as { [K in keyof T]: boolean };
+  let numTargetsSuccessfullyFound = 0;
+
+  // Initialize results and handle skip checks
   for (const key of targetKeys) {
-    results[key] = false;
+    const capitalizedKey =
+      (key as string).charAt(0).toUpperCase() + (key as string).slice(1);
+    const skipPropName = `skip${capitalizedKey}Check` as keyof ComponentOverrideProps<T>;
+
+    if ((props as ComponentOverrideProps<T>)[skipPropName] === true) {
+      results[key] = true;
+      numTargetsSuccessfullyFound++;
+    } else {
+      results[key] = false;
+    }
   }
 
-  let numTargetsSuccessfullyFound = 0;
+  const activelySearchedTargetKeys = targetKeys.filter((key) => !results[key]);
   let startTime = 0;
 
   if (config?.debug) {
@@ -78,9 +90,35 @@ export function getComponentFlags<T extends Record<string, FunctionComponent>>(
     }
 
     if (iterations === WARNING_THRESHOLD) {
-      const finalTargetNamesForLog = targetKeys.join(", and ") || "none";
+      const finalTargetNamesForLog = activelySearchedTargetKeys.join(", and ") || "none";
       console.warn(
-        `Qwik Design System: Exceeded ${WARNING_THRESHOLD - 1} iterations in the ${config?.componentName} component searching for the existence of the ${config?.componentName} ${finalTargetNamesForLog}. `
+        `
+--------------------------------
+
+Qwik Design System Warning in ${config?.componentName}:
+
+Potential performance issue: Exceeded ${WARNING_THRESHOLD - 1} iterations when searching for the following child component(s): ${finalTargetNamesForLog}.
+
+This usually means the JSX content within ${config?.componentName} is very deep or complex.
+
+To improve performance, consider these options for ${config?.componentName}:
+
+  - Simplify JSX:
+    Try moving complex or deeply nested elements outside of this component.
+
+  - Virtualize Lists:
+    If ${config?.componentName} contains long lists, use virtualization to render only visible items.
+
+  - Skip Component Existence Checks (Advanced):
+
+    If you are certain the component(s) listed above (${finalTargetNamesForLog}) are indeed present as children, you can remove the need to search for the component by providing a skip prop to ${config?.componentName} Root.
+    
+    For example, if you have definitely passed a Description component as a child to ${config?.componentName}, you could add the prop 'skipDescriptionCheck={true}' to ${config?.componentName}. Similarly for other listed components (e.g., 'skipLabelCheck={true}').
+    
+    Be cautious: Only use this option if you are absolutely sure the child component is present. Incorrectly skipping these checks can lead to unexpected behavior or hide issues if the component is actually missing.
+
+--------------------------------
+`
       );
     }
 
@@ -130,18 +168,18 @@ export function getComponentFlags<T extends Record<string, FunctionComponent>>(
 
   if (config?.debug) {
     const endTime = performance.now();
-    const targetNamesForLog = targetKeys.join(", ") || "none";
+    const debugTargetNamesForLog = activelySearchedTargetKeys.join(", ") || "none";
     const resultLog = JSON.stringify(results);
     console.log(
-      `[${config?.componentName}] Qwik Design System: Debug: Traversal took ${(endTime - startTime).toFixed(2)}ms for ${iterations} iterations. Targets (${targetKeys.length}): [${targetNamesForLog}]. Result: ${resultLog}.`
+      `[${config?.componentName}] Qwik Design System: Debug: Traversal took ${(endTime - startTime).toFixed(2)}ms for ${iterations} iterations. Actively Searched Targets (${activelySearchedTargetKeys.length}): [${debugTargetNamesForLog}]. Full Result: ${resultLog}.`
     );
   }
 
   if (iterations >= MAX_ITERATIONS) {
-    const targetNamesForLog = targetKeys.join(", ") || "none";
+    const errorTargetNamesForLog = activelySearchedTargetKeys.join(", ") || "none";
     const resultLog = JSON.stringify(results);
     throw new Error(
-      `[${config?.componentName}] Qwik Design System: Traversal halted after ${MAX_ITERATIONS} iterations. Targets (${targetKeys.length}): [${targetNamesForLog}]. Partial Result: ${resultLog}. This might indicate an excessively deep, complex, or cyclical JSX structure.`
+      `[${config?.componentName}] Qwik Design System: Traversal halted after ${MAX_ITERATIONS} iterations. Actively Searched Targets (${activelySearchedTargetKeys.length}): [${errorTargetNamesForLog}]. Partial Result: ${resultLog}. This might indicate an excessively deep, complex, or cyclical JSX structure.`
     );
   }
 

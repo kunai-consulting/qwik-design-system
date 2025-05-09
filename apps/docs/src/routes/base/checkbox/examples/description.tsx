@@ -6,7 +6,7 @@ export default component$(() => {
   useStyles$(styles);
 
   return (
-    <Checkbox.Root description>
+    <Checkbox.Root skipLabelCheck>
       <div
         style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}
       >
