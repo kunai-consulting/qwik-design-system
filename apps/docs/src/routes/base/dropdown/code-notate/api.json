@@ -101,13 +101,18 @@
               {
                 "comment": "Callback fired when the item is selected.",
                 "prop": "onSelect$",
-                "type": "(() => void)"
+                "type": "((value: string) => void)"
               },
               {
                 "comment": "Whether to close the dropdown when the item is selected",
                 "prop": "closeOnSelect",
                 "type": "boolean",
                 "defaultValue": "true"
+              },
+              {
+                "comment": "Data value associated with this item, passed to onSelect$ when selected",
+                "prop": "value",
+                "type": "string"
               }
             ]
           }

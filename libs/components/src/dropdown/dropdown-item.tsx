@@ -12,11 +12,13 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { dropdownContextId } from "./dropdown-context";
 
-export type PublicDropdownItemProps = PropsOf<"div"> & {
+export type PublicDropdownItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
   /** Whether the dropdown item is disabled */
   disabled?: boolean;
+  /** Data value associated with this item, passed to onSelect$ when selected */
+  value?: string;
   /** Event handler called when the item is selected */
-  onSelect$?: () => void;
+  onSelect$?: (value: string | undefined) => void;
   /** Whether to close the dropdown when the item is selected (default: true) */
   closeOnSelect?: boolean;
   _index?: number;
@@ -24,7 +26,7 @@ export type PublicDropdownItemProps = PropsOf<"div"> & {
 
 /** Interactive item within a dropdown menu */
 export const DropdownItemBase = component$<PublicDropdownItemProps>(
-  ({ disabled, onSelect$, closeOnSelect = true, _index, ...props }) => {
+  ({ disabled, value, onSelect$, closeOnSelect = true, _index, ...props }) => {
     const context = useContext(dropdownContextId);
     const itemRef = useSignal<HTMLElement>();
     const isHoveredSig = useSignal(false);
@@ -40,17 +42,25 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
       }
 
       if (itemRef.value) {
-        while (context.itemRefs.value.length <= _index) {
-          context.itemRefs.value.push({ ref: { value: null } });
+        // Create a new array instead of mutating the existing one
+        const newItemRefs = [...context.itemRefs.value];
+
+        // Ensure array is large enough
+        while (newItemRefs.length <= _index) {
+          newItemRefs.push({ ref: { value: null } });
         }
 
-        context.itemRefs.value[_index] = { ref: itemRef };
+        // Set the ref at the right index
+        newItemRefs[_index] = { ref: itemRef };
+
+        // Replace the entire array in the signal
+        context.itemRefs.value = newItemRefs;
       }
     });
 
     const handleSelect = $(() => {
       if (disabled) return;
-      onSelect$?.();
+      onSelect$?.(value);
       if (closeOnSelect) {
         context.isOpenSig.value = false;
       }

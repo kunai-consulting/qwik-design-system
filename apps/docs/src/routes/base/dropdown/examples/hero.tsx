@@ -4,7 +4,7 @@ import styles from "./dropdown-custom.css?inline";
 
 export default component$(() => {
   useStyles$(styles);
-  const selectedItem = useSignal("");
+  const selectedItem = useSignal<string | null>(null);
 
   return (
     <div>
@@ -12,7 +12,8 @@ export default component$(() => {
         <Dropdown.Trigger class="bg-qwik-blue-700 p-1">Open Menu</Dropdown.Trigger>
         <Dropdown.Content>
           <Dropdown.Item
-            onSelect$={() => (selectedItem.value = "1")}
+            value="1"
+            onSelect$={(value) => (selectedItem.value = value ?? null)}
             class="dropdown-item"
           >
             <Dropdown.ItemLabel class="dropdown-item-label">Item 1</Dropdown.ItemLabel>
@@ -30,7 +31,10 @@ export default component$(() => {
           </Dropdown.Item>
         </Dropdown.Content>
       </Dropdown.Root>
-      {selectedItem.value !== "" && <span>Selected item: {selectedItem.value}</span>}
+
+      <div style="margin-top: 20px;">
+        {selectedItem.value !== null && <span>Selected item: {selectedItem.value}</span>}
+      </div>
     </div>
   );
 });

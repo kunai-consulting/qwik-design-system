@@ -85,7 +85,9 @@ disabled?: boolean;
 ```tsx
 interface DropdownItemProps {
 disabled?: boolean;
-onSelect$?: () => void;
+onSelect$?: (value: string | undefined) => void;
+closeOnSelect?: boolean;
+value?: string;
 }
 ```
 

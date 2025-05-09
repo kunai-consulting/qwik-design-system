@@ -4,7 +4,7 @@ import styles from "./dropdown-custom.css?inline";
 
 export default component$(() => {
   useStyles$(styles);
-  const selectedItem = useSignal("");
+  const selectedItem = useSignal<string | null>(null);
   const isOpen = useSignal(false);
 
   return (
@@ -13,7 +13,7 @@ export default component$(() => {
         Dropdown is {isOpen.value ? "opened" : "closed"}.
       </p>
       <Dropdown.Root
-        open={isOpen.value}
+        bind:open={isOpen}
         onOpenChange$={(open: boolean) => {
           isOpen.value = open;
         }}
@@ -41,7 +41,7 @@ export default component$(() => {
       </Dropdown.Root>
 
       <div style="margin-top: 20px;">
-        {selectedItem.value !== "" && <p>Selected item: {selectedItem.value}</p>}
+        {selectedItem.value !== null && <span>Selected item: {selectedItem.value}</span>}
       </div>
     </div>
   );

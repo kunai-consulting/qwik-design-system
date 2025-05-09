@@ -4,11 +4,11 @@ import styles from "./dropdown-custom.css?inline";
 
 export default component$(() => {
   useStyles$(styles);
-  const selectedItem = useSignal("");
+  const selectedItem = useSignal<string | null>(null);
 
   return (
     <div>
-      {selectedItem.value !== "" && <span>Selected item: {selectedItem.value}</span>}
+      {selectedItem.value !== null && <span>Selected item: {selectedItem.value}</span>}
       <Dropdown.Root>
         <Dropdown.Trigger class="bg-qwik-blue-700 p-1 w-70">Open Menu</Dropdown.Trigger>
         <Dropdown.Content>
