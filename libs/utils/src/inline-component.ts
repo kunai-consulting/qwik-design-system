@@ -1,4 +1,9 @@
-import type { FunctionComponent, JSXChildren, JSXNode } from "@builder.io/qwik";
+import type {
+  FunctionComponent,
+  JSXChildren,
+  JSXNode,
+  Component
+} from "@builder.io/qwik";
 
 /**
  * Defines optional properties for overriding default component checks and component implementations
@@ -19,7 +24,7 @@ export type ComponentCheckerProps<
 > = {
   [K in keyof FlagMap as `skip${Capitalize<K & string>}Check`]?: boolean;
 } & {
-  [K in keyof FlagMap as `${K & string}Component`]?: FlagMap[K];
+  [K in keyof FlagMap as `${K & string}Component`]?: Component<Record<string, unknown>>;
 } & {
   componentChecker?: ComponentCheckerData<{ [K in keyof FlagMap]: boolean }>;
 };
