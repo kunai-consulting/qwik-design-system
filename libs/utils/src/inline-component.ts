@@ -11,18 +11,18 @@ import type { FunctionComponent, JSXChildren, JSXNode } from "@builder.io/qwik";
  * This is useful for conditional logic based on whether a component is present or not from the user.
  *
  * @param props.children The JSX children to search within
- * @param targets Map of component flags to component references to check for
+ * @param flagMap Map of component flags to component references to check for
  * @param componentName The name of the component calling this function, used for logging.
  * @param config Optional configuration options
  * @returns Object with boolean flags indicating if each component was found
  */
 export function getComponentFlags<T extends Record<string, FunctionComponent>>(
   props: Record<string, unknown> & { children?: JSXChildren },
-  targets: T,
+  flagMap: T,
   config?: { debug?: boolean; componentName: string }
 ): { [K in keyof T]: boolean } {
-  const targetKeys = Object.keys(targets) as Array<keyof T>;
-  const targetReferences = Object.values(targets);
+  const targetKeys = Object.keys(flagMap) as Array<keyof T>;
+  const targetReferences = Object.values(flagMap);
 
   const results = {} as { [K in keyof T]: boolean };
   for (const key of targetKeys) {
