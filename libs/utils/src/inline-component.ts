@@ -54,7 +54,21 @@ export function setComponentFlags<T extends Record<string, FunctionComponent>>(
   config: { debug?: boolean; componentName: string }
 ): { [K in keyof T]: boolean } {
   const targetKeys = Object.keys(flagMap) as Array<keyof T>;
-  const targetReferences = Object.values(flagMap);
+  // Dynamically build targetReferences based on props overrides or flagMap defaults
+  const targetReferences: FunctionComponent[] = [];
+  for (const key of targetKeys) {
+    const overrideComponentPropName =
+      `${key as string}Component` as keyof ComponentCheckerProps<T>; // e.g., descriptionComponent
+    const overrideComponent = (props as ComponentCheckerProps<T>)[
+      overrideComponentPropName
+    ];
+
+    if (overrideComponent && typeof overrideComponent === "function") {
+      targetReferences.push(overrideComponent as FunctionComponent);
+    } else {
+      targetReferences.push(flagMap[key]);
+    }
+  }
 
   const results = {} as { [K in keyof T]: boolean };
   let numTargetsSuccessfullyFound = 0;

@@ -25,7 +25,11 @@ export default component$(() => {
         />
       ))}
 
-      <MyDesc />
+      <Checkbox.Description style={{ color: "#b8c1cc" }}>
+        By checking this box, you acknowledge that you have read, understood, and agree to
+        our Terms of Service and Privacy Policy. This includes consent to process your
+        personal data as described in our policies.
+      </Checkbox.Description>
     </Checkbox.Root>
   );
 });
