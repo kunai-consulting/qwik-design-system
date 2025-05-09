@@ -233,19 +233,17 @@ export function assertComponentIsPresent<TResults extends Record<string, boolean
     const componentPropName = `${flagKey as string}Component`;
 
     throw new Error(
-      `Qwik Design System: 
-      
-      The ${componentName} component was used, but ${namespace} Root did not find it.
-      
-      This happens when you've returned the ${componentName} in a different Qwik component than the one the ${namespace} Root is in.
+      `Qwik Design System: The ${componentName} component was used, but ${namespace} Root did not find it.
 
-      To fix it, pass the component that ${componentName} is in as the ${componentPropName} prop to ${namespace}.
+This happens when you've returned the ${componentName} in a different Qwik component than the one the ${namespace} Root is in.
 
-      For example:
+To fix it, pass the component that ${componentName} is in as the ${componentPropName} prop to the ${namespace} Root.
 
-      <${namespace}.Root ${componentPropName}={Your${componentName}}>
-        {...}
-      </${namespace}.Root>`
+For example:
+
+<${namespace}.Root ${componentPropName}={Your${componentName}}>
+  {...}
+</${namespace}.Root>`
     );
   }
 }
