@@ -15,7 +15,7 @@
     width: anchor-size(width);
     margin: unset;
     top: anchor(bottom);
-    left: anchor(left);
+    left: anchor(inside);
     right: auto;
     bottom: auto;
     position: absolute;
