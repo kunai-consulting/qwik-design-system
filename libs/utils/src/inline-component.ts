@@ -1,6 +1,28 @@
 import type { FunctionComponent, JSXChildren, JSXNode } from "@builder.io/qwik";
 
 /**
+ * Defines optional properties for overriding default component checks and component implementations
+ * based on a map of components.
+ *
+ * For a given `FlagMap` (e.g., `{ description: CmpA, customLabel: CmpB }`), this type generates properties like:
+ * - `skipDescriptionCheck?: boolean;`
+ * - `descriptionComponent?: CmpA;`
+ * - `skipCustomLabelCheck?: boolean;`
+ * - `customLabelComponent?: CmpB;`
+ *
+ * The pattern for generated properties, where `Key` is a key from `FlagMap`:
+ * - `skip<CapitalizedKey>Check`: An optional boolean. If true, the existence check for the component associated with `Key` might be skipped.
+ * - `<key>Component`: An optional Qwik component. If provided, this component can be used as an alternative to the default component associated with `Key`.
+ */
+export type ComponentOverrideProps<
+  FlagMap extends Record<string, FunctionComponent<Record<string, unknown>>>
+> = {
+  [K in keyof FlagMap as `skip${Capitalize<K & string>}Check`]?: boolean;
+} & {
+  [K in keyof FlagMap as `${K & string}Component`]?: FlagMap[K];
+};
+
+/**
  * Checks if specific components exist within a component's visible tree.
  *
  * This utility helps component roots detect if required child components are present.
