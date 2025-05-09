@@ -19,11 +19,7 @@ import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";
 import { type DropdownContext, dropdownContextId } from "./dropdown-context";
 
-type DropdownRootBaseProps = Omit<
-  PropsOf<typeof PopoverRootBase>,
-  /** Reactive value that controls whether the dropdown is open */
-  "id" | "popover" | "open" | "bind:open"
->;
+type DropdownRootBaseProps = PropsOf<typeof PopoverRootBase>;
 
 /** Initial open state of the dropdown */
 export type PublicDropdownRootProps = DropdownRootBaseProps &
@@ -41,18 +37,22 @@ interface ItemRef {
 
 /** Root container component for the dropdown menu */
 const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
-  const { openSig: isOpenSig } = useBindings(
-    { "bind:open": props["bind:open"], open: props.open },
-    {
-      open: false
-    }
-  );
+  const { openSig: isOpenSig } = useBindings(props, {
+    open: false
+  });
 
-  useTask$(({ track }) => {
+  const isInitialRenderSig = useSignal(true);
+
+  useTask$(async ({ track, cleanup }) => {
     const isOpen = track(() => isOpenSig.value);
-    if (props.onOpenChange$) {
-      props.onOpenChange$(isOpen);
+
+    if (!isInitialRenderSig.value && props.onOpenChange$) {
+      await props.onOpenChange$(isOpen);
     }
+
+    cleanup(() => {
+      isInitialRenderSig.value = false;
+    });
   });
 
   useOnWindow(
