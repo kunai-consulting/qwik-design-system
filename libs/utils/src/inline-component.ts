@@ -233,17 +233,19 @@ export function assertComponentIsPresent<TResults extends Record<string, boolean
     const componentPropName = `${flagKey as string}Component`;
 
     throw new Error(
-      `Qwik Design System: The ${componentName} component was used, but ${namespace} Root did not find it.
+      `${namespace}.Root could not find the required ${componentName} piece.
 
-This happens when you've returned the ${componentName} in a different Qwik component than the one the ${namespace} Root is in.
+This usually happens if ${componentName} is rendered inside another Qwik component, not directly under '${namespace}.Root'.
 
-To fix it, pass the component that ${componentName} is in as the ${componentPropName} prop to the ${namespace} Root.
+To fix: Pass the Qwik component that wraps over ${componentName} to the ${componentPropName} prop on <${namespace}.Root>.
 
-For example:
+Example:
+If My${componentName}Wrapper is your Qwik component rendering the ${componentName} content:
 
-<${namespace}.Root ${componentPropName}={Your${componentName}}>
-  {...}
-</${namespace}.Root>`
+<${namespace}.Root ${componentPropName}={My${componentName}Wrapper}>
+  {/* ... */}
+</${namespace}.Root>
+`
     );
   }
 }
