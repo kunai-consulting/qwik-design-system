@@ -212,17 +212,27 @@ To improve performance, consider these options for ${config?.componentName}:
  * guiding the user on how to correctly pass the child component or use the override props.
  *
  * @param componentChecker The component checker data, typically from the parent root component's props.
- * @param flagKey The key corresponding to this child component in the `componentChecker.results`. Autocomplete should be available based on the passed `componentChecker`.
- * @param componentName The display name of the child component making this assertion (e.g., "CheckboxDescription").
+ * @param config An object containing the `flagKey` and `componentName`.
+ *   - `flagKey`: The key corresponding to this child component in the `componentChecker.results`. Autocomplete should be available.
+ *   - `componentName`: The display name of the child component making this assertion (e.g., "CheckboxDescription").
  */
-export function assertComponentIsPresent<TResults extends Record<string, boolean>>(
+
+// Define a type for the configuration object
+export type AssertConfig<TResults extends Record<string, boolean>> = {
+  flagKey: keyof TResults;
+  componentName: string;
+};
+
+export function assertComponentPresence<TResults extends Record<string, boolean>>(
   componentChecker: ComponentCheckerData<TResults> | undefined,
-  flagKey: keyof TResults,
-  componentName: string
+  config: AssertConfig<TResults> // Updated parameter
 ): void {
+  // Destructure from config object
+  const { flagKey, componentName } = config;
+
   if (!componentChecker) {
     console.warn(
-      `Qwik Design System Warning: \`${componentName}\` called \`assertChildComponentIsPresent\` but the \`componentChecker\` data was not provided. Ensure the parent root component correctly uses \`setComponentFlags\` and that its \`componentChecker\` data is passed to this function.`
+      `Qwik Design System Warning: \`${componentName}\` called \`assertComponentIsPresent\` but the \`componentChecker\` data was not provided. Ensure the parent root component correctly uses \`setComponentFlags\` and that its \`componentChecker\` data is passed to this function.`
     );
     return;
   }
@@ -233,7 +243,7 @@ export function assertComponentIsPresent<TResults extends Record<string, boolean
     const componentPropName = `${flagKey as string}Component`;
 
     throw new Error(
-      `${namespace}.Root could not find the required ${componentName} piece.
+      `[Qwik Design System] ${namespace}.Root could not find the rendered ${componentName} piece.
 
 This usually happens if ${componentName} is rendered inside another Qwik component, not directly under '${namespace}.Root'.
 
