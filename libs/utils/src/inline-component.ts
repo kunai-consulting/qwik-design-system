@@ -19,7 +19,7 @@ import type { FunctionComponent, JSXChildren, JSXNode } from "@builder.io/qwik";
 export function getComponentFlags<T extends Record<string, FunctionComponent>>(
   props: Record<string, unknown> & { children?: JSXChildren },
   flagMap: T,
-  config?: { debug?: boolean; componentName: string }
+  config: { debug?: boolean; componentName: string }
 ): { [K in keyof T]: boolean } {
   const targetKeys = Object.keys(flagMap) as Array<keyof T>;
   const targetReferences = Object.values(flagMap);
