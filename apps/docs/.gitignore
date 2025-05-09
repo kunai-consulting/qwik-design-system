@@ -3,6 +3,7 @@
 /lib
 /lib-types
 /server
+/public/pagefind
 
 # Development
 node_modules

@@ -16,6 +16,7 @@
       "libs/icons/src/downloads",
       "libs/icons/src/icons",
       "libs/icons/src/page",
+      "libs/utils/lib/*",
       ".vscode",
       "test-results"
     ]
