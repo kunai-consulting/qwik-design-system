@@ -201,7 +201,44 @@ To improve performance, consider these options for ${config?.componentName}:
   return results;
 }
 
-// ... (rest of the file: processChildren, componentRegistry, findComponent, ComponentProcessor)
+/**
+ * Asserts that a specific child component was detected by its parent root component.
+ *
+ * This function is intended to be called from within a child component (e.g., Description, Label)
+ * to ensure that the parent Root component (which should have used `setComponentFlags`)
+ * has successfully found this child in its JSX structure or that the check was skipped.
+ *
+ * If the child was not found (and its check was not skipped), it throws an error
+ * guiding the user on how to correctly pass the child component or use the override props.
+ *
+ * @param componentChecker The component checker data, typically from the parent root component's props.
+ * @param flagKey The key corresponding to this child component in the `componentChecker.results`. Autocomplete should be available based on the passed `componentChecker`.
+ * @param componentName The display name of the child component making this assertion (e.g., "CheckboxDescription").
+ */
+export function assertComponentIsPresent<TResults extends Record<string, boolean>>(
+  componentChecker: ComponentCheckerData<TResults> | undefined,
+  flagKey: keyof TResults,
+  componentName: string
+): void {
+  if (!componentChecker) {
+    console.warn(
+      `Qwik Design System Warning: \`${componentName}\` called \`assertChildComponentIsPresent\` but the \`componentChecker\` data was not provided. Ensure the parent root component correctly uses \`setComponentFlags\` and that its \`componentChecker\` data is passed to this function.`
+    );
+    return;
+  }
+
+  const { results, name: rootComponentName } = componentChecker;
+
+  if (results && (results as Record<string, boolean>)[flagKey as string] === false) {
+    const componentPropName = `${flagKey as string}Component`;
+    const skipCheckPropName = `skip${(flagKey as string).charAt(0).toUpperCase() + (flagKey as string).slice(1)}Check`;
+
+    throw new Error(
+      `Qwik Design System Error: The '${componentName}' component was used, but it was not detected by its parent, '${rootComponentName}'.\n\nThis can happen if '${componentName}' is not a direct child or is nested too deeply for detection.\n\nTo resolve this:\n1. Ensure '${componentName}' is a direct child of '${rootComponentName}'.\n2. If '${componentName}' is intentionally provided and you are sure it's present, you can pass the '${componentPropName}' prop to '${rootComponentName}' with your custom component implementation.\n3. Alternatively, if you are managing its presence manually and want to bypass this check, pass '${skipCheckPropName}={true}' to '${rootComponentName}'.\n\nPlease check the structure of your '${rootComponentName}' component and its children.`
+    );
+  }
+}
+
 /**
  *
  * This function allows us to process the children of an inline component. We can look into the children and get the proper index, pass data, or make certain API decisions.

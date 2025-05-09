@@ -2,6 +2,7 @@ import { type PropsOf, Slot, component$, useContext, useTask$ } from "@builder.i
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { checkboxContextId } from "./checkbox-context";
+import { assertComponentIsPresent } from "@kunai-consulting/qwik-utils";
 type PublicCheckboxDescriptionProps = PropsOf<"div">;
 /** A component that renders the description text for a checkbox */
 export const CheckboxDescriptionBase = component$(
@@ -10,11 +11,7 @@ export const CheckboxDescriptionBase = component$(
     const descriptionId = `${context.localId}-description`;
 
     useTask$(() => {
-      if (!context.description) {
-        console.warn(
-          "Qwik Design System Warning: No description prop provided to the Checkbox Root component."
-        );
-      }
+      assertComponentIsPresent(context.componentChecker, "description", "Description");
     });
 
     return (
