@@ -44,11 +44,14 @@ export type ComponentCheckerData<TResults> = {
  *
  * This is useful for conditional logic based on whether a component is present or not from the user.
  *
- * @param props.children The JSX children to search within
+ * @param props The component props containing children and optional component overrides
  * @param flagMap Map of component flags to component references to check for
- * @param componentName The name of the component calling this function, used for logging.
- * @param config Optional configuration options
+ * @param config Configuration options including the component name for error messages
  * @returns Object with boolean flags indicating if each component was found
+ *
+ * Note: This function updates the `componentChecker` prop on the provided props object
+ * with the results of the component detection, which can be used by child components
+ * to verify they're properly connected to their parent.
  */
 export function setComponentFlags<T extends Record<string, FunctionComponent>>(
   props: Record<string, unknown> & {

@@ -123,7 +123,7 @@ export const CheckboxRoot = withAsChild(CheckboxRootBase, (props) => {
   };
 
   setComponentFlags(props, componentFlagMap, {
-    debug: true,
+    debug: false,
     componentName: "Checkbox"
   });
 
