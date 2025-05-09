@@ -227,14 +227,25 @@ export function assertComponentIsPresent<TResults extends Record<string, boolean
     return;
   }
 
-  const { results, name: rootComponentName } = componentChecker;
+  const { results, name: namespace } = componentChecker;
 
   if (results && (results as Record<string, boolean>)[flagKey as string] === false) {
     const componentPropName = `${flagKey as string}Component`;
-    const skipCheckPropName = `skip${(flagKey as string).charAt(0).toUpperCase() + (flagKey as string).slice(1)}Check`;
 
     throw new Error(
-      `Qwik Design System Error: The '${componentName}' component was used, but it was not detected by its parent, '${rootComponentName}'.\n\nThis can happen if '${componentName}' is not a direct child or is nested too deeply for detection.\n\nTo resolve this:\n1. Ensure '${componentName}' is a direct child of '${rootComponentName}'.\n2. If '${componentName}' is intentionally provided and you are sure it's present, you can pass the '${componentPropName}' prop to '${rootComponentName}' with your custom component implementation.\n3. Alternatively, if you are managing its presence manually and want to bypass this check, pass '${skipCheckPropName}={true}' to '${rootComponentName}'.\n\nPlease check the structure of your '${rootComponentName}' component and its children.`
+      `Qwik Design System: 
+      
+      The ${componentName} component was used, but ${namespace} Root did not find it.
+      
+      This happens when you've returned the ${componentName} in a different Qwik component than the one the ${namespace} Root is in.
+
+      To fix it, pass the component that ${componentName} is in as the ${componentPropName} prop to ${namespace}.
+
+      For example:
+
+      <${namespace}.Root ${componentPropName}={Your${componentName}}>
+        {...}
+      </${namespace}.Root>`
     );
   }
 }
