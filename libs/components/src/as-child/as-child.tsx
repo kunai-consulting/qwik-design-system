@@ -5,11 +5,13 @@ import {
   noSerialize
 } from "@builder.io/qwik";
 import type { FunctionComponent } from "@builder.io/qwik/jsx-runtime";
+import type { ComponentCheckerData } from "@kunai-consulting/qwik-utils";
 
 export type AsChildProps = {
   _allProps?: object;
   _jsxType?: Component | string;
   asChild?: boolean;
+  componentChecker?: ComponentCheckerData<Record<string, boolean>>;
 };
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -21,7 +23,8 @@ export function syncFixedInV2<T extends (...args: any[]) => unknown>(fn: T) {
 
 export function withAsChild<T>(
   BaseComponent: Component<T>,
-  fn?: (props: T & AsChildProps) => T & AsChildProps
+  // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
+  fn?: (props: T & AsChildProps) => (T & AsChildProps) | void
 ) {
   const count = 0;
 
@@ -29,7 +32,8 @@ export function withAsChild<T>(
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const children = (props as any).children;
 
-    let moreProps: (T & AsChildProps) | undefined;
+    // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
+    let moreProps: (T & AsChildProps) | undefined | void;
 
     if (fn) {
       moreProps = fn(props);

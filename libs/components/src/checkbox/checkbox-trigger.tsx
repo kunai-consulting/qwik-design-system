@@ -6,7 +6,8 @@ import {
   sync$,
   useComputed$,
   useContext,
-  useOnWindow
+  useOnWindow,
+  useTask$
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
@@ -21,7 +22,8 @@ export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps
   const errorId = `${context.localId}-error`;
   const describedByLabels = useComputed$(() => {
     const labels = [];
-    if (context.description) {
+
+    if (context.componentChecker?.description) {
       labels.push(descriptionId);
     }
     if (context.isErrorSig.value) {
@@ -46,6 +48,16 @@ export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps
       }
     })
   );
+
+  useTask$(function assertAccessibleName() {
+    if (context.componentChecker?.label) return;
+    if (props["aria-label"]) return;
+    if (props["aria-labelledby"]) return;
+
+    throw new Error(
+      "Qwik Design System: Checkbox.Trigger must have a label, pass the Checkbox.Label component or use the aria-label prop on the Trigger."
+    );
+  });
 
   return (
     <Render

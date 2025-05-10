@@ -8,16 +8,21 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
+import {
+  type BindableProps,
+  type ComponentCheckerProps,
+  setComponentChecker,
+  useBindings
+} from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
+import { CheckboxDescription } from "./checkbox-description";
+import { CheckboxLabel } from "./checkbox-label";
 
 export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   /** Event handler called when the checkbox state changes */
   onChange$?: (checked: T) => void;
-  /** Whether the checkbox has a description */
-  description?: boolean;
   /** Name attribute for the hidden input element */
   name?: string;
   /** Whether the checkbox is required */
@@ -25,7 +30,8 @@ export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   /** Value attribute for the hidden input element */
   value?: string;
 } & Omit<PropsOf<"div">, "onChange$"> &
-  BindableProps<CheckboxBinds>;
+  BindableProps<CheckboxBinds> &
+  ComponentCheckerProps<CheckboxPieces>;
 
 type CheckboxBinds = {
   /* Determines whether the checkbox is checked */
@@ -34,9 +40,14 @@ type CheckboxBinds = {
   disabled: boolean;
 };
 
+export type CheckboxPieces = {
+  description: typeof CheckboxDescription;
+  label: typeof CheckboxLabel;
+};
+
 /** Root component that provides context and state management for the checkbox */
 export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
-  const { onChange$, description, name, required, value, ...rest } = props;
+  const { onChange$, name, required, value, componentChecker, ...rest } = props;
 
   const { checkedSig, disabledSig: isDisabledSig } = useBindings<CheckboxBinds>(props, {
     checked: false,
@@ -64,13 +75,13 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
     checkedSig,
     isDisabledSig,
     localId,
-    description,
     name,
     required,
     value,
     isErrorSig,
     triggerRef,
-    dataAttributes
+    dataAttributes,
+    componentChecker
   };
 
   useContextProvider(checkboxContextId, context);
@@ -102,4 +113,16 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
   );
 });
 
-export const CheckboxRoot = withAsChild(CheckboxRootBase);
+export const CheckboxRoot = withAsChild(CheckboxRootBase, (props) => {
+  const components: CheckboxPieces = {
+    description: CheckboxDescription,
+    label: CheckboxLabel
+  };
+
+  setComponentChecker(props, components, {
+    debug: false,
+    componentName: "Checkbox"
+  });
+
+  return props;
+});
