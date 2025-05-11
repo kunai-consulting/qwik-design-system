@@ -3,6 +3,10 @@ import { qwikVite } from "@builder.io/qwik/optimizer";
 import tailwindcss from "@tailwindcss/vite";
 import { resolve } from "pathe";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
+import fs from "node:fs";
+import { Parser, type Node as AcornNode } from "acorn";
+import jsx from "acorn-jsx";
+import { recursive as recursiveWalk, base as baseVisitor } from "acorn-walk";
 
 /**
  * This is the base config for vite.
@@ -13,6 +17,29 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import pkg from "./package.json";
 import { recmaProvideComponents } from "./src/mdx/recma-provide-comp";
 
+// Define types for JSX-related AST nodes (simplified for this example)
+// In a more complex setup, you might use types from a library or define them more extensively
+interface JSXIdentifier extends AcornNode {
+  type: "JSXIdentifier";
+  name: string;
+}
+interface JSXMemberExpression extends AcornNode {
+  type: "JSXMemberExpression";
+  object: JSXIdentifier | JSXMemberExpression;
+  property: JSXIdentifier;
+}
+interface JSXOpeningElement extends AcornNode {
+  type: "JSXOpeningElement";
+  name: JSXIdentifier | JSXMemberExpression;
+  attributes: AcornNode[]; // Or more specific attribute types
+}
+interface JSXElement extends AcornNode {
+  type: "JSXElement";
+  openingElement: JSXOpeningElement;
+  children: AcornNode[];
+  closingElement: AcornNode | null;
+}
+
 type PkgDep = Record<string, string>;
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 const { dependencies = {}, devDependencies = {} } = pkg as any as {
@@ -21,6 +48,26 @@ const { dependencies = {}, devDependencies = {} } = pkg as any as {
   [key: string]: unknown;
 };
 errorOnDuplicatesPkgDeps(devDependencies, dependencies);
+
+// Helper function to get the full name of a JSX element (e.g., "Checkbox.Root")
+function getJsxElementName(
+  nameNode: JSXIdentifier | JSXMemberExpression | null | undefined
+): string | null {
+  if (!nameNode) {
+    return null;
+  }
+  if (nameNode.type === "JSXIdentifier") {
+    return nameNode.name;
+  }
+  if (nameNode.type === "JSXMemberExpression") {
+    const objectName = getJsxElementName(
+      nameNode.object as JSXIdentifier | JSXMemberExpression
+    ); // Recursive call
+    const propertyName = nameNode.property.name;
+    return objectName && propertyName ? `${objectName}.${propertyName}` : null;
+  }
+  return null;
+}
 
 /**
  * Note that Vite normally starts from `index.html` but the qwikCity plugin makes start at `src/entry.ssr.tsx` instead.
@@ -48,7 +95,191 @@ export default defineConfig(({ command, mode }): UserConfig => {
         webp: mainQuality,
         avif: mainQuality
       }),
-      tsconfigPaths()
+      tsconfigPaths(),
+      {
+        name: "qwik-design-system",
+        enforce: "pre",
+        load(id) {
+          const cleanedId = id.split("?")[0];
+          // console.log("[qwik-ds LOAD] Processing file ID:", id); // Optional: Log all files
+          // console.log("[qwik-ds LOAD] Cleaned file ID:", cleanedId); // Optional: Log all files
+
+          if (
+            cleanedId.includes("apps/docs/src/routes/base/checkbox/examples/hero.tsx")
+          ) {
+            console.log("[qwik-ds LOAD] MATCHED hero.tsx:", cleanedId);
+            try {
+              const rawCode = fs.readFileSync(cleanedId, "utf-8");
+              console.log(
+                "[qwik-ds LOAD] Raw code for hero.tsx (first 300 chars):",
+                rawCode.substring(0, 300)
+              );
+              try {
+                const JsxParser = Parser.extend(jsx());
+                const ast = JsxParser.parse(rawCode, {
+                  sourceType: "module",
+                  ecmaVersion: "latest",
+                  locations: true
+                }) as AcornNode;
+                console.log("[qwik-ds LOAD] Successfully parsed AST for hero.tsx");
+
+                let foundDescriptionInRoot = false;
+                const initialState: { inCheckboxRoot: boolean; found: boolean } = {
+                  inCheckboxRoot: false,
+                  found: false
+                };
+
+                const customRecursiveVisitors = {
+                  JSXElement: (
+                    node: AcornNode,
+                    state: typeof initialState,
+                    c: (node: AcornNode, state: typeof initialState) => void
+                  ) => {
+                    const jsxNode = node as JSXElement;
+                    const elementName = getJsxElementName(jsxNode.openingElement.name);
+                    const originalInCheckboxRoot = state.inCheckboxRoot;
+
+                    if (elementName === "Checkbox.Root") {
+                      state.inCheckboxRoot = true;
+                    } else if (
+                      elementName === "Checkbox.Description" &&
+                      state.inCheckboxRoot
+                    ) {
+                      state.found = true;
+                      foundDescriptionInRoot = true;
+                      return;
+                    }
+                    for (const child of jsxNode.children) {
+                      if (
+                        state.found &&
+                        state.inCheckboxRoot &&
+                        elementName === "Checkbox.Root"
+                      )
+                        break;
+                      c(child, state);
+                    }
+                    if (elementName === "Checkbox.Root") {
+                      state.inCheckboxRoot = originalInCheckboxRoot;
+                      if (state.found) state.found = false;
+                    }
+                  },
+                  JSXExpressionContainer: (
+                    node: AcornNode,
+                    state: typeof initialState,
+                    c: (node: AcornNode, state: typeof initialState) => void
+                  ) => {
+                    // biome-ignore lint/suspicious/noExplicitAny: <AcornNode for .expression might be too generic>
+                    const expressionNode = node as any;
+                    if (expressionNode.expression) {
+                      c(expressionNode.expression, state);
+                    }
+                  }
+                };
+
+                const extendedBaseRecursiveVisitors = {
+                  // biome-ignore lint/suspicious/noExplicitAny: <acorn-walk base visitor type>
+                  ...(baseVisitor as any),
+                  JSXElement: (
+                    node: AcornNode,
+                    state: typeof initialState,
+                    c: (node: AcornNode, state: typeof initialState) => void
+                  ) => {
+                    const jsxNode = node as JSXElement;
+                    for (const child of jsxNode.children) {
+                      c(child, state);
+                    }
+                  },
+                  JSXFragment: (
+                    node: AcornNode,
+                    state: typeof initialState,
+                    c: (node: AcornNode, state: typeof initialState) => void
+                  ) => {
+                    // biome-ignore lint/suspicious/noExplicitAny: <Assuming JSXFragment has children>
+                    const fragmentNode = node as any;
+                    if (fragmentNode.children) {
+                      for (const child of fragmentNode.children) {
+                        c(child, state);
+                      }
+                    }
+                  },
+                  JSXExpressionContainer: (
+                    node: AcornNode,
+                    state: typeof initialState,
+                    c: (node: AcornNode, state: typeof initialState) => void
+                  ) => {
+                    // biome-ignore lint/suspicious/noExplicitAny: <AcornNode for .expression might be too generic>
+                    const expressionNode = node as any;
+                    if (expressionNode.expression) {
+                      c(expressionNode.expression, state);
+                    }
+                  },
+                  JSXAttribute: (
+                    node: AcornNode,
+                    state: typeof initialState,
+                    c: (node: AcornNode, state: typeof initialState) => void
+                  ) => {
+                    // biome-ignore lint/suspicious/noExplicitAny: <JSXAttribute might have .value which could be JSXExpressionContainer>
+                    const attrNode = node as any;
+                    if (attrNode.value) {
+                      c(attrNode.value, state);
+                    }
+                  },
+                  JSXText: () => {},
+                  JSXOpeningElement: () => {},
+                  JSXClosingElement: () => {},
+                  JSXMemberExpression: () => {},
+                  JSXNamespacedName: () => {},
+                  JSXEmptyExpression: () => {},
+                  JSXSpreadChild: () => {}
+                };
+
+                recursiveWalk(
+                  ast,
+                  initialState,
+                  // biome-ignore lint/suspicious/noExplicitAny: <acorn-walk dynamic visitor map structure>
+                  customRecursiveVisitors as any,
+                  // biome-ignore lint/suspicious/noExplicitAny: <acorn-walk dynamic visitor map structure>
+                  extendedBaseRecursiveVisitors as any
+                );
+
+                if (foundDescriptionInRoot) {
+                  console.log(
+                    "[qwik-ds-plugin LOAD hero.tsx] Found Checkbox.Description within a Checkbox.Root!"
+                  );
+                } else {
+                  console.log(
+                    "[qwik-ds-plugin LOAD hero.tsx] Did NOT find Checkbox.Description within a Checkbox.Root."
+                  );
+                }
+              } catch (parseError) {
+                console.error(
+                  `[qwik-ds] Error during AST processing for ${cleanedId}:`,
+                  parseError
+                );
+              }
+            } catch (e) {
+              console.error(`[qwik-ds] Error reading file ${cleanedId}:`, e);
+            }
+          }
+          return null;
+        },
+        transform(code, id) {
+          const cleanedId = id.split("?")[0]; // Also clean ID here if using it for conditions
+
+          if (cleanedId.endsWith(".tsx")) {
+            // console.log(`[qwik-ds-plugin TRANSFORM] SAW .tsx ID: ${id}`); // Optional
+          }
+
+          if (
+            cleanedId.includes("apps/docs/src/routes/base/checkbox/examples/hero.tsx")
+          ) {
+            // console.log( // Optional: log transformed code if needed for comparison
+            //   `[qwik-ds-plugin TRANSFORM hero.tsx] Transformed code (first 500 chars for ID ${id}):\n${code.substring(0, 500)}...`
+            // );
+          }
+          return null;
+        }
+      }
     ],
     // This tells Vite which dependencies to pre-build in dev mode.
     optimizeDeps: {

@@ -11,6 +11,7 @@ export default component$(() => {
           <LuCheck />
         </Checkbox.Indicator>
       </Checkbox.Trigger>
+      <Checkbox.Description>This is a test description.</Checkbox.Description>
     </Checkbox.Root>
   );
 });
