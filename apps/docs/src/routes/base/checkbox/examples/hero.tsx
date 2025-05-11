@@ -1,5 +1,8 @@
 import { component$, useStyles$ } from "@builder.io/qwik";
 import { Checkbox } from "@kunai-consulting/qwik";
+import { LuCheck } from "@qwikest/icons/lucide";
+import styles from "./checkbox.css?inline";
+import { Heyo } from "./Heyo";
 
 export default component$(() => {
   useStyles$(styles);
@@ -11,11 +14,7 @@ export default component$(() => {
           <LuCheck />
         </Checkbox.Indicator>
       </Checkbox.Trigger>
-      <Checkbox.Description>This is a test description.</Checkbox.Description>
+      <Heyo />
     </Checkbox.Root>
   );
 });
-
-import { LuCheck } from "@qwikest/icons/lucide";
-// example styles
-import styles from "./checkbox.css?inline";

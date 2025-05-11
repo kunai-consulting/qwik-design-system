@@ -69,6 +69,14 @@ function getJsxElementName(
   return null;
 }
 
+interface CandidateComponent {
+  componentName: string;
+  astNode: JSXElement; // The JSXElement node in hero.tsx
+  importSource?: string; // e.g., './Heyo' or '@some-lib/Button'
+  resolvedPath?: string; // Absolute path after this.resolve()
+  providesDescription?: boolean; // Result of analyzing the child component
+}
+
 /**
  * Note that Vite normally starts from `index.html` but the qwikCity plugin makes start at `src/entry.ssr.tsx` instead.
  */
@@ -99,35 +107,34 @@ export default defineConfig(({ command, mode }): UserConfig => {
       {
         name: "qwik-design-system",
         enforce: "pre",
-        load(id) {
+        async load(id) {
           const cleanedId = id.split("?")[0];
-          // console.log("[qwik-ds LOAD] Processing file ID:", id); // Optional: Log all files
-          // console.log("[qwik-ds LOAD] Cleaned file ID:", cleanedId); // Optional: Log all files
-
           if (
             cleanedId.includes("apps/docs/src/routes/base/checkbox/examples/hero.tsx")
           ) {
-            console.log("[qwik-ds LOAD] MATCHED hero.tsx:", cleanedId);
             try {
               const rawCode = fs.readFileSync(cleanedId, "utf-8");
-              console.log(
-                "[qwik-ds LOAD] Raw code for hero.tsx (first 300 chars):",
-                rawCode.substring(0, 300)
-              );
               try {
                 const JsxParser = Parser.extend(jsx());
+                // Ensure ast is treated as a Program node for accessing .body
                 const ast = JsxParser.parse(rawCode, {
                   sourceType: "module",
                   ecmaVersion: "latest",
                   locations: true
-                }) as AcornNode;
-                console.log("[qwik-ds LOAD] Successfully parsed AST for hero.tsx");
+                }) as AcornNode & { type: "Program"; body: AcornNode[] }; // More specific type here
 
                 let foundDescriptionInRoot = false;
+                const candidateComponents: CandidateComponent[] = [];
                 const initialState: { inCheckboxRoot: boolean; found: boolean } = {
                   inCheckboxRoot: false,
                   found: false
                 };
+                console.log("[qwik-ds LOAD] MATCHED hero.tsx:", cleanedId);
+                console.log(
+                  "[qwik-ds LOAD] Raw code for hero.tsx (first 300 chars):",
+                  rawCode.substring(0, 300)
+                );
+                console.log("[qwik-ds LOAD] Successfully parsed AST for hero.tsx");
 
                 const customRecursiveVisitors = {
                   JSXElement: (
@@ -138,7 +145,6 @@ export default defineConfig(({ command, mode }): UserConfig => {
                     const jsxNode = node as JSXElement;
                     const elementName = getJsxElementName(jsxNode.openingElement.name);
                     const originalInCheckboxRoot = state.inCheckboxRoot;
-
                     if (elementName === "Checkbox.Root") {
                       state.inCheckboxRoot = true;
                     } else if (
@@ -148,6 +154,16 @@ export default defineConfig(({ command, mode }): UserConfig => {
                       state.found = true;
                       foundDescriptionInRoot = true;
                       return;
+                    } else if (
+                      state.inCheckboxRoot &&
+                      jsxNode.openingElement.name.type === "JSXIdentifier"
+                    ) {
+                      if (elementName && !elementName.startsWith("Checkbox.")) {
+                        candidateComponents.push({
+                          componentName: elementName,
+                          astNode: jsxNode
+                        });
+                      }
                     }
                     for (const child of jsxNode.children) {
                       if (
@@ -242,25 +258,65 @@ export default defineConfig(({ command, mode }): UserConfig => {
                   extendedBaseRecursiveVisitors as any
                 );
 
+                // Phase 1.5: Find import sources for candidate components
+                // The type assertion for `ast` above makes `ast.body` accessible here.
+                if (candidateComponents.length > 0) {
+                  // ast.type === "Program" is implicit from the type assertion
+                  for (const astBodyNode of ast.body) {
+                    if (astBodyNode.type === "ImportDeclaration") {
+                      const importDeclarationNode = astBodyNode as AcornNode & {
+                        specifiers: (AcornNode & {
+                          local: { name: string };
+                          imported?: { name: string };
+                          type: string;
+                        })[]; // Added type to specifier for ImportDefaultSpecifier check
+                        source: { value: string; raw: string };
+                      };
+                      for (const specifier of importDeclarationNode.specifiers) {
+                        const localName = specifier.local.name;
+                        // const importedName = specifier.imported ? specifier.imported.name : (specifier.type === 'ImportDefaultSpecifier' ? localName : null);
+
+                        for (const candidate of candidateComponents) {
+                          if (candidate.componentName === localName) {
+                            candidate.importSource = importDeclarationNode.source.value;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+
                 if (foundDescriptionInRoot) {
                   console.log(
-                    "[qwik-ds-plugin LOAD hero.tsx] Found Checkbox.Description within a Checkbox.Root!"
+                    "[qwik-ds-plugin LOAD hero.tsx] Found Checkbox.Description directly within a Checkbox.Root!"
                   );
                 } else {
                   console.log(
-                    "[qwik-ds-plugin LOAD hero.tsx] Did NOT find Checkbox.Description within a Checkbox.Root."
+                    "[qwik-ds-plugin LOAD hero.tsx] Did NOT find Checkbox.Description directly within a Checkbox.Root."
                   );
+                }
+
+                if (candidateComponents.length > 0) {
+                  console.log(
+                    "[qwik-ds LOAD hero.tsx] Candidate child components (with sources):"
+                  );
+                  for (const c of candidateComponents) {
+                    // Changed from forEach to for...of
+                    console.log(
+                      `  - Name: ${c.componentName}, Source: ${c.importSource || "Not found/Local/Built-in"}`
+                    );
+                  }
                 }
               } catch (parseError) {
                 console.error(
                   `[qwik-ds] Error during AST processing for ${cleanedId}:`,
                   parseError
                 );
-              }
+              } // End inner try-catch
             } catch (e) {
               console.error(`[qwik-ds] Error reading file ${cleanedId}:`, e);
-            }
-          }
+            } // End outer try-catch
+          } // End if hero.tsx
           return null;
         },
         transform(code, id) {
