@@ -3,7 +3,7 @@ import { qwikVite } from "@builder.io/qwik/optimizer";
 import tailwindcss from "@tailwindcss/vite";
 import { resolve } from "pathe";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
-import { qwikDesignSystemVitePlugin } from "./src/vite-plugins/qwik-design-system-vite-plugin";
+import { qwikAnalyzer } from "./src/vite/qwik-analyzer-vite";
 
 /**
  * This is the base config for vite.
@@ -50,7 +50,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
         avif: mainQuality
       }),
       tsconfigPaths(),
-      qwikDesignSystemVitePlugin()
+      qwikAnalyzer()
     ],
     // This tells Vite which dependencies to pre-build in dev mode.
     optimizeDeps: {

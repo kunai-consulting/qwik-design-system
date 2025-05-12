@@ -37,20 +37,19 @@ function getJsxElementName(
   return null;
 }
 
-// Helper function to get the full name of a standard JS element from an AST node
 function getStandardElementName(node: OxNode | null | undefined): string | null {
   if (!node) {
     return null;
   }
   if (node.type === "Identifier") {
-    return (node as IdentifierName).name; // Use IdentifierName for name access
+    return (node as IdentifierName).name;
   }
   if (node.type === "MemberExpression") {
     const memberNode = node as MemberExpression;
     const objectName = getStandardElementName(memberNode.object);
     let propertyName: string | undefined;
     if (memberNode.property.type === "Identifier") {
-      propertyName = (memberNode.property as IdentifierName).name; // Use IdentifierName
+      propertyName = (memberNode.property as IdentifierName).name;
     } else if (memberNode.property.type === "PrivateIdentifier") {
       propertyName = memberNode.property.name;
     }
@@ -63,6 +62,11 @@ function getStandardElementName(node: OxNode | null | undefined): string | null 
   return null;
 }
 
+/**
+ *  A candidate component is one that could potentially hold the component we're searching for within its JSX return parameter.
+ *
+ *  For example, if the consumer of a library wraps the target in <MyWrapper />, then MyWrapper has become a candidate component.
+ */
 interface CandidateComponent {
   componentName: string;
   astNode: OxcJSXElement;
@@ -71,16 +75,11 @@ interface CandidateComponent {
   providesDescription?: boolean;
 }
 
-const VIRTUAL_MODULE_ID = "virtual:checkbox-analysis";
-const RESOLVED_VIRTUAL_MODULE_ID = `\0${VIRTUAL_MODULE_ID}`;
-
-// Store analysis results: Map<filePath, hasDescription>
 const analysisResults = new Map<string, boolean>();
 
 async function analyzeImportedComponentForDescription(
   filePath: string,
-  // biome-ignore lint/suspicious/noExplicitAny: <Vite plugin context type>
-  pluginContext: any
+  _: unknown
 ): Promise<boolean> {
   console.log(`[qwik-ds ANALYZE] Analyzing imported component: ${filePath}`);
   let foundDescription = false;
@@ -98,9 +97,7 @@ async function analyzeImportedComponentForDescription(
     try {
       walk(ast, {
         enter: (node: OxNode) => {
-          // Use proper options object with enter callback
           if (foundDescription) {
-            // Throw error to stop walking
             throw new Error("FoundDescription");
           }
           if (node.type === "JSXElement") {
@@ -133,21 +130,11 @@ async function analyzeImportedComponentForDescription(
   }
 }
 
-export function qwikDesignSystemVitePlugin(): PluginOption {
+export function qwikAnalyzer(): PluginOption {
   return {
-    name: "qwik-design-system",
+    name: "qwik-analyzer",
     enforce: "pre",
-    resolveId(id) {
-      if (id === VIRTUAL_MODULE_ID) {
-        return RESOLVED_VIRTUAL_MODULE_ID;
-      }
-      return null;
-    },
     async load(id) {
-      if (id === RESOLVED_VIRTUAL_MODULE_ID) {
-        return `export default ${JSON.stringify(Object.fromEntries(analysisResults))};`;
-      }
-
       const cleanedId = id.split("?")[0];
       const targetPathPrefix =
         "/Users/jackshelton/dev/kunai/qwik-design-system/apps/docs/src/routes/";
@@ -167,7 +154,7 @@ export function qwikDesignSystemVitePlugin(): PluginOption {
           let importsFromKunaiQwik = false;
           walk(ast, {
             enter: (node: OxNode) => {
-              if (importsFromKunaiQwik) return; // Already found
+              if (importsFromKunaiQwik) return;
               if (node.type === "ImportDeclaration") {
                 const importDecl = node as ImportDeclaration;
                 if (importDecl.source.value === "@kunai-consulting/qwik") {
@@ -186,12 +173,12 @@ export function qwikDesignSystemVitePlugin(): PluginOption {
 
           let foundDescriptionInRoot = false;
           const candidateComponents: CandidateComponent[] = [];
-          const inCheckboxRootStack: boolean[] = []; // Use a stack for enter/leave logic
+          const inCheckboxRootStack: boolean[] = [];
 
           walk(ast, {
             enter: (node: OxNode) => {
               if (node.type === "JSXElement") {
-                if (foundDescriptionInRoot && inCheckboxRootStack.length === 0) return; // Optimization
+                if (foundDescriptionInRoot && inCheckboxRootStack.length === 0) return;
 
                 const jsxNode = node as OxcJSXElement;
                 const elementName = getJsxElementName(jsxNode.openingElement.name);
@@ -204,7 +191,6 @@ export function qwikDesignSystemVitePlugin(): PluginOption {
                   inCheckboxRootStack[inCheckboxRootStack.length - 1]
                 ) {
                   foundDescriptionInRoot = true;
-                  // No direct way to stop walker for just this path, rely on foundDescriptionInRoot flag
                 } else if (
                   inCheckboxRootStack.length > 0 &&
                   inCheckboxRootStack[inCheckboxRootStack.length - 1] &&
@@ -220,13 +206,11 @@ export function qwikDesignSystemVitePlugin(): PluginOption {
               }
             },
             leave: (node: OxNode) => {
-              // Added leave callback for proper stack management
               if (node.type === "JSXElement") {
                 const jsxNode = node as OxcJSXElement;
                 const elementName = getJsxElementName(jsxNode.openingElement.name);
                 if (elementName === "Checkbox.Root") {
                   if (inCheckboxRootStack.length > 0) {
-                    // Ensure stack is not empty before popping
                     inCheckboxRootStack.pop();
                   }
                 }
@@ -242,7 +226,6 @@ export function qwikDesignSystemVitePlugin(): PluginOption {
                   const importDecl = node as ImportDeclaration;
                   for (const specifier of importDecl.specifiers || []) {
                     let localName: string | undefined;
-                    // Oxc's ImportSpecifier directly has 'local'
                     if (
                       specifier.type === "ImportSpecifier" ||
                       specifier.type === "ImportDefaultSpecifier" ||
@@ -364,7 +347,6 @@ export function qwikDesignSystemVitePlugin(): PluginOption {
                 ) {
                   const componentArg = callNode.arguments[0];
                   const propsArg = callNode.arguments[1];
-                  // Ensure componentArg is treated as OxNode for getStandardElementName
                   const renderedComponentName = getStandardElementName(
                     componentArg as OxNode
                   );
@@ -385,7 +367,6 @@ export function qwikDesignSystemVitePlugin(): PluginOption {
                     let existingPropIndex = -1;
                     for (let i = 0; i < propsObject.properties.length; i++) {
                       const prop = propsObject.properties[i];
-                      // Oxc Property has 'key' which is an Identifier or other key types
                       if (prop.type === "Property") {
                         const objectProp = prop as ObjectProperty;
                         const key = objectProp.key;
@@ -399,14 +380,12 @@ export function qwikDesignSystemVitePlugin(): PluginOption {
                       }
                     }
 
-                    // Create or update the property
                     const dummySpan = { start: 0, end: 0 };
 
-                    // Create a BooleanLiteral with type: 'Literal' as per actual interface definition
                     const newPropValueLiteral: BooleanLiteral = {
-                      type: "Literal", // Note: This is 'Literal', not 'BooleanLiteral'
+                      type: "Literal",
                       value: hasDescription,
-                      raw: hasDescription ? "true" : "false", // Add raw property as required by BooleanLiteral
+                      raw: hasDescription ? "true" : "false",
                       start: 0,
                       end: 0
                     };
@@ -414,7 +393,6 @@ export function qwikDesignSystemVitePlugin(): PluginOption {
                     if (existingPropIndex !== -1) {
                       const existingProperty = propsObject.properties[existingPropIndex];
                       if (existingProperty.type === "Property") {
-                        // Ensure it's a Property before assigning
                         (existingProperty as ObjectProperty).value =
                           newPropValueLiteral as unknown as Expression;
                         modified = true;
@@ -423,7 +401,6 @@ export function qwikDesignSystemVitePlugin(): PluginOption {
                         `[qwik-ds TRANSFORM with Oxc] Updated _staticHasDescription to ${hasDescription} in _jsxC props for ${cleanedId}`
                       );
                     } else {
-                      // Create a new property with proper structure
                       const identifierKey: IdentifierName = {
                         type: "Identifier",
                         name: "_staticHasDescription",
@@ -432,7 +409,7 @@ export function qwikDesignSystemVitePlugin(): PluginOption {
                       };
 
                       const newProperty: ObjectProperty = {
-                        type: "Property", // ObjectProperty has type: 'Property'
+                        type: "Property",
                         method: false,
                         shorthand: false,
                         computed: false,
