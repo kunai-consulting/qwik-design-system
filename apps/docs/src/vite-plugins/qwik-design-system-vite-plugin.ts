@@ -1,13 +1,6 @@
 import fs from "node:fs";
-// import { Parser, type Node as AcornNode } from "acorn";
-// import jsx from "acorn-jsx";
 import oxc from "oxc-parser";
-// Re-type AcornNode to be more generic or use oxc-parser types if available and compatible.
-// For now, let's assume ESTree compatibility means we can keep AcornNode for structure,
-// but be mindful of specific type differences that might arise.
-import type { Node as AcornNode } from "acorn"; // Keep for structural reference, may need Oxc types.
-
-import { walk } from "oxc-walker"; // Corrected: Use walk function
+import { walk } from "oxc-walker";
 import type { PluginOption } from "vite";
 import { generate as astringGenerate } from "astring";
 
@@ -24,31 +17,8 @@ import type {
   MemberExpression,
   ImportDeclaration,
   Expression
-} from "@oxc-project/types"; // Import from @oxc-project/types
+} from "@oxc-project/types";
 
-// Define types for JSX-related AST nodes - these should align with ESTree
-interface JSXIdentifier extends AcornNode {
-  type: "JSXIdentifier";
-  name: string;
-}
-interface JSXMemberExpression extends AcornNode {
-  type: "JSXMemberExpression";
-  object: JSXIdentifier | JSXMemberExpression;
-  property: JSXIdentifier;
-}
-interface JSXOpeningElement extends AcornNode {
-  type: "JSXOpeningElement";
-  name: JSXIdentifier | JSXMemberExpression;
-  attributes: AcornNode[];
-}
-interface JSXElement extends AcornNode {
-  type: "JSXElement";
-  openingElement: JSXOpeningElement;
-  children: AcornNode[];
-  closingElement: AcornNode | null;
-}
-
-// Helper function to get the full name of a JSX element
 function getJsxElementName(
   nameNode: OxcJSXIdentifier | OxcJSXMemberExpression | OxNode | null | undefined
 ): string | null {
