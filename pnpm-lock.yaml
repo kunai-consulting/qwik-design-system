@@ -38,6 +38,9 @@ importers:
       acorn-walk:
         specifier: ^8.3.4
         version: 8.3.4
+      astring:
+        specifier: ^1.9.0
+        version: 1.9.0
       pagefind:
         specifier: 1.2.0
         version: 1.2.0
@@ -1272,6 +1275,10 @@ packages:
 
   astring@1.8.6:
     resolution: {integrity: sha512-ISvCdHdlTDlH5IpxQJIex7BWBywFWgjJSVdwst+/iQCoEYnyOaQ95+X1JGshuBjGp6nxKUy1jMgE3zPqN7fQdg==}
+    hasBin: true
+
+  astring@1.9.0:
+    resolution: {integrity: sha512-LElXdjswlqjWrPpJFg1Fx4wpkOCxj1TDHlSV4PlaRxHGWko024xICaa97ZkMfs6DRKlCguiAI+rbXv5GWwXIkg==}
     hasBin: true
 
   async@3.2.6:
@@ -3849,6 +3856,8 @@ snapshots:
   assertion-error@2.0.1: {}
 
   astring@1.8.6: {}
+
+  astring@1.9.0: {}
 
   async@3.2.6: {}
 

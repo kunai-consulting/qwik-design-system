@@ -16,7 +16,10 @@ import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
 export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   /** Event handler called when the checkbox state changes */
   onChange$?: (checked: T) => void;
-  /** Whether the checkbox has a description */
+  /**
+   * @deprecated This prop will be ignored if _staticHasDescription is provided by the build process.
+   * Manually indicates whether the checkbox has an associated description.
+   */
   description?: boolean;
   /** Name attribute for the hidden input element */
   name?: string;
@@ -24,6 +27,8 @@ export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   required?: boolean;
   /** Value attribute for the hidden input element */
   value?: string;
+  /** @internal Static analysis result indicating if a description is structurally present. Should be injected by a Vite plugin. */
+  _staticHasDescription?: boolean;
 } & Omit<PropsOf<"div">, "onChange$"> &
   BindableProps<CheckboxBinds>;
 
@@ -36,7 +41,22 @@ type CheckboxBinds = {
 
 /** Root component that provides context and state management for the checkbox */
 export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
-  const { onChange$, description, name, required, value, ...rest } = props;
+  // Destructure _staticHasDescription. The manual `description` prop is kept for now as a fallback.
+  const {
+    onChange$,
+    description,
+    name,
+    required,
+    value,
+    _staticHasDescription,
+    ...rest
+  } = props;
+
+  if (typeof _staticHasDescription === "boolean") {
+    console.log(
+      `[Checkbox.Root] Received _staticHasDescription: ${_staticHasDescription}. Original description prop was: ${description}`
+    );
+  }
 
   const { checkedSig, disabledSig: isDisabledSig } = useBindings<CheckboxBinds>(props, {
     checked: false,
@@ -60,11 +80,21 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
     };
   });
 
+  // Determine the effective description status
+  const effectiveDescription = useComputed$(() => {
+    // Prioritize the static analysis result if it was provided by the plugin
+    if (typeof _staticHasDescription === "boolean") {
+      return _staticHasDescription;
+    }
+    // Otherwise, fallback to the manually provided description prop
+    return description;
+  });
+
   const context: CheckboxContext = {
     checkedSig,
     isDisabledSig,
     localId,
-    description,
+    description: effectiveDescription.value, // Use the computed effective description
     name,
     required,
     value,

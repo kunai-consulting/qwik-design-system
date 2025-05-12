@@ -3,6 +3,7 @@ import { Parser, type Node as AcornNode } from "acorn";
 import jsx from "acorn-jsx";
 import { recursive as recursiveWalk, base as baseVisitor } from "acorn-walk";
 import type { PluginOption } from "vite";
+import { generate as astringGenerate } from "astring";
 
 // Define types for JSX-related AST nodes
 interface JSXIdentifier extends AcornNode {
@@ -46,6 +47,34 @@ function getJsxElementName(
   return null;
 }
 
+// Helper function to get the full name of a standard JS element from an AST node
+function getStandardElementName(node: AcornNode | null | undefined): string | null {
+  if (!node) {
+    // console.log("[qwik-ds getStandardElementName] Node is null or undefined");
+    return null;
+  }
+
+  // biome-ignore lint/suspicious/noExplicitAny: Acorn node structure
+  const nodeAny = node as any;
+
+  // console.log(`[qwik-ds getStandardElementName] Node type: ${nodeAny.type}, Name: ${nodeAny.name || 'N/A'}`);
+
+  if (nodeAny.type === "Identifier") {
+    return nodeAny.name;
+  }
+  if (nodeAny.type === "MemberExpression") {
+    const objectName = getStandardElementName(nodeAny.object);
+    const propertyName = nodeAny.property?.name; // property should be an Identifier
+    if (objectName && propertyName) {
+      return `${objectName}.${propertyName}`;
+    }
+    // console.log(`[qwik-ds getStandardElementName] MemberExpression parts: objectName=${objectName}, propertyName=${propertyName}`);
+    return null;
+  }
+  // console.log(`[qwik-ds getStandardElementName] Node type ${nodeAny.type} not handled or fell through`);
+  return null;
+}
+
 interface CandidateComponent {
   componentName: string;
   astNode: JSXElement;
@@ -53,6 +82,12 @@ interface CandidateComponent {
   resolvedPath?: string;
   providesDescription?: boolean;
 }
+
+const VIRTUAL_MODULE_ID = "virtual:checkbox-analysis";
+const RESOLVED_VIRTUAL_MODULE_ID = `\0${VIRTUAL_MODULE_ID}`;
+
+// Store analysis results: Map<filePath, hasDescription>
+const analysisResults = new Map<string, boolean>();
 
 async function analyzeImportedComponentForDescription(
   filePath: string,
@@ -259,11 +294,126 @@ async function analyzeImportedComponentForDescription(
   }
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: <acorn-walk base visitor type>
+const comprehensiveBaseVisitor: any = {
+  ...(baseVisitor as any),
+  JSXElement: (
+    node: AcornNode,
+    state: unknown,
+    c: (n: AcornNode, s: unknown) => void
+  ) => {
+    const jsxNode = node as JSXElement;
+    if (jsxNode.openingElement) {
+      // Check if openingElement exists
+      c(jsxNode.openingElement, state);
+    }
+    for (const child of jsxNode.children) {
+      c(child, state);
+    }
+    if (jsxNode.closingElement) {
+      // Check if closingElement exists
+      c(jsxNode.closingElement, state);
+    }
+  },
+  JSXFragment: (
+    node: AcornNode & { children: AcornNode[] },
+    state: unknown,
+    c: (n: AcornNode, s: unknown) => void
+  ) => {
+    if (node.children) {
+      for (const child of node.children) {
+        c(child, state);
+      }
+    }
+  },
+  JSXOpeningElement: (
+    node: AcornNode,
+    state: unknown,
+    c: (n: AcornNode, s: unknown) => void
+  ) => {
+    const openingElNode = node as JSXOpeningElement;
+    c(openingElNode.name, state);
+    for (const attr of openingElNode.attributes) {
+      c(attr, state);
+    }
+  },
+  JSXClosingElement: () => {},
+  JSXAttribute: (
+    node: AcornNode & { value?: AcornNode | null },
+    state: unknown,
+    c: (n: AcornNode, s: unknown) => void
+  ) => {
+    if (node.value) {
+      c(node.value, state);
+    }
+  },
+  JSXExpressionContainer: (
+    node: AcornNode & { expression: AcornNode },
+    state: unknown,
+    c: (n: AcornNode, s: unknown) => void
+  ) => {
+    if (node.expression) {
+      c(node.expression, state);
+    }
+  },
+  JSXIdentifier: () => {},
+  JSXMemberExpression: (
+    node: AcornNode & { object: AcornNode; property: AcornNode },
+    state: unknown,
+    c: (n: AcornNode, s: unknown) => void
+  ) => {
+    c(node.object, state);
+    c(node.property, state);
+  },
+  JSXNamespacedName: () => {},
+  JSXEmptyExpression: () => {},
+  JSXSpreadAttribute: (
+    node: AcornNode & { argument: AcornNode },
+    state: unknown,
+    c: (n: AcornNode, s: unknown) => void
+  ) => {
+    if (node.argument) {
+      c(node.argument, state);
+    }
+  },
+  JSXText: () => {},
+  JSXSpreadChild: (
+    node: AcornNode & { expression: AcornNode },
+    state: unknown,
+    c: (n: AcornNode, s: unknown) => void
+  ) => {
+    if (node.expression) {
+      c(node.expression, state);
+    }
+  },
+  // Add ParenthesizedExpression handler
+  ParenthesizedExpression: (
+    node: AcornNode & { expression: AcornNode },
+    state: unknown,
+    c: (n: AcornNode, s: unknown) => void
+  ) => {
+    if (node.expression) {
+      c(node.expression, state);
+    }
+  }
+};
+
 export function qwikDesignSystemVitePlugin(): PluginOption {
   return {
     name: "qwik-design-system",
     enforce: "pre",
+    resolveId(id) {
+      if (id === VIRTUAL_MODULE_ID) {
+        return RESOLVED_VIRTUAL_MODULE_ID;
+      }
+      return null; // Let other plugins handle it
+    },
     async load(id) {
+      // Handle the virtual module
+      if (id === RESOLVED_VIRTUAL_MODULE_ID) {
+        return `export default ${JSON.stringify(Object.fromEntries(analysisResults))};`;
+      }
+
       const cleanedId = id.split("?")[0];
       if (cleanedId.includes("apps/docs/src/routes/base/checkbox/examples/hero.tsx")) {
         try {
@@ -461,18 +611,26 @@ export function qwikDesignSystemVitePlugin(): PluginOption {
               }
             }
 
-            if (foundDescriptionInRoot) {
-              console.log(
-                "[qwik-ds-plugin LOAD hero.tsx] Found Checkbox.Description directly within a Checkbox.Root!"
-              );
-            } else if (indirectDescriptionFound) {
-              console.log(
-                "[qwik-ds-plugin LOAD hero.tsx] Found Checkbox.Description indirectly via an imported component!"
-              );
-              // Log which components provided it
-              for (const c of candidateComponents) {
-                if (c.providesDescription) {
-                  console.log(`  - Via: ${c.componentName} (from ${c.importSource})`);
+            const hasDescription = foundDescriptionInRoot || indirectDescriptionFound;
+            analysisResults.set(cleanedId, hasDescription);
+            console.log(
+              `[qwik-ds-plugin LOAD hero.tsx] Stored analysis for ${cleanedId}: ${hasDescription}`
+            );
+
+            if (hasDescription) {
+              if (foundDescriptionInRoot) {
+                console.log(
+                  "[qwik-ds-plugin LOAD hero.tsx] Found Checkbox.Description directly within a Checkbox.Root!"
+                );
+              } else {
+                console.log(
+                  "[qwik-ds-plugin LOAD hero.tsx] Found Checkbox.Description indirectly via an imported component!"
+                );
+                // Log which components provided it
+                for (const c of candidateComponents) {
+                  if (c.providesDescription) {
+                    console.log(`  - Via: ${c.componentName} (from ${c.importSource})`);
+                  }
                 }
               }
             } else {
@@ -517,7 +675,279 @@ export function qwikDesignSystemVitePlugin(): PluginOption {
         //   }...`
         // );
       }
-      return null;
+
+      if (cleanedId.includes("apps/docs/src/routes/base/checkbox/examples/hero.tsx")) {
+        const hasDescription = analysisResults.get(cleanedId);
+
+        // If analysis hasn't run or no result, don't transform (shouldn't happen if load runs first)
+        if (typeof hasDescription !== "boolean") {
+          console.warn(
+            `[qwik-ds TRANSFORM] No analysis result for ${cleanedId}, skipping transform.`
+          );
+          return null;
+        }
+
+        console.log(
+          `[qwik-ds TRANSFORM] Transforming ${cleanedId}, hasDescription: ${hasDescription}`
+        );
+
+        try {
+          const JsxParser = Parser.extend(jsx());
+          // We need to parse with location info if we were to do precise string manipulation
+          // but for AST manipulation and regeneration, it's less critical for this step.
+          const ast = JsxParser.parse(code, {
+            sourceType: "module",
+            ecmaVersion: "latest"
+            // locations: true, // Useful for debugging AST nodes
+          }) as AcornNode & { type: "Program"; body: AcornNode[] };
+
+          let modified = false;
+
+          console.log(`[qwik-ds TRANSFORM] Starting AST walk for ${cleanedId}`);
+          recursiveWalk(
+            ast,
+            null,
+            {
+              Program: (
+                node: AcornNode & { body: AcornNode[] },
+                state: null,
+                c: (n: AcornNode, s: null) => void
+              ) => {
+                console.log("[qwik-ds TRANSFORM AST-WALK] Visiting Program node");
+                for (const child of node.body) {
+                  c(child, state);
+                }
+              },
+              ExportDefaultDeclaration: (
+                node: AcornNode & { declaration: AcornNode },
+                state: null,
+                c: (n: AcornNode, s: null) => void
+              ) => {
+                console.log(
+                  "[qwik-ds TRANSFORM AST-WALK] Visiting ExportDefaultDeclaration node"
+                );
+                c(node.declaration, state);
+              },
+              // FunctionDeclaration, ArrowFunctionExpression, VariableDeclaration -> leading to component
+              FunctionDeclaration: (
+                node: AcornNode & { body: AcornNode },
+                state: null,
+                c: (n: AcornNode, s: null) => void
+              ) => {
+                console.log(
+                  "[qwik-ds TRANSFORM AST-WALK] Visiting FunctionDeclaration node"
+                );
+                c(node.body, state); // Walk into the function body (BlockStatement)
+              },
+              ArrowFunctionExpression: (
+                node: AcornNode & { body: AcornNode },
+                state: null,
+                c: (n: AcornNode, s: null) => void
+              ) => {
+                console.log(
+                  "[qwik-ds TRANSFORM AST-WALK] Visiting ArrowFunctionExpression node"
+                );
+                c(node.body, state); // Walk into the body
+              },
+              VariableDeclaration: (
+                node: AcornNode & { declarations: (AcornNode & { init: AcornNode })[] },
+                state: null,
+                c: (n: AcornNode, s: null) => void
+              ) => {
+                console.log(
+                  "[qwik-ds TRANSFORM AST-WALK] Visiting VariableDeclaration node"
+                );
+                for (const decl of node.declarations) {
+                  if (decl.init) c(decl.init, state); // Walk into initializers
+                }
+              },
+              CallExpression: (
+                node: AcornNode & { callee: AcornNode; arguments: AcornNode[] },
+                state: null,
+                c: (n: AcornNode, s: null) => void
+              ) => {
+                // biome-ignore lint/suspicious/noExplicitAny: <AST node structure is dynamic>
+                const callNode = node as any;
+                let calleeName: string | null = null;
+
+                if (callNode.callee?.type === "Identifier") {
+                  calleeName = callNode.callee.name;
+                }
+                // No need to log all CallExpressions here again, already done in ReturnStatement if it's the return value.
+                // console.log(
+                //   `[qwik-ds TRANSFORM AST-WALK] Visiting CallExpression node (Callee: ${calleeName || 'Complex'})`
+                // );
+
+                if (
+                  calleeName === "_jsxC" &&
+                  callNode.arguments &&
+                  callNode.arguments.length >= 2
+                ) {
+                  const componentArg = callNode.arguments[0];
+                  const propsArg = callNode.arguments[1];
+
+                  const renderedComponentName = getStandardElementName(componentArg);
+                  // console.log(`[qwik-ds TRANSFORM _jsxC] componentArg type: ${componentArg?.type}, renderedComponentName: ${renderedComponentName}`);
+
+                  if (
+                    renderedComponentName === "Checkbox.Root" &&
+                    // biome-ignore lint/suspicious/noExplicitAny: <AST node structure is dynamic>
+                    (propsArg as any).type === "ObjectExpression"
+                  ) {
+                    console.log(
+                      `[qwik-ds TRANSFORM] Found _jsxC call for Checkbox.Root in ${cleanedId}`
+                    );
+
+                    // biome-ignore lint/suspicious/noExplicitAny: <AST node structure for ObjectExpression>
+                    const propsObject = propsArg as any;
+                    if (!propsObject.properties) {
+                      propsObject.properties = [];
+                    }
+
+                    let existingPropIndex = -1;
+                    for (let i = 0; i < propsObject.properties.length; i++) {
+                      const prop = propsObject.properties[i];
+                      if (
+                        prop.key &&
+                        prop.key.type === "Identifier" &&
+                        prop.key.name === "_staticHasDescription"
+                      ) {
+                        existingPropIndex = i;
+                        break;
+                      }
+                    }
+
+                    const newPropValueLiteral = {
+                      type: "Literal",
+                      value: hasDescription, // from outer transform scope
+                      raw: String(hasDescription)
+                    };
+
+                    if (existingPropIndex !== -1) {
+                      propsObject.properties[existingPropIndex].value =
+                        newPropValueLiteral;
+                      console.log(
+                        `[qwik-ds TRANSFORM] Updated _staticHasDescription to ${hasDescription} in _jsxC props for ${cleanedId}`
+                      );
+                    } else {
+                      const newProperty = {
+                        type: "Property",
+                        key: {
+                          type: "Identifier",
+                          name: "_staticHasDescription"
+                        },
+                        value: newPropValueLiteral,
+                        kind: "init",
+                        method: false,
+                        shorthand: false,
+                        computed: false
+                      };
+                      // biome-ignore lint/suspicious/noExplicitAny: <Pushing new AST Property node>
+                      propsObject.properties.push(newProperty as any);
+                      console.log(
+                        `[qwik-ds TRANSFORM] Added _staticHasDescription={${hasDescription}} to _jsxC props for ${cleanedId}`
+                      );
+                    }
+                    modified = true; // from outer transform scope
+                  }
+                }
+
+                // Default traversal for callee and arguments
+                if (callNode.callee) {
+                  c(callNode.callee, state);
+                }
+                if (callNode.arguments) {
+                  for (const arg of callNode.arguments) {
+                    if (arg) c(arg, state);
+                  }
+                }
+              },
+              BlockStatement: (
+                node: AcornNode & { body: AcornNode[] },
+                state: null,
+                c: (n: AcornNode, s: null) => void
+              ) => {
+                console.log("[qwik-ds TRANSFORM AST-WALK] Visiting BlockStatement node");
+                for (const child of node.body) {
+                  c(child, state);
+                }
+              },
+              ReturnStatement: (
+                node: AcornNode & { argument: AcornNode | null },
+                state: null,
+                c: (n: AcornNode, s: null) => void
+              ) => {
+                console.log("[qwik-ds TRANSFORM AST-WALK] Visiting ReturnStatement node");
+                if (node.argument) {
+                  console.log(
+                    `[qwik-ds TRANSFORM AST-WALK] ReturnStatement argument type: ${node.argument.type}`
+                  );
+                  if (node.argument.type === "CallExpression") {
+                    // biome-ignore lint/suspicious/noExplicitAny: <debugging AST>
+                    const callExpr = node.argument as any;
+                    let calleeName = "Unknown Callee";
+                    if (callExpr.callee) {
+                      // Ensure callee exists
+                      if (callExpr.callee.type === "Identifier") {
+                        calleeName = callExpr.callee.name;
+                      } else if (callExpr.callee.type === "MemberExpression") {
+                        calleeName =
+                          getJsxElementName(callExpr.callee as JSXMemberExpression) ||
+                          "Complex MemberExpression";
+                      } else {
+                        calleeName = `Non-standard callee type: ${callExpr.callee.type}`;
+                      }
+                    }
+                    console.log(
+                      `[qwik-ds TRANSFORM AST-WALK]   CallExpression Callee: ${calleeName}`
+                    );
+                    if (callExpr.arguments && Array.isArray(callExpr.arguments)) {
+                      console.log(
+                        `[qwik-ds TRANSFORM AST-WALK]   CallExpression Arguments types: ${
+                          // biome-ignore lint/suspicious/noExplicitAny: <Acorn AST node array>
+                          (callExpr.arguments as AcornNode[])
+                            .map((arg: AcornNode) => arg?.type || "undefined_arg")
+                            .join(", ")
+                        }`
+                      );
+                    } else {
+                      console.log(
+                        "[qwik-ds TRANSFORM AST-WALK]   CallExpression has no arguments or arguments is not an array."
+                      );
+                    }
+                  }
+                  c(node.argument, state);
+                }
+              }
+              // JSXElement visitor is removed from here as we target _jsxC now.
+              // The comprehensiveBaseVisitor will handle generic JSX traversal if needed.
+            } as any,
+            comprehensiveBaseVisitor // Use the comprehensive base visitor
+          );
+
+          console.log(
+            `[qwik-ds TRANSFORM] AST walk finished for ${cleanedId}. Modified: ${modified}`
+          );
+
+          if (modified) {
+            console.log(
+              `[qwik-ds TRANSFORM] Attempting to generate code with astring for ${cleanedId}`
+            );
+            const outputCode = astringGenerate(ast);
+            console.log(
+              `[qwik-ds TRANSFORM] Code after transformation: ${outputCode.substring(0, 500)}...`
+            );
+            return {
+              code: outputCode,
+              map: null
+            };
+          }
+        } catch (e) {
+          console.error(`[qwik-ds TRANSFORM] Error transforming ${cleanedId}:`, e);
+          return null; // On error, return null to not break the build
+        }
+      }
+      return null; // For other files, no transformation
     }
   };
 }
