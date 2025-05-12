@@ -141,6 +141,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   return (
     <CollapsibleRootBase
       {...props}
+      id={id}
       ref={itemRef}
       role="treeitem"
       bind:open={isOpenSig}

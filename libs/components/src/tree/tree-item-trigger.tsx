@@ -1,11 +1,20 @@
-import { type Component, type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import {
+  type Component,
+  type PropsOf,
+  Slot,
+  component$,
+  useContext
+} from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { CollapsibleTrigger } from "../collapsible/collapsible-trigger";
+import { itemContextId } from "./tree-item";
 
 export const TreeItemTriggerBase: Component<PropsOf<typeof CollapsibleTrigger>> =
   component$(({ ...props }) => {
+    const itemContext = useContext(itemContextId);
+
     return (
-      <CollapsibleTrigger tabIndex={-1} {...props}>
+      <CollapsibleTrigger tabIndex={-1} {...props} aria-labelledby={itemContext?.id}>
         <Slot />
       </CollapsibleTrigger>
     );
