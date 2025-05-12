@@ -5,10 +5,10 @@ import type { PluginOption } from "vite";
 import { generate as astringGenerate } from "astring";
 
 import type {
-  Node as OxNode,
-  JSXElement as OxcJSXElement,
-  JSXIdentifier as OxcJSXIdentifier,
-  JSXMemberExpression as OxcJSXMemberExpression,
+  Node,
+  JSXElement,
+  JSXIdentifier,
+  JSXMemberExpression,
   ObjectExpression,
   ObjectProperty,
   BooleanLiteral,
@@ -20,16 +20,16 @@ import type {
 } from "@oxc-project/types";
 
 function getJsxElementName(
-  nameNode: OxcJSXIdentifier | OxcJSXMemberExpression | OxNode | null | undefined
+  nameNode: JSXIdentifier | JSXMemberExpression | Node | null | undefined
 ): string | null {
   if (!nameNode) {
     return null;
   }
   if (nameNode.type === "JSXIdentifier") {
-    return (nameNode as OxcJSXIdentifier).name;
+    return (nameNode as JSXIdentifier).name;
   }
   if (nameNode.type === "JSXMemberExpression") {
-    const jsxMemberNode = nameNode as OxcJSXMemberExpression;
+    const jsxMemberNode = nameNode as JSXMemberExpression;
     const objectName = getJsxElementName(jsxMemberNode.object);
     const propertyName = jsxMemberNode.property.name;
     return objectName && propertyName ? `${objectName}.${propertyName}` : null;
@@ -37,7 +37,7 @@ function getJsxElementName(
   return null;
 }
 
-function getStandardElementName(node: OxNode | null | undefined): string | null {
+function getStandardElementName(node: Node | null | undefined): string | null {
   if (!node) {
     return null;
   }
@@ -69,7 +69,7 @@ function getStandardElementName(node: OxNode | null | undefined): string | null 
  */
 interface CandidateComponent {
   componentName: string;
-  astNode: OxcJSXElement;
+  astNode: JSXElement;
   importSource?: string;
   resolvedPath?: string;
   providesDescription?: boolean;
@@ -93,12 +93,12 @@ async function analyzeImports(filePath: string, _: unknown): Promise<boolean> {
 
     try {
       walk(ast, {
-        enter: (node: OxNode) => {
+        enter: (node: Node) => {
           if (foundDescription) {
             throw new Error("FoundDescription");
           }
           if (node.type === "JSXElement") {
-            const jsxNode = node as OxcJSXElement;
+            const jsxNode = node as JSXElement;
             const elementName = getJsxElementName(jsxNode.openingElement.name);
             if (elementName === "Checkbox.Description") {
               foundDescription = true;
@@ -150,7 +150,7 @@ export function qwikAnalyzer(): PluginOption {
 
           let importsFromKunaiQwik = false;
           walk(ast, {
-            enter: (node: OxNode) => {
+            enter: (node: Node) => {
               if (importsFromKunaiQwik) return;
               if (node.type === "ImportDeclaration") {
                 const importDecl = node as ImportDeclaration;
@@ -173,11 +173,11 @@ export function qwikAnalyzer(): PluginOption {
           const inCheckboxRootStack: boolean[] = [];
 
           walk(ast, {
-            enter: (node: OxNode) => {
+            enter: (node: Node) => {
               if (node.type === "JSXElement") {
                 if (foundDescriptionInRoot && inCheckboxRootStack.length === 0) return;
 
-                const jsxNode = node as OxcJSXElement;
+                const jsxNode = node as JSXElement;
                 const elementName = getJsxElementName(jsxNode.openingElement.name);
 
                 if (elementName === "Checkbox.Root") {
@@ -202,9 +202,9 @@ export function qwikAnalyzer(): PluginOption {
                 }
               }
             },
-            leave: (node: OxNode) => {
+            leave: (node: Node) => {
               if (node.type === "JSXElement") {
-                const jsxNode = node as OxcJSXElement;
+                const jsxNode = node as JSXElement;
                 const elementName = getJsxElementName(jsxNode.openingElement.name);
                 if (elementName === "Checkbox.Root") {
                   if (inCheckboxRootStack.length > 0) {
@@ -218,7 +218,7 @@ export function qwikAnalyzer(): PluginOption {
           let indirectDescriptionFound = false;
           if (candidateComponents.length > 0) {
             walk(ast, {
-              enter: (node: OxNode) => {
+              enter: (node: Node) => {
                 if (node.type === "ImportDeclaration") {
                   const importDecl = node as ImportDeclaration;
                   for (const specifier of importDecl.specifiers || []) {
@@ -328,7 +328,7 @@ export function qwikAnalyzer(): PluginOption {
           console.log(`[qwik-ds TRANSFORM with Oxc] Starting AST walk for ${cleanedId}`);
 
           walk(ast, {
-            enter: (node: OxNode) => {
+            enter: (node: Node) => {
               if (node.type === "CallExpression") {
                 const callNode = node as CallExpression;
                 let calleeName: string | null = null;
@@ -344,7 +344,7 @@ export function qwikAnalyzer(): PluginOption {
                   const componentArg = callNode.arguments[0];
                   const propsArg = callNode.arguments[1];
                   const renderedComponentName = getStandardElementName(
-                    componentArg as OxNode
+                    componentArg as Node
                   );
 
                   if (
