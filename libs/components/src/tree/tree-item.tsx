@@ -141,8 +141,9 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   return (
     <CollapsibleRootBase
       {...props}
+      id={id}
       ref={itemRef}
-      role="treeitem"
+      role="row"
       bind:open={isOpenSig}
       tabIndex={0}
       onFocus$={[handleFocus$, props.onFocus$]}
@@ -153,7 +154,10 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       data-highlighted={isHighlightedSig.value}
       data-group
     >
-      <Slot />
+      {/* NOTE: This span is required for the aria tree grid pattern, we give it display contents so that it does not break composition */}
+      <div role="gridcell" style={{ display: "contents" }} tabIndex={-1}>
+        <Slot />
+      </div>
     </CollapsibleRootBase>
   );
 });
