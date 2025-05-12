@@ -26,8 +26,20 @@ Target features. Some are essential, others are nice to have. Checked items are 
 - Root
   - Label
   - DateEntry
+    - DaySegment
+    - MonthSegment
+    - YearSegment
+    - Separator
   - ErrorMessage
   - HiddenInput
+
+  Under the hood -> return Segment with type="day | month | year"
+  - Day
+  - Month
+  - Year
+
+  - Segment type="day | month | year"
+
 
 ## Research Links
 Here are some resources that can inform and inspire our implementation

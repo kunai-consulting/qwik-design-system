@@ -8,37 +8,40 @@ import {
   useStyles$,
   useTask$
 } from "@builder.io/qwik";
-import type { Signal } from "@builder.io/qwik";
 import type { DayOfMonth, Month } from "../calendar/types";
 import { dateInputContextId } from "./date-input-context";
 import styles from "./date-input-segment.css?inline";
-import type { DateSegment } from "./types";
+import type { DateSegmentType, DateSegment } from "./types";
 import { getDisplayValue, getLastDayOfMonth, getTwoDigitPaddedValue } from "./utils";
 import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import type { PublicDateInputSegmentProps } from "./types";
 
 type DateInputSegmentProps = PublicDateInputSegmentProps & {
   _index?: number;
-  segmentSig: Signal<DateSegment>;
-  localId: string;
-  isEditable: boolean;
-  maxLength: number;
+  type: DateSegmentType;
 };
 
 /** Segment component for the Date Input */
-export const DateInputSegmentBase = component$(
-  ({ segmentSig, isEditable, showLeadingZero, maxLength, _index, ...otherProps }: DateInputSegmentProps) => {
+export const DateInputSegmentTypeBase = component$(
+  ({ type, showLeadingZero, _index, ...otherProps }: DateInputSegmentProps) => {
     const context = useContext(dateInputContextId);
+    const segmentSig =
+      type === "month"
+        ? context.monthSegmentSig
+        : type === "day"
+          ? context.dayOfMonthSegmentSig
+          : context.yearSegmentSig;
     const inputId = `${context.localId}-segment-${segmentSig.value.type}`;
+    const maxLength = type === "year" ? 4 : 2;
     const index = _index ?? -1;
     const inputRef = useSignal<HTMLInputElement>();
-    
+
     useStyles$(styles);
 
     useTask$(function registerSegmentRef() {
       console.log("Segment index", _index);
       //console.log("Segment ref", inputRef.value);
-      // context.segmentRefs.value[index] = inputRef;
+      context.segmentRefs.value[index] = inputRef;
     });
 
     const updateActiveDate = $(() => {
@@ -69,11 +72,6 @@ export const DateInputSegmentBase = component$(
       return context.orderedSegments.findIndex(
         (s) => s.value.type === segmentSig.value.type
       );
-    });
-
-    const segmentLengthSig = useComputed$(() => {
-      const placeholderLength = segmentSig.value.placeholderText.length;
-      return placeholderLength < 2 ? 2 : placeholderLength;
     });
 
     /**
@@ -132,7 +130,8 @@ export const DateInputSegmentBase = component$(
         ...segmentSig.value,
         isPlaceholder: false,
         numericValue: newValue,
-        displayValue: `${newValue}`
+        displayValue: `${newValue}`,
+        isoValue: `${newValue}`
       } as DateSegment;
       const month = context.monthSegmentSig.value.numericValue;
       await updateDayOfMonthSegmentForYearAndMonth(newValue, month);
@@ -149,11 +148,13 @@ export const DateInputSegmentBase = component$(
         newValue = segment.min;
       }
       const displayValue = getDisplayValue(newValue, segment.placeholderText);
+      const isoValue = getTwoDigitPaddedValue(newValue);
       segmentSig.value = {
         ...segment,
         isPlaceholder: false,
         numericValue: newValue,
-        displayValue
+        displayValue,
+        isoValue
       };
       const year = context.yearSegmentSig.value.numericValue;
       await updateDayOfMonthSegmentForYearAndMonth(year, newValue);
@@ -170,11 +171,13 @@ export const DateInputSegmentBase = component$(
         newValue = segment.min;
       }
       const displayValue = getDisplayValue(newValue, segment.placeholderText);
+      const isoValue = getTwoDigitPaddedValue(newValue);
       segmentSig.value = {
         ...segment,
         isPlaceholder: false,
         numericValue: newValue,
-        displayValue
+        displayValue,
+        isoValue
       };
     });
 
@@ -221,9 +224,9 @@ export const DateInputSegmentBase = component$(
         ...segment,
         isPlaceholder: false,
         numericValue,
-        displayValue:
+        isoValue:
           segment.type !== "year"
-            ? getDisplayValue(numericValue, segment.placeholderText)
+            ? getTwoDigitPaddedValue(numericValue)
             : `${numericValue}`
       };
 
@@ -244,9 +247,10 @@ export const DateInputSegmentBase = component$(
         ...segment,
         isPlaceholder: true,
         numericValue: undefined,
-        displayValue: undefined
+        displayValue: undefined,
+        isoValue: undefined
       };
-    });    
+    });
 
     // Watch for activeSegmentIndex changes and focus this segment when it matches
     useTask$(({ track }) => {
@@ -287,15 +291,23 @@ export const DateInputSegmentBase = component$(
         event.preventDefault();
       }
 
-      // Make sure we don't allow more than the max digits
-      // const value = (event.target as HTMLInputElement).value; // The value before the keypress
-      // if (value.length === maxLength && value[0] !== "0") {
-      //   event.preventDefault();
-      // }
+      // Special handling for leading zeros
+      const target = event.target as HTMLInputElement;
+      const value = target.value; // The value before the keypress
+      if (value[0] === "0" && value.length === 2) {
+        target.value = value.slice(1);
+        return;
+      }
+      const maxLen = target.maxLength - 1;
+      const hasSelection = target.selectionStart !== target.selectionEnd;
+      if (value.length >= maxLen && !hasSelection) {
+        event.preventDefault();
+      }
     });
 
     // Process input and update our segment and date values accordingly
     const onInput$ = $(async (event: InputEvent) => {
+      console.log("onInput running");
       const segment = segmentSig.value;
       const target = event.target as HTMLInputElement;
       const content = target.value || "";
@@ -343,10 +355,11 @@ export const DateInputSegmentBase = component$(
     });
 
     const usePlaceholderWidth = useComputed$(() => {
-      return (
-        segmentSig.value.placeholderText.length >
-        (segmentSig.value.displayValue?.length ?? 0)
-      );
+      return !displayValueSig.value.length;
+    });
+
+    const isEditableSig = useComputed$(() => {
+      return !context.disabledSig.value;
     });
 
     return (
@@ -363,7 +376,7 @@ export const DateInputSegmentBase = component$(
           >
             {usePlaceholderWidth.value
               ? segmentSig.value.placeholderText
-              : segmentSig.value.displayValue}
+              : displayValueSig.value}
           </span>
 
           <input
@@ -379,17 +392,19 @@ export const DateInputSegmentBase = component$(
             data-qds-date-input-segment-index={_index}
             value={displayValueSig.value}
             onKeyDown$={
-              isEditable ? [onKeyDownSync$, onKeyDown$, otherProps.onKeyDown$] : undefined
+              isEditableSig.value
+                ? [onKeyDownSync$, onKeyDown$, otherProps.onKeyDown$]
+                : undefined
             }
-            onInput$={isEditable ? [onInput$, otherProps.onInput$] : undefined}
-            onClick$={isEditable ? [onClick$, otherProps.onClick$] : undefined}
+            onInput$={isEditableSig.value ? [onInput$, otherProps.onInput$] : undefined}
+            // onClick$={isEditableSig.value ? [onClick$, otherProps.onClick$] : undefined}
             stoppropagation:change
             placeholder={segmentSig.value.placeholderText}
             aria-label={`${segmentSig.value.type} input`}
             aria-valuemax={segmentSig.value.max}
             aria-valuemin={segmentSig.value.min}
             aria-valuenow={segmentSig.value.numericValue}
-            disabled={!isEditable}
+            disabled={context.disabledSig.value}
             maxLength={maxLength + 1}
           />
         </div>
@@ -398,27 +413,8 @@ export const DateInputSegmentBase = component$(
   }
 );
 
-export function DateInputSegment(props: DateInputSegmentProps) {
-  const index = getNextIndex(`${props.localId}-segment`);
-
+export function DateInputSegmentType(props: DateInputSegmentProps) {
+  const index = getNextIndex("date-input-segment-type");
   props._index = index;
-
-  return <DateInputSegmentBase {...props} />
+  return <DateInputSegmentTypeBase {...props} />;
 }
-
-// Component -> Generic type
-// type -> union type between "day" | "month" | "year"
-
-// export const GetSegmentType = (Component, type) => {
-//   function DateInputSegment(props) {
-//     const index = getNextIndex(`${props.localId}-segment`);
-
-//     props._index = index;
-  
-//     return <DateInputSegmentBase {...props} />
-//   }
-
-//   return DateInputSegment;
-// }
-
-// export const DateInputDay = GetSegmentType(DateInputDayBase, "day")

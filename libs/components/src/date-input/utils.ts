@@ -1,5 +1,5 @@
 import type { DateFormat, ISODate, Separator } from "../calendar/types";
-import { MAX_YEAR, MIN_YEAR } from "./constants";
+import { DEFAULT_DAY_OF_MONTH_SEGMENT, DEFAULT_MONTH_SEGMENT, DEFAULT_YEAR_SEGMENT, MAX_YEAR, MIN_YEAR } from "./constants";
 import type { DateSegment } from "./types";
 
 export const getSeparatorFromFormat = (format?: DateFormat): Separator => {
@@ -40,6 +40,42 @@ export const getSegmentsFromFormat = (
   }
   return segments;
 };
+
+export const getInitialSegments = (initialDate: ISODate | null) => {
+  if (!initialDate) {
+    return {
+      dayOfMonthSegment: DEFAULT_DAY_OF_MONTH_SEGMENT,
+      monthSegment: DEFAULT_MONTH_SEGMENT,
+      yearSegment: DEFAULT_YEAR_SEGMENT
+    }
+  }
+
+  const [year, month, day] = initialDate.split("-");
+  return {
+    dayOfMonthSegment: {
+      ...DEFAULT_DAY_OF_MONTH_SEGMENT,
+      numericValue: +day,
+      displayValue: day,
+      isoValue: day,
+      max: getLastDayOfMonth(+year, +month),
+      isPlaceholder: false
+    },
+    monthSegment: {
+      ...DEFAULT_MONTH_SEGMENT,
+      numericValue: +month,
+      displayValue: month,
+      isoValue: month,
+      isPlaceholder: false
+    },
+    yearSegment: {
+      ...DEFAULT_YEAR_SEGMENT,
+      numericValue: +year,
+      displayValue: year,
+      isoValue: year,
+      isPlaceholder: false
+    }
+  }
+}
 
 export const getLastDayOfMonth = (year: number, month: number) => {
   // The Date constructor month is 0-indexed, but we can use our 1-based month value along with the 0 day value,

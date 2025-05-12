@@ -1,33 +1,27 @@
-import { type PropsOf, component$, useContext } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { dateInputContextId } from "./date-input-context";
-import { DateInputSegment } from "./date-input-segment";
-type PublicDateInputDateEntryProps = PropsOf<"div"> & {
-  value?: string;
-};
+import { Render } from "../render/render";
+type PublicDateInputDateEntryProps = PropsOf<"div">;
 
-// no-composition-check
-// This component presents three segments as one unified entry experience.
-// The composition here simplifies the API for the developer consuming the library.
-/** Date entry component for the Date Input */
+/** Container for the segments of the Date Input that assists with accessibility
+ * by giving a target for the label, and providing a role for screen readers.
+ */
 export const DateInputDateEntryBase = component$(
   (props: PublicDateInputDateEntryProps) => {
     const context = useContext(dateInputContextId);
     const inputId = `${context.localId}-entry`;
+
     return (
-      <div {...props} data-qds-date-input-date-entry role="group" id={inputId}>
-        {context.orderedSegments.map((segmentSig, index) => (
-          <span key={inputId + segmentSig.value.type}>
-            <DateInputSegment
-              segmentSig={segmentSig}
-              isEditable={!context.disabledSig.value}
-            />
-            {index !== context.orderedSegments.length - 1 && (
-              <span data-qds-date-input-separator>{context.separator}</span>
-            )}
-          </span>
-        ))}
-      </div>
+      <Render
+        fallback={"div"}
+        {...props}
+        data-qds-date-input-date-entry
+        role="group"
+        id={inputId}
+      >
+        <Slot />
+      </Render>
     );
   }
 );

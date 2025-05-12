@@ -4,27 +4,30 @@ import {
   type QRL,
   Slot,
   component$,
-  createSignal,
   useComputed$,
   useContextProvider,
   useId,
   useSignal,
-  useTask$
+  useTask$,
+  isBrowser,
+  type Signal
 } from "@builder.io/qwik";
-import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
+import {
+  type BindableProps,
+  resetIndexes,
+  useBindings
+} from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { ARIA_LABELS, MONTHS_LG } from "../calendar/constants";
-import type { DateFormat, ISODate, Locale } from "../calendar/types";
+import type { ISODate, Locale } from "../calendar/types";
 import { Render } from "../render/render";
 import type { DateInputContext } from "./date-input-context";
 import { dateInputContextId } from "./date-input-context";
-import { getSegmentsFromFormat, getSeparatorFromFormat } from "./utils";
+import { getInitialSegments } from "./utils";
 
 export type PublicDateInputRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   /** The locale used for formatting dates and text */
   locale?: Locale;
-  /** The format of the date. Controls the appearance of the date input. Defaults to "mm/dd/yyyy". */
-  format?: DateFormat;
   /** Event handler called when a date is selected */
   onChange$?: QRL<(date: ISODate | null) => void>;
 } & BindableProps<DateInputBoundProps>;
@@ -44,7 +47,6 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
   const { onChange$, ...rest } = props;
   const isInitialLoadSig = useSignal(true);
   const locale = props.locale || "en";
-  const format = props.format;
   const labelStr = props["aria-label"] ?? ARIA_LABELS[locale].root;
   const { dateSig, disabledSig } = useBindings<DateInputBoundProps>(props, {
     date: props.date ?? null,
@@ -52,12 +54,95 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
   });
 
   const localId = useId();
-  const dateFormat = format ?? "m/d/yyyy";
-  const separator = getSeparatorFromFormat(dateFormat);
-  const segments = getSegmentsFromFormat(dateFormat, separator, dateSig.value).map(
-    (segment) => createSignal(segment)
+  const { dayOfMonthSegment, monthSegment, yearSegment } = getInitialSegments(
+    dateSig.value
   );
-  const activeSegmentIndex = useSignal<number>(-1);
+  const dayOfMonthSegmentSig = useSignal(dayOfMonthSegment);
+  const monthSegmentSig = useSignal(monthSegment);
+  const yearSegmentSig = useSignal(yearSegment);
+
+  // Focus management signals and methods
+  const focusableSegments = useSignal<HTMLInputElement[]>([]);
+  const segmentRefs = useSignal<Signal<HTMLInputElement | undefined>[]>([]);
+
+  // Sort segments based on their position in the DOM to ensure consistent tab order
+  const sortFocusableSegmentsByDOMOrder = $(() => {
+    if (focusableSegments.value.length <= 1) return;
+
+    // Sort elements based on their position in the DOM
+    const sortedSegments = [...focusableSegments.value].sort((a, b) => {
+      // Use compareDocumentPosition to determine relative position
+      const position = a.compareDocumentPosition(b);
+
+      // If b follows a in the document
+      if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
+        return -1;
+      }
+      // If b precedes a in the document
+      if (position & Node.DOCUMENT_POSITION_PRECEDING) {
+        return 1;
+      }
+      // Elements are the same or not comparable
+      return 0;
+    });
+
+    focusableSegments.value = sortedSegments;
+    console.log("Sorted segments by DOM order");
+  });
+
+  const registerFocusableSegment$ = $(
+    (element: HTMLInputElement, type: "day" | "month" | "year") => {
+      // Skip if we're on the server
+      if (!isBrowser) return;
+
+      // Check if already registered
+      if (!focusableSegments.value.includes(element)) {
+        // Add to array
+        console.log("Adding element to focusable segments");
+        focusableSegments.value = [...focusableSegments.value, element];
+
+        // Sort the segments to ensure proper navigation order
+        sortFocusableSegmentsByDOMOrder();
+
+        console.log("Current focusable segments:", focusableSegments.value.length);
+      }
+    }
+  );
+
+  const focusNextSegment$ = $((currentElement: HTMLInputElement) => {
+    // Skip if we're on the server
+    if (!isBrowser) return;
+
+    console.log("moveFocusToNextSegment$", currentElement);
+    console.log("Current focusable segments:", focusableSegments.value.length);
+
+    const currentIndex = focusableSegments.value.indexOf(currentElement);
+    console.log("Current index:", currentIndex);
+
+    if (currentIndex >= 0 && currentIndex < focusableSegments.value.length - 1) {
+      const nextElement = focusableSegments.value[currentIndex + 1];
+      console.log("Moving focus to next element", nextElement);
+      nextElement.focus();
+      nextElement.select();
+    }
+  });
+
+  const focusPreviousSegment$ = $((currentElement: HTMLInputElement) => {
+    // Skip if we're on the server
+    if (!isBrowser) return;
+
+    console.log("focusPreviousSegment$", currentElement);
+    console.log("Current focusable segments:", focusableSegments.value.length);
+
+    const currentIndex = focusableSegments.value.indexOf(currentElement);
+    console.log("Current index:", currentIndex);
+
+    if (currentIndex > 0) {
+      const prevElement = focusableSegments.value[currentIndex - 1];
+      console.log("Moving focus to previous element", prevElement);
+      prevElement.focus();
+    }
+  });
 
   // This flag helps maintain two behaviors when the date changes to null.
   // 1. When the date signal changes to null programmatically, we want to clear all segments.
@@ -65,34 +150,23 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
   // See usage in updateSegmentsWithNewDateValue
   const isInternalSegmentClearance = useSignal<boolean>(false);
 
-  // biome-ignore lint/style/noNonNullAssertion: valid format will always include day
-  const dayOfMonthSegmentSig = segments.find((s) => s.value.type === "day")!;
-  // biome-ignore lint/style/noNonNullAssertion: valid format will always include month
-  const monthSegmentSig = segments.find((s) => s.value.type === "month")!;
-  // biome-ignore lint/style/noNonNullAssertion: valid format will always include year
-  const yearSegmentSig = segments.find((s) => s.value.type === "year")!;
-
-  const focusNextSegment$ = $(() => {
-    if (activeSegmentIndex.value >= 0 && activeSegmentIndex.value < segments.length - 1) {
-      // Move to the next segment
-      activeSegmentIndex.value++;
-    }
-  });
-
   const context: DateInputContext = {
     locale,
     dateSig,
     localId,
-    format: dateFormat,
     disabledSig,
-    separator,
-    orderedSegments: segments,
     dayOfMonthSegmentSig,
     monthSegmentSig,
     yearSegmentSig,
-    activeSegmentIndex,
     focusNextSegment$,
-    isInternalSegmentClearance
+    focusPreviousSegment$,
+    focusableSegments,
+    registerFocusableSegment$,
+    isInternalSegmentClearance,
+    segmentRefs,
+    // TODO: remove these deprecated properties
+    orderedSegments: [],
+    activeSegmentIndex: useSignal(-1)
   };
 
   useContextProvider(dateInputContextId, context);
@@ -117,6 +191,7 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
    * to make sure the segments match the date value.
    */
   const updateSegmentsWithNewDateValue = $((date: ISODate | null) => {
+    console.log("updateSegmentsWithNewDateValue", date);
     if (date !== null) {
       const [year, month, day] = date.split("-");
       if (yearSegmentSig.value.numericValue !== +year) {
@@ -197,4 +272,7 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
   );
 });
 
-export const DateInputRoot = withAsChild(DateInputRootBase);
+export const DateInputRoot = withAsChild(DateInputRootBase, (props) => {
+  resetIndexes("date-input-segment-type");
+  return props;
+});
