@@ -77,10 +77,7 @@ interface CandidateComponent {
 
 const analysisResults = new Map<string, boolean>();
 
-async function analyzeImportedComponentForDescription(
-  filePath: string,
-  _: unknown
-): Promise<boolean> {
+async function analyzeImports(filePath: string, _: unknown): Promise<boolean> {
   console.log(`[qwik-ds ANALYZE] Analyzing imported component: ${filePath}`);
   let foundDescription = false;
   try {
@@ -254,8 +251,7 @@ export function qwikAnalyzer(): PluginOption {
                 const resolved = await this.resolve(candidate.importSource, cleanedId);
                 if (resolved?.id) {
                   candidate.resolvedPath = resolved.id;
-                  candidate.providesDescription =
-                    await analyzeImportedComponentForDescription(resolved.id, this);
+                  candidate.providesDescription = await analyzeImports(resolved.id, this);
                   if (candidate.providesDescription) {
                     indirectDescriptionFound = true;
                   }
@@ -379,8 +375,6 @@ export function qwikAnalyzer(): PluginOption {
                         }
                       }
                     }
-
-                    const dummySpan = { start: 0, end: 0 };
 
                     const newPropValueLiteral: BooleanLiteral = {
                       type: "Literal",
