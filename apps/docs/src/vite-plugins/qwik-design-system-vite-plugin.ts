@@ -415,17 +415,44 @@ export function qwikDesignSystemVitePlugin(): PluginOption {
       }
 
       const cleanedId = id.split("?")[0];
-      if (cleanedId.includes("apps/docs/src/routes/base/checkbox/examples/hero.tsx")) {
+      const targetPathPrefix =
+        "/Users/jackshelton/dev/kunai/qwik-design-system/apps/docs/src/routes/";
+
+      // Filter for .tsx files within the target routes directory
+      if (cleanedId.endsWith(".tsx") && cleanedId.startsWith(targetPathPrefix)) {
         try {
           const rawCode = fs.readFileSync(cleanedId, "utf-8");
-          try {
-            const JsxParser = Parser.extend(jsx());
-            const ast = JsxParser.parse(rawCode, {
-              sourceType: "module",
-              ecmaVersion: "latest",
-              locations: true
-            }) as AcornNode & { type: "Program"; body: AcornNode[] };
+          const JsxParser = Parser.extend(jsx());
+          const ast = JsxParser.parse(rawCode, {
+            sourceType: "module",
+            ecmaVersion: "latest",
+            locations: true
+          }) as AcornNode & { type: "Program"; body: AcornNode[] };
 
+          let importsFromKunaiQwik = false;
+          for (const node of ast.body) {
+            if (node.type === "ImportDeclaration") {
+              const importDecl = node as AcornNode & { source: { value: string } };
+              if (
+                importDecl.source &&
+                importDecl.source.value === "@kunai-consulting/qwik"
+              ) {
+                importsFromKunaiQwik = true;
+                break;
+              }
+            }
+          }
+
+          if (!importsFromKunaiQwik) {
+            // console.log(`[qwik-ds LOAD] Skipping analysis for ${cleanedId}, no import from @kunai-consulting/qwik.`);
+            analysisResults.set(cleanedId, false); // Ensure transform hook knows it's handled
+            return null;
+          }
+
+          console.log(`[qwik-ds LOAD] Processing route file: ${cleanedId}`);
+
+          // Existing analysis logic
+          try {
             let foundDescriptionInRoot = false;
             const candidateComponents: CandidateComponent[] = [];
             const initialState: { inCheckboxRoot: boolean; found: boolean } = {
@@ -663,23 +690,13 @@ export function qwikDesignSystemVitePlugin(): PluginOption {
     },
     transform(code, id) {
       const cleanedId = id.split("?")[0];
+      const targetPathPrefix =
+        "/Users/jackshelton/dev/kunai/qwik-design-system/apps/docs/src/routes/";
 
-      if (cleanedId.endsWith(".tsx")) {
-        // console.log(`[qwik-ds-plugin TRANSFORM] SAW .tsx ID: ${id}`);
-      }
-
-      if (cleanedId.includes("apps/docs/src/routes/base/checkbox/examples/hero.tsx")) {
-        // console.log(
-        //   `[qwik-ds-plugin TRANSFORM hero.tsx] Transformed code (first 500 chars for ID ${id}):\n${
-        //     code.substring(0, 500)
-        //   }...`
-        // );
-      }
-
-      if (cleanedId.includes("apps/docs/src/routes/base/checkbox/examples/hero.tsx")) {
+      // Filter for .tsx files within the target routes directory
+      if (cleanedId.endsWith(".tsx") && cleanedId.startsWith(targetPathPrefix)) {
         const hasDescription = analysisResults.get(cleanedId);
 
-        // If analysis hasn't run or no result, don't transform (shouldn't happen if load runs first)
         if (typeof hasDescription !== "boolean") {
           console.warn(
             `[qwik-ds TRANSFORM] No analysis result for ${cleanedId}, skipping transform.`

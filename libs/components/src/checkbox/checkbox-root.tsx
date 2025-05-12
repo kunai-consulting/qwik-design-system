@@ -52,6 +52,8 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
     ...rest
   } = props;
 
+  console.log("Checkbox.Root", props);
+
   if (typeof _staticHasDescription === "boolean") {
     console.log(
       `[Checkbox.Root] Received _staticHasDescription: ${_staticHasDescription}. Original description prop was: ${description}`
@@ -125,6 +127,7 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
       data-qds-checkbox-root
       // Indicates whether the checkbox is disabled
       aria-disabled={context.isDisabledSig.value ? "true" : "false"}
+      data-has-description={props._staticHasDescription ? "true" : undefined}
       {...context.dataAttributes.value}
     >
       <Slot />
