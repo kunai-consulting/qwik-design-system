@@ -7,6 +7,7 @@ import { qwikVite } from "@builder.io/qwik/optimizer";
 import { type UserConfig, defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import pkg from "./package.json";
+import { resolve } from "path";
 
 type PkgDep = Record<string, string>;
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -58,6 +59,20 @@ export default defineConfig(({ command, mode }): UserConfig => {
         // Do cache the server response in preview (non-adapter production build)
         "Cache-Control": "public, max-age=600"
       }
+    },
+    esbuild: {
+      supported: {
+        "top-level-await": true
+      }
+    },
+    resolve: {
+      alias: {
+        "@kunai-consulting/qwik": resolve(__dirname, "../../libs/components/src"),
+        "@kunai-consulting/qwik-utils": resolve(__dirname, "../../libs/utils/src"),
+        "@kunai-consulting/qwik-icons": resolve(__dirname, "../../libs/icons/src"),
+        "~": resolve(__dirname, "src")
+      },
+      dedupe: ["@builder.io/qwik", "@builder.io/qwik-city"]
     }
   };
 });
