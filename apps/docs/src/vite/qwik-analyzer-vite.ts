@@ -78,9 +78,8 @@ function getStandardElementName(node: Node | null | undefined): string | null {
 }
 
 /**
- *  A candidate component is one that could potentially hold the component we're searching for within its JSX return parameter.
- *
- *  For example, if the consumer of a library wraps the target in <MyWrapper />, then MyWrapper has become a candidate component.
+ * Component that may wrap our target component in its JSX.
+ * Example: If <MyWrapper> contains <Checkbox.Description>, MyWrapper is a candidate.
  */
 interface CandidateComponent {
   componentName: string;
@@ -106,27 +105,18 @@ async function analyzeImports(filePath: string, _: unknown): Promise<boolean> {
     }
     const ast = parseResult.program;
 
-    try {
-      walk(ast, {
-        enter: (node: Node) => {
-          if (foundDescription) {
-            throw new Error("FoundDescription");
-          }
-          if (node.type === "JSXElement") {
-            const jsxNode = node as JSXElement;
-            const elementName = getJsxElementName(jsxNode.openingElement.name);
-            if (elementName === "Checkbox.Description") {
-              foundDescription = true;
-              throw new Error("FoundDescription");
-            }
+    walk(ast, {
+      enter: (node: Node) => {
+        if (node.type === "JSXElement") {
+          const jsxNode = node;
+          const elementName = getJsxElementName(jsxNode.openingElement.name);
+          if (elementName === "Checkbox.Description") {
+            foundDescription = true;
+            return false;
           }
         }
-      });
-    } catch (e) {
-      if ((e as Error).message !== "FoundDescription") {
-        throw e;
       }
-    }
+    });
 
     if (foundDescription) {
       console.log(`[qwik-ds ANALYZE] Found Checkbox.Description in ${filePath}`);
@@ -135,9 +125,7 @@ async function analyzeImports(filePath: string, _: unknown): Promise<boolean> {
     }
     return foundDescription;
   } catch (error) {
-    if (!((error as Error).message === "FoundDescription")) {
-      console.error(`[qwik-ds ANALYZE] Error analyzing ${filePath}:`, error);
-    }
+    console.error(`[qwik-ds ANALYZE] Error analyzing ${filePath}:`, error);
     return foundDescription;
   }
 }
