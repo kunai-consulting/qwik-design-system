@@ -5,9 +5,15 @@ import { DateInput } from "@kunai-consulting/qwik";
 export default component$(() => {
   useStyles$(styles);
   return (
-    <DateInput.Root class="date-input-root-row" format="dd-mm-yyyy">
-      <DateInput.Label>Day-first date entry:</DateInput.Label>
-      <DateInput.DateEntry />
+    <DateInput.Root class="date-input-root-row">
+      <DateInput.Label>European-style date entry:</DateInput.Label>
+      <DateInput.DateEntry>
+        <DateInput.Day showLeadingZero={true} />
+        <DateInput.Separator separator="." />
+        <DateInput.Month showLeadingZero={true} />
+        <DateInput.Separator separator="." />
+        <DateInput.Year />
+      </DateInput.DateEntry>
     </DateInput.Root>
   );
 });

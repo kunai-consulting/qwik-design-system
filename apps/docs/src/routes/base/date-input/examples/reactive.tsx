@@ -10,7 +10,13 @@ export default component$(() => {
     <div class="date-input-container">
       <DateInput.Root class="date-input-root-col" bind:date={selectedDate}>
         <DateInput.Label>Party like it's:</DateInput.Label>
-        <DateInput.DateEntry />
+        <DateInput.DateEntry>
+          <DateInput.Month />
+          <DateInput.Separator separator="/" />
+          <DateInput.Day />
+          <DateInput.Separator separator="/" />
+          <DateInput.Year />
+        </DateInput.DateEntry>
       </DateInput.Root>
       <p>
         Bound date: <span class="external-value">{selectedDate.value}</span>

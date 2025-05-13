@@ -18,9 +18,9 @@ export default component$(() => {
       >
         <DateInput.Label>Choose your date:</DateInput.Label>
         <DateInput.DateEntry>
-          <DateInput.Month />
+          <DateInput.Month showLeadingZero />
           <DateInput.Separator separator="/" />
-          <DateInput.Day />
+          <DateInput.Day showLeadingZero />
           <DateInput.Separator separator="/" />
           <DateInput.Year />
         </DateInput.DateEntry>
