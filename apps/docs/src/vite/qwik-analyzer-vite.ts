@@ -20,6 +20,14 @@ import type {
   Program
 } from "@oxc-project/types";
 
+let debugEnabled = false;
+
+function debug(message: string): void {
+  if (debugEnabled) {
+    console.log(`[qwik-ds] ${message}`);
+  }
+}
+
 /**
  * Extracts component/element name from JSX AST nodes.
  * Handles standard elements (<div />), components (<Button />),
@@ -99,7 +107,7 @@ const analysisResults = new Map<string, boolean>();
  * @returns true if Checkbox.Description is found
  */
 async function analyzeImports(filePath: string): Promise<boolean> {
-  console.log(`[qwik-ds ANALYZE] Analyzing imported component: ${filePath}`);
+  debug(`Analyzing imported component: ${filePath}`);
   let foundDescription = false;
   try {
     const rawCode = fs.readFileSync(filePath, "utf-8");
@@ -126,9 +134,9 @@ async function analyzeImports(filePath: string): Promise<boolean> {
     });
 
     if (foundDescription) {
-      console.log(`[qwik-ds ANALYZE] Found Checkbox.Description in ${filePath}`);
+      debug(`Found Checkbox.Description in ${filePath}`);
     } else {
-      console.log(`[qwik-ds ANALYZE] Did NOT find Checkbox.Description in ${filePath}`);
+      debug(`Did NOT find Checkbox.Description in ${filePath}`);
     }
     return foundDescription;
   } catch (error) {
@@ -270,7 +278,9 @@ function resolveImportSources(
   });
 }
 
-export function qwikAnalyzer(): PluginOption {
+export function qwikAnalyzer(options?: { debug?: boolean }): PluginOption {
+  debugEnabled = options?.debug ?? false;
+
   return {
     name: "qwik-analyzer",
     enforce: "pre",
@@ -284,10 +294,7 @@ export function qwikAnalyzer(): PluginOption {
           const rawCode = fs.readFileSync(cleanedId, "utf-8");
           const parseResult = oxc.parseSync(cleanedId, rawCode, { sourceType: "module" });
           if (parseResult.errors && parseResult.errors.length > 0) {
-            console.error(
-              `[qwik-ds LOAD Oxc] Errors parsing ${cleanedId}:`,
-              parseResult.errors
-            );
+            console.error(`[qwik-ds] Errors parsing ${cleanedId}:`, parseResult.errors);
           }
           const ast = parseResult.program;
 
@@ -301,7 +308,7 @@ export function qwikAnalyzer(): PluginOption {
             return null;
           }
 
-          console.log(`[qwik-ds LOAD] Processing route file: ${cleanedId}`);
+          debug(`Processing route file: ${cleanedId}`);
 
           const { foundDirectly: foundDescriptionInRoot, candidateComponents } =
             findComponentWithinParent(ast, "Checkbox.Root", "Checkbox.Description");
@@ -310,9 +317,7 @@ export function qwikAnalyzer(): PluginOption {
 
           let indirectDescriptionFound = false;
           if (candidateComponents.length > 0) {
-            console.log(
-              "[qwik-ds LOAD with Oxc] Analyzing candidate components for indirect Checkbox.Description..."
-            );
+            debug("Analyzing candidate components for indirect Checkbox.Description...");
 
             for (const candidate of candidateComponents) {
               if (candidate.importSource) {
@@ -324,8 +329,8 @@ export function qwikAnalyzer(): PluginOption {
                     indirectDescriptionFound = true;
                   }
                 } else {
-                  console.log(
-                    `[qwik-ds LOAD with Oxc] Could not resolve import source: ${candidate.importSource} for component ${candidate.componentName}`
+                  debug(
+                    `Could not resolve import source: ${candidate.importSource} for component ${candidate.componentName}`
                   );
                 }
               }
@@ -334,31 +339,24 @@ export function qwikAnalyzer(): PluginOption {
 
           const hasDescription = foundDescriptionInRoot || indirectDescriptionFound;
           analysisResults.set(cleanedId, hasDescription);
-          console.log(
-            `[qwik-ds-plugin LOAD with Oxc] Stored analysis for ${cleanedId}: ${hasDescription}`
-          );
+          debug(`Stored analysis for ${cleanedId}: ${hasDescription}`);
+
           if (hasDescription) {
             if (foundDescriptionInRoot) {
-              console.log(
-                "[qwik-ds-plugin LOAD with Oxc] Found Checkbox.Description directly within a Checkbox.Root!"
-              );
+              debug("Found Checkbox.Description directly within a Checkbox.Root!");
             } else {
-              console.log(
-                "[qwik-ds-plugin LOAD with Oxc] Found Checkbox.Description indirectly via an imported component!"
-              );
+              debug("Found Checkbox.Description indirectly via an imported component!");
               for (const c of candidateComponents) {
                 if (c.providesDescription) {
-                  console.log(`  - Via: ${c.componentName} (from ${c.importSource})`);
+                  debug(`  - Via: ${c.componentName} (from ${c.importSource})`);
                 }
               }
             }
           } else {
-            console.log(
-              "[qwik-ds-plugin LOAD with Oxc] Did NOT find Checkbox.Description directly or indirectly."
-            );
+            debug("Did NOT find Checkbox.Description directly or indirectly.");
           }
         } catch (e) {
-          console.error(`[qwik-ds with Oxc] Error reading file ${cleanedId}:`, e);
+          console.error(`[qwik-ds] Error reading file ${cleanedId}:`, e);
         }
       }
       return null;
@@ -373,27 +371,22 @@ export function qwikAnalyzer(): PluginOption {
 
         if (typeof hasDescription !== "boolean") {
           console.warn(
-            `[qwik-ds TRANSFORM with Oxc] No analysis result for ${cleanedId}, skipping transform.`
+            `[qwik-ds] No analysis result for ${cleanedId}, skipping transform.`
           );
           return null;
         }
 
-        console.log(
-          `[qwik-ds TRANSFORM with Oxc] Transforming ${cleanedId}, hasDescription: ${hasDescription}`
-        );
+        debug(`Transforming ${cleanedId}, hasDescription: ${hasDescription}`);
 
         try {
           const parseResult = oxc.parseSync(cleanedId, code, { sourceType: "module" });
           if (parseResult.errors && parseResult.errors.length > 0) {
-            console.error(
-              `[qwik-ds TRANSFORM Oxc] Errors parsing ${cleanedId}:`,
-              parseResult.errors
-            );
+            console.error(`[qwik-ds] Errors parsing ${cleanedId}:`, parseResult.errors);
           }
           const ast = parseResult.program;
           let modified = false;
 
-          console.log(`[qwik-ds TRANSFORM with Oxc] Starting AST walk for ${cleanedId}`);
+          debug(`Starting AST walk for ${cleanedId}`);
 
           walk(ast, {
             enter: (node: Node) => {
@@ -419,9 +412,7 @@ export function qwikAnalyzer(): PluginOption {
                     renderedComponentName === "Checkbox.Root" &&
                     propsArg.type === "ObjectExpression"
                   ) {
-                    console.log(
-                      `[qwik-ds TRANSFORM with Oxc] Found _jsxC call for Checkbox.Root in ${cleanedId}`
-                    );
+                    debug(`Found _jsxC call for Checkbox.Root in ${cleanedId}`);
                     const propsObject = propsArg as ObjectExpression;
 
                     if (!propsObject.properties) {
@@ -459,8 +450,8 @@ export function qwikAnalyzer(): PluginOption {
                           newPropValueLiteral as unknown as Expression;
                         modified = true;
                       }
-                      console.log(
-                        `[qwik-ds TRANSFORM with Oxc] Updated _staticHasDescription to ${hasDescription} in _jsxC props for ${cleanedId}`
+                      debug(
+                        `Updated _staticHasDescription to ${hasDescription} in _jsxC props for ${cleanedId}`
                       );
                     } else {
                       const identifierKey: IdentifierName = {
@@ -484,8 +475,8 @@ export function qwikAnalyzer(): PluginOption {
 
                       propsObject.properties.push(newProperty);
                       modified = true;
-                      console.log(
-                        `[qwik-ds TRANSFORM with Oxc] Added _staticHasDescription={${hasDescription}} to _jsxC props for ${cleanedId}`
+                      debug(
+                        `Added _staticHasDescription={${hasDescription}} to _jsxC props for ${cleanedId}`
                       );
                     }
                   }
@@ -494,28 +485,19 @@ export function qwikAnalyzer(): PluginOption {
             }
           });
 
-          console.log(
-            `[qwik-ds TRANSFORM with Oxc] AST walk finished for ${cleanedId}. Modified: ${modified}`
-          );
+          debug(`AST walk finished for ${cleanedId}. Modified: ${modified}`);
 
           if (modified) {
-            console.log(
-              `[qwik-ds TRANSFORM with Oxc] Attempting to generate code with astring for ${ast}`
-            );
+            debug(`Attempting to generate code with astring for ${ast}`);
             const outputCode = astringGenerate(ast);
-            console.log(
-              `[qwik-ds TRANSFORM with Oxc] Code after transformation: ${outputCode.substring(0, 500)}...`
-            );
+            debug(`Code after transformation: ${outputCode.substring(0, 100)}...`);
             return {
               code: outputCode,
               map: null
             };
           }
         } catch (e) {
-          console.error(
-            `[qwik-ds TRANSFORM with Oxc] Error transforming ${cleanedId}:`,
-            e
-          );
+          console.error(`[qwik-ds] Error transforming ${cleanedId}:`, e);
           return null;
         }
       }

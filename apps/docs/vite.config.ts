@@ -50,7 +50,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
         avif: mainQuality
       }),
       tsconfigPaths(),
-      qwikAnalyzer()
+      qwikAnalyzer({ debug: true })
     ],
     // This tells Vite which dependencies to pre-build in dev mode.
     optimizeDeps: {
