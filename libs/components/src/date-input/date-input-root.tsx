@@ -39,7 +39,7 @@ export type DateInputBoundProps = {
 };
 
 // Regular expression for validating ISO date format (yyyy-mm-dd)
-const regex = /^\d{4}-(0[1-9]|1[0-2])-\d{2}$/;
+const isoDateRegex = /^\d{4}-(0[1-9]|1[0-2])-\d{2}$/;
 
 /** The root Date Input component that manages state and provides context */
 export const DateInputRootBase = component$<PublicDateInputRootProps>((props) => {
@@ -90,7 +90,7 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
     return `${labelStr} ${MONTHS_LG[locale][+month - 1]} ${year}`;
   });
 
-  if (props.date && !regex.test(props.date)) {
+  if (props.date && !isoDateRegex.test(props.date)) {
     throw new Error("Invalid date format. Please use yyyy-mm-dd format.");
   }
 
@@ -103,7 +103,6 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
    * to make sure the segments match the date value.
    */
   const updateSegmentsWithNewDateValue = $((date: ISODate | null) => {
-    console.log("updateSegmentsWithNewDateValue", date);
     if (date !== null) {
       const [year, month, day] = date.split("-");
       if (yearSegmentSig.value.numericValue !== +year) {

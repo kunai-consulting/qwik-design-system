@@ -5,12 +5,13 @@ export const MAX_YEAR = 10000;
 export const MIN_MONTH = 1;
 export const MAX_MONTH = 12;
 export const MIN_DAY = 1;
+export const MAX_DAY = 31;
 export const DEFAULT_DAY_OF_MONTH_SEGMENT: DateSegment = {
   placeholderText: "dd",
   type: "day",
   isPlaceholder: true,
-  min: 1,
-  max: 31,
+  min: MIN_DAY,
+  max: MAX_DAY,
   numericValue: undefined,
   isoValue: undefined
 };
@@ -18,8 +19,8 @@ export const DEFAULT_MONTH_SEGMENT: DateSegment = {
   placeholderText: "mm",
   type: "month",
   isPlaceholder: true,
-  min: 1,
-  max: 12,
+  min: MIN_MONTH,
+  max: MAX_MONTH,
   numericValue: undefined,
   isoValue: undefined
 };

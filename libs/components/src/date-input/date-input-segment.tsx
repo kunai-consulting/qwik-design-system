@@ -15,6 +15,7 @@ import styles from "./date-input-segment.css?inline";
 import type { DateSegment } from "./types";
 import type { PublicDateInputSegmentProps } from "./types";
 import { getLastDayOfMonth, getTwoDigitPaddedValue } from "./utils";
+import { MAX_DAY } from "./constants";
 
 type DateInputSegmentProps = PublicDateInputSegmentProps & {
   segmentSig: Signal<DateSegment>;
@@ -22,6 +23,9 @@ type DateInputSegmentProps = PublicDateInputSegmentProps & {
   maxLength: number;
   placeholder: string;
 };
+
+// Regular expression for validating numeric input
+const numericRegex = /^\d$/;
 
 /** Segment component for the Date Input */
 export const DateInputSegment = component$(
@@ -42,7 +46,6 @@ export const DateInputSegment = component$(
     useStyles$(styles);
 
     useTask$(() => {
-      console.log("Segment index", _index);
       context.segmentRefs.value[index] = inputRef;
     });
 
@@ -117,7 +120,7 @@ export const DateInputSegment = component$(
         // Not enough info, so let the user enter up to 31
         context.dayOfMonthSegmentSig.value = {
           ...currentDayOfMonthSegment,
-          max: 31
+          max: MAX_DAY
         };
       }
     );
@@ -245,7 +248,6 @@ export const DateInputSegment = component$(
     });
 
     const focusNextSegment = $(() => {
-      console.log("Attempting to focus next segment");
       const nextSegment = context.segmentRefs.value[index + 1]?.value;
       if (nextSegment) {
         nextSegment.focus();
@@ -253,7 +255,6 @@ export const DateInputSegment = component$(
     });
 
     const focusPreviousSegment = $(() => {
-      console.log("Attempting to focus previous segment");
       const previousSegment = context.segmentRefs.value[index - 1]?.value;
       if (previousSegment) {
         previousSegment.focus();
@@ -300,7 +301,7 @@ export const DateInputSegment = component$(
       }
 
       // Allow numeric keys only
-      if (!/^\d$/.test(event.key)) {
+      if (!numericRegex.test(event.key)) {
         event.preventDefault();
       }
 

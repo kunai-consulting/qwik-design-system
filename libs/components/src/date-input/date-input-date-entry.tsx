@@ -6,7 +6,7 @@ import { dateInputContextId } from "./date-input-context";
 type PublicDateInputDateEntryProps = PropsOf<"div">;
 
 /** Container for the segments of the Date Input that assists with accessibility
- * by giving a target for the label, and providing a role for screen readers.
+ * by giving a target for the label and providing a role for screen readers.
  */
 export const DateInputDateEntryBase = component$(
   (props: PublicDateInputDateEntryProps) => {

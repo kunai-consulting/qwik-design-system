@@ -12,8 +12,8 @@ export type DateInputContext = {
   dayOfMonthSegmentSig: Signal<DateSegment>;
   monthSegmentSig: Signal<DateSegment>;
   yearSegmentSig: Signal<DateSegment>;
-  errorMessage?: string;
   localId: string;
+  errorMessage?: string;
   name?: string;
   required?: boolean;
   value?: string;
