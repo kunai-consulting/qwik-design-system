@@ -4,7 +4,6 @@ import type {
   ObjectProperty,
   BooleanLiteral,
   IdentifierName,
-  Expression,
   JSXIdentifier,
   JSXMemberExpression,
   MemberExpression
@@ -121,8 +120,7 @@ export function setStaticBooleanProp(
   if (existingPropIndex !== -1) {
     const existingProperty = propsObject.properties[existingPropIndex];
     if (existingProperty.type === "Property") {
-      (existingProperty as ObjectProperty).value =
-        newPropValueLiteral as unknown as Expression;
+      existingProperty.value = newPropValueLiteral;
       return true;
     }
     return false;
@@ -141,7 +139,7 @@ export function setStaticBooleanProp(
     shorthand: false,
     computed: false,
     key: identifierKey,
-    value: newPropValueLiteral as unknown as Expression,
+    value: newPropValueLiteral,
     kind: "init",
     start: 0,
     end: 0
