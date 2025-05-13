@@ -16,7 +16,8 @@ import type {
   CallExpression,
   MemberExpression,
   ImportDeclaration,
-  Expression
+  Expression,
+  Program
 } from "@oxc-project/types";
 
 /**
@@ -136,6 +137,139 @@ async function analyzeImports(filePath: string): Promise<boolean> {
   }
 }
 
+/**
+ * Checks if the AST contains imports from a specific package.
+ *
+ * @param ast Program AST to analyze
+ * @param packageName Name of the package to check for
+ * @returns true if the package is imported
+ */
+function checkImportsFromPackage(ast: Program, packageName: string): boolean {
+  let importsFromPackage = false;
+
+  walk(ast, {
+    enter: (node: Node) => {
+      if (importsFromPackage) return false;
+      if (node.type === "ImportDeclaration") {
+        const importDecl = node as ImportDeclaration;
+        if (importDecl.source.value === packageName) {
+          importsFromPackage = true;
+          return false;
+        }
+      }
+    }
+  });
+
+  return importsFromPackage;
+}
+
+/**
+ * Finds a specific child component within a parent component.
+ * Tracks parent component instances and searches for child components within them.
+ *
+ * @param ast Program AST to analyze
+ * @param parentComponent Name of the parent component to look within
+ * @param childComponent Name of the child component to find
+ * @returns Object with results of the search
+ */
+function findComponentWithinParent(
+  ast: Program,
+  parentComponent: string,
+  childComponent: string
+): {
+  foundDirectly: boolean;
+  candidateComponents: CandidateComponent[];
+} {
+  let foundDirectly = false;
+  const candidateComponents: CandidateComponent[] = [];
+  const parentComponentStack: boolean[] = [];
+
+  walk(ast, {
+    enter: (node: Node) => {
+      if (node.type === "JSXElement") {
+        if (foundDirectly && parentComponentStack.length === 0) return;
+
+        const jsxNode = node as JSXElement;
+        const elementName = getJsxElementName(jsxNode.openingElement.name);
+
+        if (elementName === parentComponent) {
+          parentComponentStack.push(true);
+        } else if (
+          elementName === childComponent &&
+          parentComponentStack.length > 0 &&
+          parentComponentStack[parentComponentStack.length - 1]
+        ) {
+          foundDirectly = true;
+        } else if (
+          parentComponentStack.length > 0 &&
+          parentComponentStack[parentComponentStack.length - 1] &&
+          jsxNode.openingElement.name.type === "JSXIdentifier"
+        ) {
+          if (
+            elementName &&
+            !elementName.startsWith(`${parentComponent.split(".")[0]}.`)
+          ) {
+            candidateComponents.push({
+              componentName: elementName,
+              astNode: jsxNode
+            });
+          }
+        }
+      }
+    },
+    leave: (node: Node) => {
+      if (node.type === "JSXElement") {
+        const jsxNode = node as JSXElement;
+        const elementName = getJsxElementName(jsxNode.openingElement.name);
+        if (elementName === parentComponent) {
+          if (parentComponentStack.length > 0) {
+            parentComponentStack.pop();
+          }
+        }
+      }
+    }
+  });
+
+  return { foundDirectly, candidateComponents };
+}
+
+/**
+ * Resolves import sources for component names.
+ *
+ * @param ast Program AST to analyze
+ * @param candidateComponents List of components to resolve
+ */
+function resolveImportSources(
+  ast: Program,
+  candidateComponents: CandidateComponent[]
+): void {
+  walk(ast, {
+    enter: (node: Node) => {
+      if (node.type === "ImportDeclaration") {
+        const importDecl = node as ImportDeclaration;
+        for (const specifier of importDecl.specifiers || []) {
+          let localName: string | undefined;
+          if (
+            specifier.type === "ImportSpecifier" ||
+            specifier.type === "ImportDefaultSpecifier" ||
+            specifier.type === "ImportNamespaceSpecifier"
+          ) {
+            localName = specifier.local.name;
+          }
+
+          if (localName) {
+            for (const candidate of candidateComponents) {
+              if (candidate.componentName === localName) {
+                candidate.importSource = importDecl.source.value;
+              }
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
 export function qwikAnalyzer(): PluginOption {
   return {
     name: "qwik-analyzer",
@@ -157,104 +291,29 @@ export function qwikAnalyzer(): PluginOption {
           }
           const ast = parseResult.program;
 
-          let importsFromKunaiQwik = false;
-          walk(ast, {
-            enter: (node: Node) => {
-              if (importsFromKunaiQwik) return;
-              if (node.type === "ImportDeclaration") {
-                const importDecl = node as ImportDeclaration;
-                if (importDecl.source.value === "@kunai-consulting/qwik") {
-                  importsFromKunaiQwik = true;
-                }
-              }
-            }
-          });
+          const importsFromPackage = checkImportsFromPackage(
+            ast,
+            "@kunai-consulting/qwik"
+          );
 
-          if (!importsFromKunaiQwik) {
+          if (!importsFromPackage) {
             analysisResults.set(cleanedId, false);
             return null;
           }
 
           console.log(`[qwik-ds LOAD] Processing route file: ${cleanedId}`);
 
-          let foundDescriptionInRoot = false;
-          const candidateComponents: CandidateComponent[] = [];
-          const inCheckboxRootStack: boolean[] = [];
+          const { foundDirectly: foundDescriptionInRoot, candidateComponents } =
+            findComponentWithinParent(ast, "Checkbox.Root", "Checkbox.Description");
 
-          walk(ast, {
-            enter: (node: Node) => {
-              if (node.type === "JSXElement") {
-                if (foundDescriptionInRoot && inCheckboxRootStack.length === 0) return;
-
-                const jsxNode = node as JSXElement;
-                const elementName = getJsxElementName(jsxNode.openingElement.name);
-
-                if (elementName === "Checkbox.Root") {
-                  inCheckboxRootStack.push(true);
-                } else if (
-                  elementName === "Checkbox.Description" &&
-                  inCheckboxRootStack.length > 0 &&
-                  inCheckboxRootStack[inCheckboxRootStack.length - 1]
-                ) {
-                  foundDescriptionInRoot = true;
-                } else if (
-                  inCheckboxRootStack.length > 0 &&
-                  inCheckboxRootStack[inCheckboxRootStack.length - 1] &&
-                  jsxNode.openingElement.name.type === "JSXIdentifier"
-                ) {
-                  if (elementName && !elementName.startsWith("Checkbox.")) {
-                    candidateComponents.push({
-                      componentName: elementName,
-                      astNode: jsxNode
-                    });
-                  }
-                }
-              }
-            },
-            leave: (node: Node) => {
-              if (node.type === "JSXElement") {
-                const jsxNode = node as JSXElement;
-                const elementName = getJsxElementName(jsxNode.openingElement.name);
-                if (elementName === "Checkbox.Root") {
-                  if (inCheckboxRootStack.length > 0) {
-                    inCheckboxRootStack.pop();
-                  }
-                }
-              }
-            }
-          });
+          resolveImportSources(ast, candidateComponents);
 
           let indirectDescriptionFound = false;
           if (candidateComponents.length > 0) {
-            walk(ast, {
-              enter: (node: Node) => {
-                if (node.type === "ImportDeclaration") {
-                  const importDecl = node as ImportDeclaration;
-                  for (const specifier of importDecl.specifiers || []) {
-                    let localName: string | undefined;
-                    if (
-                      specifier.type === "ImportSpecifier" ||
-                      specifier.type === "ImportDefaultSpecifier" ||
-                      specifier.type === "ImportNamespaceSpecifier"
-                    ) {
-                      localName = specifier.local.name;
-                    }
-
-                    if (localName) {
-                      for (const candidate of candidateComponents) {
-                        if (candidate.componentName === localName) {
-                          candidate.importSource = importDecl.source.value;
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            });
-
             console.log(
               "[qwik-ds LOAD with Oxc] Analyzing candidate components for indirect Checkbox.Description..."
             );
+
             for (const candidate of candidateComponents) {
               if (candidate.importSource) {
                 const resolved = await this.resolve(candidate.importSource, cleanedId);
