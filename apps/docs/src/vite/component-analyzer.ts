@@ -3,8 +3,8 @@ import oxc from "oxc-parser";
 import { walk } from "oxc-walker";
 import type { Node, Program, JSXElement, ImportDeclaration } from "@oxc-project/types";
 
-// Import from main file
-import { debug, getJsxElementName, type CandidateComponent } from "./qwik-analyzer-vite";
+import { getJsxElementName } from "./ast-utils";
+import { debug, type CandidateComponent } from "./qwik-analyzer-vite";
 
 /**
  * Checks if the AST contains imports from a specific package.

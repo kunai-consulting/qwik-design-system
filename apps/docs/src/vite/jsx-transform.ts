@@ -6,10 +6,13 @@ import type {
   ObjectExpression,
   Program
 } from "@oxc-project/types";
-import { findPropertyByName, setStaticBooleanProp } from "./ast-utils";
+import {
+  findPropertyByName,
+  setStaticBooleanProp,
+  getStandardElementName
+} from "./ast-utils";
 
-// Import from main file
-import { debug, getStandardElementName } from "./qwik-analyzer-vite";
+import { debug } from "./qwik-analyzer-vite";
 
 /**
  * Processes a _jsxC call for a specific component
