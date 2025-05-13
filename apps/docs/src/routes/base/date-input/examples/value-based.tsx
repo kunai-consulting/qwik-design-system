@@ -17,7 +17,13 @@ export default component$(() => {
         onChange$={handleChange$}
       >
         <DateInput.Label>Choose your date:</DateInput.Label>
-        <DateInput.DateEntry />
+        <DateInput.DateEntry>
+          <DateInput.Month />
+          <DateInput.Separator separator="/" />
+          <DateInput.Day />
+          <DateInput.Separator separator="/" />
+          <DateInput.Year />
+        </DateInput.DateEntry>
       </DateInput.Root>
 
       <p>

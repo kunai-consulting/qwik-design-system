@@ -1,6 +1,9 @@
 import type { DateFormat, ISODate, Separator } from "../calendar/types";
-import { DEFAULT_DAY_OF_MONTH_SEGMENT, DEFAULT_MONTH_SEGMENT, DEFAULT_YEAR_SEGMENT, MAX_YEAR, MIN_YEAR } from "./constants";
-import type { DateSegment } from "./types";
+import {
+  DEFAULT_DAY_OF_MONTH_SEGMENT,
+  DEFAULT_MONTH_SEGMENT,
+  DEFAULT_YEAR_SEGMENT
+} from "./constants";
 
 export const getSeparatorFromFormat = (format?: DateFormat): Separator => {
   if (format?.includes("/")) return "/";
@@ -9,45 +12,13 @@ export const getSeparatorFromFormat = (format?: DateFormat): Separator => {
   return "/";
 };
 
-export const getSegmentsFromFormat = (
-  format: DateFormat,
-  separator: Separator,
-  defaultDate?: ISODate | null
-): DateSegment[] => {
-  const sections = format.split(separator);
-  let segments = sections.map((segment) => {
-    const type = segment.includes("y") ? "year" : segment.includes("d") ? "day" : "month";
-    return {
-      placeholderText: segment,
-      type,
-      isPlaceholder: true,
-      min: type === "year" ? MIN_YEAR : 1,
-      max: type === "year" ? MAX_YEAR : type === "month" ? 12 : 31
-    } as DateSegment;
-  });
-  if (defaultDate) {
-    const [year, month, day] = defaultDate.split("-");
-    segments = segments.map((segment) => {
-      const type = segment.type;
-      return {
-        ...segment,
-        isPlaceholder: false,
-        numericValue: type === "year" ? +year : type === "month" ? +month : +day,
-        displayValue: type === "year" ? year : type === "month" ? month : day,
-        max: type === "day" ? getLastDayOfMonth(+year, +month) : segment.max
-      } as DateSegment;
-    });
-  }
-  return segments;
-};
-
 export const getInitialSegments = (initialDate: ISODate | null) => {
   if (!initialDate) {
     return {
       dayOfMonthSegment: DEFAULT_DAY_OF_MONTH_SEGMENT,
       monthSegment: DEFAULT_MONTH_SEGMENT,
       yearSegment: DEFAULT_YEAR_SEGMENT
-    }
+    };
   }
 
   const [year, month, day] = initialDate.split("-");
@@ -74,8 +45,8 @@ export const getInitialSegments = (initialDate: ISODate | null) => {
       isoValue: year,
       isPlaceholder: false
     }
-  }
-}
+  };
+};
 
 export const getLastDayOfMonth = (year: number, month: number) => {
   // The Date constructor month is 0-indexed, but we can use our 1-based month value along with the 0 day value,

@@ -62,87 +62,7 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
   const yearSegmentSig = useSignal(yearSegment);
 
   // Focus management signals and methods
-  const focusableSegments = useSignal<HTMLInputElement[]>([]);
   const segmentRefs = useSignal<Signal<HTMLInputElement | undefined>[]>([]);
-
-  // Sort segments based on their position in the DOM to ensure consistent tab order
-  const sortFocusableSegmentsByDOMOrder = $(() => {
-    if (focusableSegments.value.length <= 1) return;
-
-    // Sort elements based on their position in the DOM
-    const sortedSegments = [...focusableSegments.value].sort((a, b) => {
-      // Use compareDocumentPosition to determine relative position
-      const position = a.compareDocumentPosition(b);
-
-      // If b follows a in the document
-      if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
-        return -1;
-      }
-      // If b precedes a in the document
-      if (position & Node.DOCUMENT_POSITION_PRECEDING) {
-        return 1;
-      }
-      // Elements are the same or not comparable
-      return 0;
-    });
-
-    focusableSegments.value = sortedSegments;
-    console.log("Sorted segments by DOM order");
-  });
-
-  const registerFocusableSegment$ = $(
-    (element: HTMLInputElement, type: "day" | "month" | "year") => {
-      // Skip if we're on the server
-      if (!isBrowser) return;
-
-      // Check if already registered
-      if (!focusableSegments.value.includes(element)) {
-        // Add to array
-        console.log("Adding element to focusable segments");
-        focusableSegments.value = [...focusableSegments.value, element];
-
-        // Sort the segments to ensure proper navigation order
-        sortFocusableSegmentsByDOMOrder();
-
-        console.log("Current focusable segments:", focusableSegments.value.length);
-      }
-    }
-  );
-
-  const focusNextSegment$ = $((currentElement: HTMLInputElement) => {
-    // Skip if we're on the server
-    if (!isBrowser) return;
-
-    console.log("moveFocusToNextSegment$", currentElement);
-    console.log("Current focusable segments:", focusableSegments.value.length);
-
-    const currentIndex = focusableSegments.value.indexOf(currentElement);
-    console.log("Current index:", currentIndex);
-
-    if (currentIndex >= 0 && currentIndex < focusableSegments.value.length - 1) {
-      const nextElement = focusableSegments.value[currentIndex + 1];
-      console.log("Moving focus to next element", nextElement);
-      nextElement.focus();
-      nextElement.select();
-    }
-  });
-
-  const focusPreviousSegment$ = $((currentElement: HTMLInputElement) => {
-    // Skip if we're on the server
-    if (!isBrowser) return;
-
-    console.log("focusPreviousSegment$", currentElement);
-    console.log("Current focusable segments:", focusableSegments.value.length);
-
-    const currentIndex = focusableSegments.value.indexOf(currentElement);
-    console.log("Current index:", currentIndex);
-
-    if (currentIndex > 0) {
-      const prevElement = focusableSegments.value[currentIndex - 1];
-      console.log("Moving focus to previous element", prevElement);
-      prevElement.focus();
-    }
-  });
 
   // This flag helps maintain two behaviors when the date changes to null.
   // 1. When the date signal changes to null programmatically, we want to clear all segments.
@@ -158,15 +78,8 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
     dayOfMonthSegmentSig,
     monthSegmentSig,
     yearSegmentSig,
-    focusNextSegment$,
-    focusPreviousSegment$,
-    focusableSegments,
-    registerFocusableSegment$,
     isInternalSegmentClearance,
-    segmentRefs,
-    // TODO: remove these deprecated properties
-    orderedSegments: [],
-    activeSegmentIndex: useSignal(-1)
+    segmentRefs
   };
 
   useContextProvider(dateInputContextId, context);
@@ -198,7 +111,7 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
         yearSegmentSig.value = {
           ...yearSegmentSig.value,
           numericValue: +year,
-          displayValue: year,
+          isoValue: year,
           isPlaceholder: false
         };
       }
@@ -206,7 +119,7 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
         monthSegmentSig.value = {
           ...monthSegmentSig.value,
           numericValue: +month,
-          displayValue: month,
+          isoValue: month,
           isPlaceholder: false
         };
       }
@@ -214,7 +127,7 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
         dayOfMonthSegmentSig.value = {
           ...dayOfMonthSegmentSig.value,
           numericValue: +day,
-          displayValue: day,
+          isoValue: day,
           isPlaceholder: false
         };
       }
@@ -223,7 +136,7 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
         yearSegmentSig.value = {
           ...yearSegmentSig.value,
           numericValue: undefined,
-          displayValue: undefined,
+          isoValue: undefined,
           isPlaceholder: true
         };
       }
@@ -231,7 +144,7 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
         monthSegmentSig.value = {
           ...monthSegmentSig.value,
           numericValue: undefined,
-          displayValue: undefined,
+          isoValue: undefined,
           isPlaceholder: true
         };
       }
@@ -239,11 +152,10 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
         dayOfMonthSegmentSig.value = {
           ...dayOfMonthSegmentSig.value,
           numericValue: undefined,
-          displayValue: undefined,
+          isoValue: undefined,
           isPlaceholder: true
         };
       }
-      context.activeSegmentIndex.value = -1;
     }
     context.isInternalSegmentClearance.value = false;
   });
@@ -273,6 +185,6 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
 });
 
 export const DateInputRoot = withAsChild(DateInputRootBase, (props) => {
-  resetIndexes("date-input-segment-type");
+  resetIndexes("date-input-segment");
   return props;
 });

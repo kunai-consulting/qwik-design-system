@@ -4,9 +4,15 @@ import { DateInput } from "@kunai-consulting/qwik";
 
 export default component$(() => {
   return (
-    <DateInput.Root format="yyyy-mm-dd">
+    <DateInput.Root>
       <DateInput.Label>Enter your date of birth:</DateInput.Label>
-      <DateInput.DateEntry />
+      <DateInput.DateEntry>
+        <DateInput.Year />
+        <DateInput.Separator separator="-" />
+        <DateInput.Month showLeadingZero={true} />
+        <DateInput.Separator separator="-" />
+        <DateInput.Day showLeadingZero={true} />
+      </DateInput.DateEntry>
       <DateInput.HiddenInput name="date-of-birth" />
     </DateInput.Root>
   );

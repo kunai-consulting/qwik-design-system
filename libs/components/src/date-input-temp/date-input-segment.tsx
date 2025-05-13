@@ -1,11 +1,17 @@
-import { component$, useContext, useSignal, useTask$, type PropsOf } from "@builder.io/qwik";
+import {
+  component$,
+  useContext,
+  useSignal,
+  useTask$,
+  type PropsOf
+} from "@builder.io/qwik";
 import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import { dateInputContextId } from "./date-input-root";
 
 export type SegmentProps = {
   _index?: number;
-  type: "day" | "month" | "year"
-} & PropsOf<'div'>
+  type: "day" | "month" | "year";
+} & PropsOf<"div">;
 
 export const DateInputSegmentBase = component$((props: SegmentProps) => {
   const segmentRef = useSignal<HTMLInputElement>();
@@ -14,21 +20,29 @@ export const DateInputSegmentBase = component$((props: SegmentProps) => {
 
   useTask$(function registerSegmentRef() {
     context.segmentRefs.value[index] = segmentRef;
-  })
+  });
 
-  return <input maxLength={2} style={{ border: "1px solid red" }} onInput$={(e) => {
-    const length = (e.target as HTMLInputElement).value.length;
-    const nextSegment = context.segmentRefs.value[index + 1]?.value;
+  return (
+    <input
+      maxLength={2}
+      style={{ border: "1px solid red" }}
+      onInput$={(e) => {
+        const length = (e.target as HTMLInputElement).value.length;
+        const nextSegment = context.segmentRefs.value[index + 1]?.value;
 
-    if (length >= 2) {
-      if (!nextSegment) {
-        console.log("at end of array")
-        return;
-      }
+        if (length >= 2) {
+          if (!nextSegment) {
+            console.log("at end of array");
+            return;
+          }
 
-      nextSegment.focus();
-    }
-  }} ref={segmentRef} data-index={props._index} />;
+          nextSegment.focus();
+        }
+      }}
+      ref={segmentRef}
+      data-index={props._index}
+    />
+  );
 });
 
 export function DateInputSegment(props: SegmentProps) {
@@ -36,5 +50,5 @@ export function DateInputSegment(props: SegmentProps) {
 
   props._index = index;
 
-  return <DateInputSegmentBase {...props} />
+  return <DateInputSegmentBase {...props} />;
 }

@@ -12,7 +12,6 @@ export const DEFAULT_DAY_OF_MONTH_SEGMENT: DateSegment = {
   min: 1,
   max: 31,
   numericValue: undefined,
-  displayValue: undefined,
   isoValue: undefined
 };
 export const DEFAULT_MONTH_SEGMENT: DateSegment = {
@@ -22,7 +21,6 @@ export const DEFAULT_MONTH_SEGMENT: DateSegment = {
   min: 1,
   max: 12,
   numericValue: undefined,
-  displayValue: undefined,
   isoValue: undefined
 };
 export const DEFAULT_YEAR_SEGMENT: DateSegment = {
@@ -32,6 +30,5 @@ export const DEFAULT_YEAR_SEGMENT: DateSegment = {
   min: MIN_YEAR,
   max: MAX_YEAR,
   numericValue: undefined,
-  displayValue: undefined,
   isoValue: undefined
 };

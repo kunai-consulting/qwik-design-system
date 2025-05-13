@@ -4,7 +4,6 @@ export type DateSegmentType = "month" | "day" | "year";
 
 export type DateSegment = {
   numericValue?: number;
-  displayValue?: string;
   isoValue?: string;
   placeholderText: string;
   type: DateSegmentType;
@@ -14,6 +13,7 @@ export type DateSegment = {
 };
 
 export type PublicDateInputSegmentProps = PropsOf<"input"> & {
+  _index?: number;
   placeholder?: string;
   showLeadingZero?: boolean;
 };

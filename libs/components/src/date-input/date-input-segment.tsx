@@ -13,32 +13,37 @@ import type { DayOfMonth, Month } from "../calendar/types";
 import { dateInputContextId } from "./date-input-context";
 import styles from "./date-input-segment.css?inline";
 import type { DateSegment } from "./types";
-import { getDisplayValue, getLastDayOfMonth, getTwoDigitPaddedValue } from "./utils";
-import { getNextIndex } from "@kunai-consulting/qwik-utils";
+import { getLastDayOfMonth, getTwoDigitPaddedValue } from "./utils";
 import type { PublicDateInputSegmentProps } from "./types";
 
 type DateInputSegmentProps = PublicDateInputSegmentProps & {
-  _index?: number;
   segmentSig: Signal<DateSegment>;
-  localId: string;
   isEditable: boolean;
   maxLength: number;
+  placeholder: string;
 };
 
 /** Segment component for the Date Input */
-export const DateInputSegmentBase = component$(
-  ({ segmentSig, isEditable, showLeadingZero, maxLength, _index, ...otherProps }: DateInputSegmentProps) => {
+export const DateInputSegment = component$(
+  ({
+    segmentSig,
+    isEditable,
+    showLeadingZero,
+    placeholder,
+    maxLength,
+    _index,
+    ...otherProps
+  }: DateInputSegmentProps) => {
     const context = useContext(dateInputContextId);
     const inputId = `${context.localId}-segment-${segmentSig.value.type}`;
     const index = _index ?? -1;
     const inputRef = useSignal<HTMLInputElement>();
-    
+
     useStyles$(styles);
 
-    useTask$(function registerSegmentRef() {
+    useTask$(() => {
       console.log("Segment index", _index);
-      //console.log("Segment ref", inputRef.value);
-      // context.segmentRefs.value[index] = inputRef;
+      context.segmentRefs.value[index] = inputRef;
     });
 
     const updateActiveDate = $(() => {
@@ -59,21 +64,17 @@ export const DateInputSegmentBase = component$(
       }
     });
 
+    // Initialize the placeholder text based on the props
+    useTask$(function initializePlaceholderText() {
+      segmentSig.value = {
+        ...segmentSig.value,
+        placeholderText: placeholder
+      };
+    });
+
     useTask$(async ({ track }) => {
       track(() => segmentSig.value);
       await updateActiveDate();
-    });
-
-    // The index of the current segment in orderedSegments
-    const segmentIndexSig = useComputed$(() => {
-      return context.orderedSegments.findIndex(
-        (s) => s.value.type === segmentSig.value.type
-      );
-    });
-
-    const segmentLengthSig = useComputed$(() => {
-      const placeholderLength = segmentSig.value.placeholderText.length;
-      return placeholderLength < 2 ? 2 : placeholderLength;
     });
 
     /**
@@ -98,10 +99,7 @@ export const DateInputSegmentBase = component$(
               ...currentDayOfMonthSegment,
               max: lastDayOfMonth,
               numericValue: lastDayOfMonth,
-              displayValue: getDisplayValue(
-                lastDayOfMonth,
-                currentDayOfMonthSegment.placeholderText
-              )
+              isoValue: getTwoDigitPaddedValue(lastDayOfMonth)
             };
             return;
           }
@@ -132,7 +130,7 @@ export const DateInputSegmentBase = component$(
         ...segmentSig.value,
         isPlaceholder: false,
         numericValue: newValue,
-        displayValue: `${newValue}`
+        isoValue: `${newValue}`
       } as DateSegment;
       const month = context.monthSegmentSig.value.numericValue;
       await updateDayOfMonthSegmentForYearAndMonth(newValue, month);
@@ -148,12 +146,12 @@ export const DateInputSegmentBase = component$(
       if (newValue > segment.max) {
         newValue = segment.min;
       }
-      const displayValue = getDisplayValue(newValue, segment.placeholderText);
+      const isoValue = getTwoDigitPaddedValue(newValue);
       segmentSig.value = {
         ...segment,
         isPlaceholder: false,
         numericValue: newValue,
-        displayValue
+        isoValue
       };
       const year = context.yearSegmentSig.value.numericValue;
       await updateDayOfMonthSegmentForYearAndMonth(year, newValue);
@@ -169,12 +167,12 @@ export const DateInputSegmentBase = component$(
       if (newValue > segment.max) {
         newValue = segment.min;
       }
-      const displayValue = getDisplayValue(newValue, segment.placeholderText);
+      const isoValue = getTwoDigitPaddedValue(newValue);
       segmentSig.value = {
         ...segment,
         isPlaceholder: false,
         numericValue: newValue,
-        displayValue
+        isoValue
       };
     });
 
@@ -190,7 +188,6 @@ export const DateInputSegmentBase = component$(
           await incrementDayValue(1);
           break;
       }
-      context.activeSegmentIndex.value = segmentIndexSig.value;
     });
 
     const decrementValue = $(async () => {
@@ -205,7 +202,6 @@ export const DateInputSegmentBase = component$(
           await incrementDayValue(-1);
           break;
       }
-      context.activeSegmentIndex.value = segmentIndexSig.value;
     });
 
     const updateSegmentWithValue = $(async (textValue: string) => {
@@ -221,9 +217,9 @@ export const DateInputSegmentBase = component$(
         ...segment,
         isPlaceholder: false,
         numericValue,
-        displayValue:
+        isoValue:
           segment.type !== "year"
-            ? getDisplayValue(numericValue, segment.placeholderText)
+            ? getTwoDigitPaddedValue(numericValue)
             : `${numericValue}`
       };
 
@@ -244,20 +240,23 @@ export const DateInputSegmentBase = component$(
         ...segment,
         isPlaceholder: true,
         numericValue: undefined,
-        displayValue: undefined
+        isoValue: undefined
       };
-    });    
+    });
 
-    // Watch for activeSegmentIndex changes and focus this segment when it matches
-    useTask$(({ track }) => {
-      const activeIndex = track(() => context.activeSegmentIndex.value);
-      const thisIndex = track(() => segmentIndexSig.value);
+    const focusNextSegment = $(() => {
+      console.log("Attempting to focus next segment");
+      const nextSegment = context.segmentRefs.value[index + 1]?.value;
+      if (nextSegment) {
+        nextSegment.focus();
+      }
+    });
 
-      if (activeIndex === thisIndex && inputRef.value) {
-        if (document.activeElement !== inputRef.value) {
-          inputRef.value?.focus();
-          inputRef.value?.select();
-        }
+    const focusPreviousSegment = $(() => {
+      console.log("Attempting to focus previous segment");
+      const previousSegment = context.segmentRefs.value[index - 1]?.value;
+      if (previousSegment) {
+        previousSegment.focus();
       }
     });
 
@@ -271,6 +270,24 @@ export const DateInputSegmentBase = component$(
       if (event.key === "ArrowDown") {
         await decrementValue();
         return;
+      }
+
+      // Handle left/right arrow keys for navigation between segments
+      if (event.key === "ArrowRight" && inputRef.value) {
+        const input = inputRef.value;
+        // If cursor is at the end, move to next segment
+        if (input.selectionStart === input.value.length) {
+          await focusNextSegment();
+        }
+        return;
+      }
+
+      if (event.key === "ArrowLeft" && inputRef.value) {
+        const input = inputRef.value;
+        // If cursor is at the beginning, move to previous segment
+        if (input.selectionStart === 0) {
+          await focusPreviousSegment();
+        }
       }
     });
 
@@ -287,11 +304,18 @@ export const DateInputSegmentBase = component$(
         event.preventDefault();
       }
 
-      // Make sure we don't allow more than the max digits
-      // const value = (event.target as HTMLInputElement).value; // The value before the keypress
-      // if (value.length === maxLength && value[0] !== "0") {
-      //   event.preventDefault();
-      // }
+      // Special handling for leading zeros
+      const target = event.target as HTMLInputElement;
+      const value = target.value; // The value before the keypress
+      if (value[0] === "0" && value.length === 2) {
+        target.value = value.slice(1);
+        return;
+      }
+      const maxLen = target.maxLength - 1;
+      const hasSelection = target.selectionStart !== target.selectionEnd;
+      if (value.length >= maxLen && !hasSelection) {
+        event.preventDefault();
+      }
     });
 
     // Process input and update our segment and date values accordingly
@@ -317,22 +341,11 @@ export const DateInputSegmentBase = component$(
         const isDayFull =
           segment.type === "day" && (numericContent.length >= 2 || +numericContent >= 4);
         if (isYearFull || isMonthFull || isDayFull) {
-          // Use the context function to move to the next segment
-          console.log("attempting to move to the next segment");
-          const nextSegment = context.segmentRefs.value[index + 1]?.value;
-          if (nextSegment) {
-            nextSegment.focus();
-          }
-          // context.activeSegmentIndex.value = segmentIndexSig.value;
-          // await context.focusNextSegment$();
+          await focusNextSegment();
         }
       } else {
         await updateSegmentToPlaceholder();
       }
-    });
-
-    const onClick$ = $(() => {
-      context.activeSegmentIndex.value = segmentIndexSig.value;
     });
 
     const displayValueSig = useComputed$(() => {
@@ -343,10 +356,7 @@ export const DateInputSegmentBase = component$(
     });
 
     const usePlaceholderWidth = useComputed$(() => {
-      return (
-        segmentSig.value.placeholderText.length >
-        (segmentSig.value.displayValue?.length ?? 0)
-      );
+      return !displayValueSig.value.length;
     });
 
     return (
@@ -363,7 +373,7 @@ export const DateInputSegmentBase = component$(
           >
             {usePlaceholderWidth.value
               ? segmentSig.value.placeholderText
-              : segmentSig.value.displayValue}
+              : displayValueSig.value}
           </span>
 
           <input
@@ -382,14 +392,13 @@ export const DateInputSegmentBase = component$(
               isEditable ? [onKeyDownSync$, onKeyDown$, otherProps.onKeyDown$] : undefined
             }
             onInput$={isEditable ? [onInput$, otherProps.onInput$] : undefined}
-            onClick$={isEditable ? [onClick$, otherProps.onClick$] : undefined}
             stoppropagation:change
             placeholder={segmentSig.value.placeholderText}
             aria-label={`${segmentSig.value.type} input`}
             aria-valuemax={segmentSig.value.max}
             aria-valuemin={segmentSig.value.min}
             aria-valuenow={segmentSig.value.numericValue}
-            disabled={!isEditable}
+            disabled={context.disabledSig.value}
             maxLength={maxLength + 1}
           />
         </div>
@@ -398,13 +407,13 @@ export const DateInputSegmentBase = component$(
   }
 );
 
-export function DateInputSegment(props: DateInputSegmentProps) {
-  const index = getNextIndex(`${props.localId}-segment`);
+// export function DateInputSegment(props: DateInputSegmentProps) {
+//   const index = getNextIndex(`${props.localId}-segment`);
 
-  props._index = index;
+//   props._index = index;
 
-  return <DateInputSegmentBase {...props} />
-}
+//   return <DateInputSegmentBase {...props} />
+// }
 
 // Component -> Generic type
 // type -> union type between "day" | "month" | "year"
@@ -414,7 +423,7 @@ export function DateInputSegment(props: DateInputSegmentProps) {
 //     const index = getNextIndex(`${props.localId}-segment`);
 
 //     props._index = index;
-  
+
 //     return <DateInputSegmentBase {...props} />
 //   }
 
