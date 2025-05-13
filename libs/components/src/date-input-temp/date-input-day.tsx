@@ -1,4 +1,4 @@
-import { component$, Slot } from "@builder.io/qwik";
+import { Slot, component$ } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { DateInputSegmentBase, type SegmentProps } from "./date-input-segment";
 

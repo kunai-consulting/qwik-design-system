@@ -2,15 +2,14 @@ import {
   $,
   type PropsOf,
   type QRL,
+  type Signal,
   Slot,
   component$,
   useComputed$,
   useContextProvider,
   useId,
   useSignal,
-  useTask$,
-  isBrowser,
-  type Signal
+  useTask$
 } from "@builder.io/qwik";
 import {
   type BindableProps,

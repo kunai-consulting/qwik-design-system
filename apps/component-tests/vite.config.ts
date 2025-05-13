@@ -1,3 +1,4 @@
+import { resolve } from "node:path";
 import { qwikCity } from "@builder.io/qwik-city/vite";
 import { qwikVite } from "@builder.io/qwik/optimizer";
 /**
@@ -7,7 +8,6 @@ import { qwikVite } from "@builder.io/qwik/optimizer";
 import { type UserConfig, defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import pkg from "./package.json";
-import { resolve } from "path";
 
 type PkgDep = Record<string, string>;
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>

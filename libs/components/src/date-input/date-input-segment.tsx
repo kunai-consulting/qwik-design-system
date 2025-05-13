@@ -13,8 +13,8 @@ import type { DayOfMonth, Month } from "../calendar/types";
 import { dateInputContextId } from "./date-input-context";
 import styles from "./date-input-segment.css?inline";
 import type { DateSegment } from "./types";
-import { getLastDayOfMonth, getTwoDigitPaddedValue } from "./utils";
 import type { PublicDateInputSegmentProps } from "./types";
+import { getLastDayOfMonth, getTwoDigitPaddedValue } from "./utils";
 
 type DateInputSegmentProps = PublicDateInputSegmentProps & {
   segmentSig: Signal<DateSegment>;

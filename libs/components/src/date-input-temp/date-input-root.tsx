@@ -1,14 +1,14 @@
 import {
-  component$,
-  createContextId,
   type Signal,
   Slot,
+  component$,
+  createContextId,
   useContextProvider,
   useSignal
 } from "@builder.io/qwik";
-import { Render } from "../render/render";
-import { withAsChild } from "../as-child/as-child";
 import { resetIndexes } from "@kunai-consulting/qwik-utils";
+import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
 
 export const dateInputContextId = createContextId<DateInputContext>(
   "date-input-temp-context"

@@ -1,9 +1,9 @@
 import { component$, useContext, useTask$ } from "@builder.io/qwik";
 import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import { dateInputContextId } from "./date-input-context";
-import { getTwoDigitPaddedValue } from "./utils";
 import { DateInputSegment } from "./date-input-segment";
 import type { PublicDateInputSegmentProps } from "./types";
+import { getTwoDigitPaddedValue } from "./utils";
 
 /**
  * Month segment component for the Date Input.

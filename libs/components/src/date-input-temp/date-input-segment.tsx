@@ -1,9 +1,9 @@
 import {
+  type PropsOf,
   component$,
   useContext,
   useSignal,
-  useTask$,
-  type PropsOf
+  useTask$
 } from "@builder.io/qwik";
 import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import { dateInputContextId } from "./date-input-root";
