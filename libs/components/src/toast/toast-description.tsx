@@ -8,15 +8,10 @@ export const ToastDescriptionBase = component$((props: PropsOf<"div">) => {
   const descriptionId = `${context.localId}-description`;
 
   return (
-    <Render
-      id={descriptionId}
-      data-qds-toast-description
-      fallback="div"
-      {...props}
-    >
+    <Render id={descriptionId} data-qds-toast-description fallback="div" {...props}>
       <Slot />
     </Render>
   );
 });
 
-export const ToastDescription = withAsChild(ToastDescriptionBase); 
+export const ToastDescription = withAsChild(ToastDescriptionBase);

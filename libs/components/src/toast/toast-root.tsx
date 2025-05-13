@@ -101,10 +101,10 @@ export const ToastRootBase = component$((props: ToastRootProps) => {
   useTask$(({ track }) => {
     track(() => isPausedSig.value);
     const isOpen = track(() => isOpenSig.value);
-    
+
     // Only process if toast is open
     if (!isOpen) return;
-    
+
     // Only handle if we have a duration
     if (durationSig.value === null) return;
 
@@ -112,7 +112,7 @@ export const ToastRootBase = component$((props: ToastRootProps) => {
     if (isPausedSig.value && timeoutIdSig.value !== undefined) {
       window.clearTimeout(timeoutIdSig.value);
       timeoutIdSig.value = undefined;
-    } 
+    }
     // Create new timeout when unpaused if none exists
     else if (!isPausedSig.value && timeoutIdSig.value === undefined) {
       startTimer$();
@@ -129,13 +129,13 @@ export const ToastRootBase = component$((props: ToastRootProps) => {
       if (!isPausedSig.value) {
         startTimer$();
       }
-    } 
+    }
     // Clear timer when toast closes
     else if (timeoutIdSig.value !== undefined) {
       window.clearTimeout(timeoutIdSig.value);
       timeoutIdSig.value = undefined;
     }
-    
+
     // Fire onChange callback
     onChange$?.(isOpen);
   });
@@ -144,7 +144,7 @@ export const ToastRootBase = component$((props: ToastRootProps) => {
   useTask$(({ track }) => {
     const newDuration = track(() => props.duration);
     durationSig.value = newDuration ?? 5000;
-    
+
     // If toast is open and not paused, restart timer with new duration
     if (isOpenSig.value && !isPausedSig.value) {
       startTimer$();

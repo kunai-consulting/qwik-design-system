@@ -5,7 +5,7 @@ import { toastContextId } from "./toast-context";
 
 export const ToastCloseBase = component$((props: PropsOf<"button">) => {
   const context = useContext(toastContextId);
-  
+
   const handleClick$ = $(() => {
     context.isOpenSig.value = false;
   });
@@ -24,4 +24,4 @@ export const ToastCloseBase = component$((props: PropsOf<"button">) => {
   );
 });
 
-export const ToastClose = withAsChild(ToastCloseBase); 
+export const ToastClose = withAsChild(ToastCloseBase);
