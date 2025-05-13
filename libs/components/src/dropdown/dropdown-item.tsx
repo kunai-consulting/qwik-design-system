@@ -10,7 +10,12 @@ import {
 import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-import { dropdownContextId } from "./dropdown-context";
+import {
+  type DropdownContext,
+  dropdownContextId,
+  type SubmenuState
+} from "./dropdown-context";
+import { submenuContextId } from "./dropdown-submenu-context";
 
 export type PublicDropdownItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
   /** Whether the dropdown item is disabled */
@@ -21,29 +26,87 @@ export type PublicDropdownItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
   onSelect$?: (value: string | undefined) => void;
   /** Whether to close the dropdown when the item is selected (default: true) */
   closeOnSelect?: boolean;
+  /** The ID of the submenu content */
+  _submenuContentId?: string;
+  /** The level of the item */
+  _level?: number;
+  /** The index of the item */
   _index?: number;
 };
 
 /** Interactive item within a dropdown menu */
 export const DropdownItemBase = component$<PublicDropdownItemProps>(
-  ({ disabled, value, onSelect$, closeOnSelect = true, _index, ...props }) => {
+  ({
+    disabled,
+    value,
+    onSelect$,
+    closeOnSelect = true,
+    _index,
+    _submenuContentId,
+    ...props
+  }) => {
     const context = useContext(dropdownContextId);
     const itemRef = useSignal<HTMLElement>();
     const isHoveredSig = useSignal(false);
     const isFocusedSig = useSignal(false);
+    const submenuContext = useContext(submenuContextId, null);
+    const currentSubmenu = useSignal<SubmenuState | undefined>(undefined);
 
-    useTask$(function manageItemRef({ track }) {
+    const focusFirstItem = $((enabledItems: HTMLElement[]) => {
+      setTimeout(async () => {
+        if (enabledItems.length > 0) {
+          enabledItems[0].focus();
+        }
+      }, 50);
+    });
+
+    const getSubmenuStateByContentId = $((contentId: string) => {
+      return context.submenus.value.find((submenu) => submenu.contentId === contentId);
+    });
+
+    const getParent = $((parentId: string | undefined) => {
+      let parent: SubmenuState | DropdownContext;
+
+      if (parentId === context.contentId || !parentId) {
+        parent = context;
+      } else {
+        parent = context.submenus.value.find(
+          (submenu) => submenu.contentId === parentId
+        ) as SubmenuState;
+      }
+
+      return parent;
+    });
+
+    useTask$(async function manageSubmenu() {
+      if (submenuContext) {
+        currentSubmenu.value = await getSubmenuStateByContentId(submenuContext.contentId);
+      }
+    });
+
+    useTask$(async function manageItemRef({ track }) {
       track(() => _index);
       track(() => itemRef.value);
+      track(() => currentSubmenu.value);
 
       if (typeof _index !== "number") {
         console.error("DropdownItem received invalid index:", _index);
         return;
       }
 
+      let refs = context.itemRefs;
+
+      if (_submenuContentId) {
+        console.log(_submenuContentId);
+        const parent = await getParent(currentSubmenu.value?.parentId);
+        refs = parent.itemRefs;
+      } else if (currentSubmenu.value) {
+        refs = currentSubmenu.value.itemRefs;
+      }
+
       if (itemRef.value) {
         // Create a new array instead of mutating the existing one
-        const newItemRefs = [...context.itemRefs.value];
+        const newItemRefs = [...refs.value];
 
         // Ensure array is large enough
         while (newItemRefs.length <= _index) {
@@ -54,12 +117,17 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
         newItemRefs[_index] = { ref: itemRef };
 
         // Replace the entire array in the signal
-        context.itemRefs.value = newItemRefs;
+        refs.value = newItemRefs;
       }
     });
 
-    const handleSelect = $(() => {
+    const handleSelect = $(async () => {
       if (disabled) return;
+      if (_submenuContentId && currentSubmenu.value) {
+        currentSubmenu.value.isOpenSig.value = true;
+        focusFirstItem(await currentSubmenu.value.getEnabledItems());
+        return;
+      }
       onSelect$?.(value);
       if (closeOnSelect) {
         context.isOpenSig.value = false;
@@ -69,7 +137,7 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
     const handleKeyDown = $(async (event: KeyboardEvent) => {
       if (disabled) return;
       const { key } = event;
-      if (key === "Enter" || key === " ") {
+      if (key === "Enter" || key === " " || (_submenuContentId && key === "ArrowRight")) {
         await handleSelect();
         return;
       }
@@ -77,7 +145,19 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
         return;
       }
       // Get elements from refs, filter out disabled ones
-      const enabledItems = await context.getEnabledItems();
+      let enabledItems: HTMLElement[] = await context.getEnabledItems();
+
+      // If we're in a submenu context and this is a trigger item, get the enabled items from the parent submenu
+      if (_submenuContentId) {
+        const parent = await getParent(currentSubmenu.value?.parentId);
+        enabledItems = await parent.getEnabledItems();
+      } else if (currentSubmenu.value) {
+        // If we're in a submenu context and this is NOT a trigger item, get the enabled items from the current submenu
+        enabledItems = await currentSubmenu.value.getEnabledItems();
+      }
+
+      console.log("enabledItems", enabledItems);
+
       if (enabledItems.length === 0) return;
 
       let nextIndex: number;

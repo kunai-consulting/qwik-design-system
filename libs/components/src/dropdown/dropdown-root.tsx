@@ -18,7 +18,11 @@ import {
 } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";
-import { type DropdownContext, dropdownContextId } from "./dropdown-context";
+import {
+  type DropdownContext,
+  type SubmenuState,
+  dropdownContextId
+} from "./dropdown-context";
 
 type DropdownRootBaseProps = PropsOf<typeof PopoverRootBase>;
 
@@ -41,11 +45,22 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
   const { openSig: isOpenSig } = useBindings(props, {
     open: false
   });
+  const submenus = useSignal<SubmenuState[]>([]);
+
+  const closeAllSubmenus = $(() => {
+    for (const submenu of submenus.value) {
+      submenu.isOpenSig.value = false;
+    }
+  });
 
   const isInitialRenderSig = useSignal(true);
 
   useTask$(async ({ track, cleanup }) => {
     const isOpen = track(() => isOpenSig.value);
+
+    if (!isOpen) {
+      closeAllSubmenus();
+    }
 
     if (!isInitialRenderSig.value && props.onOpenChange$) {
       await props.onOpenChange$(isOpen);
@@ -65,7 +80,7 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
 
       if (!isWithinDropdown) return;
 
-      const preventKeys = ["ArrowUp", "ArrowDown", " ", "Home", "End"];
+      const preventKeys = ["ArrowUp", "ArrowDown", " ", "Home", "End", "ArrowRight"];
       if (preventKeys.includes(event.key)) {
         event.preventDefault();
       }
@@ -73,7 +88,6 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
   );
 
   const id = useId();
-
   const contentId = `${id}-content`;
   const triggerId = `${id}-trigger`;
   const itemRefs = useSignal<ItemRef[]>([]);
@@ -81,10 +95,11 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
   const getEnabledItems = $(() =>
     itemRefs.value
       .map((itemRefObj) => itemRefObj.ref.value)
-      .filter(
-        (el): el is HTMLElement =>
-          !!el && !el.hasAttribute("data-disabled") && !el.hasAttribute("disabled")
-      )
+      .filter((el): el is HTMLElement => {
+        if (!el) return false;
+        if (el.hasAttribute("data-disabled") || el.hasAttribute("disabled")) return false;
+        return true;
+      })
   );
 
   const context: DropdownContext = {
@@ -92,7 +107,9 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
     contentId,
     triggerId,
     itemRefs,
-    getEnabledItems
+    getEnabledItems,
+    submenus,
+    closeAllSubmenus
   };
 
   useContextProvider(dropdownContextId, context);
@@ -100,7 +117,6 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
   const { open: _o, "bind:open": _bo, ...rest } = props;
 
   return (
-    // The identifier for the root dropdown container
     <PopoverRootBase bind:open={isOpenSig} data-qds-dropdown-root {...rest}>
       <Slot />
     </PopoverRootBase>

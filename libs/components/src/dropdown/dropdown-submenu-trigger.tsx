@@ -1,0 +1,42 @@
+import { Slot, component$, useContext } from "@builder.io/qwik";
+import { withAsChild } from "../as-child/as-child";
+import { dropdownContextId } from "./dropdown-context";
+import { submenuContextId } from "./dropdown-submenu-context";
+import { DropdownItem, type PublicDropdownItemProps } from "./dropdown-item";
+
+/** Props for the submenu trigger component */
+export type PublicDropdownSubmenuTriggerProps = Omit<
+  PublicDropdownItemProps,
+  "_index" | "closeOnSelect" | "value" | "_submenuContentId"
+>;
+
+/** A component that renders the submenu trigger */
+export const DropdownSubmenuTriggerBase = component$<PublicDropdownSubmenuTriggerProps>(
+  (props) => {
+    const context = useContext(dropdownContextId);
+    const ids = useContext(submenuContextId);
+
+    // Find the submenu state for this trigger
+    const submenu = context.submenus.value.find(
+      (submenu) => submenu.triggerId === ids.triggerId
+    );
+
+    if (!submenu) {
+      console.warn("Submenu trigger not found in context");
+      return null;
+    }
+
+    return (
+      <DropdownItem
+        closeOnSelect={false}
+        _submenuContentId={ids.contentId}
+        data-qds-dropdown-submenu-trigger
+        {...props}
+      >
+        <Slot />
+      </DropdownItem>
+    );
+  }
+);
+
+export const DropdownSubmenuTrigger = withAsChild(DropdownSubmenuTriggerBase);
