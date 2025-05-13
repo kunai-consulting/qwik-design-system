@@ -57,6 +57,11 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   });
 
   const handleKeyNavigation$ = $((e: KeyboardEvent) => {
+    // ensure the tree can be exited
+    if (e.key === "Tab") {
+      return;
+    }
+
     e.stopPropagation();
     e.preventDefault();
 
@@ -141,10 +146,16 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   return (
     <CollapsibleRootBase
       {...props}
+      id={id}
       ref={itemRef}
-      role="treeitem"
+      role="row"
       bind:open={isOpenSig}
-      tabIndex={0}
+      tabIndex={
+        context.currentFocusEl.value === itemRef.value ||
+        context.currentFocusEl.value === null
+          ? 0
+          : -1
+      }
       onFocus$={[handleFocus$, props.onFocus$]}
       onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
       data-qds-tree-item
@@ -153,7 +164,10 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       data-highlighted={isHighlightedSig.value}
       data-group
     >
-      <Slot />
+      {/* NOTE: This span is required for the aria tree grid pattern, we give it display contents so that it does not break composition */}
+      <div role="gridcell" style={{ display: "contents" }} tabIndex={-1}>
+        <Slot />
+      </div>
     </CollapsibleRootBase>
   );
 });
