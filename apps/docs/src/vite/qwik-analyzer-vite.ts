@@ -318,6 +318,177 @@ async function findIndirectComponents(
   return indirectComponentFound;
 }
 
+/**
+ * Finds a property in an object expression by name
+ *
+ * @param propsObject Object expression to search
+ * @param propName Name of the property to find
+ * @returns Index of the property or -1 if not found
+ */
+function findPropertyByName(propsObject: ObjectExpression, propName: string): number {
+  if (!propsObject.properties) {
+    return -1;
+  }
+
+  for (let i = 0; i < propsObject.properties.length; i++) {
+    const prop = propsObject.properties[i];
+    if (prop.type === "Property") {
+      const objectProp = prop as ObjectProperty;
+      const key = objectProp.key;
+      if (key.type === "Identifier" && (key as IdentifierName).name === propName) {
+        return i;
+      }
+    }
+  }
+
+  return -1;
+}
+
+/**
+ * Creates or updates a static boolean property in an object expression
+ *
+ * @param propsObject Object expression to modify
+ * @param propName Name of the property to set
+ * @param value Boolean value to set
+ * @returns Whether the object was modified
+ */
+function setStaticBooleanProp(
+  propsObject: ObjectExpression,
+  propName: string,
+  value: boolean
+): boolean {
+  if (!propsObject.properties) {
+    propsObject.properties = [];
+  }
+
+  const existingPropIndex = findPropertyByName(propsObject, propName);
+
+  const newPropValueLiteral: BooleanLiteral = {
+    type: "Literal",
+    value: value,
+    raw: value ? "true" : "false",
+    start: 0,
+    end: 0
+  };
+
+  if (existingPropIndex !== -1) {
+    const existingProperty = propsObject.properties[existingPropIndex];
+    if (existingProperty.type === "Property") {
+      (existingProperty as ObjectProperty).value =
+        newPropValueLiteral as unknown as Expression;
+      return true;
+    }
+    return false;
+  }
+
+  const identifierKey: IdentifierName = {
+    type: "Identifier",
+    name: propName,
+    start: 0,
+    end: 0
+  };
+
+  const newProperty: ObjectProperty = {
+    type: "Property",
+    method: false,
+    shorthand: false,
+    computed: false,
+    key: identifierKey,
+    value: newPropValueLiteral as unknown as Expression,
+    kind: "init",
+    start: 0,
+    end: 0
+  };
+
+  propsObject.properties.push(newProperty);
+  return true;
+}
+
+/**
+ * Processes a _jsxC call for a specific component
+ *
+ * @param callNode Call expression node
+ * @param componentName Target component name to look for
+ * @param staticProps Object with static props to set
+ * @param filePath File path for debugging
+ * @returns Whether the node was modified
+ */
+function processJSXTransformCall(
+  callNode: CallExpression,
+  componentName: string,
+  staticProps: { [key: string]: boolean },
+  filePath: string
+): boolean {
+  let modified = false;
+
+  let calleeName: string | null = null;
+  if (callNode.callee.type === "Identifier") {
+    calleeName = (callNode.callee as IdentifierName).name;
+  }
+
+  if (calleeName === "_jsxC" && callNode.arguments && callNode.arguments.length >= 2) {
+    const componentArg = callNode.arguments[0];
+    const propsArg = callNode.arguments[1];
+    const renderedComponentName = getStandardElementName(componentArg as Node);
+
+    if (renderedComponentName === componentName && propsArg.type === "ObjectExpression") {
+      debug(`Found _jsxC call for ${componentName} in ${filePath}`);
+      const propsObject = propsArg as ObjectExpression;
+
+      for (const [propName, value] of Object.entries(staticProps)) {
+        const propModified = setStaticBooleanProp(propsObject, propName, value);
+        if (propModified) {
+          modified = true;
+          const action =
+            findPropertyByName(propsObject, propName) !== -1 ? "Updated" : "Added";
+          debug(`${action} ${propName} to ${value} in _jsxC props for ${filePath}`);
+        }
+      }
+    }
+  }
+
+  return modified;
+}
+
+/**
+ * Updates static properties in _jsxC calls for components
+ *
+ * @param ast The AST to transform
+ * @param hasDescription Whether the component has description
+ * @param filePath File path for debugging
+ * @returns Whether the AST was modified
+ */
+function updateStaticProps(
+  ast: Program,
+  hasDescription: boolean,
+  filePath: string
+): boolean {
+  let modified = false;
+
+  debug(`Starting AST walk for ${filePath}`);
+
+  walk(ast, {
+    enter: (node: Node) => {
+      if (node.type === "CallExpression") {
+        const nodeModified = processJSXTransformCall(
+          node as CallExpression,
+          "Checkbox.Root",
+          { _staticHasDescription: hasDescription },
+          filePath
+        );
+
+        if (nodeModified) {
+          modified = true;
+        }
+      }
+    }
+  });
+
+  debug(`AST walk finished for ${filePath}. Modified: ${modified}`);
+
+  return modified;
+}
+
 export function qwikAnalyzer(options?: { debug?: boolean }): PluginOption {
   isDebugMode = options?.debug ?? false;
 
@@ -411,110 +582,10 @@ export function qwikAnalyzer(options?: { debug?: boolean }): PluginOption {
             console.error(`[qwik-ds] Errors parsing ${cleanedId}:`, parseResult.errors);
           }
           const ast = parseResult.program;
-          let modified = false;
 
-          debug(`Starting AST walk for ${cleanedId}`);
+          const isFileModified = updateStaticProps(ast, hasDescription, cleanedId);
 
-          walk(ast, {
-            enter: (node: Node) => {
-              if (node.type === "CallExpression") {
-                const callNode = node as CallExpression;
-                let calleeName: string | null = null;
-                if (callNode.callee.type === "Identifier") {
-                  calleeName = (callNode.callee as IdentifierName).name;
-                }
-
-                if (
-                  calleeName === "_jsxC" &&
-                  callNode.arguments &&
-                  callNode.arguments.length >= 2
-                ) {
-                  const componentArg = callNode.arguments[0];
-                  const propsArg = callNode.arguments[1];
-                  const renderedComponentName = getStandardElementName(
-                    componentArg as Node
-                  );
-
-                  if (
-                    renderedComponentName === "Checkbox.Root" &&
-                    propsArg.type === "ObjectExpression"
-                  ) {
-                    debug(`Found _jsxC call for Checkbox.Root in ${cleanedId}`);
-                    const propsObject = propsArg as ObjectExpression;
-
-                    if (!propsObject.properties) {
-                      propsObject.properties = [];
-                    }
-
-                    let existingPropIndex = -1;
-                    for (let i = 0; i < propsObject.properties.length; i++) {
-                      const prop = propsObject.properties[i];
-                      if (prop.type === "Property") {
-                        const objectProp = prop as ObjectProperty;
-                        const key = objectProp.key;
-                        if (
-                          key.type === "Identifier" &&
-                          (key as IdentifierName).name === "_staticHasDescription"
-                        ) {
-                          existingPropIndex = i;
-                          break;
-                        }
-                      }
-                    }
-
-                    const newPropValueLiteral: BooleanLiteral = {
-                      type: "Literal",
-                      value: hasDescription,
-                      raw: hasDescription ? "true" : "false",
-                      start: 0,
-                      end: 0
-                    };
-
-                    if (existingPropIndex !== -1) {
-                      const existingProperty = propsObject.properties[existingPropIndex];
-                      if (existingProperty.type === "Property") {
-                        (existingProperty as ObjectProperty).value =
-                          newPropValueLiteral as unknown as Expression;
-                        modified = true;
-                      }
-                      debug(
-                        `Updated _staticHasDescription to ${hasDescription} in _jsxC props for ${cleanedId}`
-                      );
-                    } else {
-                      const identifierKey: IdentifierName = {
-                        type: "Identifier",
-                        name: "_staticHasDescription",
-                        start: 0,
-                        end: 0
-                      };
-
-                      const newProperty: ObjectProperty = {
-                        type: "Property",
-                        method: false,
-                        shorthand: false,
-                        computed: false,
-                        key: identifierKey,
-                        value: newPropValueLiteral as unknown as Expression,
-                        kind: "init",
-                        start: 0,
-                        end: 0
-                      };
-
-                      propsObject.properties.push(newProperty);
-                      modified = true;
-                      debug(
-                        `Added _staticHasDescription={${hasDescription}} to _jsxC props for ${cleanedId}`
-                      );
-                    }
-                  }
-                }
-              }
-            }
-          });
-
-          debug(`AST walk finished for ${cleanedId}. Modified: ${modified}`);
-
-          if (modified) {
+          if (isFileModified) {
             debug(`Attempting to generate code with astring for ${ast}`);
             const outputCode = astringGenerate(ast);
             debug(`Code after transformation: ${outputCode.substring(0, 100)}...`);
