@@ -1,5 +1,12 @@
 # @kunai-consulting/qwik-headless
 
+## 0.0.12
+
+### Patch Changes
+
+- 5a9d42c: feat: correctly exit the tree compoenent on focus management
+- ce67467: fix: tree accessibility
+
 ## 0.0.11
 
 ### Patch Changes
