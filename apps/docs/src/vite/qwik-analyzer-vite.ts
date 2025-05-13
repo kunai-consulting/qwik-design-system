@@ -19,6 +19,14 @@ import type {
   Expression
 } from "@oxc-project/types";
 
+/**
+ * Extracts component/element name from JSX AST nodes.
+ * Handles standard elements (<div />), components (<Button />),
+ * and namespaced components (<Checkbox.Description />).
+ *
+ * @param nameNode JSX name node
+ * @returns Component name string or null
+ */
 function getJsxElementName(
   nameNode: JSXIdentifier | JSXMemberExpression | Node | null | undefined
 ): string | null {
@@ -26,10 +34,10 @@ function getJsxElementName(
     return null;
   }
   if (nameNode.type === "JSXIdentifier") {
-    return (nameNode as JSXIdentifier).name;
+    return nameNode.name;
   }
   if (nameNode.type === "JSXMemberExpression") {
-    const jsxMemberNode = nameNode as JSXMemberExpression;
+    const jsxMemberNode = nameNode;
     const objectName = getJsxElementName(jsxMemberNode.object);
     const propertyName = jsxMemberNode.property.name;
     return objectName && propertyName ? `${objectName}.${propertyName}` : null;
@@ -37,12 +45,19 @@ function getJsxElementName(
   return null;
 }
 
+/**
+ * Extracts component name from standard JS AST nodes (non-JSX).
+ * Handles identifiers and member expressions in compiled code.
+ *
+ * @param node AST node
+ * @returns Component name string or null
+ */
 function getStandardElementName(node: Node | null | undefined): string | null {
   if (!node) {
     return null;
   }
   if (node.type === "Identifier") {
-    return (node as IdentifierName).name;
+    return node.name;
   }
   if (node.type === "MemberExpression") {
     const memberNode = node as MemberExpression;
