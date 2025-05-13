@@ -91,7 +91,13 @@ interface CandidateComponent {
 
 const analysisResults = new Map<string, boolean>();
 
-async function analyzeImports(filePath: string, _: unknown): Promise<boolean> {
+/**
+ * Scans a component file to check if it contains Checkbox.Description.
+ *
+ * @param filePath File to analyze
+ * @returns true if Checkbox.Description is found
+ */
+async function analyzeImports(filePath: string): Promise<boolean> {
   console.log(`[qwik-ds ANALYZE] Analyzing imported component: ${filePath}`);
   let foundDescription = false;
   try {
@@ -254,7 +260,7 @@ export function qwikAnalyzer(): PluginOption {
                 const resolved = await this.resolve(candidate.importSource, cleanedId);
                 if (resolved?.id) {
                   candidate.resolvedPath = resolved.id;
-                  candidate.providesDescription = await analyzeImports(resolved.id, this);
+                  candidate.providesDescription = await analyzeImports(resolved.id);
                   if (candidate.providesDescription) {
                     indirectDescriptionFound = true;
                   }
