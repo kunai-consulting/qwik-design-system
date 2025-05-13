@@ -13,6 +13,6 @@ export * as Resizable from "./resizable";
 export * as Tree from "./tree";
 export * as Switch from "./switch";
 export * as Toggle from "./toggle";
-export * as Toaster from "./toast";
+export * as Toast from "./toast";
 export { Render } from "./render/render";
 export { withAsChild } from "./as-child/as-child";

@@ -2,9 +2,7 @@
 The toast component will leverage our [popover component](https://qwik.design/base/popover/) and build on top of it.
 
 ## Resources
-- [Toast API Example](https://www.agnosui.dev/latest/api/react/headless/components/toast)
 - [Ark Toast Example](https://ark-ui.com/docs/components/toast)
-- [Base-ui Toast & Toaster](https://base-ui.com/react/components/toast)
 - [Toaster Example and Usage inspiration](https://kobalte.dev/docs/core/components/toast)
 - [Toaster Accessibility Example](https://www.radix-ui.com/primitives/docs/components/toast#accessibility)
 - [Toaster toaster example](https://next.melt-ui.com/components/toaster)
@@ -14,12 +12,10 @@ The toast component will leverage our [popover component](https://qwik.design/ba
 - [ ] `Pause on hover/focus` - Stop timer when user interacts
 
 ## Component Structure
-- `Toaster.Root` 
-- `Toaster.Trigger`
-- `Toaster.Item`
-- `Toaster.ItemTitle`
-- `Toaster.ItemDescription`
-- `Toaster.ItemClose`
+- `Toast.Root` 
+- `Toast.Title`
+- `Toast.Description`
+- `Toast.Close`
 
 ## Keyboard Interactions
 - `Escape` - Dismiss the currently focused toast
@@ -27,8 +23,6 @@ The toast component will leverage our [popover component](https://qwik.design/ba
 - `Enter/Space` - Activate buttons (close, action buttons)
 
 ## Attributes
-- role="status" for non-critical toasts (informational), applies an implicit aria-live='polite'
-- role="alert" for critical notifications (errors, warnings), applies an implicit aria-live='assertive'
 - [data-state] "open" or "close" to describe the visual state of the component.
 
 ## Use Cases
@@ -40,33 +34,7 @@ The toast component will leverage our [popover component](https://qwik.design/ba
 
 
 ## API Design
-```
-Toaster.Root:
-- defaultDuration -> Default duration (in ms) before toasts auto-dismiss
-- pauseOnHover -> Whether to pause dismiss timer on hover
 
-Toaster.Trigger:
-- id -> Unique identifier for the target toast item
-- type -> Toast type ('success', 'error', 'info', 'warning')
-- action -> Action to perform ('show', 'hide', 'toggle')
-
-Toaster.Item
-- id -> Unique identifier for the toast
-- type -> Toast type ('success', 'error', 'info', 'warning')
-- duration -> Time (in ms) before auto-dismissal (overrides Root default)
-- dismissible -> Whether the toast can be dismissed manually
-- onDismiss$ -> QRL function called when toast is dismissed
-
-Toaster.ItemTitle
-- id -> Optional ID for ARIA relationships
-
-Toaster.ItemDescription
-- id -> Optional ID for ARIA relationships
-
-Toaster.ItemClose
-- onClick$ -> QRL function called when close button is clicked
-- label -> Accessibility label for close button (default: "Close")
-```
 ## Known Issues
 
 ## Questions

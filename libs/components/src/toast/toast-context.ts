@@ -1,23 +1,20 @@
 import { type Signal, createContextId } from "@builder.io/qwik";
 
-export type Toast = {
-  id: string;
-  title?: string;
-  description?: string;
-  duration?: number;
-  dismissible?: boolean;
-};
-
-export type ToastQueue = Toast[];
-
 export type ToastContext = {
+  /**
+   * Unique ID for the toast component
+   */
   localId: string;
-  toastQueue: Signal<ToastQueue>;
-  currentToast: Signal<Toast | null>;
-  duration: Signal<number>;
-  pauseOnHover: Signal<boolean>;
-  show$: (toast: Omit<Toast, "id">) => void;
-  hide$: () => void;
+
+  /**
+   * Signal that tracks if the toast is open
+   */
+  isOpenSig: Signal<boolean>;
+
+  /**
+   * Signal that tracks the total duration for auto-dismissal
+   */
+  durationSig: Signal<number | null>;
 };
 
 export const toastContextId = createContextId<ToastContext>("qds-toast");

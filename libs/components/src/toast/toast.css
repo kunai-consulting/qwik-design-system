@@ -1,0 +1,6 @@
+@layer qds {
+  [data-qds-toast-root] {
+    position: fixed;
+    z-index: 1000;
+  }
+} 

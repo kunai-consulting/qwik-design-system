@@ -28,7 +28,6 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
             { id: "/base/radio-group", label: "Radio Group" },
             { id: "/base/slider", label: "Slider" },
             { id: "/base/switch", label: "Switch" },
-            { id: "/base/toaster", label: "Toaster" }
           ]
         },
         {
@@ -38,7 +37,8 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
             { id: "/base/resizable", label: "Resizable" },
             { id: "/base/scroll-area", label: "Scroll Area" },
             { id: "/base/tree", label: "Tree" },
-            { id: "/base/popover", label: "Popover" }
+            { id: "/base/popover", label: "Popover" },
+            { id: "/base/toast", label: "Toast" }
           ]
         },
         {
