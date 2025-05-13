@@ -21,8 +21,6 @@ export type SubmenuState = {
   getEnabledItems: QRL<() => HTMLElement[]>;
   /** The parent submenu */
   parentId: string;
-  /** The level of the submenu */
-  level: number;
 };
 
 export type DropdownContext = {
