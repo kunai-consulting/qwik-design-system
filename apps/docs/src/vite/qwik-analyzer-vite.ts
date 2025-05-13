@@ -278,6 +278,46 @@ function resolveImportSources(
   });
 }
 
+/**
+ * Finds components that indirectly include a target component through imports.
+ *
+ * @param candidateComponents Components to check for imported target components
+ * @param importer Path of the importing file (needed for resolution)
+ * @param pluginContext Vite plugin context with resolve method
+ * @param targetComponent Name of the component we're looking for in imports
+ * @returns True if any indirect component was found
+ */
+async function findIndirectComponents(
+  candidateComponents: CandidateComponent[],
+  importer: string,
+  pluginContext: {
+    resolve: (id: string, importer: string) => Promise<{ id: string } | null>;
+  }
+): Promise<boolean> {
+  let indirectComponentFound = false;
+
+  debug("Analyzing candidate components for indirect Checkbox.Description...");
+
+  for (const candidate of candidateComponents) {
+    if (candidate.importSource) {
+      const resolved = await pluginContext.resolve(candidate.importSource, importer);
+      if (resolved?.id) {
+        candidate.resolvedPath = resolved.id;
+        candidate.providesDescription = await analyzeImports(resolved.id);
+        if (candidate.providesDescription) {
+          indirectComponentFound = true;
+        }
+      } else {
+        debug(
+          `Could not resolve import source: ${candidate.importSource} for component ${candidate.componentName}`
+        );
+      }
+    }
+  }
+
+  return indirectComponentFound;
+}
+
 export function qwikAnalyzer(options?: { debug?: boolean }): PluginOption {
   isDebugMode = options?.debug ?? false;
 
@@ -317,24 +357,11 @@ export function qwikAnalyzer(options?: { debug?: boolean }): PluginOption {
 
           let indirectDescriptionFound = false;
           if (candidateComponents.length > 0) {
-            debug("Analyzing candidate components for indirect Checkbox.Description...");
-
-            for (const candidate of candidateComponents) {
-              if (candidate.importSource) {
-                const resolved = await this.resolve(candidate.importSource, cleanedId);
-                if (resolved?.id) {
-                  candidate.resolvedPath = resolved.id;
-                  candidate.providesDescription = await analyzeImports(resolved.id);
-                  if (candidate.providesDescription) {
-                    indirectDescriptionFound = true;
-                  }
-                } else {
-                  debug(
-                    `Could not resolve import source: ${candidate.importSource} for component ${candidate.componentName}`
-                  );
-                }
-              }
-            }
+            indirectDescriptionFound = await findIndirectComponents(
+              candidateComponents,
+              cleanedId,
+              this
+            );
           }
 
           const hasDescription = foundDescriptionInRoot || indirectDescriptionFound;
