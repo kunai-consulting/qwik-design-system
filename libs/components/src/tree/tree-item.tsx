@@ -57,6 +57,11 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   });
 
   const handleKeyNavigation$ = $((e: KeyboardEvent) => {
+    // ensure the tree can be exited
+    if (e.key === "Tab") {
+      return;
+    }
+
     e.stopPropagation();
     e.preventDefault();
 
@@ -145,7 +150,12 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       ref={itemRef}
       role="row"
       bind:open={isOpenSig}
-      tabIndex={0}
+      tabIndex={
+        context.currentFocusEl.value === itemRef.value ||
+        context.currentFocusEl.value === null
+          ? 0
+          : -1
+      }
       onFocus$={[handleFocus$, props.onFocus$]}
       onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
       data-qds-tree-item
