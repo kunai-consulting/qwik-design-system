@@ -62,6 +62,10 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator(".set-null-button");
   };
 
+  const getToggleDisabledButton = () => {
+    return rootLocator.locator(".toggle-disabled-button");
+  };
+
   return {
     ...rootLocator,
     locator: rootLocator,
@@ -79,6 +83,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getSubmittedData,
     getExternalValue,
     getSetValueButton,
-    getSetNullButton
+    getSetNullButton,
+    getToggleDisabledButton
   };
 }

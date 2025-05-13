@@ -361,7 +361,7 @@ export const DateInputSegment = component$(
 
     return (
       <>
-        <div class="qds-date-input-segment-container">
+        <span class="qds-date-input-segment-container">
           <span
             class={[
               "qds-date-input-width-measurement",
@@ -401,33 +401,8 @@ export const DateInputSegment = component$(
             disabled={context.disabledSig.value}
             maxLength={maxLength + 1}
           />
-        </div>
+        </span>
       </>
     );
   }
 );
-
-// export function DateInputSegment(props: DateInputSegmentProps) {
-//   const index = getNextIndex(`${props.localId}-segment`);
-
-//   props._index = index;
-
-//   return <DateInputSegmentBase {...props} />
-// }
-
-// Component -> Generic type
-// type -> union type between "day" | "month" | "year"
-
-// export const GetSegmentType = (Component, type) => {
-//   function DateInputSegment(props) {
-//     const index = getNextIndex(`${props.localId}-segment`);
-
-//     props._index = index;
-
-//     return <DateInputSegmentBase {...props} />
-//   }
-
-//   return DateInputSegment;
-// }
-
-// export const DateInputDay = GetSegmentType(DateInputDayBase, "day")

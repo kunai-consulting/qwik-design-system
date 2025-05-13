@@ -224,3 +224,47 @@ test.describe("Input/Output", () => {
     await expect(externalValue).toHaveText("2024-02-14");
   });
 });
+
+test.describe("Disabled", () => {
+  test("GIVEN a disabled date input THEN the segments should be disabled", async ({
+    page
+  }) => {
+    const d = await setup(page, "disabled");
+    const yearSegment = d.getYearSegment();
+    const monthSegment = d.getMonthSegment();
+    const daySegment = d.getDaySegment();
+    expect(await yearSegment.inputValue()).toEqual("2000");
+    expect(await monthSegment.inputValue()).toEqual("12");
+    expect(await daySegment.inputValue()).toEqual("25");
+    await expect(yearSegment).toBeDisabled();
+    await expect(monthSegment).toBeDisabled();
+    await expect(daySegment).toBeDisabled();
+  });
+
+  test("GIVEN a date input WHEN the disabled state is toggled THEN the segments' disabled state should be updated", async ({
+    page
+  }) => {
+    const d = await setup(page, "toggle-disabled");
+    const yearSegment = d.getYearSegment();
+    const monthSegment = d.getMonthSegment();
+    const daySegment = d.getDaySegment();
+    expect(await yearSegment.inputValue()).toEqual("1998");
+    expect(await monthSegment.inputValue()).toEqual("11");
+    expect(await daySegment.inputValue()).toEqual("1");
+    await expect(yearSegment).toBeEnabled();
+    await expect(monthSegment).toBeEnabled();
+    await expect(daySegment).toBeEnabled();
+
+    await d.getToggleDisabledButton().click();
+
+    await expect(yearSegment).toBeDisabled();
+    await expect(monthSegment).toBeDisabled();
+    await expect(daySegment).toBeDisabled();
+
+    await d.getToggleDisabledButton().click();
+
+    await expect(yearSegment).toBeEnabled();
+    await expect(monthSegment).toBeEnabled();
+    await expect(daySegment).toBeEnabled();
+  });
+});
