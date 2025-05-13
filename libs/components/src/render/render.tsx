@@ -46,7 +46,7 @@ export const Render = component$(
         {...rest}
         {...props._allProps}
         ref={$((el: HTMLElement) => {
-          if (props.ref) {
+          if (props.ref && "value" in props.ref) {
             (props.ref as Signal<HTMLElement>).value = el;
           }
 

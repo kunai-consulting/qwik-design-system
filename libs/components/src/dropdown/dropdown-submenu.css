@@ -1,0 +1,78 @@
+@layer qds {
+  [data-qds-dropdown-submenu] {
+    anchor-scope: --qds-dropdown-submenu;
+    position: relative;
+  }
+
+  [data-qds-dropdown-submenu-trigger] {
+    anchor-name: --qds-dropdown-submenu;
+    width: 100%;
+  }
+
+  [data-qds-dropdown-submenu-content] {
+    position-anchor: --qds-dropdown-submenu;
+    width: anchor-size(width);
+    margin: unset;
+    position: absolute;
+    position-try: normal flip-block flip-inline;
+    z-index: var(--qds-submenu-level, 1);
+  }
+
+  /* Default position: right */
+  [data-qds-dropdown-submenu-content] {
+    top: anchor(top);
+    left: anchor(end);
+    right: auto;
+    bottom: auto;
+  }
+
+  /* Position: bottom */
+  [data-qds-dropdown-submenu-content][data-position="bottom"] {
+    top: anchor(bottom);
+    left: anchor(left);
+    right: auto;
+    bottom: auto;
+  }
+
+  /* Position: top */
+  [data-qds-dropdown-submenu-content][data-position="top"] {
+    top: auto;
+    left: anchor(left);
+    right: auto;
+    bottom: anchor(top);
+  }
+
+  /* Position: left */
+  [data-qds-dropdown-submenu-content][data-position="left"] {
+    top: anchor(top);
+    left: auto;
+    right: anchor(start);
+    bottom: auto;
+  }
+
+  /* Nested submenu support */
+  [data-qds-dropdown-submenu-content] [data-qds-dropdown-submenu] {
+    position: relative;
+  }
+
+  /* RTL support */
+  [dir="rtl"] [data-qds-dropdown-submenu-content] {
+    left: auto;
+    right: anchor(end);
+  }
+
+  [dir="rtl"] [data-qds-dropdown-submenu-content][data-position="bottom"] {
+    left: auto;
+    right: anchor(left);
+  }
+
+  [dir="rtl"] [data-qds-dropdown-submenu-content][data-position="top"] {
+    left: auto;
+    right: anchor(left);
+  }
+
+  [dir="rtl"] [data-qds-dropdown-submenu-content][data-position="left"] {
+    left: anchor(start);
+    right: auto;
+  }
+} 
