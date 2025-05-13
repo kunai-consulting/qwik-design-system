@@ -20,10 +20,10 @@ import type {
   Program
 } from "@oxc-project/types";
 
-let debugEnabled = false;
+let isDebugMode = false;
 
 function debug(message: string): void {
-  if (debugEnabled) {
+  if (isDebugMode) {
     console.log(`[qwik-ds] ${message}`);
   }
 }
@@ -279,7 +279,7 @@ function resolveImportSources(
 }
 
 export function qwikAnalyzer(options?: { debug?: boolean }): PluginOption {
-  debugEnabled = options?.debug ?? false;
+  isDebugMode = options?.debug ?? false;
 
   return {
     name: "qwik-analyzer",
