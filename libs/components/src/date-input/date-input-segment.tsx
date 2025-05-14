@@ -297,6 +297,11 @@ export const DateInputSegment = component$(
         return;
       }
 
+      // Allow key combinations with modifier keys (Cmd, Ctrl, Alt, Shift)
+      if (event.metaKey || event.ctrlKey) {
+        return;
+      }
+
       // Allow numeric keys only
       if (!/^\d$/.test(event.key)) {
         event.preventDefault();
@@ -313,6 +318,14 @@ export const DateInputSegment = component$(
       const hasSelection = target.selectionStart !== target.selectionEnd;
       if (value.length >= maxLen && !hasSelection) {
         event.preventDefault();
+      }
+    });
+
+    const onPasteSync$ = sync$((event: ClipboardEvent) => {
+      const pastedText = event.clipboardData?.getData("text") || "";
+      if (!/^\d+$/.test(pastedText)) {
+        event.preventDefault();
+        return;
       }
     });
 
@@ -390,6 +403,7 @@ export const DateInputSegment = component$(
               isEditable ? [onKeyDownSync$, onKeyDown$, otherProps.onKeyDown$] : undefined
             }
             onInput$={isEditable ? [onInput$, otherProps.onInput$] : undefined}
+            onPaste$={[onPasteSync$, otherProps.onPaste$]}
             stoppropagation:change
             placeholder={segmentSig.value.placeholderText}
             aria-label={`${segmentSig.value.type} input`}
