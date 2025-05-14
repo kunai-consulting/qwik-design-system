@@ -391,10 +391,8 @@ export const DateInputSegment = component$(
             data-qds-date-input-segment-year={segmentSig.value.type === "year"}
             data-qds-date-input-segment-index={_index}
             value={displayValueSig.value}
-            onKeyDown$={
-              isEditable ? [onKeyDownSync$, onKeyDown$, otherProps.onKeyDown$] : undefined
-            }
-            onInput$={isEditable ? [onInput$, otherProps.onInput$] : undefined}
+            onKeyDown$={[onKeyDownSync$, onKeyDown$, otherProps.onKeyDown$]}
+            onInput$={[onInput$, otherProps.onInput$]}
             onPaste$={[onPasteSync$, otherProps.onPaste$]}
             stoppropagation:change
             placeholder={segmentSig.value.placeholderText}
