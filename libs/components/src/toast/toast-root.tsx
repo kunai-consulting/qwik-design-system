@@ -3,12 +3,12 @@ import {
   type PropsOf,
   Slot,
   component$,
+  isServer,
   useContextProvider,
   useId,
   useSignal,
   useStyles$,
-  useTask$,
-  useVisibleTask$
+  useTask$
 } from "@builder.io/qwik";
 import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
@@ -152,7 +152,8 @@ export const ToastRootBase = component$((props: ToastRootProps) => {
   });
 
   // Cleanup on unmount
-  useVisibleTask$(({ cleanup }) => {
+  useTask$(({ cleanup }) => {
+    if (isServer) return;
     cleanup(() => {
       if (timeoutIdSig.value !== undefined) {
         window.clearTimeout(timeoutIdSig.value);
@@ -165,31 +166,28 @@ export const ToastRootBase = component$((props: ToastRootProps) => {
 
   return (
     <Render
-      data-open={isOpenSig.value}
-      data-closed={!isOpenSig.value}
       data-qds-toast-root
-      data-paused={isPausedSig.value}
       internalRef={rootRef}
       fallback="div"
       onMouseEnter$={[handleMouseEnter$, props.onMouseEnter$]}
       onMouseLeave$={[handleMouseLeave$, props.onMouseLeave$]}
+      data-open={isOpenSig.value}
+      data-closed={!isOpenSig.value}
+      data-paused={isPausedSig.value}
       {...rest}
     >
-      <Slot />
-      {isOpenSig.value && (
-        <Popover.Root bind:open={isOpenSig}>
-          <Popover.Content
-            ref={contentRef}
-            data-qds-toast-content
-            role="status"
-            aria-live="polite"
-            aria-labelledby={titleId}
-            aria-describedby={descriptionId}
-          >
-            <Slot />
-          </Popover.Content>
-        </Popover.Root>
-      )}
+      <Popover.Root bind:open={isOpenSig}>
+        <Popover.Content
+          ref={contentRef}
+          data-qds-toast-content
+          role="status"
+          aria-live="polite"
+          aria-labelledby={titleId}
+          aria-describedby={descriptionId}
+        >
+          <Slot />
+        </Popover.Content>
+      </Popover.Root>
     </Render>
   );
 });
