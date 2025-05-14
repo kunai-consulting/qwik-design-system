@@ -8,11 +8,11 @@ export default component$(() => {
     <DateInput.Root class="date-input-root-row">
       <DateInput.Label>European-style date entry:</DateInput.Label>
       <DateInput.DateEntry>
-        <DateInput.Day showLeadingZero={true} />
+        <DateInput.Day placeholder="DD" showLeadingZero={true} />
         <DateInput.Separator separator="." />
-        <DateInput.Month showLeadingZero={true} />
+        <DateInput.Month placeholder="MM" showLeadingZero={true} />
         <DateInput.Separator separator="." />
-        <DateInput.Year />
+        <DateInput.Year placeholder="YYYY" />
       </DateInput.DateEntry>
     </DateInput.Root>
   );

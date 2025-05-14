@@ -1,16 +1,17 @@
 import { component$ } from "@builder.io/qwik";
+
 import { DateInput } from "@kunai-consulting/qwik";
 
 export default component$(() => {
   return (
-    <DateInput.Root disabled={true} date="2000-12-25">
-      <DateInput.Label>Permanently Disabled</DateInput.Label>
+    <DateInput.Root>
+      <DateInput.Label>Enter your date of birth:</DateInput.Label>
       <DateInput.DateEntry>
-        <DateInput.Month />
+        <DateInput.Month placeholder="Month" />
         <DateInput.Separator separator="/" />
-        <DateInput.Day />
+        <DateInput.Day placeholder="Day" />
         <DateInput.Separator separator="/" />
-        <DateInput.Year />
+        <DateInput.Year placeholder="Year" />
       </DateInput.DateEntry>
     </DateInput.Root>
   );

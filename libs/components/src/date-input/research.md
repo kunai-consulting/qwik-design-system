@@ -4,7 +4,7 @@ Note: Consult the [Calendar research document](../calendar/research.md), which i
 
 ## Features
 Target features. Some are essential, others are nice to have. Checked items are already implemented in our component.
-- [x] Year, month and date entry
+- [x] Year, month, and date entry
 - [x] Customizable entry format (e.g. "mm/dd/yyyy", "yyyy-mm-dd", "dd/mm/yyyy")
 - [x] Placeholder text
 - [x] Increment/decrement using up and down arrows
@@ -20,26 +20,18 @@ Target features. Some are essential, others are nice to have. Checked items are 
 - [ ] Error messages
 - [ ] Required state
 - [ ] Default format based on locale
-- [ ] Support two-digit date entry (e.g. "12/31/26" instead of "12/31/2026")
+- [ ] Support two-digit year entry (e.g. "12/31/26" instead of "12/31/2026")
 
 ## Component Structure
 - Root
   - Label
   - DateEntry
-    - DaySegment
-    - MonthSegment
-    - YearSegment
+    - Day
+    - Month
+    - Year
     - Separator
   - ErrorMessage
   - HiddenInput
-
-  Under the hood -> return Segment with type="day | month | year"
-  - Day
-  - Month
-  - Year
-
-  - Segment type="day | month | year"
-
 
 ## Research Links
 Here are some resources that can inform and inspire our implementation

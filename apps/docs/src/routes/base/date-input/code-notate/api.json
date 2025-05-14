@@ -10,11 +10,11 @@
     },
     {
       "key": "ArrowLeft",
-      "comment": "Moves cursor left within the current segment"
+      "comment": "Moves cursor left within the current segment or to the previous segment as appropriate"
     },
     {
       "key": "ArrowRight",
-      "comment": "Moves cursor right within the current segment"
+      "comment": "Moves cursor right within the current segment or to the next segment as appropriate"
     },
     {
       "key": "Tab",
@@ -35,16 +35,12 @@
     {
       "key": "Delete",
       "comment": "When focus is on a segment, allows deleting characters"
-    },
-    {
-      "key": "Click",
-      "comment": "When clicking on a segment, activates and focuses that segment"
     }
   ],
   "features": [
     "Date and time segment UI for structured input",
-    "Keyboard arrow navigation between segments",
-    "Format customization (mm/dd/yyyy, dd-mm-yyyy, etc.)",
+    "Keyboard tab and arrow navigation between segments",
+    "Composable format (mm/dd/yyyy, dd.mm.yyyy, yyyy-mm-dd, etc.)",
     "Automatic segment validation and constraints",
     "Dynamic date value construction from segments",
     "Smart segment focus management",

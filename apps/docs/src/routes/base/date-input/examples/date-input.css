@@ -19,7 +19,7 @@
 
 .date-input-root-row {
   display: flex;
-  gap: 2px;
+  gap: 4px;
 }
 
 .date-input-button-container {

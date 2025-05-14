@@ -5,7 +5,6 @@ import {
   type Signal,
   Slot,
   component$,
-  useComputed$,
   useContextProvider,
   useId,
   useSignal,
@@ -17,16 +16,13 @@ import {
   useBindings
 } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
-import { ARIA_LABELS, MONTHS_LG } from "../calendar/constants";
-import type { ISODate, Locale } from "../calendar/types";
+import type { ISODate } from "../calendar/types";
 import { Render } from "../render/render";
 import type { DateInputContext } from "./date-input-context";
 import { dateInputContextId } from "./date-input-context";
 import { getInitialSegments } from "./utils";
 
 export type PublicDateInputRootProps = Omit<PropsOf<"div">, "onChange$"> & {
-  /** The locale used for formatting dates and text */
-  locale?: Locale;
   /** Event handler called when a date is selected */
   onChange$?: QRL<(date: ISODate | null) => void>;
 } & BindableProps<DateInputBoundProps>;
@@ -45,8 +41,6 @@ const isoDateRegex = /^\d{4}-(0[1-9]|1[0-2])-\d{2}$/;
 export const DateInputRootBase = component$<PublicDateInputRootProps>((props) => {
   const { onChange$, ...rest } = props;
   const isInitialLoadSig = useSignal(true);
-  const locale = props.locale || "en";
-  const labelStr = props["aria-label"] ?? ARIA_LABELS[locale].root;
   const { dateSig, disabledSig } = useBindings<DateInputBoundProps>(props, {
     date: props.date ?? null,
     disabled: false
@@ -70,7 +64,6 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
   const isInternalSegmentClearance = useSignal<boolean>(false);
 
   const context: DateInputContext = {
-    locale,
     dateSig,
     localId,
     disabledSig,
@@ -82,13 +75,6 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
   };
 
   useContextProvider(dateInputContextId, context);
-
-  const labelSignal = useComputed$(() => {
-    if (!dateSig.value) return labelStr;
-    const [year, month] = dateSig.value.split("-");
-
-    return `${labelStr} ${MONTHS_LG[locale][+month - 1]} ${year}`;
-  });
 
   if (props.date && !isoDateRegex.test(props.date)) {
     throw new Error("Invalid date format. Please use yyyy-mm-dd format.");
@@ -170,13 +156,7 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>((props) =>
   });
 
   return (
-    <Render
-      fallback="div"
-      data-qds-date-input-root
-      data-theme="light"
-      aria-label={labelSignal.value}
-      {...rest}
-    >
+    <Render fallback="div" data-qds-date-input-root {...rest}>
       <Slot />
     </Render>
   );

@@ -1,5 +1,5 @@
 import { type Signal, createContextId } from "@builder.io/qwik";
-import type { ISODate, Locale } from "../calendar/types";
+import type { ISODate } from "../calendar/types";
 import type { DateSegment } from "./types";
 
 export const dateInputContextId = createContextId<DateInputContext>(
@@ -7,7 +7,6 @@ export const dateInputContextId = createContextId<DateInputContext>(
 );
 
 export type DateInputContext = {
-  locale: Locale;
   dateSig: Signal<ISODate | null>;
   dayOfMonthSegmentSig: Signal<DateSegment>;
   monthSegmentSig: Signal<DateSegment>;

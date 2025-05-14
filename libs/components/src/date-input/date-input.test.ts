@@ -75,6 +75,15 @@ test.describe("Composition", () => {
     expect(await d.getSeparators().first().textContent()).toEqual("/");
     expect(await d.getSeparators().last().textContent()).toEqual("/");
   });
+
+  test("GIVEN a date input with placeholder inputs THEN the segments should have the placeholder text", async ({
+    page
+  }) => {
+    const d = await setup(page, "placeholder");
+    await expect(d.getMonthSegment()).toHaveAttribute("placeholder", "Month");
+    await expect(d.getDaySegment()).toHaveAttribute("placeholder", "Day");
+    await expect(d.getYearSegment()).toHaveAttribute("placeholder", "Year");
+  });
 });
 
 test.describe("Form integration", () => {
