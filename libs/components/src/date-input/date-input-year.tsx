@@ -1,4 +1,4 @@
-import { component$, useContext, useTask$ } from "@builder.io/qwik";
+import { component$, useContext } from "@builder.io/qwik";
 import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import { dateInputContextId } from "./date-input-context";
 import { DateInputSegment } from "./date-input-segment";
@@ -15,27 +15,7 @@ export const DateInputYearBase = component$(
     ...otherProps
   }: PublicDateInputSegmentProps) => {
     const context = useContext(dateInputContextId);
-
     const segmentSig = context.yearSegmentSig;
-
-    // If we have a value in the context, update our local segment
-    useTask$(({ track }) => {
-      track(() => context.dateSig.value);
-
-      if (context.dateSig.value) {
-        const [year] = context.dateSig.value.split("-");
-        const numericValue = Number.parseInt(year, 10);
-
-        if (!Number.isNaN(numericValue)) {
-          segmentSig.value = {
-            ...segmentSig.value,
-            numericValue,
-            isoValue: year,
-            isPlaceholder: false
-          };
-        }
-      }
-    });
 
     return (
       <DateInputSegment

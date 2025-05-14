@@ -10,12 +10,12 @@ import {
 } from "@builder.io/qwik";
 import type { Signal } from "@builder.io/qwik";
 import type { DayOfMonth, Month } from "../calendar/types";
+import { MAX_DAY } from "./constants";
 import { dateInputContextId } from "./date-input-context";
 import styles from "./date-input-segment.css?inline";
 import type { DateSegment } from "./types";
 import type { PublicDateInputSegmentProps } from "./types";
 import { getLastDayOfMonth, getTwoDigitPaddedValue } from "./utils";
-import { MAX_DAY } from "./constants";
 
 type DateInputSegmentProps = PublicDateInputSegmentProps & {
   segmentSig: Signal<DateSegment>;
@@ -23,9 +23,6 @@ type DateInputSegmentProps = PublicDateInputSegmentProps & {
   maxLength: number;
   placeholder: string;
 };
-
-// Regular expression for validating numeric input
-const numericRegex = /^\d$/;
 
 /** Segment component for the Date Input */
 export const DateInputSegment = component$(
@@ -301,7 +298,7 @@ export const DateInputSegment = component$(
       }
 
       // Allow numeric keys only
-      if (!numericRegex.test(event.key)) {
+      if (!/^\d$/.test(event.key)) {
         event.preventDefault();
       }
 

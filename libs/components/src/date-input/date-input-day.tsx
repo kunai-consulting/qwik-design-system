@@ -1,9 +1,8 @@
-import { component$, useContext, useTask$ } from "@builder.io/qwik";
+import { component$, useContext } from "@builder.io/qwik";
 import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import { dateInputContextId } from "./date-input-context";
 import { DateInputSegment } from "./date-input-segment";
 import type { PublicDateInputSegmentProps } from "./types";
-import { getTwoDigitPaddedValue } from "./utils";
 
 /**
  * Day segment component for the Date Input.
@@ -17,25 +16,6 @@ export const DateInputDayBase = component$(
   }: PublicDateInputSegmentProps) => {
     const context = useContext(dateInputContextId);
     const segmentSig = context.dayOfMonthSegmentSig;
-
-    // If we have a value in the context, update our local segment
-    useTask$(({ track }) => {
-      track(() => context.dateSig.value);
-
-      if (context.dateSig.value) {
-        const [, , day] = context.dateSig.value.split("-");
-        const numericValue = Number.parseInt(day, 10);
-
-        if (!Number.isNaN(numericValue)) {
-          segmentSig.value = {
-            ...segmentSig.value,
-            numericValue,
-            isoValue: getTwoDigitPaddedValue(numericValue),
-            isPlaceholder: false
-          };
-        }
-      }
-    });
 
     return (
       <DateInputSegment
