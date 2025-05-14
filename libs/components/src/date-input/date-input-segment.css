@@ -8,6 +8,10 @@
     min-width: 1ch;
   }
 
+  input[data-qds-date-input-segment] {
+    caret-color: transparent;
+  }
+
   input[data-qds-date-input-segment]::placeholder {
     text-align: center;
   }

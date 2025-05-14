@@ -272,20 +272,12 @@ export const DateInputSegment = component$(
 
       // Handle left/right arrow keys for navigation between segments
       if (event.key === "ArrowRight" && inputRef.value) {
-        const input = inputRef.value;
-        // If cursor is at the end, move to next segment
-        if (input.selectionStart === input.value.length) {
-          await focusNextSegment();
-        }
+        await focusNextSegment();
         return;
       }
 
       if (event.key === "ArrowLeft" && inputRef.value) {
-        const input = inputRef.value;
-        // If cursor is at the beginning, move to previous segment
-        if (input.selectionStart === 0) {
-          await focusPreviousSegment();
-        }
+        await focusPreviousSegment();
       }
     });
 
@@ -337,7 +329,7 @@ export const DateInputSegment = component$(
       const numericContent = content.replace(/\D/g, "");
 
       // If the format specifies leading zeros and the input is 0, allow it
-      if (segment.placeholderText.length > 1 && numericContent === "0") {
+      if (showLeadingZero && numericContent === "0") {
         return;
       }
 
