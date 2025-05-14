@@ -1,0 +1,28 @@
+.date-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 300px;
+}
+
+.date-input-container button {
+  border: 1px solid white;
+  padding: 2px 10px;
+  cursor: pointer;
+}
+
+.date-input-root-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.date-input-root-row {
+  display: flex;
+  gap: 4px;
+}
+
+.date-input-button-container {
+  display: flex;
+  gap: 10px;
+}

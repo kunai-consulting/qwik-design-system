@@ -1,0 +1,52 @@
+{
+  "keyboardInteractions": [
+    {
+      "key": "ArrowUp",
+      "comment": "When focus is on a segment, increments the value of that segment"
+    },
+    {
+      "key": "ArrowDown",
+      "comment": "When focus is on a segment, decrements the value of that segment"
+    },
+    {
+      "key": "ArrowLeft",
+      "comment": "Moves cursor left within the current segment or to the previous segment as appropriate"
+    },
+    {
+      "key": "ArrowRight",
+      "comment": "Moves cursor right within the current segment or to the next segment as appropriate"
+    },
+    {
+      "key": "Tab",
+      "comment": "Moves focus to the next segment or element"
+    },
+    {
+      "key": "Shift + Tab",
+      "comment": "Moves focus to the previous segment or element"
+    },
+    {
+      "key": "Digits (0-9)",
+      "comment": "When focus is on a segment, inputs numeric values into that segment"
+    },
+    {
+      "key": "Backspace",
+      "comment": "When focus is on a segment, allows deleting characters"
+    },
+    {
+      "key": "Delete",
+      "comment": "When focus is on a segment, allows deleting characters"
+    }
+  ],
+  "features": [
+    "Date and time segment UI for structured input",
+    "Keyboard tab and arrow navigation between segments",
+    "Composable format (mm/dd/yyyy, dd.mm.yyyy, yyyy-mm-dd, etc.)",
+    "Automatic segment validation and constraints",
+    "Dynamic date value construction from segments",
+    "Smart segment focus management",
+    "Month-aware day validation (adjusts max days based on month/year)",
+    "Placeholder text and visual state handling",
+    "Accessibility features including ARIA attributes",
+    "Form integration with hidden input"
+  ]
+}
