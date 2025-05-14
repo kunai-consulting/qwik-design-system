@@ -268,3 +268,67 @@ test.describe("Disabled", () => {
     await expect(daySegment).toBeEnabled();
   });
 });
+
+test.describe("Keyboard interactions", () => {
+  test("GIVEN a date input WHEN the tab key is pressed THEN the focus should move to the next segment", async ({
+    page
+  }) => {
+    const d = await setup(page, "basic");
+    const yearSegment = d.getYearSegment();
+    const monthSegment = d.getMonthSegment();
+    const daySegment = d.getDaySegment();
+
+    await page.keyboard.press("Tab");
+    await expect(yearSegment).toBeFocused();
+
+    await page.keyboard.press("Tab");
+    await expect(monthSegment).toBeFocused();
+
+    await page.keyboard.press("Tab");
+    await expect(daySegment).toBeFocused();
+
+    await page.keyboard.press("Shift+Tab");
+    await expect(monthSegment).toBeFocused();
+
+    await page.keyboard.press("Shift+Tab");
+    await expect(yearSegment).toBeFocused();
+  });
+
+  test("GIVEN a date input WHEN data is entered THEN the focus should move to the next segment", async ({
+    page
+  }) => {
+    const d = await setup(page, "basic");
+    const yearSegment = d.getYearSegment();
+    const monthSegment = d.getMonthSegment();
+    const daySegment = d.getDaySegment();
+
+    await yearSegment.fill("2022");
+    await expect(monthSegment).toBeFocused();
+
+    await monthSegment.fill("02");
+    await expect(daySegment).toBeFocused();
+  });
+
+  test("GIVEN a date input WHEN the right/left arrow keys are pressed THEN the focus should move to the next/previous segment", async ({
+    page
+  }) => {
+    const d = await setup(page, "basic");
+    const yearSegment = d.getYearSegment();
+    const monthSegment = d.getMonthSegment();
+    const daySegment = d.getDaySegment();
+    await page.keyboard.press("Tab");
+    await expect(yearSegment).toBeFocused();
+
+    await page.keyboard.press("ArrowRight");
+    await expect(monthSegment).toBeFocused();
+
+    await page.keyboard.press("ArrowRight");
+    await expect(daySegment).toBeFocused();
+
+    await page.keyboard.press("ArrowLeft");
+    await expect(monthSegment).toBeFocused();
+
+    await page.keyboard.press("ArrowLeft");
+    await expect(yearSegment).toBeFocused();
+  });
+});
