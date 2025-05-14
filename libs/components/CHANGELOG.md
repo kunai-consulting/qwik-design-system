@@ -1,5 +1,11 @@
 # @kunai-consulting/qwik-headless
 
+## 0.1.0
+
+### Minor Changes
+
+- 66b5545: Add DateInput component
+
 ## 0.0.12
 
 ### Patch Changes
