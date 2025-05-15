@@ -12,7 +12,6 @@ import { Render } from "../render/render";
 import { dropdownContextId, type SubmenuState } from "./dropdown-context";
 import { submenuContextId } from "./dropdown-submenu-context";
 import { getSubmenuStateByContentId, getParent } from "./utils";
-import { useDropdownWalker } from "./use-dropdown-walker";
 import { getNextIndex } from "@kunai-consulting/qwik-utils";
 
 export type PublicDropdownItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
@@ -40,15 +39,6 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
 
     const handleFocus$ = $((e: FocusEvent) => {
       context.currentFocusEl.value = e.target as HTMLElement;
-    });
-
-    const focusFirstItem = $((root: HTMLElement) => {
-      const { getFirstDropdownItem } = useDropdownWalker();
-      setTimeout(() => {
-        if (!root) return;
-        const first = getFirstDropdownItem(root);
-        if (first) first.focus();
-      }, 50);
     });
 
     useTask$(async function manageSubmenu() {
@@ -152,20 +142,12 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
         case "ArrowLeft": {
           if (currentSubmenu.value) {
             currentSubmenu.value.isOpenSig.value = false;
-            const parent = await getParent(context, currentSubmenu.value.parentId);
-            if (parent?.rootRef.value) {
-              focusFirstItem(parent.rootRef.value);
-            }
           }
           break;
         }
         case "ArrowRight": {
           if (props["aria-controls"] && currentSubmenu.value) {
             currentSubmenu.value.isOpenSig.value = true;
-            const submenuRoot = currentSubmenu.value.rootRef.value;
-            if (submenuRoot) {
-              focusFirstItem(submenuRoot);
-            }
           }
           break;
         }
@@ -174,10 +156,6 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
           await handleSelect();
           if (props["aria-controls"] && currentSubmenu.value) {
             currentSubmenu.value.isOpenSig.value = true;
-            const submenuRoot = currentSubmenu.value.rootRef.value;
-            if (submenuRoot) {
-              focusFirstItem(submenuRoot);
-            }
           }
           break;
         }

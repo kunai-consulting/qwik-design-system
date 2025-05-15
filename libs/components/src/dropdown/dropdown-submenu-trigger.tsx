@@ -1,8 +1,9 @@
-import { $, Slot, component$, useContext } from "@builder.io/qwik";
+import { $, Slot, component$, useContext, useSignal, useTask$ } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
-import { dropdownContextId } from "./dropdown-context";
+import { dropdownContextId, type SubmenuState } from "./dropdown-context";
 import { submenuContextId } from "./dropdown-submenu-context";
 import { DropdownItem, type PublicDropdownItemProps } from "./dropdown-item";
+import { getSubmenuStateByContentId } from "./utils";
 
 /** Props for the submenu trigger component */
 export type PublicDropdownSubmenuTriggerProps = Omit<
@@ -15,33 +16,40 @@ export const DropdownSubmenuTriggerBase = component$<PublicDropdownSubmenuTrigge
   ({ onClick$, disabled, ...props }) => {
     const context = useContext(dropdownContextId);
     const submenuContext = useContext(submenuContextId);
+    const submenu = useSignal<SubmenuState | undefined>(undefined);
 
-    // Find the submenu state for this trigger
-    const submenu = context.submenus.value.find(
-      (submenu) => submenu.contentId === submenuContext.contentId
-    );
+    useTask$(async () => {
+      submenu.value = await getSubmenuStateByContentId(context, submenuContext.contentId);
+    });
 
-    if (!submenu) {
-      console.warn("Submenu trigger not found in context");
+    if (!submenu.value) {
+      console.warn("Submenu content not found in trigger");
       return null;
     }
 
-    const handleClick$ = $((e: MouseEvent) => {
-      if (disabled) return;
-      e.preventDefault();
-      e.stopPropagation();
-      submenu.isOpenSig.value = !submenu.isOpenSig.value;
+    const focusFirstItem = $(async () => {
+      const enabledItems = await submenu.value?.getEnabledItems();
+      setTimeout(() => {
+        if (enabledItems && enabledItems.length > 0) {
+          enabledItems[0].focus();
+        }
+      }, 50);
+    });
+
+    const handleClick$ = $(async () => {
+      context.isOpenSig.value = true;
+      await focusFirstItem();
     });
 
     return (
       <DropdownItem
         closeOnSelect={false}
         data-qds-dropdown-submenu-trigger
-        data-qds-dropdown-parent={submenu.parentId}
+        data-qds-dropdown-parent={submenu.value.parentId}
         qds-submenu-level={submenuContext.level}
         aria-haspopup="menu"
-        aria-controls={submenu.contentId}
-        aria-expanded={submenu.isOpenSig.value}
+        aria-controls={submenu.value.contentId}
+        aria-expanded={submenu.value.isOpenSig.value}
         onClick$={[handleClick$, onClick$]}
         disabled={disabled}
         {...props}

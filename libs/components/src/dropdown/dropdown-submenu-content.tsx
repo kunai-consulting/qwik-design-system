@@ -4,8 +4,8 @@ import { PopoverContentBase } from "../popover/popover-content";
 import { dropdownContextId, type SubmenuState } from "./dropdown-context";
 import { submenuContextId } from "./dropdown-submenu-context";
 import type { PropsOf } from "@builder.io/qwik";
-import { getSubmenuStateByContentId } from "./utils";
-import { useDropdownWalker } from "./use-dropdown-walker";
+import { getParent, getSubmenuStateByContentId } from "./utils";
+
 /** Props for the submenu content component */
 export type PublicDropdownSubmenuContentProps = PropsOf<typeof PopoverContentBase>;
 
@@ -17,12 +17,17 @@ export const DropdownSubmenuContentBase = component$<PublicDropdownSubmenuConten
     const submenu = useSignal<SubmenuState | undefined>(undefined);
     const isInitialRenderSig = useSignal(true);
 
+    if (!submenuContext) {
+      console.warn("Submenu context not found in context");
+      return null;
+    }
+
     useTask$(async () => {
       submenu.value = await getSubmenuStateByContentId(context, submenuContext.contentId);
     });
 
     if (!submenu.value) {
-      console.warn("Submenu content not found in context");
+      console.warn("Submenu content not found in content");
       return null;
     }
 
@@ -34,23 +39,14 @@ export const DropdownSubmenuContentBase = component$<PublicDropdownSubmenuConten
       }
 
       if (!isOpen) {
-        const { getDropdownMenuItems } = useDropdownWalker();
-        const items = getDropdownMenuItems(
-          submenuContext.parentRef.value,
-          submenuContext.parentId
-        );
-        if (items.length > 0) {
+        const items = await submenu.value?.getEnabledItems();
+        if (items && items.length > 0) {
           items[0].focus();
         }
       } else {
-        if (!submenu.value?.rootRef.value) return;
-        const { getDropdownMenuItems } = useDropdownWalker();
-
-        const items = getDropdownMenuItems(
-          submenu.value.rootRef.value,
-          submenuContext.contentId
-        );
-        if (items.length > 0) {
+        const parent = await getParent(context, submenuContext.parentId);
+        const items = await parent.getEnabledItems();
+        if (items && items.length > 0) {
           items[0].focus();
         }
       }
