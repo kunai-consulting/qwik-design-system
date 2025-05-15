@@ -12,7 +12,6 @@ export const DropdownContentBase = component$<DropdownContentProps>((props) => {
   return (
     <PopoverContentBase
       id={context.contentId} // Use ID from main context
-      ref={context.rootRef}
       tabIndex={-1}
       role="menu"
       aria-labelledby={context.triggerId} // Labelled by the main trigger

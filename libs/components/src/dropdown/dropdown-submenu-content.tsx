@@ -39,13 +39,13 @@ export const DropdownSubmenuContentBase = component$<PublicDropdownSubmenuConten
       }
 
       if (!isOpen) {
-        const items = await submenu.value?.getEnabledItems();
+        const parent = await getParent(context, submenuContext.parentId);
+        const items = await parent.getEnabledItems();
         if (items && items.length > 0) {
           items[0].focus();
         }
       } else {
-        const parent = await getParent(context, submenuContext.parentId);
-        const items = await parent.getEnabledItems();
+        const items = await submenu.value?.getEnabledItems();
         if (items && items.length > 0) {
           items[0].focus();
         }
@@ -56,7 +56,6 @@ export const DropdownSubmenuContentBase = component$<PublicDropdownSubmenuConten
       <PopoverContentBase
         tabIndex={-1}
         role="menu"
-        ref={submenu.value?.rootRef}
         id={submenuContext.contentId}
         aria-labelledby={submenuContext.triggerId}
         data-qds-dropdown-submenu-content

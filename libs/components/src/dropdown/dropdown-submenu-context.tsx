@@ -1,12 +1,10 @@
-import { createContextId, type Signal } from "@builder.io/qwik";
+import { createContextId } from "@builder.io/qwik";
 
 type SubmenuIds = {
   triggerId: string;
   contentId: string;
   /** The level of the submenu */
   level: number;
-  /** The root element of the submenu parent */
-  parentRef: Signal<HTMLElement>;
   /** The id of the submenu parent */
   parentId: string;
 };

@@ -9,12 +9,11 @@ import {
   useStyles$,
   $
 } from "@builder.io/qwik";
-import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";
 import { dropdownContextId, type ItemRef } from "./dropdown-context";
 import { submenuContextId } from "./dropdown-submenu-context";
 import type { PublicDropdownRootProps } from "./dropdown-root";
-import { resetIndexes, useBindings } from "@kunai-consulting/qwik-utils";
+import { useBindings } from "@kunai-consulting/qwik-utils";
 import dropdownSubmenuStyles from "./dropdown-submenu.css?inline";
 import { getEnabledItemsUtil } from "./utils";
 
@@ -43,10 +42,21 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
   const currentLevel = parentContext?.level ? parentContext.level + 1 : 1;
   const parentRef = parentContext ? rootRef : context.rootRef;
   const parentId = parentContext ? parentContext.contentId : context.contentId;
-
   const getEnabledItems = $(() => {
     return getEnabledItemsUtil(itemRefs.value);
   });
+
+  const submenu = {
+    triggerId: triggerId.value,
+    contentId: contentId.value,
+    position: props.position ?? "right",
+    isOpenSig,
+    disabled: false,
+    parentId,
+    rootRef,
+    itemRefs,
+    getEnabledItems
+  };
 
   // Provide IDs to children through context
   useContextProvider(submenuContextId, {
@@ -58,20 +68,7 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
   });
 
   useTask$(function registerSubmenu() {
-    context.submenus.value = [
-      ...context.submenus.value,
-      {
-        triggerId: triggerId.value,
-        contentId: contentId.value,
-        position: props.position ?? "right",
-        isOpenSig,
-        disabled: false,
-        parentId,
-        rootRef,
-        itemRefs,
-        getEnabledItems
-      }
-    ];
+    context.submenus.value = [...context.submenus.value, submenu];
   });
 
   useTask$(function onClose() {});
@@ -91,7 +88,4 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
   );
 });
 
-export const DropdownSubmenu = withAsChild(DropdownSubmenuBase, (props) => {
-  resetIndexes("dropdown");
-  return props;
-});
+export const DropdownSubmenu = DropdownSubmenuBase;

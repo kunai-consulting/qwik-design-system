@@ -43,7 +43,6 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
     open: false
   });
   const submenus = useSignal<SubmenuState[]>([]);
-  const rootRef = useSignal<HTMLDivElement>();
   const currentFocusEl = useSignal<HTMLElement>();
   const itemRefs = useSignal<ItemRef[]>([]);
 
@@ -100,7 +99,6 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
     contentId,
     triggerId,
     submenus,
-    rootRef,
     currentFocusEl,
     itemRefs,
     getEnabledItems
@@ -111,13 +109,7 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
   const { open: _o, "bind:open": _bo, ...rest } = props;
 
   return (
-    <PopoverRootBase
-      tabIndex={-1}
-      bind:open={isOpenSig}
-      data-qds-dropdown-root
-      ref={rootRef}
-      {...rest}
-    >
+    <PopoverRootBase tabIndex={-1} bind:open={isOpenSig} data-qds-dropdown-root {...rest}>
       <Slot />
     </PopoverRootBase>
   );
