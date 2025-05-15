@@ -18,52 +18,6 @@ export default component$(() => {
           >
             <Dropdown.ItemLabel class="dropdown-item-label">Item 1</Dropdown.ItemLabel>
           </Dropdown.Item>
-          <Dropdown.Submenu>
-            <Dropdown.SubmenuTrigger class="dropdown-item">
-              Submenu
-            </Dropdown.SubmenuTrigger>
-            <Dropdown.SubmenuContent>
-              <Dropdown.Item class="dropdown-item">
-                <Dropdown.ItemLabel class="dropdown-item-label">
-                  Submenu Item 1
-                </Dropdown.ItemLabel>
-              </Dropdown.Item>
-              <Dropdown.Submenu>
-                <Dropdown.SubmenuTrigger class="dropdown-item">
-                  Submenu 2
-                </Dropdown.SubmenuTrigger>
-                <Dropdown.SubmenuContent>
-                  <Dropdown.Item class="dropdown-item">
-                    <Dropdown.ItemLabel class="dropdown-item-label">
-                      Submenu Item 1
-                    </Dropdown.ItemLabel>
-                  </Dropdown.Item>
-                  <Dropdown.Submenu>
-                    <Dropdown.SubmenuTrigger class="dropdown-item">
-                      Submenu 3
-                    </Dropdown.SubmenuTrigger>
-                    <Dropdown.SubmenuContent>
-                      <Dropdown.Item class="dropdown-item">
-                        <Dropdown.ItemLabel class="dropdown-item-label">
-                          Submenu Item 1
-                        </Dropdown.ItemLabel>
-                      </Dropdown.Item>
-                      <Dropdown.Item class="dropdown-item">
-                        <Dropdown.ItemLabel class="dropdown-item-label">
-                          Submenu Item 2
-                        </Dropdown.ItemLabel>
-                      </Dropdown.Item>
-                    </Dropdown.SubmenuContent>
-                  </Dropdown.Submenu>
-                  <Dropdown.Item class="dropdown-item">
-                    <Dropdown.ItemLabel class="dropdown-item-label">
-                      Submenu Item 2
-                    </Dropdown.ItemLabel>
-                  </Dropdown.Item>
-                </Dropdown.SubmenuContent>
-              </Dropdown.Submenu>
-            </Dropdown.SubmenuContent>
-          </Dropdown.Submenu>
           <Dropdown.Item
             onSelect$={() => (selectedItem.value = "2")}
             class="dropdown-item"

@@ -25,6 +25,7 @@ export const DropdownSubmenuContentBase = component$<PublicDropdownSubmenuConten
       return null;
     }
 
+    // Focus the first enabled item of the parent when the submenu closes
     useTask$(async ({ track, cleanup }) => {
       track(() => submenu.isOpenSig.value);
       if (!(submenu.isOpenSig.value || isInitialRenderSig.value)) {
