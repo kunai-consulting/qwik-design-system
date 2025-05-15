@@ -27,18 +27,10 @@ export const DropdownSubmenuTriggerBase = component$<PublicDropdownSubmenuTrigge
       return null;
     }
 
-    const focusFirstItem = $(async () => {
-      const enabledItems = await submenu.value?.getEnabledItems();
-      setTimeout(() => {
-        if (enabledItems && enabledItems.length > 0) {
-          enabledItems[0].focus();
-        }
-      }, 50);
-    });
-
     const handleClick$ = $(async () => {
-      context.isOpenSig.value = true;
-      await focusFirstItem();
+      if (submenu.value) {
+        submenu.value.isOpenSig.value = !submenu.value.isOpenSig.value;
+      }
     });
 
     return (

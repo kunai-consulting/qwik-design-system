@@ -23,12 +23,27 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return getContent().locator("[data-qds-dropdown-item]", { hasText: text });
   };
 
+  const getSubmenuTrigger = () => {
+    return rootLocator.locator('[data-qds-dropdown-submenu-trigger]');
+  };
+
+  const getSubmenuContent = () => {
+    return rootLocator.locator('[data-qds-dropdown-submenu-content]');
+  };
+
+  const getSubmenuItems = () => {
+    return getSubmenuContent().locator('[data-qds-dropdown-item]');
+  };
+
   return {
     locator: rootLocator,
     getRoot,
     getTrigger,
     getContent,
     getItems,
-    getItemByText
+    getItemByText,
+    getSubmenuTrigger,
+    getSubmenuContent,
+    getSubmenuItems
   };
 }

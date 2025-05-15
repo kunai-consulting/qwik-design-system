@@ -216,3 +216,91 @@ test.describe("Dropdown Component", () => {
     await expect(content).toBeVisible();
   });
 });
+
+test.describe('Dropdown Submenu', () => {
+  test('GIVEN a Dropdown with a submenu WHEN the submenu trigger is clicked THEN the submenu content should open', async ({ page }) => {
+    const driver = await setup(page, 'submenu');
+    const trigger = driver.getTrigger();
+    await trigger.click();
+    const submenuTrigger = driver.getSubmenuTrigger();
+    await submenuTrigger.click();
+    const submenuContent = driver.getSubmenuContent();
+    await expect(submenuContent).toBeVisible();
+  });
+
+  test('GIVEN a Dropdown with a submenu WHEN ArrowRight is pressed on the submenu trigger THEN the submenu content should open and first item is focused', async ({ page }) => {
+    const driver = await setup(page, 'submenu');
+    const trigger = driver.getTrigger();
+    await trigger.click();
+    const submenuTrigger = driver.getSubmenuTrigger();
+    await submenuTrigger.waitFor({ state: "visible" });
+    await submenuTrigger.focus();
+    await expect(submenuTrigger).toBeFocused();
+    await submenuTrigger.press('ArrowRight');
+    const submenuContent = driver.getSubmenuContent();
+    await expect(submenuContent).toBeVisible();
+    const submenuItems = await driver.getSubmenuItems().all();
+    await expect(submenuItems[0]).toBeFocused();
+  });
+
+  test('GIVEN an open submenu WHEN ArrowDown is pressed THEN focus should move to the next submenu item', async ({ page }) => {
+    const driver = await setup(page, 'submenu');
+    const trigger = driver.getTrigger();
+    await trigger.click();
+    const submenuTrigger = driver.getSubmenuTrigger();
+    await submenuTrigger.click();
+    const submenuItems = await driver.getSubmenuItems().all();
+    await submenuItems[0].focus();
+    await expect(submenuItems[0]).toBeFocused();
+    await submenuItems[0].press('ArrowDown');
+    await expect(submenuItems[1]).toBeFocused();
+  });
+
+  test('GIVEN an open submenu WHEN ArrowUp is pressed on the first item THEN focus should wrap to the last submenu item', async ({ page }) => {
+    const driver = await setup(page, 'submenu');
+    const trigger = driver.getTrigger();
+    await trigger.click();
+    const submenuTrigger = driver.getSubmenuTrigger();
+    await submenuTrigger.click();
+    const submenuItems = await driver.getSubmenuItems().all();
+    await submenuItems[0].focus();
+    await submenuItems[0].press('ArrowUp');
+    await expect(submenuItems[submenuItems.length - 1]).toBeFocused();
+  });
+
+  test('GIVEN a submenu item with closeOnSelect=false WHEN it is clicked THEN the submenu should remain open', async ({ page }) => {
+    const driver = await setup(page, 'submenu');
+    const trigger = driver.getTrigger();
+    await trigger.click();
+    const submenuTrigger = driver.getSubmenuTrigger();
+    await submenuTrigger.click();
+    const submenuItems = await driver.getSubmenuItems().all();
+    // The second submenu item has closeOnSelect=false
+    await submenuItems[1].click();
+    const submenuContent = driver.getSubmenuContent();
+    await expect(submenuContent).toBeVisible();
+  });
+
+  test('GIVEN a submenu WHEN Escape is pressed THEN the submenu should close', async ({ page }) => {
+    const driver = await setup(page, 'submenu');
+    const trigger = driver.getTrigger();
+    await trigger.click();
+    const submenuTrigger = driver.getSubmenuTrigger();
+    await submenuTrigger.click();
+    const submenuContent = driver.getSubmenuContent();
+    await expect(submenuContent).toBeVisible();
+    await submenuContent.press('Escape');
+    await expect(submenuContent).toBeHidden();
+  });
+
+  test('GIVEN a submenu trigger WHEN rendered THEN it should have correct ARIA attributes', async ({ page }) => {
+    const driver = await setup(page, 'submenu');
+    const trigger = driver.getTrigger();
+    await trigger.click();
+    const submenuTrigger = driver.getSubmenuTrigger();
+    await expect(submenuTrigger).toHaveAttribute('aria-haspopup', 'menu');
+    await expect(submenuTrigger).toHaveAttribute('aria-expanded', 'false');
+    await submenuTrigger.click();
+    await expect(submenuTrigger).toHaveAttribute('aria-expanded', 'true');
+  });
+});
