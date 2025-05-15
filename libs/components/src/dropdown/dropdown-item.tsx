@@ -13,6 +13,7 @@ import { dropdownContextId, type SubmenuState } from "./dropdown-context";
 import { submenuContextId } from "./dropdown-submenu-context";
 import { getSubmenuStateByContentId, getParent } from "./utils";
 import { useDropdownWalker } from "./use-dropdown-walker";
+import { getNextIndex } from "@kunai-consulting/qwik-utils";
 
 export type PublicDropdownItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
   /** Whether the dropdown item is disabled */
@@ -23,13 +24,13 @@ export type PublicDropdownItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
   onSelect$?: (value: string | undefined) => void;
   /** Whether to close the dropdown when the item is selected (default: true) */
   closeOnSelect?: boolean;
-  /** The ID of the submenu content */
-  _submenuContentId?: string;
+  /** Whether the item is a submenu */
+  _index?: number;
 };
 
 /** Interactive item within a dropdown menu */
 export const DropdownItemBase = component$<PublicDropdownItemProps>(
-  ({ disabled, value, onSelect$, closeOnSelect = true, _submenuContentId, ...props }) => {
+  ({ disabled, value, onSelect$, closeOnSelect = true, _index, ...props }) => {
     const context = useContext(dropdownContextId);
     const itemRef = useSignal<HTMLElement>();
     const isHoveredSig = useSignal(false);
@@ -67,6 +68,35 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
       }
     });
 
+    useTask$(async function registerItemRef({ track }) {
+      track(() => _index);
+      track(() => itemRef.value);
+      track(() => currentSubmenu.value);
+
+      if (typeof _index !== "number") {
+        console.error("DropdownItem received invalid index:", _index);
+        return;
+      }
+
+      let refs = context.itemRefs;
+
+      if (props["aria-controls"]) {
+        const parent = await getParent(context, submenuContext?.parentId);
+        refs = parent.itemRefs;
+      } else if (currentSubmenu.value) {
+        refs = currentSubmenu.value.itemRefs;
+      }
+
+      if (itemRef.value) {
+        const newItemRefs = [...refs.value];
+        while (newItemRefs.length <= _index) {
+          newItemRefs.push({ ref: { value: null } });
+        }
+        newItemRefs[_index] = { ref: itemRef };
+        refs.value = newItemRefs;
+      }
+    });
+
     const handleKeyDown = $(async (event: KeyboardEvent) => {
       const navKeys = [
         "ArrowDown",
@@ -78,48 +108,46 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
         "Enter",
         " "
       ];
-      if (!navKeys.includes(event.key)) return;
+      if (!navKeys.includes(event.key) || disabled) return;
 
       event.preventDefault();
       event.stopPropagation();
 
-      let root = context.rootRef.value;
-      let contentId = context.contentId;
+      let enabledItems = await context.getEnabledItems();
 
-      if (_submenuContentId) {
-        const parent = await getParent(context, currentSubmenu.value?.parentId);
-        root = parent.rootRef.value;
-        contentId = parent.contentId;
+      if (props["aria-controls"]) {
+        const parent = await getParent(context, submenuContext?.parentId);
+
+        enabledItems = await parent.getEnabledItems();
       } else if (currentSubmenu.value) {
-        root = currentSubmenu.value.rootRef.value;
-        contentId = currentSubmenu.value.contentId;
+        enabledItems = await currentSubmenu.value.getEnabledItems();
       }
 
-      if (!(root && context.currentFocusEl.value)) return;
+      if (!enabledItems.length) return;
 
-      const { getDropdownMenuItems } = useDropdownWalker();
+      console.log("enabledItems", enabledItems.length);
 
-      const items = getDropdownMenuItems(root, contentId);
-      if (items.length === 0) return;
-      const currentIndex = items.findIndex(
-        (item) => item === context.currentFocusEl.value
-      );
-      if (currentIndex === -1) return;
+      const currentIndex = enabledItems.findIndex((item) => item === itemRef.value);
+
+      if (currentIndex === -1) {
+        enabledItems[0].focus();
+        return;
+      }
 
       // Navigation keys
       let nextIndex: number | null = null;
 
       switch (event.key) {
         case "ArrowDown":
-          nextIndex = currentIndex >= items.length - 1 ? 0 : currentIndex + 1;
+          nextIndex = currentIndex >= enabledItems.length - 1 ? 0 : currentIndex + 1;
           break;
         case "ArrowUp":
-          nextIndex = currentIndex <= 0 ? items.length - 1 : currentIndex - 1;
+          nextIndex = currentIndex <= 0 ? enabledItems.length - 1 : currentIndex - 1;
           break;
         case "Home":
           return 0;
         case "End":
-          nextIndex = items.length - 1;
+          nextIndex = enabledItems.length - 1;
           break;
         case "ArrowLeft": {
           if (currentSubmenu.value) {
@@ -132,7 +160,7 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
           break;
         }
         case "ArrowRight": {
-          if (_submenuContentId && currentSubmenu.value) {
+          if (props["aria-controls"] && currentSubmenu.value) {
             currentSubmenu.value.isOpenSig.value = true;
             const submenuRoot = currentSubmenu.value.rootRef.value;
             if (submenuRoot) {
@@ -144,7 +172,7 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
         case "Enter":
         case " ": {
           await handleSelect();
-          if (_submenuContentId && currentSubmenu.value) {
+          if (props["aria-controls"] && currentSubmenu.value) {
             currentSubmenu.value.isOpenSig.value = true;
             const submenuRoot = currentSubmenu.value.rootRef.value;
             if (submenuRoot) {
@@ -157,8 +185,8 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
           return null;
       }
 
-      if (nextIndex !== null && items[nextIndex]) {
-        items[nextIndex].focus();
+      if (nextIndex !== null && enabledItems[nextIndex]) {
+        enabledItems[nextIndex].focus();
         return;
       }
     });
@@ -193,4 +221,8 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
   }
 );
 
-export const DropdownItem = withAsChild(DropdownItemBase);
+export const DropdownItem = withAsChild(DropdownItemBase, (props) => {
+  const nextIndex = getNextIndex("dropdown");
+  props._index = nextIndex;
+  return props;
+});

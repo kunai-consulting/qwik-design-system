@@ -1,10 +1,10 @@
 import { $ } from "@builder.io/qwik";
-import type { DropdownContext, SubmenuState, ItemRef } from "./dropdown-context";
+import type { DropdownContext, ItemRef, SubmenuState } from "./dropdown-context";
 
 /**
  * Returns all enabled (not disabled) item elements from an array of refs.
  */
-export function getEnabledItems(itemRefs: ItemRef[]): HTMLElement[] {
+export function getEnabledItemsUtil(itemRefs: ItemRef[]): HTMLElement[] {
   return itemRefs
     .map((itemRefObj) => itemRefObj.ref.value)
     .filter((el): el is HTMLElement => {
@@ -13,6 +13,8 @@ export function getEnabledItems(itemRefs: ItemRef[]): HTMLElement[] {
       return true;
     });
 }
+
+
 
 /**
  * Finds a submenu state by its contentId from the dropdown context.

@@ -1,4 +1,4 @@
-import { Slot, component$, useContext } from "@builder.io/qwik";
+import { $, Slot, component$, useContext } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { dropdownContextId } from "./dropdown-context";
 import { submenuContextId } from "./dropdown-submenu-context";
@@ -12,7 +12,7 @@ export type PublicDropdownSubmenuTriggerProps = Omit<
 
 /** A component that renders the submenu trigger */
 export const DropdownSubmenuTriggerBase = component$<PublicDropdownSubmenuTriggerProps>(
-  (props) => {
+  ({ onClick$, disabled, ...props }) => {
     const context = useContext(dropdownContextId);
     const submenuContext = useContext(submenuContextId);
 
@@ -26,16 +26,24 @@ export const DropdownSubmenuTriggerBase = component$<PublicDropdownSubmenuTrigge
       return null;
     }
 
+    const handleClick$ = $((e: MouseEvent) => {
+      if (disabled) return;
+      e.preventDefault();
+      e.stopPropagation();
+      submenu.isOpenSig.value = !submenu.isOpenSig.value;
+    });
+
     return (
       <DropdownItem
         closeOnSelect={false}
-        _submenuContentId={submenu.contentId}
         data-qds-dropdown-submenu-trigger
-        data-qds-dropdown-parent={context.contentId}
+        data-qds-dropdown-parent={submenu.parentId}
         qds-submenu-level={submenuContext.level}
         aria-haspopup="menu"
         aria-controls={submenu.contentId}
         aria-expanded={submenu.isOpenSig.value}
+        onClick$={[handleClick$, onClick$]}
+        disabled={disabled}
         {...props}
       >
         <Slot />

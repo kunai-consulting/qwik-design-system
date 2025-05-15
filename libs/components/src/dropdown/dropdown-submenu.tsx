@@ -6,15 +6,17 @@ import {
   useContextProvider,
   useSignal,
   useId,
-  useStyles$
+  useStyles$,
+  $
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";
-import { dropdownContextId } from "./dropdown-context";
+import { dropdownContextId, type ItemRef } from "./dropdown-context";
 import { submenuContextId } from "./dropdown-submenu-context";
 import type { PublicDropdownRootProps } from "./dropdown-root";
-import { useBindings } from "@kunai-consulting/qwik-utils";
+import { resetIndexes, useBindings } from "@kunai-consulting/qwik-utils";
 import dropdownSubmenuStyles from "./dropdown-submenu.css?inline";
+import { getEnabledItemsUtil } from "./utils";
 
 export type PublicDropdownSubmenuProps = PublicDropdownRootProps & {
   /** The position of the submenu relative to its trigger */
@@ -27,6 +29,7 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
   const context = useContext(dropdownContextId);
   const parentContext = useContext(submenuContextId, null);
   const rootRef = useSignal<HTMLElement>();
+  const itemRefs = useSignal<ItemRef[]>([]);
 
   const { openSig: isOpenSig } = useBindings(props, {
     open: false
@@ -40,6 +43,10 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
   const currentLevel = parentContext?.level ? parentContext.level + 1 : 1;
   const parentRef = parentContext ? rootRef : context.rootRef;
   const parentId = parentContext ? parentContext.contentId : context.contentId;
+
+  const getEnabledItems = $(() => {
+    return getEnabledItemsUtil(itemRefs.value);
+  });
 
   // Provide IDs to children through context
   useContextProvider(submenuContextId, {
@@ -57,10 +64,12 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
         triggerId: triggerId.value,
         contentId: contentId.value,
         position: props.position ?? "right",
-        isOpenSig: isOpenSig,
+        isOpenSig,
         disabled: false,
-        parentId: parentContext ? parentContext.contentId : context.contentId,
-        rootRef: rootRef
+        parentId,
+        rootRef,
+        itemRefs,
+        getEnabledItems
       }
     ];
   });
@@ -82,4 +91,7 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
   );
 });
 
-export const DropdownSubmenu = withAsChild(DropdownSubmenuBase);
+export const DropdownSubmenu = withAsChild(DropdownSubmenuBase, (props) => {
+  resetIndexes("dropdown");
+  return props;
+});

@@ -1,7 +1,6 @@
 import {
   $,
   type PropsOf,
-  type Signal,
   Slot,
   component$,
   sync$,
@@ -20,9 +19,11 @@ import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";
 import {
   type DropdownContext,
+  type ItemRef,
   type SubmenuState,
   dropdownContextId
 } from "./dropdown-context";
+import { getEnabledItemsUtil } from "./utils";
 
 type DropdownRootBaseProps = PropsOf<typeof PopoverRootBase>;
 
@@ -36,10 +37,6 @@ export type PublicDropdownRootProps = DropdownRootBaseProps &
     onOpenChange$?: (open: boolean) => void;
   };
 
-interface ItemRef {
-  ref: Signal;
-}
-
 /** Root container component for the dropdown menu */
 const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
   const { openSig: isOpenSig } = useBindings(props, {
@@ -48,6 +45,7 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
   const submenus = useSignal<SubmenuState[]>([]);
   const rootRef = useSignal<HTMLDivElement>();
   const currentFocusEl = useSignal<HTMLElement>();
+  const itemRefs = useSignal<ItemRef[]>([]);
 
   const closeAllSubmenus = $(() => {
     for (const submenu of submenus.value) {
@@ -71,6 +69,10 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
     cleanup(() => {
       isInitialRenderSig.value = false;
     });
+  });
+
+  const getEnabledItems = $(() => {
+    return getEnabledItemsUtil(itemRefs.value);
   });
 
   useOnWindow(
@@ -99,7 +101,9 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
     triggerId,
     submenus,
     rootRef,
-    currentFocusEl
+    currentFocusEl,
+    itemRefs,
+    getEnabledItems
   };
 
   useContextProvider(dropdownContextId, context);
