@@ -41,7 +41,7 @@ interface ItemRef {
 }
 
 /** Root container component for the dropdown menu */
-const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
+export const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
   const { openSig: isOpenSig } = useBindings(props, {
     open: false
   });

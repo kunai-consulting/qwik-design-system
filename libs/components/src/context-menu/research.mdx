@@ -1,0 +1,101 @@
+# Context Menu Research
+
+## Overview
+A Context Menu is a floating menu that appears on right-click (or long press on touch devices),
+providing contextual actions related to an element. It follows the WAI-ARIA menu pattern, offering
+an accessible way to present context-specific options to users.
+
+## Research Links
+- [WAI-ARIA Menu Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)
+- [Shadcn Context Menu](https://ui.shadcn.com/docs/components/context-menu)
+- [Radix UI Context Menu](https://www.radix-ui.com/primitives/docs/components/context-menu)
+- [Material UI Context Menu](https://mui.com/material-ui/react-menu/#context-menu)
+- [CSS Anchor Positioning Spec](https://developer.mozilla.org/en-US/docs/Web/CSS/anchor)
+
+## Features
+- [ ] Right-click activation
+- [ ] Keyboard navigation
+- [ ] Focus management
+- [ ] CSS Anchor positioning
+- [ ] Item selection
+- [ ] Disabled states
+- [ ] Proper ARIA attributes
+- [ ] Nested dropdowns (submenus)
+- [ ] RTL support
+
+## Component Structure
+
+Pieces:
+- Root (container and state management)
+- Trigger (area that activates the context menu)
+- Content (positioned container for items)
+- Item (individual menu items)
+- ItemLabel (text/content within items)
+
+## Keyboard Interactions
+- Arrow Down: Move focus to next item
+- Arrow Up: Move focus to previous item
+- Home: Move focus to first item
+- End: Move focus to last item
+- Enter/Space: Select focused item
+- Escape: Close the menu
+- Tab: Move focus out of menu
+
+## Attributes
+- role="menu" (content)
+- role="menuitem" (items)
+- aria-haspopup="true" (trigger)
+- aria-expanded (trigger)
+- aria-labelledby (content references trigger)
+- aria-disabled
+- data-qds-context-menu-root
+- data-qds-context-menu-trigger
+- data-qds-context-menu-content
+- data-qds-context-menu-item
+- data-qds-context-menu-item-label
+- data-disabled
+- data-highlighted
+
+## Use Cases
+- File operations in file managers
+- Text editor operations
+- Custom context actions
+- Data grid row actions
+- Image operations
+- Link actions
+- Component customization menus
+- List item actions
+
+## API Design
+
+### Root:
+```tsx
+interface ContextMenuRootProps {
+  open?: boolean;
+  onOpenChange$?: (open: boolean) => void;
+  disabled?: boolean;
+}
+```
+
+### Trigger:
+```tsx
+interface ContextMenuTriggerProps {
+  // Inherits div props
+  preventDefaultContextMenu?: boolean;
+}
+```
+
+### Content:
+- No specific props, inherits div props
+
+### Item:
+```tsx
+interface ContextMenuItemProps {
+  disabled?: boolean;
+  onSelect$?: (value: string | undefined) => void;
+  value?: string;
+}
+```
+
+### ItemLabel:
+- No specific props, inherits div props
