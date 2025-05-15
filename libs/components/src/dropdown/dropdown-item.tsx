@@ -7,12 +7,12 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { dropdownContextId, type SubmenuState } from "./dropdown-context";
 import { submenuContextId } from "./dropdown-submenu-context";
-import { focusFirstItem, getSubmenuStateByContentId, getParent } from "./utils";
+import { getSubmenuStateByContentId, getParent } from "./utils";
+import { useDropdownWalker } from "./use-dropdown-walker";
 
 export type PublicDropdownItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
   /** Whether the dropdown item is disabled */
@@ -25,27 +25,30 @@ export type PublicDropdownItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
   closeOnSelect?: boolean;
   /** The ID of the submenu content */
   _submenuContentId?: string;
-  /** The index of the item */
-  _index?: number;
 };
 
 /** Interactive item within a dropdown menu */
 export const DropdownItemBase = component$<PublicDropdownItemProps>(
-  ({
-    disabled,
-    value,
-    onSelect$,
-    closeOnSelect = true,
-    _index,
-    _submenuContentId,
-    ...props
-  }) => {
+  ({ disabled, value, onSelect$, closeOnSelect = true, _submenuContentId, ...props }) => {
     const context = useContext(dropdownContextId);
     const itemRef = useSignal<HTMLElement>();
     const isHoveredSig = useSignal(false);
     const isFocusedSig = useSignal(false);
     const submenuContext = useContext(submenuContextId, null);
     const currentSubmenu = useSignal<SubmenuState | undefined>(undefined);
+
+    const handleFocus$ = $((e: FocusEvent) => {
+      context.currentFocusEl.value = e.target as HTMLElement;
+    });
+
+    const focusFirstItem = $((root: HTMLElement) => {
+      const { getFirstDropdownItem } = useDropdownWalker();
+      setTimeout(() => {
+        if (!root) return;
+        const first = getFirstDropdownItem(root);
+        if (first) first.focus();
+      }, 50);
+    });
 
     useTask$(async function manageSubmenu() {
       if (submenuContext) {
@@ -56,42 +59,8 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
       }
     });
 
-    useTask$(async function manageItemRef({ track }) {
-      track(() => _index);
-      track(() => itemRef.value);
-      track(() => currentSubmenu.value);
-
-      if (typeof _index !== "number") {
-        console.error("DropdownItem received invalid index:", _index);
-        return;
-      }
-
-      let refs = context.itemRefs;
-
-      if (_submenuContentId) {
-        const parent = await getParent(context, currentSubmenu.value?.parentId);
-        refs = parent.itemRefs;
-      } else if (currentSubmenu.value) {
-        refs = currentSubmenu.value.itemRefs;
-      }
-
-      if (itemRef.value) {
-        const newItemRefs = [...refs.value];
-        while (newItemRefs.length <= _index) {
-          newItemRefs.push({ ref: { value: null } });
-        }
-        newItemRefs[_index] = { ref: itemRef };
-        refs.value = newItemRefs;
-      }
-    });
-
     const handleSelect = $(async () => {
       if (disabled) return;
-      if (_submenuContentId && currentSubmenu.value) {
-        currentSubmenu.value.isOpenSig.value = true;
-        focusFirstItem(await currentSubmenu.value.getEnabledItems());
-        return;
-      }
       onSelect$?.(value);
       if (closeOnSelect) {
         context.isOpenSig.value = false;
@@ -99,52 +68,99 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
     });
 
     const handleKeyDown = $(async (event: KeyboardEvent) => {
-      if (disabled) return;
-      const { key } = event;
+      const navKeys = [
+        "ArrowDown",
+        "ArrowUp",
+        "Home",
+        "End",
+        "ArrowLeft",
+        "ArrowRight",
+        "Enter",
+        " "
+      ];
+      if (!navKeys.includes(event.key)) return;
 
-      // Handle selection when the user presses Enter, Space, or ArrowRight
-      if (key === "Enter" || key === " " || (_submenuContentId && key === "ArrowRight")) {
-        await handleSelect();
-        return;
-      }
+      event.preventDefault();
+      event.stopPropagation();
 
-      // Close the submenu when the user presses ArrowLeft and item is in a submenu
-      if (key === "ArrowLeft" && currentSubmenu.value) {
-        currentSubmenu.value.isOpenSig.value = false;
-        return;
-      }
+      let root = context.rootRef.value;
+      let contentId = context.contentId;
 
-      if (key !== "ArrowDown" && key !== "ArrowUp" && key !== "Home" && key !== "End") {
-        return;
-      }
-      let enabledItems: HTMLElement[] = await context.getEnabledItems();
-
-      // Get the enabled items for the current item
-      // This is needed because if the items is a submenu trigger, we need to get the enabled items for the submenu parent instead from the current submenu state
       if (_submenuContentId) {
         const parent = await getParent(context, currentSubmenu.value?.parentId);
-        enabledItems = await parent.getEnabledItems();
+        root = parent.rootRef.value;
+        contentId = parent.contentId;
       } else if (currentSubmenu.value) {
-        enabledItems = await currentSubmenu.value.getEnabledItems();
-      }
-      if (enabledItems.length === 0) return;
-      let nextIndex: number;
-      const currentIndex = enabledItems.findIndex((item) => item === itemRef.value);
-      if (currentIndex === -1) {
-        enabledItems[0]?.focus();
-        return;
-      }
-      if (key === "Home") {
-        nextIndex = 0;
-      } else if (key === "End") {
-        nextIndex = enabledItems.length - 1;
-      } else if (key === "ArrowDown") {
-        nextIndex = currentIndex >= enabledItems.length - 1 ? 0 : currentIndex + 1;
-      } else {
-        nextIndex = currentIndex <= 0 ? enabledItems.length - 1 : currentIndex - 1;
+        root = currentSubmenu.value.rootRef.value;
+        contentId = currentSubmenu.value.contentId;
       }
 
-      enabledItems[nextIndex]?.focus();
+      if (!(root && context.currentFocusEl.value)) return;
+
+      const { getDropdownMenuItems } = useDropdownWalker();
+
+      const items = getDropdownMenuItems(root, contentId);
+      if (items.length === 0) return;
+      const currentIndex = items.findIndex(
+        (item) => item === context.currentFocusEl.value
+      );
+      if (currentIndex === -1) return;
+
+      // Navigation keys
+      let nextIndex: number | null = null;
+
+      switch (event.key) {
+        case "ArrowDown":
+          nextIndex = currentIndex >= items.length - 1 ? 0 : currentIndex + 1;
+          break;
+        case "ArrowUp":
+          nextIndex = currentIndex <= 0 ? items.length - 1 : currentIndex - 1;
+          break;
+        case "Home":
+          return 0;
+        case "End":
+          nextIndex = items.length - 1;
+          break;
+        case "ArrowLeft": {
+          if (currentSubmenu.value) {
+            currentSubmenu.value.isOpenSig.value = false;
+            const parent = await getParent(context, currentSubmenu.value.parentId);
+            if (parent?.rootRef.value) {
+              focusFirstItem(parent.rootRef.value);
+            }
+          }
+          break;
+        }
+        case "ArrowRight": {
+          if (_submenuContentId && currentSubmenu.value) {
+            currentSubmenu.value.isOpenSig.value = true;
+            const submenuRoot = currentSubmenu.value.rootRef.value;
+            if (submenuRoot) {
+              focusFirstItem(submenuRoot);
+            }
+          }
+          break;
+        }
+        case "Enter":
+        case " ": {
+          await handleSelect();
+          if (_submenuContentId && currentSubmenu.value) {
+            currentSubmenu.value.isOpenSig.value = true;
+            const submenuRoot = currentSubmenu.value.rootRef.value;
+            if (submenuRoot) {
+              focusFirstItem(submenuRoot);
+            }
+          }
+          break;
+        }
+        default:
+          return null;
+      }
+
+      if (nextIndex !== null && items[nextIndex]) {
+        items[nextIndex].focus();
+        return;
+      }
     });
 
     return (
@@ -152,17 +168,20 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
         role="menuitem"
         fallback="div"
         internalRef={itemRef}
-        tabIndex={disabled ? -1 : 0}
+        tabIndex={
+          context.currentFocusEl.value === itemRef.value ||
+          context.currentFocusEl.value === null
+            ? 0
+            : -1
+        }
         onClick$={[handleSelect, props.onClick$]}
         onKeyDown$={[handleKeyDown, props.onKeyDown$]}
         onMouseEnter$={[$(() => (isHoveredSig.value = true)), props.onMouseEnter$]}
         onMouseLeave$={[$(() => (isHoveredSig.value = false)), props.onMouseLeave$]}
-        onFocus$={[$(() => (isFocusedSig.value = true)), props.onFocus$]}
+        onFocus$={[handleFocus$, props.onFocus$]}
         onBlur$={[$(() => (isFocusedSig.value = false)), props.onBlur$]}
         aria-disabled={disabled}
-        // Indicates whether the dropdown item is disabled
         data-disabled={disabled}
-        // The identifier for the dropdown item element
         data-qds-dropdown-item
         data-hovered={isHoveredSig.value}
         data-focused={isFocusedSig.value}
@@ -174,8 +193,4 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
   }
 );
 
-export const DropdownItem = withAsChild(DropdownItemBase, (props) => {
-  const nextIndex = getNextIndex("dropdown");
-  props._index = nextIndex;
-  return props;
-});
+export const DropdownItem = withAsChild(DropdownItemBase);

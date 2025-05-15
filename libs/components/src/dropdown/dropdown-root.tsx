@@ -23,7 +23,6 @@ import {
   type SubmenuState,
   dropdownContextId
 } from "./dropdown-context";
-import { getEnabledItems as getEnabledItemsUtil } from "./utils";
 
 type DropdownRootBaseProps = PropsOf<typeof PopoverRootBase>;
 
@@ -47,6 +46,8 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
     open: false
   });
   const submenus = useSignal<SubmenuState[]>([]);
+  const rootRef = useSignal<HTMLDivElement>();
+  const currentFocusEl = useSignal<HTMLElement>();
 
   const closeAllSubmenus = $(() => {
     for (const submenu of submenus.value) {
@@ -91,18 +92,14 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
   const id = useId();
   const contentId = `${id}-content`;
   const triggerId = `${id}-trigger`;
-  const itemRefs = useSignal<ItemRef[]>([]);
-
-  const getEnabledItems = $(() => getEnabledItemsUtil(itemRefs.value));
 
   const context: DropdownContext = {
     isOpenSig,
     contentId,
     triggerId,
-    itemRefs,
-    getEnabledItems,
     submenus,
-    closeAllSubmenus
+    rootRef,
+    currentFocusEl
   };
 
   useContextProvider(dropdownContextId, context);
@@ -110,7 +107,13 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
   const { open: _o, "bind:open": _bo, ...rest } = props;
 
   return (
-    <PopoverRootBase bind:open={isOpenSig} data-qds-dropdown-root {...rest}>
+    <PopoverRootBase
+      tabIndex={-1}
+      bind:open={isOpenSig}
+      data-qds-dropdown-root
+      ref={rootRef}
+      {...rest}
+    >
       <Slot />
     </PopoverRootBase>
   );

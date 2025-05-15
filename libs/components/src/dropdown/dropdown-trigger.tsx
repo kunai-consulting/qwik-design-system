@@ -2,21 +2,23 @@ import { $, type PropsOf, Slot, component$, useContext } from "@builder.io/qwik"
 import { withAsChild } from "../as-child/as-child";
 import { PopoverTriggerBase } from "../popover/popover-trigger";
 import { dropdownContextId } from "./dropdown-context";
+import { useDropdownWalker } from "./use-dropdown-walker";
 
 export type PublicDropdownTriggerProps = Omit<
   PropsOf<typeof PopoverTriggerBase>,
-  "popovertarget"
+  "popovertarget" | "id" | "aria-haspopup" | "aria-expanded" | "aria-controls"
 >;
 /** Button that triggers the dropdown menu to open/close */
 export const DropdownTriggerBase = component$<PublicDropdownTriggerProps>((props) => {
   const context = useContext(dropdownContextId);
 
   const focusFirstItem = $(() => {
-    setTimeout(async () => {
-      const enabledItems = await context.getEnabledItems();
-      if (enabledItems.length > 0) {
-        enabledItems[0].focus();
-      }
+    const { getFirstDropdownItem } = useDropdownWalker();
+    setTimeout(() => {
+      const root = context.rootRef.value;
+      if (!root) return;
+      const first = getFirstDropdownItem(root);
+      if (first) first.focus();
     }, 50);
   });
 

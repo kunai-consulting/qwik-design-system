@@ -1,4 +1,4 @@
-import { type QRL, type Signal, createContextId } from "@builder.io/qwik";
+import { type Signal, createContextId } from "@builder.io/qwik";
 
 export type ItemRef = {
   ref: Signal;
@@ -15,12 +15,10 @@ export type SubmenuState = {
   isOpenSig: Signal<boolean>;
   /** Whether the submenu is disabled */
   disabled: boolean;
-  /** The items in the submenu */
-  itemRefs: Signal<ItemRef[]>;
-  /** Get the enabled items in the submenu */
-  getEnabledItems: QRL<() => HTMLElement[]>;
   /** The parent submenu */
   parentId: string;
+  /** The root element of the submenu */
+  rootRef: Signal<HTMLElement | undefined>;
 };
 
 export type DropdownContext = {
@@ -30,9 +28,8 @@ export type DropdownContext = {
   submenus: Signal<SubmenuState[]>;
   contentId: string;
   triggerId: string;
-  itemRefs: Signal<ItemRef[]>;
-  getEnabledItems: QRL<() => HTMLElement[]>;
-  closeAllSubmenus: QRL<() => void>;
+  rootRef: Signal<HTMLElement | undefined>;
+  currentFocusEl: Signal<HTMLElement | undefined>;
 };
 
 export const dropdownContextId = createContextId<DropdownContext>("dropdown-context");

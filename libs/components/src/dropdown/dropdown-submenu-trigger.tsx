@@ -31,6 +31,7 @@ export const DropdownSubmenuTriggerBase = component$<PublicDropdownSubmenuTrigge
         closeOnSelect={false}
         _submenuContentId={submenu.contentId}
         data-qds-dropdown-submenu-trigger
+        data-qds-dropdown-parent={context.contentId}
         qds-submenu-level={submenuContext.level}
         aria-haspopup="menu"
         aria-controls={submenu.contentId}
