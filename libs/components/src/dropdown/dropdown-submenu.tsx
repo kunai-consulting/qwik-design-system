@@ -17,6 +17,7 @@ import { submenuContextId } from "./dropdown-submenu-context";
 import type { PublicDropdownRootProps } from "./dropdown-root";
 import { useBindings } from "@kunai-consulting/qwik-utils";
 import dropdownSubmenuStyles from "./dropdown-submenu.css?inline";
+import { getEnabledItems as getEnabledItemsUtil } from "./utils";
 
 export type PublicDropdownSubmenuProps = PublicDropdownRootProps & {
   /** The position of the submenu relative to its trigger */
@@ -43,22 +44,16 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
   const triggerId = useSignal(`dropdown-submenu-trigger-${id}`);
   const contentId = useSignal(`dropdown-submenu-content-${id}`);
 
+  const currentLevel = parentContext?.level ? parentContext.level + 1 : 1;
+
   // Provide IDs to children through context
   useContextProvider(submenuContextId, {
     triggerId: triggerId.value,
     contentId: contentId.value,
-    level: parentContext?.level ? parentContext.level + 1 : 1
+    level: currentLevel
   });
 
-  const getEnabledItems = $(() =>
-    itemRefs.value
-      .map((itemRefObj) => itemRefObj.ref.value)
-      .filter((el): el is HTMLElement => {
-        if (!el) return false;
-        if (el.hasAttribute("data-disabled") || el.hasAttribute("disabled")) return false;
-        return true;
-      })
-  );
+  const getEnabledItems = $(() => getEnabledItemsUtil(itemRefs.value));
 
   useTask$(function registerSubmenu() {
     context.submenus.value = [
@@ -81,7 +76,12 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
   const { open: _o, "bind:open": _bo, ...rest } = props;
 
   return (
-    <PopoverRootBase bind:open={isOpenSig} {...rest} data-qds-dropdown-submenu>
+    <PopoverRootBase
+      bind:open={isOpenSig}
+      {...rest}
+      data-qds-dropdown-submenu
+      qds-submenu-level={currentLevel}
+    >
       <Slot />
     </PopoverRootBase>
   );

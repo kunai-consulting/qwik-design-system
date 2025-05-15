@@ -14,11 +14,11 @@ export type PublicDropdownSubmenuTriggerProps = Omit<
 export const DropdownSubmenuTriggerBase = component$<PublicDropdownSubmenuTriggerProps>(
   (props) => {
     const context = useContext(dropdownContextId);
-    const ids = useContext(submenuContextId);
+    const submenuContext = useContext(submenuContextId);
 
     // Find the submenu state for this trigger
     const submenu = context.submenus.value.find(
-      (submenu) => submenu.triggerId === ids.triggerId
+      (submenu) => submenu.contentId === submenuContext.contentId
     );
 
     if (!submenu) {
@@ -29,8 +29,9 @@ export const DropdownSubmenuTriggerBase = component$<PublicDropdownSubmenuTrigge
     return (
       <DropdownItem
         closeOnSelect={false}
-        _submenuContentId={ids.contentId}
+        _submenuContentId={submenu.contentId}
         data-qds-dropdown-submenu-trigger
+        qds-submenu-level={submenuContext.level}
         {...props}
       >
         <Slot />

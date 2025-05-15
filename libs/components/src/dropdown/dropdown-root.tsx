@@ -23,6 +23,7 @@ import {
   type SubmenuState,
   dropdownContextId
 } from "./dropdown-context";
+import { getEnabledItems as getEnabledItemsUtil } from "./utils";
 
 type DropdownRootBaseProps = PropsOf<typeof PopoverRootBase>;
 
@@ -92,15 +93,7 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
   const triggerId = `${id}-trigger`;
   const itemRefs = useSignal<ItemRef[]>([]);
 
-  const getEnabledItems = $(() =>
-    itemRefs.value
-      .map((itemRefObj) => itemRefObj.ref.value)
-      .filter((el): el is HTMLElement => {
-        if (!el) return false;
-        if (el.hasAttribute("data-disabled") || el.hasAttribute("disabled")) return false;
-        return true;
-      })
-  );
+  const getEnabledItems = $(() => getEnabledItemsUtil(itemRefs.value));
 
   const context: DropdownContext = {
     isOpenSig,

@@ -10,12 +10,9 @@ import {
 import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-import {
-  type DropdownContext,
-  dropdownContextId,
-  type SubmenuState
-} from "./dropdown-context";
+import { dropdownContextId, type SubmenuState } from "./dropdown-context";
 import { submenuContextId } from "./dropdown-submenu-context";
+import { focusFirstItem, getSubmenuStateByContentId, getParent } from "./utils";
 
 export type PublicDropdownItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
   /** Whether the dropdown item is disabled */
@@ -28,8 +25,6 @@ export type PublicDropdownItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
   closeOnSelect?: boolean;
   /** The ID of the submenu content */
   _submenuContentId?: string;
-  /** The level of the item */
-  _level?: number;
   /** The index of the item */
   _index?: number;
 };
@@ -52,35 +47,12 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
     const submenuContext = useContext(submenuContextId, null);
     const currentSubmenu = useSignal<SubmenuState | undefined>(undefined);
 
-    const focusFirstItem = $((enabledItems: HTMLElement[]) => {
-      setTimeout(async () => {
-        if (enabledItems.length > 0) {
-          enabledItems[0].focus();
-        }
-      }, 50);
-    });
-
-    const getSubmenuStateByContentId = $((contentId: string) => {
-      return context.submenus.value.find((submenu) => submenu.contentId === contentId);
-    });
-
-    const getParent = $((parentId: string | undefined) => {
-      let parent: SubmenuState | DropdownContext;
-
-      if (parentId === context.contentId || !parentId) {
-        parent = context;
-      } else {
-        parent = context.submenus.value.find(
-          (submenu) => submenu.contentId === parentId
-        ) as SubmenuState;
-      }
-
-      return parent;
-    });
-
     useTask$(async function manageSubmenu() {
       if (submenuContext) {
-        currentSubmenu.value = await getSubmenuStateByContentId(submenuContext.contentId);
+        currentSubmenu.value = await getSubmenuStateByContentId(
+          context,
+          submenuContext.contentId
+        );
       }
     });
 
@@ -97,25 +69,18 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
       let refs = context.itemRefs;
 
       if (_submenuContentId) {
-        const parent = await getParent(currentSubmenu.value?.parentId);
+        const parent = await getParent(context, currentSubmenu.value?.parentId);
         refs = parent.itemRefs;
       } else if (currentSubmenu.value) {
         refs = currentSubmenu.value.itemRefs;
       }
 
       if (itemRef.value) {
-        // Create a new array instead of mutating the existing one
         const newItemRefs = [...refs.value];
-
-        // Ensure array is large enough
         while (newItemRefs.length <= _index) {
           newItemRefs.push({ ref: { value: null } });
         }
-
-        // Set the ref at the right index
         newItemRefs[_index] = { ref: itemRef };
-
-        // Replace the entire array in the signal
         refs.value = newItemRefs;
       }
     });
@@ -140,28 +105,23 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
         await handleSelect();
         return;
       }
+      if (key === "ArrowLeft" && currentSubmenu.value) {
+        currentSubmenu.value.isOpenSig.value = false;
+        return;
+      }
       if (key !== "ArrowDown" && key !== "ArrowUp" && key !== "Home" && key !== "End") {
         return;
       }
-      // Get elements from refs, filter out disabled ones
       let enabledItems: HTMLElement[] = await context.getEnabledItems();
-
-      // If we're in a submenu context and this is a trigger item, get the enabled items from the parent submenu
       if (_submenuContentId) {
-        const parent = await getParent(currentSubmenu.value?.parentId);
+        const parent = await getParent(context, currentSubmenu.value?.parentId);
         enabledItems = await parent.getEnabledItems();
       } else if (currentSubmenu.value) {
-        // If we're in a submenu context and this is NOT a trigger item, get the enabled items from the current submenu
         enabledItems = await currentSubmenu.value.getEnabledItems();
       }
-
-      console.log("enabledItems", enabledItems);
-
       if (enabledItems.length === 0) return;
-
       let nextIndex: number;
       const currentIndex = enabledItems.findIndex((item) => item === itemRef.value);
-
       if (currentIndex === -1) {
         enabledItems[0]?.focus();
         return;
@@ -173,7 +133,6 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
       } else if (key === "ArrowDown") {
         nextIndex = currentIndex >= enabledItems.length - 1 ? 0 : currentIndex + 1;
       } else {
-        // ArrowUp
         nextIndex = currentIndex <= 0 ? enabledItems.length - 1 : currentIndex - 1;
       }
       enabledItems[nextIndex]?.focus();
