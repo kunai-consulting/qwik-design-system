@@ -358,53 +358,31 @@ export const DateInputSegment = component$(
       return `${segmentSig.value.numericValue ?? ""}`;
     });
 
-    const usePlaceholderWidth = useComputed$(() => {
-      return !displayValueSig.value.length;
-    });
-
     return (
-      <>
-        <span class="qds-date-input-segment-container">
-          <span
-            class={[
-              "qds-date-input-width-measurement",
-              usePlaceholderWidth.value
-                ? "qds-date-input-width-measurement-placeholder"
-                : ""
-            ]}
-            aria-hidden="true"
-          >
-            {usePlaceholderWidth.value
-              ? segmentSig.value.placeholderText
-              : displayValueSig.value}
-          </span>
-
-          <input
-            {...otherProps}
-            ref={inputRef}
-            id={inputId}
-            type="text"
-            data-qds-date-input-segment
-            data-qds-date-input-segment-placeholder={segmentSig.value.isPlaceholder}
-            data-qds-date-input-segment-day={segmentSig.value.type === "day"}
-            data-qds-date-input-segment-month={segmentSig.value.type === "month"}
-            data-qds-date-input-segment-year={segmentSig.value.type === "year"}
-            data-qds-date-input-segment-index={_index}
-            value={displayValueSig.value}
-            onKeyDown$={[onKeyDownSync$, onKeyDown$, otherProps.onKeyDown$]}
-            onInput$={[onInput$, otherProps.onInput$]}
-            onPaste$={[onPasteSync$, otherProps.onPaste$]}
-            stoppropagation:change
-            placeholder={segmentSig.value.placeholderText}
-            aria-label={`${segmentSig.value.type} input`}
-            aria-valuemax={segmentSig.value.max}
-            aria-valuemin={segmentSig.value.min}
-            aria-valuenow={segmentSig.value.numericValue}
-            disabled={context.disabledSig.value}
-            maxLength={maxLength + 1}
-          />
-        </span>
-      </>
+      <input
+        {...otherProps}
+        ref={inputRef}
+        id={inputId}
+        type="text"
+        data-qds-date-input-segment
+        data-qds-date-input-segment-placeholder={segmentSig.value.isPlaceholder}
+        data-qds-date-input-segment-day={segmentSig.value.type === "day"}
+        data-qds-date-input-segment-month={segmentSig.value.type === "month"}
+        data-qds-date-input-segment-year={segmentSig.value.type === "year"}
+        data-qds-date-input-segment-index={_index}
+        value={displayValueSig.value}
+        onKeyDown$={[onKeyDownSync$, onKeyDown$, otherProps.onKeyDown$]}
+        onInput$={[onInput$, otherProps.onInput$]}
+        onPaste$={[onPasteSync$, otherProps.onPaste$]}
+        stoppropagation:change
+        placeholder={segmentSig.value.placeholderText}
+        aria-label={`${segmentSig.value.type} input`}
+        aria-valuemax={segmentSig.value.max}
+        aria-valuemin={segmentSig.value.min}
+        aria-valuenow={segmentSig.value.numericValue}
+        disabled={context.disabledSig.value}
+        maxLength={maxLength + 1}
+      />
     );
   }
 );
