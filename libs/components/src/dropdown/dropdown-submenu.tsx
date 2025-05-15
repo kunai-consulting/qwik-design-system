@@ -10,12 +10,13 @@ import {
   $
 } from "@builder.io/qwik";
 import { PopoverRootBase } from "../popover/popover-root";
-import { dropdownContextId, type ItemRef } from "./dropdown-context";
+import { dropdownContextId, type SubmenuState, type ItemRef } from "./dropdown-context";
 import { submenuContextId } from "./dropdown-submenu-context";
 import type { PublicDropdownRootProps } from "./dropdown-root";
 import { useBindings } from "@kunai-consulting/qwik-utils";
 import dropdownSubmenuStyles from "./dropdown-submenu.css?inline";
 import { getEnabledItemsUtil } from "./utils";
+import { withAsChild } from "../as-child/as-child";
 
 export type PublicDropdownSubmenuProps = PublicDropdownRootProps & {
   /** The position of the submenu relative to its trigger */
@@ -27,7 +28,6 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
   useStyles$(dropdownSubmenuStyles);
   const context = useContext(dropdownContextId);
   const parentContext = useContext(submenuContextId, null);
-  const rootRef = useSignal<HTMLElement>();
   const itemRefs = useSignal<ItemRef[]>([]);
 
   const { openSig: isOpenSig } = useBindings(props, {
@@ -40,20 +40,19 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
   const contentId = useSignal(`${id}-dropdown-submenu-content`);
 
   const currentLevel = parentContext?.level ? parentContext.level + 1 : 1;
-  const parentRef = parentContext ? rootRef : context.rootRef;
+
   const parentId = parentContext ? parentContext.contentId : context.contentId;
   const getEnabledItems = $(() => {
     return getEnabledItemsUtil(itemRefs.value);
   });
 
-  const submenu = {
+  const submenu: SubmenuState = {
     triggerId: triggerId.value,
     contentId: contentId.value,
     position: props.position ?? "right",
     isOpenSig,
     disabled: false,
     parentId,
-    rootRef,
     itemRefs,
     getEnabledItems
   };
@@ -63,7 +62,6 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
     triggerId: triggerId.value,
     contentId: contentId.value,
     level: currentLevel,
-    parentRef: parentRef,
     parentId: parentId
   });
 
@@ -88,4 +86,4 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
   );
 });
 
-export const DropdownSubmenu = DropdownSubmenuBase;
+export const DropdownSubmenu = withAsChild(DropdownSubmenuBase);

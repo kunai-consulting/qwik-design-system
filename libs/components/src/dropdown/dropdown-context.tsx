@@ -17,8 +17,6 @@ export type SubmenuState = {
   disabled: boolean;
   /** The parent submenu */
   parentId: string;
-  /** The root element of the submenu */
-  rootRef: Signal<HTMLElement | undefined>;
   /** The item refs of the submenu */
   itemRefs: Signal<ItemRef[]>;
   /** Get the enabled items of the submenu */
@@ -33,7 +31,6 @@ export type DropdownContext = {
   contentId: string;
   triggerId: string;
   itemRefs: Signal<ItemRef[]>;
-  rootRef: Signal<HTMLElement | undefined>;
   currentFocusEl: Signal<HTMLElement | undefined>;
   /** Get the enabled items of the dropdown */
   getEnabledItems: QRL<() => HTMLElement[]>;

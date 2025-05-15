@@ -12,7 +12,6 @@ import { Render } from "../render/render";
 import { dropdownContextId, type SubmenuState } from "./dropdown-context";
 import { submenuContextId } from "./dropdown-submenu-context";
 import { getSubmenuStateByContentId, getParent } from "./utils";
-import { getNextIndex } from "@kunai-consulting/qwik-utils";
 
 export type PublicDropdownItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
   /** Whether the dropdown item is disabled */
@@ -23,13 +22,11 @@ export type PublicDropdownItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
   onSelect$?: (value: string | undefined) => void;
   /** Whether to close the dropdown when the item is selected (default: true) */
   closeOnSelect?: boolean;
-  /** Whether the item is a submenu */
-  _index?: number;
 };
 
 /** Interactive item within a dropdown menu */
 export const DropdownItemBase = component$<PublicDropdownItemProps>(
-  ({ disabled, value, onSelect$, closeOnSelect = true, _index, ...props }) => {
+  ({ disabled, value, onSelect$, closeOnSelect = true, ...rest }) => {
     const context = useContext(dropdownContextId);
     const itemRef = useSignal<HTMLElement>();
     const isHoveredSig = useSignal(false);
@@ -59,18 +56,12 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
     });
 
     useTask$(async function registerItemRef({ track }) {
-      track(() => _index);
       track(() => itemRef.value);
       track(() => currentSubmenu.value);
 
-      if (typeof _index !== "number") {
-        console.error("DropdownItem received invalid index:", _index);
-        return;
-      }
-
       let refs = context.itemRefs;
 
-      if (props["aria-controls"]) {
+      if (rest["aria-controls"]) {
         const parent = await getParent(context, submenuContext?.parentId);
         refs = parent.itemRefs;
       } else if (currentSubmenu.value) {
@@ -78,11 +69,14 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
       }
 
       if (itemRef.value) {
-        const newItemRefs = [...refs.value];
-        while (newItemRefs.length <= _index) {
-          newItemRefs.push({ ref: { value: null } });
+        let newItemRefs = [...refs.value];
+
+        const oldIndex = newItemRefs.findIndex((ref) => ref.ref.value === itemRef.value);
+
+        if (oldIndex === -1) {
+          newItemRefs = [...newItemRefs, { ref: itemRef }];
         }
-        newItemRefs[_index] = { ref: itemRef };
+
         refs.value = newItemRefs;
       }
     });
@@ -105,7 +99,7 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
 
       let enabledItems = await context.getEnabledItems();
 
-      if (props["aria-controls"]) {
+      if (rest["aria-controls"]) {
         const parent = await getParent(context, submenuContext?.parentId);
 
         enabledItems = await parent.getEnabledItems();
@@ -142,19 +136,33 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
         case "ArrowLeft": {
           if (currentSubmenu.value) {
             currentSubmenu.value.isOpenSig.value = false;
+            const parent = await getParent(context, currentSubmenu.value.parentId);
+            const parentItems = await parent.getEnabledItems();
+            if (parentItems.length > 0) {
+              setTimeout(() => {
+                parentItems[0].focus();
+              }, 50);
+            }
           }
           break;
         }
         case "ArrowRight": {
-          if (props["aria-controls"] && currentSubmenu.value) {
+          if (rest["aria-controls"] && currentSubmenu.value) {
             currentSubmenu.value.isOpenSig.value = true;
+
+            const submenuItems = await currentSubmenu.value.getEnabledItems();
+            if (submenuItems.length > 0) {
+              setTimeout(() => {
+                submenuItems[0].focus();
+              }, 50);
+            }
           }
           break;
         }
         case "Enter":
         case " ": {
           await handleSelect();
-          if (props["aria-controls"] && currentSubmenu.value) {
+          if (rest["aria-controls"] && currentSubmenu.value) {
             currentSubmenu.value.isOpenSig.value = true;
           }
           break;
@@ -174,24 +182,19 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
         role="menuitem"
         fallback="div"
         internalRef={itemRef}
-        tabIndex={
-          context.currentFocusEl.value === itemRef.value ||
-          context.currentFocusEl.value === null
-            ? 0
-            : -1
-        }
-        onClick$={[handleSelect, props.onClick$]}
-        onKeyDown$={[handleKeyDown, props.onKeyDown$]}
-        onMouseEnter$={[$(() => (isHoveredSig.value = true)), props.onMouseEnter$]}
-        onMouseLeave$={[$(() => (isHoveredSig.value = false)), props.onMouseLeave$]}
-        onFocus$={[handleFocus$, props.onFocus$]}
-        onBlur$={[$(() => (isFocusedSig.value = false)), props.onBlur$]}
+        tabIndex={0}
+        onClick$={[handleSelect, rest.onClick$]}
+        onKeyDown$={[handleKeyDown, rest.onKeyDown$]}
+        onMouseEnter$={[$(() => (isHoveredSig.value = true)), rest.onMouseEnter$]}
+        onMouseLeave$={[$(() => (isHoveredSig.value = false)), rest.onMouseLeave$]}
+        onFocus$={[handleFocus$, rest.onFocus$]}
+        onBlur$={[$(() => (isFocusedSig.value = false)), rest.onBlur$]}
         aria-disabled={disabled}
         data-disabled={disabled}
         data-qds-dropdown-item
         data-hovered={isHoveredSig.value}
         data-focused={isFocusedSig.value}
-        {...props}
+        {...rest}
       >
         <Slot />
       </Render>
@@ -199,8 +202,4 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
   }
 );
 
-export const DropdownItem = withAsChild(DropdownItemBase, (props) => {
-  const nextIndex = getNextIndex("dropdown");
-  props._index = nextIndex;
-  return props;
-});
+export const DropdownItem = withAsChild(DropdownItemBase);

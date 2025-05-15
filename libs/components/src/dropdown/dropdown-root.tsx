@@ -10,11 +10,7 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import {
-  type BindableProps,
-  resetIndexes,
-  useBindings
-} from "@kunai-consulting/qwik-utils";
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";
 import {
@@ -109,13 +105,10 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
   const { open: _o, "bind:open": _bo, ...rest } = props;
 
   return (
-    <PopoverRootBase tabIndex={-1} bind:open={isOpenSig} data-qds-dropdown-root {...rest}>
+    <PopoverRootBase bind:open={isOpenSig} data-qds-dropdown-root {...rest}>
       <Slot />
     </PopoverRootBase>
   );
 });
 
-export const DropdownRoot = withAsChild(DropdownRootBase, (props) => {
-  resetIndexes("dropdown");
-  return props;
-});
+export const DropdownRoot = withAsChild(DropdownRootBase);
