@@ -47,7 +47,7 @@ export const DropdownSubmenuContentBase = component$<PublicDropdownSubmenuConten
       <PopoverContentBase
         role="menu"
         id={submenuContext.contentId}
-        aria-labelledby={submenuContext.contentId}
+        aria-labelledby={submenuContext.triggerId}
         data-qds-dropdown-submenu-content
         data-position={submenu.position}
       >

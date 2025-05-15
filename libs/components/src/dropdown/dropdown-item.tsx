@@ -101,18 +101,26 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
     const handleKeyDown = $(async (event: KeyboardEvent) => {
       if (disabled) return;
       const { key } = event;
+
+      // Handle selection when the user presses Enter, Space, or ArrowRight
       if (key === "Enter" || key === " " || (_submenuContentId && key === "ArrowRight")) {
         await handleSelect();
         return;
       }
+
+      // Close the submenu when the user presses ArrowLeft and item is in a submenu
       if (key === "ArrowLeft" && currentSubmenu.value) {
         currentSubmenu.value.isOpenSig.value = false;
         return;
       }
+
       if (key !== "ArrowDown" && key !== "ArrowUp" && key !== "Home" && key !== "End") {
         return;
       }
       let enabledItems: HTMLElement[] = await context.getEnabledItems();
+
+      // Get the enabled items for the current item
+      // This is needed because if the items is a submenu trigger, we need to get the enabled items for the submenu parent instead from the current submenu state
       if (_submenuContentId) {
         const parent = await getParent(context, currentSubmenu.value?.parentId);
         enabledItems = await parent.getEnabledItems();
@@ -135,6 +143,7 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
       } else {
         nextIndex = currentIndex <= 0 ? enabledItems.length - 1 : currentIndex - 1;
       }
+
       enabledItems[nextIndex]?.focus();
     });
 

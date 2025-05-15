@@ -50,6 +50,15 @@ export default component$(() => {
               </Dropdown.Item>
             </Dropdown.SubmenuContent>
           </Dropdown.Submenu>
+          <Dropdown.Item
+            value="Regular Item 2"
+            onSelect$={() => (selectedItem.value = "Regular Item 2")}
+            class="dropdown-item"
+          >
+            <Dropdown.ItemLabel class="dropdown-item-label">
+              Regular Item 2
+            </Dropdown.ItemLabel>
+          </Dropdown.Item>
         </Dropdown.Content>
       </Dropdown.Root>
     </div>

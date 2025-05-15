@@ -32,6 +32,9 @@ export const DropdownSubmenuTriggerBase = component$<PublicDropdownSubmenuTrigge
         _submenuContentId={submenu.contentId}
         data-qds-dropdown-submenu-trigger
         qds-submenu-level={submenuContext.level}
+        aria-haspopup="menu"
+        aria-controls={submenu.contentId}
+        aria-expanded={submenu.isOpenSig.value}
         {...props}
       >
         <Slot />

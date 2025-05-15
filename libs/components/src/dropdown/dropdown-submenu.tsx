@@ -41,8 +41,8 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
 
   const id = useId();
 
-  const triggerId = useSignal(`dropdown-submenu-trigger-${id}`);
-  const contentId = useSignal(`dropdown-submenu-content-${id}`);
+  const triggerId = useSignal(`${id}-dropdown-submenu-trigger`);
+  const contentId = useSignal(`${id}-dropdown-submenu-content`);
 
   const currentLevel = parentContext?.level ? parentContext.level + 1 : 1;
 
