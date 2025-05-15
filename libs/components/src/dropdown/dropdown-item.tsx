@@ -129,7 +129,8 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
           nextIndex = currentIndex <= 0 ? enabledItems.length - 1 : currentIndex - 1;
           break;
         case "Home":
-          return 0;
+          nextIndex = 0;
+          break;
         case "End":
           nextIndex = enabledItems.length - 1;
           break;
