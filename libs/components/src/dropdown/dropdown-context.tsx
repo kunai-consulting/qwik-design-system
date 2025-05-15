@@ -1,6 +1,6 @@
 import { type QRL, type Signal, createContextId } from "@builder.io/qwik";
 
-type ItemRef = {
+export type ItemRef = {
   ref: Signal;
 };
 

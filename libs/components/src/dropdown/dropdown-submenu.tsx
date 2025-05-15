@@ -71,7 +71,7 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
         disabled: false,
         itemRefs: itemRefs,
         getEnabledItems: getEnabledItems,
-        parentId: parentContext ? contentId.value : context.contentId
+        parentId: parentContext ? parentContext.contentId : context.contentId
       }
     ];
   });

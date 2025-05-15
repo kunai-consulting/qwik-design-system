@@ -3,9 +3,9 @@ import { withAsChild } from "../as-child/as-child";
 import { PopoverContentBase } from "../popover/popover-content";
 import { dropdownContextId } from "./dropdown-context";
 import { submenuContextId } from "./dropdown-submenu-context";
-
+import type { PropsOf } from "@builder.io/qwik";
 /** Props for the submenu content component */
-export type PublicDropdownSubmenuContentProps = Record<string, never>;
+export type PublicDropdownSubmenuContentProps = PropsOf<typeof PopoverContentBase>;
 
 /** A component that renders the submenu content */
 export const DropdownSubmenuContentBase = component$<PublicDropdownSubmenuContentProps>(

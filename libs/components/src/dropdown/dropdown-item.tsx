@@ -97,7 +97,6 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
       let refs = context.itemRefs;
 
       if (_submenuContentId) {
-        console.log(_submenuContentId);
         const parent = await getParent(currentSubmenu.value?.parentId);
         refs = parent.itemRefs;
       } else if (currentSubmenu.value) {

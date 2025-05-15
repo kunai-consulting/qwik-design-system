@@ -19,9 +19,11 @@ export default component$(() => {
             <Dropdown.ItemLabel class="dropdown-item-label">Item 1</Dropdown.ItemLabel>
           </Dropdown.Item>
           <Dropdown.Submenu>
-            <Dropdown.SubmenuTrigger>Submenu</Dropdown.SubmenuTrigger>
+            <Dropdown.SubmenuTrigger class="dropdown-item">
+              Submenu
+            </Dropdown.SubmenuTrigger>
             <Dropdown.SubmenuContent>
-              <Dropdown.Item>
+              <Dropdown.Item class="dropdown-item">
                 <Dropdown.ItemLabel class="dropdown-item-label">
                   Submenu Item 1
                 </Dropdown.ItemLabel>
@@ -29,7 +31,7 @@ export default component$(() => {
               <Dropdown.Submenu>
                 <Dropdown.SubmenuTrigger>Submenu 2</Dropdown.SubmenuTrigger>
                 <Dropdown.SubmenuContent>
-                  <Dropdown.Item>
+                  <Dropdown.Item class="dropdown-item">
                     <Dropdown.ItemLabel class="dropdown-item-label">
                       Submenu Item 1
                     </Dropdown.ItemLabel>
@@ -37,12 +39,12 @@ export default component$(() => {
                   <Dropdown.Submenu>
                     <Dropdown.SubmenuTrigger>Submenu 3</Dropdown.SubmenuTrigger>
                     <Dropdown.SubmenuContent>
-                      <Dropdown.Item>
+                      <Dropdown.Item class="dropdown-item">
                         <Dropdown.ItemLabel class="dropdown-item-label">
                           Submenu Item 1
                         </Dropdown.ItemLabel>
                       </Dropdown.Item>
-                      <Dropdown.Item>
+                      <Dropdown.Item class="dropdown-item">
                         <Dropdown.ItemLabel class="dropdown-item-label">
                           Submenu Item 2
                         </Dropdown.ItemLabel>
