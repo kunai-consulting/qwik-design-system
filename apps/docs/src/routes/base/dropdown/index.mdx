@@ -38,6 +38,24 @@ This example demonstrates:
 - Default behavior where items close the dropdown when selected
 - `disabled` prop to make items non-interactive
 
+### Submenu Functionality
+Dropdowns now support nested submenus for more complex menu structures. Use `Dropdown.Submenu` to wrap a submenu, `Dropdown.SubmenuTrigger` to provide the trigger item, and `Dropdown.SubmenuContent` for the submenu's content.
+
+<Showcase name="submenu" />
+This example demonstrates:
+- Creating a submenu inside a dropdown
+- Using `Dropdown.SubmenuTrigger` to open the submenu
+- Keyboard navigation and focus management between root and submenu items
+
+### Multi-level Submenus
+You can nest submenus to any depth, allowing for complex menu hierarchies. Each submenu manages its own open state and keyboard navigation, and focus is managed across all levels.
+
+<Showcase name="submenu-multilevel" />
+This example demonstrates:
+- Multiple levels of nested submenus
+- Keyboard navigation between root, first-level, and second-level submenu items
+- Each submenu trigger opens its own submenu and returns focus to the correct trigger when closed
+
 ## Component State
 
 ### State Management

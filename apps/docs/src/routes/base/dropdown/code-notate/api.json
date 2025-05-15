@@ -153,6 +153,60 @@
           }
         ]
       }
+    },
+    {
+      "Dropdown Submenu": {
+        "inheritsFrom": "Dropdown Root",
+        "types": [
+          {
+            "PublicDropdownSubmenuProps": [
+              {
+                "comment": "The position of the submenu relative to its trigger (right, left, bottom, top).",
+                "prop": "position",
+                "type": "'right' | 'left' | 'bottom' | 'top'",
+                "defaultValue": "'right'"
+              }
+            ]
+          }
+        ],
+        "dataAttributes": [
+          {
+            "name": "data-qds-dropdown-submenu",
+            "comment": "Present on the submenu container."
+          }
+        ]
+      }
+    },
+    {
+      "Dropdown SubmenuTrigger": {
+        "inheritsFrom": "Dropdown.Item",
+        "ariaAttributes": [
+          { "name": "aria-haspopup", "value": "menu" },
+          { "name": "aria-expanded", "value": "boolean" },
+          { "name": "aria-controls", "value": "string (ID of submenu content)" }
+        ],
+        "dataAttributes": [
+          {
+            "name": "data-qds-dropdown-submenu-trigger",
+            "comment": "Present on the submenu trigger item."
+          }
+        ]
+      }
+    },
+    {
+      "Dropdown SubmenuContent": {
+        "inheritsFrom": "Dropdown.Content",
+        "ariaAttributes": [
+          { "name": "role", "value": "menu" },
+          { "name": "aria-labelledby", "value": "string (ID of submenu trigger)" }
+        ],
+        "dataAttributes": [
+          {
+            "name": "data-qds-dropdown-submenu-content",
+            "comment": "Present on the submenu content element."
+          }
+        ]
+      }
     }
   ],
   "anatomy": [
@@ -175,6 +229,18 @@
     {
       "name": "Dropdown.ItemLabel",
       "description": "The text content or label for a Dropdown.Item."
+    },
+    {
+      "name": "Dropdown.Submenu",
+      "description": "Container for a nested submenu, manages its own open state and context."
+    },
+    {
+      "name": "Dropdown.SubmenuTrigger",
+      "description": "The item that triggers opening of the submenu."
+    },
+    {
+      "name": "Dropdown.SubmenuContent",
+      "description": "The container for submenu items, positioned relative to the submenu trigger."
     }
   ],
   "keyboardInteractions": [
@@ -188,15 +254,23 @@
     },
     {
       "key": "ArrowDown",
-      "comment": "When focus is within the dropdown content, moves focus/highlight to the next menu item."
+      "comment": "When focus is within the dropdown content, moves focus/highlight to the next menu item or opens a submenu if on a submenu trigger."
     },
     {
       "key": "ArrowUp",
       "comment": "When focus is within the dropdown content, moves focus/highlight to the previous menu item."
     },
     {
+      "key": "ArrowRight",
+      "comment": "When focus is on a submenu trigger, opens the submenu and moves focus to its first item."
+    },
+    {
+      "key": "ArrowLeft",
+      "comment": "When focus is within a submenu, closes the submenu and returns focus to the submenu trigger."
+    },
+    {
       "key": "Escape",
-      "comment": "When the dropdown is open, closes the dropdown."
+      "comment": "When the dropdown or submenu is open, closes the dropdown or submenu."
     },
     {
       "key": "Tab",
@@ -204,23 +278,24 @@
     },
     {
       "key": "Home",
-      "comment": "When focus is on a dropdown item, moves focus to the first enabled item in the dropdown"
+      "comment": "When focus is on a dropdown item, moves focus to the first enabled item in the dropdown or submenu."
     },
     {
       "key": "End",
-      "comment": "When focus is on a dropdown item, moves focus to the last enabled item in the dropdown"
+      "comment": "When focus is on a dropdown item, moves focus to the last enabled item in the dropdown or submenu."
     }
   ],
   "features": [
     "WAI ARIA Menu design pattern compliance",
-    "Arrow key navigation between items",
+    "Arrow key navigation between items and submenus",
     "Home/End key support for first/last item navigation",
     "Disabled item states and handling",
     "Keyboard selection with Enter/Space",
     "Custom close behavior per item",
-    "Focus management between items",
+    "Focus management between items and submenus",
     "Automatic ARIA labeling and relationships",
     "Event callbacks for open state changes",
-    "Popover positioning system integration"
+    "Popover positioning system integration",
+    "Nested submenus with triggers and content"
   ]
 }
