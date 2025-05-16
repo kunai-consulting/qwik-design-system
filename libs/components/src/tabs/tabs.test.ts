@@ -22,3 +22,16 @@ test.describe("critical functionality", () => {
     expect(initialResults.violations).toEqual([]);
   });
 });
+
+test.describe("keyboard navigation", () => {
+  test(`GIVEN a tabs
+        WHEN focus is inside the tablist
+        THEN only the active tab should be focusable
+`, async ({ page }) => {
+    const d = await setup(page, "hero");
+
+    await expect(d.getTriggerAt(0)).toHaveAttribute("tabindex", "0");
+    await expect(d.getTriggerAt(1)).toHaveAttribute("tabindex", "-1");
+    await expect(d.getTriggerAt(2)).toHaveAttribute("tabindex", "-1");
+  });
+});

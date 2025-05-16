@@ -10,12 +10,12 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator("[data-qds-tabs-list]");
   };
 
-  const getTrigger = () => {
-    return rootLocator.locator("[data-qds-tabs-trigger]");
+  const getTriggerAt = (index: number) => {
+    return rootLocator.locator("[data-qds-tabs-trigger]").nth(index);
   };
 
-  const getContent = () => {
-    return rootLocator.locator("[data-qds-tabs-content]");
+  const getContentAt = (index: number) => {
+    return rootLocator.locator("[data-qds-tabs-content]").nth(index);
   };
 
   const getIndicator = () => {
@@ -27,8 +27,8 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     locator: rootLocator,
     getRoot,
     getList,
-    getTrigger,
-    getContent,
+    getTriggerAt,
+    getContentAt,
     getIndicator
   };
 }

@@ -4,6 +4,7 @@ import {
   Slot,
   component$,
   sync$,
+  useComputed$,
   useContext,
   useOnWindow,
   useSignal,
@@ -38,6 +39,14 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
     }
   });
 
+  const isActiveSig = useComputed$(() => {
+    const isIndexBased = Number.parseInt(context.selectedValueSig.value) === props._index;
+
+    const isValueBased = props.value === context.selectedValueSig.value;
+
+    return isIndexBased || isValueBased;
+  });
+
   useOnWindow(
     "keydown",
     sync$((e: KeyboardEvent) => {
@@ -67,6 +76,7 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
       fallback="button"
       onClick$={[handleSelect$, props.onClick$]}
       onKeyDown$={[handleNavigation$, props.onKeyDown$]}
+      tabIndex={isActiveSig.value ? 0 : -1}
       {...props}
     >
       <Slot />
