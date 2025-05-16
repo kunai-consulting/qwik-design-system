@@ -6,7 +6,7 @@ export type TabsRootProps = PropsOf<"div">;
 
 export const TabsRootBase = component$((props: TabsRootProps) => {
   return (
-    <Render fallback="div" {...props}>
+    <Render data-qds-tabs-root fallback="div" {...props}>
       <Slot />
     </Render>
   );

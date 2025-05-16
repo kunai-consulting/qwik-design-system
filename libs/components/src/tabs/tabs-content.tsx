@@ -6,7 +6,7 @@ export type TabsContentProps = PropsOf<"div">;
 
 export const TabsContentBase = component$((props: TabsContentProps) => {
   return (
-    <Render role="tabpanel" fallback="div" {...props}>
+    <Render data-qds-tabs-content role="tabpanel" fallback="div" {...props}>
       <Slot />
     </Render>
   );

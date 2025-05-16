@@ -6,7 +6,7 @@ export type TabsIndicatorProps = PropsOf<"div">;
 
 export const TabsIndicatorBase = component$((props: TabsIndicatorProps) => {
   return (
-    <Render fallback="div" {...props}>
+    <Render data-qds-tabs-indicator fallback="div" {...props}>
       <Slot />
     </Render>
   );

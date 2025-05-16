@@ -6,7 +6,7 @@ export type TabsListProps = PropsOf<"div">;
 
 export const TabsListBase = component$((props: TabsListProps) => {
   return (
-    <Render role="tablist" fallback="div" {...props}>
+    <Render data-qds-tabs-list role="tablist" fallback="div" {...props}>
       <Slot />
     </Render>
   );

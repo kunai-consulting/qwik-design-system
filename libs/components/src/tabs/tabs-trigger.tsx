@@ -6,7 +6,7 @@ export type TabsTriggerProps = PropsOf<"button">;
 
 export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
   return (
-    <Render role="tab" fallback="button" {...props}>
+    <Render data-qds-tabs-trigger role="tab" fallback="button" {...props}>
       <Slot />
     </Render>
   );
