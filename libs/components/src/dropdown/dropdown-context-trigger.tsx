@@ -29,32 +29,32 @@ export const DropdownContextTriggerBase = component$<PropsOf<"div">>((props) => 
       context.isOpenSig.value = true;
     } else {
       // If already open, we need to force a re-render at the new position
-      // This is done by directly accessing the DOM element to ensure immediate update
-      const contentEl = document.getElementById(context.contentId);
-      if (contentEl) {
-        requestAnimationFrame(() => {
-          // Update position based on right-click coordinates
-          let posX = event.clientX;
-          let posY = event.clientY;
+      // Use requestAnimationFrame to ensure the DOM is updated
+      requestAnimationFrame(() => {
+        const contentEl = context.contentRef.value;
+        if (!contentEl) return;
 
-          const { innerWidth, innerHeight } = window;
-          const contentRect = contentEl.getBoundingClientRect();
+        // Update position based on right-click coordinates
+        let posX = event.clientX;
+        let posY = event.clientY;
 
-          // Adjust if the menu would overflow the viewport
-          if (posX + contentRect.width > innerWidth) {
-            posX = Math.max(0, posX - contentRect.width);
-          }
+        const { innerWidth, innerHeight } = window;
+        const contentRect = contentEl.getBoundingClientRect();
 
-          if (posY + contentRect.height > innerHeight) {
-            posY = Math.max(0, posY - contentRect.height);
-          }
+        // Adjust if the menu would overflow the viewport
+        if (posX + contentRect.width > innerWidth) {
+          posX = Math.max(0, posX - contentRect.width);
+        }
 
-          // Apply fixed positioning
-          contentEl.style.position = "fixed";
-          contentEl.style.left = `${posX}px`;
-          contentEl.style.top = `${posY}px`;
-        });
-      }
+        if (posY + contentRect.height > innerHeight) {
+          posY = Math.max(0, posY - contentRect.height);
+        }
+
+        // Apply fixed positioning
+        contentEl.style.position = "fixed";
+        contentEl.style.left = `${posX}px`;
+        contentEl.style.top = `${posY}px`;
+      });
     }
   });
 

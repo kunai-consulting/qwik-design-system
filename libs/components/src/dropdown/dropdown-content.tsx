@@ -16,14 +16,12 @@ export const DropdownContentBase = component$<DropdownContentProps>((props) => {
     const isContextMenu = track(() => context.isContextMenu);
     const x = track(() => context.contextMenuX);
     const y = track(() => context.contextMenuY);
+    const contentEl = track(() => context.contentRef.value);
 
     // Check if this is a context menu and should be positioned
-    if (isOpen && isContextMenu && x > 0 && y > 0) {
+    if (isOpen && isContextMenu && x > 0 && y > 0 && contentEl) {
       // Wait for content to be rendered before positioning
       requestAnimationFrame(() => {
-        const contentEl = document.getElementById(context.contentId);
-        if (!contentEl) return;
-
         const { innerWidth, innerHeight } = window;
         const contentRect = contentEl.getBoundingClientRect();
 
@@ -51,6 +49,7 @@ export const DropdownContentBase = component$<DropdownContentProps>((props) => {
   return (
     <PopoverContentBase
       id={context.contentId} // Use ID from main context
+      ref={context.contentRef}
       role="menu"
       aria-labelledby={context.triggerId} // Labelled by the main trigger
       data-qds-dropdown-content

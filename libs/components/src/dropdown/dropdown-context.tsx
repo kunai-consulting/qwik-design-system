@@ -46,6 +46,8 @@ export type DropdownContext = {
   contextMenuY: number;
   /** Whether the dropdown was opened via context menu */
   isContextMenu: boolean;
+  /** Reference to the content element */
+  contentRef: Signal<HTMLElement | undefined>;
 };
 
 export const dropdownContextId = createContextId<DropdownContext>("dropdown-context");

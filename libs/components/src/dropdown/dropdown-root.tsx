@@ -47,6 +47,7 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
   const isContextMenu = useSignal(false);
   const contextMenuX = useSignal(0);
   const contextMenuY = useSignal(0);
+  const contentRef = useSignal<HTMLElement>();
 
   const closeAllSubmenus = $(() => {
     for (const submenu of submenus.value) {
@@ -119,7 +120,8 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
     getEnabledItems,
     contextMenuX: contextMenuX.value,
     contextMenuY: contextMenuY.value,
-    isContextMenu: isContextMenu.value
+    isContextMenu: isContextMenu.value,
+    contentRef
   };
 
   useContextProvider(dropdownContextId, context);
