@@ -39,8 +39,14 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
     open: false
   });
   const submenus = useSignal<SubmenuState[]>([]);
+  const rootRef = useSignal<HTMLDivElement>();
   const currentFocusEl = useSignal<HTMLElement>();
   const itemRefs = useSignal<ItemRef[]>([]);
+
+  // Context menu state
+  const isContextMenu = useSignal(false);
+  const contextMenuX = useSignal(0);
+  const contextMenuY = useSignal(0);
 
   const closeAllSubmenus = $(() => {
     for (const submenu of submenus.value) {
@@ -49,6 +55,18 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
   });
 
   const isInitialRenderSig = useSignal(true);
+
+  // Track if the dropdown is currently a context menu
+  useTask$(({ track }) => {
+    track(() => isOpenSig.value);
+
+    // Reset context menu flag when dropdown closes
+    if (!isOpenSig.value) {
+      isContextMenu.value = false;
+      contextMenuX.value = 0;
+      contextMenuY.value = 0;
+    }
+  });
 
   useTask$(async ({ track, cleanup }) => {
     const isOpen = track(() => isOpenSig.value);
@@ -95,9 +113,13 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
     contentId,
     triggerId,
     submenus,
+    rootRef,
     currentFocusEl,
     itemRefs,
-    getEnabledItems
+    getEnabledItems,
+    contextMenuX: contextMenuX.value,
+    contextMenuY: contextMenuY.value,
+    isContextMenu: isContextMenu.value
   };
 
   useContextProvider(dropdownContextId, context);
@@ -105,7 +127,7 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
   const { open: _o, "bind:open": _bo, ...rest } = props;
 
   return (
-    <PopoverRootBase bind:open={isOpenSig} data-qds-dropdown-root {...rest}>
+    <PopoverRootBase bind:open={isOpenSig} data-qds-dropdown-root ref={rootRef} {...rest}>
       <Slot />
     </PopoverRootBase>
   );

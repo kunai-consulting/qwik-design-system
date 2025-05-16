@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$, useContext, useTask$ } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverContentBase } from "../popover/popover-content";
 import { dropdownContextId } from "./dropdown-context";
@@ -8,6 +8,45 @@ export type DropdownContentProps = PropsOf<typeof PopoverContentBase>;
 /** A component that renders the dropdown menu content */
 export const DropdownContentBase = component$<DropdownContentProps>((props) => {
   const context = useContext(dropdownContextId);
+
+  // Position the content at mouse coordinates when opened via context menu
+  useTask$(({ track }) => {
+    // Track these values to reposition when any of them change
+    const isOpen = track(() => context.isOpenSig.value);
+    const isContextMenu = track(() => context.isContextMenu);
+    const x = track(() => context.contextMenuX);
+    const y = track(() => context.contextMenuY);
+
+    // Check if this is a context menu and should be positioned
+    if (isOpen && isContextMenu && x > 0 && y > 0) {
+      // Wait for content to be rendered before positioning
+      requestAnimationFrame(() => {
+        const contentEl = document.getElementById(context.contentId);
+        if (!contentEl) return;
+
+        const { innerWidth, innerHeight } = window;
+        const contentRect = contentEl.getBoundingClientRect();
+
+        // Apply standard context menu positioning
+        let posX = x;
+        let posY = y;
+
+        // Adjust if the menu would overflow the viewport
+        if (x + contentRect.width > innerWidth) {
+          posX = Math.max(0, x - contentRect.width);
+        }
+
+        if (posY + contentRect.height > innerHeight) {
+          posY = Math.max(0, y - contentRect.height);
+        }
+
+        // Apply fixed positioning to handle scrolling properly
+        contentEl.style.position = "fixed";
+        contentEl.style.left = `${posX}px`;
+        contentEl.style.top = `${posY}px`;
+      });
+    }
+  });
 
   return (
     <PopoverContentBase

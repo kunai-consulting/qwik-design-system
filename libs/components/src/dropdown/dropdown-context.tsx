@@ -28,12 +28,24 @@ export type DropdownContext = {
   isOpenSig: Signal<boolean>;
   /** The submenus in the dropdown */
   submenus: Signal<SubmenuState[]>;
+  /** ID of the dropdown content element */
   contentId: string;
+  /** ID of the dropdown trigger element */
   triggerId: string;
+  /** The item refs of the dropdown */
   itemRefs: Signal<ItemRef[]>;
+  /** The currently focused element within the dropdown */
   currentFocusEl: Signal<HTMLElement | undefined>;
   /** Get the enabled items of the dropdown */
   getEnabledItems: QRL<() => HTMLElement[]>;
+  /** Root reference to the dropdown container */
+  rootRef: Signal<HTMLElement | undefined>;
+  /** X coordinate for context menu positioning */
+  contextMenuX: number;
+  /** Y coordinate for context menu positioning */
+  contextMenuY: number;
+  /** Whether the dropdown was opened via context menu */
+  isContextMenu: boolean;
 };
 
 export const dropdownContextId = createContextId<DropdownContext>("dropdown-context");
