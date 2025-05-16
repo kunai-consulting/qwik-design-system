@@ -16,7 +16,9 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 
 export type TabsRootProps = Omit<PropsOf<"div">, "align"> &
-  BindableProps<{ selectedValue: string }>;
+  BindableProps<{ selectedValue: string }> & {
+    orientation?: "horizontal" | "vertical";
+  };
 
 type TriggerRef = Signal<HTMLButtonElement | undefined>;
 
@@ -25,6 +27,7 @@ export const tabsContextId = createContextId<TabsContext>("qds-tabs");
 type TabsContext = {
   triggerRefs: Signal<TriggerRef[]>;
   selectedValueSig: Signal<string>;
+  orientationSig: Signal<string>;
 };
 
 export const TabsRootBase = component$((props: TabsRootProps) => {
@@ -33,13 +36,15 @@ export const TabsRootBase = component$((props: TabsRootProps) => {
   /**
    *  If the consumer does not pass a distinct value, then we set the value to the index as a string, to handle types and conditional logic easier
    */
-  const { selectedValueSig } = useBindings(props, {
-    selectedValue: "0"
+  const { selectedValueSig, orientationSig } = useBindings(props, {
+    selectedValue: "0",
+    orientation: "horizontal"
   });
 
   const context: TabsContext = {
     triggerRefs,
-    selectedValueSig
+    selectedValueSig,
+    orientationSig
   };
 
   useContextProvider(tabsContextId, context);
