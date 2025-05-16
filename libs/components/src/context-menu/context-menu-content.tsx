@@ -1,6 +1,9 @@
 import { Slot, component$, useContext, useTask$ } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
-import { DropdownContentBase, DropdownContentProps } from "../dropdown/dropdown-content";
+import {
+  DropdownContentBase,
+  type DropdownContentProps
+} from "../dropdown/dropdown-content";
 import { contextMenuExtensionId } from "./context-menu-context";
 import { dropdownContextId } from "../dropdown/dropdown-context";
 
@@ -61,10 +64,7 @@ export const ContextMenuContentBase = component$<DropdownContentProps>((props) =
   });
 
   return (
-    <DropdownContentBase
-      data-qds-context-menu-content
-      {...props}
-    >
+    <DropdownContentBase data-qds-context-menu-content {...props}>
       <Slot />
     </DropdownContentBase>
   );

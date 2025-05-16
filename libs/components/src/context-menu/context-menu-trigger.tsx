@@ -1,6 +1,9 @@
 import { $, Slot, component$, useContext } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
-import { DropdownTriggerBase, PublicDropdownTriggerProps } from "../dropdown/dropdown-trigger";
+import {
+  DropdownTriggerBase,
+  type PublicDropdownTriggerProps
+} from "../dropdown/dropdown-trigger";
 import { contextMenuExtensionId } from "./context-menu-context";
 import { dropdownContextId } from "../dropdown/dropdown-context";
 

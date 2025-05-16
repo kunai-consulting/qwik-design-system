@@ -1,16 +1,14 @@
-import {
-  Slot,
-  component$,
-  useContextProvider,
-  useSignal
-} from "@builder.io/qwik";
+import { Slot, component$, useContextProvider, useSignal } from "@builder.io/qwik";
 import { resetIndexes } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import {
   contextMenuExtensionId,
   type ContextMenuExtension
 } from "./context-menu-context";
-import { DropdownRootBase, PublicDropdownRootProps } from "../dropdown/dropdown-root";
+import {
+  DropdownRootBase,
+  type PublicDropdownRootProps
+} from "../dropdown/dropdown-root";
 
 /** Root container component for the context menu */
 const ContextMenuRootBase = component$<PublicDropdownRootProps>((props) => {
