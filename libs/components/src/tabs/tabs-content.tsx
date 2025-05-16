@@ -1,8 +1,11 @@
 import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 
-export type TabsContentProps = PropsOf<"div">;
+export type TabsContentProps = PropsOf<"div"> & {
+  _index?: number;
+};
 
 export const TabsContentBase = component$((props: TabsContentProps) => {
   return (
@@ -12,4 +15,9 @@ export const TabsContentBase = component$((props: TabsContentProps) => {
   );
 });
 
-export const TabsContent = withAsChild(TabsContentBase);
+export const TabsContent = withAsChild(TabsContentBase, (props) => {
+  const index = getNextIndex("tabs-content");
+  props._index = index;
+
+  return props;
+});

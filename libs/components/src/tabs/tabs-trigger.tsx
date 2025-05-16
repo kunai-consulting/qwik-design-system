@@ -1,8 +1,11 @@
 import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 
-export type TabsTriggerProps = PropsOf<"button">;
+export type TabsTriggerProps = PropsOf<"button"> & {
+  _index?: number;
+};
 
 export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
   return (
@@ -12,4 +15,9 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
   );
 });
 
-export const TabsTrigger = withAsChild(TabsTriggerBase);
+export const TabsTrigger = withAsChild(TabsTriggerBase, (props) => {
+  const index = getNextIndex("tabs-trigger");
+  props._index = index;
+
+  return props;
+});
