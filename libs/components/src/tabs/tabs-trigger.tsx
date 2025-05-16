@@ -1,4 +1,5 @@
 import {
+  $,
   type PropsOf,
   Slot,
   component$,
@@ -13,6 +14,7 @@ import { tabsContextId } from "./tabs-root";
 
 export type TabsTriggerProps = PropsOf<"button"> & {
   _index?: number;
+  value: string;
 };
 
 export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
@@ -26,8 +28,22 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
     context.triggerRefs.value[index] = triggerRef;
   });
 
+  const handleSelect$ = $(() => {
+    if (props.value) {
+      context.selectedValueSig.value = props.value;
+    } else {
+      context.selectedValueSig.value = props._index?.toString() ?? "No index";
+    }
+  });
+
   return (
-    <Render data-qds-tabs-trigger role="tab" fallback="button" {...props}>
+    <Render
+      data-qds-tabs-trigger
+      role="tab"
+      fallback="button"
+      onClick$={[handleSelect$, props.onClick$]}
+      {...props}
+    >
       <Slot />
     </Render>
   );
