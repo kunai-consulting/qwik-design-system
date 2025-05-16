@@ -1,18 +1,17 @@
 @layer qds {
   [data-qds-dropdown-submenu] {
-     /* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
+    /* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
     anchor-scope: --qds-dropdown-submenu;
     position: relative;
   }
 
   [data-qds-dropdown-submenu-trigger] {
-     /* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
     anchor-name: --qds-dropdown-submenu;
     width: 100%;
   }
 
   [data-qds-dropdown-submenu-content] {
-     /* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
+    /* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
     position-anchor: --qds-dropdown-submenu;
     width: anchor-size(width);
     margin: unset;
