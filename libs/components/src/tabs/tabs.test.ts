@@ -128,4 +128,26 @@ test.describe("keyboard navigation", () => {
 
     await expect(d.getTriggerAt(0)).toBeFocused();
   });
+
+  test(`GIVEN a tabs
+        WHEN pressing the end key
+        THEN the last tab should be focused
+`, async ({ page }) => {
+    const { driver: d } = await setup(page, "hero");
+
+    await d.getTriggerAt(0).press("End");
+
+    await expect(d.getTriggerAt(2)).toBeFocused();
+  });
+
+  test(`GIVEN a tabs
+    WHEN pressing the home key
+    THEN the first tab should be focused
+`, async ({ page }) => {
+    const { driver: d } = await setup(page, "hero");
+
+    await d.getTriggerAt(2).press("Home");
+
+    await expect(d.getTriggerAt(0)).toBeFocused();
+  });
 });
