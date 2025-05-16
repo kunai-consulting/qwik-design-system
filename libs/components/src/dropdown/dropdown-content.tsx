@@ -10,18 +10,27 @@ export const DropdownContentBase = component$<DropdownContentProps>((props) => {
   const context = useContext(dropdownContextId);
 
   // Position the content at mouse coordinates when opened via context menu
-  useTask$(({ track }) => {
+  useTask$(({ track, cleanup }) => {
     // Track these values to reposition when any of them change
     const isOpen = track(() => context.isOpenSig.value);
     const isContextMenu = track(() => context.isContextMenu);
     const x = track(() => context.contextMenuX);
     const y = track(() => context.contextMenuY);
     const contentEl = track(() => context.contentRef.value);
+    let initialMargin = 0;
 
     // Check if this is a context menu and should be positioned
     if (isOpen && isContextMenu && x > 0 && y > 0 && contentEl) {
       // Wait for content to be rendered before positioning
       requestAnimationFrame(() => {
+        const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+        const body = document.body;
+        const styles = window.getComputedStyle(body);
+        initialMargin = Number.parseFloat(styles.marginRight);
+        body.style.overflow = "hidden";
+        body.style.userSelect = "none";
+        document.body.style.marginRight = `${initialMargin + scrollbarWidth}px`;
+
         const { innerWidth, innerHeight } = window;
         const contentRect = contentEl.getBoundingClientRect();
 
@@ -44,6 +53,14 @@ export const DropdownContentBase = component$<DropdownContentProps>((props) => {
         contentEl.style.top = `${posY}px`;
       });
     }
+
+    cleanup(() => {
+      document.body.style.overflow = "";
+      document.body.style.userSelect = "";
+      if (initialMargin !== 0) {
+        document.body.style.marginRight = `${initialMargin}px`;
+      }
+    });
   });
 
   return (

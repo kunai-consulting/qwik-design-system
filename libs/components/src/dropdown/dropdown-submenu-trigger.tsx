@@ -1,8 +1,8 @@
 import { $, Slot, component$, useContext, useSignal, useTask$ } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
-import { dropdownContextId, type SubmenuState } from "./dropdown-context";
-import { submenuContextId } from "./dropdown-submenu-context";
+import { type SubmenuState, dropdownContextId } from "./dropdown-context";
 import { DropdownItem, type PublicDropdownItemProps } from "./dropdown-item";
+import { submenuContextId } from "./dropdown-submenu-context";
 import { getSubmenuStateByContentId } from "./utils";
 
 /** Props for the submenu trigger component */

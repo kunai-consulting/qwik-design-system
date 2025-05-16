@@ -10,7 +10,7 @@ export default component$(() => {
     <div>
       <Dropdown.Root>
         {/* Area that responds to right-clicks */}
-        <Dropdown.ContextTrigger class="bg-qwik-blue-700 p-1">
+        <Dropdown.ContextTrigger class="bg-qwik-blue-700 p-10">
           Right-click me!
         </Dropdown.ContextTrigger>
 

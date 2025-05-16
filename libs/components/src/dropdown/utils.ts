@@ -14,14 +14,14 @@ export function getEnabledItemsUtil(itemRefs: ItemRef[]): HTMLElement[] {
     });
 }
 
-
-
 /**
  * Finds a submenu state by its contentId from the dropdown context.
  */
-export const getSubmenuStateByContentId = $((context: DropdownContext, contentId: string) => {
-  return context.submenus.value.find((submenu) => submenu.contentId === contentId);
-});
+export const getSubmenuStateByContentId = $(
+  (context: DropdownContext, contentId: string) => {
+    return context.submenus.value.find((submenu) => submenu.contentId === contentId);
+  }
+);
 
 /**
  * Given a parentId, returns the parent submenu or root context.
@@ -47,4 +47,4 @@ export const focusFirstItem = $((enabledItems: HTMLElement[]) => {
       enabledItems[0].focus();
     }
   }, 50);
-}); 
+});

@@ -1,14 +1,14 @@
 import {
   $,
+  type PropsOf,
   Slot,
   component$,
   useContext,
-  useSignal,
-  type PropsOf
+  useSignal
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
-import { dropdownContextId } from "./dropdown-context";
 import { Render } from "../render/render";
+import { dropdownContextId } from "./dropdown-context";
 
 /**
  * A trigger that opens the dropdown on right-click (context menu)

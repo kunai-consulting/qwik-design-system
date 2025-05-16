@@ -1,22 +1,22 @@
 import {
+  $,
   Slot,
   component$,
   useContext,
-  useTask$,
   useContextProvider,
-  useSignal,
   useId,
+  useSignal,
   useStyles$,
-  $
+  useTask$
 } from "@builder.io/qwik";
-import { PopoverRootBase } from "../popover/popover-root";
-import { dropdownContextId, type SubmenuState, type ItemRef } from "./dropdown-context";
-import { submenuContextId } from "./dropdown-submenu-context";
-import type { PublicDropdownRootProps } from "./dropdown-root";
 import { useBindings } from "@kunai-consulting/qwik-utils";
+import { withAsChild } from "../as-child/as-child";
+import { PopoverRootBase } from "../popover/popover-root";
+import { type ItemRef, type SubmenuState, dropdownContextId } from "./dropdown-context";
+import type { PublicDropdownRootProps } from "./dropdown-root";
+import { submenuContextId } from "./dropdown-submenu-context";
 import dropdownSubmenuStyles from "./dropdown-submenu.css?inline";
 import { getEnabledItemsUtil } from "./utils";
-import { withAsChild } from "../as-child/as-child";
 
 export type PublicDropdownSubmenuProps = PublicDropdownRootProps & {
   /** The position of the submenu relative to its trigger */

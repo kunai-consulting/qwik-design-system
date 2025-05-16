@@ -217,9 +217,11 @@ test.describe("Dropdown Component", () => {
   });
 });
 
-test.describe('Dropdown Submenu', () => {
-  test('GIVEN a Dropdown with a submenu WHEN the submenu trigger is clicked THEN the submenu content should open', async ({ page }) => {
-    const driver = await setup(page, 'submenu');
+test.describe("Dropdown Submenu", () => {
+  test("GIVEN a Dropdown with a submenu WHEN the submenu trigger is clicked THEN the submenu content should open", async ({
+    page
+  }) => {
+    const driver = await setup(page, "submenu");
     const trigger = driver.getTrigger();
     await trigger.click();
     const submenuTrigger = driver.getSubmenuTrigger();
@@ -228,23 +230,27 @@ test.describe('Dropdown Submenu', () => {
     await expect(submenuContent).toBeVisible();
   });
 
-  test('GIVEN a Dropdown with a submenu WHEN ArrowRight is pressed on the submenu trigger THEN the submenu content should open and first item is focused', async ({ page }) => {
-    const driver = await setup(page, 'submenu');
+  test("GIVEN a Dropdown with a submenu WHEN ArrowRight is pressed on the submenu trigger THEN the submenu content should open and first item is focused", async ({
+    page
+  }) => {
+    const driver = await setup(page, "submenu");
     const trigger = driver.getTrigger();
     await trigger.click();
     const submenuTrigger = driver.getSubmenuTrigger();
     await submenuTrigger.waitFor({ state: "visible" });
     await submenuTrigger.focus();
     await expect(submenuTrigger).toBeFocused();
-    await submenuTrigger.press('ArrowRight');
+    await submenuTrigger.press("ArrowRight");
     const submenuContent = driver.getSubmenuContent();
     await expect(submenuContent).toBeVisible();
     const submenuItems = await driver.getSubmenuItems().all();
     await expect(submenuItems[0]).toBeFocused();
   });
 
-  test('GIVEN an open submenu WHEN ArrowDown is pressed THEN focus should move to the next submenu item', async ({ page }) => {
-    const driver = await setup(page, 'submenu');
+  test("GIVEN an open submenu WHEN ArrowDown is pressed THEN focus should move to the next submenu item", async ({
+    page
+  }) => {
+    const driver = await setup(page, "submenu");
     const trigger = driver.getTrigger();
     await trigger.click();
     const submenuTrigger = driver.getSubmenuTrigger();
@@ -252,24 +258,28 @@ test.describe('Dropdown Submenu', () => {
     const submenuItems = await driver.getSubmenuItems().all();
     await submenuItems[0].focus();
     await expect(submenuItems[0]).toBeFocused();
-    await submenuItems[0].press('ArrowDown');
+    await submenuItems[0].press("ArrowDown");
     await expect(submenuItems[1]).toBeFocused();
   });
 
-  test('GIVEN an open submenu WHEN ArrowUp is pressed on the first item THEN focus should wrap to the last submenu item', async ({ page }) => {
-    const driver = await setup(page, 'submenu');
+  test("GIVEN an open submenu WHEN ArrowUp is pressed on the first item THEN focus should wrap to the last submenu item", async ({
+    page
+  }) => {
+    const driver = await setup(page, "submenu");
     const trigger = driver.getTrigger();
     await trigger.click();
     const submenuTrigger = driver.getSubmenuTrigger();
     await submenuTrigger.click();
     const submenuItems = await driver.getSubmenuItems().all();
     await submenuItems[0].focus();
-    await submenuItems[0].press('ArrowUp');
+    await submenuItems[0].press("ArrowUp");
     await expect(submenuItems[submenuItems.length - 1]).toBeFocused();
   });
 
-  test('GIVEN a submenu item with closeOnSelect=false WHEN it is clicked THEN the submenu should remain open', async ({ page }) => {
-    const driver = await setup(page, 'submenu');
+  test("GIVEN a submenu item with closeOnSelect=false WHEN it is clicked THEN the submenu should remain open", async ({
+    page
+  }) => {
+    const driver = await setup(page, "submenu");
     const trigger = driver.getTrigger();
     await trigger.click();
     const submenuTrigger = driver.getSubmenuTrigger();
@@ -281,26 +291,176 @@ test.describe('Dropdown Submenu', () => {
     await expect(submenuContent).toBeVisible();
   });
 
-  test('GIVEN a submenu WHEN Escape is pressed THEN the submenu should close', async ({ page }) => {
-    const driver = await setup(page, 'submenu');
+  test("GIVEN a submenu WHEN Escape is pressed THEN the submenu should close", async ({
+    page
+  }) => {
+    const driver = await setup(page, "submenu");
     const trigger = driver.getTrigger();
     await trigger.click();
     const submenuTrigger = driver.getSubmenuTrigger();
     await submenuTrigger.click();
     const submenuContent = driver.getSubmenuContent();
     await expect(submenuContent).toBeVisible();
-    await submenuContent.press('Escape');
+    await submenuContent.press("Escape");
     await expect(submenuContent).toBeHidden();
   });
 
-  test('GIVEN a submenu trigger WHEN rendered THEN it should have correct ARIA attributes', async ({ page }) => {
-    const driver = await setup(page, 'submenu');
+  test("GIVEN a submenu trigger WHEN rendered THEN it should have correct ARIA attributes", async ({
+    page
+  }) => {
+    const driver = await setup(page, "submenu");
     const trigger = driver.getTrigger();
     await trigger.click();
     const submenuTrigger = driver.getSubmenuTrigger();
-    await expect(submenuTrigger).toHaveAttribute('aria-haspopup', 'menu');
-    await expect(submenuTrigger).toHaveAttribute('aria-expanded', 'false');
+    await expect(submenuTrigger).toHaveAttribute("aria-haspopup", "menu");
+    await expect(submenuTrigger).toHaveAttribute("aria-expanded", "false");
     await submenuTrigger.click();
-    await expect(submenuTrigger).toHaveAttribute('aria-expanded', 'true');
+    await expect(submenuTrigger).toHaveAttribute("aria-expanded", "true");
+  });
+});
+
+test.describe("Dropdown Context Menu", () => {
+  test("GIVEN a closed context menu WHEN right-clicked on the context trigger THEN the dropdown content should open", async ({
+    page
+  }) => {
+    const driver = await setup(page, "context-menu");
+    const contextTrigger = driver.getContextTrigger();
+    const content = driver.getContent();
+
+    await expect(content).toBeHidden();
+
+    // Perform right-click
+    await driver.rightClickOn(contextTrigger);
+
+    await expect(content).toBeVisible();
+    // Check position is set to fixed
+    await expect(content).toHaveCSS("position", "fixed");
+  });
+
+  test("GIVEN an open context menu WHEN right-clicked again on the context trigger THEN the context menu should remain open and reposition", async ({
+    page
+  }) => {
+    const driver = await setup(page, "context-menu");
+    const contextTrigger = driver.getContextTrigger();
+    const content = driver.getContent();
+
+    // First right-click to open directly via dispatchEvent to avoid intercepted clicks
+    await page.evaluate(() => {
+      const element = document.querySelector("[data-qds-dropdown-context-trigger]");
+      if (element) {
+        const event = new MouseEvent("contextmenu", {
+          bubbles: true,
+          cancelable: true,
+          clientX: 50,
+          clientY: 50
+        });
+        element.dispatchEvent(event);
+      }
+    });
+
+    // Wait for content to be visible
+    await expect(content).toBeVisible();
+
+    // Capture initial position
+    const initialLeft = await content.evaluate((el) => el.style.left);
+    const initialTop = await content.evaluate((el) => el.style.top);
+
+    // Second right-click at different position using evaluate
+    await page.evaluate(() => {
+      const element = document.querySelector("[data-qds-dropdown-context-trigger]");
+      if (element) {
+        const event = new MouseEvent("contextmenu", {
+          bubbles: true,
+          cancelable: true,
+          clientX: 150,
+          clientY: 150
+        });
+        element.dispatchEvent(event);
+      }
+    });
+
+    // Wait a moment for positioning to update
+    await page.waitForTimeout(100);
+
+    // Content should still be visible
+    await expect(content).toBeVisible();
+
+    // Position should be different
+    const newLeft = await content.evaluate((el) => el.style.left);
+    const newTop = await content.evaluate((el) => el.style.top);
+
+    // Positions should be different
+    expect(newLeft).not.toEqual(initialLeft);
+    expect(newTop).not.toEqual(initialTop);
+  });
+
+  test("GIVEN an open context menu WHEN an item is clicked THEN the context menu should close", async ({
+    page
+  }) => {
+    const driver = await setup(page, "context-menu");
+    const contextTrigger = driver.getContextTrigger();
+    const content = driver.getContent();
+
+    // Open with right-click
+    await driver.rightClickOn(contextTrigger);
+    await expect(content).toBeVisible();
+
+    // Click first item
+    const items = await driver.getItems().all();
+    await items[0].click();
+
+    // Menu should close
+    await expect(content).toBeHidden();
+  });
+
+  test("GIVEN an open context menu WHEN Escape key is pressed THEN the context menu should close", async ({
+    page
+  }) => {
+    const driver = await setup(page, "context-menu");
+    const contextTrigger = driver.getContextTrigger();
+    const content = driver.getContent();
+
+    // Open with right-click
+    await driver.rightClickOn(contextTrigger);
+    await expect(content).toBeVisible();
+
+    // Press Escape
+    await driver.locator.press("body", "Escape");
+
+    // Menu should close
+    await expect(content).toBeHidden();
+  });
+
+  test("GIVEN an open context menu WHEN clicking outside THEN the context menu should close", async ({
+    page
+  }) => {
+    const driver = await setup(page, "context-menu");
+    const contextTrigger = driver.getContextTrigger();
+    const content = driver.getContent();
+
+    // Open with right-click
+    await driver.rightClickOn(contextTrigger);
+    await expect(content).toBeVisible();
+
+    // Click outside the menu at top left corner
+    await driver.locator.locator("body").click({ position: { x: 0, y: 0 }, force: true });
+
+    // Menu should close
+    await expect(content).toBeHidden();
+  });
+
+  test("GIVEN a context menu WHEN right-clicked THEN it should prevent default browser context menu", async ({
+    page
+  }) => {
+    const driver = await setup(page, "context-menu");
+    const contextTrigger = driver.getContextTrigger();
+
+    // Check if there's a preventdefault attribute on the context trigger
+    await expect(contextTrigger).toHaveAttribute("preventdefault:contextmenu", "");
+
+    // Check that our menu opens instead
+    await driver.rightClickOn(contextTrigger);
+    const content = driver.getContent();
+    await expect(content).toBeVisible();
   });
 });

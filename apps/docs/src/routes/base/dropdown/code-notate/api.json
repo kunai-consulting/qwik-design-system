@@ -67,6 +67,30 @@
       }
     },
     {
+      "Dropdown ContextTrigger": {
+        "inheritsFrom": "div",
+        "description": "A trigger that opens the dropdown via right-click (context menu).",
+        "ariaAttributes": [
+          {
+            "name": "role",
+            "value": "presentation"
+          }
+        ],
+        "dataAttributes": [
+          {
+            "name": "data-qds-dropdown-context-trigger",
+            "comment": "Present on the context trigger element."
+          }
+        ],
+        "events": [
+          {
+            "name": "onContextMenu$",
+            "comment": "Opens the dropdown and positions it at the cursor coordinates."
+          }
+        ]
+      }
+    },
+    {
       "Dropdown Content": {
         "inheritsFrom": "PopoverContent",
         "ariaAttributes": [
@@ -219,6 +243,10 @@
       "description": "The button element that toggles the dropdown visibility."
     },
     {
+      "name": "Dropdown.ContextTrigger",
+      "description": "An area that responds to right-clicks to open the dropdown as a context menu."
+    },
+    {
       "name": "Dropdown.Content",
       "description": "The container element for the menu items, positioned relative to the trigger."
     },
@@ -296,6 +324,7 @@
     "Automatic ARIA labeling and relationships",
     "Event callbacks for open state changes",
     "Popover positioning system integration",
-    "Nested submenus with triggers and content"
+    "Nested submenus with triggers and content",
+    "Context menu support with right-click activation"
   ]
 }

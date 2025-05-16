@@ -56,6 +56,14 @@ This example demonstrates:
 - Keyboard navigation between root, first-level, and second-level submenu items
 - Each submenu trigger opens its own submenu and returns focus to the correct trigger when closed
 
+### Context Menu
+<Showcase name="context-menu" />
+This example demonstrates:
+- Using `Dropdown.ContextTrigger` to create a right-click context menu
+- Menu automatically positions itself at the cursor location
+- Subsequent right-clicks reposition the menu without closing it
+- Context menu stays open until an item is selected, Escape is pressed, or clicking outside
+
 ## Component State
 
 ### State Management
@@ -89,7 +97,10 @@ Items can be configured in several ways:
 The Dropdown component requires a specific component hierarchy:
 ```typescript
 <Dropdown.Root>
-  <Dropdown.Trigger />
+  {/* Choose one of these trigger types */}
+  <Dropdown.Trigger />        {/* Click trigger */}
+  <Dropdown.ContextTrigger /> {/* Right-click trigger */}
+  
   <Dropdown.Content>
     <Dropdown.Item>
       <Dropdown.ItemLabel />
@@ -100,9 +111,28 @@ The Dropdown component requires a specific component hierarchy:
 Each component serves a specific purpose:
 - `Root`: Manages state and context for the dropdown
 - `Trigger`: The button that toggles the dropdown
+- `ContextTrigger`: Area that responds to right-clicks to open the dropdown as a context menu
 - `Content`: The container for dropdown items
 - `Item`: Individual selectable options
 - `ItemLabel`: Text or content within items
+
+### Context Menu Setup
+To create a context menu that appears on right-click:
+```typescript
+<Dropdown.Root>
+  <Dropdown.ContextTrigger>
+    Right-click me!
+  </Dropdown.ContextTrigger>
+  <Dropdown.Content>
+    {/* Menu items */}
+  </Dropdown.Content>
+</Dropdown.Root>
+```
+The context menu automatically:
+- Positions itself at the cursor location
+- Stays open until deliberately dismissed
+- Repositions with subsequent right-clicks
+- Prevents browser's native context menu
 
 ## Technical Constraints
 

@@ -11,6 +11,10 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator("[data-qds-dropdown-trigger]");
   };
 
+  const getContextTrigger = () => {
+    return rootLocator.locator("[data-qds-dropdown-context-trigger]");
+  };
+
   const getContent = () => {
     return rootLocator.locator("[data-qds-dropdown-content]");
   };
@@ -24,26 +28,35 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   };
 
   const getSubmenuTrigger = () => {
-    return rootLocator.locator('[data-qds-dropdown-submenu-trigger]');
+    return rootLocator.locator("[data-qds-dropdown-submenu-trigger]");
   };
 
   const getSubmenuContent = () => {
-    return rootLocator.locator('[data-qds-dropdown-submenu-content]');
+    return rootLocator.locator("[data-qds-dropdown-submenu-content]");
   };
 
   const getSubmenuItems = () => {
-    return getSubmenuContent().locator('[data-qds-dropdown-item]');
+    return getSubmenuContent().locator("[data-qds-dropdown-item]");
+  };
+
+  const rightClickOn = async (locator: Locator, position?: { x: number; y: number }) => {
+    await locator.click({
+      button: "right",
+      position: position || undefined
+    });
   };
 
   return {
     locator: rootLocator,
     getRoot,
     getTrigger,
+    getContextTrigger,
     getContent,
     getItems,
     getItemByText,
     getSubmenuTrigger,
     getSubmenuContent,
-    getSubmenuItems
+    getSubmenuItems,
+    rightClickOn
   };
 }

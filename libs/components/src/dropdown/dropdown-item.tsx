@@ -9,9 +9,9 @@ import {
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-import { dropdownContextId, type SubmenuState } from "./dropdown-context";
+import { type SubmenuState, dropdownContextId } from "./dropdown-context";
 import { submenuContextId } from "./dropdown-submenu-context";
-import { getSubmenuStateByContentId, getParent } from "./utils";
+import { getParent, getSubmenuStateByContentId } from "./utils";
 
 export type PublicDropdownItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
   /** Whether the dropdown item is disabled */
