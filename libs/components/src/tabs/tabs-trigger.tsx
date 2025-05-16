@@ -3,7 +3,9 @@ import {
   type PropsOf,
   Slot,
   component$,
+  sync$,
   useContext,
+  useOnWindow,
   useSignal,
   useTask$
 } from "@builder.io/qwik";
@@ -36,12 +38,35 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
     }
   });
 
+  useOnWindow(
+    "keydown",
+    sync$((e: KeyboardEvent) => {
+      if (!document.activeElement?.hasAttribute("data-qds-tabs-trigger")) return;
+
+      const keys = ["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "Home", "End"];
+
+      if (!keys.includes(e.key)) return;
+
+      e.preventDefault();
+    })
+  );
+
+  const handleNavigation$ = $((e: KeyboardEvent) => {
+    switch (e.key) {
+      case "ArrowRight":
+        break;
+      case "ArrowLeft":
+        break;
+    }
+  });
+
   return (
     <Render
       data-qds-tabs-trigger
       role="tab"
       fallback="button"
       onClick$={[handleSelect$, props.onClick$]}
+      onKeyDown$={[handleNavigation$, props.onKeyDown$]}
       {...props}
     >
       <Slot />
