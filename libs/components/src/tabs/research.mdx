@@ -1,0 +1,72 @@
+# Tabs Research
+
+
+
+## Features
+Target features. Some are essential, others are nice to have.
+- [ ] Hover vs. click activation
+- [ ] Horizontal and vertical orientation
+- [ ] Support for disabled tabs
+- [ ] Signal vs value based state management
+- [ ] Callback for tab change/activation
+- [ ] Add/remove tabs dynamically
+
+## Component Structure
+A potential structure for the Tabs component:
+
+- Root (main container)
+- List (container for the tab triggers)
+- Trigger (the clickable tab element)
+- Content (container for the content of a tab)
+- Indicator (visual indicator of the active tab)
+
+```tsx
+<Tabs.Root>
+  <Tabs.List>
+    <Tabs.Trigger />
+  </Tabs.List>
+  <Tabs.Content />
+</Tabs.Root>
+```
+
+## Research Links
+
+- [Base UI Tabs](https://base-ui.com/react/components/tabs)
+- [Kobalte Tabs](https://kobalte.dev/docs/core/components/tabs)
+
+
+### Native HTML / WAI-ARIA Authoring Practices
+- [WAI-ARIA Authoring Practices - Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabpanel/)
+
+## Accessibility (ARIA)
+Key ARIA attributes and roles to consider:
+- `role="tablist"` on the container of tabs.
+- `role="tab"` on each tab element.
+- `role="tabpanel"` on each tab content element.
+- `aria-selected` on the active tab.
+- `aria-controls` on each tab, linking to its `tabpanel`'s ID.
+- `aria-labelledby` on each `tabpanel`, linking to its tab's ID.
+- `aria-orientation` for `tablist` if supporting vertical tabs.
+- `aria-disabled` for disabled tabs.
+
+## Keyboard Navigation
+Standard keyboard interactions for tabs:
+- `Tab`:
+    - When focus is outside the tab list, `Tab` moves focus to the active tab.
+    - When focus is on a tab, `Tab` moves focus to the active tab panel (if focus is meant to go into the panel) or the next focusable element outside the tab list.
+- `Arrow Keys` (Left/Right for horizontal, Up/Down for vertical):
+    - When focus is on a tab, these keys move focus to the previous/next tab.
+    - Behavior for automatic vs. manual activation:
+        - **Automatic activation**: Moves focus and activates the tab.
+        - **Manual activation**: Moves focus only; user presses `Enter` or `Space` to activate.
+- `Enter` or `Space`:
+    - When focus is on a tab (in manual activation mode), activates the tab and its associated panel.
+- `Home`:
+    - When focus is on a tab, moves focus to the first tab. (Activates if automatic activation)
+- `End`:
+    - When focus is on a tab, moves focus to the last tab. (Activates if automatic activation)
+- (Optional) `Delete` for deletable tabs.
+
+## Open Questions
+- Default activation mode (automatic or manual)?
+- How to handle dynamic addition/removal of tabs smoothly?
