@@ -7,11 +7,16 @@ import {
   useContextProvider,
   useSignal
 } from "@builder.io/qwik";
-import { resetIndexes } from "@kunai-consulting/qwik-utils";
+import {
+  type BindableProps,
+  resetIndexes,
+  useBindings
+} from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 
-export type TabsRootProps = PropsOf<"div">;
+export type TabsRootProps = Omit<PropsOf<"div">, "align"> &
+  BindableProps<{ selectedValue: string }>;
 
 type TriggerRef = Signal<HTMLButtonElement | undefined>;
 
@@ -19,13 +24,22 @@ export const tabsContextId = createContextId<TabsContext>("qds-tabs");
 
 type TabsContext = {
   triggerRefs: Signal<TriggerRef[]>;
+  selectedValueSig: Signal<string>;
 };
 
 export const TabsRootBase = component$((props: TabsRootProps) => {
   const triggerRefs = useSignal<TriggerRef[]>([]);
 
+  /**
+   *  If the consumer does not pass a distinct value, then we set the value to the index as a string, to handle types and conditional logic easier
+   */
+  const { selectedValueSig } = useBindings(props, {
+    selectedValue: "0"
+  });
+
   const context: TabsContext = {
-    triggerRefs
+    triggerRefs,
+    selectedValueSig
   };
 
   useContextProvider(tabsContextId, context);
