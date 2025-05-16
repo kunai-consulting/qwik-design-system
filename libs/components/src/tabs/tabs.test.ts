@@ -84,4 +84,48 @@ test.describe("keyboard navigation", () => {
     await expect(d.getTriggerAt(1)).toHaveAttribute("tabindex", "-1");
     await expect(d.getTriggerAt(2)).toHaveAttribute("tabindex", "-1");
   });
+
+  test(`GIVEN a horizontal tabs
+        WHEN pressing right
+        THEN the next tab should be focused
+`, async ({ page }) => {
+    const { driver: d } = await setup(page, "hero");
+
+    await d.getTriggerAt(0).press("ArrowRight");
+
+    await expect(d.getTriggerAt(1)).toBeFocused();
+  });
+
+  test(`GIVEN a horizontal tabs
+        WHEN pressing left
+        THEN the previous tab should be focused
+`, async ({ page }) => {
+    const { driver: d } = await setup(page, "hero");
+
+    await d.getTriggerAt(1).press("ArrowLeft");
+
+    await expect(d.getTriggerAt(0)).toBeFocused();
+  });
+
+  test(`GIVEN a vertical tabs
+        WHEN pressing down
+        THEN the next tab should be focused
+`, async ({ page }) => {
+    const { driver: d } = await setup(page, "hero");
+
+    await d.getTriggerAt(0).press("ArrowDown");
+
+    await expect(d.getTriggerAt(1)).toBeFocused();
+  });
+
+  test(`GIVEN a vertical tabs
+        WHEN pressing up
+        THEN the previous tab should be focused
+`, async ({ page }) => {
+    const { driver: d } = await setup(page, "hero");
+
+    await d.getTriggerAt(1).press("ArrowUp");
+
+    await expect(d.getTriggerAt(0)).toBeFocused();
+  });
 });
