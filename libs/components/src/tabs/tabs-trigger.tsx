@@ -5,7 +5,7 @@ export type TabsTriggerProps = PropsOf<"button">;
 
 export const TabsTrigger = component$((props: TabsTriggerProps) => {
   return (
-    <Render fallback="button" {...props}>
+    <Render role="tab" fallback="button" {...props}>
       <Slot />
     </Render>
   );
