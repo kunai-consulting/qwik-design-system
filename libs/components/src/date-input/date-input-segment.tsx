@@ -13,14 +13,12 @@ import type { DayOfMonth, Month } from "../calendar/types";
 import { MAX_DAY } from "./constants";
 import { dateInputContextId } from "./date-input-context";
 import styles from "./date-input-segment.css?inline";
-import type { DateSegment } from "./types";
+import type { DateSegment, DateSegmentType } from "./types";
 import type { PublicDateInputSegmentProps } from "./types";
 import { getLastDayOfMonth, getTwoDigitPaddedValue } from "./utils";
 
 type DateInputSegmentProps = PublicDateInputSegmentProps & {
   segmentSig: Signal<DateSegment>;
-  isEditable: boolean;
-  maxLength: number;
   placeholder: string;
 };
 
@@ -28,10 +26,8 @@ type DateInputSegmentProps = PublicDateInputSegmentProps & {
 export const DateInputSegment = component$(
   ({
     segmentSig,
-    isEditable,
     showLeadingZero,
     placeholder,
-    maxLength,
     _index,
     ...otherProps
   }: DateInputSegmentProps) => {
@@ -39,6 +35,8 @@ export const DateInputSegment = component$(
     const inputId = `${context.localId}-segment-${segmentSig.value.type}`;
     const index = _index ?? -1;
     const inputRef = useSignal<HTMLInputElement>();
+    /** A promise-based lock mechanism to ensure inputs are processed sequentially */
+    const inputLock = useSignal<Promise<void>>(Promise.resolve());
 
     useStyles$(styles);
 
@@ -204,6 +202,36 @@ export const DateInputSegment = component$(
       }
     });
 
+    const isSegmentFull = $((type: DateSegmentType, numericValue?: number) => {
+      if (!numericValue) {
+        return false;
+      }
+      switch (type) {
+        case "year":
+          return numericValue.toString().length >= 4;
+        case "month":
+          return numericValue.toString().length >= 2 || numericValue >= 2;
+        case "day":
+          return numericValue.toString().length >= 2 || numericValue >= 4;
+      }
+    });
+
+    const focusNextSegment = $(async () => {
+      const nextSegment = context.segmentRefs.value[index + 1]?.value;
+      if (nextSegment) {
+        nextSegment.focus();
+        nextSegment.select();
+      }
+    });
+
+    const focusPreviousSegment = $(async () => {
+      const previousSegment = context.segmentRefs.value[index - 1]?.value;
+      if (previousSegment) {
+        previousSegment.focus();
+        previousSegment.select();
+      }
+    });
+
     const updateSegmentWithValue = $(async (textValue: string) => {
       const segment = segmentSig.value;
       let numericValue = +textValue;
@@ -231,6 +259,10 @@ export const DateInputSegment = component$(
         const month = context.monthSegmentSig.value.numericValue;
         await updateDayOfMonthSegmentForYearAndMonth(numericValue, month);
       }
+
+      if (await isSegmentFull(segment.type, numericValue)) {
+        await focusNextSegment();
+      }
     });
 
     const updateSegmentToPlaceholder = $(() => {
@@ -242,20 +274,6 @@ export const DateInputSegment = component$(
         numericValue: undefined,
         isoValue: undefined
       };
-    });
-
-    const focusNextSegment = $(() => {
-      const nextSegment = context.segmentRefs.value[index + 1]?.value;
-      if (nextSegment) {
-        nextSegment.focus();
-      }
-    });
-
-    const focusPreviousSegment = $(() => {
-      const previousSegment = context.segmentRefs.value[index - 1]?.value;
-      if (previousSegment) {
-        previousSegment.focus();
-      }
     });
 
     // Our own custom key handlers
@@ -298,19 +316,6 @@ export const DateInputSegment = component$(
       if (!/^\d$/.test(event.key)) {
         event.preventDefault();
       }
-
-      // Special handling for leading zeros
-      const target = event.target as HTMLInputElement;
-      const value = target.value; // The value before the keypress
-      if (value[0] === "0" && value.length === 2) {
-        target.value = value.slice(1);
-        return;
-      }
-      const maxLen = target.maxLength - 1;
-      const hasSelection = target.selectionStart !== target.selectionEnd;
-      if (value.length >= maxLen && !hasSelection) {
-        event.preventDefault();
-      }
     });
 
     const onPasteSync$ = sync$((event: ClipboardEvent) => {
@@ -321,33 +326,69 @@ export const DateInputSegment = component$(
       }
     });
 
+    /**
+     * @param segment
+     * @param inputData
+     * @returns The new value to apply to the segment.
+     *
+     * If the segment is already full or the updated value would be invalid, use only the newly input data.
+     * Otherwise, return the combination of the segment's current value and the input data.
+     */
+    const getNewValue = $(
+      async (segment: DateSegment, inputData: string): Promise<string> => {
+        let newContent: string;
+        const segmentPreviouslyFull = await isSegmentFull(
+          segment.type,
+          segment.numericValue
+        );
+        const combinedValue = (segment.numericValue ?? "") + inputData;
+        if (segmentPreviouslyFull || +combinedValue > segment.max) {
+          newContent = inputData;
+        } else {
+          newContent = combinedValue;
+        }
+
+        return newContent;
+      }
+    );
+
     // Process input and update our segment and date values accordingly
     const onInput$ = $(async (event: InputEvent) => {
-      const segment = segmentSig.value;
-      const target = event.target as HTMLInputElement;
-      const content = target.value || "";
-      const numericContent = content.replace(/\D/g, "");
+      // Wait for any previous input processing to complete
+      await inputLock.value;
 
-      // If the format specifies leading zeros and the input is 0, allow it
-      if (showLeadingZero && numericContent === "0") {
-        return;
-      }
+      // Create a new promise that will resolve when this input finishes
+      let resolveLock!: () => void;
+      inputLock.value = new Promise((resolve) => {
+        resolveLock = resolve;
+      });
 
-      if (numericContent.length > 0) {
-        await updateSegmentWithValue(numericContent);
+      try {
+        const segment = segmentSig.value;
+        const target = event.target as HTMLInputElement;
+        const content = target.value || "";
+        const data = event.data || ""; // The newly-input data, if any
 
-        // Check if the segment is fully entered and move focus to the next segment
-        const isYearFull = segment.type === "year" && numericContent.length >= 4;
-        const isMonthFull =
-          segment.type === "month" &&
-          (numericContent.length >= 2 || +numericContent >= 2);
-        const isDayFull =
-          segment.type === "day" && (numericContent.length >= 2 || +numericContent >= 4);
-        if (isYearFull || isMonthFull || isDayFull) {
-          await focusNextSegment();
+        let newValue: string;
+        if (data.length > 0) {
+          newValue = await getNewValue(segment, data);
+        } else {
+          newValue = content;
         }
-      } else {
-        await updateSegmentToPlaceholder();
+
+        // If the format specifies leading zeros and the input is 0, allow it
+        if (showLeadingZero && newValue === "0") {
+          return;
+        }
+
+        if (newValue.length > 0) {
+          await updateSegmentWithValue(newValue);
+        } else {
+          await updateSegmentToPlaceholder();
+        }
+      } finally {
+        // Release the lock when done, regardless of success or error
+        resolveLock();
       }
     });
 
@@ -381,7 +422,7 @@ export const DateInputSegment = component$(
         aria-valuemin={segmentSig.value.min}
         aria-valuenow={segmentSig.value.numericValue}
         disabled={context.disabledSig.value}
-        maxLength={maxLength + 1}
+        maxLength={segmentSig.value.maxLength + 1}
       />
     );
   }

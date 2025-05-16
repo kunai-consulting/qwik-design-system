@@ -4,6 +4,7 @@ import {
   DEFAULT_MONTH_SEGMENT,
   DEFAULT_YEAR_SEGMENT
 } from "./constants";
+import type { DateSegment } from "./types";
 
 export const getSeparatorFromFormat = (format?: DateFormat): Separator => {
   if (format?.includes("/")) return "/";
@@ -12,7 +13,13 @@ export const getSeparatorFromFormat = (format?: DateFormat): Separator => {
   return "/";
 };
 
-export const getInitialSegments = (initialDate: ISODate | null) => {
+export const getInitialSegments = (
+  initialDate: ISODate | null
+): {
+  dayOfMonthSegment: DateSegment;
+  monthSegment: DateSegment;
+  yearSegment: DateSegment;
+} => {
   if (!initialDate) {
     return {
       dayOfMonthSegment: DEFAULT_DAY_OF_MONTH_SEGMENT,
@@ -26,7 +33,6 @@ export const getInitialSegments = (initialDate: ISODate | null) => {
     dayOfMonthSegment: {
       ...DEFAULT_DAY_OF_MONTH_SEGMENT,
       numericValue: +day,
-      displayValue: day,
       isoValue: day,
       max: getLastDayOfMonth(+year, +month),
       isPlaceholder: false
@@ -34,14 +40,12 @@ export const getInitialSegments = (initialDate: ISODate | null) => {
     monthSegment: {
       ...DEFAULT_MONTH_SEGMENT,
       numericValue: +month,
-      displayValue: month,
       isoValue: month,
       isPlaceholder: false
     },
     yearSegment: {
       ...DEFAULT_YEAR_SEGMENT,
       numericValue: +year,
-      displayValue: year,
       isoValue: year,
       isPlaceholder: false
     }

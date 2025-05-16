@@ -10,6 +10,7 @@ export type DateSegment = {
   isPlaceholder: boolean;
   min: number;
   max: number;
+  maxLength: number;
 };
 
 export type PublicDateInputSegmentProps = PropsOf<"input"> & {
