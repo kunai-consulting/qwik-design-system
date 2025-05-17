@@ -173,3 +173,59 @@ test.describe("keyboard navigation", () => {
     await expect(d.getTriggerAt(0)).toBeFocused();
   });
 });
+
+test.describe("looping", () => {
+  test(`GIVEN a horizontal tabs
+        WHEN pressing the right key on the last tab
+        THEN the first tab should be focused
+`, async ({ page }) => {
+    const { driver: d } = await setup(page, "hero");
+
+    // setup
+    await d.getTriggerAt(0).press("End");
+    await expect(d.getTriggerAt(2)).toBeFocused();
+
+    await d.getTriggerAt(2).press("ArrowRight");
+    await expect(d.getTriggerAt(0)).toBeFocused();
+  });
+
+  test(`GIVEN a horizontal tabs
+        WHEN pressing the left key on the first tab
+        THEN the last tab should be focused
+`, async ({ page }) => {
+    const { driver: d } = await setup(page, "hero");
+
+    // setup
+    await expect(d.getTriggerAt(0)).toBeFocused();
+
+    await d.getTriggerAt(0).press("ArrowLeft");
+    await expect(d.getTriggerAt(2)).toBeFocused();
+  });
+
+  test(`GIVEN a vertical tabs
+        WHEN pressing the down key on the last tab
+        THEN the first tab should be focused
+`, async ({ page }) => {
+    const { driver: d } = await setup(page, "hero");
+
+    // setup
+    await d.getTriggerAt(0).press("End");
+    await expect(d.getTriggerAt(2)).toBeFocused();
+
+    await d.getTriggerAt(2).press("ArrowDown");
+    await expect(d.getTriggerAt(0)).toBeFocused();
+  });
+
+  test(`GIVEN a vertical tabs
+        WHEN pressing the up key on the first tab
+        THEN the last tab should be focused
+`, async ({ page }) => {
+    const { driver: d } = await setup(page, "hero");
+
+    // setup
+    await expect(d.getTriggerAt(0)).toBeFocused();
+
+    await d.getTriggerAt(0).press("ArrowUp");
+    await expect(d.getTriggerAt(2)).toBeFocused();
+  });
+});
