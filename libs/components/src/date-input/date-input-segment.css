@@ -2,27 +2,11 @@
   input[data-qds-date-input-segment] {
     border: none;
     padding: 0 1px;
-    box-sizing: border-box;
-    grid-area: 1 / 1;
-    width: 100%;
-    min-width: 1ch;
+    caret-color: transparent;
+    field-sizing: content;
   }
 
   input[data-qds-date-input-segment]::placeholder {
     text-align: center;
-  }
-
-  .qds-date-input-segment-container {
-    display: inline-grid;
-    width: min-content;
-  }
-
-  .qds-date-input-width-measurement {
-    grid-area: 1 / 1;
-    visibility: hidden;
-    white-space: pre;
-    font: inherit;
-    letter-spacing: inherit;
-    padding: 0 1px;
   }
 }

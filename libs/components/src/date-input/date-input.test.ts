@@ -232,6 +232,39 @@ test.describe("Input/Output", () => {
     await d.getYearSegment().fill("2024");
     await expect(externalValue).toHaveText("2024-02-14");
   });
+
+  test("GIVEN a date input WHEN date info is typed THEN the values should be updated", async ({
+    page
+  }) => {
+    const d = await setup(page, "hero");
+    const monthSegment = d.getMonthSegment();
+    const yearSegment = d.getYearSegment();
+    const daySegment = d.getDaySegment();
+    const externalValue = d.getExternalValue();
+
+    await monthSegment.pressSequentially("12");
+    expect(await monthSegment.inputValue()).toEqual("12");
+    await daySegment.pressSequentially("15");
+    expect(await daySegment.inputValue()).toEqual("15");
+    await yearSegment.pressSequentially("2025");
+    expect(await yearSegment.inputValue()).toEqual("2025");
+
+    await expect(externalValue).toHaveText("2025-12-15");
+
+    await monthSegment.pressSequentially("11");
+    expect(await monthSegment.inputValue()).toEqual("11");
+
+    await monthSegment.pressSequentially("9");
+    expect(await monthSegment.inputValue()).toEqual("9");
+
+    await daySegment.pressSequentially("3");
+    expect(await daySegment.inputValue()).toEqual("3");
+
+    await yearSegment.pressSequentially("1999");
+    expect(await yearSegment.inputValue()).toEqual("1999");
+
+    await expect(externalValue).toHaveText("1999-09-03");
+  });
 });
 
 test.describe("Disabled", () => {
