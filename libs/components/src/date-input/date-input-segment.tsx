@@ -35,8 +35,6 @@ export const DateInputSegment = component$(
     const inputId = `${context.localId}-segment-${segmentSig.value.type}`;
     const index = _index ?? -1;
     const inputRef = useSignal<HTMLInputElement>();
-    /** A promise-based lock mechanism to ensure inputs are processed sequentially */
-    const inputLock = useSignal<Promise<void>>(Promise.resolve());
 
     useStyles$(styles);
 
@@ -299,7 +297,7 @@ export const DateInputSegment = component$(
       }
     });
 
-    // Use sync$ to filter keyboard events
+    // Use sync$ method to control input
     const onKeyDownSync$ = sync$((event: KeyboardEvent) => {
       // Allow navigation keys (arrows, backspace, delete, tab)
       const allowedKeys = ["ArrowLeft", "ArrowRight", "Backspace", "Delete", "Tab"];
@@ -312,10 +310,87 @@ export const DateInputSegment = component$(
         return;
       }
 
-      // Allow numeric keys only
+      // Block non-numeric keys
       if (!/^\d$/.test(event.key)) {
         event.preventDefault();
+        return;
       }
+
+      // At this point, we know it's a numeric key
+      const inputElement = event.target as HTMLInputElement;
+      const currentValue = inputElement.value;
+      const newDigit = event.key;
+      const segmentType: DateSegmentType = inputElement.attributes.getNamedItem(
+        "data-qds-date-input-segment-year"
+      )
+        ? "year"
+        : inputElement.attributes.getNamedItem("data-qds-date-input-segment-month")
+          ? "month"
+          : "day";
+
+      let replaceExistingValue = false;
+      let newValue = currentValue + newDigit;
+
+      // Logic specific to each segment type
+      switch (segmentType) {
+        case "month": {
+          // For month: handle 1-12 range
+          const monthVal = Number.parseInt(newValue, 10);
+          if (currentValue === "1" && Number.parseInt(newDigit, 10) > 2) {
+            // 13-19 are invalid, replace with just the new digit
+            replaceExistingValue = true;
+            newValue = newDigit;
+          } else if (monthVal > 12 || currentValue.length >= 2) {
+            replaceExistingValue = true;
+            newValue = newDigit;
+          }
+          break;
+        }
+
+        case "day": {
+          // For day: handle 1-31 range
+          const dayVal = Number.parseInt(newValue, 10);
+          if (currentValue === "3" && Number.parseInt(newDigit, 10) > 1) {
+            // 32-39 are invalid, replace with just the new digit
+            replaceExistingValue = true;
+            newValue = newDigit;
+          } else if (dayVal > 31 || currentValue.length >= 2) {
+            // Over max or already has 2 digits
+            replaceExistingValue = true;
+            newValue = newDigit;
+          }
+          break;
+        }
+
+        case "year": {
+          // For year: allow building up to 4 digits
+          if (currentValue.length >= 4) {
+            // Already at max length for year, replace
+            replaceExistingValue = true;
+            newValue = newDigit;
+          }
+          break;
+        }
+      }
+
+      // Apply our decision - either let default happen or replace the existing value
+      if (replaceExistingValue) {
+        // Prevent default behavior (which would append)
+        event.preventDefault();
+
+        // Set new value directly
+        inputElement.value = newValue;
+
+        // Create and dispatch an InputEvent with our data
+        const inputEvent = new InputEvent("input", {
+          bubbles: true,
+          cancelable: false,
+          data: newDigit,
+          inputType: "insertText"
+        });
+        inputElement.dispatchEvent(inputEvent);
+      }
+      // Otherwise let the default append behavior happen
     });
 
     const onPasteSync$ = sync$((event: ClipboardEvent) => {
@@ -326,69 +401,16 @@ export const DateInputSegment = component$(
       }
     });
 
-    /**
-     * @param segment
-     * @param inputData
-     * @returns The new value to apply to the segment.
-     *
-     * If the segment is already full or the updated value would be invalid, use only the newly input data.
-     * Otherwise, return the combination of the segment's current value and the input data.
-     */
-    const getNewValue = $(
-      async (segment: DateSegment, inputData: string): Promise<string> => {
-        let newContent: string;
-        const segmentPreviouslyFull = await isSegmentFull(
-          segment.type,
-          segment.numericValue
-        );
-        const combinedValue = (segment.numericValue ?? "") + inputData;
-        if (segmentPreviouslyFull || +combinedValue > segment.max) {
-          newContent = inputData;
-        } else {
-          newContent = combinedValue;
-        }
-
-        return newContent;
-      }
-    );
-
     // Process input and update our segment and date values accordingly
     const onInput$ = $(async (event: InputEvent) => {
-      // Wait for any previous input processing to complete
-      await inputLock.value;
+      const target = event.target as HTMLInputElement;
+      const currentValue = target.value;
 
-      // Create a new promise that will resolve when this input finishes
-      let resolveLock!: () => void;
-      inputLock.value = new Promise((resolve) => {
-        resolveLock = resolve;
-      });
-
-      try {
-        const segment = segmentSig.value;
-        const target = event.target as HTMLInputElement;
-        const content = target.value || "";
-        const data = event.data || ""; // The newly-input data, if any
-
-        let newValue: string;
-        if (data.length > 0) {
-          newValue = await getNewValue(segment, data);
-        } else {
-          newValue = content;
-        }
-
-        // If the format specifies leading zeros and the input is 0, allow it
-        if (showLeadingZero && newValue === "0") {
-          return;
-        }
-
-        if (newValue.length > 0) {
-          await updateSegmentWithValue(newValue);
-        } else {
-          await updateSegmentToPlaceholder();
-        }
-      } finally {
-        // Release the lock when done, regardless of success or error
-        resolveLock();
+      if (currentValue.length > 0) {
+        await updateSegmentWithValue(currentValue);
+        await updateActiveDate();
+      } else {
+        await updateSegmentToPlaceholder();
       }
     });
 
