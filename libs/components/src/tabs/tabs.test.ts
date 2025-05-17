@@ -141,12 +141,34 @@ test.describe("keyboard navigation", () => {
   });
 
   test(`GIVEN a tabs
-    WHEN pressing the home key
-    THEN the first tab should be focused
+        WHEN pressing the home key
+        THEN the first tab should be focused
 `, async ({ page }) => {
     const { driver: d } = await setup(page, "hero");
 
     await d.getTriggerAt(2).press("Home");
+
+    await expect(d.getTriggerAt(0)).toBeFocused();
+  });
+
+  test(`GIVEN a tabs
+        WHEN the next tab is disabled
+        THEN the next enabled tab should be focused
+`, async ({ page }) => {
+    const { driver: d } = await setup(page, "hero");
+
+    await d.getTriggerAt(0).press("ArrowRight");
+
+    await expect(d.getTriggerAt(2)).toBeFocused();
+  });
+
+  test(`GIVEN a tabs
+        WHEN the previous tab is disabled
+        THEN the previous enabled tab should be focused
+`, async ({ page }) => {
+    const { driver: d } = await setup(page, "hero");
+
+    await d.getTriggerAt(2).press("ArrowLeft");
 
     await expect(d.getTriggerAt(0)).toBeFocused();
   });
