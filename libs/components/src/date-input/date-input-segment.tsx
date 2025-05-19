@@ -318,7 +318,8 @@ export const DateInputSegment = component$(
 
       // At this point, we know it's a numeric key
       const inputElement = event.target as HTMLInputElement;
-      const currentValue = inputElement.value;
+      // Remove leading zero if present (e.g., "01" -> "1")
+      const currentValue = inputElement.value.replace(/^0/, "");
       const newDigit = event.key;
       const segmentType: DateSegmentType = inputElement.attributes.getNamedItem(
         "data-qds-date-input-segment-year"
@@ -405,6 +406,10 @@ export const DateInputSegment = component$(
     const onInput$ = $(async (event: InputEvent) => {
       const target = event.target as HTMLInputElement;
       const currentValue = target.value;
+
+      if (showLeadingZero && currentValue === "0") {
+        return;
+      }
 
       if (currentValue.length > 0) {
         await updateSegmentWithValue(currentValue);
