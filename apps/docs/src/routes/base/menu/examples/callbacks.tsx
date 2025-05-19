@@ -9,9 +9,7 @@ export default component$(() => {
 
   return (
     <div>
-      <p id="openChangeCallbackValue">
-        Menu is {isOpen.value ? "opened" : "closed"}.
-      </p>
+      <p id="openChangeCallbackValue">Menu is {isOpen.value ? "opened" : "closed"}.</p>
       <Menu.Root
         bind:open={isOpen}
         onOpenChange$={(open: boolean) => {
@@ -20,22 +18,14 @@ export default component$(() => {
       >
         <Menu.Trigger class="bg-qwik-blue-700 p-1">Open Menu</Menu.Trigger>
         <Menu.Content>
-          <Menu.Item
-            onSelect$={() => (selectedItem.value = "1")}
-            class="menu-item"
-          >
+          <Menu.Item onSelect$={() => (selectedItem.value = "1")} class="menu-item">
             <Menu.ItemLabel class="menu-item-label">Item 1</Menu.ItemLabel>
           </Menu.Item>
-          <Menu.Item
-            onSelect$={() => (selectedItem.value = "2")}
-            class="menu-item"
-          >
+          <Menu.Item onSelect$={() => (selectedItem.value = "2")} class="menu-item">
             <Menu.ItemLabel class="menu-item-label">Item 2</Menu.ItemLabel>
           </Menu.Item>
           <Menu.Item disabled class="menu-item">
-            <Menu.ItemLabel class="menu-item-label">
-              Item 3 (Disabled)
-            </Menu.ItemLabel>
+            <Menu.ItemLabel class="menu-item-label">Item 3 (Disabled)</Menu.ItemLabel>
           </Menu.Item>
         </Menu.Content>
       </Menu.Root>

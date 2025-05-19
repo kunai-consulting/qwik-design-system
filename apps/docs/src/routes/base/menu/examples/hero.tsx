@@ -18,16 +18,11 @@ export default component$(() => {
           >
             <Menu.ItemLabel class="menu-item-label">Item 1</Menu.ItemLabel>
           </Menu.Item>
-          <Menu.Item
-            onSelect$={() => (selectedItem.value = "2")}
-            class="menu-item"
-          >
+          <Menu.Item onSelect$={() => (selectedItem.value = "2")} class="menu-item">
             <Menu.ItemLabel class="menu-item-label">Item 2</Menu.ItemLabel>
           </Menu.Item>
           <Menu.Item disabled class="menu-item">
-            <Menu.ItemLabel class="menu-item-label">
-              Item 3 (Disabled)
-            </Menu.ItemLabel>
+            <Menu.ItemLabel class="menu-item-label">Item 3 (Disabled)</Menu.ItemLabel>
           </Menu.Item>
         </Menu.Content>
       </Menu.Root>

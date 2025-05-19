@@ -17,15 +17,11 @@ export default component$(() => {
             onSelect$={() => (selectedItem.value = "Regular Item")}
             class="menu-item"
           >
-            <Menu.ItemLabel class="menu-item-label">
-              Regular Item
-            </Menu.ItemLabel>
+            <Menu.ItemLabel class="menu-item-label">Regular Item</Menu.ItemLabel>
           </Menu.Item>
           <Menu.Submenu>
             <Menu.SubmenuTrigger class="menu-item">
-              <Menu.ItemLabel class="menu-item-label">
-                More Options
-              </Menu.ItemLabel>
+              <Menu.ItemLabel class="menu-item-label">More Options</Menu.ItemLabel>
             </Menu.SubmenuTrigger>
             <Menu.SubmenuContent>
               <Menu.Item
@@ -33,9 +29,7 @@ export default component$(() => {
                 onSelect$={() => (selectedItem.value = "Submenu 1")}
                 class="menu-item"
               >
-                <Menu.ItemLabel class="menu-item-label">
-                  Submenu Item 1
-                </Menu.ItemLabel>
+                <Menu.ItemLabel class="menu-item-label">Submenu Item 1</Menu.ItemLabel>
               </Menu.Item>
               <Menu.Submenu>
                 <Menu.SubmenuTrigger class="menu-item">
