@@ -32,11 +32,10 @@ export default component$(() => {
 
       <div class="date-input-button-container">
         <button
-          onClick$={() =>
-            (selectedDate.value = new Date()
-              .toISOString()
-              .split("T")[0] as DateInput.ISODate)
-          }
+          onClick$={() => {
+            const date = new Date().toISOString().split("T")[0] as DateInput.ISODate;
+            selectedDate.value = date;
+          }}
           type="button"
           class="set-value-button"
         >

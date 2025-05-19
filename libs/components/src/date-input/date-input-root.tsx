@@ -35,7 +35,7 @@ export type DateInputBoundProps = {
 };
 
 // Regular expression for validating ISO date format (yyyy-mm-dd)
-const isoDateRegex = /^\d{4}-(0[1-9]|1[0-2])-\d{2}$/;
+const isoDateRegex = /^\d{1,4}-(0[1-9]|1[0-2])-\d{2}$/;
 
 /** The root Date Input component that manages state and provides context */
 export const DateInputRootBase = component$<PublicDateInputRootProps>((props) => {

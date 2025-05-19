@@ -3,6 +3,10 @@ import api from "./code-notate/api.json";
 # Date Input
 A customizable date entry field that allows users to input dates in various formats.
 <Showcase name="hero" />
+
+Note: This component relies on `field-sizing: content;` to set the width of the inputs based on the content of the input or its placeholder. 
+This is supported in Chromium-based browsers, but may not work properly in other browsers.
+If you need to support other or older browsers, you can manage the width of the inputs in your own CSS.
 ## Features
 <Features api={api} />
 ## Anatomy
