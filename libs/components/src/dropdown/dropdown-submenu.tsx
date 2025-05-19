@@ -29,6 +29,7 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
   const context = useContext(dropdownContextId);
   const parentContext = useContext(submenuContextId, null);
   const itemRefs = useSignal<ItemRef[]>([]);
+  const submenuRef = useSignal<HTMLElement>();
 
   const { openSig: isOpenSig } = useBindings(props, {
     open: false
@@ -43,7 +44,7 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
 
   const parentId = parentContext ? parentContext.contentId : context.contentId;
   const getEnabledItems = $(() => {
-    return getEnabledItemsUtil(itemRefs.value);
+    return getEnabledItemsUtil(itemRefs.value, submenuRef.value);
   });
 
   const submenu: SubmenuState = {
@@ -79,6 +80,7 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
       data-qds-dropdown-submenu
       qds-submenu-level={currentLevel}
       tabIndex={-1}
+      ref={submenuRef}
       {...rest}
     >
       <Slot />

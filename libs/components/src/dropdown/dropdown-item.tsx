@@ -109,8 +109,6 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
 
       if (!enabledItems.length) return;
 
-      console.log("enabledItems", enabledItems.length);
-
       const currentIndex = enabledItems.findIndex((item) => item === itemRef.value);
 
       if (currentIndex === -1) {

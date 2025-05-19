@@ -86,7 +86,7 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
   });
 
   const getEnabledItems = $(() => {
-    return getEnabledItemsUtil(itemRefs.value);
+    return getEnabledItemsUtil(itemRefs.value, contentRef.value);
   });
 
   useOnWindow(
