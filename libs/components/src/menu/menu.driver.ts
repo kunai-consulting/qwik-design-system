@@ -4,39 +4,39 @@ type DriverLocator = Locator | Page;
 
 export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   const getRoot = () => {
-    return rootLocator.locator("[data-qds-dropdown-root]");
+    return rootLocator.locator("[data-qds-menu-root]");
   };
 
   const getTrigger = () => {
-    return rootLocator.locator("[data-qds-dropdown-trigger]");
+    return rootLocator.locator("[data-qds-menu-trigger]");
   };
 
   const getContextTrigger = () => {
-    return rootLocator.locator("[data-qds-dropdown-context-trigger]");
+    return rootLocator.locator("[data-qds-menu-context-trigger]");
   };
 
   const getContent = () => {
-    return rootLocator.locator("[data-qds-dropdown-content]");
+    return rootLocator.locator("[data-qds-menu-content]");
   };
 
   const getItems = () => {
-    return getContent().locator("[data-qds-dropdown-item]");
+    return getContent().locator("[data-qds-menu-item]");
   };
 
   const getItemByText = (text: string) => {
-    return getContent().locator("[data-qds-dropdown-item]", { hasText: text });
+    return getContent().locator("[data-qds-menu-item]", { hasText: text });
   };
 
   const getSubmenuTrigger = () => {
-    return rootLocator.locator("[data-qds-dropdown-submenu-trigger]");
+    return rootLocator.locator("[data-qds-menu-submenu-trigger]");
   };
 
   const getSubmenuContent = () => {
-    return rootLocator.locator("[data-qds-dropdown-submenu-content]");
+    return rootLocator.locator("[data-qds-menu-submenu-content]");
   };
 
   const getSubmenuItems = () => {
-    return getSubmenuContent().locator("[data-qds-dropdown-item]");
+    return getSubmenuContent().locator("[data-qds-menu-item]");
   };
 
   const rightClickOn = async (locator: Locator, position?: { x: number; y: number }) => {

@@ -12,21 +12,21 @@ import {
 import { useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";
-import { type ItemRef, type SubmenuState, dropdownContextId } from "./dropdown-context";
-import type { PublicDropdownRootProps } from "./dropdown-root";
-import { submenuContextId } from "./dropdown-submenu-context";
-import dropdownSubmenuStyles from "./dropdown-submenu.css?inline";
+import { type ItemRef, type SubmenuState, menuContextId } from "./menu-context";
+import type { PublicMenuRootProps } from "./menu-root";
+import { submenuContextId } from "./menu-submenu-context";
+import menuSubmenuStyles from "./menu-submenu.css?inline";
 import { getEnabledItemsUtil } from "./utils";
 
-export type PublicDropdownSubmenuProps = PublicDropdownRootProps & {
+export type PublicMenuSubmenuProps = PublicMenuRootProps & {
   /** The position of the submenu relative to its trigger */
   position?: "right" | "left" | "bottom" | "top";
 };
 
 /** A component that renders a submenu */
-export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props) => {
-  useStyles$(dropdownSubmenuStyles);
-  const context = useContext(dropdownContextId);
+export const MenuSubmenuBase = component$<PublicMenuSubmenuProps>((props) => {
+  useStyles$(menuSubmenuStyles);
+  const context = useContext(menuContextId);
   const parentContext = useContext(submenuContextId, null);
   const itemRefs = useSignal<ItemRef[]>([]);
   const submenuRef = useSignal<HTMLElement>();
@@ -37,8 +37,8 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
 
   const id = useId();
 
-  const triggerId = useSignal(`${id}-dropdown-submenu-trigger`);
-  const contentId = useSignal(`${id}-dropdown-submenu-content`);
+  const triggerId = useSignal(`${id}-menu-submenu-trigger`);
+  const contentId = useSignal(`${id}-menu-submenu-content`);
 
   const currentLevel = parentContext?.level ? parentContext.level + 1 : 1;
 
@@ -77,7 +77,7 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
   return (
     <PopoverRootBase
       bind:open={isOpenSig}
-      data-qds-dropdown-submenu
+      data-qds-menu-submenu
       qds-submenu-level={currentLevel}
       tabIndex={-1}
       ref={submenuRef}
@@ -88,4 +88,4 @@ export const DropdownSubmenuBase = component$<PublicDropdownSubmenuProps>((props
   );
 });
 
-export const DropdownSubmenu = withAsChild(DropdownSubmenuBase);
+export const MenuSubmenu = withAsChild(MenuSubmenuBase);

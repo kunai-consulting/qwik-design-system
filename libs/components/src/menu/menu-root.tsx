@@ -14,27 +14,27 @@ import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";
 import {
-  type DropdownContext,
+  type MenuContext,
   type ItemRef,
   type SubmenuState,
-  dropdownContextId
-} from "./dropdown-context";
+  menuContextId
+} from "./menu-context";
 import { getEnabledItemsUtil } from "./utils";
 
-type DropdownRootBaseProps = PropsOf<typeof PopoverRootBase>;
+type MenuRootBaseProps = PropsOf<typeof PopoverRootBase>;
 
-/** Initial open state of the dropdown */
-export type PublicDropdownRootProps = DropdownRootBaseProps &
+/** Initial open state of the menu */
+export type PublicMenuRootProps = MenuRootBaseProps &
   BindableProps<{
-    /** Initial open state of the dropdown */
+    /** Initial open state of the menu */
     open: boolean;
   }> & {
-    /** Callback fired when dropdown open state changes */
+    /** Callback fired when menu open state changes */
     onOpenChange$?: (open: boolean) => void;
   };
 
-/** Root container component for the dropdown menu */
-const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
+/** Root container component for the menu */
+const MenuRootBase = component$<PublicMenuRootProps>((props) => {
   const { openSig: isOpenSig } = useBindings(props, {
     open: false
   });
@@ -57,11 +57,11 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
 
   const isInitialRenderSig = useSignal(true);
 
-  // Track if the dropdown is currently a context menu
+  // Track if the menu is currently a context menu
   useTask$(({ track }) => {
     track(() => isOpenSig.value);
 
-    // Reset context menu flag when dropdown closes
+    // Reset context menu flag when menu closes
     if (!isOpenSig.value) {
       isContextMenu.value = false;
       contextMenuX.value = 0;
@@ -94,9 +94,9 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
     sync$((event: KeyboardEvent) => {
       // we have to do this on a window event due to v1 serialization issues
       const activeElement = document.activeElement;
-      const isWithinDropdown = activeElement?.closest("[data-qds-popover-root]");
+      const isWithinMenu = activeElement?.closest("[data-qds-popover-root]");
 
-      if (!isWithinDropdown) return;
+      if (!isWithinMenu) return;
 
       const preventKeys = ["ArrowUp", "ArrowDown", " ", "Home", "End", "ArrowRight"];
       if (preventKeys.includes(event.key)) {
@@ -109,7 +109,7 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
   const contentId = `${id}-content`;
   const triggerId = `${id}-trigger`;
 
-  const context: DropdownContext = {
+  const context: MenuContext = {
     isOpenSig,
     contentId,
     triggerId,
@@ -124,15 +124,15 @@ const DropdownRootBase = component$<PublicDropdownRootProps>((props) => {
     contentRef
   };
 
-  useContextProvider(dropdownContextId, context);
+  useContextProvider(menuContextId, context);
 
   const { open: _o, "bind:open": _bo, ...rest } = props;
 
   return (
-    <PopoverRootBase bind:open={isOpenSig} data-qds-dropdown-root ref={rootRef} {...rest}>
+    <PopoverRootBase bind:open={isOpenSig} data-qds-menu-root ref={rootRef} {...rest}>
       <Slot />
     </PopoverRootBase>
   );
 });
 
-export const DropdownRoot = withAsChild(DropdownRootBase);
+export const MenuRoot = withAsChild(MenuRootBase);

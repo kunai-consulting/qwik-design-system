@@ -2,17 +2,17 @@ import { Slot, component$, useContext, useSignal, useTask$ } from "@builder.io/q
 import type { PropsOf } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverContentBase } from "../popover/popover-content";
-import { type SubmenuState, dropdownContextId } from "./dropdown-context";
-import { submenuContextId } from "./dropdown-submenu-context";
+import { type SubmenuState, menuContextId } from "./menu-context";
+import { submenuContextId } from "./menu-submenu-context";
 import { getSubmenuStateByContentId } from "./utils";
 
 /** Props for the submenu content component */
-export type PublicDropdownSubmenuContentProps = PropsOf<typeof PopoverContentBase>;
+export type PublicMenuSubmenuContentProps = PropsOf<typeof PopoverContentBase>;
 
 /** A component that renders the submenu content */
-export const DropdownSubmenuContentBase = component$<PublicDropdownSubmenuContentProps>(
+export const MenuSubmenuContentBase = component$<PublicMenuSubmenuContentProps>(
   (props) => {
-    const context = useContext(dropdownContextId);
+    const context = useContext(menuContextId);
     const submenuContext = useContext(submenuContextId);
     const submenu = useSignal<SubmenuState | undefined>(undefined);
 
@@ -35,7 +35,7 @@ export const DropdownSubmenuContentBase = component$<PublicDropdownSubmenuConten
         role="menu"
         id={submenuContext.contentId}
         aria-labelledby={submenuContext.triggerId}
-        data-qds-dropdown-submenu-content
+        data-qds-menu-submenu-content
         data-position={submenu.value.position}
         {...props}
       >
@@ -45,4 +45,4 @@ export const DropdownSubmenuContentBase = component$<PublicDropdownSubmenuConten
   }
 );
 
-export const DropdownSubmenuContent = withAsChild(DropdownSubmenuContentBase);
+export const MenuSubmenuContent = withAsChild(MenuSubmenuContentBase);

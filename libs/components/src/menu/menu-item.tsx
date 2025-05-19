@@ -9,25 +9,25 @@ import {
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-import { type SubmenuState, dropdownContextId } from "./dropdown-context";
-import { submenuContextId } from "./dropdown-submenu-context";
+import { type SubmenuState, menuContextId } from "./menu-context";
+import { submenuContextId } from "./menu-submenu-context";
 import { getParent, getSubmenuStateByContentId } from "./utils";
 
-export type PublicDropdownItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
-  /** Whether the dropdown item is disabled */
+export type PublicMenuItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
+  /** Whether the menu item is disabled */
   disabled?: boolean;
   /** Data value associated with this item, passed to onSelect$ when selected */
   value?: string;
   /** Event handler called when the item is selected */
   onSelect$?: (value: string | undefined) => void;
-  /** Whether to close the dropdown when the item is selected (default: true) */
+  /** Whether to close the menu when the item is selected (default: true) */
   closeOnSelect?: boolean;
 };
 
-/** Interactive item within a dropdown menu */
-export const DropdownItemBase = component$<PublicDropdownItemProps>(
+/** Interactive item within a menu */
+export const MenuItemBase = component$<PublicMenuItemProps>(
   ({ disabled, value, onSelect$, closeOnSelect = true, ...rest }) => {
-    const context = useContext(dropdownContextId);
+    const context = useContext(menuContextId);
     const itemRef = useSignal<HTMLElement>();
     const isHoveredSig = useSignal(false);
     const isFocusedSig = useSignal(false);
@@ -190,7 +190,7 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
         onBlur$={[$(() => (isFocusedSig.value = false)), rest.onBlur$]}
         aria-disabled={disabled}
         data-disabled={disabled}
-        data-qds-dropdown-item
+        data-qds-menu-item
         data-hovered={isHoveredSig.value}
         data-focused={isFocusedSig.value}
         {...rest}
@@ -201,4 +201,4 @@ export const DropdownItemBase = component$<PublicDropdownItemProps>(
   }
 );
 
-export const DropdownItem = withAsChild(DropdownItemBase);
+export const MenuItem = withAsChild(MenuItemBase);

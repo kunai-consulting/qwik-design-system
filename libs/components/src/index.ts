@@ -13,7 +13,7 @@ export * as Resizable from "./resizable";
 export * as Tree from "./tree";
 export * as Switch from "./switch";
 export * as Toggle from "./toggle";
-export * as Dropdown from "./dropdown";
+export * as Menu from "./menu";
 
 export { Render } from "./render/render";
 export { withAsChild } from "./as-child/as-child";

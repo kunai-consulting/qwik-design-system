@@ -1,15 +1,15 @@
 import { $, type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverTriggerBase } from "../popover/popover-trigger";
-import { dropdownContextId } from "./dropdown-context";
+import { menuContextId } from "./menu-context";
 
-export type PublicDropdownTriggerProps = Omit<
+export type PublicMenuTriggerProps = Omit<
   PropsOf<typeof PopoverTriggerBase>,
   "popovertarget" | "id" | "aria-haspopup" | "aria-expanded" | "aria-controls"
 >;
-/** Button that triggers the dropdown menu to open/close */
-export const DropdownTriggerBase = component$<PublicDropdownTriggerProps>((props) => {
-  const context = useContext(dropdownContextId);
+/** Button that triggers the menu to open/close */
+export const MenuTriggerBase = component$<PublicMenuTriggerProps>((props) => {
+  const context = useContext(menuContextId);
 
   const handleKeyDown = $(async (event: KeyboardEvent) => {
     const { key } = event;
@@ -30,8 +30,8 @@ export const DropdownTriggerBase = component$<PublicDropdownTriggerProps>((props
       aria-expanded={context.isOpenSig.value}
       aria-controls={context.isOpenSig.value ? context.contentId : undefined}
       onKeyDown$={[handleKeyDown, props.onKeyDown$]}
-      // The identifier for the dropdown trigger button
-      data-qds-dropdown-trigger
+      // The identifier for the menu trigger button
+      data-qds-menu-trigger
       type="button"
       {...props}
     >
@@ -40,4 +40,4 @@ export const DropdownTriggerBase = component$<PublicDropdownTriggerProps>((props
   );
 });
 
-export const DropdownTrigger = withAsChild(DropdownTriggerBase);
+export const MenuTrigger = withAsChild(MenuTriggerBase);

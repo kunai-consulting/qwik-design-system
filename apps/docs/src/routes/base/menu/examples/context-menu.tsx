@@ -1,6 +1,6 @@
 import { component$, useSignal, useStyles$ } from "@builder.io/qwik";
-import { Dropdown } from "@kunai-consulting/qwik";
-import styles from "./dropdown-custom.css?inline";
+import { Menu } from "@kunai-consulting/qwik";
+import styles from "./menu-custom.css?inline";
 
 export default component$(() => {
   useStyles$(styles);
@@ -8,30 +8,30 @@ export default component$(() => {
 
   return (
     <div>
-      <Dropdown.Root>
+      <Menu.Root>
         {/* Area that responds to right-clicks */}
-        <Dropdown.ContextTrigger class="bg-qwik-blue-700 p-10">
+        <Menu.ContextTrigger class="bg-qwik-blue-700 p-10">
           Right-click me!
-        </Dropdown.ContextTrigger>
+        </Menu.ContextTrigger>
 
         {/* The menu content (shown on right-click) */}
-        <Dropdown.Content>
-          <Dropdown.Item
+        <Menu.Content>
+          <Menu.Item
             value="1"
             onSelect$={(value) => (selectedItem.value = value ?? null)}
-            class="dropdown-item"
+            class="menu-item"
           >
-            <Dropdown.ItemLabel class="dropdown-item-label">Item 1</Dropdown.ItemLabel>
-          </Dropdown.Item>
-          <Dropdown.Item
+            <Menu.ItemLabel class="menu-item-label">Item 1</Menu.ItemLabel>
+          </Menu.Item>
+          <Menu.Item
             value="2"
             onSelect$={(value) => (selectedItem.value = value ?? null)}
-            class="dropdown-item"
+            class="menu-item"
           >
-            <Dropdown.ItemLabel class="dropdown-item-label">Item 2</Dropdown.ItemLabel>
-          </Dropdown.Item>
-        </Dropdown.Content>
-      </Dropdown.Root>
+            <Menu.ItemLabel class="menu-item-label">Item 2</Menu.ItemLabel>
+          </Menu.Item>
+        </Menu.Content>
+      </Menu.Root>
       <div style="margin-top: 20px;">
         {selectedItem.value !== null && <span>Selected item: {selectedItem.value}</span>}
       </div>

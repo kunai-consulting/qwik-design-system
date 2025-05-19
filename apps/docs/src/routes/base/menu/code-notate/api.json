@@ -1,13 +1,13 @@
 {
   "components": [
     {
-      "Dropdown Root": {
+      "Menu Root": {
         "inheritsFrom": "PopoverRoot",
         "types": [
           {
-            "PublicDropdownRootProps": [
+            "PublicMenuRootProps": [
               {
-                "comment": "Whether the dropdown is open by default (uncontrolled).",
+                "comment": "Whether the menu is open by default (uncontrolled).",
                 "prop": "open",
                 "type": "boolean",
                 "defaultValue": "false"
@@ -18,7 +18,7 @@
                 "type": "Signal<boolean>"
               },
               {
-                "comment": "Callback fired when dropdown open state changes.",
+                "comment": "Callback fired when menu open state changes.",
                 "prop": "onOpenChange$",
                 "type": "(open: boolean) => void"
               }
@@ -27,22 +27,22 @@
         ],
         "dataAttributes": [
           {
-            "name": "data-qds-dropdown-root",
+            "name": "data-qds-menu-root",
             "comment": "Present on the root element."
           },
           {
             "name": "data-open",
-            "comment": "Present when the dropdown is open."
+            "comment": "Present when the menu is open."
           },
           {
             "name": "data-closed",
-            "comment": "Present when the dropdown is closed."
+            "comment": "Present when the menu is closed."
           }
         ]
       }
     },
     {
-      "Dropdown Trigger": {
+      "Menu Trigger": {
         "inheritsFrom": "PopoverTrigger",
         "ariaAttributes": [
           {
@@ -60,16 +60,16 @@
         ],
         "dataAttributes": [
           {
-            "name": "data-qds-dropdown-trigger",
+            "name": "data-qds-menu-trigger",
             "comment": "Present on the trigger element."
           }
         ]
       }
     },
     {
-      "Dropdown ContextTrigger": {
+      "Menu ContextTrigger": {
         "inheritsFrom": "div",
-        "description": "A trigger that opens the dropdown via right-click (context menu).",
+        "description": "A trigger that opens the menu via right-click (context menu).",
         "ariaAttributes": [
           {
             "name": "role",
@@ -78,20 +78,20 @@
         ],
         "dataAttributes": [
           {
-            "name": "data-qds-dropdown-context-trigger",
+            "name": "data-qds-menu-context-trigger",
             "comment": "Present on the context trigger element."
           }
         ],
         "events": [
           {
             "name": "onContextMenu$",
-            "comment": "Opens the dropdown and positions it at the cursor coordinates."
+            "comment": "Opens the menu and positions it at the cursor coordinates."
           }
         ]
       }
     },
     {
-      "Dropdown Content": {
+      "Menu Content": {
         "inheritsFrom": "PopoverContent",
         "ariaAttributes": [
           {
@@ -105,18 +105,18 @@
         ],
         "dataAttributes": [
           {
-            "name": "data-qds-dropdown-content",
+            "name": "data-qds-menu-content",
             "comment": "Present on the content element."
           }
         ]
       }
     },
     {
-      "Dropdown Item": {
+      "Menu Item": {
         "inheritsFrom": "div",
         "types": [
           {
-            "PublicDropdownItemProps": [
+            "PublicMenuItemProps": [
               {
                 "comment": "Whether the item is interactive.",
                 "prop": "disabled",
@@ -128,7 +128,7 @@
                 "type": "((value: string) => void)"
               },
               {
-                "comment": "Whether to close the dropdown when the item is selected",
+                "comment": "Whether to close the menu when the item is selected",
                 "prop": "closeOnSelect",
                 "type": "boolean",
                 "defaultValue": "true"
@@ -153,7 +153,7 @@
         ],
         "dataAttributes": [
           {
-            "name": "data-qds-dropdown-item",
+            "name": "data-qds-menu-item",
             "comment": "Present on the item element."
           },
           {
@@ -168,22 +168,22 @@
       }
     },
     {
-      "Dropdown ItemLabel": {
+      "Menu ItemLabel": {
         "inheritsFrom": "span",
         "dataAttributes": [
           {
-            "name": "data-qds-dropdown-item-label",
+            "name": "data-qds-menu-item-label",
             "comment": "Present on the item label element."
           }
         ]
       }
     },
     {
-      "Dropdown Submenu": {
-        "inheritsFrom": "Dropdown Root",
+      "Menu Submenu": {
+        "inheritsFrom": "Menu Root",
         "types": [
           {
-            "PublicDropdownSubmenuProps": [
+            "PublicMenuSubmenuProps": [
               {
                 "comment": "The position of the submenu relative to its trigger (right, left, bottom, top).",
                 "prop": "position",
@@ -195,15 +195,15 @@
         ],
         "dataAttributes": [
           {
-            "name": "data-qds-dropdown-submenu",
+            "name": "data-qds-menu-submenu",
             "comment": "Present on the submenu container."
           }
         ]
       }
     },
     {
-      "Dropdown SubmenuTrigger": {
-        "inheritsFrom": "Dropdown.Item",
+      "Menu SubmenuTrigger": {
+        "inheritsFrom": "Menu.Item",
         "ariaAttributes": [
           { "name": "aria-haspopup", "value": "menu" },
           { "name": "aria-expanded", "value": "boolean" },
@@ -211,22 +211,22 @@
         ],
         "dataAttributes": [
           {
-            "name": "data-qds-dropdown-submenu-trigger",
+            "name": "data-qds-menu-submenu-trigger",
             "comment": "Present on the submenu trigger item."
           }
         ]
       }
     },
     {
-      "Dropdown SubmenuContent": {
-        "inheritsFrom": "Dropdown.Content",
+      "Menu SubmenuContent": {
+        "inheritsFrom": "Menu.Content",
         "ariaAttributes": [
           { "name": "role", "value": "menu" },
           { "name": "aria-labelledby", "value": "string (ID of submenu trigger)" }
         ],
         "dataAttributes": [
           {
-            "name": "data-qds-dropdown-submenu-content",
+            "name": "data-qds-menu-submenu-content",
             "comment": "Present on the submenu content element."
           }
         ]
@@ -235,58 +235,58 @@
   ],
   "anatomy": [
     {
-      "name": "Dropdown.Root",
-      "description": "Root container for the dropdown, manages state and context."
+      "name": "Menu.Root",
+      "description": "Root container for the menu, manages state and context."
     },
     {
-      "name": "Dropdown.Trigger",
-      "description": "The button element that toggles the dropdown visibility."
+      "name": "Menu.Trigger",
+      "description": "The button element that toggles the menu visibility."
     },
     {
-      "name": "Dropdown.ContextTrigger",
-      "description": "An area that responds to right-clicks to open the dropdown as a context menu."
+      "name": "Menu.ContextTrigger",
+      "description": "An area that responds to right-clicks to open the menu as a context menu."
     },
     {
-      "name": "Dropdown.Content",
+      "name": "Menu.Content",
       "description": "The container element for the menu items, positioned relative to the trigger."
     },
     {
-      "name": "Dropdown.Item",
-      "description": "An interactive menu item within the dropdown."
+      "name": "Menu.Item",
+      "description": "An interactive menu item within the menu."
     },
     {
-      "name": "Dropdown.ItemLabel",
-      "description": "The text content or label for a Dropdown.Item."
+      "name": "Menu.ItemLabel",
+      "description": "The text content or label for a Menu.Item."
     },
     {
-      "name": "Dropdown.Submenu",
+      "name": "Menu.Submenu",
       "description": "Container for a nested submenu, manages its own open state and context."
     },
     {
-      "name": "Dropdown.SubmenuTrigger",
+      "name": "Menu.SubmenuTrigger",
       "description": "The item that triggers opening of the submenu."
     },
     {
-      "name": "Dropdown.SubmenuContent",
+      "name": "Menu.SubmenuContent",
       "description": "The container for submenu items, positioned relative to the submenu trigger."
     }
   ],
   "keyboardInteractions": [
     {
       "key": "Enter",
-      "comment": "When focus is on a dropdown item, selects the item and closes the dropdown."
+      "comment": "When focus is on a menu item, selects the item and closes the menu."
     },
     {
       "key": "Space",
-      "comment": "When focus is on a dropdown item, selects the item and closes the dropdown."
+      "comment": "When focus is on a menu item, selects the item and closes the menu."
     },
     {
       "key": "ArrowDown",
-      "comment": "When focus is within the dropdown content, moves focus/highlight to the next menu item or opens a submenu if on a submenu trigger."
+      "comment": "When focus is within the menu content, moves focus/highlight to the next menu item or opens a submenu if on a submenu trigger."
     },
     {
       "key": "ArrowUp",
-      "comment": "When focus is within the dropdown content, moves focus/highlight to the previous menu item."
+      "comment": "When focus is within the menu content, moves focus/highlight to the previous menu item."
     },
     {
       "key": "ArrowRight",
@@ -298,19 +298,19 @@
     },
     {
       "key": "Escape",
-      "comment": "When the dropdown or submenu is open, closes the dropdown or submenu."
+      "comment": "When the menu or submenu is open, closes the menu or submenu."
     },
     {
       "key": "Tab",
-      "comment": "Moves focus to the next focusable element; closes the dropdown when focus leaves."
+      "comment": "Moves focus to the next focusable element; closes the menu when focus leaves."
     },
     {
       "key": "Home",
-      "comment": "When focus is on a dropdown item, moves focus to the first enabled item in the dropdown or submenu."
+      "comment": "When focus is on a menu item, moves focus to the first enabled item in the menu or submenu."
     },
     {
       "key": "End",
-      "comment": "When focus is on a dropdown item, moves focus to the last enabled item in the dropdown or submenu."
+      "comment": "When focus is on a menu item, moves focus to the last enabled item in the menu or submenu."
     }
   ],
   "features": [

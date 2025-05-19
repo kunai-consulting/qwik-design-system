@@ -1,14 +1,14 @@
 import { type Page, expect, test } from "@playwright/test";
-import { createTestDriver } from "./dropdown.driver";
+import { createTestDriver } from "./menu.driver";
 
 async function setup(page: Page, exampleName: string) {
-  await page.goto(`http://localhost:6174/base/dropdown/${exampleName}`);
+  await page.goto(`http://localhost:6174/base/menu/${exampleName}`);
   const driver = createTestDriver(page);
   return driver;
 }
 
-test.describe("Dropdown Component", () => {
-  test(`GIVEN an initial Dropdown
+test.describe("Menu Component", () => {
+  test(`GIVEN an initial Menu
         WHEN rendered
         THEN it should have correct initial ARIA attributes`, async ({ page }) => {
     const driver = await setup(page, "hero");
@@ -19,9 +19,9 @@ test.describe("Dropdown Component", () => {
     await expect(driver.getContent()).toBeHidden(); // Also check content is initially hidden
   });
 
-  test(`GIVEN a closed Dropdown
+  test(`GIVEN a closed Menu
         WHEN the trigger is clicked
-        THEN the dropdown content should open`, async ({ page }) => {
+        THEN the menu content should open`, async ({ page }) => {
     const driver = await setup(page, "hero");
     const trigger = driver.getTrigger();
     const content = driver.getContent();
@@ -33,9 +33,9 @@ test.describe("Dropdown Component", () => {
     await expect(trigger).toHaveAttribute("aria-expanded", "true");
   });
 
-  test(`GIVEN an open Dropdown
+  test(`GIVEN an open Menu
         WHEN the trigger is clicked again
-        THEN the dropdown content should close`, async ({ page }) => {
+        THEN the menu content should close`, async ({ page }) => {
     const driver = await setup(page, "hero");
     const trigger = driver.getTrigger();
     const content = driver.getContent();
@@ -48,9 +48,9 @@ test.describe("Dropdown Component", () => {
     await expect(trigger).toHaveAttribute("aria-expanded", "false");
   });
 
-  test(`GIVEN an open Dropdown
+  test(`GIVEN an open Menu
         WHEN the Escape key is pressed
-        THEN the dropdown content should close`, async ({ page }) => {
+        THEN the menu content should close`, async ({ page }) => {
     const driver = await setup(page, "hero");
     const trigger = driver.getTrigger();
     const content = driver.getContent();
@@ -64,9 +64,9 @@ test.describe("Dropdown Component", () => {
     await expect(trigger).toHaveAttribute("aria-expanded", "false");
   });
 
-  test(`GIVEN an open Dropdown
-        WHEN clicking outside the dropdown content
-        THEN the dropdown content should close`, async ({ page }) => {
+  test(`GIVEN an open Menu
+        WHEN clicking outside the menu content
+        THEN the menu content should close`, async ({ page }) => {
     const driver = await setup(page, "hero");
     const trigger = driver.getTrigger();
     const content = driver.getContent();
@@ -79,7 +79,7 @@ test.describe("Dropdown Component", () => {
     await expect(trigger).toHaveAttribute("aria-expanded", "false");
   });
 
-  test(`GIVEN an open Dropdown with focus on the first item
+  test(`GIVEN an open Menu with focus on the first item
       WHEN ArrowDown is pressed
       THEN focus should move to the second item`, async ({ page }) => {
     const driver = await setup(page, "hero");
@@ -96,7 +96,7 @@ test.describe("Dropdown Component", () => {
     await expect(items[1]).toBeFocused();
   });
 
-  test(`GIVEN an open Dropdown with focus on the last item
+  test(`GIVEN an open Menu with focus on the last item
         WHEN ArrowDown is pressed
         THEN focus should wrap to the first item`, async ({ page }) => {
     const driver = await setup(page, "hero");
@@ -114,7 +114,7 @@ test.describe("Dropdown Component", () => {
     await expect(items[0]).toBeFocused(); // Wraps to first item
   });
 
-  test(`GIVEN an open Dropdown with focus on the second item
+  test(`GIVEN an open Menu with focus on the second item
         WHEN ArrowUp is pressed
         THEN focus should move to the first item`, async ({ page }) => {
     const driver = await setup(page, "hero");
@@ -131,7 +131,7 @@ test.describe("Dropdown Component", () => {
     await expect(items[0]).toBeFocused();
   });
 
-  test(`GIVEN an open Dropdown with focus on the first item
+  test(`GIVEN an open Menu with focus on the first item
         WHEN ArrowUp is pressed
         THEN focus should wrap to the last enabled item`, async ({ page }) => {
     const driver = await setup(page, "hero");
@@ -148,7 +148,7 @@ test.describe("Dropdown Component", () => {
     await expect(lastEnabledItem).toBeFocused(); // Wraps to last enabled item
   });
 
-  test(`GIVEN an open Dropdown with focus on any item
+  test(`GIVEN an open Menu with focus on any item
         WHEN Home key is pressed
         THEN focus should move to the first item`, async ({ page }) => {
     const driver = await setup(page, "hero");
@@ -164,7 +164,7 @@ test.describe("Dropdown Component", () => {
     await expect(items[0]).toBeFocused();
   });
 
-  test(`GIVEN an open Dropdown with focus on any item
+  test(`GIVEN an open Menu with focus on any item
         WHEN End key is pressed
         THEN focus should move to the last enabled item`, async ({ page }) => {
     const driver = await setup(page, "hero");
@@ -183,27 +183,27 @@ test.describe("Dropdown Component", () => {
     await expect(lastEnabledItem).toBeFocused();
   });
 
-  test(`GIVEN a Dropdown with onOpenChange$ callback
+  test(`GIVEN a Menu with onOpenChange$ callback
         WHEN the open state changes
         THEN the callback should be triggered`, async ({ page }) => {
     const driver = await setup(page, "callbacks");
     const trigger = driver.getTrigger();
 
     const callbackIndicator = page.locator("#openChangeCallbackValue");
-    await expect(callbackIndicator).toHaveText("Dropdown is closed.");
+    await expect(callbackIndicator).toHaveText("Menu is closed.");
 
     await trigger.click();
 
-    await expect(callbackIndicator).toHaveText("Dropdown is opened.");
+    await expect(callbackIndicator).toHaveText("Menu is opened.");
 
     await driver.getTrigger().click();
 
-    await expect(callbackIndicator).toHaveText("Dropdown is closed.");
+    await expect(callbackIndicator).toHaveText("Menu is closed.");
   });
 
-  test(`GIVEN a Dropdown Item with closeOnSelect=false
+  test(`GIVEN a Menu Item with closeOnSelect=false
         WHEN the item is clicked
-        THEN the dropdown should remain open`, async ({ page }) => {
+        THEN the menu should remain open`, async ({ page }) => {
     const driver = await setup(page, "close-on-select");
     const trigger = driver.getTrigger();
     const content = driver.getContent();
@@ -217,8 +217,8 @@ test.describe("Dropdown Component", () => {
   });
 });
 
-test.describe("Dropdown Submenu", () => {
-  test("GIVEN a Dropdown with a submenu WHEN the submenu trigger is clicked THEN the submenu content should open", async ({
+test.describe("Menu Submenu", () => {
+  test("GIVEN a Menu with a submenu WHEN the submenu trigger is clicked THEN the submenu content should open", async ({
     page
   }) => {
     const driver = await setup(page, "submenu");
@@ -230,7 +230,7 @@ test.describe("Dropdown Submenu", () => {
     await expect(submenuContent).toBeVisible();
   });
 
-  test("GIVEN a Dropdown with a submenu WHEN ArrowRight is pressed on the submenu trigger THEN the submenu content should open and first item is focused", async ({
+  test("GIVEN a Menu with a submenu WHEN ArrowRight is pressed on the submenu trigger THEN the submenu content should open and first item is focused", async ({
     page
   }) => {
     const driver = await setup(page, "submenu");
@@ -319,8 +319,8 @@ test.describe("Dropdown Submenu", () => {
   });
 });
 
-test.describe("Dropdown Context Menu", () => {
-  test("GIVEN a closed context menu WHEN right-clicked on the context trigger THEN the dropdown content should open", async ({
+test.describe("Menu Context Menu", () => {
+  test("GIVEN a closed context menu WHEN right-clicked on the context trigger THEN the menu content should open", async ({
     page
   }) => {
     const driver = await setup(page, "context-menu");
@@ -346,7 +346,7 @@ test.describe("Dropdown Context Menu", () => {
 
     // First right-click to open directly via dispatchEvent to avoid intercepted clicks
     await page.evaluate(() => {
-      const element = document.querySelector("[data-qds-dropdown-context-trigger]");
+      const element = document.querySelector("[data-qds-menu-context-trigger]");
       if (element) {
         const event = new MouseEvent("contextmenu", {
           bubbles: true,
@@ -367,7 +367,7 @@ test.describe("Dropdown Context Menu", () => {
 
     // Second right-click at different position using evaluate
     await page.evaluate(() => {
-      const element = document.querySelector("[data-qds-dropdown-context-trigger]");
+      const element = document.querySelector("[data-qds-menu-context-trigger]");
       if (element) {
         const event = new MouseEvent("contextmenu", {
           bubbles: true,

@@ -1,13 +1,13 @@
 import { type PropsOf, Slot, component$, useContext, useTask$ } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverContentBase } from "../popover/popover-content";
-import { dropdownContextId } from "./dropdown-context";
+import { menuContextId } from "./menu-context";
 
-export type DropdownContentProps = PropsOf<typeof PopoverContentBase>;
+export type MenuContentProps = PropsOf<typeof PopoverContentBase>;
 
-/** A component that renders the dropdown menu content */
-export const DropdownContentBase = component$<DropdownContentProps>((props) => {
-  const context = useContext(dropdownContextId);
+/** A component that renders the menu content */
+export const MenuContentBase = component$<MenuContentProps>((props) => {
+  const context = useContext(menuContextId);
 
   // Position the content at mouse coordinates when opened via context menu
   useTask$(({ track, cleanup }) => {
@@ -69,7 +69,7 @@ export const DropdownContentBase = component$<DropdownContentProps>((props) => {
       ref={context.contentRef}
       role="menu"
       aria-labelledby={context.triggerId} // Labelled by the main trigger
-      data-qds-dropdown-content
+      data-qds-menu-content
       {...props}
     >
       <Slot />
@@ -77,4 +77,4 @@ export const DropdownContentBase = component$<DropdownContentProps>((props) => {
   );
 });
 
-export const DropdownContent = withAsChild(DropdownContentBase);
+export const MenuContent = withAsChild(MenuContentBase);

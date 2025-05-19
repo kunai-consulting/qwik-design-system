@@ -14,35 +14,35 @@
   "keyboard": [
     {
       "key": "Enter",
-      "comment": "When focus is on a dropdown item, selects the item and closes the dropdown"
+      "comment": "When focus is on a menu item, selects the item and closes the menu"
     },
     {
       "key": "Space",
-      "comment": "When focus is on a dropdown item, selects the item and closes the dropdown"
+      "comment": "When focus is on a menu item, selects the item and closes the menu"
     },
     {
       "key": "ArrowDown",
-      "comment": "When focus is within the dropdown content, moves focus to the next menu item"
+      "comment": "When focus is within the menu content, moves focus to the next menu item"
     },
     {
       "key": "ArrowUp",
-      "comment": "When focus is within the dropdown content, moves focus to the previous menu item"
+      "comment": "When focus is within the menu content, moves focus to the previous menu item"
     },
     {
       "key": "Escape",
-      "comment": "When the dropdown is open, closes the dropdown"
+      "comment": "When the menu is open, closes the menu"
     },
     {
       "key": "Tab",
-      "comment": "Moves focus to the next focusable element and closes the dropdown when focus leaves"
+      "comment": "Moves focus to the next focusable element and closes the menu when focus leaves"
     },
     {
       "key": "Home",
-      "comment": "When focus is on a dropdown item, moves focus to the first enabled item in the dropdown"
+      "comment": "When focus is on a menu item, moves focus to the first enabled item in the menu"
     },
     {
       "key": "End",
-      "comment": "When focus is on a dropdown item, moves focus to the last enabled item in the dropdown"
+      "comment": "When focus is on a menu item, moves focus to the last enabled item in the menu"
     }
   ]
 }

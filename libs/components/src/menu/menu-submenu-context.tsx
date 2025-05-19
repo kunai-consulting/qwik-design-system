@@ -13,4 +13,4 @@ type SubmenuIds = {
  * Context for managing submenu IDs
  * This context provides the trigger and content IDs to submenu components
  */
-export const submenuContextId = createContextId<SubmenuIds>("dropdown-submenu");
+export const submenuContextId = createContextId<SubmenuIds>("menusubmenu");

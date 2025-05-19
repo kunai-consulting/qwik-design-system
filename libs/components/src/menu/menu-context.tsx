@@ -23,31 +23,31 @@ export type SubmenuState = {
   getEnabledItems: QRL<() => HTMLElement[]>;
 };
 
-export type DropdownContext = {
-  /** Whether the dropdown is open */
+export type MenuContext = {
+  /** Whether the menu is open */
   isOpenSig: Signal<boolean>;
-  /** The submenus in the dropdown */
+  /** The submenus in the menu */
   submenus: Signal<SubmenuState[]>;
-  /** ID of the dropdown content element */
+  /** ID of the menu content element */
   contentId: string;
-  /** ID of the dropdown trigger element */
+  /** ID of the menu trigger element */
   triggerId: string;
-  /** The item refs of the dropdown */
+  /** The item refs of the menu */
   itemRefs: Signal<ItemRef[]>;
-  /** The currently focused element within the dropdown */
+  /** The currently focused element within the menu */
   currentFocusEl: Signal<HTMLElement | undefined>;
-  /** Get the enabled items of the dropdown */
+  /** Get the enabled items of the menu */
   getEnabledItems: QRL<() => HTMLElement[]>;
-  /** Root reference to the dropdown container */
+  /** Root reference to the menu container */
   rootRef: Signal<HTMLElement | undefined>;
   /** X coordinate for context menu positioning */
   contextMenuX: number;
   /** Y coordinate for context menu positioning */
   contextMenuY: number;
-  /** Whether the dropdown was opened via context menu */
+  /** Whether the menu was opened via context menu */
   isContextMenu: boolean;
   /** Reference to the content element */
   contentRef: Signal<HTMLElement | undefined>;
 };
 
-export const dropdownContextId = createContextId<DropdownContext>("dropdown-context");
+export const menuContextId = createContextId<MenuContext>("menu-context");

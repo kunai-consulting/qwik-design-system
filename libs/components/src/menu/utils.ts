@@ -1,5 +1,5 @@
 import { $ } from "@builder.io/qwik";
-import type { DropdownContext, ItemRef, SubmenuState } from "./dropdown-context";
+import type { MenuContext, ItemRef, SubmenuState } from "./menu-context";
 
 /**
  * Returns all enabled (not disabled) item elements from an array of refs, in DOM order.
@@ -23,7 +23,7 @@ export function getEnabledItemsUtil(
   if (container) {
     const domItems = Array.from(
       container.querySelectorAll<HTMLElement>(
-        "[data-qds-dropdown-item]:not([data-disabled]):not([disabled])"
+        "[data-qds-menu-item]:not([data-disabled]):not([disabled])"
       )
     );
     // Only include those that are in enabledSet
@@ -35,19 +35,17 @@ export function getEnabledItemsUtil(
 }
 
 /**
- * Finds a submenu state by its contentId from the dropdown context.
+ * Finds a submenu state by its contentId from the menu context.
  */
-export const getSubmenuStateByContentId = $(
-  (context: DropdownContext, contentId: string) => {
-    return context.submenus.value.find((submenu) => submenu.contentId === contentId);
-  }
-);
+export const getSubmenuStateByContentId = $((context: MenuContext, contentId: string) => {
+  return context.submenus.value.find((submenu) => submenu.contentId === contentId);
+});
 
 /**
  * Given a parentId, returns the parent submenu or root context.
  */
-export const getParent = $((context: DropdownContext, parentId: string | undefined) => {
-  let parent: SubmenuState | DropdownContext;
+export const getParent = $((context: MenuContext, parentId: string | undefined) => {
+  let parent: SubmenuState | MenuContext;
   if (parentId === context.contentId || !parentId) {
     parent = context;
   } else {

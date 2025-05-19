@@ -1,7 +1,7 @@
-# Dropdown Research
+# Menu Research
 
 ## Overview
-A Dropdown component provides a button that reveals a list of options when clicked. It follows the WAI-ARIA menu pattern,
+A Menu component provides a button that reveals a list of options when clicked. It follows the WAI-ARIA menu pattern,
 providing an accessible way to display a list of actions or options that can be triggered by the user.
 
 ## Research Links
@@ -11,21 +11,21 @@ providing an accessible way to display a list of actions or options that can be 
 - [CSS Anchor Positioning Spec](https://developer.mozilla.org/en-US/docs/Web/CSS/anchor)
 
 ## Features
-- [ ] Toggle dropdown visibility
+- [ ] Toggle menu visibility
 - [ ] Keyboard navigation
 - [ ] Focus management
 - [ ] CSS Anchor positioning
 - [ ] Item selection
 - [ ] Disabled states
 - [ ] Proper ARIA attributes
-- [ ] Nested dropdowns (submenus)
+- [ ] Nested menu (submenus)
 - [ ] RTL support
 
 ## Component Structure
 
 Pieces:
 - Root (container and state management)
-- Trigger (button to toggle dropdown)
+- Trigger (button to toggle menu)
 - Content (positioned container for items)
 - Item (individual menu items)
 - ItemLabel (text/content within items)
@@ -36,7 +36,7 @@ Pieces:
 - Home: Move focus to first item
 - End: Move focus to last item
 - Enter/Space: Select focused item
-- Tab: Move focus out of dropdown
+- Tab: Move focus out of menu
 
 ## Attributes
 - role="menu" (content)
@@ -46,11 +46,14 @@ Pieces:
 - aria-expanded (trigger)
 - aria-labelledby (content references trigger)
 - aria-disabled
-- data-qds-dropdown-root
-- data-qds-dropdown-trigger
-- data-qds-dropdown-content
-- data-qds-dropdown-item
-- data-qds-dropdown-item-label
+- data-qds-menu-root
+- data-qds-menu-trigger
+- data-qds-menu-content
+- data-qds-menu-item
+- data-qds-menu-item-label
+- data-qds-menu-submenu
+- data-qds-menu-submenu-trigger
+- data-qds-menu-submenu-content
 - data-disabled
 - data-highlighted
 
@@ -58,7 +61,7 @@ Pieces:
 - Navigation menus
 - Action menus
 - Selection menus
-- Settings dropdowns
+- Settings menu
 - User profile menus
 - Language selectors
 - Filter menus
@@ -68,7 +71,7 @@ Pieces:
 
 ### Root:
 ```tsx
-interface DropdownRootProps {
+interface MenuRootProps {
 open?: boolean;
 onOpenChange$?: (open: boolean) => void;
 disabled?: boolean;
@@ -83,7 +86,7 @@ disabled?: boolean;
 
 ### Item:
 ```tsx
-interface DropdownItemProps {
+interface MenuItemProps {
 disabled?: boolean;
 onSelect$?: (value: string | undefined) => void;
 closeOnSelect?: boolean;

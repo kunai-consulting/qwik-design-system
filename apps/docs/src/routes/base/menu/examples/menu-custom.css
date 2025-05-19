@@ -1,22 +1,22 @@
-.dropdown-item {
+.menu-item {
   padding: 5px 0;
   margin: 2px;
 }
 
-.dropdown-item:hover {
+.menu-item:hover {
   background: lightblue;
   cursor: pointer;
 }
 
-.dropdown-item:active {
+.menu-item:active {
   background: lightyellow;
 }
 
-.dropdown-item[data-disabled]:hover {
+.menu-item[data-disabled]:hover {
   cursor: not-allowed;
   background: lightgrey;
 }
 
-.dropdown-item-label {
+.menu-item-label {
   padding: 0 10px;
 }

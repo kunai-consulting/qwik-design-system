@@ -1,20 +1,20 @@
 import { $, Slot, component$, useContext, useSignal, useTask$ } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
-import { type SubmenuState, dropdownContextId } from "./dropdown-context";
-import { DropdownItem, type PublicDropdownItemProps } from "./dropdown-item";
-import { submenuContextId } from "./dropdown-submenu-context";
+import { type SubmenuState, menuContextId } from "./menu-context";
+import { MenuItem, type PublicMenuItemProps } from "./menu-item";
+import { submenuContextId } from "./menu-submenu-context";
 import { getSubmenuStateByContentId } from "./utils";
 
 /** Props for the submenu trigger component */
-export type PublicDropdownSubmenuTriggerProps = Omit<
-  PublicDropdownItemProps,
+export type PublicMenuSubmenuTriggerProps = Omit<
+  PublicMenuItemProps,
   "_index" | "closeOnSelect" | "value" | "_submenuContentId"
 >;
 
 /** A component that renders the submenu trigger */
-export const DropdownSubmenuTriggerBase = component$<PublicDropdownSubmenuTriggerProps>(
+export const MenuSubmenuTriggerBase = component$<PublicMenuSubmenuTriggerProps>(
   ({ onClick$, disabled, ...props }) => {
-    const context = useContext(dropdownContextId);
+    const context = useContext(menuContextId);
     const submenuContext = useContext(submenuContextId);
     const submenu = useSignal<SubmenuState | undefined>(undefined);
 
@@ -34,10 +34,10 @@ export const DropdownSubmenuTriggerBase = component$<PublicDropdownSubmenuTrigge
     });
 
     return (
-      <DropdownItem
+      <MenuItem
         closeOnSelect={false}
-        data-qds-dropdown-submenu-trigger
-        data-qds-dropdown-parent={submenu.value.parentId}
+        data-qds-menu-submenu-trigger
+        data-qds-menu-parent={submenu.value.parentId}
         qds-submenu-level={submenuContext.level}
         aria-haspopup="menu"
         aria-controls={submenu.value.contentId}
@@ -47,9 +47,9 @@ export const DropdownSubmenuTriggerBase = component$<PublicDropdownSubmenuTrigge
         {...props}
       >
         <Slot />
-      </DropdownItem>
+      </MenuItem>
     );
   }
 );
 
-export const DropdownSubmenuTrigger = withAsChild(DropdownSubmenuTriggerBase);
+export const MenuSubmenuTrigger = withAsChild(MenuSubmenuTriggerBase);

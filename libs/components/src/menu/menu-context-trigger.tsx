@@ -8,13 +8,13 @@ import {
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-import { dropdownContextId } from "./dropdown-context";
+import { menuContextId } from "./menu-context";
 
 /**
- * A trigger that opens the dropdown on right-click (context menu)
+ * A trigger that opens the menu on right-click (context menu)
  */
-export const DropdownContextTriggerBase = component$<PropsOf<"div">>((props) => {
-  const context = useContext(dropdownContextId);
+export const MenuContextTriggerBase = component$<PropsOf<"div">>((props) => {
+  const context = useContext(menuContextId);
   const triggerRef = useSignal<HTMLElement>();
 
   const handleContextMenu = $((event: MouseEvent) => {
@@ -64,7 +64,7 @@ export const DropdownContextTriggerBase = component$<PropsOf<"div">>((props) => 
       ref={triggerRef}
       preventdefault:contextmenu
       onContextMenu$={[handleContextMenu, props.onContextMenu$]}
-      data-qds-dropdown-context-trigger
+      data-qds-menu-context-trigger
       role="presentation"
       {...props}
     >
@@ -73,4 +73,4 @@ export const DropdownContextTriggerBase = component$<PropsOf<"div">>((props) => 
   );
 });
 
-export const DropdownContextTrigger = withAsChild(DropdownContextTriggerBase);
+export const MenuContextTrigger = withAsChild(MenuContextTriggerBase);
