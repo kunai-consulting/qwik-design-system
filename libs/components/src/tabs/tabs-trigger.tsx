@@ -17,7 +17,7 @@ import { tabsContextId } from "./tabs-root";
 
 export type TabsTriggerProps = PropsOf<"button"> & {
   _index?: number;
-  value: string;
+  value?: string;
 };
 
 export const TabsTriggerBase = component$((props: TabsTriggerProps) => {

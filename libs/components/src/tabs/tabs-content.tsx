@@ -12,7 +12,7 @@ import { tabsContextId } from "./tabs-root";
 
 export type TabsContentProps = PropsOf<"div"> & {
   _index?: number;
-  value: string;
+  value?: string;
 };
 
 export const TabsContentBase = component$((props: TabsContentProps) => {
