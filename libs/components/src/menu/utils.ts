@@ -1,5 +1,5 @@
 import { $ } from "@builder.io/qwik";
-import type { MenuContext, ItemRef, SubmenuState } from "./menu-context";
+import type { ItemRef, MenuContext, SubmenuState } from "./menu-context";
 
 /**
  * Returns all enabled (not disabled) item elements from an array of refs, in DOM order.

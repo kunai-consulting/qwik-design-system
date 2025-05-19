@@ -14,8 +14,8 @@ import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";
 import {
-  type MenuContext,
   type ItemRef,
+  type MenuContext,
   type SubmenuState,
   menuContextId
 } from "./menu-context";
