@@ -295,6 +295,14 @@ export const DateInputSegment = component$(
       if (event.key === "ArrowLeft" && inputRef.value) {
         await focusPreviousSegment();
       }
+
+      if (
+        event.key === "Backspace" &&
+        inputRef.value &&
+        inputRef.value.value.length === 0
+      ) {
+        await focusPreviousSegment();
+      }
     });
 
     // Use sync$ method to control input
