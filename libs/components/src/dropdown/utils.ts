@@ -4,7 +4,10 @@ import type { DropdownContext, ItemRef, SubmenuState } from "./dropdown-context"
 /**
  * Returns all enabled (not disabled) item elements from an array of refs, in DOM order.
  */
-export function getEnabledItemsUtil(itemRefs: ItemRef[], container?: HTMLElement | null): HTMLElement[] {
+export function getEnabledItemsUtil(
+  itemRefs: ItemRef[],
+  container?: HTMLElement | null
+): HTMLElement[] {
   // Get all enabled elements from refs
   const enabledSet = new Set(
     itemRefs
@@ -19,7 +22,9 @@ export function getEnabledItemsUtil(itemRefs: ItemRef[], container?: HTMLElement
   // If container is provided, use DOM order
   if (container) {
     const domItems = Array.from(
-      container.querySelectorAll<HTMLElement>("[data-qds-dropdown-item]:not([data-disabled]):not([disabled])")
+      container.querySelectorAll<HTMLElement>(
+        "[data-qds-dropdown-item]:not([data-disabled]):not([disabled])"
+      )
     );
     // Only include those that are in enabledSet
     return domItems.filter((el) => enabledSet.has(el));

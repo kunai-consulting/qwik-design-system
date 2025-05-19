@@ -11,5 +11,8 @@
 
   // Prevent conflicts between tools.
   "eslint.enable": false,
-  "prettier.enable": false
+  "prettier.enable": false,
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  }
 }
