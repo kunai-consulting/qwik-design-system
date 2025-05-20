@@ -1,6 +1,6 @@
 import { $, type PropsOf, component$ } from "@builder.io/qwik";
 import { useSignal } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
+import { Link, useNavigate } from "@builder.io/qwik-city";
 import { Tree } from "@kunai-consulting/qwik";
 import { LuChevronRight } from "@qwikest/icons/lucide";
 
@@ -12,6 +12,7 @@ type TreeItemType = {
 
 export const Sidebar = component$((props: PropsOf<"nav">) => {
   const { renderTreeItem } = useSidebar();
+  const announcement = useSignal<string>("");
 
   const treeData: TreeItemType[] = [
     {
@@ -78,7 +79,10 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
           label: "Development",
           children: [
             { id: "/contributing/new-component", label: "New Component" },
-            { id: "/contributing/component-structure", label: "Component Structure" },
+            {
+              id: "/contributing/component-structure",
+              label: "Component Structure"
+            },
             { id: "/contributing/composition", label: "Composition" },
             { id: "/contributing/research", label: "Research" }
           ]
@@ -125,8 +129,11 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
       class="sticky top-20 hidden lg:flex flex-col h-[calc(100vh-160px)] overflow-y-auto"
       {...props}
     >
+      <div aria-live="polite" aria-atomic="true" class="sr-only">
+        {announcement.value}
+      </div>
       <Tree.Root class="flex flex-col p-2">
-        {treeData.map((node) => renderTreeItem(node))}
+        {treeData.map((node) => renderTreeItem(node, announcement))}
       </Tree.Root>
     </nav>
   );
@@ -134,7 +141,8 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
 
 export const TreeBranch = component$<{
   node: TreeItemType;
-}>(({ node }) => {
+  announcement: { value: string };
+}>(({ node, announcement }) => {
   const { renderTreeItem } = useSidebar();
   const isOpen = useSignal(false);
 
@@ -146,6 +154,9 @@ export const TreeBranch = component$<{
       class="group focus-visible:outline-qwik-blue-500 focus-visible:-outline-offset-2"
       key={node.id}
       bind:open={isOpen}
+      onFocus$={() => {
+        announcement.value = node.label;
+      }}
     >
       <div class="flex items-start gap-2 hover:bg-neutral-accent transition-colors bg-inherit duration-200 justify-between pl-2">
         <Tree.ItemTrigger class="group w-full cursor-pointer flex items-center justify-between">
@@ -159,7 +170,7 @@ export const TreeBranch = component$<{
         </Tree.ItemTrigger>
       </div>
       <Tree.ItemContent class="pl-4 transition-all overflow-hidden">
-        {node.children?.map((child: TreeItemType) => renderTreeItem(child))}
+        {node.children?.map((child: TreeItemType) => renderTreeItem(child, announcement))}
       </Tree.ItemContent>
     </Tree.Item>
   );
@@ -167,7 +178,9 @@ export const TreeBranch = component$<{
 
 export const TreeLeaves = component$<{
   node: TreeItemType;
-}>(({ node }) => {
+  announcement: { value: string };
+}>(({ node, announcement }) => {
+  const navigate = useNavigate();
   const labelStyles = "capitalize w-full select-none h-full flex items-center";
 
   const linkStyles =
@@ -175,7 +188,20 @@ export const TreeLeaves = component$<{
 
   return (
     <Tree.Item class="transition-colors bg-inherit duration-200" key={node.id} asChild>
-      <Link href={node.id} class={linkStyles}>
+      <Link
+        href={node.id}
+        class={linkStyles}
+        // this fixes the one time or first time enter key activation
+        onKeyDown$={(event: KeyboardEvent) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            navigate(node.id);
+            setTimeout(() => {
+              announcement.value = `Navigating to ${node.label}`;
+            }, 100);
+          }
+        }}
+      >
         <Tree.ItemLabel class={labelStyles}>{node.label}</Tree.ItemLabel>
       </Link>
     </Tree.Item>
@@ -183,14 +209,14 @@ export const TreeLeaves = component$<{
 });
 
 function useSidebar() {
-  const renderTreeItem = $((node: TreeItemType) => {
+  const renderTreeItem = $((node: TreeItemType, announcement: { value: string }) => {
     const hasChildren = node.children && node.children.length > 0;
 
     if (!hasChildren) {
-      return <TreeLeaves node={node} />;
+      return <TreeLeaves node={node} announcement={announcement} />;
     }
 
-    return <TreeBranch node={node} />;
+    return <TreeBranch node={node} announcement={announcement} />;
   });
 
   return { renderTreeItem };
