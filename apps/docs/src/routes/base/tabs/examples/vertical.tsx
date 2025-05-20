@@ -6,7 +6,7 @@ export default component$(() => {
   useStyles$(tabsStyles);
 
   return (
-    <Tabs.Root orientation="vertical">
+    <Tabs.Root class="tabs-root" orientation="vertical">
       <Tabs.List>
         <Tabs.Trigger class="tabs-trigger">Tab 1</Tabs.Trigger>
         <Tabs.Trigger class="tabs-trigger">Tab 2</Tabs.Trigger>

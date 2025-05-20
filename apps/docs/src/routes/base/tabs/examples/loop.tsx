@@ -6,7 +6,7 @@ export default component$(() => {
   useStyles$(tabsStyles);
 
   return (
-    <Tabs.Root loop>
+    <Tabs.Root class="tabs-root" loop>
       <Tabs.List>
         <Tabs.Trigger class="tabs-trigger">Tab 1</Tabs.Trigger>
         <Tabs.Trigger class="tabs-trigger">Tab 2</Tabs.Trigger>
