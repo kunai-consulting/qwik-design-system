@@ -19,7 +19,7 @@ import tabsStyles from "./tabs.css?inline";
 
 export type TabsRootProps = Omit<PropsOf<"div">, "align"> &
   BindableProps<{
-    selectedValue: string;
+    value: string;
     orientation: "horizontal" | "vertical";
     loop: boolean;
   }>;
@@ -42,8 +42,12 @@ export const TabsRootBase = component$((props: TabsRootProps) => {
   /**
    *  If the consumer does not pass a distinct value, then we set the value to the index as a string, to handle types and conditional logic easier
    */
-  const { selectedValueSig, orientationSig, loopSig } = useBindings(props, {
-    selectedValue: "0",
+  const {
+    valueSig: selectedValueSig,
+    orientationSig,
+    loopSig
+  } = useBindings(props, {
+    value: "0",
     orientation: "horizontal",
     loop: false
   });
