@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "composite": true,
     "rootDir": "./",
     "allowJs": true,
     "target": "ES2017",
@@ -22,5 +23,10 @@
       "~/*": ["./src/*"]
     }
   },
-  "include": ["src", "./*.d.ts", "./*.config.ts", "docs-widgets", "mdx"]
+  "include": ["src", "./*.d.ts", "./*.config.ts", "docs-widgets", "mdx"],
+  "references": [
+    { "path": "../../libs/components" },
+    { "path": "../../libs/icons" },
+    { "path": "../../libs/utils" }
+  ]
 }
