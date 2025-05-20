@@ -98,6 +98,7 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
       onClick$={[handleSelect$, props.onClick$]}
       onKeyDown$={[handleNavigation$, props.onKeyDown$]}
       tabIndex={isActiveSig.value ? 0 : -1}
+      data-selected={isActiveSig.value}
       {...props}
     >
       <Slot />

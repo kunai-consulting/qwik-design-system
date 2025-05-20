@@ -1,16 +1,22 @@
-.tabs-list {
-  display: flex;
-  gap: 1rem;
+.tabs-trigger {
+  padding-block: 0.5rem;
   border-bottom: 1px solid #202a2c;
+  padding-inline: 0.5rem;
   margin-bottom: 0.5rem;
-  padding-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.tabs-trigger[data-selected] {
+  border-bottom: 1px solid #0088cb;
+}
+
+.tabs-trigger:focus-visible,
+.tabs-trigger:hover {
+  outline: none;
+  background: #202a2c;
 }
 
 .tabs-trigger[disabled] {
-  opacity: 0.5;
+  color: #4c6b6e;
   cursor: not-allowed;
-}
-
-.tabs-indicator {
-  background-color: #045c88;
 }
