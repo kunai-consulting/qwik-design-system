@@ -6,7 +6,7 @@ export default component$(() => {
   useStyles$(tabsStyles);
 
   return (
-    <Tabs.Root class="tabs-root" value="1">
+    <Tabs.Root class="tabs-root" value="settings">
       <Tabs.List>
         <Tabs.Trigger class="tabs-trigger" value="overview">
           Overview
