@@ -43,7 +43,7 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
     }
   });
 
-  const isActiveSig = useComputed$(() => {
+  const isSelectedSig = useComputed$(() => {
     const isIndexBased = Number.parseInt(context.selectedValueSig.value) === props._index;
 
     const isValueBased = props.value === context.selectedValueSig.value;
@@ -162,8 +162,9 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
       onClick$={[handleSelect$, props.onClick$]}
       onFocus$={[context.selectOnFocus ? handleSelect$ : undefined, props.onFocus$]}
       onKeyDown$={[handleNavigation$, props.onKeyDown$]}
-      tabIndex={isActiveSig.value ? 0 : -1}
-      data-selected={isActiveSig.value}
+      tabIndex={isSelectedSig.value ? 0 : -1}
+      data-selected={isSelectedSig.value}
+      aria-selected={isSelectedSig.value ? "true" : "false"}
       {...props}
     >
       <Slot />
