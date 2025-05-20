@@ -32,6 +32,8 @@ export const TabsContentBase = component$((props: TabsContentProps) => {
       role="tabpanel"
       fallback="div"
       hidden={!isVisibleSig.value}
+      tabIndex={isVisibleSig.value ? 0 : -1}
+      aria-live="off"
       {...props}
     >
       <Slot />
