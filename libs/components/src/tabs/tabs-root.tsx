@@ -16,9 +16,11 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 
 export type TabsRootProps = Omit<PropsOf<"div">, "align"> &
-  BindableProps<{ selectedValue: string }> & {
-    orientation?: "horizontal" | "vertical";
-  };
+  BindableProps<{
+    selectedValue: string;
+    orientation: "horizontal" | "vertical";
+    loop: boolean;
+  }>;
 
 type TriggerRef = Signal<HTMLButtonElement | undefined>;
 
@@ -28,6 +30,7 @@ type TabsContext = {
   triggerRefs: Signal<TriggerRef[]>;
   selectedValueSig: Signal<string>;
   orientationSig: Signal<string>;
+  loopSig: Signal<boolean>;
 };
 
 export const TabsRootBase = component$((props: TabsRootProps) => {
@@ -36,15 +39,17 @@ export const TabsRootBase = component$((props: TabsRootProps) => {
   /**
    *  If the consumer does not pass a distinct value, then we set the value to the index as a string, to handle types and conditional logic easier
    */
-  const { selectedValueSig, orientationSig } = useBindings(props, {
+  const { selectedValueSig, orientationSig, loopSig } = useBindings(props, {
     selectedValue: "0",
-    orientation: "horizontal"
+    orientation: "horizontal",
+    loop: false
   });
 
   const context: TabsContext = {
     triggerRefs,
     selectedValueSig,
-    orientationSig
+    orientationSig,
+    loopSig
   };
 
   useContextProvider(tabsContextId, context);

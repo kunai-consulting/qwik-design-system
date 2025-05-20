@@ -67,20 +67,59 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
   const handleNavigation$ = $((e: KeyboardEvent) => {
     switch (e.key) {
       case "ArrowRight": {
+        if (context.orientationSig.value === "vertical") {
+          return;
+        }
+
         const nextIndex = getNextEnabledIndex({
           items: context.triggerRefs.value,
           currentIndex: props._index ?? 0,
-          loop: true
+          loop: context.loopSig.value
         });
 
         context.triggerRefs.value[nextIndex].value?.focus();
         break;
       }
+
+      case "ArrowDown": {
+        if (context.orientationSig.value === "horizontal") {
+          return;
+        }
+
+        const nextIndex = getNextEnabledIndex({
+          items: context.triggerRefs.value,
+          currentIndex: props._index ?? 0,
+          loop: context.loopSig.value
+        });
+
+        context.triggerRefs.value[nextIndex].value?.focus();
+        break;
+      }
+
       case "ArrowLeft": {
+        if (context.orientationSig.value === "vertical") {
+          return;
+        }
+
         const prevIndex = getPrevEnabledIndex({
           items: context.triggerRefs.value,
           currentIndex: props._index ?? 0,
-          loop: true
+          loop: context.loopSig.value
+        });
+
+        context.triggerRefs.value[prevIndex].value?.focus();
+        break;
+      }
+
+      case "ArrowUp": {
+        if (context.orientationSig.value === "horizontal") {
+          return;
+        }
+
+        const prevIndex = getPrevEnabledIndex({
+          items: context.triggerRefs.value,
+          currentIndex: props._index ?? 0,
+          loop: context.loopSig.value
         });
 
         context.triggerRefs.value[prevIndex].value?.focus();
