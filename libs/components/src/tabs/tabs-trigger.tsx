@@ -160,7 +160,7 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
         context.orientationSig.value === "vertical" ? "vertical" : "horizontal"
       }
       onClick$={[handleSelect$, props.onClick$]}
-      onFocus$={context.selectOnFocus ? handleSelect$ : undefined}
+      onFocus$={[context.selectOnFocus ? handleSelect$ : undefined, props.onFocus$]}
       onKeyDown$={[handleNavigation$, props.onKeyDown$]}
       tabIndex={isActiveSig.value ? 0 : -1}
       data-selected={isActiveSig.value}
