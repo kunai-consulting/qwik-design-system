@@ -6,7 +6,8 @@ import {
   createContextId,
   useContextProvider,
   useSignal,
-  useStyles$
+  useStyles$,
+  useTask$
 } from "@builder.io/qwik";
 import {
   type BindableProps,
@@ -22,7 +23,9 @@ export type TabsRootProps = Omit<PropsOf<"div">, "align"> &
     value: string;
     orientation: "horizontal" | "vertical";
     loop: boolean;
-  }>;
+  }> & {
+    onChange$?: (value: string) => void;
+  };
 
 type TriggerRef = Signal<HTMLButtonElement | undefined>;
 
@@ -36,8 +39,11 @@ type TabsContext = {
 };
 
 export const TabsRootBase = component$((props: TabsRootProps) => {
+  const { onChange$, ...rest } = props;
+
   useStyles$(tabsStyles);
   const triggerRefs = useSignal<TriggerRef[]>([]);
+  const isInitialRenderSig = useSignal(true);
 
   /**
    *  If the consumer does not pass a distinct value, then we set the value to the index as a string, to handle types and conditional logic easier
@@ -61,6 +67,18 @@ export const TabsRootBase = component$((props: TabsRootProps) => {
 
   useContextProvider(tabsContextId, context);
 
+  useTask$(function handleTabChange({ track, cleanup }) {
+    track(() => selectedValueSig.value);
+
+    if (!isInitialRenderSig.value) {
+      onChange$?.(selectedValueSig.value as string);
+    }
+
+    cleanup(() => {
+      isInitialRenderSig.value = false;
+    });
+  });
+
   return (
     <Render
       data-qds-tabs-root
@@ -68,7 +86,7 @@ export const TabsRootBase = component$((props: TabsRootProps) => {
       data-orientation={
         context.orientationSig.value === "vertical" ? "vertical" : "horizontal"
       }
-      {...props}
+      {...rest}
     >
       <Slot />
     </Render>
