@@ -10,7 +10,11 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import { getNextIndex } from "@kunai-consulting/qwik-utils";
+import {
+  getNextEnabledIndex,
+  getNextIndex,
+  getPrevEnabledIndex
+} from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { tabsContextId } from "./tabs-root";
@@ -62,15 +66,32 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
 
   const handleNavigation$ = $((e: KeyboardEvent) => {
     switch (e.key) {
-      case "ArrowRight":
+      case "ArrowRight": {
+        const nextIndex = getNextEnabledIndex({
+          items: context.triggerRefs.value,
+          currentIndex: props._index ?? 0,
+          loop: true
+        });
+
+        context.triggerRefs.value[nextIndex].value?.focus();
         break;
-      case "ArrowLeft":
+      }
+      case "ArrowLeft": {
+        const prevIndex = getPrevEnabledIndex({
+          items: context.triggerRefs.value,
+          currentIndex: props._index ?? 0,
+          loop: true
+        });
+
+        context.triggerRefs.value[prevIndex].value?.focus();
         break;
+      }
     }
   });
 
   return (
     <Render
+      internalRef={triggerRef}
       data-qds-tabs-trigger
       role="tab"
       fallback="button"
