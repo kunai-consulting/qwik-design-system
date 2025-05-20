@@ -7,13 +7,12 @@ export default component$(() => {
 
   return (
     <Tabs.Root>
-      <Tabs.List class="tabs-list">
+      <Tabs.List>
         <Tabs.Trigger class="tabs-trigger">Tab 1</Tabs.Trigger>
         <Tabs.Trigger class="tabs-trigger" disabled>
           Tab 2
         </Tabs.Trigger>
         <Tabs.Trigger class="tabs-trigger">Tab 3</Tabs.Trigger>
-        <Tabs.Indicator class="tabs-indicator" />
       </Tabs.List>
       <Tabs.Content>Content 1</Tabs.Content>
       <Tabs.Content>Content 2</Tabs.Content>
