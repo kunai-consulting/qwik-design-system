@@ -18,7 +18,7 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import tabsStyles from "./tabs.css?inline";
 
-export type TabsRootProps = Omit<PropsOf<"div">, "align"> &
+export type TabsRootProps = Omit<PropsOf<"div">, "align" | "onChange$"> &
   BindableProps<{
     value: string;
     orientation: "horizontal" | "vertical";
@@ -71,7 +71,7 @@ export const TabsRootBase = component$((props: TabsRootProps) => {
     track(() => selectedValueSig.value);
 
     if (!isInitialRenderSig.value) {
-      onChange$?.(selectedValueSig.value as string);
+      onChange$?.(selectedValueSig.value);
     }
 
     cleanup(() => {

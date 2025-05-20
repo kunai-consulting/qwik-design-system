@@ -12,7 +12,9 @@ export default component$(() => {
       <Tabs.Root
         class="tabs-root"
         value={selectedTab.value}
-        onChange$={(value) => (selectedTab.value = value)}
+        onChange$={(value) => {
+          selectedTab.value = value;
+        }}
       >
         <Tabs.List>
           <Tabs.Trigger class="tabs-trigger" value="overview">
