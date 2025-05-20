@@ -21,9 +21,7 @@ export const DateInputDayBase = component$(
       <DateInputSegment
         segmentSig={segmentSig}
         placeholder={placeholder}
-        isEditable={!context.disabledSig.value}
         showLeadingZero={showLeadingZero}
-        maxLength={2}
         {...otherProps}
       />
     );

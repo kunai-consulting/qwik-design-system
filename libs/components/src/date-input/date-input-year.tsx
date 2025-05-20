@@ -21,9 +21,7 @@ export const DateInputYearBase = component$(
       <DateInputSegment
         segmentSig={segmentSig}
         placeholder={placeholder}
-        isEditable={!context.disabledSig.value}
         showLeadingZero={showLeadingZero}
-        maxLength={4}
         {...otherProps}
       />
     );

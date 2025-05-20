@@ -232,6 +232,76 @@ test.describe("Input/Output", () => {
     await d.getYearSegment().fill("2024");
     await expect(externalValue).toHaveText("2024-02-14");
   });
+
+  test("GIVEN a date input WHEN date info is typed THEN the values should be updated", async ({
+    page
+  }) => {
+    const d = await setup(page, "hero");
+    const monthSegment = d.getMonthSegment();
+    const yearSegment = d.getYearSegment();
+    const daySegment = d.getDaySegment();
+    const externalValue = d.getExternalValue();
+
+    await monthSegment.pressSequentially("12");
+    expect(await monthSegment.inputValue()).toEqual("12");
+    await daySegment.pressSequentially("15");
+    expect(await daySegment.inputValue()).toEqual("15");
+    await yearSegment.pressSequentially("2025", { delay: 50 });
+    expect(await yearSegment.inputValue()).toEqual("2025");
+
+    await expect(externalValue).toHaveText("2025-12-15");
+
+    await monthSegment.pressSequentially("11");
+    expect(await monthSegment.inputValue()).toEqual("11");
+
+    await monthSegment.pressSequentially("9");
+    expect(await monthSegment.inputValue()).toEqual("9");
+
+    await daySegment.pressSequentially("3");
+    expect(await daySegment.inputValue()).toEqual("3");
+
+    await yearSegment.pressSequentially("1999", { delay: 50 });
+    expect(await yearSegment.inputValue()).toEqual("1999");
+
+    await expect(externalValue).toHaveText("1999-09-03");
+  });
+
+  test("GIVEN a date input that uses leading zeros WHEN date info is typed THEN the values should be updated", async ({
+    page
+  }) => {
+    const d = await setup(page, "value-based");
+    const monthSegment = d.getMonthSegment();
+    const yearSegment = d.getYearSegment();
+    const daySegment = d.getDaySegment();
+    const externalValue = d.getExternalValue();
+
+    await page.keyboard.press("Tab");
+    await monthSegment.pressSequentially("05");
+    await expect(monthSegment).toHaveValue("05");
+    await page.keyboard.press("Tab");
+    await daySegment.fill("2");
+    await expect(daySegment).toHaveValue("02");
+    await yearSegment.pressSequentially("2025", { delay: 50 });
+    await expect(yearSegment).toHaveValue("2025");
+
+    await expect(externalValue).toHaveText("2025-05-02");
+
+    await monthSegment.pressSequentially("11");
+    await expect(monthSegment).toHaveValue("11");
+
+    await daySegment.pressSequentially("3");
+    await expect(daySegment).toHaveValue("03");
+
+    await yearSegment.pressSequentially("1999", { delay: 50 });
+    await expect(yearSegment).toHaveValue("1999");
+
+    await expect(externalValue).toHaveText("1999-11-03");
+
+    await monthSegment.pressSequentially("4");
+    await expect(monthSegment).toHaveValue("04");
+
+    await expect(externalValue).toHaveText("1999-04-03");
+  });
 });
 
 test.describe("Disabled", () => {

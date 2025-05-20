@@ -12,6 +12,7 @@ export const DEFAULT_DAY_OF_MONTH_SEGMENT: DateSegment = {
   isPlaceholder: true,
   min: MIN_DAY,
   max: MAX_DAY,
+  maxLength: 2,
   numericValue: undefined,
   isoValue: undefined
 };
@@ -21,6 +22,7 @@ export const DEFAULT_MONTH_SEGMENT: DateSegment = {
   isPlaceholder: true,
   min: MIN_MONTH,
   max: MAX_MONTH,
+  maxLength: 2,
   numericValue: undefined,
   isoValue: undefined
 };
@@ -30,6 +32,7 @@ export const DEFAULT_YEAR_SEGMENT: DateSegment = {
   isPlaceholder: true,
   min: MIN_YEAR,
   max: MAX_YEAR,
+  maxLength: 4,
   numericValue: undefined,
   isoValue: undefined
 };
