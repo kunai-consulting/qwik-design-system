@@ -31,6 +31,24 @@ This example shows a European-style date format (DD.MM.YYYY) with dots as separa
 The `showLeadingZero` prop can be applied to month or day segments to ensure consistent formatting with leading zeros for single-digit values.
 <Showcase name="value-based" />
 In this example, both the month and day segments display leading zeros, creating a consistent visual appearance.
+
+#### Separators
+You can use the `<DateInput.Separator>` component to insert any sort of separator between or around the segments. 
+The component accepts a `separator` prop to set the separator text:
+```tsx
+<DateInput.Separator separator="/" />
+```
+Alternatively, you can project custom content into the component's Slot:
+```tsx
+<DateInput.Separator>
+  <MySeparatorIcon />
+</DateInput.Separator>
+```
+Note that projected content will be ignored if the `separator` prop is provided.
+
+Example using a custom separator icon:
+<Showcase name="separator" />
+
 ### Advanced Usage
 #### Form Integration
 The Date Input can be integrated with forms using the `<DateInput.HiddenInput>` component.
