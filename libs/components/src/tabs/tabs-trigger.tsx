@@ -156,6 +156,9 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
       data-qds-tabs-trigger
       role="tab"
       fallback="button"
+      data-orientation={
+        context.orientationSig.value === "vertical" ? "vertical" : "horizontal"
+      }
       onClick$={[handleSelect$, props.onClick$]}
       onKeyDown$={[handleNavigation$, props.onKeyDown$]}
       tabIndex={isActiveSig.value ? 0 : -1}

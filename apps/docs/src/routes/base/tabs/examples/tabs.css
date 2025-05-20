@@ -20,3 +20,8 @@
   color: #4c6b6e;
   cursor: not-allowed;
 }
+
+.tabs-trigger[data-orientation="vertical"] {
+  margin-right: 2rem;
+  margin-top: -0.5rem;
+}

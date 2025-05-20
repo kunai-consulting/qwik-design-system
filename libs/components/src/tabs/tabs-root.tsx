@@ -5,7 +5,8 @@ import {
   component$,
   createContextId,
   useContextProvider,
-  useSignal
+  useSignal,
+  useStyles$
 } from "@builder.io/qwik";
 import {
   type BindableProps,
@@ -14,6 +15,7 @@ import {
 } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
+import tabsStyles from "./tabs.css?inline";
 
 export type TabsRootProps = Omit<PropsOf<"div">, "align"> &
   BindableProps<{
@@ -34,6 +36,7 @@ type TabsContext = {
 };
 
 export const TabsRootBase = component$((props: TabsRootProps) => {
+  useStyles$(tabsStyles);
   const triggerRefs = useSignal<TriggerRef[]>([]);
 
   /**
@@ -55,7 +58,14 @@ export const TabsRootBase = component$((props: TabsRootProps) => {
   useContextProvider(tabsContextId, context);
 
   return (
-    <Render data-qds-tabs-root fallback="div" {...props}>
+    <Render
+      data-qds-tabs-root
+      fallback="div"
+      data-orientation={
+        context.orientationSig.value === "vertical" ? "vertical" : "horizontal"
+      }
+      {...props}
+    >
       <Slot />
     </Render>
   );
