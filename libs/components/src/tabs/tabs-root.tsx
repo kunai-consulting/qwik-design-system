@@ -25,6 +25,7 @@ export type TabsRootProps = Omit<PropsOf<"div">, "align" | "onChange$"> &
     loop: boolean;
   }> & {
     onChange$?: (value: string) => void;
+    selectOnFocus?: boolean;
   };
 
 type TriggerRef = Signal<HTMLButtonElement | undefined>;
@@ -36,10 +37,11 @@ type TabsContext = {
   selectedValueSig: Signal<string>;
   orientationSig: Signal<string>;
   loopSig: Signal<boolean>;
+  selectOnFocus: boolean;
 };
 
 export const TabsRootBase = component$((props: TabsRootProps) => {
-  const { onChange$, ...rest } = props;
+  const { onChange$, selectOnFocus = true, ...rest } = props;
 
   useStyles$(tabsStyles);
   const triggerRefs = useSignal<TriggerRef[]>([]);
@@ -55,14 +57,16 @@ export const TabsRootBase = component$((props: TabsRootProps) => {
   } = useBindings(props, {
     value: "0",
     orientation: "horizontal",
-    loop: false
+    loop: false,
+    selectOnFocus: true
   });
 
   const context: TabsContext = {
     triggerRefs,
     selectedValueSig,
     orientationSig,
-    loopSig
+    loopSig,
+    selectOnFocus
   };
 
   useContextProvider(tabsContextId, context);
