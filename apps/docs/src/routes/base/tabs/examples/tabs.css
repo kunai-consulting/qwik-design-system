@@ -1,0 +1,16 @@
+.tabs-list {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 1px solid #202a2c;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.tabs-trigger[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tabs-indicator {
+  background-color: #045c88;
+}

@@ -9,7 +9,9 @@ export default component$(() => {
     <Tabs.Root>
       <Tabs.List class="tabs-list">
         <Tabs.Trigger class="tabs-trigger">Tab 1</Tabs.Trigger>
-        <Tabs.Trigger class="tabs-trigger">Tab 2</Tabs.Trigger>
+        <Tabs.Trigger class="tabs-trigger" disabled>
+          Tab 2
+        </Tabs.Trigger>
         <Tabs.Trigger class="tabs-trigger">Tab 3</Tabs.Trigger>
         <Tabs.Indicator class="tabs-indicator" />
       </Tabs.List>
