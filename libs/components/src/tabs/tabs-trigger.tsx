@@ -125,6 +125,28 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
         context.triggerRefs.value[prevIndex].value?.focus();
         break;
       }
+
+      case "Home": {
+        const firstEnabledIndex = getNextEnabledIndex({
+          items: context.triggerRefs.value,
+          currentIndex: -1,
+          loop: context.loopSig.value
+        });
+
+        context.triggerRefs.value[firstEnabledIndex].value?.focus();
+        break;
+      }
+
+      case "End": {
+        const lastEnabledIndex = getPrevEnabledIndex({
+          items: context.triggerRefs.value,
+          currentIndex: context.triggerRefs.value.length,
+          loop: context.loopSig.value
+        });
+
+        context.triggerRefs.value[lastEnabledIndex].value?.focus();
+        break;
+      }
     }
   });
 
