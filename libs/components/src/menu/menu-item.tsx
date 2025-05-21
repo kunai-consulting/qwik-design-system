@@ -4,12 +4,17 @@ import {
   Slot,
   component$,
   useContext,
-  useSignal,
-  useTask$
+  useSignal
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { menuContextId } from "./menu-root";
+import {
+  getNextMenuItem,
+  getPreviousMenuItem,
+  getFirstMenuItem,
+  getLastMenuItem
+} from "./utils";
 
 export type PublicMenuItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
   /** Whether the menu item is disabled */
@@ -44,31 +49,6 @@ export const MenuItemBase = component$<PublicMenuItemProps>(
       }
     });
 
-    useTask$(async function registerItemRef({ track }) {
-      track(() => itemRef.value);
-
-      let refs = context.itemRefs;
-
-      if (isSubmenuTrigger) {
-        const parent = menuContext?.parentContext;
-        if (parent) {
-          refs = parent.itemRefs;
-        }
-      }
-
-      if (itemRef.value) {
-        let newItemRefs = [...refs.value];
-
-        const oldIndex = newItemRefs.findIndex((ref) => ref.ref.value === itemRef.value);
-
-        if (oldIndex === -1) {
-          newItemRefs = [...newItemRefs, { ref: itemRef }];
-        }
-
-        refs.value = newItemRefs;
-      }
-    });
-
     const handleKeyDown = $(async (event: KeyboardEvent) => {
       const navKeys = [
         "ArrowDown",
@@ -80,54 +60,57 @@ export const MenuItemBase = component$<PublicMenuItemProps>(
         "Enter",
         " "
       ];
-      if (!navKeys.includes(event.key) || disabled) return;
 
-      event.preventDefault();
-      event.stopPropagation();
-
-      let enabledItems = await context.getEnabledItems();
-
-      if (isSubmenuTrigger) {
-        const parent = menuContext?.parentContext;
-        if (parent) {
-          enabledItems = await parent.getEnabledItems();
-        }
-      }
-
-      if (!enabledItems.length) return;
-
-      const currentIndex = enabledItems.findIndex((item) => item === itemRef.value);
-
-      if (currentIndex === -1) {
-        enabledItems[0].focus();
+      if (!navKeys.includes(event.key) || disabled || !context.currentFocusEl.value)
         return;
-      }
 
-      // Navigation keys
-      let nextIndex: number | null = null;
+      // For navigation, always use parent context if this is a submenu trigger
+      const navContext =
+        isSubmenuTrigger && menuContext?.parentContext
+          ? menuContext.parentContext
+          : context;
 
+      const rootEl = navContext.contentRef?.value || navContext.rootRef?.value;
+
+      if (!rootEl) return;
+
+      const currentItem = context.currentFocusEl.value;
+
+      if (!currentItem) return;
+
+      let nextItem: HTMLElement | null = null;
       switch (event.key) {
-        case "ArrowDown":
-          nextIndex = currentIndex >= enabledItems.length - 1 ? 0 : currentIndex + 1;
+        case "ArrowDown": {
+          nextItem = getNextMenuItem(currentItem);
+          if (!nextItem) {
+            nextItem = getFirstMenuItem(rootEl);
+          }
           break;
-        case "ArrowUp":
-          nextIndex = currentIndex <= 0 ? enabledItems.length - 1 : currentIndex - 1;
+        }
+        case "ArrowUp": {
+          nextItem = getPreviousMenuItem(currentItem);
+          if (!nextItem) {
+            nextItem = getLastMenuItem(rootEl);
+          }
           break;
-        case "Home":
-          nextIndex = 0;
+        }
+        case "Home": {
+          nextItem = getFirstMenuItem(rootEl);
           break;
-        case "End":
-          nextIndex = enabledItems.length - 1;
+        }
+        case "End": {
+          nextItem = getLastMenuItem(rootEl);
           break;
+        }
         case "ArrowLeft": {
           if (menuContext?.parentContext) {
             menuContext.isOpenSig.value = false;
             const parent = menuContext.parentContext;
-            const parentItems = await parent.getEnabledItems();
-            if (parentItems.length > 0) {
-              setTimeout(() => {
-                parentItems[0].focus();
-              }, 50);
+            const parentRoot = parent.contentRef?.value || parent.rootRef?.value;
+            if (parentRoot) {
+              const first = getFirstMenuItem(parentRoot);
+
+              first?.focus();
             }
           }
           break;
@@ -135,12 +118,11 @@ export const MenuItemBase = component$<PublicMenuItemProps>(
         case "ArrowRight": {
           if (menuContext?.parentContext) {
             menuContext.isOpenSig.value = true;
-
-            const submenuItems = await menuContext.getEnabledItems();
-            if (submenuItems.length > 0) {
-              setTimeout(() => {
-                submenuItems[0].focus();
-              }, 50);
+            const submenuRoot =
+              menuContext.contentRef?.value || menuContext.rootRef?.value;
+            if (submenuRoot) {
+              const first = getFirstMenuItem(submenuRoot);
+              first?.focus();
             }
           }
           break;
@@ -154,8 +136,8 @@ export const MenuItemBase = component$<PublicMenuItemProps>(
           return null;
       }
 
-      if (nextIndex !== null && enabledItems[nextIndex]) {
-        enabledItems[nextIndex].focus();
+      if (nextItem) {
+        nextItem.focus();
         return;
       }
     });

@@ -1,5 +1,4 @@
 import {
-  $,
   Slot,
   component$,
   useContext,
@@ -14,7 +13,6 @@ import { PopoverRootBase } from "../popover/popover-root";
 import { type ItemRef, menuContextId, type MenuContext } from "./menu-root";
 import type { PublicMenuRootProps } from "./menu-root";
 import menuSubmenuStyles from "./menu-submenu.css?inline";
-import { getEnabledItemsUtil } from "./utils";
 
 export type PublicMenuSubmenuProps = PublicMenuRootProps & {
   /** The position of the submenu relative to its trigger */
@@ -39,12 +37,6 @@ export const MenuSubmenuBase = component$<PublicMenuSubmenuProps>((props) => {
   const triggerId = `${id}-menu-submenu-trigger`;
   const contentId = `${id}-menu-submenu-content`;
 
-  const parentId = parentContext?.contentId;
-
-  const getEnabledItems = $(() => {
-    return getEnabledItemsUtil(itemRefs.value, submenuRef.value);
-  });
-
   const menuContext: MenuContext = {
     triggerId,
     contentId,
@@ -52,7 +44,6 @@ export const MenuSubmenuBase = component$<PublicMenuSubmenuProps>((props) => {
     isOpenSig,
     parentContext,
     itemRefs,
-    getEnabledItems,
     rootRef: submenuRef,
     currentFocusEl: parentContext.currentFocusEl,
     nestedMenus: nestedMenus,

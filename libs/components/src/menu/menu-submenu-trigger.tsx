@@ -33,8 +33,8 @@ export const MenuSubmenuTriggerBase = component$<PublicMenuSubmenuTriggerProps>(
         aria-haspopup="menu"
         aria-controls={submenuContext.contentId}
         aria-expanded={submenuContext.isOpenSig.value}
-        onClick$={[handleClick$, onClick$]}
         disabled={disabled}
+        onClick$={[handleClick$, onClick$]}
         {...props}
       >
         <Slot />

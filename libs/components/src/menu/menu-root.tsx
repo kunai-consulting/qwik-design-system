@@ -1,5 +1,4 @@
 import {
-  $,
   type PropsOf,
   type Signal,
   Slot,
@@ -10,13 +9,11 @@ import {
   useOnWindow,
   useSignal,
   useTask$,
-  type QRL,
   createContextId
 } from "@builder.io/qwik";
 import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";
-import { getEnabledItemsUtil } from "./utils";
 
 export type ItemRef = {
   ref: Signal;
@@ -39,8 +36,6 @@ export type MenuContext = {
   itemRefs: Signal<ItemRef[]>;
   /** The currently focused element within the menu */
   currentFocusEl: Signal<HTMLElement | undefined>;
-  /** Get the enabled items of the menu */
-  getEnabledItems: QRL<() => HTMLElement[]>;
   /** Root reference to the menu container */
   rootRef: Signal<HTMLElement | undefined>;
   /** The position of the menu */
@@ -106,10 +101,6 @@ const MenuRootBase = component$<PublicMenuRootProps>((props) => {
     });
   });
 
-  const getEnabledItems = $(() => {
-    return getEnabledItemsUtil(itemRefs.value, contentRef.value);
-  });
-
   useOnWindow(
     "keydown",
     sync$((event: KeyboardEvent) => {
@@ -138,7 +129,6 @@ const MenuRootBase = component$<PublicMenuRootProps>((props) => {
     rootRef,
     currentFocusEl,
     itemRefs,
-    getEnabledItems,
     contextMenuX: contextMenuX.value,
     contextMenuY: contextMenuY.value,
     isContextMenu: isContextMenu.value,
