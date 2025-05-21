@@ -66,6 +66,40 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator(".toggle-disabled-button");
   };
 
+  const getRangeStartEntry = () => {
+    return rootLocator.locator("[data-range-start-entry]");
+  };
+
+  const getRangeEndEntry = () => {
+    return rootLocator.locator("[data-range-end-entry]");
+  };
+
+  const getRangeStartYearSegment = () => {
+    return getRangeStartEntry().locator("[data-qds-date-input-segment-year]");
+  };
+  const getRangeStartMonthSegment = () => {
+    return getRangeStartEntry().locator("[data-qds-date-input-segment-month]");
+  };
+  const getRangeStartDaySegment = () => {
+    return getRangeStartEntry().locator("[data-qds-date-input-segment-day]");
+  };
+  const getRangeStartHiddenInput = () => {
+    return getRangeStartEntry().locator('input[name="departure-date"]');
+  };
+
+  const getRangeEndYearSegment = () => {
+    return getRangeEndEntry().locator("[data-qds-date-input-segment-year]");
+  };
+  const getRangeEndMonthSegment = () => {
+    return getRangeEndEntry().locator("[data-qds-date-input-segment-month]");
+  };
+  const getRangeEndDaySegment = () => {
+    return getRangeEndEntry().locator("[data-qds-date-input-segment-day]");
+  };
+  const getRangeEndHiddenInput = () => {
+    return getRangeEndEntry().locator('input[name="return-date"]');
+  };
+
   return {
     ...rootLocator,
     locator: rootLocator,
@@ -84,6 +118,17 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getExternalValue,
     getSetValueButton,
     getSetNullButton,
-    getToggleDisabledButton
+    getToggleDisabledButton,
+    // Getters for range date entries
+    getRangeStartEntry,
+    getRangeEndEntry,
+    getRangeStartYearSegment,
+    getRangeStartMonthSegment,
+    getRangeStartDaySegment,
+    getRangeStartHiddenInput,
+    getRangeEndYearSegment,
+    getRangeEndMonthSegment,
+    getRangeEndDaySegment,
+    getRangeEndHiddenInput
   };
 }

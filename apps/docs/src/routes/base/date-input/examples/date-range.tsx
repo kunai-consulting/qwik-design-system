@@ -6,13 +6,21 @@ export default component$(() => {
   useStyles$(styles);
   const departureDate = useSignal<DateInput.ISODate | null>(null);
   const returnDate = useSignal<DateInput.ISODate | null>(null);
+  const formData = useSignal<Record<string, FormDataEntryValue>>();
 
   return (
-    <div class="date-input-container">
+    <form
+      class="date-input-container"
+      preventdefault:submit
+      onSubmit$={(e) => {
+        const form = e.target as HTMLFormElement;
+        formData.value = Object.fromEntries(new FormData(form));
+      }}
+    >
       <DateInput.Root>
         <DateInput.Label>Travel dates</DateInput.Label>
         <div class="date-input-date-range">
-          <DateInput.DateEntry bind:date={departureDate}>
+          <DateInput.DateEntry bind:date={departureDate} data-range-start-entry>
             <DateInput.Year />
             <DateInput.Separator separator="-" />
             <DateInput.Month showLeadingZero={true} />
@@ -21,7 +29,7 @@ export default component$(() => {
             <DateInput.HiddenInput name="departure-date" />
           </DateInput.DateEntry>
           <DateInput.Separator separator="to" />
-          <DateInput.DateEntry bind:date={returnDate}>
+          <DateInput.DateEntry bind:date={returnDate} data-range-end-entry>
             <DateInput.Year />
             <DateInput.Separator separator="-" />
             <DateInput.Month showLeadingZero={true} />
@@ -66,8 +74,16 @@ export default component$(() => {
         >
           Clear return
         </button>
+        <button type="submit" class="submit-button">
+          Submit
+        </button>
       </div>
-    </div>
+      {formData.value && (
+        <div class="submitted-data">
+          Submitted: {JSON.stringify(formData.value, null, 2)}
+        </div>
+      )}
+    </form>
   );
 });
 
