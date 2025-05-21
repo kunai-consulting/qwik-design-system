@@ -11,13 +11,9 @@ export default component$(() => {
 
   return (
     <div class="date-input-container">
-      <DateInput.Root
-        class="date-input-root-col"
-        date={selectedDate.value}
-        onChange$={handleChange$}
-      >
+      <DateInput.Root class="date-input-root-col">
         <DateInput.Label>Choose your date:</DateInput.Label>
-        <DateInput.DateEntry>
+        <DateInput.DateEntry date={selectedDate.value} onChange$={handleChange$}>
           <DateInput.Month showLeadingZero />
           <DateInput.Separator separator="/" />
           <DateInput.Day showLeadingZero />

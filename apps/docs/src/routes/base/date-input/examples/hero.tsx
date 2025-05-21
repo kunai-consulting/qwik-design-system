@@ -11,17 +11,16 @@ export default component$(() => {
 
   return (
     <div class="date-input-container">
-      <DateInput.Root class="date-input-root-col" onChange$={handleChange$}>
+      <DateInput.Root class="date-input-root-col">
         <DateInput.Label>My date input</DateInput.Label>
-        <DateInput.DateEntry>
+        <DateInput.DateEntry onChange$={handleChange$}>
           <DateInput.Month />
           <DateInput.Separator separator="/" />
           <DateInput.Day />
           <DateInput.Separator separator="/" />
           <DateInput.Year />
+          <DateInput.HiddenInput name="date" value={selectedDate.value} />
         </DateInput.DateEntry>
-
-        <DateInput.HiddenInput name="date" value={selectedDate.value} />
       </DateInput.Root>
 
       <div>

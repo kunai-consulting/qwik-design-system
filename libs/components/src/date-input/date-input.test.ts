@@ -17,13 +17,13 @@ function getToday() {
 }
 
 test.describe("Label", () => {
-  test("GIVEN a date input with a label THEN the for attribute of the label should match the id of the entry component", async ({
+  test("GIVEN a date input with a label THEN the aria-labelledby attribute of the entry should match the id of the label", async ({
     page
   }) => {
     const d = await setup(page, "basic");
-    const forAttribute = await d.getLabel().getAttribute("for");
-    const entryId = await d.getDateEntry().getAttribute("id");
-    expect(forAttribute).toEqual(entryId);
+    const labelId = await d.getLabel().getAttribute("id");
+    const entryLabeledBy = await d.getDateEntry().getAttribute("aria-labelledby");
+    expect(labelId).toEqual(entryLabeledBy);
   });
 });
 
