@@ -1,7 +1,7 @@
 import { $, type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverTriggerBase } from "../popover/popover-trigger";
-import { menuContextId } from "./menu-context";
+import { menuContextId } from "./menu-root";
 
 export type PublicMenuTriggerProps = Omit<
   PropsOf<typeof PopoverTriggerBase>,

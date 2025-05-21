@@ -1,10 +1,8 @@
-import { Slot, component$, useContext, useSignal, useTask$ } from "@builder.io/qwik";
+import { Slot, component$, useContext } from "@builder.io/qwik";
 import type { PropsOf } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverContentBase } from "../popover/popover-content";
-import { type SubmenuState, menuContextId } from "./menu-root";
-import { submenuContextId } from "./menu-submenu";
-import { getSubmenuStateByContentId } from "./utils";
+import { menuContextId } from "./menu-root";
 
 /** Props for the submenu content component */
 export type PublicMenuSubmenuContentProps = PropsOf<typeof PopoverContentBase>;
@@ -12,20 +10,14 @@ export type PublicMenuSubmenuContentProps = PropsOf<typeof PopoverContentBase>;
 /** A component that renders the submenu content */
 export const MenuSubmenuContentBase = component$<PublicMenuSubmenuContentProps>(
   (props) => {
-    const context = useContext(menuContextId);
-    const submenuContext = useContext(submenuContextId);
-    const submenu = useSignal<SubmenuState | undefined>(undefined);
+    const submenuContext = useContext(menuContextId);
 
     if (!submenuContext) {
       console.warn("Submenu context not found in context");
       return null;
     }
 
-    useTask$(async () => {
-      submenu.value = await getSubmenuStateByContentId(context, submenuContext.contentId);
-    });
-
-    if (!submenu.value) {
+    if (!submenuContext) {
       console.warn("Submenu content not found in content");
       return null;
     }
@@ -36,7 +28,7 @@ export const MenuSubmenuContentBase = component$<PublicMenuSubmenuContentProps>(
         id={submenuContext.contentId}
         aria-labelledby={submenuContext.triggerId}
         data-qds-menu-submenu-content
-        data-position={submenu.value.position}
+        data-position={submenuContext.position}
         {...props}
       >
         <Slot />

@@ -9,9 +9,7 @@ import {
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-import { type SubmenuState, menuContextId } from "./menu-context";
-import { submenuContextId } from "./menu-submenu-context";
-import { getParent, getSubmenuStateByContentId } from "./utils";
+import { menuContextId } from "./menu-root";
 
 export type PublicMenuItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
   /** Whether the menu item is disabled */
@@ -31,20 +29,11 @@ export const MenuItemBase = component$<PublicMenuItemProps>(
     const itemRef = useSignal<HTMLElement>();
     const isHoveredSig = useSignal(false);
     const isFocusedSig = useSignal(false);
-    const submenuContext = useContext(submenuContextId, null);
-    const currentSubmenu = useSignal<SubmenuState | undefined>(undefined);
+    const menuContext = useContext(menuContextId);
+    const isSubmenuTrigger = rest["aria-controls"] !== undefined;
 
     const handleFocus$ = $((e: FocusEvent) => {
       context.currentFocusEl.value = e.target as HTMLElement;
-    });
-
-    useTask$(async function manageSubmenu() {
-      if (submenuContext) {
-        currentSubmenu.value = await getSubmenuStateByContentId(
-          context,
-          submenuContext.contentId
-        );
-      }
     });
 
     const handleSelect = $(async () => {
@@ -57,15 +46,14 @@ export const MenuItemBase = component$<PublicMenuItemProps>(
 
     useTask$(async function registerItemRef({ track }) {
       track(() => itemRef.value);
-      track(() => currentSubmenu.value);
 
       let refs = context.itemRefs;
 
-      if (rest["aria-controls"]) {
-        const parent = await getParent(context, submenuContext?.parentId);
-        refs = parent.itemRefs;
-      } else if (currentSubmenu.value) {
-        refs = currentSubmenu.value.itemRefs;
+      if (isSubmenuTrigger) {
+        const parent = menuContext?.parentContext;
+        if (parent) {
+          refs = parent.itemRefs;
+        }
       }
 
       if (itemRef.value) {
@@ -99,12 +87,11 @@ export const MenuItemBase = component$<PublicMenuItemProps>(
 
       let enabledItems = await context.getEnabledItems();
 
-      if (rest["aria-controls"]) {
-        const parent = await getParent(context, submenuContext?.parentId);
-
-        enabledItems = await parent.getEnabledItems();
-      } else if (currentSubmenu.value) {
-        enabledItems = await currentSubmenu.value.getEnabledItems();
+      if (isSubmenuTrigger) {
+        const parent = menuContext?.parentContext;
+        if (parent) {
+          enabledItems = await parent.getEnabledItems();
+        }
       }
 
       if (!enabledItems.length) return;
@@ -133,9 +120,9 @@ export const MenuItemBase = component$<PublicMenuItemProps>(
           nextIndex = enabledItems.length - 1;
           break;
         case "ArrowLeft": {
-          if (currentSubmenu.value) {
-            currentSubmenu.value.isOpenSig.value = false;
-            const parent = await getParent(context, currentSubmenu.value.parentId);
+          if (menuContext?.parentContext) {
+            menuContext.isOpenSig.value = false;
+            const parent = menuContext.parentContext;
             const parentItems = await parent.getEnabledItems();
             if (parentItems.length > 0) {
               setTimeout(() => {
@@ -146,10 +133,10 @@ export const MenuItemBase = component$<PublicMenuItemProps>(
           break;
         }
         case "ArrowRight": {
-          if (rest["aria-controls"] && currentSubmenu.value) {
-            currentSubmenu.value.isOpenSig.value = true;
+          if (menuContext?.parentContext) {
+            menuContext.isOpenSig.value = true;
 
-            const submenuItems = await currentSubmenu.value.getEnabledItems();
+            const submenuItems = await menuContext.getEnabledItems();
             if (submenuItems.length > 0) {
               setTimeout(() => {
                 submenuItems[0].focus();
@@ -161,9 +148,6 @@ export const MenuItemBase = component$<PublicMenuItemProps>(
         case "Enter":
         case " ": {
           await handleSelect();
-          if (rest["aria-controls"] && currentSubmenu.value) {
-            currentSubmenu.value.isOpenSig.value = true;
-          }
           break;
         }
         default:

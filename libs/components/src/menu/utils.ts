@@ -1,5 +1,5 @@
 import { $ } from "@builder.io/qwik";
-import type { ItemRef, MenuContext, SubmenuState } from "./menu-context";
+import type { ItemRef } from "./menu-root";
 
 /**
  * Returns all enabled (not disabled) item elements from an array of refs, in DOM order.
@@ -33,28 +33,6 @@ export function getEnabledItemsUtil(
   // Fallback: return enabled items in ref order
   return Array.from(enabledSet);
 }
-
-/**
- * Finds a submenu state by its contentId from the menu context.
- */
-export const getSubmenuStateByContentId = $((context: MenuContext, contentId: string) => {
-  return context.submenus.value.find((submenu) => submenu.contentId === contentId);
-});
-
-/**
- * Given a parentId, returns the parent submenu or root context.
- */
-export const getParent = $((context: MenuContext, parentId: string | undefined) => {
-  let parent: SubmenuState | MenuContext;
-  if (parentId === context.contentId || !parentId) {
-    parent = context;
-  } else {
-    parent = context.submenus.value.find(
-      (submenu) => submenu.contentId === parentId
-    ) as SubmenuState;
-  }
-  return parent;
-});
 
 /**
  * Focuses the first enabled item in a list, with a timeout.

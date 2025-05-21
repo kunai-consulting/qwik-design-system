@@ -8,7 +8,7 @@ import {
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-import { menuContextId } from "./menu-context";
+import { menuContextId } from "./menu-root";
 
 /**
  * A trigger that opens the menu on right-click (context menu)

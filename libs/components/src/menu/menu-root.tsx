@@ -22,34 +22,19 @@ export type ItemRef = {
   ref: Signal;
 };
 
-export type SubmenuState = {
-  /** ID of the submenu trigger element */
-  triggerId: string;
-  /** ID of the submenu content element */
-  contentId: string;
-  /** The position of the submenu relative to its trigger */
-  position: "right" | "left" | "bottom" | "top";
-  /** Whether the submenu is open */
-  isOpenSig: Signal<boolean>;
-  /** Whether the submenu is disabled */
-  disabled: boolean;
-  /** The parent submenu */
-  parentId: string;
-  /** The item refs of the submenu */
-  itemRefs: Signal<ItemRef[]>;
-  /** Get the enabled items of the submenu */
-  getEnabledItems: QRL<() => HTMLElement[]>;
-};
+export type MenuPosition = "right" | "left" | "bottom" | "top";
 
 export type MenuContext = {
   /** Whether the menu is open */
   isOpenSig: Signal<boolean>;
   /** The submenus in the menu */
-  submenus: Signal<SubmenuState[]>;
+  nestedMenus: Signal<MenuContext[]>;
   /** ID of the menu content element */
   contentId: string;
   /** ID of the menu trigger element */
   triggerId: string;
+  /** The parent menu */
+  parentContext?: MenuContext;
   /** The item refs of the menu */
   itemRefs: Signal<ItemRef[]>;
   /** The currently focused element within the menu */
@@ -58,12 +43,14 @@ export type MenuContext = {
   getEnabledItems: QRL<() => HTMLElement[]>;
   /** Root reference to the menu container */
   rootRef: Signal<HTMLElement | undefined>;
+  /** The position of the menu */
+  position?: MenuPosition;
   /** X coordinate for context menu positioning */
-  contextMenuX: number;
+  contextMenuX?: number;
   /** Y coordinate for context menu positioning */
-  contextMenuY: number;
+  contextMenuY?: number;
   /** Whether the menu was opened via context menu */
-  isContextMenu: boolean;
+  isContextMenu?: boolean;
   /** Reference to the content element */
   contentRef: Signal<HTMLElement | undefined>;
 };
@@ -75,42 +62,31 @@ type MenuRootBaseProps = PropsOf<typeof PopoverRootBase>;
 /** Initial open state of the menu */
 export type PublicMenuRootProps = MenuRootBaseProps &
   BindableProps<{
-    /** Initial open state of the menu */
     open: boolean;
+    disabled: boolean;
   }> & {
-    /** Callback fired when menu open state changes */
     onOpenChange$?: (open: boolean) => void;
   };
 
 /** Root container component for the menu */
 const MenuRootBase = component$<PublicMenuRootProps>((props) => {
-  const { openSig: isOpenSig } = useBindings(props, {
-    open: false
+  const { openSig: isOpenSig, disabledSig: isDisabledSig } = useBindings(props, {
+    open: false,
+    disabled: false
   });
-  const submenus = useSignal<SubmenuState[]>([]);
+  const nestedMenus = useSignal<MenuContext[]>([]);
   const rootRef = useSignal<HTMLDivElement>();
   const currentFocusEl = useSignal<HTMLElement>();
   const itemRefs = useSignal<ItemRef[]>([]);
-
-  // Context menu state
   const isContextMenu = useSignal(false);
   const contextMenuX = useSignal(0);
   const contextMenuY = useSignal(0);
   const contentRef = useSignal<HTMLElement>();
 
-  const closeAllSubmenus = $(() => {
-    for (const submenu of submenus.value) {
-      submenu.isOpenSig.value = false;
-    }
-  });
-
   const isInitialRenderSig = useSignal(true);
 
-  // Track if the menu is currently a context menu
   useTask$(({ track }) => {
     track(() => isOpenSig.value);
-
-    // Reset context menu flag when menu closes
     if (!isOpenSig.value) {
       isContextMenu.value = false;
       contextMenuX.value = 0;
@@ -120,10 +96,6 @@ const MenuRootBase = component$<PublicMenuRootProps>((props) => {
 
   useTask$(async ({ track, cleanup }) => {
     const isOpen = track(() => isOpenSig.value);
-
-    if (!isOpen) {
-      closeAllSubmenus();
-    }
 
     if (!isInitialRenderSig.value && props.onOpenChange$) {
       await props.onOpenChange$(isOpen);
@@ -162,7 +134,7 @@ const MenuRootBase = component$<PublicMenuRootProps>((props) => {
     isOpenSig,
     contentId,
     triggerId,
-    submenus,
+    nestedMenus,
     rootRef,
     currentFocusEl,
     itemRefs,

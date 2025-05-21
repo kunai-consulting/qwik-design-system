@@ -1,9 +1,7 @@
-import { $, Slot, component$, useContext, useSignal, useTask$ } from "@builder.io/qwik";
+import { $, Slot, component$, useContext } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
-import { type SubmenuState, menuContextId } from "./menu-context";
+import { menuContextId } from "./menu-root";
 import { MenuItem, type PublicMenuItemProps } from "./menu-item";
-import { submenuContextId } from "./menu-submenu-context";
-import { getSubmenuStateByContentId } from "./utils";
 
 /** Props for the submenu trigger component */
 export type PublicMenuSubmenuTriggerProps = Omit<
@@ -14,22 +12,16 @@ export type PublicMenuSubmenuTriggerProps = Omit<
 /** A component that renders the submenu trigger */
 export const MenuSubmenuTriggerBase = component$<PublicMenuSubmenuTriggerProps>(
   ({ onClick$, disabled, ...props }) => {
-    const context = useContext(menuContextId);
-    const submenuContext = useContext(submenuContextId);
-    const submenu = useSignal<SubmenuState | undefined>(undefined);
+    const submenuContext = useContext(menuContextId);
 
-    useTask$(async () => {
-      submenu.value = await getSubmenuStateByContentId(context, submenuContext.contentId);
-    });
-
-    if (!submenu.value) {
+    if (!submenuContext) {
       console.warn("Submenu content not found in trigger");
       return null;
     }
 
-    const handleClick$ = $(async () => {
-      if (submenu.value) {
-        submenu.value.isOpenSig.value = !submenu.value.isOpenSig.value;
+    const handleClick$ = $(() => {
+      if (submenuContext) {
+        submenuContext.isOpenSig.value = !submenuContext.isOpenSig.value;
       }
     });
 
@@ -37,11 +29,10 @@ export const MenuSubmenuTriggerBase = component$<PublicMenuSubmenuTriggerProps>(
       <MenuItem
         closeOnSelect={false}
         data-qds-menu-submenu-trigger
-        data-qds-menu-parent={submenu.value.parentId}
-        qds-submenu-level={submenuContext.level}
+        data-qds-menu-parent={submenuContext.parentContext?.contentId}
         aria-haspopup="menu"
-        aria-controls={submenu.value.contentId}
-        aria-expanded={submenu.value.isOpenSig.value}
+        aria-controls={submenuContext.contentId}
+        aria-expanded={submenuContext.isOpenSig.value}
         onClick$={[handleClick$, onClick$]}
         disabled={disabled}
         {...props}

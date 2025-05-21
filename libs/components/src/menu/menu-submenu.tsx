@@ -6,31 +6,15 @@ import {
   useContextProvider,
   useId,
   useSignal,
-  useStyles$,
-  useTask$
+  useStyles$
 } from "@builder.io/qwik";
 import { useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";
-import { type ItemRef, type SubmenuState, menuContextId } from "./menu-root";
+import { type ItemRef, menuContextId, type MenuContext } from "./menu-root";
 import type { PublicMenuRootProps } from "./menu-root";
 import menuSubmenuStyles from "./menu-submenu.css?inline";
 import { getEnabledItemsUtil } from "./utils";
-
-import { createContextId } from "@builder.io/qwik";
-
-type SubmenuContext = {
-  triggerId: string;
-  contentId: string;
-  level: number;
-  parentId: string;
-};
-
-/**
- * Context for managing submenu IDs
- * This context provides the trigger and content IDs to submenu components
- */
-export const submenuContextId = createContextId<SubmenuContext>("menu-submenu");
 
 export type PublicMenuSubmenuProps = PublicMenuRootProps & {
   /** The position of the submenu relative to its trigger */
@@ -40,10 +24,11 @@ export type PublicMenuSubmenuProps = PublicMenuRootProps & {
 /** A component that renders a submenu */
 export const MenuSubmenuBase = component$<PublicMenuSubmenuProps>((props) => {
   useStyles$(menuSubmenuStyles);
-  const context = useContext(menuContextId);
-  const parentContext = useContext(submenuContextId, null);
+  const parentContext = useContext(menuContextId);
   const itemRefs = useSignal<ItemRef[]>([]);
   const submenuRef = useSignal<HTMLElement>();
+  const nestedMenus = useSignal<MenuContext[]>([]);
+  const contentRef = useSignal<HTMLElement>();
 
   const { openSig: isOpenSig } = useBindings(props, {
     open: false
@@ -51,40 +36,30 @@ export const MenuSubmenuBase = component$<PublicMenuSubmenuProps>((props) => {
 
   const id = useId();
 
-  const triggerId = useSignal(`${id}-menu-submenu-trigger`);
-  const contentId = useSignal(`${id}-menu-submenu-content`);
+  const triggerId = `${id}-menu-submenu-trigger`;
+  const contentId = `${id}-menu-submenu-content`;
 
-  const currentLevel = parentContext?.level ? parentContext.level + 1 : 1;
+  const parentId = parentContext?.contentId;
 
-  const parentId = parentContext ? parentContext.contentId : context.contentId;
   const getEnabledItems = $(() => {
     return getEnabledItemsUtil(itemRefs.value, submenuRef.value);
   });
 
-  const submenu: SubmenuState = {
-    triggerId: triggerId.value,
-    contentId: contentId.value,
+  const menuContext: MenuContext = {
+    triggerId,
+    contentId,
     position: props.position ?? "right",
     isOpenSig,
-    disabled: false,
-    parentId,
+    parentContext,
     itemRefs,
-    getEnabledItems
+    getEnabledItems,
+    rootRef: submenuRef,
+    currentFocusEl: parentContext.currentFocusEl,
+    nestedMenus: nestedMenus,
+    contentRef
   };
 
-  // Provide IDs to children through context
-  useContextProvider(submenuContextId, {
-    triggerId: triggerId.value,
-    contentId: contentId.value,
-    level: currentLevel,
-    parentId: parentId
-  });
-
-  useTask$(function registerSubmenu() {
-    context.submenus.value = [...context.submenus.value, submenu];
-  });
-
-  useTask$(function onClose() {});
+  useContextProvider(menuContextId, menuContext);
 
   const { open: _o, "bind:open": _bo, ...rest } = props;
 
@@ -92,7 +67,6 @@ export const MenuSubmenuBase = component$<PublicMenuSubmenuProps>((props) => {
     <PopoverRootBase
       bind:open={isOpenSig}
       data-qds-menu-submenu
-      qds-submenu-level={currentLevel}
       tabIndex={-1}
       ref={submenuRef}
       {...rest}

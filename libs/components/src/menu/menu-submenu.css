@@ -17,7 +17,6 @@
     margin: unset;
     position: absolute;
     position-try: normal flip-block flip-inline;
-    z-index: var(--qds-submenu-level, 1);
   }
 
   /* Default position: right */
