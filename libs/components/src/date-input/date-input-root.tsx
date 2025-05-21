@@ -15,6 +15,7 @@ import { dateInputContextId } from "./date-input-context";
 
 type PublicDateInputRootProps = PropsOf<"div">;
 
+// no-bindings -- bindings handled by DateInputDateEntry
 /** The root Date Input component that manages state and provides context */
 export const DateInputRootBase = component$<PublicDateInputRootProps>((props) => {
   const localId = useId();
