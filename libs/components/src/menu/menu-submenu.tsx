@@ -12,11 +12,25 @@ import {
 import { useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";
-import { type ItemRef, type SubmenuState, menuContextId } from "./menu-context";
+import { type ItemRef, type SubmenuState, menuContextId } from "./menu-root";
 import type { PublicMenuRootProps } from "./menu-root";
-import { submenuContextId } from "./menu-submenu-context";
 import menuSubmenuStyles from "./menu-submenu.css?inline";
 import { getEnabledItemsUtil } from "./utils";
+
+import { createContextId } from "@builder.io/qwik";
+
+type SubmenuContext = {
+  triggerId: string;
+  contentId: string;
+  level: number;
+  parentId: string;
+};
+
+/**
+ * Context for managing submenu IDs
+ * This context provides the trigger and content IDs to submenu components
+ */
+export const submenuContextId = createContextId<SubmenuContext>("menu-submenu");
 
 export type PublicMenuSubmenuProps = PublicMenuRootProps & {
   /** The position of the submenu relative to its trigger */

@@ -2,8 +2,8 @@ import { Slot, component$, useContext, useSignal, useTask$ } from "@builder.io/q
 import type { PropsOf } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverContentBase } from "../popover/popover-content";
-import { type SubmenuState, menuContextId } from "./menu-context";
-import { submenuContextId } from "./menu-submenu-context";
+import { type SubmenuState, menuContextId } from "./menu-root";
+import { submenuContextId } from "./menu-submenu";
 import { getSubmenuStateByContentId } from "./utils";
 
 /** Props for the submenu content component */
