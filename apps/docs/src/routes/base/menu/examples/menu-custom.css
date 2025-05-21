@@ -20,3 +20,18 @@
 .menu-item-label {
   padding: 0 10px;
 }
+
+.submenu-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.chevron {
+  transition: transform 0.2s;
+  display: flex;
+  align-items: center;
+  margin-right: 0.5em;
+}
+[data-qds-menu-submenu][data-open] .chevron {
+  transform: rotate(90deg);
+}
