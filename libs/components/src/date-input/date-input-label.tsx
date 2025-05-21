@@ -1,7 +1,7 @@
 import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
-import { dateInputContextId } from "./date-input-context";
 import { Render } from "../render/render";
+import { dateInputContextId } from "./date-input-context";
 type PublicDateInputLabelProps = PropsOf<"div">;
 
 /** Label component for the Date Input */
