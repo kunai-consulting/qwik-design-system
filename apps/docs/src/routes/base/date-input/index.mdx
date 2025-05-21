@@ -9,8 +9,6 @@ This is supported in Chromium-based browsers, but may not work properly in other
 If you need to support other or older browsers, you can manage the width of the inputs in your own CSS.
 ## Features
 <Features api={api} />
-## Anatomy
-<AnatomyTable api={api} />
 ## Examples
 ### Basic Usage
 The Date Input component provides a structured way to enter dates with separate segments for year, month, and day. The basic implementation includes a root component that manages state, a label for accessibility, date entry container, and individual segments.
@@ -119,15 +117,6 @@ const handleChange$ = $((date: DateInput.ISODate | null) => {
 ```
 As shown in the Change example, you can use this handler to track changes and update external state.
 
-#### Form Integration
-When using the Date Input in forms, you can access its value through the `<DateInput.HiddenInput>` component:
-```tsx
-<DateInput.Root>
-  {/* ... */}
-  <DateInput.HiddenInput name="appointment-date" />
-</DateInput.Root>
-```
-As shown in the Form example, this approach ensures the date value is included when the form is submitted.
 #### Clearing the Date Value
 You can clear the date value by setting it to `null`, which will reset all segments to their placeholder state:
 ```tsx
@@ -137,9 +126,9 @@ You can clear the date value by setting it to `null`, which will reset all segme
 ```
 This is demonstrated in both the Reactive and Value-Based examples, where a button is provided to clear the date.
 
-# Configuration Options
-## Date Format Configuration
-### Custom Date Formats
+## Configuration Options
+### Date Format Configuration
+#### Custom Date Formats
 The Date Input component allows you to customize the date format by arranging the segments in any order and using different separators. This flexibility enables you to create date formats that match regional preferences or specific application requirements.
 As shown in the Format example above, you can create a European-style date format (DD.MM.YYYY) by arranging the segments in day-month-year order and using dots as separators:
 ```tsx
@@ -183,6 +172,14 @@ The default placeholder values are:
 - "mm" for the month segment
 - "yyyy" for the year segment
 
+### Multiple dates
+The Date Input can be composed with multiple `<DateInput.DateEntry>` components to create a multi-date input.
+You could use multiple `<DateInput.Root>` components, but if you have multiple dates that are related, with a single label, 
+you can use a single `<DateInput.Root>` component with multiple `<DateInput.DateEntry>` components, 
+as in the following Date Range example:
+
+<Showcase name="date-range" />
+
 ## Technical Constraints
 ### Date Range Limitations
 The Date Input component enforces the following constraints on segment values:
@@ -207,50 +204,40 @@ The Date Input component provides comprehensive keyboard navigation between segm
 As shown in the Basic example, the component handles focus management automatically, moving to the next segment when a complete value is entered.
 
 ## Form Integration
-### Hidden Input Configuration
-When using the Date Input in forms, the `<DateInput.HiddenInput>` component provides a hidden native input for form submission. This component accepts standard HTML input attributes:
+The Date Input component provides seamless integration with forms through the `<DateInput.HiddenInput>` component.
+
+### Basic Form Integration
+To use the Date Input in a form, include the `<DateInput.HiddenInput>` component within the `<DateInput.DateEntry>` component.
 ```tsx
-<DateInput.HiddenInput 
-  name="date-field" 
-  required={true}
-/>
+<DateInput.Root>
+  {/* ... */}
+  <DateInput.DateEntry>
+    {/* ... date segments ... */}
+    <DateInput.HiddenInput name="appointment-date" />
+  </DateInput.DateEntry>
+</DateInput.Root>
 ```
-As shown in the Form example, the hidden input will contain the complete ISO date string when the form is submitted.
-
-## Performance Considerations
-The Date Input component uses signals for state management, which provides efficient updates when segment values change.
-
-# Form Integration
-The Date Input component provides seamless integration with forms through the `<DateInput.HiddenInput>` component, which creates a hidden native input element for form submission.
-## Basic Form Integration
-To use the Date Input in a form, include the `<DateInput.HiddenInput>` component within the `<DateInput.Root>` component. This creates a hidden input field that will be included when the form is submitted.
+This creates a hidden native input field that will be included in the form data when the form is submitted.
 <Showcase name="form" />
 In this example:
 - The `name` attribute on `<DateInput.HiddenInput>` specifies the field name that will appear in the form data
 - The Date Input's value is automatically included in form submissions
 - The submitted data is displayed after form submission, showing the date in ISO format (YYYY-MM-DD)
-## Form Field Naming
-The `name` attribute can be provided either directly on the `<DateInput.HiddenInput>` component or through the context from the `<DateInput.Root>` component:
-```tsx
-<DateInput.Root>
-  <DateInput.DateEntry>
-    {/* ... date segments ... */}
-  </DateInput.DateEntry>
-  <DateInput.HiddenInput name="appointment-date" />
-</DateInput.Root>
-```
-## Required Fields
+
+Note that the `<DateInput.HiddenInput>` must be slotted within a `<DateInput.DateEntry>` component in order to properly access the date value from the entry's context.
+
+### Required Fields
 The `required` attribute can be applied to make the date field mandatory in form submissions:
 ```tsx
 <DateInput.HiddenInput name="appointment-date" required={true} />
 ```
-## Form Value Handling
+### Form Value Handling
 The `<DateInput.HiddenInput>` component automatically uses the current date value from the Date Input context. When the form is submitted, the date is included in the ISO format (YYYY-MM-DD).
 As shown in the Form example above, the submitted data includes the date value with the specified field name:
 ```json
 { "appointment-date": "2022-02-14" }
 ```
-## Custom Form Handling
+### Custom Form Handling
 For more control over form submission, you can combine the Date Input with custom form handling logic:
 ```tsx
 <form
@@ -263,7 +250,10 @@ For more control over form submission, you can combine the Date Input with custo
 >
   <DateInput.Root>
     {/* ... */}
-    <DateInput.HiddenInput name="date-field" />
+    <DateInput.DateEntry>
+      {/* ... date segments ... */}
+      <DateInput.HiddenInput name="date-field" />
+    </DateInput.DateEntry>
   </DateInput.Root>
   <button type="submit">Submit</button>
 </form>
