@@ -12,8 +12,8 @@ export default component$(() => {
         <DateInput.Month showLeadingZero={true} />
         <DateInput.Separator separator="-" />
         <DateInput.Day showLeadingZero={true} />
+        <DateInput.HiddenInput name="date-of-birth" />
       </DateInput.DateEntry>
-      <DateInput.HiddenInput name="date-of-birth" />
     </DateInput.Root>
   );
 });

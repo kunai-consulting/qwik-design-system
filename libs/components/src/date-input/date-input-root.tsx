@@ -1,162 +1,37 @@
 import {
-  $,
   type PropsOf,
-  type QRL,
   type Signal,
   Slot,
   component$,
   useContextProvider,
   useId,
-  useSignal,
-  useTask$
+  useSignal
 } from "@builder.io/qwik";
-import {
-  type BindableProps,
-  resetIndexes,
-  useBindings
-} from "@kunai-consulting/qwik-utils";
+import { resetIndexes } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
-import type { ISODate } from "../calendar/types";
 import { Render } from "../render/render";
 import type { DateInputContext } from "./date-input-context";
 import { dateInputContextId } from "./date-input-context";
-import { getInitialSegments } from "./utils";
 
-export type PublicDateInputRootProps = Omit<PropsOf<"div">, "onChange$"> & {
-  /** Event handler called when a date is selected */
-  onChange$?: QRL<(date: ISODate | null) => void>;
-} & BindableProps<DateInputBoundProps>;
+type PublicDateInputRootProps = PropsOf<"div">;
 
-export type DateInputBoundProps = {
-  /** The currently selected date */
-  date: ISODate | null;
-  /** When enabled prevents the user from interacting with the date input */
-  disabled: boolean;
-};
-
-// Regular expression for validating ISO date format (yyyy-mm-dd)
-const isoDateRegex = /^\d{1,4}-(0[1-9]|1[0-2])-\d{2}$/;
-
+// no-bindings -- bindings handled by DateInputDateEntry
 /** The root Date Input component that manages state and provides context */
 export const DateInputRootBase = component$<PublicDateInputRootProps>((props) => {
-  const { onChange$, ...rest } = props;
-  const isInitialLoadSig = useSignal(true);
-  const { dateSig, disabledSig } = useBindings<DateInputBoundProps>(props, {
-    date: props.date ?? null,
-    disabled: false
-  });
-
   const localId = useId();
-  const { dayOfMonthSegment, monthSegment, yearSegment } = getInitialSegments(
-    dateSig.value
-  );
-  const dayOfMonthSegmentSig = useSignal(dayOfMonthSegment);
-  const monthSegmentSig = useSignal(monthSegment);
-  const yearSegmentSig = useSignal(yearSegment);
 
   // Focus management signals and methods
   const segmentRefs = useSignal<Signal<HTMLInputElement | undefined>[]>([]);
 
-  // This flag helps maintain two behaviors when the date changes to null.
-  // 1. When the date signal changes to null programmatically, we want to clear all segments.
-  // 2. When the date is cleared via keyboard input on an individual segment, we leave the other segments unchanged.
-  // See usage in updateSegmentsWithNewDateValue
-  const isInternalSegmentClearance = useSignal<boolean>(false);
-
   const context: DateInputContext = {
-    dateSig,
     localId,
-    disabledSig,
-    dayOfMonthSegmentSig,
-    monthSegmentSig,
-    yearSegmentSig,
-    isInternalSegmentClearance,
     segmentRefs
   };
 
   useContextProvider(dateInputContextId, context);
 
-  if (props.date && !isoDateRegex.test(props.date)) {
-    throw new Error("Invalid date format. Please use yyyy-mm-dd format.");
-  }
-
-  /**
-   * Updates the segments with the new date value.
-   *
-   * @param date - The new date value or null
-   *
-   * This method is used to react to updates to the date signal, particularly those originating from outside the component,
-   * to make sure the segments match the date value.
-   */
-  const updateSegmentsWithNewDateValue = $((date: ISODate | null) => {
-    if (date !== null) {
-      const [year, month, day] = date.split("-");
-      if (yearSegmentSig.value.numericValue !== +year) {
-        yearSegmentSig.value = {
-          ...yearSegmentSig.value,
-          numericValue: +year,
-          isoValue: year,
-          isPlaceholder: false
-        };
-      }
-      if (monthSegmentSig.value.numericValue !== +month) {
-        monthSegmentSig.value = {
-          ...monthSegmentSig.value,
-          numericValue: +month,
-          isoValue: month,
-          isPlaceholder: false
-        };
-      }
-      if (dayOfMonthSegmentSig.value.numericValue !== +day) {
-        dayOfMonthSegmentSig.value = {
-          ...dayOfMonthSegmentSig.value,
-          numericValue: +day,
-          isoValue: day,
-          isPlaceholder: false
-        };
-      }
-    } else if (!context.isInternalSegmentClearance.value) {
-      if (!yearSegmentSig.value.isPlaceholder) {
-        yearSegmentSig.value = {
-          ...yearSegmentSig.value,
-          numericValue: undefined,
-          isoValue: undefined,
-          isPlaceholder: true
-        };
-      }
-      if (!monthSegmentSig.value.isPlaceholder) {
-        monthSegmentSig.value = {
-          ...monthSegmentSig.value,
-          numericValue: undefined,
-          isoValue: undefined,
-          isPlaceholder: true
-        };
-      }
-      if (!dayOfMonthSegmentSig.value.isPlaceholder) {
-        dayOfMonthSegmentSig.value = {
-          ...dayOfMonthSegmentSig.value,
-          numericValue: undefined,
-          isoValue: undefined,
-          isPlaceholder: true
-        };
-      }
-    }
-    context.isInternalSegmentClearance.value = false;
-  });
-
-  useTask$(async ({ track, cleanup }) => {
-    const date = track(() => dateSig.value);
-    await updateSegmentsWithNewDateValue(date);
-    if (!isInitialLoadSig.value && onChange$) {
-      await onChange$(date);
-    }
-    cleanup(() => {
-      isInitialLoadSig.value = false;
-    });
-  });
-
   return (
-    <Render fallback="div" data-qds-date-input-root {...rest}>
+    <Render fallback="div" data-qds-date-input-root {...props}>
       <Slot />
     </Render>
   );

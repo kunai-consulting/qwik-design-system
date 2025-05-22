@@ -17,13 +17,13 @@ function getToday() {
 }
 
 test.describe("Label", () => {
-  test("GIVEN a date input with a label THEN the for attribute of the label should match the id of the entry component", async ({
+  test("GIVEN a date input with a label THEN the aria-labelledby attribute of the entry should match the id of the label", async ({
     page
   }) => {
     const d = await setup(page, "basic");
-    const forAttribute = await d.getLabel().getAttribute("for");
-    const entryId = await d.getDateEntry().getAttribute("id");
-    expect(forAttribute).toEqual(entryId);
+    const labelId = await d.getLabel().getAttribute("id");
+    const entryLabeledBy = await d.getDateEntry().getAttribute("aria-labelledby");
+    expect(labelId).toEqual(entryLabeledBy);
   });
 });
 
@@ -409,5 +409,177 @@ test.describe("Keyboard interactions", () => {
 
     await page.keyboard.press("ArrowLeft");
     await expect(yearSegment).toBeFocused();
+  });
+});
+
+test.describe("Multiple date entries", () => {
+  test("GIVEN two date entries WHEN the updating the segments THEN the entries should function independently", async ({
+    page
+  }) => {
+    const d = await setup(page, "date-range");
+
+    const depYear = d.getRangeStartYearSegment();
+    const depMonth = d.getRangeStartMonthSegment();
+    const depDay = d.getRangeStartDaySegment();
+    const depHidden = d.getRangeStartHiddenInput();
+
+    const retYear = d.getRangeEndYearSegment();
+    const retMonth = d.getRangeEndMonthSegment();
+    const retDay = d.getRangeEndDaySegment();
+    const retHidden = d.getRangeEndHiddenInput();
+
+    // 1. Check initial state (placeholders)
+    await expect(depYear).toHaveAttribute("placeholder", "yyyy");
+    await expect(depMonth).toHaveAttribute("placeholder", "mm");
+    await expect(depDay).toHaveAttribute("placeholder", "dd");
+    await expect(depHidden).toHaveValue("");
+
+    await expect(retYear).toHaveAttribute("placeholder", "yyyy");
+    await expect(retMonth).toHaveAttribute("placeholder", "mm");
+    await expect(retDay).toHaveAttribute("placeholder", "dd");
+    await expect(retHidden).toHaveValue("");
+
+    // 2. Fill departure date
+    await depYear.fill("2023");
+    await depMonth.fill("07");
+    await depDay.fill("15");
+
+    // Assert departure date is set
+    await expect(depYear).toHaveValue("2023");
+    await expect(depMonth).toHaveValue("07");
+    await expect(depDay).toHaveValue("15");
+    await expect(depHidden).toHaveValue("2023-07-15");
+
+    // Assert return date is still empty (placeholders)
+    await expect(retYear).toHaveAttribute("placeholder", "yyyy");
+    await expect(retMonth).toHaveAttribute("placeholder", "mm");
+    await expect(retDay).toHaveAttribute("placeholder", "dd");
+    await expect(retHidden).toHaveValue("");
+
+    // 3. Fill return date
+    await retYear.fill("2024");
+    await retMonth.fill("09");
+    await retDay.fill("25");
+
+    // Assert return date is set
+    await expect(retYear).toHaveValue("2024");
+    await expect(retMonth).toHaveValue("09");
+    await expect(retDay).toHaveValue("25");
+    await expect(retHidden).toHaveValue("2024-09-25");
+
+    // Assert departure date remains unchanged
+    await expect(depYear).toHaveValue("2023");
+    await expect(depMonth).toHaveValue("07");
+    await expect(depDay).toHaveValue("15");
+    await expect(depHidden).toHaveValue("2023-07-15");
+  });
+
+  test("GIVEN two date entries WHEN using the arrow keys to navigate between segments THEN focus should also seamlessly move between entries", async ({
+    page
+  }) => {
+    const d = await setup(page, "date-range");
+
+    const depYear = d.getRangeStartYearSegment();
+    const depMonth = d.getRangeStartMonthSegment();
+    const depDay = d.getRangeStartDaySegment();
+
+    const retYear = d.getRangeEndYearSegment();
+    const retMonth = d.getRangeEndMonthSegment();
+    const retDay = d.getRangeEndDaySegment();
+
+    // Focus the first segment of the first entry
+    await depYear.focus();
+    await expect(depYear).toBeFocused();
+
+    // Navigate right through the first entry
+    await page.keyboard.press("ArrowRight");
+    await expect(depMonth).toBeFocused();
+
+    await page.keyboard.press("ArrowRight");
+    await expect(depDay).toBeFocused();
+
+    // Navigate from the last segment of the first entry to the first segment of the second entry
+    await page.keyboard.press("ArrowRight");
+    await expect(retYear).toBeFocused();
+
+    // Navigate right through the second entry
+    await page.keyboard.press("ArrowRight");
+    await expect(retMonth).toBeFocused();
+
+    await page.keyboard.press("ArrowRight");
+    await expect(retDay).toBeFocused();
+
+    // Boundary: Pressing ArrowRight on the last segment of the last entry should keep focus there
+    await page.keyboard.press("ArrowRight");
+    await expect(retDay).toBeFocused();
+
+    // Navigate left through the second entry
+    await page.keyboard.press("ArrowLeft");
+    await expect(retMonth).toBeFocused();
+
+    await page.keyboard.press("ArrowLeft");
+    await expect(retYear).toBeFocused();
+
+    // Navigate from the first segment of the second entry to the last segment of the first entry
+    await page.keyboard.press("ArrowLeft");
+    await expect(depDay).toBeFocused();
+
+    // Navigate left through the first entry
+    await page.keyboard.press("ArrowLeft");
+    await expect(depMonth).toBeFocused();
+
+    await page.keyboard.press("ArrowLeft");
+    await expect(depYear).toBeFocused();
+
+    // Boundary: Pressing ArrowLeft on the first segment of the first entry should keep focus there
+    await page.keyboard.press("ArrowLeft");
+    await expect(depYear).toBeFocused();
+  });
+
+  test("GIVEN two date entries with hidden inputs WHEN the form is filled and submitted THEN the form should submit both date values", async ({
+    page
+  }) => {
+    const d = await setup(page, "date-range");
+
+    const depYear = d.getRangeStartYearSegment();
+    const depMonth = d.getRangeStartMonthSegment();
+    const depDay = d.getRangeStartDaySegment();
+
+    const retYear = d.getRangeEndYearSegment();
+    const retMonth = d.getRangeEndMonthSegment();
+    const retDay = d.getRangeEndDaySegment();
+
+    const submitButton = d.getSubmitButton();
+    const submittedData = d.getSubmittedData();
+
+    // Fill departure date
+    await depYear.fill("2023");
+    await depMonth.fill("10");
+    await depDay.fill("20");
+
+    // Fill return date
+    await retYear.fill("2024");
+    await retMonth.fill("11");
+    await retDay.fill("21");
+
+    await submitButton.click();
+
+    // Verify submitted data
+    const expectedSubmittedValue = {
+      "departure-date": "2023-10-20",
+      "return-date": "2024-11-21"
+    };
+
+    await expect(submittedData).toBeVisible();
+    const textContent = await submittedData.textContent();
+    if (textContent === null) {
+      throw new Error(
+        "Submitted data text content is null, but was expected to be a string."
+      );
+    }
+    const jsonString = textContent.replace("Submitted: ", "");
+    const actualSubmittedValue = JSON.parse(jsonString);
+
+    expect(actualSubmittedValue).toEqual(expectedSubmittedValue);
   });
 });

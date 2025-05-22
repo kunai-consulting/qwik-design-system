@@ -26,3 +26,8 @@
   display: flex;
   gap: 10px;
 }
+
+.date-input-date-range {
+  display: flex;
+  gap: 10px;
+}
