@@ -1,5 +1,11 @@
 # @kunai-consulting/qwik-headless
 
+## 0.2.0
+
+### Minor Changes
+
+- d2415a0: Move date input/output from Root to DateEntry in order to support multiple dates
+
 ## 0.1.0
 
 ### Minor Changes
