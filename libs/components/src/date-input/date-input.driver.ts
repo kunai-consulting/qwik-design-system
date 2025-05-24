@@ -66,38 +66,42 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator(".toggle-disabled-button");
   };
 
-  const getRangeStartEntry = () => {
-    return rootLocator.locator("[data-range-start-entry]");
+  const getFirstEntry = () => {
+    return rootLocator.locator(
+      '[data-qds-date-input-date-entry][data-qds-date-input-date-entry-index="0"]'
+    );
   };
 
-  const getRangeEndEntry = () => {
-    return rootLocator.locator("[data-range-end-entry]");
+  const getSecondEntry = () => {
+    return rootLocator.locator(
+      '[data-qds-date-input-date-entry][data-qds-date-input-date-entry-index="1"]'
+    );
   };
 
-  const getRangeStartYearSegment = () => {
-    return getRangeStartEntry().locator("[data-qds-date-input-segment-year]");
+  const getFirstYearSegment = () => {
+    return getFirstEntry().locator("[data-qds-date-input-segment-year]");
   };
-  const getRangeStartMonthSegment = () => {
-    return getRangeStartEntry().locator("[data-qds-date-input-segment-month]");
+  const getFirstMonthSegment = () => {
+    return getFirstEntry().locator("[data-qds-date-input-segment-month]");
   };
-  const getRangeStartDaySegment = () => {
-    return getRangeStartEntry().locator("[data-qds-date-input-segment-day]");
+  const getFirstDaySegment = () => {
+    return getFirstEntry().locator("[data-qds-date-input-segment-day]");
   };
-  const getRangeStartHiddenInput = () => {
-    return getRangeStartEntry().locator('input[name="departure-date"]');
+  const getFirstHiddenInput = () => {
+    return getFirstEntry().locator('input[name="departure-date"]');
   };
 
-  const getRangeEndYearSegment = () => {
-    return getRangeEndEntry().locator("[data-qds-date-input-segment-year]");
+  const getSecondYearSegment = () => {
+    return getSecondEntry().locator("[data-qds-date-input-segment-year]");
   };
-  const getRangeEndMonthSegment = () => {
-    return getRangeEndEntry().locator("[data-qds-date-input-segment-month]");
+  const getSecondMonthSegment = () => {
+    return getSecondEntry().locator("[data-qds-date-input-segment-month]");
   };
-  const getRangeEndDaySegment = () => {
-    return getRangeEndEntry().locator("[data-qds-date-input-segment-day]");
+  const getSecondDaySegment = () => {
+    return getSecondEntry().locator("[data-qds-date-input-segment-day]");
   };
-  const getRangeEndHiddenInput = () => {
-    return getRangeEndEntry().locator('input[name="return-date"]');
+  const getSecondHiddenInput = () => {
+    return getSecondEntry().locator('input[name="return-date"]');
   };
 
   return {
@@ -120,15 +124,15 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getSetNullButton,
     getToggleDisabledButton,
     // Getters for range date entries
-    getRangeStartEntry,
-    getRangeEndEntry,
-    getRangeStartYearSegment,
-    getRangeStartMonthSegment,
-    getRangeStartDaySegment,
-    getRangeStartHiddenInput,
-    getRangeEndYearSegment,
-    getRangeEndMonthSegment,
-    getRangeEndDaySegment,
-    getRangeEndHiddenInput
+    getFirstEntry,
+    getSecondEntry,
+    getFirstYearSegment,
+    getFirstMonthSegment,
+    getFirstDaySegment,
+    getFirstHiddenInput,
+    getSecondYearSegment,
+    getSecondMonthSegment,
+    getSecondDaySegment,
+    getSecondHiddenInput
   };
 }
