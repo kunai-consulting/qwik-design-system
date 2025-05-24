@@ -14,9 +14,9 @@ If you need to support other or older browsers, you can manage the width of the 
 The Date Input component provides a structured way to enter dates with separate segments for year, month, and day. The basic implementation includes a root component that manages state, a label for accessibility, date entry container, and individual segments.
 <Showcase name="basic" />
 In this example:
-- `<DateInput.Root>` serves as the container and state manager
+- `<DateInput.Root>` serves as the container and handles overall state
 - `<DateInput.Label>` provides an accessible label for the input
-- `<DateInput.DateEntry>` groups the segments for proper accessibility
+- `<DateInput.DateEntry>` groups the segments for proper accessibility and handles input, output, and state for an individual date value 
 - `<DateInput.Year>`, `<DateInput.Month>`, and `<DateInput.Day>` are the individual input segments
 - `<DateInput.Separator>` visually separates the segments
 - `<DateInput.HiddenInput>` provides a hidden native input for form submission
@@ -60,6 +60,12 @@ This example demonstrates binding the date to a signal with `bind:date`. Changes
 For more granular control, you can use the Date Input with `date` and `onChange$` props.
 <Showcase name="change" />
 The `onChange$` handler is called whenever the date changes, allowing you to track changes and update external state.
+#### Observing Changes at the Root Level
+You can also use the `onChange$` handler on the `<DateInput.Root>` component to observe changes at the root level.
+The event fires whenever any date changes in the Date Input context, providing the date values as an array. 
+This can be useful when you have two or more Date Entry components under the same root.
+<Showcase name="root-change" />
+
 #### Disabled State
 The Date Input can be disabled to prevent user interaction.
 <Showcase name="disabled" />
