@@ -418,15 +418,15 @@ test.describe("Multiple date entries", () => {
   }) => {
     const d = await setup(page, "date-range");
 
-    const depYear = d.getRangeStartYearSegment();
-    const depMonth = d.getRangeStartMonthSegment();
-    const depDay = d.getRangeStartDaySegment();
-    const depHidden = d.getRangeStartHiddenInput();
+    const depYear = d.getFirstYearSegment();
+    const depMonth = d.getFirstMonthSegment();
+    const depDay = d.getFirstDaySegment();
+    const depHidden = d.getFirstHiddenInput();
 
-    const retYear = d.getRangeEndYearSegment();
-    const retMonth = d.getRangeEndMonthSegment();
-    const retDay = d.getRangeEndDaySegment();
-    const retHidden = d.getRangeEndHiddenInput();
+    const retYear = d.getSecondYearSegment();
+    const retMonth = d.getSecondMonthSegment();
+    const retDay = d.getSecondDaySegment();
+    const retHidden = d.getSecondHiddenInput();
 
     // 1. Check initial state (placeholders)
     await expect(depYear).toHaveAttribute("placeholder", "yyyy");
@@ -479,13 +479,13 @@ test.describe("Multiple date entries", () => {
   }) => {
     const d = await setup(page, "date-range");
 
-    const depYear = d.getRangeStartYearSegment();
-    const depMonth = d.getRangeStartMonthSegment();
-    const depDay = d.getRangeStartDaySegment();
+    const depYear = d.getFirstYearSegment();
+    const depMonth = d.getFirstMonthSegment();
+    const depDay = d.getFirstDaySegment();
 
-    const retYear = d.getRangeEndYearSegment();
-    const retMonth = d.getRangeEndMonthSegment();
-    const retDay = d.getRangeEndDaySegment();
+    const retYear = d.getSecondYearSegment();
+    const retMonth = d.getSecondMonthSegment();
+    const retDay = d.getSecondDaySegment();
 
     // Focus the first segment of the first entry
     await depYear.focus();
@@ -541,13 +541,13 @@ test.describe("Multiple date entries", () => {
   }) => {
     const d = await setup(page, "date-range");
 
-    const depYear = d.getRangeStartYearSegment();
-    const depMonth = d.getRangeStartMonthSegment();
-    const depDay = d.getRangeStartDaySegment();
+    const depYear = d.getFirstYearSegment();
+    const depMonth = d.getFirstMonthSegment();
+    const depDay = d.getFirstDaySegment();
 
-    const retYear = d.getRangeEndYearSegment();
-    const retMonth = d.getRangeEndMonthSegment();
-    const retDay = d.getRangeEndDaySegment();
+    const retYear = d.getSecondYearSegment();
+    const retMonth = d.getSecondMonthSegment();
+    const retDay = d.getSecondDaySegment();
 
     const submitButton = d.getSubmitButton();
     const submittedData = d.getSubmittedData();
@@ -581,5 +581,46 @@ test.describe("Multiple date entries", () => {
     const actualSubmittedValue = JSON.parse(jsonString);
 
     expect(actualSubmittedValue).toEqual(expectedSubmittedValue);
+  });
+});
+
+test.describe("root onChange", () => {
+  test("GIVEN two date entries WHEN one of the dates changes THEN the root onChange event should be triggered with the date values", async ({
+    page
+  }) => {
+    const d = await setup(page, "root-change");
+
+    const firstGuessYear = d.getFirstYearSegment();
+    const firstGuessMonth = d.getFirstMonthSegment();
+    const firstGuessDay = d.getFirstDaySegment();
+
+    const secondGuessYear = d.getSecondYearSegment();
+    const secondGuessMonth = d.getSecondMonthSegment();
+    const secondGuessDay = d.getSecondDaySegment();
+
+    const externalValue = d.getExternalValue();
+
+    await expect(externalValue).toHaveText("[]");
+
+    await firstGuessYear.fill("1985");
+    await firstGuessMonth.fill("10");
+    await firstGuessDay.fill("20");
+
+    await expect(externalValue).toHaveText('["1985-10-20"]');
+
+    await secondGuessYear.fill("2024");
+    await secondGuessMonth.fill("11");
+    await secondGuessDay.fill("21");
+
+    await expect(externalValue).toHaveText('["1985-10-20","2024-11-21"]');
+
+    await secondGuessYear.press("ArrowDown");
+    await expect(externalValue).toHaveText('["1985-10-20","2023-11-21"]');
+
+    await firstGuessDay.clear();
+    await expect(externalValue).toHaveText('[null,"2023-11-21"]');
+
+    await secondGuessMonth.clear();
+    await expect(externalValue).toHaveText("[null,null]");
   });
 });
