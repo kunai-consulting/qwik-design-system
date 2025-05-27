@@ -20,9 +20,7 @@ export const MenuSubmenuTriggerBase = component$<PublicMenuSubmenuTriggerProps>(
     }
 
     const handleClick$ = $(() => {
-      if (submenuContext) {
-        submenuContext.isOpenSig.value = !submenuContext.isOpenSig.value;
-      }
+      submenuContext.isOpenSig.value = !submenuContext.isOpenSig.value;
     });
 
     return (
@@ -34,7 +32,8 @@ export const MenuSubmenuTriggerBase = component$<PublicMenuSubmenuTriggerProps>(
         aria-controls={submenuContext.contentId}
         aria-expanded={submenuContext.isOpenSig.value}
         disabled={disabled}
-        onClick$={[handleClick$, onClick$]}
+        onClick$={handleClick$}
+        ref={submenuContext.triggerRef}
         {...props}
       >
         <Slot />

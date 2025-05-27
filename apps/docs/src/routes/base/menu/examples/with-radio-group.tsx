@@ -1,5 +1,5 @@
 import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
-import { Menu } from "@kunai-consulting/qwik";
+import { Menu, RadioGroup } from "@kunai-consulting/qwik";
 import styles from "./menu-custom.css?inline";
 
 export type MenuItemType = {
@@ -7,7 +7,6 @@ export type MenuItemType = {
   label: string;
   value: string;
   closeOnSelect?: boolean;
-  disabled?: boolean;
 };
 
 const menuData: MenuItemType[] = [
@@ -34,8 +33,7 @@ const menuData: MenuItemType[] = [
   {
     id: "logout",
     label: "Log Out",
-    value: "logout",
-    disabled: true
+    value: "logout"
   }
 ];
 
@@ -44,8 +42,19 @@ export default component$(() => {
   const selectedItem = useSignal<string | undefined>(undefined);
   const open = useSignal(false);
 
+  const radioGroupValue = useSignal<string | undefined>(undefined);
+
   const handleChange = $((value: string) => {
+    if (!value) {
+      return;
+    }
+
     selectedItem.value = value;
+  });
+
+  const handleRadioGroupChange = $((value: string | undefined) => {
+    console.log("radioGroupValue", value);
+    radioGroupValue.value = value;
   });
 
   return (
@@ -62,11 +71,31 @@ export default component$(() => {
               value={item.value}
               class="menu-item"
               closeOnSelect={item.closeOnSelect}
-              disabled={item.disabled}
             >
               <Menu.ItemLabel class="menu-item-label">{item.label}</Menu.ItemLabel>
             </Menu.Item>
           ))}
+          <RadioGroup.Root
+            orientation="vertical"
+            class="radio-group-root"
+            value={radioGroupValue.value}
+          >
+            <RadioGroup.Label class="radio-group-label">Size</RadioGroup.Label>
+            {["S", "M", "L", "XL"].map((size) => (
+              <Menu.Item
+                key={size}
+                value={size}
+                class="menu-item"
+                closeOnSelect={false}
+                onSelect$={handleRadioGroupChange}
+              >
+                <RadioGroup.Item value={size} key={size} class="radio-group-item">
+                  <RadioGroup.Label>{size}</RadioGroup.Label>
+                  <RadioGroup.Indicator class="radio-group-indicator" />
+                </RadioGroup.Item>
+              </Menu.Item>
+            ))}
+          </RadioGroup.Root>
         </Menu.Content>
       </Menu.Root>
     </div>

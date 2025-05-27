@@ -15,21 +15,21 @@ import {
   getFirstMenuItem,
   getLastMenuItem
 } from "./utils";
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 
 export type PublicMenuItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
-  /** Whether the menu item is disabled */
-  disabled?: boolean;
-  /** Data value associated with this item, passed to onSelect$ when selected */
-  value?: string;
   /** Event handler called when the item is selected */
   onSelect$?: (value: string | undefined) => void;
   /** Whether to close the menu when the item is selected (default: true) */
   closeOnSelect?: boolean;
-};
+} & BindableProps<{
+    value: string;
+    disabled: boolean;
+  }>;
 
 /** Interactive item within a menu */
 export const MenuItemBase = component$<PublicMenuItemProps>(
-  ({ disabled, value, onSelect$, closeOnSelect = true, ...rest }) => {
+  ({ onSelect$, closeOnSelect = true, ...rest }) => {
     const context = useContext(menuContextId);
     const itemRef = useSignal<HTMLElement>();
     const isHoveredSig = useSignal(false);
@@ -37,13 +37,19 @@ export const MenuItemBase = component$<PublicMenuItemProps>(
     const menuContext = useContext(menuContextId);
     const isSubmenuTrigger = rest["aria-controls"] !== undefined;
 
+    const { valueSig, disabledSig: isDisabledSig } = useBindings(rest, {
+      value: "",
+      disabled: false
+    });
+
     const handleFocus$ = $((e: FocusEvent) => {
       context.currentFocusEl.value = e.target as HTMLElement;
     });
 
     const handleSelect = $(async () => {
-      if (disabled) return;
-      onSelect$?.(value);
+      if (context.disabled.value || isDisabledSig.value) return;
+      onSelect$?.(valueSig.value);
+      context.onItemSelection$?.(valueSig.value);
       if (closeOnSelect) {
         context.isOpenSig.value = false;
       }
@@ -61,7 +67,11 @@ export const MenuItemBase = component$<PublicMenuItemProps>(
         " "
       ];
 
-      if (!navKeys.includes(event.key) || disabled || !context.currentFocusEl.value)
+      if (
+        !navKeys.includes(event.key) ||
+        isDisabledSig.value ||
+        !context.currentFocusEl.value
+      )
         return;
 
       // For navigation, always use parent context if this is a submenu trigger
@@ -103,14 +113,12 @@ export const MenuItemBase = component$<PublicMenuItemProps>(
           break;
         }
         case "ArrowLeft": {
-          if (menuContext?.parentContext) {
-            menuContext.isOpenSig.value = false;
-            const parent = menuContext.parentContext;
-            const parentRoot = parent.contentRef?.value || parent.rootRef?.value;
+          if (navContext) {
+            navContext.isOpenSig.value = false;
+            const parent = navContext.parentContext;
+            const parentRoot = parent?.contentRef?.value || parent?.rootRef?.value;
             if (parentRoot) {
-              const first = getFirstMenuItem(parentRoot);
-
-              first?.focus();
+              nextItem = navContext.triggerRef.value as HTMLElement;
             }
           }
           break;
@@ -121,8 +129,7 @@ export const MenuItemBase = component$<PublicMenuItemProps>(
             const submenuRoot =
               menuContext.contentRef?.value || menuContext.rootRef?.value;
             if (submenuRoot) {
-              const first = getFirstMenuItem(submenuRoot);
-              first?.focus();
+              nextItem = getFirstMenuItem(submenuRoot);
             }
           }
           break;
@@ -154,8 +161,8 @@ export const MenuItemBase = component$<PublicMenuItemProps>(
         onMouseLeave$={[$(() => (isHoveredSig.value = false)), rest.onMouseLeave$]}
         onFocus$={[handleFocus$, rest.onFocus$]}
         onBlur$={[$(() => (isFocusedSig.value = false)), rest.onBlur$]}
-        aria-disabled={disabled}
-        data-disabled={disabled}
+        aria-disabled={context.disabled.value || isDisabledSig.value}
+        data-disabled={context.disabled.value || isDisabledSig.value}
         data-qds-menu-item
         data-hovered={isHoveredSig.value}
         data-focused={isFocusedSig.value}

@@ -22,14 +22,16 @@ export type PublicMenuSubmenuProps = PublicMenuRootProps & {
 /** A component that renders a submenu */
 export const MenuSubmenuBase = component$<PublicMenuSubmenuProps>((props) => {
   useStyles$(menuSubmenuStyles);
+
   const parentContext = useContext(menuContextId);
   const itemRefs = useSignal<ItemRef[]>([]);
   const submenuRef = useSignal<HTMLElement>();
-  const nestedMenus = useSignal<MenuContext[]>([]);
   const contentRef = useSignal<HTMLElement>();
+  const triggerRef = useSignal<HTMLElement>();
 
-  const { openSig: isOpenSig } = useBindings(props, {
-    open: false
+  const { openSig: isOpenSig, disabledSig: isDisabledSig } = useBindings(props, {
+    open: false,
+    disabled: false
   });
 
   const id = useId();
@@ -45,14 +47,16 @@ export const MenuSubmenuBase = component$<PublicMenuSubmenuProps>((props) => {
     parentContext,
     itemRefs,
     rootRef: submenuRef,
+    contentRef,
+    triggerRef,
+    disabled: isDisabledSig,
     currentFocusEl: parentContext.currentFocusEl,
-    nestedMenus: nestedMenus,
-    contentRef
+    onItemSelection$: parentContext.onItemSelection$
   };
 
   useContextProvider(menuContextId, menuContext);
 
-  const { open: _o, "bind:open": _bo, ...rest } = props;
+  const { open: _o, "bind:open": _bo, onChange$: _oc, ...rest } = props;
 
   return (
     <PopoverRootBase

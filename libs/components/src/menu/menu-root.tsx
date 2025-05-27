@@ -9,7 +9,8 @@ import {
   useOnWindow,
   useSignal,
   useTask$,
-  createContextId
+  createContextId,
+  $
 } from "@builder.io/qwik";
 import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
@@ -24,8 +25,6 @@ export type MenuPosition = "right" | "left" | "bottom" | "top";
 export type MenuContext = {
   /** Whether the menu is open */
   isOpenSig: Signal<boolean>;
-  /** The submenus in the menu */
-  nestedMenus: Signal<MenuContext[]>;
   /** ID of the menu content element */
   contentId: string;
   /** ID of the menu trigger element */
@@ -38,6 +37,12 @@ export type MenuContext = {
   currentFocusEl: Signal<HTMLElement | undefined>;
   /** Root reference to the menu container */
   rootRef: Signal<HTMLElement | undefined>;
+  /** Reference to the content element */
+  contentRef: Signal<HTMLElement | undefined>;
+  /** Reference to the trigger element */
+  triggerRef: Signal<HTMLElement | undefined>;
+  /** Whether the menu is disabled */
+  disabled: Signal<boolean>;
   /** The position of the menu */
   position?: MenuPosition;
   /** X coordinate for context menu positioning */
@@ -46,8 +51,8 @@ export type MenuContext = {
   contextMenuY?: number;
   /** Whether the menu was opened via context menu */
   isContextMenu?: boolean;
-  /** Reference to the content element */
-  contentRef: Signal<HTMLElement | undefined>;
+  /** The function to call when an item is selected */
+  onItemSelection$: (value: string) => void;
 };
 
 export const menuContextId = createContextId<MenuContext>("menu-context");
@@ -55,12 +60,13 @@ export const menuContextId = createContextId<MenuContext>("menu-context");
 type MenuRootBaseProps = PropsOf<typeof PopoverRootBase>;
 
 /** Initial open state of the menu */
-export type PublicMenuRootProps = MenuRootBaseProps &
+export type PublicMenuRootProps = Omit<MenuRootBaseProps, "onChange$"> &
   BindableProps<{
     open: boolean;
     disabled: boolean;
   }> & {
     onOpenChange$?: (open: boolean) => void;
+    onChange$?: (value: string) => void;
   };
 
 /** Root container component for the menu */
@@ -69,7 +75,6 @@ const MenuRootBase = component$<PublicMenuRootProps>((props) => {
     open: false,
     disabled: false
   });
-  const nestedMenus = useSignal<MenuContext[]>([]);
   const rootRef = useSignal<HTMLDivElement>();
   const currentFocusEl = useSignal<HTMLElement>();
   const itemRefs = useSignal<ItemRef[]>([]);
@@ -77,6 +82,11 @@ const MenuRootBase = component$<PublicMenuRootProps>((props) => {
   const contextMenuX = useSignal(0);
   const contextMenuY = useSignal(0);
   const contentRef = useSignal<HTMLElement>();
+  const triggerRef = useSignal<HTMLElement>();
+
+  const handleItemSelection = $((value: string) => {
+    props.onChange$?.(value);
+  });
 
   const isInitialRenderSig = useSignal(true);
 
@@ -89,11 +99,11 @@ const MenuRootBase = component$<PublicMenuRootProps>((props) => {
     }
   });
 
-  useTask$(async ({ track, cleanup }) => {
+  useTask$(({ track, cleanup }) => {
     const isOpen = track(() => isOpenSig.value);
 
     if (!isInitialRenderSig.value && props.onOpenChange$) {
-      await props.onOpenChange$(isOpen);
+      props.onOpenChange$(isOpen);
     }
 
     cleanup(() => {
@@ -125,19 +135,21 @@ const MenuRootBase = component$<PublicMenuRootProps>((props) => {
     isOpenSig,
     contentId,
     triggerId,
-    nestedMenus,
     rootRef,
+    contentRef,
+    triggerRef,
     currentFocusEl,
     itemRefs,
     contextMenuX: contextMenuX.value,
     contextMenuY: contextMenuY.value,
     isContextMenu: isContextMenu.value,
-    contentRef
+    onItemSelection$: handleItemSelection,
+    disabled: isDisabledSig
   };
 
   useContextProvider(menuContextId, context);
 
-  const { open: _o, "bind:open": _bo, ...rest } = props;
+  const { open: _o, "bind:open": _bo, onChange$: _oc, ...rest } = props;
 
   return (
     <PopoverRootBase bind:open={isOpenSig} data-qds-menu-root ref={rootRef} {...rest}>

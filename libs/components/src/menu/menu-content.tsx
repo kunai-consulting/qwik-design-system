@@ -14,53 +14,52 @@ export const MenuContentBase = component$<MenuContentProps>((props) => {
     // Track these values to reposition when any of them change
     const isOpen = track(() => context.isOpenSig.value);
     const isContextMenu = track(() => context.isContextMenu);
-    const x = track(() => context.contextMenuX);
-    const y = track(() => context.contextMenuY);
+    const x = track(() => context.contextMenuX) ?? 0;
+    const y = track(() => context.contextMenuY) ?? 0;
     const contentEl = track(() => context.contentRef.value);
-    const initialMargin = 0;
+    let initialMargin = 0;
 
     // Check if this is a context menu and should be positioned
-    // if (isOpen && isContextMenu && x > 0 && y > 0 && contentEl) {
-    //   // Wait for content to be rendered before positioning
-    //   requestAnimationFrame(() => {
-    //     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-    //     const body = document.body;
-    //     const styles = window.getComputedStyle(body);
-    //     initialMargin = Number.parseFloat(styles.marginRight);
-    //     body.style.overflow = "hidden";
-    //     body.style.userSelect = "none";
-    //     document.body.style.marginRight = `${initialMargin + scrollbarWidth}px`;
+    if (isOpen && isContextMenu && x > 0 && y > 0 && contentEl) {
+      // Wait for content to be rendered before positioning
 
-    //     const { innerWidth, innerHeight } = window;
-    //     const contentRect = contentEl.getBoundingClientRect();
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      const body = document.body;
+      const styles = window.getComputedStyle(body);
+      initialMargin = Number.parseFloat(styles.marginRight);
+      body.style.overflow = "hidden";
+      body.style.userSelect = "none";
+      document.body.style.marginRight = `${initialMargin + scrollbarWidth}px`;
 
-    //     // Apply standard context menu positioning
-    //     let posX = x;
-    //     let posY = y;
+      const { innerWidth, innerHeight } = window;
+      const contentRect = contentEl.getBoundingClientRect();
 
-    //     // Adjust if the menu would overflow the viewport
-    //     if (x + contentRect.width > innerWidth) {
-    //       posX = Math.max(0, x - contentRect.width);
-    //     }
+      // Apply standard context menu positioning
+      let posX = x;
+      let posY = y;
 
-    //     if (posY + contentRect.height > innerHeight) {
-    //       posY = Math.max(0, y - contentRect.height);
-    //     }
+      // Adjust if the menu would overflow the viewport
+      if (x + contentRect.width > innerWidth) {
+        posX = Math.max(0, x - contentRect.width);
+      }
 
-    //     // Apply fixed positioning to handle scrolling properly
-    //     contentEl.style.position = "fixed";
-    //     contentEl.style.left = `${posX}px`;
-    //     contentEl.style.top = `${posY}px`;
-    //   });
-    // }
+      if (posY + contentRect.height > innerHeight) {
+        posY = Math.max(0, y - contentRect.height);
+      }
 
-    // cleanup(() => {
-    //   document.body.style.overflow = "";
-    //   document.body.style.userSelect = "";
-    //   if (initialMargin !== 0) {
-    //     document.body.style.marginRight = `${initialMargin}px`;
-    //   }
-    // });
+      // Apply fixed positioning to handle scrolling properly
+      contentEl.style.position = "fixed";
+      contentEl.style.left = `${posX}px`;
+      contentEl.style.top = `${posY}px`;
+
+      cleanup(() => {
+        document.body.style.overflow = "";
+        document.body.style.userSelect = "";
+        if (initialMargin !== 0) {
+          document.body.style.marginRight = `${initialMargin}px`;
+        }
+      });
+    }
   });
 
   return (

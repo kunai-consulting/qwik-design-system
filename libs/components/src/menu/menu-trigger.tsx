@@ -12,7 +12,7 @@ export type PublicMenuTriggerProps = Omit<
 export const MenuTriggerBase = component$<PublicMenuTriggerProps>((props) => {
   const context = useContext(menuContextId);
 
-  const handleKeyDown = $(async (event: KeyboardEvent) => {
+  const handleKeyDown = $((event: KeyboardEvent) => {
     const { key } = event;
 
     if (key === "ArrowDown" || key === "Enter" || key === " " || key === "ArrowUp") {
@@ -40,7 +40,7 @@ export const MenuTriggerBase = component$<PublicMenuTriggerProps>((props) => {
       aria-expanded={context.isOpenSig.value}
       aria-controls={context.isOpenSig.value ? context.contentId : undefined}
       onKeyDown$={[handleKeyDown, props.onKeyDown$]}
-      // The identifier for the menu trigger button
+      ref={context.triggerRef}
       data-qds-menu-trigger
       type="button"
       {...props}
