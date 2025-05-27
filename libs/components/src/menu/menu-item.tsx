@@ -126,11 +126,11 @@ export const MenuItemBase = component$<PublicMenuItemProps>(
         case "ArrowRight": {
           if (menuContext?.parentContext) {
             menuContext.isOpenSig.value = true;
-            const submenuRoot =
-              menuContext.contentRef?.value || menuContext.rootRef?.value;
-            if (submenuRoot) {
-              nextItem = getFirstMenuItem(submenuRoot);
-            }
+          }
+          await new Promise((resolve) => setTimeout(resolve, 50));
+          const submenuRoot = menuContext.contentRef?.value || menuContext.rootRef?.value;
+          if (submenuRoot) {
+            nextItem = getFirstMenuItem(submenuRoot);
           }
           break;
         }

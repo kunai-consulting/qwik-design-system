@@ -1,8 +1,9 @@
-import { Slot, component$, useContext } from "@builder.io/qwik";
+import { Slot, component$, useContext, useTask$ } from "@builder.io/qwik";
 import type { PropsOf } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverContentBase } from "../popover/popover-content";
 import { menuContextId } from "./menu-root";
+import { getFirstMenuItem } from "./utils";
 
 /** Props for the submenu content component */
 export type PublicMenuSubmenuContentProps = PropsOf<typeof PopoverContentBase>;
@@ -21,6 +22,17 @@ export const MenuSubmenuContentBase = component$<PublicMenuSubmenuContentProps>(
       console.warn("Submenu content not found in content");
       return null;
     }
+
+    useTask$(({ track }) => {
+      const isOpen = track(() => submenuContext.isOpenSig.value);
+      if (isOpen) {
+        requestAnimationFrame(() => {
+          if (submenuContext.contentRef.value) {
+            getFirstMenuItem(submenuContext.contentRef.value)?.focus();
+          }
+        });
+      }
+    });
 
     return (
       <PopoverContentBase

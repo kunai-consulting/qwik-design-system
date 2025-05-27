@@ -51,7 +51,8 @@ export const MenuSubmenuBase = component$<PublicMenuSubmenuProps>((props) => {
     triggerRef,
     disabled: isDisabledSig,
     currentFocusEl: parentContext.currentFocusEl,
-    onItemSelection$: parentContext.onItemSelection$
+    onItemSelection$: parentContext.onItemSelection$,
+    openFocusDirection: parentContext.openFocusDirection
   };
 
   useContextProvider(menuContextId, menuContext);

@@ -53,6 +53,8 @@ export type MenuContext = {
   isContextMenu?: boolean;
   /** The function to call when an item is selected */
   onItemSelection$: (value: string) => void;
+  /** The direction to focus on when the menu is opened */
+  openFocusDirection: Signal<"first" | "last" | undefined>;
 };
 
 export const menuContextId = createContextId<MenuContext>("menu-context");
@@ -83,6 +85,7 @@ const MenuRootBase = component$<PublicMenuRootProps>((props) => {
   const contextMenuY = useSignal(0);
   const contentRef = useSignal<HTMLElement>();
   const triggerRef = useSignal<HTMLElement>();
+  const openFocusDirection = useSignal<"first" | "last" | undefined>(undefined);
 
   const handleItemSelection = $((value: string) => {
     props.onChange$?.(value);
@@ -144,7 +147,8 @@ const MenuRootBase = component$<PublicMenuRootProps>((props) => {
     contextMenuY: contextMenuY.value,
     isContextMenu: isContextMenu.value,
     onItemSelection$: handleItemSelection,
-    disabled: isDisabledSig
+    disabled: isDisabledSig,
+    openFocusDirection
   };
 
   useContextProvider(menuContextId, context);

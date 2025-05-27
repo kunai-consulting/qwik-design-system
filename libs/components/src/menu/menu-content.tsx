@@ -2,6 +2,7 @@ import { type PropsOf, Slot, component$, useContext, useTask$ } from "@builder.i
 import { withAsChild } from "../as-child/as-child";
 import { PopoverContentBase } from "../popover/popover-content";
 import { menuContextId } from "./menu-root";
+import { getFirstMenuItem, getLastMenuItem } from "./utils";
 
 export type MenuContentProps = PropsOf<typeof PopoverContentBase>;
 
@@ -21,8 +22,6 @@ export const MenuContentBase = component$<MenuContentProps>((props) => {
 
     // Check if this is a context menu and should be positioned
     if (isOpen && isContextMenu && x > 0 && y > 0 && contentEl) {
-      // Wait for content to be rendered before positioning
-
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
       const body = document.body;
       const styles = window.getComputedStyle(body);
@@ -59,6 +58,26 @@ export const MenuContentBase = component$<MenuContentProps>((props) => {
           document.body.style.marginRight = `${initialMargin}px`;
         }
       });
+    }
+  });
+
+  useTask$(({ track }) => {
+    const isOpen = track(() => context.isOpenSig.value);
+    const direction = track(() => context.openFocusDirection.value);
+    if (isOpen && direction) {
+      const rootEl = context.contentRef.value || context.rootRef.value;
+      if (!rootEl) return;
+
+      // Wait for the popover code to be executed
+      setTimeout(() => {
+        if (direction === "first") {
+          getFirstMenuItem(rootEl)?.focus();
+        } else if (direction === "last") {
+          getLastMenuItem(rootEl)?.focus();
+        }
+      }, 50);
+
+      context.openFocusDirection.value = undefined;
     }
   });
 
