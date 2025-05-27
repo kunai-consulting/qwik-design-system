@@ -88,3 +88,21 @@ export function getLastMenuItem(root: HTMLElement): HTMLElement | null {
   }
   return lastNode;
 }
+
+/**
+ * Waits for an element to be visible.
+ * @param el - The element to wait for.
+ * @param timeout - The timeout in milliseconds.
+ * @param interval - The interval in milliseconds to check if the element is visible.
+ */
+export async function waitForVisible(
+  el: HTMLElement,
+  timeout = 2000,
+  interval = 20
+): Promise<void> {
+  const start = Date.now();
+  while (el && !el.checkVisibility()) {
+    await new Promise((resolve) => setTimeout(resolve, interval));
+    if (Date.now() - start > timeout) break;
+  }
+}

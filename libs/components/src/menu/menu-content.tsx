@@ -2,7 +2,7 @@ import { type PropsOf, Slot, component$, useContext, useTask$ } from "@builder.i
 import { withAsChild } from "../as-child/as-child";
 import { PopoverContentBase } from "../popover/popover-content";
 import { menuContextId } from "./menu-root";
-import { getFirstMenuItem, getLastMenuItem } from "./utils";
+import { getFirstMenuItem, getLastMenuItem, waitForVisible } from "./utils";
 
 export type MenuContentProps = PropsOf<typeof PopoverContentBase>;
 
@@ -61,7 +61,7 @@ export const MenuContentBase = component$<MenuContentProps>((props) => {
     }
   });
 
-  useTask$(({ track }) => {
+  useTask$(async ({ track }) => {
     const isOpen = track(() => context.isOpenSig.value);
     const direction = track(() => context.openFocusDirection.value);
     if (isOpen && direction) {
@@ -69,6 +69,10 @@ export const MenuContentBase = component$<MenuContentProps>((props) => {
       if (!rootEl) return;
 
       // Wait for the popover code to be executed
+      // TODO: This is a hack to wait for the popover code to be executed
+      // We should find a better way to do this
+      await waitForVisible(rootEl, 50, 20);
+
       setTimeout(() => {
         if (direction === "first") {
           getFirstMenuItem(rootEl)?.focus();

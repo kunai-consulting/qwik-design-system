@@ -14,7 +14,8 @@ import {
   getFirstMenuItem,
   getLastMenuItem,
   getNextMenuItem,
-  getPreviousMenuItem
+  getPreviousMenuItem,
+  waitForVisible
 } from "./utils";
 
 export type PublicMenuItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
@@ -127,9 +128,14 @@ export const MenuItemBase = component$<PublicMenuItemProps>(
           if (menuContext?.parentContext) {
             menuContext.isOpenSig.value = true;
           }
-          await new Promise((resolve) => setTimeout(resolve, 50));
+
           const submenuRoot = menuContext.contentRef?.value || menuContext.rootRef?.value;
+
           if (submenuRoot) {
+            // Wait for the submenu to be visible
+            // TODO: This is a hack to wait for the submenu to be visible
+            // We should find a better way to do this
+            await waitForVisible(submenuRoot, 50, 20);
             nextItem = getFirstMenuItem(submenuRoot);
           }
           break;
