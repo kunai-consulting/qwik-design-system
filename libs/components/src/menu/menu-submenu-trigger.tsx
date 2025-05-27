@@ -1,7 +1,7 @@
 import { $, Slot, component$, useContext } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
-import { menuContextId } from "./menu-root";
 import { MenuItem, type PublicMenuItemProps } from "./menu-item";
+import { menuContextId } from "./menu-root";
 
 /** Props for the submenu trigger component */
 export type PublicMenuSubmenuTriggerProps = Omit<

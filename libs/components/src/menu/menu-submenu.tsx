@@ -10,7 +10,7 @@ import {
 import { useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";
-import { type ItemRef, menuContextId, type MenuContext } from "./menu-root";
+import { type ItemRef, type MenuContext, menuContextId } from "./menu-root";
 import type { PublicMenuRootProps } from "./menu-root";
 import menuSubmenuStyles from "./menu-submenu.css?inline";
 
