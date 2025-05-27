@@ -19,6 +19,10 @@
     position-try: normal flip-block flip-inline;
   }
 
+  [data-qds-menu-item-label] {
+    user-select: none;
+  }
+
   /* Default position: right */
   [data-qds-menu-submenu-content] {
     top: anchor(top);
