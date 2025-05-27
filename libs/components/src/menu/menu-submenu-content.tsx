@@ -1,8 +1,9 @@
-import { Slot, component$, useContext } from "@builder.io/qwik";
+import { Slot, component$, useContext, useVisibleTask$ } from "@builder.io/qwik";
 import type { PropsOf } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverContentBase } from "../popover/popover-content";
 import { menuContextId } from "./menu-root";
+import { getFirstMenuItem } from "./utils";
 
 /** Props for the submenu content component */
 export type PublicMenuSubmenuContentProps = PropsOf<typeof PopoverContentBase>;
@@ -17,10 +18,16 @@ export const MenuSubmenuContentBase = component$<PublicMenuSubmenuContentProps>(
       return null;
     }
 
-    if (!submenuContext) {
-      console.warn("Submenu content not found in content");
-      return null;
-    }
+    // WARNING: Only use this if you know what you are doing
+    // Focus the first or last item when the menu opens
+    useVisibleTask$(({ track }) => {
+      const isOpen = track(() => submenuContext.isOpenSig.value);
+      if (isOpen && submenuContext.openFocusDirection.value) {
+        const rootEl = submenuContext.contentRef.value || submenuContext.rootRef.value;
+        if (!rootEl) return;
+        getFirstMenuItem(rootEl)?.focus();
+      }
+    });
 
     return (
       <PopoverContentBase

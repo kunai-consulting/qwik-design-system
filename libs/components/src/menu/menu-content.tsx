@@ -1,8 +1,15 @@
-import { type PropsOf, Slot, component$, useContext, useTask$ } from "@builder.io/qwik";
+import {
+  type PropsOf,
+  Slot,
+  component$,
+  useContext,
+  useTask$,
+  useVisibleTask$
+} from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverContentBase } from "../popover/popover-content";
 import { menuContextId } from "./menu-root";
-import { getFirstMenuItem, getLastMenuItem, waitForVisible } from "./utils";
+import { getFirstMenuItem, getLastMenuItem } from "./utils";
 
 export type MenuContentProps = PropsOf<typeof PopoverContentBase>;
 
@@ -61,27 +68,19 @@ export const MenuContentBase = component$<MenuContentProps>((props) => {
     }
   });
 
-  useTask$(async ({ track }) => {
+  // WARNING: Only use this if you know what you are doing
+  // Focus the first or last item when the menu opens
+  useVisibleTask$(({ track }) => {
     const isOpen = track(() => context.isOpenSig.value);
     const direction = track(() => context.openFocusDirection.value);
-    if (isOpen && direction) {
+    if (isOpen && context.openFocusDirection.value) {
       const rootEl = context.contentRef.value || context.rootRef.value;
       if (!rootEl) return;
-
-      // Wait for the popover code to be executed
-      // TODO: This is a hack to wait for the popover code to be executed
-      // We should find a better way to do this
-      await waitForVisible(rootEl, 50, 20);
-
-      setTimeout(() => {
-        if (direction === "first") {
-          getFirstMenuItem(rootEl)?.focus();
-        } else if (direction === "last") {
-          getLastMenuItem(rootEl)?.focus();
-        }
-      }, 50);
-
-      context.openFocusDirection.value = undefined;
+      if (direction === "first") {
+        getFirstMenuItem(rootEl)?.focus();
+      } else if (direction === "last") {
+        getLastMenuItem(rootEl)?.focus();
+      }
     }
   });
 
