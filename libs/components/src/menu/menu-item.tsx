@@ -6,16 +6,16 @@ import {
   useContext,
   useSignal
 } from "@builder.io/qwik";
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { menuContextId } from "./menu-root";
 import {
-  getNextMenuItem,
-  getPreviousMenuItem,
   getFirstMenuItem,
-  getLastMenuItem
+  getLastMenuItem,
+  getNextMenuItem,
+  getPreviousMenuItem
 } from "./utils";
-import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 
 export type PublicMenuItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
   /** Event handler called when the item is selected */

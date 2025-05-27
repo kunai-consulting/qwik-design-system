@@ -1,16 +1,16 @@
 import {
+  $,
   type PropsOf,
   type Signal,
   Slot,
   component$,
+  createContextId,
   sync$,
   useContextProvider,
   useId,
   useOnWindow,
   useSignal,
-  useTask$,
-  createContextId,
-  $
+  useTask$
 } from "@builder.io/qwik";
 import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";

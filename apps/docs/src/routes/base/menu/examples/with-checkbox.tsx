@@ -1,7 +1,7 @@
 import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
 import { Checkbox, Menu } from "@kunai-consulting/qwik";
-import styles from "./menu-custom.css?inline";
 import { LuCheck } from "@qwikest/icons/lucide";
+import styles from "./menu-custom.css?inline";
 
 export type MenuItemType = {
   id: string;
