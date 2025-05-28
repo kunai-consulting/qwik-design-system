@@ -11,7 +11,7 @@ import {
 } from "@builder.io/qwik";
 import type { QRL } from "@builder.io/qwik";
 import type { BindableProps } from "@kunai-consulting/qwik-utils";
-import { useBindings } from "@kunai-consulting/qwik-utils";
+import { getNextIndex, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import type { ISODate } from "../calendar/types";
 import { Render } from "../render/render";
@@ -23,8 +23,10 @@ import {
 import { getInitialSegments } from "./utils";
 
 export type PublicDateInputDateEntryProps = Omit<PropsOf<"div">, "onChange$"> & {
-  /** Event handler called when a date is selected */
+  /** Event handler called when a date is updated */
   onChange$?: QRL<(date: ISODate | null) => void>;
+  /** The index of the date entry */
+  _index?: number;
 } & BindableProps<DateInputDateEntryBoundProps>;
 
 export type DateInputDateEntryBoundProps = {
@@ -42,7 +44,7 @@ const isoDateRegex = /^\d{1,4}-(0[1-9]|1[0-2])-\d{2}$/;
  */
 export const DateInputDateEntryBase = component$(
   (props: PublicDateInputDateEntryProps) => {
-    const { onChange$, ...rest } = props;
+    const { onChange$, _index, ...rest } = props;
     const rootContext = useContext(dateInputContextId);
     const isInitialLoadSig = useSignal(true);
     const { dateSig, disabledSig } = useBindings<DateInputDateEntryBoundProps>(props, {
@@ -57,6 +59,7 @@ export const DateInputDateEntryBase = component$(
     const dayOfMonthSegmentSig = useSignal(dayOfMonthSegment);
     const monthSegmentSig = useSignal(monthSegment);
     const yearSegmentSig = useSignal(yearSegment);
+    const index = _index ?? -1;
 
     // This flag helps maintain two behaviors when the date changes to null.
     // 1. When the date signal changes to null programmatically, we want to clear all segments.
@@ -149,8 +152,14 @@ export const DateInputDateEntryBase = component$(
     useTask$(async ({ track, cleanup }) => {
       const date = track(() => dateSig.value);
       await updateSegmentsWithNewDateValue(date);
-      if (!isInitialLoadSig.value && onChange$) {
-        await onChange$(date);
+      if (!isInitialLoadSig.value) {
+        if (onChange$) {
+          await onChange$(date);
+        }
+        // Update the rootContext dates array with the new date at the current index
+        const dates = [...rootContext.datesSig.value];
+        dates[index] = date;
+        rootContext.datesSig.value = dates;
       }
       cleanup(() => {
         isInitialLoadSig.value = false;
@@ -162,6 +171,7 @@ export const DateInputDateEntryBase = component$(
         fallback={"div"}
         {...rest}
         data-qds-date-input-date-entry
+        data-qds-date-input-date-entry-index={_index}
         role="group"
         id={elementId}
         aria-labelledby={`${rootContext.localId}-label`}
@@ -172,4 +182,7 @@ export const DateInputDateEntryBase = component$(
   }
 );
 
-export const DateInputDateEntry = withAsChild(DateInputDateEntryBase);
+export const DateInputDateEntry = withAsChild(DateInputDateEntryBase, (props) => {
+  props._index = getNextIndex("date-input-date-entry");
+  return props;
+});
