@@ -20,7 +20,7 @@ export default component$(() => {
       {paginationItems.map((item, index) => {
         const uniqueKey = `page-${index}-${Date.now()}`;
         return (
-          <Pagination.Item class="pagination-page" key={uniqueKey}>
+          <Pagination.Item class="pagination-item" key={uniqueKey}>
             <span>{item}</span>
           </Pagination.Item>
         );

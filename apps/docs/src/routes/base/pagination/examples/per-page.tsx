@@ -23,7 +23,7 @@ export default component$(() => {
         const uniqueKey = `page-${index}-${Date.now()}`;
 
         return (
-          <Pagination.Item class="pagination-page" key={uniqueKey}>
+          <Pagination.Item class="pagination-item" key={uniqueKey}>
             <span>{index + 1}</span>
           </Pagination.Item>
         );

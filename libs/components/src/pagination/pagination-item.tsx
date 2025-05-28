@@ -88,7 +88,7 @@ export const PaginationItem = component$(
         <Comp
           ref={pageRef}
           // Identifies a pagination page element
-          data-qds-pagination-page
+          data-qds-pagination-item
           // Specifies the index of the pagination page
           data-index={_index}
           // Indicates if this is the currently selected page

@@ -37,7 +37,7 @@ export default component$(() => {
 
         {paginationItems.map((item) => (
           <Pagination.Item
-            class="pagination-page disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
+            class="pagination-item disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
             key={`page-${item}`}
             aria-label={`Page ${item}`}
           >

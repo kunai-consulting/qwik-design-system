@@ -23,7 +23,7 @@ export default component$(() => {
         </Pagination.Previous>
         {paginationItems.map((item) => (
           <Pagination.Item
-            class="pagination-page disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
+            class="pagination-item disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
             key={`first-page-${item}`}
             isDisabled={item === firstPageSig.value}
           >
@@ -48,7 +48,7 @@ export default component$(() => {
         </Pagination.Previous>
         {paginationItems.map((item) => (
           <Pagination.Item
-            class="pagination-page disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
+            class="pagination-item disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
             key={`last-page-${item}`}
             isDisabled={item === lastPageSig.value}
           >
