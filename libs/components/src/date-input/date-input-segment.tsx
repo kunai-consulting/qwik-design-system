@@ -460,6 +460,7 @@ export const DateInputSegment = component$(
         aria-valuenow={segmentSig.value.numericValue}
         disabled={context.disabledSig.value}
         maxLength={segmentSig.value.maxLength + 1}
+        inputMode="numeric"
       />
     );
   }
