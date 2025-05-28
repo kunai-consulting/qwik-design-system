@@ -1,12 +1,9 @@
 import {
-  $,
   type PropsOf,
   Slot,
   component$,
-  sync$,
   useContextProvider,
   useId,
-  useOnWindow,
   useSignal,
   useStyles$,
   useTask$

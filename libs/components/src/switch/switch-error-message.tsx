@@ -13,7 +13,7 @@ const SwitchErrorMessageBase = component$<PropsOf<"div">>((props) => {
   /**
    *  So this doesn't work
    *  Please watch: https://www.youtube.com/watch?v=DKYpBIjDgHQ
-   * 
+   *
    * As a result, you can set aria-errormessage to the errorId without the conditional for now. The tradeoff being it may be a broken reference, but better than nothing.
    */
   useTask$(() => {
