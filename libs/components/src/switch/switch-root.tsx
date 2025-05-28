@@ -70,13 +70,14 @@ const SwitchRootBase = component$<PublicRootProps>((props) => {
     "keydown",
     sync$((event: KeyboardEvent) => {
       const activeElement = document.activeElement;
-      const isWithinSwitch = activeElement?.closest("[data-qds-switch-trigger]");
+      const switchTrigger = activeElement?.closest("[data-qds-switch-trigger]");
 
-      if (!isWithinSwitch) return;
+      if (!switchTrigger) return;
 
       const preventKeys = [" ", "Enter"];
       if (preventKeys.includes(event.key)) {
         event.preventDefault();
+        switchTrigger.setAttribute("data-keypress", event.key);
       }
     })
   );

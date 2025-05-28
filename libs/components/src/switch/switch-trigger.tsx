@@ -17,8 +17,15 @@ const SwitchTriggerBase = component$<PropsOf<"button">>((props) => {
   const triggerRef = useSignal<HTMLButtonElement>();
 
   const handleKeyDown$ = $((event: KeyboardEvent) => {
+    const trigger = triggerRef.value;
+    if (!trigger) return;
+
     if (event.key === " " || event.key === "Enter") {
-      context.toggle$();
+      const keypress = trigger.getAttribute("data-keypress");
+      if (keypress === event.key) {
+        context.toggle$();
+        trigger.removeAttribute("data-keypress");
+      }
     }
   });
 
