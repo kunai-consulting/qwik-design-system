@@ -1,6 +1,7 @@
 import { $, type PropsOf, component$ } from "@builder.io/qwik";
 import { useSignal } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
+import { useNavigate } from "@builder.io/qwik-city";
 import { Tree } from "@kunai-consulting/qwik";
 import { LuChevronRight } from "@qwikest/icons/lucide";
 
@@ -168,16 +169,28 @@ export const TreeBranch = component$<{
 export const TreeLeaves = component$<{
   node: TreeItemType;
 }>(({ node }) => {
+  const nav = useNavigate();
+
   const labelStyles = "capitalize w-full select-none h-full flex items-center";
 
   const linkStyles =
     "flex w-full items-center justify-between gap-2 px-2 group text-left transition-colors duration-200 py-2 hover:bg-neutral-accent focus-visible:outline-qwik-blue-500 focus-visible:-outline-offset-2";
 
   return (
-    <Tree.Item class="transition-colors bg-inherit duration-200" key={node.id} asChild>
-      <Link href={node.id} class={linkStyles}>
-        <Tree.ItemLabel class={labelStyles}>{node.label}</Tree.ItemLabel>
-      </Link>
+    <Tree.Item
+      class="transition-colors bg-inherit duration-200"
+      key={node.id}
+      onKeyDown$={(e: KeyboardEvent) => {
+        if (e.key === "Enter") {
+          nav(node.id);
+        }
+      }}
+    >
+      <Tree.ItemLabel class={labelStyles}>
+        <Link tabIndex={-1} href={node.id} class={linkStyles}>
+          {node.label}
+        </Link>
+      </Tree.ItemLabel>
     </Tree.Item>
   );
 });

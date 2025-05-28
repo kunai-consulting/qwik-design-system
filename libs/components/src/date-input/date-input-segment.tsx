@@ -12,6 +12,7 @@ import type { Signal } from "@builder.io/qwik";
 import type { DayOfMonth, Month } from "../calendar/types";
 import { MAX_DAY } from "./constants";
 import { dateInputContextId } from "./date-input-context";
+import { dateInputDateEntryContextId } from "./date-input-date-entry-context";
 import styles from "./date-input-segment.css?inline";
 import type { DateSegment, DateSegmentType } from "./types";
 import type { PublicDateInputSegmentProps } from "./types";
@@ -31,15 +32,16 @@ export const DateInputSegment = component$(
     _index,
     ...otherProps
   }: DateInputSegmentProps) => {
-    const context = useContext(dateInputContextId);
-    const inputId = `${context.localId}-segment-${segmentSig.value.type}`;
+    const rootContext = useContext(dateInputContextId);
+    const context = useContext(dateInputDateEntryContextId);
+    const inputId = `${context.entryId}-segment-${segmentSig.value.type}`;
     const index = _index ?? -1;
     const inputRef = useSignal<HTMLInputElement>();
 
     useStyles$(styles);
 
     useTask$(() => {
-      context.segmentRefs.value[index] = inputRef;
+      rootContext.segmentRefs.value[index] = inputRef;
     });
 
     const updateActiveDate = $(() => {
@@ -215,7 +217,7 @@ export const DateInputSegment = component$(
     });
 
     const focusNextSegment = $(async () => {
-      const nextSegment = context.segmentRefs.value[index + 1]?.value;
+      const nextSegment = rootContext.segmentRefs.value[index + 1]?.value;
       if (nextSegment) {
         nextSegment.focus();
         nextSegment.select();
@@ -223,7 +225,7 @@ export const DateInputSegment = component$(
     });
 
     const focusPreviousSegment = $(async () => {
-      const previousSegment = context.segmentRefs.value[index - 1]?.value;
+      const previousSegment = rootContext.segmentRefs.value[index - 1]?.value;
       if (previousSegment) {
         previousSegment.focus();
         previousSegment.select();
@@ -458,6 +460,7 @@ export const DateInputSegment = component$(
         aria-valuenow={segmentSig.value.numericValue}
         disabled={context.disabledSig.value}
         maxLength={segmentSig.value.maxLength + 1}
+        inputMode="numeric"
       />
     );
   }

@@ -8,13 +8,9 @@ export default component$(() => {
 
   return (
     <div class="date-input-container">
-      <DateInput.Root
-        class="date-input-root-col"
-        disabled={isDisabled.value}
-        date="1998-11-01"
-      >
+      <DateInput.Root class="date-input-root-col">
         <DateInput.Label>My date input</DateInput.Label>
-        <DateInput.DateEntry>
+        <DateInput.DateEntry disabled={isDisabled.value} date="1998-11-01">
           <DateInput.Month />
           <DateInput.Separator separator="/" />
           <DateInput.Day />

@@ -8,9 +8,9 @@ export default component$(() => {
 
   return (
     <div class="date-input-container">
-      <DateInput.Root class="date-input-root-col" bind:date={selectedDate}>
+      <DateInput.Root class="date-input-root-col">
         <DateInput.Label>Party like it's:</DateInput.Label>
-        <DateInput.DateEntry>
+        <DateInput.DateEntry bind:date={selectedDate}>
           <DateInput.Month />
           <DateInput.Separator separator="/" />
           <DateInput.Day />

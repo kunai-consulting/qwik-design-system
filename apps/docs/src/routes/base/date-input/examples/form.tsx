@@ -23,8 +23,8 @@ export default component$(() => {
           <DateInput.Day />
           <DateInput.Separator separator="/" />
           <DateInput.Year />
+          <DateInput.HiddenInput name="appointment-date" />
         </DateInput.DateEntry>
-        <DateInput.HiddenInput name="appointment-date" />
       </DateInput.Root>
       <div class="date-input-button-container">
         <button type="submit" class="submit-button">

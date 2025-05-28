@@ -4,7 +4,6 @@ import { isDev } from "@builder.io/qwik/build";
 import { RouterHead } from "./docs-widgets/router-head/router-head";
 
 import "./global.css";
-import { ModulePreload } from "./docs-widgets/module-preload/module-preload";
 
 export default component$(() => {
   /**
@@ -25,7 +24,6 @@ export default component$(() => {
       </head>
       <body lang="en">
         <RouterOutlet />
-        <ModulePreload />
         <script
           dangerouslySetInnerHTML={`
             window.addEventListener('initPagefind', async () => {
