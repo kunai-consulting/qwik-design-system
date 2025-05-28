@@ -25,9 +25,9 @@ export default component$(() => {
       ))}
 
       {isError.value && (
-        <RadioGroup.ErrorMessage class="radio-group-error-message">
+        <RadioGroup.Error class="radio-group-error-message">
           Please select an option
-        </RadioGroup.ErrorMessage>
+        </RadioGroup.Error>
       )}
     </RadioGroup.Root>
   );

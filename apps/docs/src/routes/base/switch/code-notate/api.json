@@ -197,7 +197,7 @@
       "description": "Additional descriptive text for the switch"
     },
     {
-      "name": "Switch.ErrorMessage",
+      "name": "Switch.Error",
       "description": "Error message displayed when the switch is in an error state"
     },
     {
@@ -225,7 +225,7 @@
     "WAI ARIA Switch design pattern",
     "Hidden native input for form integration",
     "Controlled and uncontrolled state management",
-    "Error state handling with aria-errormessage",
+    "Error state handling with aria-Error",
     "Support for required/disabled states",
     "Custom labels and descriptions with ARIA support",
     "Keyboard navigation (Space/Enter)",
@@ -243,7 +243,7 @@
         "aria-required",
         "aria-labelledby",
         "aria-describedby",
-        "aria-errormessage"
+        "aria-Error"
       ]
     },
     {

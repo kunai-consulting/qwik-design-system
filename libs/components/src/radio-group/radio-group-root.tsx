@@ -189,7 +189,7 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
       aria-invalid={computedIsError.value}
       aria-labelledby={`${localId}-label`}
       aria-describedby={props.isDescription ? `${localId}-description` : undefined}
-      aria-errormessage={computedIsError.value ? `${localId}-error` : undefined}
+      aria-Error={computedIsError.value ? `${localId}-error` : undefined}
       aria-orientation={props.orientation || "vertical"}
       onKeyDown$={[handleKeyDown$, props.onKeyDown$]}
     >

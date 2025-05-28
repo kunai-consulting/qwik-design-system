@@ -2,10 +2,10 @@ import { type PropsOf, Slot, component$, useContext, useTask$ } from "@builder.i
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { checkboxContextId } from "./checkbox-context";
-type PublicCheckboxErrorMessageProps = PropsOf<"div">;
+type PublicCheckboxErrorProps = PropsOf<"div">;
 /** A component that displays error messages for a checkbox */
-export const CheckboxErrorMessageBase = component$(
-  (props: PublicCheckboxErrorMessageProps) => {
+export const CheckboxErrorBase = component$(
+  (props: PublicCheckboxErrorProps) => {
     const context = useContext(checkboxContextId);
     const errorId = `${context.localId}-error`;
     useTask$(({ cleanup }) => {
@@ -23,4 +23,4 @@ export const CheckboxErrorMessageBase = component$(
   }
 );
 
-export const CheckboxErrorMessage = withAsChild(CheckboxErrorMessageBase);
+export const CheckboxError = withAsChild(CheckboxErrorBase);

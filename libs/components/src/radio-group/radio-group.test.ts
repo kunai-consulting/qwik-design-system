@@ -203,20 +203,20 @@ test.describe("Form Integration", () => {
 
     await page.getByText("Subscribe").click();
 
-    const errorMessage = d.getErrorMessage();
-    await expect(errorMessage).toBeVisible();
+    const Error = d.getError();
+    await expect(Error).toBeVisible();
   });
 
   test(`GIVEN a radio group in a form
           WHEN option is selected and form is submitted
           THEN should not show error message`, async ({ page }) => {
     const d = await setup(page, "form");
-    const errorMessage = d.getErrorMessage();
+    const Error = d.getError();
 
     const firstTrigger = d.getTriggerAt(0);
     await firstTrigger.click();
 
-    await expect(errorMessage).not.toBeVisible();
+    await expect(Error).not.toBeVisible();
   });
 });
 

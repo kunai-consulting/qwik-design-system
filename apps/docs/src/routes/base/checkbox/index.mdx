@@ -56,7 +56,7 @@ You can customize the submitted value using the `value` prop:
 
 #### Error Handling
 
-Display error messages using the `Checkbox.ErrorMessage` component. This automatically sets the appropriate ARIA attributes.
+Display error messages using the `Checkbox.Error` component. This automatically sets the appropriate ARIA attributes.
 
 <Showcase name="validation" />
 
@@ -201,7 +201,7 @@ The following props can be used to configure the form behavior:
 - `required`: Makes the checkbox a required form field
 <Showcase name="value" />
 ## Form Validation
-The Checkbox supports form validation through the `<Checkbox.ErrorMessage>` component. When rendered, it automatically puts the checkbox in an invalid state and connects it with the error message via ARIA.
+The Checkbox supports form validation through the `<Checkbox.Error>` component. When rendered, it automatically puts the checkbox in an invalid state and connects it with the error message via ARIA.
 <Showcase name="validation" />
 The error message is displayed when form validation fails, and the checkbox trigger receives the appropriate ARIA attributes:
 - `aria-invalid="true"`

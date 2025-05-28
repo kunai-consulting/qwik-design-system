@@ -37,7 +37,7 @@ Switches can be integrated into forms with validation and error handling.
 This example showcases:
 - Form integration with `name` and `value` props
 - Required field validation
-- Error message display using `ErrorMessage` component
+- Error message display using `Error` component
 - Error state handling with `hasError` prop
 - Hidden input management for form submission
 
@@ -76,7 +76,7 @@ And can be configured for form integration with the following props:
 #### Error State Management
 The Switch supports error state handling through:
 - The `hasError` prop to indicate an error state
-- The `ErrorMessage` component to display error messages
+- The `Error` component to display error messages
 - Proper ARIA attributes for accessibility
 
 As demonstrated in the Form Integration example, error states can be managed dynamically based on form validation or other conditions.
@@ -108,13 +108,13 @@ The Switch uses a compound component pattern with these required elements:
 
 Optional components include:
 - `Description`
-- `ErrorMessage`
+- `Error`
 - `HiddenInput`
 ### Technical Constraints
 - The `Trigger` component must be a direct child of `Root`
 - The `Thumb` component must be within the `Trigger`
 - Form integration requires the `HiddenInput` component
-- Error messages require both `hasError` prop and `ErrorMessage` component
+- Error messages require both `hasError` prop and `Error` component
 These constraints ensure proper functionality and accessibility compliance.
 
 

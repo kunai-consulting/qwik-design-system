@@ -80,8 +80,8 @@ test.describe("form validation", () => {
     await submitButton.click();
 
     await expect(d.getRoot()).toHaveAttribute("data-error", "");
-    await expect(d.getErrorMessage()).toBeVisible();
-    await expect(d.getErrorMessage()).toHaveText("This field is required");
+    await expect(d.getError()).toBeVisible();
+    await expect(d.getError()).toHaveText("This field is required");
   });
 
   test(`GIVEN a required Switch with error
@@ -91,10 +91,10 @@ test.describe("form validation", () => {
     const submitButton = page.locator('button[type="submit"]');
 
     await submitButton.click();
-    await expect(d.getErrorMessage()).toBeVisible();
+    await expect(d.getError()).toBeVisible();
 
     await d.getTrigger().click();
-    await expect(d.getErrorMessage()).not.toBeVisible();
+    await expect(d.getError()).not.toBeVisible();
   });
 });
 
@@ -106,8 +106,8 @@ test.describe("error message", () => {
     const submitButton = page.locator('button[type="submit"]');
 
     await submitButton.click();
-    const errorId = await d.getErrorMessage().getAttribute("id");
-    await expect(d.getRoot()).toHaveAttribute("aria-errormessage", String(errorId));
+    const errorId = await d.getError().getAttribute("id");
+    await expect(d.getRoot()).toHaveAttribute("aria-Error", String(errorId));
   });
 });
 

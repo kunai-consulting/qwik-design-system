@@ -3,9 +3,9 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 
-type PublicErrorMessageProps = PropsOf<"div">;
+type PublicErrorProps = PropsOf<"div">;
 
-export const RadioGroupErrorMessageBase = component$((props: PublicErrorMessageProps) => {
+export const RadioGroupErrorBase = component$((props: PublicErrorProps) => {
   const context = useContext(radioGroupContextId);
   const errorId = `${context.localId}-error`;
 
@@ -23,4 +23,4 @@ export const RadioGroupErrorMessageBase = component$((props: PublicErrorMessageP
   );
 });
 
-export const RadioGroupErrorMessage = withAsChild(RadioGroupErrorMessageBase);
+export const RadioGroupError = withAsChild(RadioGroupErrorBase);

@@ -22,7 +22,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator("[data-qds-checkbox-hidden-input]");
   };
 
-  const getErrorMessage = () => {
+  const getError = () => {
     return rootLocator.locator("[data-qds-checkbox-error-message]");
   };
 
@@ -34,6 +34,6 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getTrigger,
     getLabel,
     getHiddenInput,
-    getErrorMessage
+    getError
   };
 }
