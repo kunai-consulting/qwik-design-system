@@ -29,17 +29,17 @@ export default component$(() => {
           isError.value = false;
         }}
       >
-        <RadioGroup.Label>Subscription Plan</RadioGroup.Label>
+        <RadioGroup.ItemLabel>Subscription Plan</RadioGroup.ItemLabel>
         <RadioGroup.Description>
           Choose your preferred subscription plan
         </RadioGroup.Description>
 
         {items.map((item) => (
           <RadioGroup.Item value={item.value} key={item.value} class="radio-group-item">
-            <RadioGroup.Label>{item.label}</RadioGroup.Label>
-            <RadioGroup.Trigger class="radio-group-trigger">
-              <RadioGroup.Indicator class="radio-group-indicator" />
-            </RadioGroup.Trigger>
+            <RadioGroup.ItemLabel>{item.label}</RadioGroup.ItemLabel>
+            <RadioGroup.ItemTrigger class="radio-group-trigger">
+              <RadioGroup.ItemIndicator class="radio-group-indicator" />
+            </RadioGroup.ItemTrigger>
             <RadioGroup.HiddenInput />
           </RadioGroup.Item>
         ))}

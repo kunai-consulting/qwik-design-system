@@ -81,7 +81,7 @@ export const RadioGroupTriggerBase = component$((props: PublicTriggerProps) => {
   );
 });
 
-export const RadioGroupTrigger = withAsChild(RadioGroupTriggerBase, (props) => {
+export const RadioGroupItemTrigger = withAsChild(RadioGroupTriggerBase, (props) => {
   const nextIndex = getNextIndex("radioGroup");
   props._index = nextIndex;
   return props;

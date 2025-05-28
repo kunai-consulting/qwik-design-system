@@ -22,4 +22,4 @@ export const RadioGroupIndicatorBase = component$((props: PublicIndicatorProps) 
   );
 });
 
-export const RadioGroupIndicator = withAsChild(RadioGroupIndicatorBase);
+export const RadioGroupItemIndicator = withAsChild(RadioGroupIndicatorBase);
