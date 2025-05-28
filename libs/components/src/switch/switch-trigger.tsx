@@ -20,9 +20,9 @@ const SwitchTriggerBase = component$<PropsOf<"button">>((props) => {
   const triggerId = `${context.localId}-trigger`;
 
   const handleToggle$ = $(() => {
-    if (!context.disabled.value) {
-      context.checked.value = !context.checked.value;
-    }
+    if (context.disabled.value) return;
+
+    context.checked.value = !context.checked.value;
   });
 
   return (
