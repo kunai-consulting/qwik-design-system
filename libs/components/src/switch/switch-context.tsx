@@ -7,11 +7,7 @@ export interface SwitchContext {
   name?: Signal<string | undefined>;
   value?: Signal<string | undefined>;
   onChange$?: (checked: boolean) => void;
-  toggle$: () => void;
-  triggerId: string;
-  labelId: string;
-  descriptionId: string;
-  errorId: string;
+  localId: string;
   hasError?: boolean;
   hasErrorMessage: Signal<boolean>;
 }

@@ -7,12 +7,13 @@ import { switchContextId } from "./switch-context";
 const SwitchDescriptionBase = component$<PropsOf<"div">>((props) => {
   const { ...restProps } = props;
   const context = useContext(switchContextId);
+  const descriptionId = `${context.localId}-description`;
 
   return (
     <Render
       {...restProps}
       fallback="div"
-      id={context.descriptionId}
+      id={descriptionId}
       // The identifier for the switch description element
       data-qds-switch-description
       // Indicates whether the switch is currently checked

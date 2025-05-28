@@ -65,27 +65,10 @@ const SwitchRootBase = component$<PublicRootProps>((props) => {
     });
   });
 
-  // Prevent default behavior for Space and Enter keys at window level
-  useOnWindow(
-    "keydown",
-    sync$((event: KeyboardEvent) => {
-      const activeElement = document.activeElement;
-      const isWithinSwitch = activeElement?.closest("[data-qds-switch-trigger]");
-
-      if (!isWithinSwitch) return;
-
-      const preventKeys = [" ", "Enter"];
-      if (preventKeys.includes(event.key)) {
-        event.preventDefault();
-      }
-    })
-  );
-
-  const baseId = useId();
-  const triggerId = `${baseId}-trigger`;
-  const labelId = `${baseId}-label`;
-  const descriptionId = `${baseId}-description`;
-  const errorId = `${baseId}-error`;
+  const localId = useId();
+  const labelId = `${localId}-label`;
+  const descriptionId = `${localId}-description`;
+  const errorId = `${localId}-error`;
 
   const context: SwitchContext = {
     checked: checkedSig,
@@ -94,15 +77,7 @@ const SwitchRootBase = component$<PublicRootProps>((props) => {
     name: nameSig,
     value: valueSig,
     onChange$,
-    toggle$: $(() => {
-      if (!disabledSig.value) {
-        checkedSig.value = !checkedSig.value;
-      }
-    }),
-    triggerId,
-    labelId,
-    descriptionId,
-    errorId,
+    localId,
     hasErrorMessage: hasErrorMessageSig,
     hasError
   };
