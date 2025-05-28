@@ -35,7 +35,9 @@ export default component$(() => {
                 "h-9 w-10 border-2 text-center rounded data-[highlighted]:ring-qwik-blue-800 data-[highlighted]:ring-[3px] caret-blue-600"
               }
             >
-              <Otp.ItemIndicator class="text-blue-500 text-xl animate-blink-caret">|</Otp.ItemIndicator>
+              <Otp.ItemIndicator class="text-blue-500 text-xl animate-blink-caret">
+                |
+              </Otp.ItemIndicator>
             </Otp.Item>
           ))}
         </div>

@@ -42,9 +42,7 @@ export default component$(() => {
         </div>
 
         {hasError.value && (
-          <Switch.Error class="switch-error">
-            This field is required
-          </Switch.Error>
+          <Switch.Error class="switch-error">This field is required</Switch.Error>
         )}
       </Switch.Root>
 

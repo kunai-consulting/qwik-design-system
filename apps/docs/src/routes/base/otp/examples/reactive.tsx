@@ -31,7 +31,9 @@ export default component$(() => {
                   "h-9 w-10 border-2 text-center data-[highlighted]:border-blue-600 rounded data-[highlighted]:ring-blue-100  data-[highlighted]:ring-[3px] data-[highlighted]:pl-1 data-[highlighted]:pr-1 caret-blue-600"
                 }
               >
-                <Otp.ItemIndicator class="text-blue-500 text-xl animate-blink-caret">|</Otp.ItemIndicator>
+                <Otp.ItemIndicator class="text-blue-500 text-xl animate-blink-caret">
+                  |
+                </Otp.ItemIndicator>
               </Otp.Item>
             );
           })}
