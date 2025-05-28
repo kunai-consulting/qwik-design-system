@@ -27,7 +27,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   };
 
   const getError = () => {
-    return rootLocator.locator("[data-qds-radio-group-error-message]");
+    return rootLocator.locator("[data-qds-radio-group-error]");
   };
 
   const getDescription = () => {

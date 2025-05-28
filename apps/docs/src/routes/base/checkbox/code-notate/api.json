@@ -11,7 +11,7 @@
       }
     },
     {
-      "Checkbox Error Message": {
+      "Checkbox Error": {
         "types": [
           {
             "PublicCheckboxErrorProps": []

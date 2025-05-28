@@ -146,11 +146,11 @@
       }
     },
     {
-      "Switch Error Message": {
+      "Switch Error": {
         "inheritsFrom": "div",
         "dataAttributes": [
           {
-            "name": "data-qds-switch-error-message",
+            "name": "data-qds-switch-error",
             "type": "boolean",
             "comment": "Present on the error message element"
           }

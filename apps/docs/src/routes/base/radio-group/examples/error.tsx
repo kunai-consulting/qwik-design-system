@@ -25,7 +25,7 @@ export default component$(() => {
       ))}
 
       {isError.value && (
-        <RadioGroup.Error class="radio-group-error-message">
+        <RadioGroup.Error class="radio-group-error">
           Please select an option
         </RadioGroup.Error>
       )}

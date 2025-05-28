@@ -16,7 +16,7 @@ export const CheckboxErrorBase = component$(
     });
     return (
       // Identifier for the checkbox error message element
-      <Render fallback="div" id={errorId} data-qds-checkbox-error-message {...props}>
+      <Render fallback="div" id={errorId} data-qds-checkbox-error {...props}>
         <Slot />
       </Render>
     );

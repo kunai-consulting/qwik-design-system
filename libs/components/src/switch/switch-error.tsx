@@ -30,7 +30,7 @@ const SwitchErrorBase = component$<PropsOf<"div">>((props) => {
       id={errorId}
       role="alert"
       // The identifier for the switch error message element
-      data-qds-switch-error-message
+      data-qds-switch-error
       // Controls the visibility of the error message
       data-visible={context.hasError}
       aria-hidden={!context.hasError}

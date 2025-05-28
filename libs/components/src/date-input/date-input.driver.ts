@@ -39,7 +39,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   };
 
   const getError = () => {
-    return rootLocator.locator("[data-qds-date-input-error-message]");
+    return rootLocator.locator("[data-qds-date-input-error]");
   };
 
   const getSubmitButton = () => {

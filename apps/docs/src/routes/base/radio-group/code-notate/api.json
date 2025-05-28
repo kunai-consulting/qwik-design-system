@@ -6,7 +6,7 @@
       }
     },
     {
-      "Radio Group Error Message": {
+      "Radio Group Error": {
         "inheritsFrom": "div",
         "dataAttributes": [
           {
