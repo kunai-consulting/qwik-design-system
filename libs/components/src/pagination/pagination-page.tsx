@@ -17,7 +17,7 @@ type PublicPaginationPageProps = {
   isDisabled?: boolean;
 };
 /** Individual page number button component */
-export const PaginationPage = component$(
+export const PaginationItem = component$(
   <C extends PublicAllowedElements = "button">(
     props: QwikIntrinsicElements[C] & {
       as?: C;

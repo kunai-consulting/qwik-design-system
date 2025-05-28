@@ -20,9 +20,9 @@ export default component$(() => {
       >
         <Pagination.Previous class="pagination-previous">Previous</Pagination.Previous>
         {paginationItems.map((item) => (
-          <Pagination.Page class="pagination-page" key={`sibling-1-page-${item}`}>
+          <Pagination.Item class="pagination-page" key={`sibling-1-page-${item}`}>
             {item}
-          </Pagination.Page>
+          </Pagination.Item>
         ))}
         <Pagination.Next class="pagination-next">Next</Pagination.Next>
       </Pagination.Root>
@@ -39,9 +39,9 @@ export default component$(() => {
       >
         <Pagination.Previous class="pagination-previous">Previous</Pagination.Previous>
         {paginationItems.map((item) => (
-          <Pagination.Page class="pagination-page" key={`sibling-2-page-${item}`}>
+          <Pagination.Item class="pagination-page" key={`sibling-2-page-${item}`}>
             {item}
-          </Pagination.Page>
+          </Pagination.Item>
         ))}
         <Pagination.Next class="pagination-next">Next</Pagination.Next>
       </Pagination.Root>
