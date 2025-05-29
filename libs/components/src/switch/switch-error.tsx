@@ -4,7 +4,7 @@ import { Render } from "../render/render";
 import { switchContextId } from "./switch-context";
 
 /** Error message component that displays when the switch is in an error state */
-const SwitchErrorMessageBase = component$<PropsOf<"div">>((props) => {
+const SwitchErrorBase = component$<PropsOf<"div">>((props) => {
   const { ...restProps } = props;
   const context = useContext(switchContextId);
 
@@ -30,7 +30,7 @@ const SwitchErrorMessageBase = component$<PropsOf<"div">>((props) => {
       id={errorId}
       role="alert"
       // The identifier for the switch error message element
-      data-qds-switch-error-message
+      data-qds-switch-error
       // Controls the visibility of the error message
       data-visible={context.hasError}
       aria-hidden={!context.hasError}
@@ -40,4 +40,4 @@ const SwitchErrorMessageBase = component$<PropsOf<"div">>((props) => {
   );
 });
 
-export const SwitchErrorMessage = withAsChild(SwitchErrorMessageBase);
+export const SwitchError = withAsChild(SwitchErrorBase);

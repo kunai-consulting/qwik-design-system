@@ -9,7 +9,7 @@
     display: none;
   }
 
-  [data-qds-radio-group-error-message][data-visible="false"] {
+  [data-qds-radio-group-error][data-visible="false"] {
     display: none;
   }
 }

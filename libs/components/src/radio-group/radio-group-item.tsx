@@ -23,6 +23,7 @@ export const radioGroupItemContextId = createContextId<RadioGroupItemContext>(
 type RadioGroupItemContext = {
   isSelectedSig: Signal<boolean>;
   itemValue: string;
+  itemId: string;
 };
 
 export const RadioGroupItemBase = component$((props: PublicItemProps) => {
@@ -35,7 +36,8 @@ export const RadioGroupItemBase = component$((props: PublicItemProps) => {
 
   const itemContext: RadioGroupItemContext = {
     isSelectedSig,
-    itemValue: props.value
+    itemValue: props.value,
+    itemId
   };
 
   useContextProvider(radioGroupItemContextId, itemContext);

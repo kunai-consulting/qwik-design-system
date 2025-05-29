@@ -5,7 +5,7 @@ import { radioGroupItemContextId } from "./radio-group-item";
 
 type PublicIndicatorProps = PropsOf<"span">;
 
-export const RadioGroupIndicatorBase = component$((props: PublicIndicatorProps) => {
+const ItemIndicatorBase = component$((props: PublicIndicatorProps) => {
   const itemContext = useContext(radioGroupItemContextId);
 
   return (
@@ -22,4 +22,4 @@ export const RadioGroupIndicatorBase = component$((props: PublicIndicatorProps) 
   );
 });
 
-export const RadioGroupIndicator = withAsChild(RadioGroupIndicatorBase);
+export const RadioGroupItemIndicator = withAsChild(ItemIndicatorBase);

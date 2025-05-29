@@ -3,7 +3,7 @@
   gap: 10px;
 }
 
-.pagination-page {
+.pagination-item {
   border-width: 1px;
   width: 44px;
   height: 44px;
@@ -13,13 +13,13 @@
   cursor: pointer;
 }
 
-.pagination-page[data-current] {
+.pagination-item[data-current] {
   background-color: #006da4;
   color: white;
   border-color: #006da4; /* It is applied here */
 }
 
-.pagination-page:disabled {
+.pagination-item:disabled {
   cursor: default;
 }
 

@@ -36,18 +36,18 @@ export default component$(() => {
 
         {items.map((item) => (
           <RadioGroup.Item value={item.value} key={item.value} class="radio-group-item">
-            <RadioGroup.Label>{item.label}</RadioGroup.Label>
-            <RadioGroup.Trigger class="radio-group-trigger">
-              <RadioGroup.Indicator class="radio-group-indicator" />
-            </RadioGroup.Trigger>
+            <RadioGroup.ItemLabel>{item.label}</RadioGroup.ItemLabel>
+            <RadioGroup.ItemTrigger class="radio-group-trigger">
+              <RadioGroup.ItemIndicator class="radio-group-indicator" />
+            </RadioGroup.ItemTrigger>
             <RadioGroup.HiddenInput />
           </RadioGroup.Item>
         ))}
 
         {isError.value && (
-          <RadioGroup.ErrorMessage class="radio-group-error-message">
+          <RadioGroup.Error class="radio-group-error">
             Please select a subscription plan
-          </RadioGroup.ErrorMessage>
+          </RadioGroup.Error>
         )}
       </RadioGroup.Root>
 
