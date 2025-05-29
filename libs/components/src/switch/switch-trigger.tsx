@@ -15,11 +15,14 @@ const SwitchTriggerBase = component$<PropsOf<"button">>((props) => {
   const { ...restProps } = props;
   const context = useContext(switchContextId);
   const triggerRef = useSignal<HTMLButtonElement>();
+  const labelId = `${context.localId}-label`;
+  const descriptionId = `${context.localId}-description`;
+  const triggerId = `${context.localId}-trigger`;
 
-  const handleKeyDown$ = $((event: KeyboardEvent) => {
-    if (event.key === " " || event.key === "Enter") {
-      context.toggle$();
-    }
+  const handleToggle$ = $(() => {
+    if (context.disabled.value) return;
+
+    context.checked.value = !context.checked.value;
   });
 
   return (
@@ -27,7 +30,7 @@ const SwitchTriggerBase = component$<PropsOf<"button">>((props) => {
       {...restProps}
       fallback="button"
       internalRef={triggerRef}
-      id={context.triggerId}
+      id={triggerId}
       type="button"
       disabled={context.disabled.value}
       data-qds-switch-trigger
@@ -35,10 +38,9 @@ const SwitchTriggerBase = component$<PropsOf<"button">>((props) => {
       data-checked={context.checked.value}
       // Indicates whether the switch is currently disabled
       data-disabled={context.disabled.value ? "" : undefined}
-      onClick$={[context.toggle$, props.onClick$]}
-      onKeyDown$={[handleKeyDown$, props.onKeyDown$]}
-      aria-labelledby={context.labelId}
-      aria-describedby={context.descriptionId}
+      onClick$={[handleToggle$, props.onClick$]}
+      aria-labelledby={labelId}
+      aria-describedby={descriptionId}
       aria-invalid={context.hasErrorMessage.value}
     >
       <Slot />

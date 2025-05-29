@@ -17,7 +17,6 @@ export const useRandomInterval = (
       const handleTick = () => {
         const nextTickAt = random(minDelay, maxDelay);
         timeoutId.value = window.setTimeout(() => {
-          console.log("timeoutId", timeoutId.value);
           callback();
           handleTick();
         }, nextTickAt);

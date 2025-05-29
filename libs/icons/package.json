@@ -1,6 +1,6 @@
 {
   "name": "@kunai-consulting/qwik-icons",
-  "version": "0.0.12",
+  "version": "0.1.0",
   "description": "Create a Qwik library",
   "main": "./lib/index.qwik.mjs",
   "qwik": "./lib/index.qwik.mjs",
@@ -25,7 +25,7 @@
     "sample-icons": "ICON_LIMIT=10 tsx ./src/generate/generate-icons.ts"
   },
   "devDependencies": {
-    "@builder.io/qwik": "1.13.0",
+    "@builder.io/qwik": "^1.14.1",
     "@iconify/json": "^2.2.326",
     "@iconify/types": "^2.0.0",
     "@iconify/utils": "^2.3.0",

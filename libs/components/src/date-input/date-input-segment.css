@@ -1,0 +1,12 @@
+@layer qds {
+  input[data-qds-date-input-segment] {
+    border: none;
+    padding: 0 1px;
+    caret-color: transparent;
+    field-sizing: content;
+  }
+
+  input[data-qds-date-input-segment]::placeholder {
+    text-align: center;
+  }
+}

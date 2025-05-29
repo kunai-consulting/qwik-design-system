@@ -7,7 +7,7 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import { Carousel } from "@qwik-ui/headless";
+import { Tabs } from "@kunai-consulting/qwik";
 import { metaGlobComponents, rawComponents } from "~/utils/component-import";
 
 import { useLocation } from "@builder.io/qwik-city";
@@ -47,38 +47,38 @@ export const Showcase = component$<ShowcaseProps>(({ name, ...props }) => {
   });
 
   return (
-    <Carousel.Root class="my-4 border-neutral-primary border">
-      <Carousel.Pagination data-pagefind-ignore class="flex bg-neutral-accent">
-        <Carousel.Bullet class="data-[active]:bg-qwik-blue-800 data-[active]:!text-[#fff] p-2 hover:bg-qwik-blue-200 hover:text-qwik-neutral-700 transition-colors outline-qwik-blue-500">
+    <Tabs.Root class="my-4 border-neutral-primary border">
+      <Tabs.List data-pagefind-ignore class="flex bg-neutral-accent">
+        <Tabs.Trigger class="data-selected:bg-qwik-blue-800 data-selected:!text-[#fff] p-2 hover:bg-qwik-blue-200 hover:text-qwik-neutral-700 transition-colors outline-qwik-blue-500">
           Preview
-        </Carousel.Bullet>
-        <Carousel.Bullet class="data-[active]:bg-qwik-blue-800 data-[active]:!text-[#fff] p-2 hover:bg-qwik-blue-200 hover:text-qwik-neutral-700 transition-colors outline-qwik-blue-500">
+        </Tabs.Trigger>
+        <Tabs.Trigger class="data-selected:bg-qwik-blue-800 data-selected:!text-[#fff] p-2 hover:bg-qwik-blue-200 hover:text-qwik-neutral-700 transition-colors outline-qwik-blue-500">
           Code
-        </Carousel.Bullet>
-        <Carousel.Bullet
+        </Tabs.Trigger>
+        <Tabs.Trigger
           onClick$={openStackblitz$}
-          class="data-[active]:bg-qwik-blue-800 data-[active]:!text-[#fff] p-2 hover:bg-qwik-blue-200 hover:text-qwik-neutral-700 transition-colors outline-qwik-blue-500"
+          class="data-selected:bg-qwik-blue-800 data-selected:!text-[#fff] p-2 hover:bg-qwik-blue-200 hover:text-qwik-neutral-700 transition-colors outline-qwik-blue-500"
         >
           New Project
-        </Carousel.Bullet>
-      </Carousel.Pagination>
+        </Tabs.Trigger>
+      </Tabs.List>
 
-      <Carousel.Slide class="border border-neutral-primary">
+      <Tabs.Content class="border border-neutral-primary">
         <section class={"flex flex-col items-center py-12 px-6 *:flex-wrap"}>
           {MetaGlobComponentSig.value && <MetaGlobComponentSig.value />}
         </section>
-      </Carousel.Slide>
-      <Carousel.Slide class="border border-neutral-primary overflow-clip text-sm">
+      </Tabs.Content>
+      <Tabs.Content class="border border-neutral-primary overflow-clip text-sm">
         <Highlight code={componentCodeSig.value || ""} />
-      </Carousel.Slide>
-      <Carousel.Slide class="border border-neutral-primary overflow-clip text-sm">
+      </Tabs.Content>
+      <Tabs.Content class="border border-neutral-primary overflow-clip text-sm">
         <section
           id={stackblitzParentContainerId}
           class={"flex flex-col items-center *:flex-wrap"}
         >
           <div id={stackblitzContainerId} />
         </section>
-      </Carousel.Slide>
-    </Carousel.Root>
+      </Tabs.Content>
+    </Tabs.Root>
   );
 });
