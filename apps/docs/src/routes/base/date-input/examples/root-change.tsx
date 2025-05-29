@@ -51,23 +51,23 @@ export default component$(() => {
       <DateInput.Root onChange$={handleChange$}>
         <DateInput.Label>Two guesses</DateInput.Label>
         <div class="date-input-date-range">
-          <DateInput.DateEntry data-first-entry>
+          <DateInput.Entry data-first-entry>
             <DateInput.Year />
             <DateInput.Separator separator="-" />
             <DateInput.Month showLeadingZero={true} />
             <DateInput.Separator separator="-" />
             <DateInput.Day showLeadingZero={true} />
-          </DateInput.DateEntry>
+          </DateInput.Entry>
 
           <DateInput.Separator separator="||" />
 
-          <DateInput.DateEntry data-second-entry>
+          <DateInput.Entry data-second-entry>
             <DateInput.Year />
             <DateInput.Separator separator="-" />
             <DateInput.Month showLeadingZero={true} />
             <DateInput.Separator separator="-" />
             <DateInput.Day showLeadingZero={true} />
-          </DateInput.DateEntry>
+          </DateInput.Entry>
         </div>
       </DateInput.Root>
 

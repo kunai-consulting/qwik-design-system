@@ -20,23 +20,23 @@ export default component$(() => {
       <DateInput.Root>
         <DateInput.Label>Travel dates</DateInput.Label>
         <div class="date-input-date-range">
-          <DateInput.DateEntry bind:date={departureDate} data-range-start-entry>
+          <DateInput.Entry bind:date={departureDate} data-range-start-entry>
             <DateInput.Year />
             <DateInput.Separator separator="-" />
             <DateInput.Month showLeadingZero={true} />
             <DateInput.Separator separator="-" />
             <DateInput.Day showLeadingZero={true} />
             <DateInput.HiddenInput name="departure-date" />
-          </DateInput.DateEntry>
+          </DateInput.Entry>
           <DateInput.Separator separator="to" />
-          <DateInput.DateEntry bind:date={returnDate} data-range-end-entry>
+          <DateInput.Entry bind:date={returnDate} data-range-end-entry>
             <DateInput.Year />
             <DateInput.Separator separator="-" />
             <DateInput.Month showLeadingZero={true} />
             <DateInput.Separator separator="-" />
             <DateInput.Day showLeadingZero={true} />
             <DateInput.HiddenInput name="return-date" />
-          </DateInput.DateEntry>
+          </DateInput.Entry>
         </div>
       </DateInput.Root>
 

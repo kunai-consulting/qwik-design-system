@@ -94,7 +94,10 @@ test.describe("Form integration", () => {
     await d.getYearSegment().fill("2022");
     await d.getMonthSegment().fill("02");
     await d.getDaySegment().fill("14");
+
+    await page.waitForTimeout(100); // allow time for the date value to be updated on the hidden input
     await d.getSubmitButton().click();
+
     const submittedData = d.getSubmittedData();
     await expect(submittedData).toBeVisible();
     await expect(submittedData).toHaveText(

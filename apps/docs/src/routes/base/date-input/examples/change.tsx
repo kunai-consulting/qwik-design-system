@@ -15,13 +15,13 @@ export default component$(() => {
     <div class="date-input-container">
       <DateInput.Root class="date-input-root-col">
         <DateInput.Label>My date input</DateInput.Label>
-        <DateInput.DateEntry onChange$={handleChange$}>
+        <DateInput.Entry onChange$={handleChange$}>
           <DateInput.Month />
           <DateInput.Separator separator="/" />
           <DateInput.Day />
           <DateInput.Separator separator="/" />
           <DateInput.Year />
-        </DateInput.DateEntry>
+        </DateInput.Entry>
       </DateInput.Root>
 
       <div>

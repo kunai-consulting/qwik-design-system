@@ -11,7 +11,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   };
 
   const getDateEntry = () => {
-    return rootLocator.locator("[data-qds-date-input-date-entry]");
+    return rootLocator.locator("[data-qds-date-input-entry]");
   };
 
   const getSegments = () => {
@@ -68,13 +68,13 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
 
   const getFirstEntry = () => {
     return rootLocator.locator(
-      '[data-qds-date-input-date-entry][data-qds-date-input-date-entry-index="0"]'
+      '[data-qds-date-input-entry][data-qds-date-input-entry-index="0"]'
     );
   };
 
   const getSecondEntry = () => {
     return rootLocator.locator(
-      '[data-qds-date-input-date-entry][data-qds-date-input-date-entry-index="1"]'
+      '[data-qds-date-input-entry][data-qds-date-input-entry-index="1"]'
     );
   };
 

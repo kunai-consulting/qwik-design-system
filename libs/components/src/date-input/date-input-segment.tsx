@@ -12,7 +12,7 @@ import type { Signal } from "@builder.io/qwik";
 import type { DayOfMonth, Month } from "../calendar/types";
 import { MAX_DAY } from "./constants";
 import { dateInputContextId } from "./date-input-context";
-import { dateInputDateEntryContextId } from "./date-input-date-entry-context";
+import { dateInputEntryContextId } from "./date-input-entry-context";
 import styles from "./date-input-segment.css?inline";
 import type { DateSegment, DateSegmentType } from "./types";
 import type { PublicDateInputSegmentProps } from "./types";
@@ -33,7 +33,7 @@ export const DateInputSegment = component$(
     ...otherProps
   }: DateInputSegmentProps) => {
     const rootContext = useContext(dateInputContextId);
-    const context = useContext(dateInputDateEntryContextId);
+    const context = useContext(dateInputEntryContextId);
     const inputId = `${context.entryId}-segment-${segmentSig.value.type}`;
     const index = _index ?? -1;
     const inputRef = useSignal<HTMLInputElement>();

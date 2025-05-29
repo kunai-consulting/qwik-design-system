@@ -16,7 +16,7 @@ The Date Input component provides a structured way to enter dates with separate 
 In this example:
 - `<DateInput.Root>` serves as the container and handles overall state
 - `<DateInput.Label>` provides an accessible label for the input
-- `<DateInput.DateEntry>` groups the segments for proper accessibility and handles input, output, and state for an individual date value 
+- `<DateInput.Entry>` groups the segments for proper accessibility and handles input, output, and state for an individual date value
 - `<DateInput.Year>`, `<DateInput.Month>`, and `<DateInput.Day>` are the individual input segments
 - `<DateInput.Separator>` visually separates the segments
 - `<DateInput.HiddenInput>` provides a hidden native input for form submission
@@ -138,13 +138,13 @@ This is demonstrated in both the Reactive and Value-Based examples, where a butt
 The Date Input component allows you to customize the date format by arranging the segments in any order and using different separators. This flexibility enables you to create date formats that match regional preferences or specific application requirements.
 As shown in the Format example above, you can create a European-style date format (DD.MM.YYYY) by arranging the segments in day-month-year order and using dots as separators:
 ```tsx
-<DateInput.DateEntry>
+<DateInput.Entry>
   <DateInput.Day showLeadingZero={true} />
   <DateInput.Separator separator="." />
   <DateInput.Month showLeadingZero={true} />
   <DateInput.Separator separator="." />
   <DateInput.Year />
-</DateInput.DateEntry>
+</DateInput.Entry>
 ```
 The component supports various date formats including:
 - American format (MM/DD/YYYY) as shown in the first example
@@ -179,9 +179,9 @@ The default placeholder values are:
 - "yyyy" for the year segment
 
 ### Multiple dates
-The Date Input can be composed with multiple `<DateInput.DateEntry>` components to create a multi-date input.
+The Date Input can be composed with multiple `<DateInput.Entry>` components to create a multi-date input.
 You could use multiple `<DateInput.Root>` components, but if you have multiple dates that are related, with a single label, 
-you can use a single `<DateInput.Root>` component with multiple `<DateInput.DateEntry>` components, 
+you can use a single `<DateInput.Root>` component with multiple `<DateInput.Entry>` components,
 as in the following Date Range example:
 
 <Showcase name="date-range" />
@@ -213,14 +213,14 @@ As shown in the Basic example, the component handles focus management automatica
 The Date Input component provides seamless integration with forms through the `<DateInput.HiddenInput>` component.
 
 ### Basic Form Integration
-To use the Date Input in a form, include the `<DateInput.HiddenInput>` component within the `<DateInput.DateEntry>` component.
+To use the Date Input in a form, include the `<DateInput.HiddenInput>` component within the `<DateInput.Entry>` component.
 ```tsx
 <DateInput.Root>
   {/* ... */}
-  <DateInput.DateEntry>
+  <DateInput.Entry>
     {/* ... date segments ... */}
     <DateInput.HiddenInput name="appointment-date" />
-  </DateInput.DateEntry>
+  </DateInput.Entry>
 </DateInput.Root>
 ```
 This creates a hidden native input field that will be included in the form data when the form is submitted.
@@ -230,7 +230,7 @@ In this example:
 - The Date Input's value is automatically included in form submissions
 - The submitted data is displayed after form submission, showing the date in ISO format (YYYY-MM-DD)
 
-Note that the `<DateInput.HiddenInput>` must be slotted within a `<DateInput.DateEntry>` component in order to properly access the date value from the entry's context.
+Note that the `<DateInput.HiddenInput>` must be slotted within a `<DateInput.Entry>` component in order to properly access the date value from the entry's context.
 
 ### Required Fields
 The `required` attribute can be applied to make the date field mandatory in form submissions:
@@ -256,10 +256,10 @@ For more control over form submission, you can combine the Date Input with custo
 >
   <DateInput.Root>
     {/* ... */}
-    <DateInput.DateEntry>
+    <DateInput.Entry>
       {/* ... date segments ... */}
       <DateInput.HiddenInput name="date-field" />
-    </DateInput.DateEntry>
+    </DateInput.Entry>
   </DateInput.Root>
   <button type="submit">Submit</button>
 </form>
