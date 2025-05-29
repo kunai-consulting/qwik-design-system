@@ -1,7 +1,10 @@
-import { component$, useSignal } from "@builder.io/qwik";
+import { component$, useSignal, useStyles$ } from "@builder.io/qwik";
 import { Pagination } from "@kunai-consulting/qwik";
+import styles from "./pagination.css?inline";
 
 export default component$(() => {
+  useStyles$(styles);
+
   // Examples for first page and last page
   const firstPageSig = useSignal(1);
   const lastPageSig = useSignal(5);

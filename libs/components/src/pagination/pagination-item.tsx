@@ -8,6 +8,8 @@ import {
   useTask$
 } from "@builder.io/qwik";
 import type { QwikIntrinsicElements } from "@builder.io/qwik";
+import { getNextIndex } from "@kunai-consulting/qwik-utils";
+import { withAsChild } from "../as-child/as-child";
 import { paginationContextId } from "./pagination-context";
 type PublicAllowedElements = "button" | "a" | "div" | "span";
 type PublicPaginationPageProps = {
@@ -17,7 +19,7 @@ type PublicPaginationPageProps = {
   isDisabled?: boolean;
 };
 /** Individual page number button component */
-export const PaginationItem = component$(
+export const PaginationItemBase = component$(
   <C extends PublicAllowedElements = "button">(
     props: QwikIntrinsicElements[C] & {
       as?: C;
@@ -115,3 +117,10 @@ export const PaginationItem = component$(
     );
   }
 );
+
+export const PaginationItem = withAsChild(PaginationItemBase, (props) => {
+  const index = getNextIndex("pagination");
+  props._index = index;
+
+  return props;
+});

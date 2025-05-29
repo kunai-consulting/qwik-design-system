@@ -10,13 +10,9 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import {
-  findComponent,
-  processChildren,
-  useBoundSignal
-} from "@kunai-consulting/qwik-utils";
+import { resetIndexes, useBoundSignal } from "@kunai-consulting/qwik-utils";
+import { withAsChild } from "../as-child/as-child";
 import { type PaginationContext, paginationContextId } from "./pagination-context";
-import { PaginationItem } from "./pagination-item";
 import { getPaginationItems } from "./utils";
 export type PublicPaginationRootProps = PropsOf<"div"> & {
   /** The total number of pages to display */
@@ -36,18 +32,7 @@ export type PublicPaginationRootProps = PropsOf<"div"> & {
   /** Number of siblings to show on each side of current page */
   siblingCount?: number;
 };
-export const PaginationRoot = (props: PublicPaginationRootProps) => {
-  let currPageIndex = 0;
 
-  findComponent(PaginationItem, (pageProps) => {
-    pageProps._index = currPageIndex;
-    currPageIndex++;
-  });
-
-  processChildren(props.children);
-
-  return <PaginationBase {...props}>{props.children}</PaginationBase>;
-};
 /** Root pagination container component that provides context and handles page management */
 export const PaginationBase = component$((props: PublicPaginationRootProps) => {
   const {
@@ -111,4 +96,10 @@ export const PaginationBase = component$((props: PublicPaginationRootProps) => {
       <Slot />
     </div>
   );
+});
+
+export const PaginationRoot = withAsChild(PaginationBase, (props) => {
+  resetIndexes("pagination");
+
+  return props;
 });
