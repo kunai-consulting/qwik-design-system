@@ -29,7 +29,7 @@ export default component$(() => {
           isError.value = false;
         }}
       >
-        <RadioGroup.ItemLabel>Subscription Plan</RadioGroup.ItemLabel>
+        <RadioGroup.Label>Subscription Plan</RadioGroup.Label>
         <RadioGroup.Description>
           Choose your preferred subscription plan
         </RadioGroup.Description>

@@ -15,7 +15,7 @@ export default component$(() => {
       </button>
 
       <RadioGroup.Root class="radio-group-root" disabled={isGroupDisabled.value}>
-        <RadioGroup.ItemLabel>Choose option</RadioGroup.ItemLabel>
+        <RadioGroup.Label>Choose option</RadioGroup.Label>
 
         <RadioGroup.Item value="option1" class="radio-group-item">
           <RadioGroup.ItemLabel>Option 1</RadioGroup.ItemLabel>

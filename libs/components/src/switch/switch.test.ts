@@ -107,7 +107,7 @@ test.describe("error message", () => {
 
     await submitButton.click();
     const errorId = await d.getError().getAttribute("id");
-    await expect(d.getRoot()).toHaveAttribute("aria-Error", String(errorId));
+    await expect(d.getRoot()).toHaveAttribute("aria-errormessage", String(errorId));
   });
 });
 

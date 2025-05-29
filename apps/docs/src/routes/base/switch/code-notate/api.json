@@ -225,7 +225,7 @@
     "WAI ARIA Switch design pattern",
     "Hidden native input for form integration",
     "Controlled and uncontrolled state management",
-    "Error state handling with aria-Error",
+    "Error state handling with aria-errormessage",
     "Support for required/disabled states",
     "Custom labels and descriptions with ARIA support",
     "Keyboard navigation (Space/Enter)",
@@ -243,7 +243,7 @@
         "aria-required",
         "aria-labelledby",
         "aria-describedby",
-        "aria-Error"
+        "aria-errormessage"
       ]
     },
     {

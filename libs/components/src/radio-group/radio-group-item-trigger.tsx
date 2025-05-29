@@ -18,12 +18,13 @@ type PublicTriggerProps = PropsOf<"button"> & {
   _index?: number;
 };
 
-export const RadioGroupTriggerBase = component$((props: PublicTriggerProps) => {
+const TriggerBase = component$((props: PublicTriggerProps) => {
   const context = useContext(radioGroupContextId);
   const itemContext = useContext(radioGroupItemContextId);
   const triggerRef = useSignal<HTMLElement>();
   const { _index, ...restProps } = props;
   const value = itemContext.itemValue;
+  const itemLabelId = `${itemContext.itemId}-label`;
 
   useTask$(function getIndexOrder() {
     if (_index === undefined) {
@@ -75,13 +76,14 @@ export const RadioGroupTriggerBase = component$((props: PublicTriggerProps) => {
       onKeyDown$={[handleKeyDown$, props.onKeyDown$]}
       disabled={isDisabledSig.value}
       tabIndex={tabIndexSig.value}
+      aria-labelledby={itemLabelId}
     >
       <Slot />
     </Render>
   );
 });
 
-export const RadioGroupItemTrigger = withAsChild(RadioGroupTriggerBase, (props) => {
+export const RadioGroupItemTrigger = withAsChild(TriggerBase, (props) => {
   const nextIndex = getNextIndex("radioGroup");
   props._index = nextIndex;
   return props;

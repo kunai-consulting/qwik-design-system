@@ -16,4 +16,4 @@ export const RadioGroupLabelBase = component$((props: PublicLabelProps) => {
   );
 });
 
-export const RadioGroupItemLabel = withAsChild(RadioGroupLabelBase);
+export const RadioGroupLabel = withAsChild(RadioGroupLabelBase);

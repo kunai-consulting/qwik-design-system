@@ -4,7 +4,7 @@ import { RadioGroup } from "@kunai-consulting/qwik";
 export default component$(() => {
   return (
     <RadioGroup.Root orientation="horizontal" class="radio-group-root">
-      <RadioGroup.ItemLabel>Size</RadioGroup.ItemLabel>
+      <RadioGroup.Label>Size</RadioGroup.Label>
 
       {["S", "M", "L", "XL"].map((size) => (
         <RadioGroup.Item value={size} key={size} class="radio-group-item">

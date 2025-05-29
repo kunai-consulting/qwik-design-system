@@ -6,7 +6,7 @@ export default component$(() => {
   useStyles$(styles);
   return (
     <RadioGroup.Root class="radio-group-root">
-      <RadioGroup.ItemLabel>Choose option</RadioGroup.ItemLabel>
+      <RadioGroup.Label>Choose option</RadioGroup.Label>
 
       {["Option 1", "Option 2"].map((value) => (
         <RadioGroup.Item value={value} key={value} class="radio-group-item">
