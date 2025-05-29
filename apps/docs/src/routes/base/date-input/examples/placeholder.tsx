@@ -8,9 +8,9 @@ export default component$(() => {
       <DateInput.Label>Enter your date of birth:</DateInput.Label>
       <DateInput.Entry>
         <DateInput.Month placeholder="Month" />
-        <DateInput.Separator separator="/" />
+        <span>/</span>
         <DateInput.Day placeholder="Day" />
-        <DateInput.Separator separator="/" />
+        <span>/</span>
         <DateInput.Year placeholder="Year" />
       </DateInput.Entry>
     </DateInput.Root>

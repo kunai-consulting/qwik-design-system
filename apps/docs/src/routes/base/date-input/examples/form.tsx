@@ -17,11 +17,9 @@ export default component$(() => {
     >
       <DateInput.Root>
         <DateInput.Label>Appointment Date</DateInput.Label>
-        <DateInput.Entry>
+        <DateInput.Entry separator="/">
           <DateInput.Month />
-          <DateInput.Separator separator="/" />
           <DateInput.Day />
-          <DateInput.Separator separator="/" />
           <DateInput.Year />
           <DateInput.HiddenInput name="appointment-date" />
         </DateInput.Entry>

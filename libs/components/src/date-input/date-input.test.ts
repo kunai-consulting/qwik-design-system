@@ -28,7 +28,7 @@ test.describe("Label", () => {
 });
 
 test.describe("Composition", () => {
-  test("GIVEN a date input with the format yyyy-mm-dd THEN the segments should be in the correct order with the correct separators", async ({
+  test("GIVEN a date input with the format yyyy-mm-dd THEN the segments should be in the correct order", async ({
     page
   }) => {
     const d = await setup(page, "basic");
@@ -43,11 +43,9 @@ test.describe("Composition", () => {
     await expect(segments[2]).toHaveAttribute("data-qds-date-input-segment-day");
     await expect(segments[2]).not.toHaveAttribute("data-qds-date-input-segment-year");
     await expect(segments[2]).not.toHaveAttribute("data-qds-date-input-segment-month");
-    expect(await d.getSeparators().first().textContent()).toEqual("-");
-    expect(await d.getSeparators().last().textContent()).toEqual("-");
   });
 
-  test("GIVEN a date input with the format dd.mm.yyyy THEN the segments should be in the correct order with the correct separators", async ({
+  test("GIVEN a date input with the format dd.mm.yyyy THEN the segments should be in the correct order", async ({
     page
   }) => {
     const d = await setup(page, "format");
@@ -59,8 +57,6 @@ test.describe("Composition", () => {
     await expect(segments[1]).toHaveAttribute("data-qds-date-input-segment-index", "1");
     await expect(segments[2]).toHaveAttribute("data-qds-date-input-segment-year");
     await expect(segments[2]).toHaveAttribute("data-qds-date-input-segment-index", "2");
-    expect(await d.getSeparators().first().textContent()).toEqual(".");
-    expect(await d.getSeparators().last().textContent()).toEqual(".");
   });
 
   test("GIVEN a date input with no format input THEN the segments should match the default format", async ({
@@ -72,8 +68,6 @@ test.describe("Composition", () => {
     await expect(segments[0]).toHaveAttribute("data-qds-date-input-segment-month");
     await expect(segments[1]).toHaveAttribute("data-qds-date-input-segment-day");
     await expect(segments[2]).toHaveAttribute("data-qds-date-input-segment-year");
-    expect(await d.getSeparators().first().textContent()).toEqual("/");
-    expect(await d.getSeparators().last().textContent()).toEqual("/");
   });
 
   test("GIVEN a date input with placeholder inputs THEN the segments should have the placeholder text", async ({

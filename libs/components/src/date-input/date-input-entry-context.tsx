@@ -1,4 +1,4 @@
-import { type Signal, createContextId } from "@builder.io/qwik";
+import { type QwikJSX, type Signal, createContextId } from "@builder.io/qwik";
 import type { ISODate } from "../calendar/types";
 import type { DateSegment } from "./types";
 
@@ -17,4 +17,5 @@ export type DateInputEntryContext = {
   value?: string;
   disabledSig: Signal<boolean>;
   isInternalSegmentClearance: Signal<boolean>;
+  separator?: string | QwikJSX.Element;
 };

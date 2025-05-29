@@ -53,19 +53,19 @@ export default component$(() => {
         <div class="date-input-date-range">
           <DateInput.Entry data-first-entry>
             <DateInput.Year />
-            <DateInput.Separator separator="-" />
+            <span>-</span>
             <DateInput.Month showLeadingZero={true} />
-            <DateInput.Separator separator="-" />
+            <span>-</span>
             <DateInput.Day showLeadingZero={true} />
           </DateInput.Entry>
 
-          <DateInput.Separator separator="||" />
+          <span>||</span>
 
           <DateInput.Entry data-second-entry>
             <DateInput.Year />
-            <DateInput.Separator separator="-" />
+            <span>-</span>
             <DateInput.Month showLeadingZero={true} />
-            <DateInput.Separator separator="-" />
+            <span>-</span>
             <DateInput.Day showLeadingZero={true} />
           </DateInput.Entry>
         </div>

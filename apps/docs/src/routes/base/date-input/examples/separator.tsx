@@ -5,15 +5,9 @@ export default component$(() => {
   return (
     <DateInput.Root>
       <DateInput.Label>When's your next pickleball match?</DateInput.Label>
-      <DateInput.Entry>
+      <DateInput.Entry separator={<PickleballIcon />}>
         <DateInput.Month />
-        <DateInput.Separator>
-          <PickleballIcon />
-        </DateInput.Separator>
         <DateInput.Day />
-        <DateInput.Separator>
-          <PickleballIcon />
-        </DateInput.Separator>
         <DateInput.Year />
       </DateInput.Entry>
     </DateInput.Root>

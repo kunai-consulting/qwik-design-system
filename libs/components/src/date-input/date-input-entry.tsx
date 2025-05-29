@@ -9,7 +9,7 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import type { QRL } from "@builder.io/qwik";
+import type { QRL, QwikJSX } from "@builder.io/qwik";
 import type { BindableProps } from "@kunai-consulting/qwik-utils";
 import { getNextIndex, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
@@ -25,6 +25,7 @@ import { getInitialSegments } from "./utils";
 export type PublicDateInputEntryProps = Omit<PropsOf<"div">, "onChange$"> & {
   /** Event handler called when a date is updated */
   onChange$?: QRL<(date: ISODate | null) => void>;
+  separator?: string | QwikJSX.Element;
   /** The index of the date entry */
   _index?: number;
 } & BindableProps<DateInputEntryBoundProps>;
@@ -43,7 +44,7 @@ const isoDateRegex = /^\d{1,4}-(0[1-9]|1[0-2])-\d{2}$/;
  * by giving a target for the label and providing a role for screen readers.
  */
 export const DateInputEntryBase = component$((props: PublicDateInputEntryProps) => {
-  const { onChange$, _index, ...rest } = props;
+  const { onChange$, separator, _index, ...rest } = props;
   const rootContext = useContext(dateInputContextId);
   const isInitialLoadSig = useSignal(true);
   const { dateSig, disabledSig } = useBindings<DateInputEntryBoundProps>(props, {
@@ -73,7 +74,8 @@ export const DateInputEntryBase = component$((props: PublicDateInputEntryProps) 
     dayOfMonthSegmentSig,
     monthSegmentSig,
     yearSegmentSig,
-    isInternalSegmentClearance
+    isInternalSegmentClearance,
+    separator
   };
 
   useContextProvider(dateInputEntryContextId, context);

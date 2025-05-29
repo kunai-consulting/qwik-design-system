@@ -12,9 +12,9 @@ export default component$(() => {
         <DateInput.Label>Party like it's:</DateInput.Label>
         <DateInput.Entry bind:date={selectedDate}>
           <DateInput.Month />
-          <DateInput.Separator separator="/" />
+          <span>/</span>
           <DateInput.Day />
-          <DateInput.Separator separator="/" />
+          <span>/</span>
           <DateInput.Year />
         </DateInput.Entry>
       </DateInput.Root>

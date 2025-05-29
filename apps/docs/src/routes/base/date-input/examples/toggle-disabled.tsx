@@ -10,11 +10,9 @@ export default component$(() => {
     <div class="date-input-container">
       <DateInput.Root class="date-input-root-col">
         <DateInput.Label>My date input</DateInput.Label>
-        <DateInput.Entry disabled={isDisabled.value} date="1998-11-01">
+        <DateInput.Entry disabled={isDisabled.value} date="1998-11-01" separator="/">
           <DateInput.Month />
-          <DateInput.Separator separator="/" />
           <DateInput.Day />
-          <DateInput.Separator separator="/" />
           <DateInput.Year />
         </DateInput.Entry>
       </DateInput.Root>

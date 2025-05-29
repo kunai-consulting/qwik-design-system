@@ -18,7 +18,6 @@ In this example:
 - `<DateInput.Label>` provides an accessible label for the input
 - `<DateInput.Entry>` groups the segments for proper accessibility and handles input, output, and state for an individual date value
 - `<DateInput.Year>`, `<DateInput.Month>`, and `<DateInput.Day>` are the individual input segments
-- `<DateInput.Separator>` visually separates the segments
 - `<DateInput.HiddenInput>` provides a hidden native input for form submission
 ### Visual Features
 #### Custom Date Formats
@@ -31,20 +30,30 @@ The `showLeadingZero` prop can be applied to month or day segments to ensure con
 In this example, both the month and day segments display leading zeros, creating a consistent visual appearance.
 
 #### Separators
-You can use the `<DateInput.Separator>` component to insert any sort of separator between or around the segments. 
-The component accepts a `separator` prop to set the separator text:
+The Entry component accepts a `separator` prop, which then gets automatically inserted between the segments of the input.
 ```tsx
-<DateInput.Separator separator="/" />
+<DateInput.Entry separator="/">
+  <DateInput.Month />
+  <DateInput.Day />
+  <DateInput.Year />
+</DateInput.Entry>
 ```
-Alternatively, you can project custom content into the component's Slot:
-```tsx
-<DateInput.Separator>
-  <MySeparatorIcon />
-</DateInput.Separator>
-```
-Note that projected content will be ignored if the `separator` prop is provided.
 
-Example using a custom separator icon:
+You may instead use normal markup to insert separators between the segments.
+```tsx
+<DateInput.Root>
+  <DateInput.Label>Enter your date of birth:</DateInput.Label>
+  <DateInput.Entry>
+    <DateInput.Year />
+    <span>-</span>
+    <DateInput.Month />
+    <span>-</span>
+    <DateInput.Day />
+  </DateInput.Entry>
+</DateInput.Root>
+```
+
+Example using a custom separator icon inserted via the separator prop:
 <Showcase name="separator" />
 
 ### Advanced Usage

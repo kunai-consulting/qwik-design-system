@@ -30,10 +30,6 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator("[data-qds-date-input-segment-day]");
   };
 
-  const getSeparators = () => {
-    return rootLocator.locator("[data-qds-date-input-separator]");
-  };
-
   const getHiddenInput = () => {
     return rootLocator.locator("[data-qds-date-input-hidden-input]");
   };
@@ -114,7 +110,6 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getYearSegment,
     getMonthSegment,
     getDaySegment,
-    getSeparators,
     getHiddenInput,
     getError,
     getSubmitButton,
