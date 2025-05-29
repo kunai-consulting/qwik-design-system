@@ -1,0 +1,98 @@
+# Menu Research
+
+## Overview
+A Menu component provides a button that reveals a list of options when clicked. It follows the WAI-ARIA menu pattern,
+providing an accessible way to display a list of actions or options that can be triggered by the user.
+
+## Research Links
+- [WAI-ARIA Menu Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)
+- [Ark UI Menu](https://ark-ui.com/docs/components/menu)
+- [Kobalte Dropdown Menu](https://kobalte.dev/docs/core/components/dropdown-menu)
+- [CSS Anchor Positioning Spec](https://developer.mozilla.org/en-US/docs/Web/CSS/anchor)
+
+## Features
+- [ ] Toggle menu visibility
+- [ ] Keyboard navigation
+- [ ] Focus management
+- [ ] CSS Anchor positioning
+- [ ] Item selection
+- [ ] Disabled states
+- [ ] Proper ARIA attributes
+- [ ] Nested menu (submenus)
+- [ ] RTL support
+
+## Component Structure
+
+Pieces:
+- Root (container and state management)
+- Trigger (button to toggle menu)
+- Content (positioned container for items)
+- Item (individual menu items)
+- ItemLabel (text/content within items)
+
+## Keyboard Interactions
+- Arrow Down: Move focus to next item
+- Arrow Up: Move focus to previous item
+- Home: Move focus to first item
+- End: Move focus to last item
+- Enter/Space: Select focused item
+- Tab: Move focus out of menu
+
+## Attributes
+- role="menu" (content)
+- role="menuitem" (items)
+- role="button" (trigger)
+- aria-haspopup="true" (trigger)
+- aria-expanded (trigger)
+- aria-labelledby (content references trigger)
+- aria-disabled
+- data-qds-menu-root
+- data-qds-menu-trigger
+- data-qds-menu-content
+- data-qds-menu-item
+- data-qds-menu-item-label
+- data-qds-menu-submenu
+- data-qds-menu-submenu-trigger
+- data-qds-menu-submenu-content
+- data-disabled
+- data-highlighted
+
+## Use Cases
+- Navigation menus
+- Action menus
+- Selection menus
+- Settings menu
+- User profile menus
+- Language selectors
+- Filter menus
+- Context menus
+
+## API Design
+
+### Root:
+```tsx
+interface MenuRootProps {
+open?: boolean;
+onOpenChange$?: (open: boolean) => void;
+disabled?: boolean;
+}
+```
+
+### Trigger:
+- Inherits button props
+
+### Content:
+- No specific props, inherits div props
+
+### Item:
+```tsx
+interface MenuItemProps {
+disabled?: boolean;
+onSelect$?: (value: string | undefined) => void;
+closeOnSelect?: boolean;
+value?: string;
+}
+```
+
+### ItemLabel:
+- No specific props, inherits div props

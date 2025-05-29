@@ -1,0 +1,48 @@
+{
+  "features": [
+    "WAI ARIA Menu design pattern compliance",
+    "Arrow key navigation between items",
+    "Home/End key support for first/last item navigation",
+    "Disabled item states and handling",
+    "Keyboard selection with Enter/Space",
+    "Custom close behavior per item",
+    "Focus management between items",
+    "Automatic ARIA labeling and relationships",
+    "Event callbacks for open state changes",
+    "Popover positioning system integration"
+  ],
+  "keyboard": [
+    {
+      "key": "Enter",
+      "comment": "When focus is on a menu item, selects the item and closes the menu"
+    },
+    {
+      "key": "Space",
+      "comment": "When focus is on a menu item, selects the item and closes the menu"
+    },
+    {
+      "key": "ArrowDown",
+      "comment": "When focus is within the menu content, moves focus to the next menu item"
+    },
+    {
+      "key": "ArrowUp",
+      "comment": "When focus is within the menu content, moves focus to the previous menu item"
+    },
+    {
+      "key": "Escape",
+      "comment": "When the menu is open, closes the menu"
+    },
+    {
+      "key": "Tab",
+      "comment": "Moves focus to the next focusable element and closes the menu when focus leaves"
+    },
+    {
+      "key": "Home",
+      "comment": "When focus is on a menu item, moves focus to the first enabled item in the menu"
+    },
+    {
+      "key": "End",
+      "comment": "When focus is on a menu item, moves focus to the last enabled item in the menu"
+    }
+  ]
+}
