@@ -6,13 +6,13 @@ export default component$(() => {
   return (
     <DateInput.Root>
       <DateInput.Label>Enter your date of birth:</DateInput.Label>
-      <DateInput.DateEntry>
+      <DateInput.Entry>
         <DateInput.Month placeholder="Month" />
-        <DateInput.Separator separator="/" />
+        <span>/</span>
         <DateInput.Day placeholder="Day" />
-        <DateInput.Separator separator="/" />
+        <span>/</span>
         <DateInput.Year placeholder="Year" />
-      </DateInput.DateEntry>
+      </DateInput.Entry>
     </DateInput.Root>
   );
 });
