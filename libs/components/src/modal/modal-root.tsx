@@ -10,6 +10,7 @@ import {
   useSignal,
   useTask$
 } from "@builder.io/qwik";
+import { disablePageScroll, enablePageScroll } from "@fluejs/noscroll";
 import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
@@ -33,14 +34,19 @@ export const ModalRootBase = component$((props: ModalRootProps) => {
     open: false
   });
 
-  useTask$(({ track }) => {
+  useTask$(({ track, cleanup }) => {
     track(() => isOpenSig.value);
 
     if (isOpenSig.value) {
       contentRef.value?.showModal();
+      disablePageScroll();
     } else {
       contentRef.value?.close();
     }
+
+    cleanup(() => {
+      enablePageScroll();
+    });
   });
 
   /**

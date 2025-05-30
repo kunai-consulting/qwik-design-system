@@ -154,6 +154,9 @@ importers:
       '@builder.io/qwik':
         specifier: ^1.14.1
         version: 1.14.1(vite@5.4.8(@types/node@22.14.0)(lightningcss@1.29.2))
+      '@fluejs/noscroll':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@kunai-consulting/qwik-utils':
         specifier: workspace:*
         version: link:../utils
@@ -682,6 +685,9 @@ packages:
 
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
+
+  '@fluejs/noscroll@1.0.0':
+    resolution: {integrity: sha512-fyu6jPL/BzUWkrxpwmG8RC/8LM4Fp2GprYRco2BBTypIl7zDyuipRHg6NcuoTGh4s5fAV8D1DBDMS2aDhuGclg==}
 
   '@graphql-typed-document-node/core@3.2.0':
     resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
@@ -2182,6 +2188,7 @@ packages:
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
+    deprecated: Use your platform's native DOMException instead
 
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
@@ -3376,6 +3383,8 @@ snapshots:
   '@floating-ui/utils@0.2.7': {}
 
   '@floating-ui/utils@0.2.9': {}
+
+  '@fluejs/noscroll@1.0.0': {}
 
   '@graphql-typed-document-node/core@3.2.0(graphql@15.9.0)':
     dependencies:

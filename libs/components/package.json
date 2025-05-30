@@ -32,6 +32,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.9.1",
     "@builder.io/qwik": "^1.14.1",
+    "@fluejs/noscroll": "^1.0.0",
     "@kunai-consulting/qwik-utils": "workspace:*",
     "@qwik-ui/headless": "^0.6.5",
     "@types/node": "22.14.0",
