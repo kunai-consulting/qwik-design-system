@@ -1,10 +1,12 @@
 import {
+  $,
   type PropsOf,
   type Signal,
   Slot,
   component$,
   createContextId,
   useContextProvider,
+  useOnWindow,
   useSignal,
   useTask$
 } from "@builder.io/qwik";
@@ -40,6 +42,20 @@ export const ModalRootBase = component$((props: ModalRootProps) => {
       contentRef.value?.close();
     }
   });
+
+  /**
+   * Escape key calls the native close method, so we need to update the state in this case.
+   */
+  useOnWindow(
+    "keydown",
+    $((event) => {
+      if (!isOpenSig.value) return;
+
+      if (event.key === "Escape") {
+        isOpenSig.value = false;
+      }
+    })
+  );
 
   const context: ModalContext = {
     contentRef,
