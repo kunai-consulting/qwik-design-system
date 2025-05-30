@@ -44,13 +44,16 @@ A potential structure for the Modal component:
 - `role` ('dialog' | 'alertdialog' - default 'dialog')
 - `initialFocus` (element selector for initial focus)
 - `restoreFocus` (boolean - restore focus on close, default true)
-- `closeOnEscapeKeyDown` (boolean - close on ESC, default true)
 - `closeOnOutsideClick` (boolean - close on backdrop click, default false for alertdialog)
 
-### Panel
+### Content
 - `aria-labelledby` (references title element)
 - `aria-describedby` (references description element)
 - `aria-modal` (set to true for modal dialogs)
+
+### Native HTML Dialog Note
+
+The native `<dialog>` element has a `closedBy` property with values like `"any"`, `"closerequest"`, `"none"` but these are not intuitive (not fully supported by all browsers). Our API uses more explicit boolean props like `closeOnOutsideClick` for better developer experience.
 
 ## Dialog vs Alert Dialog Differences
 
