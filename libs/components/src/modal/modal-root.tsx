@@ -5,12 +5,14 @@ import {
   Slot,
   component$,
   createContextId,
+  noSerialize,
   useContextProvider,
   useOnWindow,
   useSignal,
   useTask$
 } from "@builder.io/qwik";
-import { disablePageScroll, enablePageScroll } from "@fluejs/noscroll";
+import { createNoScroll, markScrollable } from "@fluejs/noscroll";
+import { initTouchHandler, resetTouchHandler } from "@fluejs/noscroll/touch";
 import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
@@ -29,6 +31,9 @@ type ModalRootProps = PropsOf<"div"> &
 
 export const ModalRootBase = component$((props: ModalRootProps) => {
   const contentRef = useSignal<HTMLDialogElement | undefined>();
+  const isMarkedSig = useSignal(false);
+  const disablePageScrollFn = useSignal<() => void>();
+  const enablePageScrollFn = useSignal<() => void>();
 
   const { openSig: isOpenSig } = useBindings(props, {
     open: false
@@ -37,15 +42,29 @@ export const ModalRootBase = component$((props: ModalRootProps) => {
   useTask$(({ track, cleanup }) => {
     track(() => isOpenSig.value);
 
+    if (!isMarkedSig.value) {
+      if (!contentRef.value) return;
+      markScrollable(contentRef.value);
+      isMarkedSig.value = true;
+
+      const { disablePageScroll, enablePageScroll } = createNoScroll({
+        onInitScrollDisable: initTouchHandler,
+        onResetScrollDisable: resetTouchHandler
+      });
+
+      disablePageScrollFn.value = noSerialize(disablePageScroll);
+      enablePageScrollFn.value = noSerialize(enablePageScroll);
+    }
+
     if (isOpenSig.value) {
       contentRef.value?.showModal();
-      disablePageScroll();
+      disablePageScrollFn.value?.();
     } else {
       contentRef.value?.close();
     }
 
     cleanup(() => {
-      enablePageScroll();
+      enablePageScrollFn.value?.();
     });
   });
 
