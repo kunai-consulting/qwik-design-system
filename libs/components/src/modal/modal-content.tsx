@@ -1,8 +1,11 @@
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
+import { modalContextId } from "./modal-root";
 
 export const ModalContent = component$((props: PropsOf<"dialog">) => {
+  const context = useContext(modalContextId);
+
   return (
-    <dialog {...props}>
+    <dialog ref={context.contentRef} {...props}>
       <Slot />
     </dialog>
   );
