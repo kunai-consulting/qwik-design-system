@@ -19,9 +19,9 @@ export default component$(() => {
       >
         <Pagination.Previous class="pagination-previous">Previous</Pagination.Previous>
         {paginationItems.map((item) => (
-          <Pagination.Page class="pagination-page" key={`dots-page-${item}`}>
+          <Pagination.Item class="pagination-item" key={`dots-page-${item}`}>
             {item}
-          </Pagination.Page>
+          </Pagination.Item>
         ))}
         <Pagination.Next class="pagination-next">Next</Pagination.Next>
       </Pagination.Root>
@@ -37,9 +37,9 @@ export default component$(() => {
       >
         <Pagination.Previous class="pagination-previous">Previous</Pagination.Previous>
         {paginationItems.map((item) => (
-          <Pagination.Page class="pagination-page" key={`custom-page-${item}`}>
+          <Pagination.Item class="pagination-item" key={`custom-page-${item}`}>
             {item}
-          </Pagination.Page>
+          </Pagination.Item>
         ))}
         <Pagination.Next class="pagination-next">Next</Pagination.Next>
       </Pagination.Root>

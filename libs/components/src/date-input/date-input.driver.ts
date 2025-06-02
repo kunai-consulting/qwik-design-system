@@ -11,7 +11,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
   };
 
   const getDateEntry = () => {
-    return rootLocator.locator("[data-qds-date-input-date-entry]");
+    return rootLocator.locator("[data-qds-date-input-entry]");
   };
 
   const getSegments = () => {
@@ -30,16 +30,12 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator("[data-qds-date-input-segment-day]");
   };
 
-  const getSeparators = () => {
-    return rootLocator.locator("[data-qds-date-input-separator]");
-  };
-
   const getHiddenInput = () => {
     return rootLocator.locator("[data-qds-date-input-hidden-input]");
   };
 
-  const getErrorMessage = () => {
-    return rootLocator.locator("[data-qds-date-input-error-message]");
+  const getError = () => {
+    return rootLocator.locator("[data-qds-date-input-error]");
   };
 
   const getSubmitButton = () => {
@@ -68,13 +64,13 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
 
   const getFirstEntry = () => {
     return rootLocator.locator(
-      '[data-qds-date-input-date-entry][data-qds-date-input-date-entry-index="0"]'
+      '[data-qds-date-input-entry][data-qds-date-input-entry-index="0"]'
     );
   };
 
   const getSecondEntry = () => {
     return rootLocator.locator(
-      '[data-qds-date-input-date-entry][data-qds-date-input-date-entry-index="1"]'
+      '[data-qds-date-input-entry][data-qds-date-input-entry-index="1"]'
     );
   };
 
@@ -114,9 +110,8 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getYearSegment,
     getMonthSegment,
     getDaySegment,
-    getSeparators,
     getHiddenInput,
-    getErrorMessage,
+    getError,
     getSubmitButton,
     getSubmittedData,
     getExternalValue,

@@ -37,7 +37,7 @@ Anatomy:
     <Checklist.ItemDescription />
   </Checklist.Item>
   <Checklist.HiddenInput />
-  <Checklist.ErrorMessage />
+  <Checklist.Error />
 </Checklist.Root>
 
 API's:

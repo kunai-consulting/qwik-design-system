@@ -16,7 +16,7 @@ import {
   useBoundSignal
 } from "@kunai-consulting/qwik-utils";
 import { type PaginationContext, paginationContextId } from "./pagination-context";
-import { PaginationPage } from "./pagination-page";
+import { PaginationItem } from "./pagination-item";
 import { getPaginationItems } from "./utils";
 export type PublicPaginationRootProps = PropsOf<"div"> & {
   /** The total number of pages to display */
@@ -39,7 +39,7 @@ export type PublicPaginationRootProps = PropsOf<"div"> & {
 export const PaginationRoot = (props: PublicPaginationRootProps) => {
   let currPageIndex = 0;
 
-  findComponent(PaginationPage, (pageProps) => {
+  findComponent(PaginationItem, (pageProps) => {
     pageProps._index = currPageIndex;
     currPageIndex++;
   });

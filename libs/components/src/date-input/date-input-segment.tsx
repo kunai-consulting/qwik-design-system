@@ -12,7 +12,7 @@ import type { Signal } from "@builder.io/qwik";
 import type { DayOfMonth, Month } from "../calendar/types";
 import { MAX_DAY } from "./constants";
 import { dateInputContextId } from "./date-input-context";
-import { dateInputDateEntryContextId } from "./date-input-date-entry-context";
+import { dateInputEntryContextId } from "./date-input-entry-context";
 import styles from "./date-input-segment.css?inline";
 import type { DateSegment, DateSegmentType } from "./types";
 import type { PublicDateInputSegmentProps } from "./types";
@@ -33,9 +33,11 @@ export const DateInputSegment = component$(
     ...otherProps
   }: DateInputSegmentProps) => {
     const rootContext = useContext(dateInputContextId);
-    const context = useContext(dateInputDateEntryContextId);
+    const context = useContext(dateInputEntryContextId);
     const inputId = `${context.entryId}-segment-${segmentSig.value.type}`;
     const index = _index ?? -1;
+    // Show the separator if there is a separator in the context and the index is not the last segment in a group of 3
+    const showSeparator = context.separator && index % 3 < 2;
     const inputRef = useSignal<HTMLInputElement>();
 
     useStyles$(styles);
@@ -437,31 +439,34 @@ export const DateInputSegment = component$(
     });
 
     return (
-      <input
-        {...otherProps}
-        ref={inputRef}
-        id={inputId}
-        type="text"
-        data-qds-date-input-segment
-        data-qds-date-input-segment-placeholder={segmentSig.value.isPlaceholder}
-        data-qds-date-input-segment-day={segmentSig.value.type === "day"}
-        data-qds-date-input-segment-month={segmentSig.value.type === "month"}
-        data-qds-date-input-segment-year={segmentSig.value.type === "year"}
-        data-qds-date-input-segment-index={_index}
-        value={displayValueSig.value}
-        onKeyDown$={[onKeyDownSync$, onKeyDown$, otherProps.onKeyDown$]}
-        onInput$={[onInput$, otherProps.onInput$]}
-        onPaste$={[onPasteSync$, otherProps.onPaste$]}
-        stoppropagation:change
-        placeholder={segmentSig.value.placeholderText}
-        aria-label={`${segmentSig.value.type} input`}
-        aria-valuemax={segmentSig.value.max}
-        aria-valuemin={segmentSig.value.min}
-        aria-valuenow={segmentSig.value.numericValue}
-        disabled={context.disabledSig.value}
-        maxLength={segmentSig.value.maxLength + 1}
-        inputMode="numeric"
-      />
+      <>
+        <input
+          {...otherProps}
+          ref={inputRef}
+          id={inputId}
+          type="text"
+          data-qds-date-input-segment
+          data-qds-date-input-segment-placeholder={segmentSig.value.isPlaceholder}
+          data-qds-date-input-segment-day={segmentSig.value.type === "day"}
+          data-qds-date-input-segment-month={segmentSig.value.type === "month"}
+          data-qds-date-input-segment-year={segmentSig.value.type === "year"}
+          data-qds-date-input-segment-index={_index}
+          value={displayValueSig.value}
+          onKeyDown$={[onKeyDownSync$, onKeyDown$, otherProps.onKeyDown$]}
+          onInput$={[onInput$, otherProps.onInput$]}
+          onPaste$={[onPasteSync$, otherProps.onPaste$]}
+          stoppropagation:change
+          placeholder={segmentSig.value.placeholderText}
+          aria-label={`${segmentSig.value.type} input`}
+          aria-valuemax={segmentSig.value.max}
+          aria-valuemin={segmentSig.value.min}
+          aria-valuenow={segmentSig.value.numericValue}
+          disabled={context.disabledSig.value}
+          maxLength={segmentSig.value.maxLength + 1}
+          inputMode="numeric"
+        />
+        {showSeparator && context.separator}
+      </>
     );
   }
 );

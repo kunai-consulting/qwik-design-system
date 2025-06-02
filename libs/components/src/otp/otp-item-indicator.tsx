@@ -3,7 +3,7 @@ import { OTPContextId } from "./otp-context";
 import { itemContextId } from "./otp-item";
 
 /** Component that renders a caret for OTP input focus indication */
-export const OtpCaret = component$(({ ...props }: PropsOf<"span">) => {
+export const OtpItemIndicator = component$(({ ...props }: PropsOf<"span">) => {
   const itemContext = useContext(itemContextId);
   const context = useContext(OTPContextId);
   const isHighlighted =

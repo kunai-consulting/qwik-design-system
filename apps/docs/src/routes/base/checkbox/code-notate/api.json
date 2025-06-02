@@ -11,10 +11,10 @@
       }
     },
     {
-      "Checkbox Error Message": {
+      "Checkbox Error": {
         "types": [
           {
-            "PublicCheckboxErrorMessageProps": []
+            "PublicCheckboxErrorProps": []
           }
         ],
         "inheritsFrom": "div"
@@ -179,7 +179,7 @@
       "description": "A hidden native checkbox input for form submission"
     },
     {
-      "name": "Checkbox.ErrorMessage",
+      "name": "Checkbox.Error",
       "description": "A component that displays error messages for a checkbox"
     }
   ],

@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { type Page, expect, test } from "@playwright/test";
 import { createTestDriver } from "./radio-group.driver";
 
@@ -139,6 +140,21 @@ test.describe("Keyboard Navigation", () => {
 });
 
 test.describe("Accessibility", () => {
+  test.describe("A11y", () => {
+    test(`GIVEN a pagination control
+        WHEN the pagination is rendered
+        THEN it should meet the axe a11y requirements
+    `, async ({ page }) => {
+      await setup(page, "hero");
+
+      const initialResults = await new AxeBuilder({ page })
+        .include("[data-qds-radio-group-root]")
+        .analyze();
+
+      expect(initialResults.violations).toEqual([]);
+    });
+  });
+
   test(`GIVEN a radio group
           WHEN rendered
           THEN it should have correct ARIA attributes`, async ({ page }) => {
@@ -203,20 +219,20 @@ test.describe("Form Integration", () => {
 
     await page.getByText("Subscribe").click();
 
-    const errorMessage = d.getErrorMessage();
-    await expect(errorMessage).toBeVisible();
+    const error = d.getError();
+    await expect(error).toBeVisible();
   });
 
   test(`GIVEN a radio group in a form
           WHEN option is selected and form is submitted
           THEN should not show error message`, async ({ page }) => {
     const d = await setup(page, "form");
-    const errorMessage = d.getErrorMessage();
+    const error = d.getError();
 
     const firstTrigger = d.getTriggerAt(0);
     await firstTrigger.click();
 
-    await expect(errorMessage).not.toBeVisible();
+    await expect(error).not.toBeVisible();
   });
 });
 

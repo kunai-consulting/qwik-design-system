@@ -36,13 +36,13 @@ export default component$(() => {
         </Pagination.Previous>
 
         {paginationItems.map((item) => (
-          <Pagination.Page
-            class="pagination-page disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
+          <Pagination.Item
+            class="pagination-item disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
             key={`page-${item}`}
             aria-label={`Page ${item}`}
           >
             {item}
-          </Pagination.Page>
+          </Pagination.Item>
         ))}
 
         <Pagination.Next

@@ -333,7 +333,7 @@ test.describe("forms", () => {
     const d = await setup(page, "validation");
 
     await page.getByRole("button").last().click();
-    await expect(d.getErrorMessage()).toBeVisible();
+    await expect(d.getError()).toBeVisible();
     await expect(d.getTrigger()).toHaveAttribute("aria-invalid", "true");
     await expect(d.getTrigger()).toHaveAttribute("aria-describedby");
   });

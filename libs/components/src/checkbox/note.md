@@ -40,7 +40,7 @@ Anatomy:
   </Checkbox.Control>
   <Checkbox.Label>
   <Checkbox.HiddenNativeInput />
-  <Checkbox.ErrorMessage />
+  <Checkbox.Error />
   <Checkbox.Description />
 <Checkbox.Root>
 
