@@ -79,12 +79,37 @@ test.describe("critical functionality", () => {
         THEN the toast should be closed automatically after the duration`, async ({
     page
   }) => {
-    const d = await setup(page, "auto-dismiss");
+    const d = await setup(page, "custom-duration");
 
     await d.getTrigger().click();
     await expect(d.getContent()).toBeVisible();
     // Wait for auto-dismiss (should be 2000ms)
     await page.waitForTimeout(2100);
+    await expect(d.getContent()).not.toBeVisible();
+  });
+
+  test(`GIVEN a toast with auto-dismiss and hover
+        WHEN the toast is hovered
+        THEN the auto-dismiss should be paused`, async ({ page }) => {
+    const d = await setup(page, "hero");
+
+    await d.getTrigger().click();
+    await expect(d.getContent()).toBeVisible();
+
+    // Hover over the toast to pause it
+    await d.getContent().hover();
+
+    // Wait longer than the duration (5000ms) while hovered
+    await page.waitForTimeout(5500);
+
+    // Toast should still be visible because it's paused
+    await expect(d.getContent()).toBeVisible();
+
+    // Move mouse away to resume the timer
+    await page.mouse.move(0, 0);
+
+    // Now it should close after the remaining time
+    await page.waitForTimeout(5500);
     await expect(d.getContent()).not.toBeVisible();
   });
 });

@@ -1,4 +1,5 @@
 import {
+  $,
   type PropsOf,
   Slot,
   component$,
@@ -37,6 +38,9 @@ export const ToastRootBase = component$((props: ToastRootProps) => {
   const titleId = `${localId}-title`;
   const descriptionId = `${localId}-description`;
   const isInitialRenderSig = useSignal(true);
+  const isHoveredSig = useSignal(false);
+  const remainingTimeSig = useSignal(duration);
+  const startTimeSig = useSignal<number | null>(null);
 
   const { openSig: isOpenSig } = useBindings(props, {
     open: false
@@ -54,9 +58,10 @@ export const ToastRootBase = component$((props: ToastRootProps) => {
 
   useContextProvider(toastContextId, context);
 
-  // Auto-dismiss functionality and onChange handling
+  // Auto-dismiss functionality with pause-on-hover
   useTask$(({ track, cleanup }) => {
     track(() => isOpenSig.value);
+    track(() => isHoveredSig.value);
 
     // Only call onChange$ after initial render
     if (!isInitialRenderSig.value) {
@@ -65,11 +70,29 @@ export const ToastRootBase = component$((props: ToastRootProps) => {
 
     // Auto-dismiss functionality
     if (isOpenSig.value && duration !== 0 && duration > 0) {
-      const timeoutId = setTimeout(() => {
-        isOpenSig.value = false;
-      }, duration);
+      if (isHoveredSig.value) {
+        // Toast is hovered - pause the timer and store remaining time
+        if (startTimeSig.value !== null) {
+          const elapsed = Date.now() - startTimeSig.value;
+          remainingTimeSig.value = Math.max(0, remainingTimeSig.value - elapsed);
+          startTimeSig.value = null;
+        }
+      } else {
+        // Toast is not hovered - start or resume the timer
+        if (startTimeSig.value === null) {
+          startTimeSig.value = Date.now();
+        }
 
-      cleanup(() => clearTimeout(timeoutId));
+        const timeoutId = setTimeout(() => {
+          isOpenSig.value = false;
+        }, remainingTimeSig.value);
+
+        cleanup(() => clearTimeout(timeoutId));
+      }
+    } else if (!isOpenSig.value) {
+      // Reset timer state when toast is closed
+      remainingTimeSig.value = duration;
+      startTimeSig.value = null;
     }
 
     // Mark that initial render is complete
@@ -77,6 +100,14 @@ export const ToastRootBase = component$((props: ToastRootProps) => {
       if (!isInitialRenderSig.value) return;
       isInitialRenderSig.value = false;
     });
+  });
+
+  const handleMouseEnter$ = $(() => {
+    isHoveredSig.value = true;
+  });
+
+  const handleMouseLeave$ = $(() => {
+    isHoveredSig.value = false;
   });
 
   const ariaLive = role === "alert" ? "assertive" : "polite";
@@ -94,7 +125,13 @@ export const ToastRootBase = component$((props: ToastRootProps) => {
       data-position={position}
     >
       <Popover.Root bind:open={isOpenSig} {...rest}>
-        <Popover.Content data-qds-toast-content data-position={position} popover="auto">
+        <Popover.Content
+          data-qds-toast-content
+          data-position={position}
+          popover="auto"
+          onMouseEnter$={[handleMouseEnter$, props.onMouseEnter$]}
+          onMouseLeave$={[handleMouseLeave$, props.onMouseLeave$]}
+        >
           <Slot />
         </Popover.Content>
       </Popover.Root>
