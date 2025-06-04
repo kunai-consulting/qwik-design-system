@@ -17,20 +17,20 @@ import type { ISODate } from "../calendar/types";
 import { Render } from "../render/render";
 import { dateInputContextId } from "./date-input-context";
 import {
-  type DateInputEntryContext,
-  dateInputEntryContextId
-} from "./date-input-entry-context";
+  type DateInputFieldContext,
+  dateInputFieldContextId
+} from "./date-input-field-context";
 import { getInitialSegments } from "./utils";
 
-export type PublicDateInputEntryProps = Omit<PropsOf<"div">, "onChange$"> & {
+export type PublicDateInputFieldProps = Omit<PropsOf<"div">, "onChange$"> & {
   /** Event handler called when a date is updated */
   onChange$?: QRL<(date: ISODate | null) => void>;
   separator?: string | QwikJSX.Element;
-  /** The index of the date entry */
+  /** The index of the date field */
   _index?: number;
-} & BindableProps<DateInputEntryBoundProps>;
+} & BindableProps<DateInputFieldBoundProps>;
 
-export type DateInputEntryBoundProps = {
+export type DateInputFieldBoundProps = {
   /** The currently selected date */
   date: ISODate | null;
   /** When enabled prevents the user from interacting with the date input */
@@ -43,16 +43,16 @@ const isoDateRegex = /^\d{1,4}-(0[1-9]|1[0-2])-\d{2}$/;
 /** Container for the segments of the Date Input that assists with accessibility
  * by giving a target for the label and providing a role for screen readers.
  */
-export const DateInputEntryBase = component$((props: PublicDateInputEntryProps) => {
+export const DateInputFieldBase = component$((props: PublicDateInputFieldProps) => {
   const { onChange$, separator, _index, ...rest } = props;
   const rootContext = useContext(dateInputContextId);
   const isInitialLoadSig = useSignal(true);
-  const { dateSig, disabledSig } = useBindings<DateInputEntryBoundProps>(props, {
+  const { dateSig, disabledSig } = useBindings<DateInputFieldBoundProps>(props, {
     date: props.date ?? null,
     disabled: false
   });
 
-  const entryId = useId();
+  const fieldId = useId();
   const { dayOfMonthSegment, monthSegment, yearSegment } = getInitialSegments(
     dateSig.value
   );
@@ -67,9 +67,9 @@ export const DateInputEntryBase = component$((props: PublicDateInputEntryProps) 
   // See usage in updateSegmentsWithNewDateValue
   const isInternalSegmentClearance = useSignal<boolean>(false);
 
-  const context: DateInputEntryContext = {
+  const context: DateInputFieldContext = {
     dateSig,
-    entryId,
+    fieldId,
     disabledSig,
     dayOfMonthSegmentSig,
     monthSegmentSig,
@@ -78,13 +78,13 @@ export const DateInputEntryBase = component$((props: PublicDateInputEntryProps) 
     separator
   };
 
-  useContextProvider(dateInputEntryContextId, context);
+  useContextProvider(dateInputFieldContextId, context);
 
   if (props.date && !isoDateRegex.test(props.date)) {
     throw new Error("Invalid date format. Please use yyyy-mm-dd format.");
   }
 
-  const elementId = `${context.entryId}-entry`;
+  const elementId = `${context.fieldId}-field`;
 
   /**
    * Updates the segments with the new date value.
@@ -171,8 +171,8 @@ export const DateInputEntryBase = component$((props: PublicDateInputEntryProps) 
     <Render
       fallback={"div"}
       {...rest}
-      data-qds-date-input-entry
-      data-qds-date-input-entry-index={_index}
+      data-qds-date-input-field
+      data-qds-date-input-field-index={_index}
       role="group"
       id={elementId}
       aria-labelledby={`${rootContext.localId}-label`}
@@ -182,7 +182,7 @@ export const DateInputEntryBase = component$((props: PublicDateInputEntryProps) 
   );
 });
 
-export const DateInputEntry = withAsChild(DateInputEntryBase, (props) => {
-  props._index = getNextIndex("date-input-entry");
+export const DateInputField = withAsChild(DateInputFieldBase, (props) => {
+  props._index = getNextIndex("date-input-field");
   return props;
 });

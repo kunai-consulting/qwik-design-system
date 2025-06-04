@@ -12,7 +12,7 @@ import type { Signal } from "@builder.io/qwik";
 import type { DayOfMonth, Month } from "../calendar/types";
 import { MAX_DAY } from "./constants";
 import { dateInputContextId } from "./date-input-context";
-import { dateInputEntryContextId } from "./date-input-entry-context";
+import { dateInputFieldContextId } from "./date-input-field-context";
 import styles from "./date-input-segment.css?inline";
 import type { DateSegment, DateSegmentType } from "./types";
 import type { PublicDateInputSegmentProps } from "./types";
@@ -33,8 +33,8 @@ export const DateInputSegment = component$(
     ...otherProps
   }: DateInputSegmentProps) => {
     const rootContext = useContext(dateInputContextId);
-    const context = useContext(dateInputEntryContextId);
-    const inputId = `${context.entryId}-segment-${segmentSig.value.type}`;
+    const context = useContext(dateInputFieldContextId);
+    const inputId = `${context.fieldId}-segment-${segmentSig.value.type}`;
     const index = _index ?? -1;
     // Show the separator if there is a separator in the context and the index is not the last segment in a group of 3
     const showSeparator = context.separator && index % 3 < 2;

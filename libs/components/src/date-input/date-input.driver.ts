@@ -10,8 +10,8 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator("[data-qds-date-input-label]");
   };
 
-  const getDateEntry = () => {
-    return rootLocator.locator("[data-qds-date-input-entry]");
+  const getDateField = () => {
+    return rootLocator.locator("[data-qds-date-input-field]");
   };
 
   const getSegments = () => {
@@ -64,13 +64,13 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
 
   const getFirstEntry = () => {
     return rootLocator.locator(
-      '[data-qds-date-input-entry][data-qds-date-input-entry-index="0"]'
+      '[data-qds-date-input-field][data-qds-date-input-field-index="0"]'
     );
   };
 
   const getSecondEntry = () => {
     return rootLocator.locator(
-      '[data-qds-date-input-entry][data-qds-date-input-entry-index="1"]'
+      '[data-qds-date-input-field][data-qds-date-input-field-index="1"]'
     );
   };
 
@@ -105,7 +105,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     locator: rootLocator,
     getRoot,
     getLabel,
-    getDateEntry,
+    getDateField,
     getSegments,
     getYearSegment,
     getMonthSegment,
