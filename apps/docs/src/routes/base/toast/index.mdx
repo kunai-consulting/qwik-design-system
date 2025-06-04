@@ -1,13 +1,179 @@
-# Toast
+import api from "./code-notate/api.json";
 
-Base
+# Toast
+A notification system that displays brief messages to users with automatic dismissal and positioning options.
 <Showcase name="hero" />
 
-Custom Duration
+## Features
+<Features api={api} />
+
+## Anatomy
+<AnatomyTable api={api} />
+
+## Examples
+### Basic Usage
+#### Default Toast
+The Toast component provides a way to show temporary notifications to users. It automatically dismisses after a set duration and can be manually closed.
+<Showcase name="hero" />
+
+In this example, we're using the basic Toast structure with:
+- `<Toast.Root>` as the container component
+- `<Toast.Title>` for the accessible title
+- `<Toast.Description>` for the detailed message
+- `<Toast.Close>` for the dismissal button
+The toast is triggered by a button click that sets the `isOpen` signal to `true`.
+
+#### Custom Duration
+You can customize how long the toast appears before automatically dismissing.
 <Showcase name="custom-duration" />
 
-Callback
+This example sets a custom duration of 2 seconds using the `duration` prop on `<Toast.Root>`. The default duration is 5 seconds.
+
+#### Signal Binding
+Toast state can be bound to a signal for external state management.
+<Showcase name="signal-binding" />
+The `bind:open` prop creates a two-way binding with the provided signal, allowing you to track the toast's open state from outside the component.
+
+#### Change Callback
+You can respond to toast state changes with the `onChange$` callback.
 <Showcase name="on-change" />
 
-Signal Binding
-<Showcase name="signal-binding" />
+The `onChange$` callback is triggered whenever the toast opens or closes, allowing you to perform side effects or track usage.
+
+### Visual Features
+#### Positioning Options
+Toasts can be positioned in different areas of the screen.
+
+##### Top Position
+<Showcase name="position-top" />
+This example positions the toast at the top of the screen using `position="top"`.
+
+##### Bottom Right Position
+<Showcase name="position-bottom-right" />
+This example positions the toast at the bottom-right corner using `position="bottom-right"`.
+
+##### Bottom Left Position
+<Showcase name="position-bottom-left" />
+This example positions the toast at the bottom-left corner using `position="bottom-left"`.
+
+### Accessibility Features
+#### Assertive Announcements
+For important notifications, you can use the assertive role.
+<Showcase name="assertive" />
+
+This example uses `role="alert"` which sets `aria-live="assertive"`, making screen readers announce the toast immediately, interrupting any current announcements.
+
+#### Status Announcements
+For less urgent information, you can use the status role.
+<Showcase name="status-role" />
+This example uses `role="status"` which sets `aria-live="polite"`, making screen readers announce the toast when they finish their current task.
+
+## Component State
+### Using Component State
+The Toast component provides several ways to control its state through props and callbacks.
+#### Controlling Open State
+As shown in the Basic Usage example above, you can control the toast's visibility using the `bind:open` prop with a signal:
+```typescript
+const isOpen = useSignal(false);
+<Toast.Root bind:open={isOpen}>
+  <Toast.Title>Toast Title</Toast.Title>
+  <Toast.Description>Toast Description</Toast.Description>
+  <Toast.Close>Close</Toast.Close>
+</Toast.Root>
+```
+This creates a two-way binding between your application state and the toast's open state. When the toast opens or closes, the bound signal will update accordingly.
+#### Auto-Dismissal Duration
+As shown in the Custom Duration example above, you can control how long the toast appears before automatically dismissing:
+```typescript
+<Toast.Root bind:open={isOpen} duration={2000}>
+  <!-- Toast content -->
+</Toast.Root>
+```
+The `duration` prop accepts a value in milliseconds. The default duration is 5000ms (5 seconds). Setting `duration` to `0` will disable auto-dismissal.
+### State Interactions
+#### Responding to State Changes
+As shown in the Change Callback example above, you can use the `onChange$` prop to respond to toast state changes:
+```typescript
+const handleChange$ = $((open: boolean) => {
+  // Perform actions when toast opens or closes
+  console.log(`Toast is now ${open ? 'open' : 'closed'}`);
+});
+<Toast.Root bind:open={isOpen} onChange$={handleChange$}>
+  <!-- Toast content -->
+</Toast.Root>
+```
+The `onChange$` callback receives the current open state as a boolean parameter. This is useful for tracking usage, logging, or triggering additional actions when the toast opens or closes.
+#### Pause on Hover
+The Toast component automatically pauses its auto-dismissal timer when the user hovers over it. This behavior is built-in and requires no additional configuration. When the user moves their cursor away from the toast, the timer resumes with the remaining time.
+This feature ensures that users have enough time to read and interact with the toast content, especially for longer messages or when the toast contains interactive elements like buttons or links.
+
+## Configuration
+### Core Configuration
+#### Position Options
+The Toast component can be positioned in different areas of the screen using the `position` prop on `<Toast.Root>`.
+```typescript
+<Toast.Root position="top-right">
+  {/* Toast content */}
+</Toast.Root>
+```
+The available position values are:
+- `"top"` (default) - Centers the toast at the top of the screen
+- `"top-right"` - Positions the toast at the top-right corner
+- `"top-left"` - Positions the toast at the top-left corner
+- `"bottom"` - Centers the toast at the bottom of the screen
+- `"bottom-right"` - Positions the toast at the bottom-right corner
+- `"bottom-left"` - Positions the toast at the bottom-left corner
+
+As shown in the Position Top example above, you can position the toast at the top of the screen. Similarly, as shown in the Bottom Right Position example, you can position the toast at the bottom-right corner of the screen.
+#### Duration Settings
+The Toast component automatically dismisses after a set duration. You can customize this duration using the `duration` prop on `<Toast.Root>`.
+```typescript
+<Toast.Root duration={3000}>
+  {/* Toast content */}
+</Toast.Root>
+```
+The `duration` prop accepts a value in milliseconds. The default duration is 5000ms (5 seconds). Setting `duration` to `0` will disable auto-dismissal, requiring the user to manually close the toast.
+As shown in the Custom Duration example above, you can set a custom duration of 2000ms (2 seconds) to make the toast dismiss more quickly.
+
+#### ARIA Role Configuration
+The Toast component supports two ARIA roles for different types of notifications:
+
+```typescript
+<Toast.Root role="alert">
+  {/* Important notification */}
+</Toast.Root>
+<Toast.Root role="status">
+  {/* Status update */}
+</Toast.Root>
+```
+
+The `role` prop accepts two values:
+- `"alert"` (default) - Sets `aria-live="assertive"`, making screen readers announce the toast immediately
+- `"status"` - Sets `aria-live="polite"`, making screen readers announce the toast when they finish their current task
+As shown in the Assertive example above, you can use `role="alert"` for important notifications. For less urgent information, as shown in the Status Role example, you can use `role="status"`.
+### Advanced Configuration
+#### Pause on Hover Behavior
+The Toast component automatically pauses its auto-dismissal timer when the user hovers over it. This behavior is built-in and requires no additional configuration. When the user moves their cursor away from the toast, the timer resumes with the remaining time.
+This feature ensures that users have enough time to read and interact with the toast content, especially for longer messages or when the toast contains interactive elements like buttons or links.
+#### State Change Callback
+For advanced use cases, you can track toast state changes using the `onChange$` callback:
+
+```typescript
+const handleChange$ = $((open: boolean) => {
+  // Perform actions when toast opens or closes
+  console.log(`Toast is now ${open ? 'open' : 'closed'}`);
+});
+<Toast.Root onChange$={handleChange$}>
+  {/* Toast content */}
+</Toast.Root>
+```
+As shown in the Change Callback example above, the `onChange$` callback receives the current open state as a boolean parameter. This is useful for tracking usage, logging, or triggering additional actions when the toast opens or closes.
+
+### Auto-Dismissal Behavior
+The Toast component's auto-dismissal timer operates exclusively on the client side, as it relies on browser timing mechanisms. This means:
+- The timer starts only after the component is hydrated on the client
+- The pause-on-hover functionality requires client-side interaction
+- The remaining time calculation happens entirely on the client
+<Showcase name="custom-duration" />
+
+<APITable api={api} />
