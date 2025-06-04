@@ -7,11 +7,11 @@ export default component$(() => {
   return (
     <DateInput.Root class="date-input-root-row">
       <DateInput.Label>European-style date entry:</DateInput.Label>
-      <DateInput.Entry separator=".">
+      <DateInput.Field separator=".">
         <DateInput.Day placeholder="DD" showLeadingZero={true} />
         <DateInput.Month placeholder="MM" showLeadingZero={true} />
         <DateInput.Year placeholder="YYYY" />
-      </DateInput.Entry>
+      </DateInput.Field>
     </DateInput.Root>
   );
 });

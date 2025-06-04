@@ -17,12 +17,12 @@ export default component$(() => {
     >
       <DateInput.Root>
         <DateInput.Label>Appointment Date</DateInput.Label>
-        <DateInput.Entry separator="/">
+        <DateInput.Field separator="/">
           <DateInput.Month />
           <DateInput.Day />
           <DateInput.Year />
           <DateInput.HiddenInput name="appointment-date" />
-        </DateInput.Entry>
+        </DateInput.Field>
       </DateInput.Root>
       <div class="date-input-button-container">
         <button type="submit" class="submit-button">
