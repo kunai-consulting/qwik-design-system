@@ -1,14 +1,16 @@
-import { $, component$, useSignal } from "@builder.io/qwik";
-
+import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
 import { Calendar } from "@kunai-consulting/qwik";
 
+import styles from "./calendar.css?inline";
+
 export default component$(() => {
+  useStyles$(styles);
   const selectedDate = useSignal<`${number}-${number}-${number}`>();
 
   return (
-    <div class="flex flex-col gap-10">
-      <Calendar.Root class="w-full flex flex-col gap-2 max-w-[300px]">
-        <Calendar.Header class="flex items-center justify-between">
+    <div class="calendar-example-container">
+      <Calendar.Root class="calendar-root">
+        <Calendar.Header class="calendar-header">
           <Calendar.Previous class="flex w-[20px] h-[20px] items-center justify-center border border-white rounded-md" />
           <Calendar.Title />
           <Calendar.Next class="flex w-[20px] h-[20px] items-center justify-center border border-white rounded-md" />

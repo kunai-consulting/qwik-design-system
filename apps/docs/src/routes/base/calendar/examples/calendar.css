@@ -1,0 +1,18 @@
+.calendar-example-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.calendar-root {
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
