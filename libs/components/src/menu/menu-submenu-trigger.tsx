@@ -11,7 +11,7 @@ export type PublicMenuSubmenuTriggerProps = Omit<
 
 /** A component that renders the submenu trigger */
 export const MenuSubmenuTriggerBase = component$<PublicMenuSubmenuTriggerProps>(
-  ({ onClick$, disabled, ...props }) => {
+  (props) => {
     const submenuContext = useContext(menuContextId);
 
     if (!submenuContext) {
@@ -31,8 +31,7 @@ export const MenuSubmenuTriggerBase = component$<PublicMenuSubmenuTriggerProps>(
         aria-haspopup="menu"
         aria-controls={submenuContext.contentId}
         aria-expanded={submenuContext.isOpenSig.value}
-        disabled={disabled}
-        onClick$={handleClick$}
+        onClick$={[handleClick$, props.onClick$]}
         ref={submenuContext.triggerRef}
         {...props}
       >
