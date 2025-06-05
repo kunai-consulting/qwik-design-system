@@ -40,7 +40,7 @@
   height: 100%;
 }
 
-.radio-group-error-message {
+.radio-group-error {
   color: red;
   font-size: 0.875rem;
   margin-top: 0.25rem;

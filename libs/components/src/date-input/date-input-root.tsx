@@ -20,7 +20,7 @@ type PublicDateInputRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   onChange$?: QRL<(dates: (ISODate | null)[]) => void>;
 };
 
-// no-bindings -- bindings handled by DateInputDateEntry
+// no-bindings -- bindings handled by DateInputEntry
 /** The root Date Input component that manages state and provides context */
 export const DateInputRootBase = component$<PublicDateInputRootProps>(
   ({ onChange$, ...props }) => {
@@ -58,7 +58,7 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>(
 );
 
 export const DateInputRoot = withAsChild(DateInputRootBase, (props) => {
-  resetIndexes("date-input-date-entry");
+  resetIndexes("date-input-entry");
   resetIndexes("date-input-segment");
   return props;
 });

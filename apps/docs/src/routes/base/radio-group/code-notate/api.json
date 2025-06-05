@@ -6,7 +6,7 @@
       }
     },
     {
-      "Radio Group Error Message": {
+      "Radio Group Error": {
         "inheritsFrom": "div",
         "dataAttributes": [
           {
@@ -179,7 +179,7 @@
       "description": "A description component for the radio group that provides additional context"
     },
     {
-      "name": "RadioGroup.ErrorMessage",
+      "name": "RadioGroup.Error",
       "description": "Component for displaying validation error messages"
     },
     {

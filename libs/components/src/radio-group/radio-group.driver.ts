@@ -26,8 +26,8 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator("[data-qds-radio-group-trigger]").nth(index);
   };
 
-  const getErrorMessage = () => {
-    return rootLocator.locator("[data-qds-radio-group-error-message]");
+  const getError = () => {
+    return rootLocator.locator("[data-qds-radio-group-error]");
   };
 
   const getDescription = () => {
@@ -46,7 +46,7 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getIndicatorAt,
     getLabelAt,
     getTriggerAt,
-    getErrorMessage,
+    getError,
     getDescription,
     getIndicator,
     isEnabled

@@ -20,10 +20,10 @@ export default component$(() => {
 
       {["Option 1", "Option 2"].map((value) => (
         <RadioGroup.Item value={value} key={value} class="radio-group-item">
-          <RadioGroup.Trigger class="radio-group-trigger">
-            <RadioGroup.Indicator class="radio-group-indicator" />
-          </RadioGroup.Trigger>
-          <RadioGroup.Label>{value}</RadioGroup.Label>
+          <RadioGroup.ItemTrigger class="radio-group-trigger">
+            <RadioGroup.ItemIndicator class="radio-group-indicator" />
+          </RadioGroup.ItemTrigger>
+          <RadioGroup.ItemLabel>{value}</RadioGroup.ItemLabel>
         </RadioGroup.Item>
       ))}
     </RadioGroup.Root>

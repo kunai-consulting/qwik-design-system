@@ -58,9 +58,9 @@ export const TermsCheckbox = component$(({ isChecked, isError }: TermsCheckboxPr
         <Checkbox.Label>I accept the Terms and Conditions</Checkbox.Label>
       </div>
       {isError.value && (
-        <Checkbox.ErrorMessage style={{ color: "red" }}>
+        <Checkbox.Error style={{ color: "red" }}>
           Please accept the terms and conditions
-        </Checkbox.ErrorMessage>
+        </Checkbox.Error>
       )}
     </Checkbox.Root>
   );

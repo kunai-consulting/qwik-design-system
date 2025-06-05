@@ -17,7 +17,7 @@ type PublicPaginationPageProps = {
   isDisabled?: boolean;
 };
 /** Individual page number button component */
-export const PaginationPage = component$(
+export const PaginationItem = component$(
   <C extends PublicAllowedElements = "button">(
     props: QwikIntrinsicElements[C] & {
       as?: C;
@@ -88,7 +88,7 @@ export const PaginationPage = component$(
         <Comp
           ref={pageRef}
           // Identifies a pagination page element
-          data-qds-pagination-page
+          data-qds-pagination-item
           // Specifies the index of the pagination page
           data-index={_index}
           // Indicates if this is the currently selected page

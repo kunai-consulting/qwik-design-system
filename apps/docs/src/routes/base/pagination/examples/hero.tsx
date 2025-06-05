@@ -20,9 +20,9 @@ export default component$(() => {
       {paginationItems.map((item, index) => {
         const uniqueKey = `page-${index}-${Date.now()}`;
         return (
-          <Pagination.Page class="pagination-page" key={uniqueKey}>
+          <Pagination.Item class="pagination-item" key={uniqueKey}>
             <span>{item}</span>
-          </Pagination.Page>
+          </Pagination.Item>
         );
       })}
       <Pagination.Next class="pagination-next">Next</Pagination.Next>

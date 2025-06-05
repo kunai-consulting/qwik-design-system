@@ -30,7 +30,7 @@ Target features. Some are essential, others are nice to have. Checked items are 
     - Month
     - Year
     - Separator
-  - ErrorMessage
+  - Error
   - HiddenInput
 
 ## Research Links

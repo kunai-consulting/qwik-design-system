@@ -57,7 +57,7 @@
       "description": "The checklist hidden input manages multiple checkbox form inputs"
     },
     {
-      "name": "Checklist.ErrorMessage"
+      "name": "Checklist.Error"
     },
     {
       "name": "Checklist.SelectAll"

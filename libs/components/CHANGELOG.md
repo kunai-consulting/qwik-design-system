@@ -1,5 +1,15 @@
 # @kunai-consulting/qwik-headless
 
+## 0.2.0
+
+### Minor Changes
+
+- d2415a0: Move date input/output from Root to DateEntry in order to support multiple dates
+
+### Patch Changes
+
+- 15be56a: feat: rename Error Message, Page to Item, and Item prefix to radio group for consistency
+
 ## 0.1.0
 
 ### Minor Changes
