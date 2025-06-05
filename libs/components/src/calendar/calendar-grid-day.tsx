@@ -22,22 +22,23 @@ export const CalendarGridDay = component$<PublicCalendarGridDayProps>(
       <>
         {context.datesArray.value.map((week, index) => {
           return (
-            <tr
+            // biome-ignore lint/a11y/useFocusableInteractive: The row itself doesn't need to be focusable, only its children (the grid cells).
+            <div
               key={`${week.toString()}-${index}`}
               // Identifies a row in the calendar grid body
               data-qds-calendar-grid-body-row
-              class=""
+              role="row"
             >
               {context.showWeekNumber && (
                 // Displays the week number in the calendar grid
-                <td data-qds-calendar-grid-body-week-number>
+                <div role="rowheader" data-qds-calendar-grid-body-week-number>
                   <span>
                     {(() => {
                       const validDay = week.find((day): day is string => day !== null);
                       return validDay ? getWeekNumber(validDay).toString() : "";
                     })()}
                   </span>
-                </td>
+                </div>
               )}
               {week.map((day, dayIndex) => {
                 const label = day
@@ -45,42 +46,37 @@ export const CalendarGridDay = component$<PublicCalendarGridDayProps>(
                   : undefined;
                 const disabled = day?.split("-")[1] !== context.monthToRender.value;
 
-                return (
-                  <td
+                return day ? (
+                  <button
+                    {...buttonProps}
                     key={`${week.toString()}-${day}-${dayIndex}`}
-                    role="presentation"
-                    aria-disabled={disabled}
+                    // A cell in the calendar grid body, represented as a button
+                    role="gridcell"
+                    type="button"
+                    // Indicates if this date is the current date
+                    data-current={day === context.currentDate}
+                    // Indicates if this date is currently selected
+                    data-selected={day === context.activeDate.value}
+                    aria-selected={day === context.activeDate.value ? "true" : undefined}
+                    // Stores the date value for this calendar cell
+                    data-value={day}
+                    aria-label={label}
+                    disabled={disabled}
+                    tabIndex={day === context.dateToFocus.value ? 0 : -1}
+                    onClick$={[
+                      $(() => {
+                        context.activeDate.value = day as LocalDate;
+                        onDateChange$?.(day as LocalDate);
+                      })
+                    ]}
                   >
-                    {day && (
-                      <button
-                        {...buttonProps}
-                        type="button"
-                        // Indicates if this date is the current date
-                        data-current={day === context.currentDate}
-                        // Indicates if this date is currently selected
-                        data-selected={day === context.activeDate.value}
-                        aria-selected={
-                          day === context.activeDate.value ? "true" : undefined
-                        }
-                        // Stores the date value for this calendar cell
-                        data-value={day}
-                        aria-label={label}
-                        disabled={disabled}
-                        tabIndex={day === context.dateToFocus.value ? 0 : -1}
-                        onClick$={[
-                          $(() => {
-                            context.activeDate.value = day as LocalDate;
-                            onDateChange$?.(day as LocalDate);
-                          })
-                        ]}
-                      >
-                        {day.split("-")[2]}
-                      </button>
-                    )}
-                  </td>
+                    {day.split("-")[2]}
+                  </button>
+                ) : (
+                  <div key={`${week.toString()}-empty-${dayIndex}`} />
                 );
               })}
-            </tr>
+            </div>
           );
         })}
       </>

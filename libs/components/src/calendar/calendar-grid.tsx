@@ -8,9 +8,7 @@ import {
 } from "@builder.io/qwik";
 import { calendarContextId } from "./calendar-context";
 import type { LocalDate, Locale, Month } from "./types";
-type PublicCalendarGridProps = PropsOf<"table"> & {
-  /** Props to be spread onto each date button */
-  buttonProps?: PropsOf<"button">;
+type PublicCalendarGridProps = PropsOf<"div"> & {
   /** Event handler called when a date is selected */
   onDateChange$?: QRL<(date: LocalDate) => void>;
 };
@@ -61,13 +59,13 @@ export const CalendarGrid = component$<PublicCalendarGridProps>((props) => {
     context.monthToRender.value = String(currentMonth + 1).padStart(2, "0") as Month;
   });
 
-  const updateDateFocused = $((e: KeyboardEvent, tbody: HTMLTableSectionElement) => {
+  const updateDateFocused = $((e: KeyboardEvent, gridBody: HTMLDivElement) => {
     if (!ACTION_KEYS.includes(e.key.toLowerCase() as (typeof ACTION_KEYS)[number]))
       return;
     const elFocus = document.activeElement;
     if (elFocus?.tagName.toLowerCase() !== "button") return;
 
-    const buttons = Array.from(tbody.getElementsByTagName("button"));
+    const buttons = Array.from(gridBody.getElementsByTagName("button"));
     const idx = buttons.indexOf(elFocus as HTMLButtonElement);
     const currentDate = elFocus?.getAttribute("data-value") as LocalDate;
     const key = e.key.toLowerCase();
@@ -167,42 +165,50 @@ export const CalendarGrid = component$<PublicCalendarGridProps>((props) => {
     }
   });
 
-  const { buttonProps, onDateChange$, ...tableProps } = props;
+  const { onDateChange$, ...divProps } = props;
 
   return (
     // The main calendar grid container
-    <table data-qds-calendar-grid role="grid" {...tableProps}>
+    <div
+      data-qds-calendar-grid
+      role="grid"
+      {...divProps}
+      data-show-week-numbers={context.showWeekNumber ? "true" : "false"}
+    >
       {context.showDaysOfWeek && (
         // The header section of the calendar grid
-        <thead data-qds-calendar-grid-header>
-          <tr data-qds-calendar-grid-header-row>
-            {context.showWeekNumber && <td />}
-            {context.daysOfWeek.map((day) => (
-              <th
-                key={day}
-                scope="col"
-                aria-label={day}
-                // A cell in the calendar grid header
-                data-qds-calendar-grid-header-cell
-              >
-                {day.slice(0, 2).normalize("NFD").replace(/\p{M}/gu, "")}
-              </th>
-            ))}
-          </tr>
-        </thead>
+        // biome-ignore lint/a11y/useFocusableInteractive: The header section contains no elements that a user needs to interact with or focus on.
+        <div data-qds-calendar-grid-header-row role="row">
+          {context.showWeekNumber && (
+            <div role="columnheader" data-qds-calendar-grid-header-cell>
+              Wk
+            </div>
+          )}
+          {context.daysOfWeek.map((day) => (
+            <div
+              key={day}
+              role="columnheader"
+              aria-label={day}
+              // A cell in the calendar grid header
+              data-qds-calendar-grid-header-cell
+            >
+              {day.slice(0, 2).normalize("NFD").replace(/\p{M}/gu, "")}
+            </div>
+          ))}
+        </div>
       )}
-      <tbody
+      <div
         // The body section of the calendar grid
         data-qds-calendar-grid-body
         preventdefault:keydown
         onKeyDown$={[
-          $((e: KeyboardEvent, target: HTMLTableSectionElement) => {
+          $((e: KeyboardEvent, target: HTMLDivElement) => {
             updateDateFocused(e, target);
           })
         ]}
       >
         <Slot />
-      </tbody>
-    </table>
+      </div>
+    </div>
   );
 });
