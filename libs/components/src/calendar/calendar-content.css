@@ -1,0 +1,5 @@
+@layer qds {
+  [data-qds-calendar-popover-content] {
+    width: auto;
+  }
+}
