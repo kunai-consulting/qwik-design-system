@@ -171,11 +171,11 @@ export const CalendarGrid = component$<PublicCalendarGridProps>((props) => {
 
   return (
     // The main calendar grid container
-    <table data-qds-datepicker-grid role="grid" {...tableProps}>
+    <table data-qds-calendar-grid role="grid" {...tableProps}>
       {context.showDaysOfWeek && (
         // The header section of the calendar grid
-        <thead data-qds-datepicker-grid-header>
-          <tr data-qds-datepicker-grid-header-row>
+        <thead data-qds-calendar-grid-header>
+          <tr data-qds-calendar-grid-header-row>
             {context.showWeekNumber && <td />}
             {context.daysOfWeek.map((day) => (
               <th
@@ -183,7 +183,7 @@ export const CalendarGrid = component$<PublicCalendarGridProps>((props) => {
                 scope="col"
                 aria-label={day}
                 // A cell in the calendar grid header
-                data-qds-datepicker-grid-header-cell
+                data-qds-calendar-grid-header-cell
               >
                 {day.slice(0, 2).normalize("NFD").replace(/\p{M}/gu, "")}
               </th>
@@ -193,7 +193,7 @@ export const CalendarGrid = component$<PublicCalendarGridProps>((props) => {
       )}
       <tbody
         // The body section of the calendar grid
-        data-qds-datepicker-grid-body
+        data-qds-calendar-grid-body
         preventdefault:keydown
         onKeyDown$={[
           $((e: KeyboardEvent, target: HTMLTableSectionElement) => {
@@ -201,61 +201,6 @@ export const CalendarGrid = component$<PublicCalendarGridProps>((props) => {
           })
         ]}
       >
-        {/* {context.datesArray.value.map((week, index) => {
-          return (
-            <tr key={`${week.toString()}-${index}`} data-qds-datepicker-grid-body-row class="">
-              {context.showWeekNumber && (
-                <td data-qds-datepicker-grid-body-week-number>
-                  <span>
-                    {week.find((day): day is string => day !== null)
-                      ? getWeekNumber(
-                          week.find((day): day is string => day !== null)!
-                        ).toString()
-                      : ""}
-                  </span>
-                </td>
-              )}
-              {week.map((day, dayIndex) => {
-                const label = day
-                  ? dateFormatter(context.locale).format(new Date(`${day}T12:00:00`))
-                  : undefined;
-                const disabled = day?.split("-")[1] !== context.monthToRender.value;
-
-                return (
-                  <td
-                    key={`${week.toString()}-${day}-${dayIndex}`}
-                    role="presentation"
-                    aria-disabled={disabled}
-                  >
-                    {day && (
-                      <button
-                        {...buttonProps}
-                        type="button"
-                        data-current={day === context.currentDate}
-                        data-selected={day === context.activeDate.value}
-                        aria-selected={
-                          day === context.activeDate.value ? "true" : undefined
-                        }
-                        data-value={day}
-                        aria-label={label}
-                        disabled={disabled}
-                        tabIndex={day === context.dateToFocus.value ? 0 : -1}
-                        onClick$={[
-                          $(() => {
-                            context.activeDate.value = day as LocalDate;
-                            props.onDateChange$?.(day as LocalDate);
-                          }),
-                        ]}
-                      >
-                        {day.split("-")[2]}
-                      </button>
-                    )}
-                  </td>
-                );
-              })}
-            </tr>
-          );
-        })} */}
         <Slot />
       </tbody>
     </table>

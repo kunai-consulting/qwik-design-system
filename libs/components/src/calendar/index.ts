@@ -5,3 +5,5 @@ export { CalendarPrevious as Previous } from "./calendar-previous";
 export { CalendarNext as Next } from "./calendar-next";
 export { CalendarTitle as Title } from "./calendar-title";
 export { CalendarGridDay as GridDay } from "./calendar-grid-day";
+export { CalendarContent as Content } from "./calendar-content";
+export { CalendarTrigger as Trigger } from "./calendar-trigger";

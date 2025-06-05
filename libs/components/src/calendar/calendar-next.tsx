@@ -49,7 +49,7 @@ export const CalendarNext = component$((props: CalendarNextProps) => {
   return (
     <button
       // The next month navigation button
-      data-qds-datepicker-next
+      data-qds-calendar-next
       type="button"
       {...props}
       onClick$={[

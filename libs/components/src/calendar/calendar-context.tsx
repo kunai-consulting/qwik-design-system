@@ -25,4 +25,5 @@ export type CalendarContext = {
   currentDate: LocalDate;
   localId: string;
   isPopoverOpenSig: Signal<boolean>;
+  mode: "inline" | "popover";
 };

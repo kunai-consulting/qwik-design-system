@@ -25,12 +25,12 @@ export const CalendarGridDay = component$<PublicCalendarGridDayProps>(
             <tr
               key={`${week.toString()}-${index}`}
               // Identifies a row in the calendar grid body
-              data-qds-datepicker-grid-body-row
+              data-qds-calendar-grid-body-row
               class=""
             >
               {context.showWeekNumber && (
                 // Displays the week number in the calendar grid
-                <td data-qds-datepicker-grid-body-week-number>
+                <td data-qds-calendar-grid-body-week-number>
                   <span>
                     {(() => {
                       const validDay = week.find((day): day is string => day !== null);
