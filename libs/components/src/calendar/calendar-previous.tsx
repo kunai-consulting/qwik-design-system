@@ -50,7 +50,7 @@ export const CalendarPrevious = component$((props: CalendarPreviousProps) => {
   return (
     <button
       // The previous month navigation button
-      data-qds-datepicker-previous
+      data-qds-calendar-previous
       type="button"
       onClick$={[
         decreaseDate,
