@@ -90,8 +90,8 @@ export default component$(() => {
                 onSelect$={handleRadioGroupChange}
               >
                 <RadioGroup.Item value={size} key={size} class="radio-group-item">
-                  <RadioGroup.Label>{size}</RadioGroup.Label>
-                  <RadioGroup.Indicator class="radio-group-indicator" />
+                  <RadioGroup.ItemLabel>{size}</RadioGroup.ItemLabel>
+                  <RadioGroup.ItemIndicator class="radio-group-indicator" />
                 </RadioGroup.Item>
               </Menu.Item>
             ))}
