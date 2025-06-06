@@ -21,9 +21,9 @@ export const MenuContentBase = component$<MenuContentProps>((props) => {
   useTask$(({ track, cleanup }) => {
     // Track these values to reposition when any of them change
     const isOpen = track(() => context.isOpenSig.value);
-    const isContextMenu = track(() => context.isContextMenu);
-    const x = track(() => context.contextMenuX) ?? 0;
-    const y = track(() => context.contextMenuY) ?? 0;
+    const isContextMenu = track(() => context.isContextMenu.value);
+    const x = track(() => context.contextMenuX.value);
+    const y = track(() => context.contextMenuY.value);
     const contentEl = track(() => context.contentRef.value);
     let initialMargin = 0;
 

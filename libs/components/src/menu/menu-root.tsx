@@ -46,11 +46,11 @@ export type MenuContext = {
   /** The position of the menu */
   position?: MenuPosition;
   /** X coordinate for context menu positioning */
-  contextMenuX?: number;
+  contextMenuX: Signal<number>;
   /** Y coordinate for context menu positioning */
-  contextMenuY?: number;
+  contextMenuY: Signal<number>;
   /** Whether the menu was opened via context menu */
-  isContextMenu?: boolean;
+  isContextMenu: Signal<boolean>;
   /** The function to call when an item is selected */
   onItemSelection$: (value: string) => void;
   /** The direction to focus on when the menu is opened */
@@ -143,9 +143,9 @@ const MenuRootBase = component$<PublicMenuRootProps>((props) => {
     triggerRef,
     currentFocusEl,
     itemRefs,
-    contextMenuX: contextMenuX.value,
-    contextMenuY: contextMenuY.value,
-    isContextMenu: isContextMenu.value,
+    contextMenuX: contextMenuX,
+    contextMenuY: contextMenuY,
+    isContextMenu: isContextMenu,
     onItemSelection$: handleItemSelection,
     disabled: isDisabledSig,
     openFocusDirection
