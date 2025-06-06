@@ -23,8 +23,8 @@ test.describe("critical functionality", () => {
     await d.getTrigger().click();
     const root = d.getRoot();
 
-    await expect(root).toHaveAttribute("role", "alert");
-    await expect(root).toHaveAttribute("aria-live", "assertive");
+    await expect(root).toHaveAttribute("role", "status");
+    await expect(root).toHaveAttribute("aria-live", "polite");
   });
 
   test(`GIVEN a toast with title and description
@@ -111,51 +111,6 @@ test.describe("critical functionality", () => {
     // Now it should close after the remaining time
     await page.waitForTimeout(5500);
     await expect(d.getContent()).not.toBeVisible();
-  });
-});
-
-test.describe("accessibility", () => {
-  test(`GIVEN a toast with role="status"
-        WHEN it is opened
-        THEN it should have the correct role and aria-live`, async ({ page }) => {
-    const d = await setup(page, "status-role");
-    await d.getTrigger().click();
-    const root = d.getRoot();
-
-    await expect(root).toHaveAttribute("role", "status");
-    await expect(root).toHaveAttribute("aria-live", "polite");
-  });
-
-  test(`GIVEN a toast with assertive priority
-        WHEN it is opened
-        THEN it should have aria-live="assertive"`, async ({ page }) => {
-    const d = await setup(page, "assertive");
-    await d.getTrigger().click();
-    const root = d.getRoot();
-
-    await expect(root).toHaveAttribute("aria-live", "assertive");
-  });
-});
-
-test.describe("positioning", () => {
-  test(`GIVEN a toast with position="top"
-        WHEN it is opened
-        THEN it should have the correct position data attribute`, async ({ page }) => {
-    const d = await setup(page, "position-top");
-    await d.getTrigger().click();
-    const root = d.getRoot();
-
-    await expect(root).toHaveAttribute("data-position", "top");
-  });
-
-  test(`GIVEN a toast with position="bottom-right"
-        WHEN it is opened
-        THEN it should have the correct position data attribute`, async ({ page }) => {
-    const d = await setup(page, "position-bottom-right");
-    await d.getTrigger().click();
-    const root = d.getRoot();
-
-    await expect(root).toHaveAttribute("data-position", "bottom-right");
   });
 });
 

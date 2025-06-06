@@ -15,18 +15,6 @@
                 "prop": "duration",
                 "type": "number",
                 "defaultValue": "5000"
-              },
-              {
-                "comment": "Position where the toast appears on screen",
-                "prop": "position",
-                "type": "\"top\" | \"top-right\" | \"top-left\" | \"bottom\" | \"bottom-right\" | \"bottom-left\"",
-                "defaultValue": "\"top\""
-              },
-              {
-                "comment": "ARIA role for the toast. Use 'alert' for important messages, 'status' for non-critical updates",
-                "prop": "role",
-                "type": "\"alert\" | \"status\"",
-                "defaultValue": "\"alert\""
               }
             ]
           },
@@ -56,11 +44,6 @@
             "name": "data-closed",
             "type": "boolean",
             "comment": "Indicates whether the toast is currently closed"
-          },
-          {
-            "name": "data-position",
-            "type": "string",
-            "comment": "The position of the toast on screen"
           }
         ]
       }
@@ -141,12 +124,9 @@
     ]
   },
   "features": [
-    "WAI ARIA Alert and Status pattern implementation",
     "Automatic dismissal with configurable duration",
     "Pause-on-hover functionality to prevent dismissal",
-    "Six position variants (top, top-left, top-right, bottom, bottom-left, bottom-right)",
     "Fixed positioning that persists during page scroll",
-    "Support for both alert and status roles",
     "Accessible title and description with proper ARIA relationships",
     "Manual close functionality with keyboard support",
     "Composable structure allowing flexible content",

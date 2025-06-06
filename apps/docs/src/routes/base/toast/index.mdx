@@ -1,7 +1,7 @@
 import api from "./code-notate/api.json";
 
 # Toast
-A notification system that displays brief messages to users with automatic dismissal and positioning options.
+A notification system that displays brief messages to users with automatic dismissal options.
 <Showcase name="hero" />
 
 ## Features
@@ -39,34 +39,6 @@ You can respond to toast state changes with the `onChange$` callback.
 <Showcase name="on-change" />
 
 The `onChange$` callback is triggered whenever the toast opens or closes, allowing you to perform side effects or track usage.
-
-### Visual Features
-#### Positioning Options
-Toasts can be positioned in different areas of the screen.
-
-##### Top Position
-<Showcase name="position-top" />
-This example positions the toast at the top of the screen using `position="top"`.
-
-##### Bottom Right Position
-<Showcase name="position-bottom-right" />
-This example positions the toast at the bottom-right corner using `position="bottom-right"`.
-
-##### Bottom Left Position
-<Showcase name="position-bottom-left" />
-This example positions the toast at the bottom-left corner using `position="bottom-left"`.
-
-### Accessibility Features
-#### Assertive Announcements
-For important notifications, you can use the assertive role.
-<Showcase name="assertive" />
-
-This example uses `role="alert"` which sets `aria-live="assertive"`, making screen readers announce the toast immediately, interrupting any current announcements.
-
-#### Status Announcements
-For less urgent information, you can use the status role.
-<Showcase name="status-role" />
-This example uses `role="status"` which sets `aria-live="polite"`, making screen readers announce the toast when they finish their current task.
 
 ## Component State
 ### Using Component State
@@ -109,22 +81,6 @@ This feature ensures that users have enough time to read and interact with the t
 
 ## Configuration
 ### Core Configuration
-#### Position Options
-The Toast component can be positioned in different areas of the screen using the `position` prop on `<Toast.Root>`.
-```typescript
-<Toast.Root position="top-right">
-  {/* Toast content */}
-</Toast.Root>
-```
-The available position values are:
-- `"top"` (default) - Centers the toast at the top of the screen
-- `"top-right"` - Positions the toast at the top-right corner
-- `"top-left"` - Positions the toast at the top-left corner
-- `"bottom"` - Centers the toast at the bottom of the screen
-- `"bottom-right"` - Positions the toast at the bottom-right corner
-- `"bottom-left"` - Positions the toast at the bottom-left corner
-
-As shown in the Position Top example above, you can position the toast at the top of the screen. Similarly, as shown in the Bottom Right Position example, you can position the toast at the bottom-right corner of the screen.
 #### Duration Settings
 The Toast component automatically dismisses after a set duration. You can customize this duration using the `duration` prop on `<Toast.Root>`.
 ```typescript
@@ -135,22 +91,6 @@ The Toast component automatically dismisses after a set duration. You can custom
 The `duration` prop accepts a value in milliseconds. The default duration is 5000ms (5 seconds). Setting `duration` to `0` will disable auto-dismissal, requiring the user to manually close the toast.
 As shown in the Custom Duration example above, you can set a custom duration of 2000ms (2 seconds) to make the toast dismiss more quickly.
 
-#### ARIA Role Configuration
-The Toast component supports two ARIA roles for different types of notifications:
-
-```typescript
-<Toast.Root role="alert">
-  {/* Important notification */}
-</Toast.Root>
-<Toast.Root role="status">
-  {/* Status update */}
-</Toast.Root>
-```
-
-The `role` prop accepts two values:
-- `"alert"` (default) - Sets `aria-live="assertive"`, making screen readers announce the toast immediately
-- `"status"` - Sets `aria-live="polite"`, making screen readers announce the toast when they finish their current task
-As shown in the Assertive example above, you can use `role="alert"` for important notifications. For less urgent information, as shown in the Status Role example, you can use `role="status"`.
 ### Advanced Configuration
 #### Pause on Hover Behavior
 The Toast component automatically pauses its auto-dismissal timer when the user hovers over it. This behavior is built-in and requires no additional configuration. When the user moves their cursor away from the toast, the timer resumes with the remaining time.
@@ -169,11 +109,6 @@ const handleChange$ = $((open: boolean) => {
 ```
 As shown in the Change Callback example above, the `onChange$` callback receives the current open state as a boolean parameter. This is useful for tracking usage, logging, or triggering additional actions when the toast opens or closes.
 
-### Auto-Dismissal Behavior
-The Toast component's auto-dismissal timer operates exclusively on the client side, as it relies on browser timing mechanisms. This means:
-- The timer starts only after the component is hydrated on the client
-- The pause-on-hover functionality requires client-side interaction
-- The remaining time calculation happens entirely on the client
 <Showcase name="custom-duration" />
 
 <APITable api={api} />

@@ -19,20 +19,11 @@ import styles from "./toast.css?inline";
 type ToastRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   onChange$?: (open: boolean) => void;
   duration?: number;
-  position?: "top" | "top-right" | "top-left" | "bottom" | "bottom-right" | "bottom-left";
-  role?: "alert" | "status";
 } & BindableProps<{ open: boolean }>;
 
 export const ToastRootBase = component$((props: ToastRootProps) => {
   useStyles$(styles);
-  const {
-    "bind:open": givenOpenSig,
-    onChange$,
-    duration = 5000,
-    position = "top",
-    role = "alert",
-    ...rest
-  } = props;
+  const { "bind:open": givenOpenSig, onChange$, duration = 5000, ...rest } = props;
 
   const localId = useId();
   const titleId = `${localId}-title`;
@@ -51,32 +42,36 @@ export const ToastRootBase = component$((props: ToastRootProps) => {
     isOpenSig,
     titleId,
     descriptionId,
-    role,
-    position,
     duration
   };
 
   useContextProvider(toastContextId, context);
+
+  // Handle onChange callback - separate from hover logic
+  useTask$(({ track }) => {
+    const isOpen = track(() => isOpenSig.value);
+
+    // Only call onChange$ after initial render and when open state actually changes
+    if (!isInitialRenderSig.value) {
+      onChange$?.(isOpen);
+    }
+  });
 
   // Auto-dismiss functionality with pause-on-hover
   useTask$(({ track, cleanup }) => {
     track(() => isOpenSig.value);
     track(() => isHoveredSig.value);
 
-    // Only call onChange$ after initial render
-    if (!isInitialRenderSig.value) {
-      onChange$?.(isOpenSig.value);
-    }
-
     // Auto-dismiss functionality
     if (isOpenSig.value && duration !== 0 && duration > 0) {
       if (isHoveredSig.value) {
-        // Toast is hovered - pause the timer and store remaining time
-        if (startTimeSig.value !== null) {
-          const elapsed = Date.now() - startTimeSig.value;
-          remainingTimeSig.value = Math.max(0, remainingTimeSig.value - elapsed);
-          startTimeSig.value = null;
+        if (startTimeSig.value === null) {
+          return;
         }
+        // Toast is hovered - pause the timer and store remaining time
+        const elapsed = Date.now() - startTimeSig.value;
+        remainingTimeSig.value = Math.max(0, remainingTimeSig.value - elapsed);
+        startTimeSig.value = null;
       } else {
         // Toast is not hovered - start or resume the timer
         if (startTimeSig.value === null) {
@@ -94,12 +89,11 @@ export const ToastRootBase = component$((props: ToastRootProps) => {
       remainingTimeSig.value = duration;
       startTimeSig.value = null;
     }
+  });
 
-    // Mark that initial render is complete
-    cleanup(() => {
-      if (!isInitialRenderSig.value) return;
-      isInitialRenderSig.value = false;
-    });
+  // Mark initial render as complete
+  useTask$(() => {
+    isInitialRenderSig.value = false;
   });
 
   const handleMouseEnter$ = $(() => {
@@ -110,25 +104,23 @@ export const ToastRootBase = component$((props: ToastRootProps) => {
     isHoveredSig.value = false;
   });
 
-  const ariaLive = role === "alert" ? "assertive" : "polite";
-
   return (
     <Render
       data-qds-toast-root
       fallback="div"
-      role={role}
-      aria-live={ariaLive}
+      role="status"
+      aria-live="polite"
       aria-labelledby={titleId}
       aria-describedby={descriptionId}
       data-open={isOpenSig.value}
       data-closed={!isOpenSig.value}
-      data-position={position}
     >
       <Popover.Root bind:open={isOpenSig} {...rest}>
         <Popover.Content
           data-qds-toast-content
-          data-position={position}
           popover="auto"
+          role="status"
+          aria-live="polite"
           onMouseEnter$={[handleMouseEnter$, props.onMouseEnter$]}
           onMouseLeave$={[handleMouseLeave$, props.onMouseLeave$]}
         >

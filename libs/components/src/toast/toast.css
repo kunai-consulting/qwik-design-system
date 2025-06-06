@@ -1,39 +1,5 @@
 @layer qds {
-  [data-qds-toast-content] {
-    position: fixed !important;
-  }
-
-  /* Top positions */
-  [data-qds-toast-content][data-position="top"] {
-    top: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  [data-qds-toast-content][data-position="top-left"] {
-    top: 1rem;
-    left: 1rem;
-  }
-
-  [data-qds-toast-content][data-position="top-right"] {
-    top: 1rem;
-    right: 1rem;
-  }
-
-  /* Bottom positions */
-  [data-qds-toast-content][data-position="bottom"] {
-    left: 50%;
-    bottom: 1rem;
-    transform: translateX(-50%);
-  }
-
-  [data-qds-toast-content][data-position="bottom-left"] {
-    left: 1rem;
-    bottom: 1rem;
-  }
-
-  [data-qds-toast-content][data-position="bottom-right"] {
-    right: 1rem;
-    bottom: 1rem;
+  [data-qds-toast-root] [data-qds-toast-content] {
+    position: fixed;
   }
 }

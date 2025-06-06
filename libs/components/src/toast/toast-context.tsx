@@ -5,8 +5,6 @@ export interface ToastContext {
   isOpenSig: Signal<boolean>;
   titleId: string;
   descriptionId: string;
-  role: "alert" | "status";
-  position: "top" | "top-right" | "top-left" | "bottom" | "bottom-right" | "bottom-left";
   duration?: number;
 }
 

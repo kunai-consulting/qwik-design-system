@@ -44,9 +44,8 @@ Pieces:
 ---
 
 ## Attributes
-- role="alert" (root)
-- role="status" (for non-critical messages)
-- aria-live="polite" (default) or "assertive" (for important messages)
+- role="status"
+- aria-live="polite"
 - aria-labelledby (references title)
 - aria-describedby (references description)
 - data-qds-toast-root
@@ -55,8 +54,6 @@ Pieces:
 - data-qds-toast-close
 - data-open
 - data-closed
-- data-swipe-direction
-- data-position
 
 ---
 
@@ -80,8 +77,6 @@ interface ToastRootProps {
   open?: boolean;
   onOpenChange$?: (open: boolean) => void;
   duration?: number;
-  position?: 'top' | 'top-right' | 'top-left' | 'bottom' | 'bottom-right' | 'bottom-left';
-  role?: 'alert' | 'status';
 }
 ```
 

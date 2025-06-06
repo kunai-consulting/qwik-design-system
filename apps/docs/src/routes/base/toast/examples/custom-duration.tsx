@@ -17,7 +17,7 @@ export default component$(() => {
       >
         Open Toast
       </button>
-      <Toast.Root bind:open={isOpen} duration={2000} position={"bottom"}>
+      <Toast.Root bind:open={isOpen} duration={2000}>
         <Toast.Title>Custom Duration Toast</Toast.Title>
         <Toast.Description>
           This toast will close automatically after 2 seconds
