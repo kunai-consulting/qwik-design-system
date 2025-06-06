@@ -32,6 +32,7 @@ export const ToastRootBase = component$((props: ToastRootProps) => {
   const isHoveredSig = useSignal(false);
   const remainingTimeSig = useSignal(duration);
   const startTimeSig = useSignal<number | null>(null);
+  const previousOpenSig = useSignal<boolean | null>(null);
 
   const { openSig: isOpenSig } = useBindings(props, {
     open: false
@@ -52,9 +53,16 @@ export const ToastRootBase = component$((props: ToastRootProps) => {
     const isOpen = track(() => isOpenSig.value);
 
     // Only call onChange$ after initial render and when open state actually changes
-    if (!isInitialRenderSig.value) {
+    if (
+      !isInitialRenderSig.value &&
+      previousOpenSig.value !== null &&
+      previousOpenSig.value !== isOpen
+    ) {
       onChange$?.(isOpen);
     }
+
+    // Update previous value for next comparison
+    previousOpenSig.value = isOpen;
   });
 
   // Auto-dismiss functionality with pause-on-hover
