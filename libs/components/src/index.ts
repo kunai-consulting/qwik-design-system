@@ -15,5 +15,7 @@ export * as Tree from "./tree";
 export * as Switch from "./switch";
 export * as Tabs from "./tabs";
 export * as Toggle from "./toggle";
+export * as Menu from "./menu";
+
 export { Render } from "./render/render";
 export { withAsChild } from "./as-child/as-child";
