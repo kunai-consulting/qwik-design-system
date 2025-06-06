@@ -73,7 +73,8 @@ export const CalendarGridDay = component$<PublicCalendarGridDayProps>(
                     {day.split("-")[2]}
                   </button>
                 ) : (
-                  <div key={`${week.toString()}-empty-${dayIndex}`} />
+                  // biome-ignore lint/a11y/useFocusableInteractive: not intended to be interactive
+                  <div key={`${week.toString()}-empty-${dayIndex}`} role="gridcell" />
                 );
               })}
             </div>
