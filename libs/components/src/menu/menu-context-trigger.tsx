@@ -10,10 +10,12 @@ export const MenuContextTriggerBase = component$<PropsOf<"div">>((props) => {
   const context = useContext(menuContextId);
 
   const handleContextMenu = $((event: MouseEvent) => {
-    context.isContextMenu = true;
-    context.contextMenuX = event.clientX;
-    context.contextMenuY = event.clientY;
-    context.isOpenSig.value = true;
+    if (context.isContextMenu && context.contextMenuX && context.contextMenuY) {
+      context.isContextMenu.value = true;
+      context.contextMenuX.value = event.clientX;
+      context.contextMenuY.value = event.clientY;
+      context.isOpenSig.value = true;
+    }
   });
 
   return (
