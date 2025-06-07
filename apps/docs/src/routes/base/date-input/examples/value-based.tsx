@@ -13,7 +13,7 @@ export default component$(() => {
     <div class="date-input-container">
       <DateInput.Root class="date-input-root-col">
         <DateInput.Label>Choose your date:</DateInput.Label>
-        <DateInput.Entry
+        <DateInput.Field
           date={selectedDate.value}
           onChange$={handleChange$}
           separator="/"
@@ -21,7 +21,7 @@ export default component$(() => {
           <DateInput.Month showLeadingZero />
           <DateInput.Day showLeadingZero />
           <DateInput.Year />
-        </DateInput.Entry>
+        </DateInput.Field>
       </DateInput.Root>
 
       <p>

@@ -17,7 +17,7 @@ import polyfill from "@oddbird/css-anchor-positioning/fn";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 
-type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
+export type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   onChange$?: (open: boolean) => void;
 } & BindableProps<{ open: boolean }>;
 

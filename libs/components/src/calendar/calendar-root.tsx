@@ -1,5 +1,4 @@
 import {
-  type PropsOf,
   type QRL,
   type Signal,
   Slot,
@@ -11,12 +10,13 @@ import {
   useVisibleTask$
 } from "@builder.io/qwik";
 import { useBoundSignal } from "@kunai-consulting/qwik-utils";
+import { PopoverRootBase, type PopoverRootProps } from "../popover/popover-root";
 import type { CalendarContext } from "./calendar-context";
 import { calendarContextId } from "./calendar-context";
 import { ARIA_LABELS, MONTHS_LG, WEEKDAYS } from "./constants";
 import type { LocalDate, Locale, Month } from "./types";
 import { daysArrGenerator } from "./utils";
-export type PublicCalendarRootProps = PropsOf<"div"> & {
+export type PublicCalendarRootProps = Omit<PopoverRootProps, "onChange$"> & {
   /** The locale used for formatting dates and text */
   locale?: Locale;
   /** The initial date to display when the calendar first loads */
@@ -33,6 +33,8 @@ export type PublicCalendarRootProps = PropsOf<"div"> & {
   onDateChange$?: QRL<(date: LocalDate) => void>;
   /** Reactive value to control the open state of the calendar popover */
   "bind:open"?: Signal<boolean>;
+  /** The display mode of the calendar */
+  mode?: "inline" | "popover";
 };
 const regex = /^\d{4}-(0[1-9]|1[0-2])-\d{2}$/;
 /** The root calendar component that manages state and provides context */
@@ -45,6 +47,7 @@ export const CalendarRoot = component$<PublicCalendarRootProps>(
     showDaysOfWeek = true,
     onDateChange$,
     "bind:open": givenOpenSig,
+    mode = "inline",
     ...props
   }) => {
     const labelStr = props["aria-label"] ?? ARIA_LABELS[locale].root;
@@ -82,7 +85,8 @@ export const CalendarRoot = component$<PublicCalendarRootProps>(
       dateToFocus,
       currentDate,
       localId,
-      isPopoverOpenSig
+      isPopoverOpenSig,
+      mode
     };
 
     useContextProvider(calendarContextId, context);
@@ -118,16 +122,16 @@ export const CalendarRoot = component$<PublicCalendarRootProps>(
     });
 
     return (
-      <div
+      <PopoverRootBase
         // The root container of the calendar component
-        data-qds-datepicker-root
+        data-qds-calendar-root
         // Controls the visual theme of the calendar
         data-theme="light"
         aria-label={labelSignal.value}
         {...props}
       >
         <Slot />
-      </div>
+      </PopoverRootBase>
     );
   }
 );

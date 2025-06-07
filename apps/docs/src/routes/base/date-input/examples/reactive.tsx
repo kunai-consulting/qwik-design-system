@@ -10,13 +10,13 @@ export default component$(() => {
     <div class="date-input-container">
       <DateInput.Root class="date-input-root-col">
         <DateInput.Label>Party like it's:</DateInput.Label>
-        <DateInput.Entry bind:date={selectedDate}>
+        <DateInput.Field bind:date={selectedDate}>
           <DateInput.Month />
           <span>/</span>
           <DateInput.Day />
           <span>/</span>
           <DateInput.Year />
-        </DateInput.Entry>
+        </DateInput.Field>
       </DateInput.Root>
       <p>
         Bound date: <span class="external-value">{selectedDate.value}</span>

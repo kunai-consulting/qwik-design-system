@@ -38,13 +38,12 @@
     }
   ],
   "features": [
-    "Date and time segment UI for structured input",
+    "Structured date input for year, month, and day",
     "Keyboard tab and arrow navigation between segments",
     "Composable format (mm/dd/yyyy, dd.mm.yyyy, yyyy-mm-dd, etc.)",
-    "Automatic segment validation and constraints",
     "Dynamic date value construction from segments",
     "Smart segment focus management",
-    "Month-aware day validation (adjusts max days based on month/year)",
+    "Constrains day input based on the current month and year",
     "Placeholder text and visual state handling",
     "Accessibility features including ARIA attributes",
     "Form integration with hidden input"
