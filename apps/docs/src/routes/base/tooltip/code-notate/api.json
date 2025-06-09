@@ -1,0 +1,259 @@
+{
+  "tooltip": [
+    {
+      "Tooltip Root": {
+        "types": [
+          {
+            "PublicTooltipRootProps": [
+              {
+                "comment": "Reactive value that can be controlled via signal",
+                "prop": "\"bind:open\"",
+                "type": "Signal<boolean>"
+              },
+              {
+                "comment": "Whether the tooltip is disabled",
+                "prop": "\"bind:disabled\"",
+                "type": "Signal<boolean>"
+              },
+              {
+                "comment": "Duration in milliseconds to wait before showing the tooltip",
+                "prop": "delayDuration",
+                "type": "number",
+                "defaultValue": "0"
+              },
+              {
+                "comment": "Whether the tooltip is open by default",
+                "prop": "defaultOpen",
+                "type": "boolean",
+                "defaultValue": "false"
+              },
+              {
+                "comment": "Event handler for when the tooltip's open state changes",
+                "prop": "onOpenChange$",
+                "type": "QRL<(open: boolean) => void>"
+              },
+              {
+                "comment": "Unique identifier for the tooltip",
+                "prop": "id",
+                "type": "string"
+              }
+            ]
+          }
+        ],
+        "inheritsFrom": "div",
+        "dataAttributes": [
+          {
+            "name": "data-qds-tooltip-root",
+            "type": "string",
+            "comment": "Present on the root element"
+          },
+          {
+            "name": "data-state",
+            "type": "\"open\" | \"closed\" | \"opening\" | \"closing\"",
+            "comment": "Indicates the current state of the tooltip"
+          }
+        ]
+      }
+    },
+    {
+      "Tooltip Trigger": {
+        "types": [
+          {
+            "PublicTooltipTriggerProps": [
+              {
+                "comment": "Whether to render the trigger as a child element",
+                "prop": "asChild",
+                "type": "boolean",
+                "defaultValue": "false"
+              }
+            ]
+          }
+        ],
+        "inheritsFrom": "button",
+        "dataAttributes": [
+          {
+            "name": "data-qds-tooltip-trigger",
+            "type": "string",
+            "comment": "Present on the trigger element"
+          },
+          {
+            "name": "data-state",
+            "type": "\"open\" | \"closed\" | \"opening\" | \"closing\"",
+            "comment": "Indicates the current state of the tooltip"
+          },
+          {
+            "name": "aria-describedby",
+            "type": "string",
+            "comment": "References the ID of the tooltip content"
+          },
+          {
+            "name": "aria-disabled",
+            "type": "string | undefined",
+            "comment": "Present when the tooltip is disabled"
+          }
+        ]
+      }
+    },
+    {
+      "Tooltip Content": {
+        "types": [
+          {
+            "PublicTooltipContentProps": [
+              {
+                "comment": "Whether to render the content as a child element",
+                "prop": "asChild",
+                "type": "boolean",
+                "defaultValue": "false"
+              },
+              {
+                "comment": "The preferred side to place the tooltip",
+                "prop": "side",
+                "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
+                "defaultValue": "\"top\""
+              },
+              {
+                "comment": "The distance in pixels from the trigger",
+                "prop": "sideOffset",
+                "type": "number",
+                "defaultValue": "0"
+              },
+              {
+                "comment": "The preferred alignment against the trigger",
+                "prop": "align",
+                "type": "\"start\" | \"center\" | \"end\"",
+                "defaultValue": "\"center\""
+              },
+              {
+                "comment": "The distance in pixels from the alignment point",
+                "prop": "alignOffset",
+                "type": "number",
+                "defaultValue": "0"
+              }
+            ]
+          }
+        ],
+        "inheritsFrom": "div",
+        "dataAttributes": [
+          {
+            "name": "data-qds-tooltip-content",
+            "type": "string",
+            "comment": "Present on the content element"
+          },
+          {
+            "name": "data-state",
+            "type": "\"open\" | \"closed\" | \"opening\" | \"closing\"",
+            "comment": "Indicates the current state of the tooltip"
+          },
+          {
+            "name": "data-side",
+            "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
+            "comment": "Indicates the current side of the tooltip"
+          },
+          {
+            "name": "data-align",
+            "type": "\"start\" | \"center\" | \"end\"",
+            "comment": "Indicates the current alignment of the tooltip"
+          },
+          {
+            "name": "role",
+            "type": "\"tooltip\"",
+            "comment": "ARIA role for the tooltip content"
+          }
+        ]
+      }
+    },
+    {
+      "Tooltip Arrow": {
+        "types": [
+          {
+            "PublicTooltipArrowProps": [
+              {
+                "comment": "Whether to render the arrow as a child element",
+                "prop": "asChild",
+                "type": "boolean",
+                "defaultValue": "false"
+              },
+              {
+                "comment": "The width of the arrow in pixels",
+                "prop": "width",
+                "type": "number",
+                "defaultValue": "12"
+              },
+              {
+                "comment": "The height of the arrow in pixels",
+                "prop": "height",
+                "type": "number",
+                "defaultValue": "12"
+              }
+            ]
+          }
+        ],
+        "inheritsFrom": "div",
+        "dataAttributes": [
+          {
+            "name": "data-qds-tooltip-arrow",
+            "type": "string",
+            "comment": "Present on the arrow element"
+          },
+          {
+            "name": "data-side",
+            "type": "\"top\" | \"right\" | \"bottom\" | \"left\"",
+            "comment": "Indicates the current side of the tooltip"
+          },
+          {
+            "name": "data-align",
+            "type": "\"start\" | \"center\" | \"end\"",
+            "comment": "Indicates the current alignment of the tooltip"
+          }
+        ]
+      }
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Tooltip.Root",
+      "description": "The root component that manages the tooltip's state and context"
+    },
+    {
+      "name": "Tooltip.Trigger",
+      "description": "The element that activates the tooltip on hover or focus"
+    },
+    {
+      "name": "Tooltip.Content",
+      "description": "The floating label that contains the tooltip's content"
+    },
+    {
+      "name": "Tooltip.Arrow",
+      "description": "Optional visual indicator that points to the trigger element"
+    }
+  ],
+  "keyboardInteractions": [
+    {
+      "key": "Tab",
+      "comment": "Shows tooltip on focus, hides on blur"
+    },
+    {
+      "key": "Escape",
+      "comment": "Hides the tooltip if open"
+    },
+    {
+      "key": "Enter/Space",
+      "comment": "Activates the trigger, hides the tooltip"
+    }
+  ],
+  "features": [
+    "Headless and accessible",
+    "Opens on hover or focus",
+    "Closes on blur or mouse leave",
+    "Configurable open delay",
+    "Proper ARIA roles and attributes",
+    "Keyboard and pointer interactions",
+    "Smart collision detection",
+    "Customizable placement",
+    "Optional arrow indicator",
+    "Animation support",
+    "Controlled and uncontrolled usage",
+    "RTL support",
+    "CSS Anchor Positioning"
+  ]
+} 

@@ -9,19 +9,13 @@ type TooltipContentProps = PropsOf<"div"> & {
   sideOffset?: number;
   align?: "start" | "center" | "end";
   alignOffset?: number;
-  avoidCollisions?: boolean;
-  collisionBoundary?: Element | Element[];
-  collisionPadding?: number;
-  arrowPadding?: number;
-  sticky?: "partial" | "always";
-  hideWhenDetached?: boolean;
 };
 
 const TooltipContentBase = component$<TooltipContentProps>((props) => {
   const context = useContext(tooltipContextId);
   const {
     side = "top",
-    align = "start",
+    align = "center",
     sideOffset = 0,
     alignOffset = 0,
     style,
@@ -45,7 +39,7 @@ const TooltipContentBase = component$<TooltipContentProps>((props) => {
     <PopoverContentBase
       ref={context.contentRef}
       role="tooltip"
-      data-tooltip-content
+      data-qds-tooltip-content
       data-side={side}
       data-align={align}
       style={mergedStyle}

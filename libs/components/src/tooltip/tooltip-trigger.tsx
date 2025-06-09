@@ -28,22 +28,28 @@ const TooltipTriggerBase = component$<PropsOf<"button">>((props) => {
     }
   });
 
+  const updateState = $((isOpen: boolean) => {
+    open.value = isOpen;
+    state.value = isOpen ? "open" : "closed";
+    onOpenChange$?.(isOpen);
+  });
+
   const createTimer = $(
     (isOpen: boolean, newState: TooltipState, timer: Signal<Timer>) => {
       state.value = newState;
       if (delayDuration) {
         timer.value = setTimeout(() => {
-          open.value = isOpen;
-          state.value = isOpen ? "open" : "closed";
-          onOpenChange$?.(isOpen);
+          updateState(isOpen);
         }, delayDuration);
+      } else {
+        updateState(isOpen);
       }
     }
   );
 
   const openTooltip$ = $(() => {
     if (!disabled.value) {
-      clearTimer(openTimer);
+      clearTimer(closeTimer);
       createTimer(true, "opening", openTimer);
     }
   });
@@ -51,7 +57,7 @@ const TooltipTriggerBase = component$<PropsOf<"button">>((props) => {
   const closeTooltip$ = $(() => {
     if (!disabled.value) {
       clearTimer(openTimer);
-      createTimer(false, "closing", openTimer);
+      createTimer(false, "closing", closeTimer);
     }
   });
 
@@ -71,8 +77,8 @@ const TooltipTriggerBase = component$<PropsOf<"button">>((props) => {
       aria-disabled={disabled.value || undefined}
       onFocus$={openTooltip$}
       onBlur$={closeTooltip$}
-      onMouseOver$={openTooltip$}
-      onMouseLeave$={closeTooltip$}
+      onPointerOver$={openTooltip$}
+      onPointerLeave$={closeTooltip$}
       fallback="button"
       {...props}
     >

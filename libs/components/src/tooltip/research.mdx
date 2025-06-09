@@ -21,26 +21,25 @@ Tooltips should be accessible, non-intrusive, and never trap focus. They are typ
 
 ## Features
 
-- [ ] Headless (no styles, only logic and ARIA)
-- [ ] Opens on hover, focus, or programmatically
-- [ ] Closes on blur, mouse leave, Escape, or trigger activation
-- [ ] Configurable open/close delay
-- [ ] Supports controlled and uncontrolled usage
-- [ ] Supports pointer, keyboard, and touch
-- [ ] Proper ARIA roles and attributes
-- [ ] Portal support (renders in body)
-- [ ] Arrow indicator (optional)
-- [ ] Anchor positioning (CSS or JS)
-- [ ] RTL support
-- [ ] Animation support (via data attributes)
-- [ ] Customizable placement and offset
-- [ ] Accessible: never traps focus, never receives focus itself
+- [x] Headless (no styles, only logic and ARIA)
+- [x] Opens on hover, focus, or programmatically
+- [x] Closes on blur, mouse leave, Escape, or trigger activation
+- [x] Configurable open/close delay
+- [x] Supports controlled and uncontrolled usage
+- [x] Supports pointer, keyboard, and touch
+- [x] Proper ARIA roles and attributes
+- [x] Arrow indicator (optional)
+- [x] Anchor positioning (CSS)
+- [x] RTL support
+- [x] Animation support (via data attributes)
+- [x] Customizable placement and offset
+- [x] Accessible: never traps focus, never receives focus itself
 
 ---
 
 ## Component Structure
 
-- **Root** (manages state)
+- **Root** (manages state and context)
 - **Trigger** (the element that shows the tooltip)
 - **Content** (the floating label)
 - **Arrow** (optional, visual pointer)
@@ -69,9 +68,9 @@ Tooltips should be accessible, non-intrusive, and never trap focus. They are typ
 - `data-state="open" | "closed" | "closing" | "opening"`
 - `data-side="top" | "right" | "bottom" | "left"`
 - `data-align="start" | "center" | "end"`
-- `data-tooltip-root`
-- `data-tooltip-trigger`
-- `data-tooltip-content`
+- `data-qds-tooltip-root`
+- `data-qds-tooltip-trigger`
+- `data-qds-tooltip-content`
 - `data-tooltip-arrow`
 
 ---
@@ -144,34 +143,35 @@ interface TooltipArrowProps {
 ## Example Usage
 
 ```tsx
-<TooltipProvider delayDuration={500}>
-  <TooltipRoot>
-    <TooltipTrigger asChild>
-      <button aria-label="Add to library">
-        <PlusIcon />
-      </button>
-    </TooltipTrigger>
-    <TooltipContent side="top" sideOffset={8}>
-      Add to library
-      <TooltipArrow />
-    </TooltipContent>
-  </TooltipRoot>
-</TooltipProvider>
+<Tooltip.Root>
+  <Tooltip.Trigger>
+    <button aria-label="Add to library">
+      <PlusIcon />
+    </button>
+  </Tooltip.Trigger>
+  <Tooltip.Content side="top" sideOffset={8}>
+    Add to library
+    <Tooltip.Arrow />
+  </Tooltip.Content>
+</Tooltip.Root>
 ```
 
 ---
 
 ## Positioning
 
-- **CSS Anchor Positioning** is preferred if available ([MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/anchor)), otherwise fallback to JS positioning.
-- Use `side`, `align`, and `offset` props for placement.
-- Use portal to render content in `body` for stacking context.
+- Uses **CSS Anchor Positioning** for all positioning logic
+- Positioning is handled through CSS variables and data attributes
+- Supports all side and alignment combinations
+- Arrow positioning is handled automatically based on side and alignment
+- Overflow handling is managed through CSS
 
 ---
 
 ## Accessibility
 
-- Tooltip content must have `role="tooltip"`.
-- Trigger must have `aria-describedby` referencing the tooltip content.
-- Tooltip must not be focusable or trap focus.
-- Should not interfere with screen reader navigation.
+- Tooltip content has `role="tooltip"`
+- Trigger has `aria-describedby` referencing the tooltip content
+- Tooltip is not focusable and never traps focus
+- Supports keyboard navigation and screen readers
+- Follows WAI-ARIA tooltip pattern
