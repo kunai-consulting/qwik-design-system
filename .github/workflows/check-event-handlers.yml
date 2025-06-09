@@ -109,6 +109,20 @@ jobs:
           
           # Report invalid patterns
           if [ ${#invalid_patterns[@]} -gt 0 ]; then
+            echo "❌ Found ${#invalid_patterns[@]} event handler(s) that don't use array pattern:"
+            echo ""
+            
+            # First, list all problematic files clearly
+            for pattern in "${invalid_patterns[@]}"; do
+              # Extract file, line number and content
+              file_path=$(echo "$pattern" | cut -d':' -f1)
+              line_num=$(echo "$pattern" | cut -d':' -f2)
+              line_content=$(echo "$pattern" | cut -d':' -f3-)
+              
+              echo "❌ $file_path:$line_num - $line_content"
+            done
+            
+            echo ""
             echo "::error title=Invalid Event Handler Patterns::❌ Event handlers must use array pattern"
             echo "::group::Event handlers with invalid patterns"
             
