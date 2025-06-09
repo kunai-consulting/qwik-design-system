@@ -16,3 +16,24 @@
   align-items: center;
   justify-content: space-between;
 }
+
+.calendar-header-button {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 1px solid white;
+}
+
+.calendar-grid-day {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+}
+
+.calendar-grid-day[data-current] {
+  border: 1px dashed white;
+}
+
+.calendar-grid-day[data-selected] {
+  border: 1px solid white;
+}
