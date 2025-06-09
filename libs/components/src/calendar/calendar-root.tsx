@@ -9,6 +9,7 @@ import {
   useVisibleTask$
 } from "@builder.io/qwik";
 import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
+import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase, type PopoverRootProps } from "../popover/popover-root";
 import type { CalendarContext } from "./calendar-context";
 import { calendarContextId } from "./calendar-context";
@@ -41,7 +42,7 @@ export type CalendarRootBoundProps = {
 
 const regex = /^\d{4}-(0[1-9]|1[0-2])-\d{2}$/;
 /** The root calendar component that manages state and provides context */
-export const CalendarRoot = component$<PublicCalendarRootProps>((props) => {
+export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
   const {
     fullWeeks = false,
     locale = "en",
@@ -61,11 +62,11 @@ export const CalendarRoot = component$<PublicCalendarRootProps>((props) => {
   const date = new Date();
   const currentDate =
     `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}` as ISODate;
-  const defaultDate = currentDate;
+  const initialDate = dateSig.value ?? currentDate;
   const activeDate = useSignal<LocalDate | null>(null);
-  const monthToRender = useSignal<Month>(defaultDate.split("-")[1] as Month);
-  const yearToRender = useSignal<number>(+defaultDate.split("-")[0]);
-  const dateToFocus = useSignal<LocalDate>(defaultDate);
+  const monthToRender = useSignal<Month>(initialDate.split("-")[1] as Month);
+  const yearToRender = useSignal<number>(+initialDate.split("-")[0]);
+  const dateToFocus = useSignal<LocalDate>(initialDate);
   const localId = useId();
 
   const datesArray = useComputed$(() => {
@@ -102,7 +103,7 @@ export const CalendarRoot = component$<PublicCalendarRootProps>((props) => {
     return `${labelStr} ${MONTHS_LG[locale][+month - 1]} ${year}`;
   });
 
-  if (!regex.test(defaultDate))
+  if (!regex.test(initialDate))
     throw new Error("Invalid date format in Calendar. Please use YYYY-MM-DD format.");
 
   useVisibleTask$(({ track, cleanup }) => {
@@ -139,3 +140,5 @@ export const CalendarRoot = component$<PublicCalendarRootProps>((props) => {
     </PopoverRootBase>
   );
 });
+
+export const CalendarRoot = withAsChild(CalendarRootBase);
