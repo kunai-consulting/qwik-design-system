@@ -17,6 +17,7 @@ type Timer = NodeJS.Timeout | undefined;
 const TooltipTriggerBase = component$<PropsOf<"button">>((props) => {
   const context = useContext(tooltipContextId);
   const { onOpenChange$, triggerRef, open, delayDuration, disabled, id, state } = context;
+  const { onBlur$, onFocus$, onPointerLeave$, onPointerOver$, ...rest } = props;
 
   const openTimer = useSignal<Timer>(undefined);
   const closeTimer = useSignal<Timer>(undefined);
@@ -75,12 +76,12 @@ const TooltipTriggerBase = component$<PropsOf<"button">>((props) => {
       data-state={state.value}
       aria-describedby={id}
       aria-disabled={disabled.value || undefined}
-      onFocus$={openTooltip$}
-      onBlur$={closeTooltip$}
-      onPointerOver$={openTooltip$}
-      onPointerLeave$={closeTooltip$}
+      onFocus$={[openTooltip$, onFocus$]}
+      onBlur$={[closeTooltip$, onBlur$]}
+      onPointerOver$={[openTooltip$, onPointerOver$]}
+      onPointerLeave$={[closeTooltip$, onPointerLeave$]}
       fallback="button"
-      {...props}
+      {...rest}
     >
       <Slot />
     </Render>
