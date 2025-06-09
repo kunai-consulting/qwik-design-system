@@ -1,6 +1,5 @@
 @layer qds {
   [data-qds-tooltip-trigger] {
-    /* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
     anchor-name: --qds-popover;
   }
 
