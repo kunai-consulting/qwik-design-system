@@ -7,3 +7,4 @@ export { CalendarTitle as Title } from "./calendar-title";
 export { CalendarGridDay as GridDay } from "./calendar-grid-day";
 export { CalendarContent as Content } from "./calendar-content";
 export { CalendarTrigger as Trigger } from "./calendar-trigger";
+export type { ISODate } from "./types";

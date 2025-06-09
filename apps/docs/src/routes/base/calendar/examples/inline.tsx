@@ -10,13 +10,13 @@ export default component$(() => {
     <Calendar.Root mode="inline" class="calendar-root">
       <Calendar.Content>
         <Calendar.Header class="calendar-header">
-          <Calendar.Previous class="flex w-[20px] h-[20px] items-center justify-center border border-white rounded-md" />
+          <Calendar.Previous class="calendar-header-button" />
           <Calendar.Title />
-          <Calendar.Next class="flex w-[20px] h-[20px] items-center justify-center border border-white rounded-md" />
+          <Calendar.Next class="calendar-header-button" />
         </Calendar.Header>
-        <Calendar.Grid class="w-full items-center">
+        <Calendar.Grid class="calendar-grid">
           <Calendar.GridDay
-            class="size-10 data-[selected]:border data-[current]:border-dashed data-[current]:border data-[current]:rounded-md data-[selected]:rounded-md"
+            class="calendar-grid-day"
             onDateChange$={$((date) => {
               console.log("Date changed:", date);
               selectedDate.value = date;
