@@ -32,7 +32,6 @@ export const tooltipContextId = createContextId<TooltipContext>("qds-tooltip");
 
 type TooltipRootProps = {
   delayDuration?: number;
-  defaultOpen?: boolean;
   onOpenChange$?: (open: boolean) => void;
   id?: string;
 } & BindableProps<{ open: boolean; disabled: boolean }>;

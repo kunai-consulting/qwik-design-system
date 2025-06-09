@@ -93,10 +93,9 @@ Tooltips should be accessible, non-intrusive, and never trap focus. They are typ
 ```tsx
 interface TooltipRootProps {
   open?: boolean;
-  defaultOpen?: boolean;
   onOpenChange$?: (open: boolean) => void;
   delayDuration?: number;
-  disableHoverableContent?: boolean;
+  disabled?: boolean;
 }
 ```
 
