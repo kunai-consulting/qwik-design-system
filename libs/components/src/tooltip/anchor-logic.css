@@ -1,0 +1,151 @@
+@layer qds {
+  [data-qds-tooltip-trigger] {
+    anchor-name: --qds-popover;
+  }
+
+  [data-qds-popover-content] {
+    /* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
+    position-anchor: --qds-popover;
+    position: relative;
+    margin: unset;
+    overflow: visible;
+  }
+
+  [data-qds-popover-content] > * {
+    position: relative;
+    z-index: 1000;
+  }
+
+  /* Base positioning for each side */
+  [data-qds-popover-content][data-side="top"] {
+    top: auto;
+    bottom: anchor(top);
+    left: anchor(center);
+    transform: translateX(-50%) translateY(calc(-1 * var(--qds-tooltip-side-offset, 0px)));
+  }
+
+  [data-qds-popover-content][data-side="right"] {
+    top: anchor(center);
+    left: anchor(end);
+    right: auto;
+    bottom: auto;
+    transform: translateX(var(--qds-tooltip-side-offset, 0px)) translateY(-50%);
+  }
+  [data-qds-popover-content][data-side="bottom"] {
+    top: anchor(bottom);
+    left: anchor(center);
+    transform: translateX(-50%) translateY(var(--qds-tooltip-side-offset, 0px));
+  }
+  [data-qds-popover-content][data-side="left"] {
+    top: anchor(center);
+    left: auto;
+    right: anchor(start);
+    bottom: auto;
+    transform: translateX(calc(-1 * var(--qds-tooltip-side-offset, 0px))) translateY(-50%);
+  }
+
+  /* Start alignment combinations */
+  [data-qds-popover-content][data-side="top"][data-align="start"] {
+    left: anchor(start);
+    transform: translateX(var(--qds-tooltip-align-offset, 0px))
+      translateY(calc(-1 * var(--qds-tooltip-side-offset, 0px)));
+  }
+  [data-qds-popover-content][data-side="bottom"][data-align="start"] {
+    left: anchor(start);
+    transform: translateX(var(--qds-tooltip-align-offset, 0px))
+      translateY(var(--qds-tooltip-side-offset, 0px));
+  }
+  [data-qds-popover-content][data-side="left"][data-align="start"] {
+    top: anchor(start);
+    transform: translateX(calc(-1 * var(--qds-tooltip-side-offset, 0px)))
+      translateY(var(--qds-tooltip-align-offset, 0px));
+  }
+  [data-qds-popover-content][data-side="right"][data-align="start"] {
+    top: anchor(start);
+    transform: translateX(var(--qds-tooltip-side-offset, 0px))
+      translateY(var(--qds-tooltip-align-offset, 0px));
+  }
+
+  /* End alignment combinations */
+  [data-qds-popover-content][data-side="top"][data-align="end"] {
+    left: anchor(end);
+    transform: translateX(calc(-100% + var(--qds-tooltip-align-offset, 0px)))
+      translateY(calc(-1 * var(--qds-tooltip-side-offset, 0px)));
+  }
+  [data-qds-popover-content][data-side="bottom"][data-align="end"] {
+    left: anchor(end);
+    transform: translateX(calc(-100% + var(--qds-tooltip-align-offset, 0px)))
+      translateY(var(--qds-tooltip-side-offset, 0px));
+  }
+  [data-qds-popover-content][data-side="left"][data-align="end"] {
+    top: anchor(end);
+    transform: translateX(calc(-1 * var(--qds-tooltip-side-offset, 0px)))
+      translateY(calc(-100% + var(--qds-tooltip-align-offset, 0px)));
+  }
+  [data-qds-popover-content][data-side="right"][data-align="end"] {
+    top: anchor(end);
+    transform: translateX(var(--qds-tooltip-side-offset, 0px))
+      translateY(calc(-100% + var(--qds-tooltip-align-offset, 0px)));
+  }
+
+  [data-qds-tooltip-arrow] {
+    position: absolute;
+    width: var(--qds-tooltip-arrow-width, 12px);
+    height: var(--qds-tooltip-arrow-height, 12px);
+    background: inherit;
+    z-index: 999;
+  }
+
+  /* Arrow positioning for each side */
+  [data-qds-tooltip-arrow][data-side="top"] {
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+  }
+
+  /* Bottom side */
+  [data-qds-tooltip-arrow][data-side="bottom"] {
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+  }
+
+  /* Left side */
+  [data-qds-tooltip-arrow][data-side="left"] {
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  /* Right side */
+  [data-qds-tooltip-arrow][data-side="right"] {
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  /* Arrow alignment combinations */
+  [data-qds-tooltip-arrow][data-side="top"][data-align="start"],
+  [data-qds-tooltip-arrow][data-side="bottom"][data-align="start"] {
+    left: 16px;
+    transform: rotate(45deg);
+  }
+  [data-qds-tooltip-arrow][data-side="left"][data-align="start"],
+  [data-qds-tooltip-arrow][data-side="right"][data-align="start"] {
+    top: 16px;
+    left: auto;
+    transform: rotate(45deg);
+  }
+  [data-qds-tooltip-arrow][data-side="top"][data-align="end"],
+  [data-qds-tooltip-arrow][data-side="bottom"][data-align="end"] {
+    left: auto;
+    right: 16px;
+    transform: rotate(45deg);
+  }
+  [data-qds-tooltip-arrow][data-side="left"][data-align="end"],
+  [data-qds-tooltip-arrow][data-side="right"][data-align="end"] {
+    top: auto;
+    bottom: 16px;
+    transform: rotate(45deg);
+  }
+}

@@ -1,0 +1,176 @@
+# Tooltip Research
+
+## Overview
+
+A **Tooltip** is a non-modal, floating label that provides brief, contextual information about an element when the user hovers, focuses, or touches it.
+Tooltips should be accessible, non-intrusive, and never trap focus. They are typically used for icons, buttons, or form fields to clarify their purpose.
+
+---
+
+## Research Links
+
+- [Radix UI Tooltip](https://www.radix-ui.com/primitives/docs/components/tooltip)
+- [Ark UI Tooltip](https://ark-ui.com/docs/components/tooltip)
+- [Kobalte Tooltip](https://kobalte.dev/docs/core/components/tooltip)
+- [Base UI Tooltip](https://base-ui.com/react/components/tooltip)
+- [Chrome: Declarative Popovers](https://developer.chrome.com/blog/web-at-io25#2_declarative_popovers_introducing_the_new_interest_invoker_api)
+- [Open UI Popover/Hint Research](https://open-ui.org/components/popover-hint.research.explainer/)
+- [CSS Anchor Positioning](https://anchor-positioning.oddbird.net/)
+
+---
+
+## Features
+
+- [x] Headless (no styles, only logic and ARIA)
+- [x] Opens on hover, focus, or programmatically
+- [x] Closes on blur, mouse leave, Escape, or trigger activation
+- [x] Configurable open/close delay
+- [x] Supports controlled and uncontrolled usage
+- [x] Supports pointer, keyboard, and touch
+- [x] Proper ARIA roles and attributes
+- [x] Arrow indicator (optional)
+- [x] Anchor positioning (CSS)
+- [x] RTL support
+- [x] Animation support (via data attributes)
+- [x] Customizable placement and offset
+- [x] Accessible: never traps focus, never receives focus itself
+
+---
+
+## Component Structure
+
+- **Root** (manages state and context)
+- **Trigger** (the element that shows the tooltip)
+- **Content** (the floating label)
+- **Arrow** (optional, visual pointer)
+
+---
+
+## Keyboard & Accessibility
+
+- **Tab/Shift+Tab:** Shows tooltip on focus, hides on blur
+- **Escape:** Hides tooltip if open
+- **Enter/Space:** Activates the trigger, hides tooltip
+- **ARIA roles:**  
+  - `role="tooltip"` on content  
+  - `aria-describedby` on trigger, referencing tooltip content ID  
+  - `aria-disabled` if trigger is disabled
+
+**Tooltip content should never be focusable or trap focus.**
+
+---
+
+## Attributes & Data Attributes
+
+- `role="tooltip"` (content)
+- `aria-describedby` (trigger references content)
+- `aria-disabled` (trigger, if disabled)
+- `data-state="open" | "closed" | "closing" | "opening"`
+- `data-side="top" | "right" | "bottom" | "left"`
+- `data-align="start" | "center" | "end"`
+- `data-qds-tooltip-root`
+- `data-qds-tooltip-trigger`
+- `data-qds-tooltip-content`
+- `data-tooltip-arrow`
+
+---
+
+## Use Cases
+
+- Icon buttons
+- Form fields
+- Abbreviations/acronyms
+- Truncated text
+- Data visualizations
+- Navigation items
+
+---
+
+## API Design
+
+### Root
+
+```tsx
+interface TooltipRootProps {
+  open?: boolean;
+  onOpenChange$?: (open: boolean) => void;
+  delayDuration?: number;
+  disabled?: boolean;
+}
+```
+
+### Trigger
+
+```tsx
+interface TooltipTriggerProps {
+  asChild?: boolean;
+}
+```
+
+### Content
+
+```tsx
+interface TooltipContentProps {
+  asChild?: boolean;
+  side?: "top" | "right" | "bottom" | "left";
+  sideOffset?: number;
+  align?: "start" | "center" | "end";
+  alignOffset?: number;
+  avoidCollisions?: boolean;
+  collisionBoundary?: Element | Element[];
+  collisionPadding?: number;
+  arrowPadding?: number;
+  sticky?: "partial" | "always";
+  hideWhenDetached?: boolean;
+  forceMount?: boolean;
+  ariaLabel?: string;
+}
+```
+
+### Arrow
+
+```tsx
+interface TooltipArrowProps {
+  width?: number;
+  height?: number;
+  asChild?: boolean;
+}
+```
+
+---
+
+## Example Usage
+
+```tsx
+<Tooltip.Root>
+  <Tooltip.Trigger>
+    <button aria-label="Add to library">
+      <PlusIcon />
+    </button>
+  </Tooltip.Trigger>
+  <Tooltip.Content side="top" sideOffset={8}>
+    Add to library
+    <Tooltip.Arrow />
+  </Tooltip.Content>
+</Tooltip.Root>
+```
+
+---
+
+## Positioning
+
+- Uses **CSS Anchor Positioning** for all positioning logic
+- Positioning is handled through CSS variables and data attributes
+- Supports all side and alignment combinations
+- Arrow positioning is handled automatically based on side and alignment
+- Overflow handling is managed through CSS
+
+---
+
+## Accessibility
+
+- Tooltip content has `role="tooltip"`
+- Trigger has `aria-describedby` referencing the tooltip content
+- Tooltip is not focusable and never traps focus
+- Supports keyboard navigation and screen readers
+- Follows WAI-ARIA tooltip pattern

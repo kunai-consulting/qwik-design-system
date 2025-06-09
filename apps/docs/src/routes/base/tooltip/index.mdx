@@ -1,0 +1,113 @@
+import api from "./code-notate/api.json";
+
+# Tooltip
+A Tooltip is a floating label that provides brief, contextual information about an element when the user hovers, focuses, or touches it. Tooltips are non-modal, accessible, and never trap focus.
+
+<Showcase name="hero" />
+
+## Features
+<Features api={api} />
+
+## Anatomy
+<AnatomyTable api={api} />
+
+## Examples
+
+### Basic Usage
+The tooltip provides a simple way to show contextual information. The tooltip opens on hover or focus and closes on blur or mouse leave.
+
+<Showcase name="hero" />
+This example demonstrates:
+- Using `Tooltip.Root` as the container
+- `Tooltip.Trigger` to activate the tooltip
+- `Tooltip.Content` to display the tooltip message
+- `Tooltip.Arrow` for visual connection to the trigger
+
+### Disabled Tooltip
+The tooltip can be disabled by setting the `disabled` prop to `true`.
+<Showcase name="disabled" />
+
+### Open State Callbacks
+Track the tooltip's open state using the `onOpenChange$` callback.
+<Showcase name="callbacks" />
+This example highlights:
+- `onOpenChange$` prop to monitor open/close state
+- `open` prop for controlled state management
+
+### Delay Duration
+Control how long to wait before showing the tooltip using the `delayDuration` prop.
+<Showcase name="delay" />
+This example demonstrates:
+- Custom delay duration before tooltip appears
+- Different delays for different tooltips
+- Default behavior with no delay
+
+### Default Arrow
+The tooltip component comes with a default arrow component that can be used to visually connect the tooltip to its trigger.
+<Showcase name="arrow" />
+This example demonstrates:
+- Default arrow component
+
+### Positioning
+Control the tooltip's position relative to its trigger using the `side` and `align` props.
+<Showcase name="positioning" />
+This example demonstrates:
+- Different side positions (top, right, bottom, left)
+- Alignment options (start, center, end)
+- Automatic repositioning to stay in viewport
+
+## Component State
+
+### State Management
+The tooltip's open state can be controlled in two ways:
+1. Uncontrolled state using the `open` prop:
+```typescript
+<Tooltip.Root open={false}>
+  <Tooltip.Trigger>Hover me</Tooltip.Trigger>
+  <Tooltip.Content>Tooltip content</Tooltip.Content>
+</Tooltip.Root>
+```
+2. Controlled state using bind:open prop to bind the tooltip's open state to a reactive value.
+
+The tooltip automatically manages its open state in response to:
+- Hovering over the trigger (opens)
+- Focusing the trigger (opens)
+- Moving mouse away (closes)
+- Blurring the trigger (closes)
+
+## Core Configuration
+### Tooltip Structure
+The Tooltip component requires a specific component hierarchy:
+```typescript
+<Tooltip.Root>
+  <Tooltip.Trigger>
+    {/* Trigger element */}
+  </Tooltip.Trigger>
+  <Tooltip.Content>
+    {/* Tooltip content */}
+    <Tooltip.Arrow />
+  </Tooltip.Content>
+</Tooltip.Root>
+```
+
+Each component serves a specific purpose:
+- `Root`: Manages state and context for the tooltip
+- `Trigger`: The element that activates the tooltip
+- `Content`: The container for tooltip content
+- `Arrow`: Optional visual indicator pointing to the trigger
+
+## Technical Constraints
+
+### Positioning
+The tooltip positioning is handled by the underlying Popover component. The content will automatically position
+itself relative to the trigger element, adjusting for available viewport space.
+
+### Focus Management
+The component maintains a strict focus management system:
+- Tooltip content is not focusable
+- Focus remains on the trigger element
+- Tooltip follows focus for keyboard users
+
+These behaviors are built into the component and cannot be disabled to maintain accessibility compliance.
+
+<APITable api={api} />
