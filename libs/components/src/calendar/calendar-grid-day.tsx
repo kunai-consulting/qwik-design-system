@@ -2,10 +2,13 @@ import { $, type PropsOf, component$, useContext } from "@builder.io/qwik";
 import { calendarContextId } from "./calendar-context";
 import type { ISODate, Locale } from "./types";
 import { getWeekNumber } from "./utils";
+
 type PublicCalendarGridDayProps = PropsOf<"button"> & {
   /** Event handler called when a date is selected */
   onDateChange$?: (date: ISODate) => void;
 };
+
+// no-composition-check
 /** A component that renders a single day cell in the calendar grid */
 export const CalendarGridDay = component$<PublicCalendarGridDayProps>(
   ({ onDateChange$, ...buttonProps }) => {
