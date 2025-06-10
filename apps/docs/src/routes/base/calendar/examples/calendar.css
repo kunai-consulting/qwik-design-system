@@ -55,7 +55,7 @@
   anchor-name: --qds-popover;
 }
 
-[data-qds-popover-trigger] {
+.calendar-field-and-trigger [data-qds-popover-trigger] {
   anchor-name: unset;
 }
 
