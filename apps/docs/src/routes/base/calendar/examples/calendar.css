@@ -22,6 +22,8 @@
   height: 20px;
   border-radius: 6px;
   border: 1px solid white;
+  display: flex;
+  align-items: center;
 }
 
 .calendar-grid-day {
@@ -34,6 +36,29 @@
   border: 1px dashed white;
 }
 
+[data-qds-calendar-content] {
+  color: inherit;
+  background-color: inherit;
+}
+
+[data-qds-calendar-content] button {
+  background-color: transparent;
+}
+
 .calendar-grid-day[data-selected] {
   border: 1px solid white;
+}
+
+.calendar-field-and-trigger {
+  display: flex;
+  gap: 10px;
+  anchor-name: --qds-popover;
+}
+
+[data-qds-popover-trigger] {
+  anchor-name: unset;
+}
+
+.calendar-icon-trigger-button {
+  width: fit-content;
 }

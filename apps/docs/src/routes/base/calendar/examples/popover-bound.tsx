@@ -9,7 +9,7 @@ export default component$(() => {
   const open = useSignal(false);
   return (
     <div class="calendar-example-container">
-      <div style={ { display: "flex", gap: "20px" }}>
+      <div style={{ display: "flex", gap: "20px" }}>
         <button
           onClick$={() => {
             open.value = !open.value;
