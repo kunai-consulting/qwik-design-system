@@ -11,7 +11,7 @@ export const CalendarField = component$((props: PublicDateInputFieldProps) => {
   const context = useContext(calendarContextId);
   return (
     <DateInputRoot>
-      <DateInputField {...props} bind:date={context.activeDate}>
+      <DateInputField {...props} bind:date={context.activeDate} data-qds-calendar-field>
         <Slot />
       </DateInputField>
     </DateInputRoot>
