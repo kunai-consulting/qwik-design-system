@@ -7,10 +7,10 @@ import {
   useContext
 } from "@builder.io/qwik";
 import { calendarContextId } from "./calendar-context";
-import type { LocalDate, Locale, Month } from "./types";
+import type { ISODate, Month } from "./types";
 type PublicCalendarGridProps = PropsOf<"div"> & {
   /** Event handler called when a date is selected */
-  onDateChange$?: QRL<(date: LocalDate) => void>;
+  onDateChange$?: QRL<(date: ISODate) => void>;
 };
 
 const ACTION_KEYS = [
@@ -26,13 +26,6 @@ const ACTION_KEYS = [
   "pagedown"
 ] as const;
 
-const dateFormatter = (locale: Locale) =>
-  new Intl.DateTimeFormat(locale, {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric"
-  });
 /** A component that renders the main calendar grid structure */
 export const CalendarGrid = component$<PublicCalendarGridProps>((props) => {
   const context = useContext(calendarContextId);
@@ -67,7 +60,7 @@ export const CalendarGrid = component$<PublicCalendarGridProps>((props) => {
 
     const buttons = Array.from(gridBody.getElementsByTagName("button"));
     const idx = buttons.indexOf(elFocus as HTMLButtonElement);
-    const currentDate = elFocus?.getAttribute("data-value") as LocalDate;
+    const currentDate = elFocus?.getAttribute("data-value") as ISODate;
     const key = e.key.toLowerCase();
 
     const getNewIndex = (step: number) => {
@@ -92,23 +85,23 @@ export const CalendarGrid = component$<PublicCalendarGridProps>((props) => {
         days?: number;
         months?: number;
       }
-    ): LocalDate => {
+    ): ISODate => {
       const d = new Date(date);
       if (adjustment.days) d.setDate(d.getDate() + adjustment.days);
       if (adjustment.months) d.setMonth(d.getMonth() + adjustment.months);
-      return d.toISOString().split("T")[0] as LocalDate;
+      return d.toISOString().split("T")[0] as ISODate;
     };
 
-    const updateFocus = (newIdx: number, newDate: LocalDate | null = null) => {
+    const updateFocus = (newIdx: number, newDate: ISODate | null = null) => {
       const dateToSet =
-        newDate ?? (buttons[newIdx].getAttribute("data-value") as LocalDate);
+        newDate ?? (buttons[newIdx].getAttribute("data-value") as ISODate);
       context.dateToFocus.value = dateToSet;
       elFocus?.setAttribute("tabindex", "-1");
       buttons[newIdx].setAttribute("tabindex", "0");
       buttons[newIdx].focus({ preventScroll: true });
     };
 
-    const handleMonthChange = (date: LocalDate, currentMonth: string) => {
+    const handleMonthChange = (date: ISODate, currentMonth: string) => {
       if (date.split("-")[1] !== currentMonth) {
         date.split("-")[1] < currentMonth ? decreaseDate() : increaseDate();
       }
@@ -146,7 +139,7 @@ export const CalendarGrid = component$<PublicCalendarGridProps>((props) => {
 
       case "home": {
         const rowStartIndex = Math.floor(idx / 7) * 7;
-        const newDate = buttons[rowStartIndex].getAttribute("data-value") as LocalDate;
+        const newDate = buttons[rowStartIndex].getAttribute("data-value") as ISODate;
         handleMonthChange(newDate, context.monthToRender.value);
         updateFocus(rowStartIndex, newDate);
         break;
@@ -157,7 +150,7 @@ export const CalendarGrid = component$<PublicCalendarGridProps>((props) => {
           Math.ceil((idx + 1) / 7) * 7 - 1,
           buttons.length - 1
         );
-        const newDate = buttons[rowEndIndex].getAttribute("data-value") as LocalDate;
+        const newDate = buttons[rowEndIndex].getAttribute("data-value") as ISODate;
         handleMonthChange(newDate, context.monthToRender.value);
         updateFocus(rowEndIndex, newDate);
         break;

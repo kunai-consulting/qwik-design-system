@@ -14,7 +14,7 @@ import { PopoverRootBase, type PopoverRootProps } from "../popover/popover-root"
 import type { CalendarContext } from "./calendar-context";
 import { calendarContextId } from "./calendar-context";
 import { ARIA_LABELS, MONTHS_LG, WEEKDAYS } from "./constants";
-import type { ISODate, LocalDate, Locale, Month } from "./types";
+import type { ISODate, Locale, Month } from "./types";
 import { daysArrGenerator } from "./utils";
 export type PublicCalendarRootProps = Omit<PopoverRootProps, "onChange$"> & {
   /** The locale used for formatting dates and text */
@@ -63,10 +63,10 @@ export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
   const currentDate =
     `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}` as ISODate;
   const initialDate = dateSig.value ?? currentDate;
-  const activeDate = useSignal<LocalDate | null>(null);
+  const activeDate = useSignal<ISODate | null>(null);
   const monthToRender = useSignal<Month>(initialDate.split("-")[1] as Month);
   const yearToRender = useSignal<number>(+initialDate.split("-")[0]);
-  const dateToFocus = useSignal<LocalDate>(initialDate);
+  const dateToFocus = useSignal<ISODate>(initialDate);
   const localId = useId();
 
   const datesArray = useComputed$(() => {

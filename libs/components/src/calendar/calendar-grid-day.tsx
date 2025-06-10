@@ -1,10 +1,10 @@
 import { $, type PropsOf, component$, useContext } from "@builder.io/qwik";
 import { calendarContextId } from "./calendar-context";
-import type { LocalDate, Locale } from "./types";
+import type { ISODate, Locale } from "./types";
 import { getWeekNumber } from "./utils";
 type PublicCalendarGridDayProps = PropsOf<"button"> & {
   /** Event handler called when a date is selected */
-  onDateChange$?: (date: LocalDate) => void;
+  onDateChange$?: (date: ISODate) => void;
 };
 /** A component that renders a single day cell in the calendar grid */
 export const CalendarGridDay = component$<PublicCalendarGridDayProps>(
@@ -65,8 +65,8 @@ export const CalendarGridDay = component$<PublicCalendarGridDayProps>(
                     tabIndex={day === context.dateToFocus.value ? 0 : -1}
                     onClick$={[
                       $(() => {
-                        context.activeDate.value = day as LocalDate;
-                        onDateChange$?.(day as LocalDate);
+                        context.activeDate.value = day as ISODate;
+                        onDateChange$?.(day as ISODate);
                       })
                     ]}
                   >
