@@ -29,10 +29,10 @@ export const ProgressRootBase = component$<ProgressProps & PropsOf<"div">>((prop
   const { ...rest } = props;
 
   /** Default max value for progress bar **/
-  const defaultMax = 100;
+  const initialMax = 100;
 
   const minSig = useComputed$(() => props.min ?? 0);
-  const maxSig = useComputed$(() => props.max ?? defaultMax);
+  const maxSig = useComputed$(() => props.max ?? initialMax);
   const { valueSig } = useBindings(props, {
     value: props.value ?? null
   });
