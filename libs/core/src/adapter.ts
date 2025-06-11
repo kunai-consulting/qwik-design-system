@@ -12,6 +12,9 @@ type TrackingContext = {
  */
 type ImplicitTrackingTask = () => TaskCleanup | undefined;
 
+/**
+ * Qwik-style explicit tracking with track() and cleanup() calls
+ */
 type ExplicitTrackingTask = (context: TrackingContext) => Promise<void> | void;
 
 export type Signal<T> = {
@@ -25,7 +28,7 @@ export type Computed<T> = {
 export type ReactivityAdapter = {
   signal: <T>(initialValue: T) => Signal<T>;
   computed: <T>(computeFn: () => T) => Computed<T>;
-  task: (taskFn: ImplicitTrackingTask | ExplicitTrackingTask) => TaskCleanup | undefined;
+  task: (taskFn: ExplicitTrackingTask) => TaskCleanup | undefined;
   framework: "qwik" | "react";
 };
 
@@ -67,7 +70,39 @@ export function createReactivityAdapter(
         return undefined;
       }
 
-      return typedHooks.task(taskFn) as TaskCleanup | undefined;
+      return convertToReactEffect(
+        taskFn,
+        typedHooks.task as (fn: ImplicitTrackingTask) => TaskCleanup | undefined
+      );
     }
   };
+}
+
+/**
+ * Takes a Qwik-style explicit tracking task and converts it to React signals implicit tracking effect.
+ */
+function convertToReactEffect(
+  qwikTask: ExplicitTrackingTask,
+  reactEffect: (fn: ImplicitTrackingTask) => TaskCleanup | undefined
+): TaskCleanup | undefined {
+  let cleanupFn: TaskCleanup | undefined;
+
+  return reactEffect(() => {
+    const reactContext: TrackingContext = {
+      track: <T>(fn: () => T): T => {
+        return fn();
+      },
+      cleanup: (fn: TaskCleanup) => {
+        cleanupFn = fn;
+      }
+    };
+
+    try {
+      qwikTask(reactContext);
+    } catch (error) {
+      console.error("Error in React task:", error);
+    }
+
+    return cleanupFn;
+  });
 }

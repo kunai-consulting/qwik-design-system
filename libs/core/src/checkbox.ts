@@ -5,34 +5,25 @@ type CheckboxProps = {
   onChange: (checked: boolean) => void;
 };
 
-export function useCheckbox(props: CheckboxProps, reactivity: ReactivityAdapter) {
-  const checkedSignal = reactivity.signal(props.checked);
+export function useCheckbox(props: CheckboxProps, runtime: ReactivityAdapter) {
+  const r = runtime;
 
-  const isIndeterminate = reactivity.computed(() => {
+  const checkedSignal = r.signal(props.checked);
+
+  const isIndeterminate = r.computed(() => {
     return checkedSignal.value === null;
   });
 
-  // Handle both manual and auto-tracking tasks
-  if (reactivity.framework === "qwik") {
-    // Qwik manual tracking style
-    reactivity.task(({ track, cleanup }) => {
-      track(() => checkedSignal.value);
+  r.task(({ track, cleanup }) => {
+    track(() => checkedSignal.value);
 
-      const checked = checkedSignal.value;
-      props.onChange(checked);
+    const checked = checkedSignal.value;
+    props.onChange(checked);
 
-      cleanup(() => {
-        // Any cleanup logic
-      });
+    cleanup(() => {
+      // Any cleanup logic here
     });
-  } else {
-    // React auto-tracking style
-    reactivity.task(() => {
-      const checked = checkedSignal.value;
-      props.onChange(checked);
-      return undefined; // No cleanup needed
-    });
-  }
+  });
 
   return {
     checked: checkedSignal,
