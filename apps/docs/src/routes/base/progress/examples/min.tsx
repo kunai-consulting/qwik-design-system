@@ -41,7 +41,10 @@ export default component$(() => {
         min={minGoal.value}
         class="progress"
       >
-        <Progress.Indicator class="progress-indicator" />
+        <Progress.Label class="progress-label">Fundraising Progress</Progress.Label>
+        <Progress.Track class="progress-track">
+          <Progress.Indicator class="progress-indicator" />
+        </Progress.Track>
       </Progress.Root>
 
       <p style={space}>Funding goal: ${fundraisingGoal}</p>

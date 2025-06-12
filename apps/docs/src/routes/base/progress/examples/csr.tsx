@@ -14,7 +14,10 @@ export default component$(() => {
       </button>
       {isRendered.value && (
         <Progress.Root value={progress} class="progress">
-          <Progress.Indicator class="progress-indicator" />
+          <Progress.Label class="progress-label">Loading {progress}%</Progress.Label>
+          <Progress.Track class="progress-track">
+            <Progress.Indicator class="progress-indicator" />
+          </Progress.Track>
         </Progress.Root>
       )}
     </>

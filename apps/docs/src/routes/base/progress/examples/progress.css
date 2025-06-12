@@ -1,27 +1,29 @@
 .progress {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.progress-label {
+  font-weight: 500;
+  color: white;
+  margin-bottom: 0.25rem;
+}
+
+.progress-track {
   height: 1.75rem;
   width: 100%;
   overflow: hidden;
   border-radius: 5px;
   border: 2px dotted #19b5f6;
+  position: relative;
 }
 
 .progress-indicator {
   height: 100%;
   width: 100%;
   background-color: #19b5f6;
-}
-
-@keyframes loading-flash {
-  0% {
-    opacity: 0.1;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.1;
-  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -38,13 +40,4 @@
   100% {
     transform: translateX(400%);
   }
-}
-
-.progress-example-input {
-  border-radius: 5px;
-  border: 2px dotted #19b5f6;
-  margin-left: 0.5rem;
-  max-width: 3rem;
-  padding: 0.25rem;
-  outline: none;
 }

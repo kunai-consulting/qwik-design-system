@@ -10,10 +10,12 @@ async function setup(page: Page, exampleName: string) {
 test.describe("Critical functionality", () => {
   test(`GIVEN a progress
         WHEN the progress is rendered
-        THEN it should have root and indicator`, async ({ page }) => {
+        THEN it should have root, label, track and indicator`, async ({ page }) => {
     const d = await setup(page, "hero");
 
     await expect(d.getRoot()).toBeVisible();
+    await expect(d.getLabel()).toBeVisible();
+    await expect(d.getTrack()).toBeVisible();
     await expect(d.getProgressIndicator()).toBeVisible();
   });
 
@@ -115,5 +117,32 @@ test.describe("A11y", () => {
         THEN it should have aria-valuetext attribute`, async ({ page }) => {
     const d = await setup(page, "hero");
     await expect(d.getRoot()).toHaveAttribute("aria-valuetext", "30%");
+  });
+});
+
+test.describe("Component Structure", () => {
+  test(`GIVEN a progress with label
+        WHEN the progress is rendered
+        THEN the label should contain expected text`, async ({ page }) => {
+    const d = await setup(page, "hero");
+    await expect(d.getLabel()).toContainText("Export data 30%");
+  });
+
+  test(`GIVEN a progress with track
+        WHEN the progress is rendered
+        THEN the track should contain the indicator`, async ({ page }) => {
+    const d = await setup(page, "hero");
+    await expect(d.getTrack()).toBeVisible();
+    await expect(d.getTrack().locator("[data-qds-progress-indicator]")).toBeVisible();
+  });
+
+  test(`GIVEN a progress components
+        WHEN the progress is rendered
+        THEN all components should have proper data attributes`, async ({ page }) => {
+    const d = await setup(page, "hero");
+    await expect(d.getRoot()).toHaveAttribute("data-qds-progress-root");
+    await expect(d.getLabel()).toHaveAttribute("data-qds-progress-label");
+    await expect(d.getTrack()).toHaveAttribute("data-qds-progress-track");
+    await expect(d.getProgressIndicator()).toHaveAttribute("data-qds-progress-indicator");
   });
 });

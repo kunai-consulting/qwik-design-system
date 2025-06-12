@@ -9,7 +9,12 @@ export default component$(() => {
   return (
     <>
       <Progress.Root bind:value={progressSig} class="progress">
-        <Progress.Indicator class="progress-indicator" />
+        <Progress.Label class="progress-label">
+          Progress: {progressSig.value}%
+        </Progress.Label>
+        <Progress.Track class="progress-track">
+          <Progress.Indicator class="progress-indicator" />
+        </Progress.Track>
       </Progress.Root>
       <button onClick$={() => (progressSig.value = 70)} type="button">
         Change progress

@@ -6,7 +6,10 @@ export default component$(() => {
 
   return (
     <Progress.Root value={100} class="progress">
-      <Progress.Indicator class="progress-indicator" />
+      <Progress.Label class="progress-label">Complete!</Progress.Label>
+      <Progress.Track class="progress-track">
+        <Progress.Indicator class="progress-indicator" />
+      </Progress.Track>
     </Progress.Root>
   );
 });

@@ -8,7 +8,10 @@ export default component$(() => {
 
   return (
     <Progress.Root value={progressSig.value} class="progress">
-      <Progress.Indicator class="progress-indicator indeterminate" />
+      <Progress.Label class="progress-label">Loading...</Progress.Label>
+      <Progress.Track class="progress-track">
+        <Progress.Indicator class="progress-indicator indeterminate" />
+      </Progress.Track>
     </Progress.Root>
   );
 });

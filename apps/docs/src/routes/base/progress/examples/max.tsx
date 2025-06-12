@@ -36,7 +36,10 @@ export default component$(() => {
         max={Number(totalTreats.value)}
         class="progress"
       >
-        <Progress.Indicator class="progress-indicator" />
+        <Progress.Label class="progress-label">Treats Progress</Progress.Label>
+        <Progress.Track class="progress-track">
+          <Progress.Indicator class="progress-indicator" />
+        </Progress.Track>
       </Progress.Root>
 
       <p style={space}>Number of eaten treats: {treatsEaten}</p>
