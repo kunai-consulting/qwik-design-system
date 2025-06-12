@@ -25,4 +25,5 @@ export type CalendarContext = {
   localId: string;
   isPopoverOpenSig: Signal<boolean>;
   mode: "inline" | "popover";
+  disabledSig: Signal<boolean>;
 };
