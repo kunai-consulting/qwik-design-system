@@ -4,6 +4,7 @@ import type { ISODate, Locale } from "./types";
 import { getWeekNumber } from "./utils";
 
 type PublicCalendarGridDayProps = PropsOf<"button"> & {
+  showLeadingZeros?: boolean;
   /** Event handler called when a date is selected */
   onDateChange$?: (date: ISODate) => void;
 };
@@ -11,7 +12,7 @@ type PublicCalendarGridDayProps = PropsOf<"button"> & {
 // no-composition-check
 /** A component that renders a single day cell in the calendar grid */
 export const CalendarGridDay = component$<PublicCalendarGridDayProps>(
-  ({ onDateChange$, ...buttonProps }) => {
+  ({ onDateChange$, showLeadingZeros = false, ...buttonProps }) => {
     const context = useContext(calendarContextId);
     const dateFormatter = (locale: Locale) =>
       new Intl.DateTimeFormat(locale, {
@@ -73,7 +74,7 @@ export const CalendarGridDay = component$<PublicCalendarGridDayProps>(
                       })
                     ]}
                   >
-                    {day.split("-")[2]}
+                    {showLeadingZeros ? day.split("-")[2] : `${+day.split("-")[2]}`}
                   </button>
                 ) : (
                   // biome-ignore lint/a11y/useFocusableInteractive: not intended to be interactive

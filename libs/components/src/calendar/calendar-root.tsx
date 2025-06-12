@@ -91,7 +91,8 @@ export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
     currentDate,
     localId,
     isPopoverOpenSig: openSig,
-    mode
+    mode,
+    disabledSig
   };
 
   useContextProvider(calendarContextId, context);
