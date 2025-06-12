@@ -28,7 +28,7 @@ export const CalendarField = component$(
       <DateInputRoot data-qds-calendar-field-input-root>
         <DateInputField
           {...props}
-          bind:date={context.activeDate}
+          bind:date={context.dateSig}
           disabled={context.disabledSig.value || openCalendarOnClick}
           data-qds-calendar-field
         >

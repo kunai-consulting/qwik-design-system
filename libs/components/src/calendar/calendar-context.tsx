@@ -5,7 +5,7 @@ export const calendarContextId = createContextId<CalendarContext>("qds-calendar-
 
 export type CalendarContext = {
   locale: Locale;
-  activeDate: Signal<ISODate | null>;
+  dateSig: Signal<ISODate | null>;
   dateToFocus: Signal<ISODate>;
   showWeekNumber: boolean;
   showDaysOfWeek: boolean;
