@@ -1,0 +1,43 @@
+.progress {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.progress-label {
+  font-weight: 500;
+  color: white;
+  margin-bottom: 0.25rem;
+}
+
+.progress-track {
+  height: 1.75rem;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 5px;
+  border: 2px dotted #19b5f6;
+  position: relative;
+}
+
+.progress-indicator {
+  height: 100%;
+  width: 100%;
+  background-color: #19b5f6;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .progress-indicator.indeterminate {
+    width: 30%;
+    animation: indeterminate-slide 2s infinite cubic-bezier(0.37, 0, 0.63, 1);
+  }
+}
+
+@keyframes indeterminate-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
