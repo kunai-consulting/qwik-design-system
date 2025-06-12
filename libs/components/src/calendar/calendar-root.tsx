@@ -6,6 +6,7 @@ import {
   useContextProvider,
   useId,
   useSignal,
+  useTask$,
   useVisibleTask$
 } from "@builder.io/qwik";
 import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
@@ -63,9 +64,8 @@ export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
   const currentDate =
     `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}` as ISODate;
   const initialDate = dateSig.value ?? currentDate;
-  const activeDate = useSignal<ISODate | null>(null);
-  const monthToRender = useSignal<Month>(initialDate.split("-")[1] as Month);
   const yearToRender = useSignal<number>(+initialDate.split("-")[0]);
+  const monthToRender = useSignal<Month>(initialDate.split("-")[1] as Month);
   const dateToFocus = useSignal<ISODate>(initialDate);
   const localId = useId();
 
@@ -86,7 +86,7 @@ export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
     locale,
     monthToRender,
     yearToRender,
-    activeDate,
+    dateSig,
     dateToFocus,
     currentDate,
     localId,
@@ -98,8 +98,8 @@ export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
   useContextProvider(calendarContextId, context);
 
   const labelSignal = useComputed$(() => {
-    if (!activeDate.value) return labelStr;
-    const [year, month] = activeDate.value.split("-");
+    if (!dateSig.value) return labelStr;
+    const [year, month] = dateSig.value.split("-");
 
     return `${labelStr} ${MONTHS_LG[locale][+month - 1]} ${year}`;
   });
@@ -127,12 +127,18 @@ export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
     });
   });
 
+  useTask$(({ track }) => {
+    const newDate = track(() => dateSig.value);
+
+    if (newDate) {
+      yearToRender.value = +newDate.split("-")[0];
+      monthToRender.value = newDate.split("-")[1] as Month;
+    }
+  });
+
   return (
     <PopoverRootBase
-      // The root container of the calendar component
       data-qds-calendar-root
-      // Controls the visual theme of the calendar
-      data-theme="light"
       aria-label={labelSignal.value}
       bind:open={openSig}
       {...otherProps}

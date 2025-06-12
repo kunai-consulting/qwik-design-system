@@ -60,8 +60,8 @@ export const CalendarGridDay = component$<PublicCalendarGridDayProps>(
                     // Indicates if this date is the current date
                     data-current={day === context.currentDate}
                     // Indicates if this date is currently selected
-                    data-selected={day === context.activeDate.value}
-                    aria-selected={day === context.activeDate.value ? "true" : undefined}
+                    data-selected={day === context.dateSig.value}
+                    aria-selected={day === context.dateSig.value ? "true" : undefined}
                     // Stores the date value for this calendar cell
                     data-value={day}
                     aria-label={label}
@@ -69,7 +69,7 @@ export const CalendarGridDay = component$<PublicCalendarGridDayProps>(
                     tabIndex={day === context.dateToFocus.value ? 0 : -1}
                     onClick$={[
                       $(() => {
-                        context.activeDate.value = day as ISODate;
+                        context.dateSig.value = day as ISODate;
                         onDateChange$?.(day as ISODate);
                       })
                     ]}
