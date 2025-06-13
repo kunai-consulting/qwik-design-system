@@ -30,8 +30,9 @@ const ACTION_KEYS = [
 export const CalendarGrid = component$<PublicCalendarGridProps>((props) => {
   const context = useContext(calendarContextId);
 
-  const decreaseDate = $(() => {
+  const decreaseMonth = $(() => {
     const currentMonth = Number.parseInt(context.monthToRender.value);
+
     if (currentMonth === 1) {
       context.monthToRender.value = "12";
       context.yearToRender.value--;
@@ -41,8 +42,9 @@ export const CalendarGrid = component$<PublicCalendarGridProps>((props) => {
     context.monthToRender.value = String(currentMonth - 1).padStart(2, "0") as Month;
   });
 
-  const increaseDate = $(() => {
+  const increaseMonth = $(() => {
     const currentMonth = Number.parseInt(context.monthToRender.value);
+
     if (currentMonth === 12) {
       context.monthToRender.value = "01";
       context.yearToRender.value++;
@@ -73,7 +75,7 @@ export const CalendarGrid = component$<PublicCalendarGridProps>((props) => {
       if (idx === newIdx) {
         const newDate = adjustDate(currentDate, { days: step });
         updateFocus(newIdx, newDate);
-        step < 0 ? decreaseDate() : increaseDate();
+        step < 0 ? decreaseMonth() : increaseMonth();
       } else {
         updateFocus(newIdx);
       }
@@ -96,14 +98,13 @@ export const CalendarGrid = component$<PublicCalendarGridProps>((props) => {
       const dateToSet =
         newDate ?? (buttons[newIdx].getAttribute("data-value") as ISODate);
       context.dateToFocus.value = dateToSet;
-      elFocus?.setAttribute("tabindex", "-1");
-      buttons[newIdx].setAttribute("tabindex", "0");
       buttons[newIdx].focus({ preventScroll: true });
     };
 
     const handleMonthChange = (date: ISODate, currentMonth: string) => {
-      if (date.split("-")[1] !== currentMonth) {
-        date.split("-")[1] < currentMonth ? decreaseDate() : increaseDate();
+      const month = date.split("-")[1];
+      if (month !== currentMonth) {
+        month < currentMonth ? decreaseMonth() : increaseMonth();
       }
     };
 
@@ -133,7 +134,7 @@ export const CalendarGrid = component$<PublicCalendarGridProps>((props) => {
         const step = key === "pageup" ? -1 : 1;
         const newDate = adjustDate(currentDate, { months: step });
         updateFocus(idx, newDate);
-        step < 0 ? decreaseDate() : increaseDate();
+        step < 0 ? decreaseMonth() : increaseMonth();
         break;
       }
 
