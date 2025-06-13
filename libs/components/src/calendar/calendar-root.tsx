@@ -6,6 +6,7 @@ import {
   useContextProvider,
   useId,
   useSignal,
+  useStyles$,
   useTask$,
   useVisibleTask$
 } from "@builder.io/qwik";
@@ -14,9 +15,11 @@ import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase, type PopoverRootProps } from "../popover/popover-root";
 import type { CalendarContext } from "./calendar-context";
 import { calendarContextId } from "./calendar-context";
+import styles from "./calendar-root.css?inline";
 import { ARIA_LABELS, MONTHS_LG, WEEKDAYS } from "./constants";
 import type { ISODate, Locale, Month } from "./types";
 import { daysArrGenerator } from "./utils";
+
 export type PublicCalendarRootProps = Omit<PopoverRootProps, "onChange$"> & {
   /** The locale used for formatting dates and text */
   locale?: Locale;
@@ -44,6 +47,7 @@ export type CalendarRootBoundProps = {
 const regex = /^\d{4}-(0[1-9]|1[0-2])-\d{2}$/;
 /** The root calendar component that manages state and provides context */
 export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
+  useStyles$(styles);
   const {
     fullWeeks = false,
     locale = "en",
@@ -108,21 +112,19 @@ export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
     throw new Error("Invalid date format in Calendar. Please use YYYY-MM-DD format.");
 
   useVisibleTask$(({ track, cleanup }) => {
-    track(() => datesArray.value);
+    const datesArr = track(() => datesArray.value);
 
-    if (datesArray.value.flat().includes(dateToFocus.value)) {
+    if (datesArr.flat().includes(dateToFocus.value)) {
       const btn = document.querySelector(
         `button[data-value="${dateToFocus.value}"]`
       ) as HTMLButtonElement | null;
       btn?.focus();
-      btn?.setAttribute("tabindex", "0");
     }
 
     cleanup(() => {
       const btn = document.querySelector(
         `button[data-value="${dateToFocus.value}"]`
       ) as HTMLButtonElement | null;
-      btn?.setAttribute("tabindex", "-1");
       btn?.blur();
     });
   });
@@ -133,6 +135,7 @@ export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
     if (newDate) {
       yearToRender.value = +newDate.split("-")[0];
       monthToRender.value = newDate.split("-")[1] as Month;
+      dateToFocus.value = newDate;
     }
   });
 

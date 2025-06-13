@@ -1,0 +1,5 @@
+@layer qds {
+  [data-qds-calendar-root] {
+    width: fit-content;
+  }
+}
