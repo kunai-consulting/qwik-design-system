@@ -140,6 +140,10 @@ For Internationalization, we can likely use the browser's native [Intl.DateTimeF
   - The year element should have `role="grid"`.
   - The month elements should have `role="gridcell"`.
 
+## Focus Management
+- On popover open, set focus to the currently selected date or the current date if no date is selected.
+- Move focus using keyboard navigation within the calendar grid (arrow keys, page up/down, home/end)
+
 ## Use Cases
 - Travel booking
 - Appointment scheduling

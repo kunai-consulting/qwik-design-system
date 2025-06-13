@@ -65,7 +65,7 @@ export const CalendarGridDay = component$<PublicCalendarGridDayProps>(
                     // Stores the date value for this calendar cell
                     data-value={day}
                     aria-label={label}
-                    disabled={disabled}
+                    disabled={disabled || context.disabledSig.value}
                     tabIndex={day === context.dateToFocus.value ? 0 : -1}
                     onClick$={[
                       $(() => {
