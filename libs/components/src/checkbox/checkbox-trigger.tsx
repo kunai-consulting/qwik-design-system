@@ -9,13 +9,16 @@ import {
   useOnWindow
 } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
+import { menuContextId } from "../menu/menu-root";
 import { Render } from "../render/render";
 import { checkboxContextId } from "./checkbox-context";
-type PublicCheckboxControlProps = PropsOf<"button">;
+
+export type PublicCheckboxControlProps = PropsOf<"button">;
 
 /** Interactive trigger component that handles checkbox toggling */
 export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps) => {
   const context = useContext(checkboxContextId);
+  const menuContext = useContext(menuContextId, null);
   const triggerId = `${context.localId}-trigger`;
   const descriptionId = `${context.localId}-description`;
   const errorId = `${context.localId}-error`;
@@ -29,6 +32,11 @@ export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps
     }
     return labels.join(" ") || undefined;
   });
+
+  const role = useComputed$(() => {
+    return menuContext ? "menuitemcheckbox" : "checkbox";
+  });
+
   const handleClick$ = $(() => {
     if (context.checkedSig.value === "mixed") {
       context.checkedSig.value = true;
@@ -52,7 +60,7 @@ export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps
       id={triggerId}
       internalRef={context.triggerRef}
       type="button"
-      role="checkbox"
+      role={role.value}
       fallback="button"
       aria-checked={`${context.checkedSig.value}`}
       aria-describedby={describedByLabels ? describedByLabels.value : undefined}
