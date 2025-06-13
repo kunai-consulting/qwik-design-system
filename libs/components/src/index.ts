@@ -17,6 +17,7 @@ export * as Tabs from "./tabs";
 export * as Toggle from "./toggle";
 export * as Toast from "./toast";
 export * as Menu from "./menu";
+export * as Toaster from "./toaster";
 
 export { Render } from "./render/render";
 export { withAsChild } from "./as-child/as-child";
