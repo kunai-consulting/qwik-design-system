@@ -1,0 +1,132 @@
+# Toast Research
+
+## Overview
+A Toaster component provides a system for managing multiple Toast notifications in an application.
+It handles the creation, queuing, and dismissal of multiple notifications while maintaining proper
+accessibility and user experience.
+
+## Research Links:
+- WAI-ARIA Alert Pattern (https://www.w3.org/WAI/ARIA/apg/patterns/alert/)
+- Ark UI Toast (https://ark-ui.com/docs/components/toast)
+
+---
+
+## Features:
+- [ ] Multiple toast management
+- [ ] Toast queuing system
+- [ ] Position management for multiple toasts
+- [ ] Stack/queue behavior configuration
+- [ ] Maximum visible toasts limit
+- [ ] Centralized toast creation API
+- [ ] Toast lifecycle management
+- [ ] Pause on hover (inherited from Toast)
+- [ ] RTL support
+
+---
+
+## Component Structure
+
+Pieces:
+- Root (container and state management)
+- Trigger (toast creation point)
+- Item (individual toast container)
+- ItemTitle (toast title wrapper)
+- ItemDescription (toast description wrapper)
+- ItemClose (toast close button wrapper)
+
+Basic example:
+```tsx
+<Toaster.Root>
+  <Toaster.Trigger>
+    <button onClick$={() => diapToast()}>Create Toast</button>
+  </Toaster.Trigger>
+  <Toaster.Item>
+    <Toaster.ItemTitle>Toast Title</Toaster.ItemTitle>
+    <Toaster.ItemDescription>Toast Description</Toaster.ItemDescription>
+    <Toaster.ItemClose>Close</Toaster.ItemClose>
+  </Toaster.Item>
+</Toaster.Root>
+```
+
+---
+
+## Keyboard Interactions
+- Escape: Dismiss active toast
+- Tab: Navigate through interactive elements
+- Enter/Space: Activate focused interactive element
+
+---
+
+## Attributes
+- role="region" (root)
+- aria-live="polite"
+- aria-labelledby (references title)
+- aria-describedby (references description)
+- data-qds-toaster-root
+- data-qds-toaster-trigger
+-	data-qds-toaster-item
+-	data-qds-toaster-item-title
+-	data-qds-toaster-item-description
+-	data-qds-toaster-item-close
+
+---
+
+## Use Cases
+- Multiple file upload progress notifications
+- Chat/messaging notifications
+- Multiple process completion alerts
+- System status updates
+- Error notifications queue
+- Multi-step operation feedback
+- Batch operation results
+- Real-time updates in dashboards
+
+---
+
+## API:
+
+### Root:
+```typescript
+interface ToasterRootProps {
+  limit?: number; // Maximum number of visible toasts
+  gap?: number; // Space between toasts
+  duration?: number; // Default duration for all toasts
+}
+```
+
+### Item:
+```typescript
+interface ToasterRootProps {
+  id: string | number;
+  duration?: number;
+  onDismiss$?: () => void;
+}
+```
+
+### ItemTitle:
+```typescript
+interface ToasterItemTitleProps {
+  // Inherits Toast.Title props
+}
+```
+
+### ItemDescription:
+```typescript
+interface ToasterItemDescriptionProps {
+  // Inherits Toast.Description props
+}
+```
+
+### ItemClose:
+```typescript
+interface ToasterItemCloseProps {
+  // Inherits Toast.Close props
+}
+```
+
+## Important CSS:
+
+```css
+/* Required CSS */
+
+```

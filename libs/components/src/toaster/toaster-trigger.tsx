@@ -1,0 +1,31 @@
+import { $, type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
+import { withAsChild } from "../as-child/as-child";
+import { toasterContextId } from "./toaster-context";
+import { Render } from "../render/render";
+
+type ToasterTriggerProps = PropsOf<"button">;
+
+export const ToasterTriggerBase = component$((props: ToasterTriggerProps) => {
+  const context = useContext(toasterContextId);
+
+  const handleClick$ = $((event: MouseEvent) => {
+    // Default toast creation - consumers can override this by providing their own onClick$
+    context.createToast({
+      title: "Notification",
+      description: "This is a toast notification"
+    });
+  });
+
+  return (
+    <Render
+      {...props}
+      fallback="button"
+      data-qds-toaster-trigger
+      onClick$={[handleClick$, props.onClick$]}
+    >
+      <Slot />
+    </Render>
+  );
+});
+
+export const ToasterTrigger = withAsChild(ToasterTriggerBase);
