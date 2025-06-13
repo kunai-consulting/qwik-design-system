@@ -1,0 +1,22 @@
+@layer qds {
+  [data-qds-calendar-popover-content] {
+    width: auto;
+  }
+
+  [data-qds-calendar-grid] {
+    display: grid;
+  }
+
+  [data-qds-calendar-grid][data-show-week-numbers="false"] {
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  [data-qds-calendar-grid][data-show-week-numbers="true"] {
+    grid-template-columns: 40px repeat(7, 1fr);
+  }
+
+  [data-qds-calendar-grid-body],
+  [role="row"] {
+    display: contents;
+  }
+}

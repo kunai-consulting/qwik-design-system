@@ -25,13 +25,13 @@ Target features. Some are essential, others are nice to have. Checked items are 
 ## Component Structure
 - Root
   - Label
-  - DateEntry
+  - Field
     - Day
     - Month
     - Year
     - Separator
+    - HiddenInput
   - Error
-  - HiddenInput
 
 ## Research Links
 Here are some resources that can inform and inspire our implementation
@@ -47,3 +47,7 @@ Native HTML provides a date input element that can be used to select a date.
   Each has a clear placeholder and the ability to increment/decrement the value using the up and down arrows.
 - [flux Date Picker](https://fluxui.dev/components/date-picker)
   - The tech stack and API is quite different, but the input in this date picker works similarly to React Aria's DateField.
+
+## Questions
+- Move bindings back to Root from Field?
+- Offer two Root components, one for a single date and one for multiple dates (array of dates i.e. range selection)?
