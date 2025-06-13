@@ -17,67 +17,19 @@
     margin: unset;
     position: absolute;
     position-try: normal flip-block flip-inline;
-  }
-
-  [data-qds-menu-item-label] {
-    user-select: none;
-  }
-
-  /* Default position: right */
-  [data-qds-menu-submenu-content] {
+    /* Default position: right */
     top: anchor(top);
     left: anchor(end);
     right: auto;
     bottom: auto;
   }
 
-  /* Position: bottom */
-  [data-qds-menu-submenu-content][data-position="bottom"] {
-    top: anchor(bottom);
-    left: anchor(left);
-    right: auto;
-    bottom: auto;
-  }
-
-  /* Position: top */
-  [data-qds-menu-submenu-content][data-position="top"] {
-    top: auto;
-    left: anchor(left);
-    right: auto;
-    bottom: anchor(top);
-  }
-
-  /* Position: left */
-  [data-qds-menu-submenu-content][data-position="left"] {
-    top: anchor(top);
-    left: auto;
-    right: anchor(start);
-    bottom: auto;
+  [data-qds-menu-item-label] {
+    user-select: none;
   }
 
   /* Nested submenu support */
   [data-qds-menu-submenu-content] [data-qds-menu-submenu] {
     position: relative;
-  }
-
-  /* RTL support */
-  [dir="rtl"] [data-qds-menu-submenu-content] {
-    left: auto;
-    right: anchor(end);
-  }
-
-  [dir="rtl"] [data-qds-menu-submenu-content][data-position="bottom"] {
-    left: auto;
-    right: anchor(left);
-  }
-
-  [dir="rtl"] [data-qds-menu-submenu-content][data-position="top"] {
-    left: auto;
-    right: anchor(left);
-  }
-
-  [dir="rtl"] [data-qds-menu-submenu-content][data-position="left"] {
-    left: anchor(start);
-    right: auto;
   }
 }
