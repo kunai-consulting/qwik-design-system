@@ -1,22 +1,55 @@
 import type { ReactivityAdapter } from "./adapter";
 
 export function useDummy(_, runtime: ReactivityAdapter) {
-  const r = runtime;
+  const use = runtime;
 
-  const firstNameSig = r.signal("John");
-  const lastNameSig = r.signal("Doe");
+  const firstNameSig = use.signal("John");
+  const lastNameSig = use.signal("Doe");
+  const ageSig = use.signal(25);
 
-  const exampleComputedSig = r.computed(() => {
+  const fullNameSig = use.computed(() => {
     return `${firstNameSig.value} ${lastNameSig.value}`;
   });
 
-  r.task(({ track, cleanup }) => {
-    track(() => firstNameSig.value);
+  const isAdultSig = use.computed(() => {
+    return ageSig.value >= 18;
+  });
 
-    console.log(`exampleComputedSig: ${exampleComputedSig.value}`);
+  use.task(({ track, cleanup }) => {
+    track(() => firstNameSig.value);
+    track(() => lastNameSig.value);
+    track(() => ageSig.value);
+
+    console.log("=== Tracked Changes ===");
+    console.log(`Full Name: ${fullNameSig.value}`);
+    console.log(`Age: ${ageSig.value}`);
+    console.log(`Is Adult: ${isAdultSig.value}`);
+    console.log("=====================");
 
     cleanup(() => {
-      console.log("cleanup");
+      console.log("Cleaning up previous effect");
     });
   });
+
+  use.task(({ track, cleanup }) => {
+    track(() => ageSig.value);
+
+    if (ageSig.value >= 18) {
+      console.log("User is now an adult!");
+    } else {
+      console.log("User is a minor");
+    }
+
+    cleanup(() => {
+      console.log("Age tracking cleanup");
+    });
+  });
+
+  return {
+    firstNameSig,
+    lastNameSig,
+    ageSig,
+    fullNameSig,
+    isAdultSig
+  };
 }

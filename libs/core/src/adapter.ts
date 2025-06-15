@@ -46,7 +46,7 @@ export function createReactivityAdapter(
   hooks: {
     signal: <T>(initialValue: T) => Signal<T>;
     computed: <T>(computeFn: () => T) => Computed<T>;
-    task: (taskFn: ImplicitTrackingTask) => TaskCleanup | undefined;
+    task: (cb: () => (() => void) | undefined) => void;
   }
 ): ReactivityAdapter;
 
@@ -57,7 +57,7 @@ export function createReactivityAdapter(
   const typedHooks = hooks as {
     signal: <T>(initialValue: T) => Signal<T>;
     computed: <T>(computeFn: () => T) => Computed<T>;
-    task: (taskFn: unknown) => unknown;
+    task: (cb: () => (() => void) | undefined) => void;
   };
 
   return {
@@ -66,14 +66,28 @@ export function createReactivityAdapter(
     computed: typedHooks.computed,
     task: (taskFn) => {
       if (framework === "qwik") {
-        typedHooks.task(taskFn);
+        // For Qwik, we need to cast through unknown first
+        (typedHooks.task as unknown as (taskFn: ExplicitTrackingTask) => void)(taskFn);
         return undefined;
       }
 
-      return convertToReactEffect(
-        taskFn,
-        typedHooks.task as (fn: ImplicitTrackingTask) => TaskCleanup | undefined
-      );
+      // Convert React's implicit tracking to our explicit tracking
+      let cleanup: TaskCleanup | undefined;
+      typedHooks.task(() => {
+        const result = taskFn({
+          track: (fn) => fn(),
+          cleanup: (fn) => {
+            cleanup = fn;
+            return fn;
+          }
+        });
+        if (typeof result === "function") {
+          cleanup = result;
+          return result;
+        }
+        return undefined;
+      });
+      return cleanup;
     }
   };
 }
@@ -81,7 +95,7 @@ export function createReactivityAdapter(
 /**
  * Takes a Qwik-style explicit tracking task and converts it to React signals implicit tracking effect.
  */
-function convertToReactEffect(
+export function convertToReactEffect(
   qwikTask: ExplicitTrackingTask,
   reactEffect: (fn: ImplicitTrackingTask) => TaskCleanup | undefined
 ): TaskCleanup | undefined {
