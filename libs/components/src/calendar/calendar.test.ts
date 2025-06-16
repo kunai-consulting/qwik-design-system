@@ -24,6 +24,45 @@ test.describe("basic functionality", () => {
     const calendarGrid = d.getCalendarGrid();
     await expect(calendarGrid).toBeVisible();
   });
+
+  test("GIVEN a calendar WHEN the next and previous buttons are clicked THEN the calendar grid should be updated", async ({
+    page
+  }) => {
+    const d = await setup(page, "reactive");
+    const calendarGrid = d.getCalendarGrid();
+    const daySegment = d.getDaySegment();
+    const monthSegment = d.getMonthSegment();
+    const yearSegment = d.getYearSegment();
+    const selectedDayButton = d.getSelectedDayButton();
+
+    await expect(calendarGrid).toBeVisible();
+
+    await daySegment.fill("11");
+    await monthSegment.fill("08");
+    await yearSegment.fill("2018");
+
+    await expect(selectedDayButton).toBeVisible();
+    await expect(selectedDayButton).toHaveText("11");
+    await expect(d.getCalendarTitle()).toHaveText("August 2018");
+    await expect(d.getCalendarGridDayButtons().last()).toHaveText("31");
+
+    await d.getNextButton().click();
+    await expect(d.getCalendarTitle()).toHaveText("September 2018");
+    await expect(d.getCalendarGridDayButtons().last()).toHaveText("30");
+    await expect(selectedDayButton).toBeHidden();
+
+    await d.getPreviousButton().click();
+    await expect(selectedDayButton).toBeVisible();
+    await expect(selectedDayButton).toHaveText("11");
+    await expect(d.getCalendarTitle()).toHaveText("August 2018");
+    await expect(d.getCalendarGridDayButtons().last()).toHaveText("31");
+
+    await d.getPreviousButton().click();
+    await d.getPreviousButton().click();
+    await expect(d.getCalendarTitle()).toHaveText("June 2018");
+    await expect(d.getCalendarGridDayButtons().last()).toHaveText("30");
+    await expect(selectedDayButton).toBeHidden();
+  });
 });
 
 test.describe("popover calendar", () => {
