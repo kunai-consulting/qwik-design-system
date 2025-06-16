@@ -112,3 +112,51 @@ test.describe("disabling", () => {
     await d.getTrigger().click(); // close calendar
   });
 });
+
+test.describe("Date Picker", () => {
+  test("GIVEN a date picker WHEN a date is selected THEN the date field should be updated", async ({
+    page
+  }) => {
+    const d = await setup(page, "date-picker");
+    d.getTrigger().click();
+    const lastDayOfMonthButton = d.getCalendarGridDayButtons().last();
+    const expectedValue = (await lastDayOfMonthButton.getAttribute("data-value")) ?? "";
+    const expectedDay = expectedValue.split("-")[2];
+    const expectedMonth = `${+expectedValue.split("-")[1]}`;
+    const expectedYear = expectedValue.split("-")[0];
+    await lastDayOfMonthButton.click();
+    d.getTrigger().click();
+    const daySegment = d.getDaySegment();
+    const monthSegment = d.getMonthSegment();
+    const yearSegment = d.getYearSegment();
+    await expect(yearSegment).toHaveValue(expectedYear);
+    await expect(monthSegment).toHaveValue(expectedMonth);
+    await expect(daySegment).toHaveValue(expectedDay);
+  });
+
+  test("GIVEN a date picker WHEN a the date field is updated THEN the calendar should be updated", async ({
+    page
+  }) => {
+    const d = await setup(page, "date-picker");
+    const daySegment = d.getDaySegment();
+    const monthSegment = d.getMonthSegment();
+    const yearSegment = d.getYearSegment();
+    const selectedDayButton = d.getSelectedDayButton();
+
+    await daySegment.fill("14");
+    await monthSegment.fill("02");
+    await yearSegment.fill("2022");
+    d.getTrigger().click();
+    await expect(d.getCalendarTitle()).toHaveText("February 2022");
+    await expect(selectedDayButton).toBeVisible();
+    await expect(selectedDayButton).toHaveText("14");
+
+    await daySegment.fill("5");
+    await monthSegment.fill("9");
+    await yearSegment.fill("2024");
+    d.getTrigger().click();
+    await expect(d.getCalendarTitle()).toHaveText("September 2024");
+    await expect(selectedDayButton).toBeVisible();
+    await expect(selectedDayButton).toHaveText("5");
+  });
+});

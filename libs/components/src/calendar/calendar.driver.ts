@@ -42,8 +42,16 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     return rootLocator.locator("[data-qds-calendar-grid-day-button]");
   };
 
+  const getSelectedDayButton = () => {
+    return rootLocator.locator("[data-qds-calendar-grid-day-button][data-selected]");
+  };
+
   const getTrigger = () => {
     return rootLocator.locator("[data-qds-calendar-trigger]");
+  };
+
+  const getCalendarTitle = () => {
+    return rootLocator.locator("[data-qds-calendar-title]");
   };
 
   const getOpenStatus = () => {
@@ -67,7 +75,9 @@ export function createTestDriver<T extends DriverLocator>(rootLocator: T) {
     getSetValueButton,
     getCalendarGrid,
     getCalendarGridDayButtons,
+    getSelectedDayButton,
     getTrigger,
+    getCalendarTitle,
     getOpenStatus,
     getExternalToggle
   };

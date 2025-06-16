@@ -44,7 +44,9 @@ export type CalendarRootBoundProps = {
   open: boolean;
 };
 
-const regex = /^\d{4}-(0[1-9]|1[0-2])-\d{2}$/;
+// Regular expression for validating ISO date format (yyyy-mm-dd)
+const isoDateRegex = /^\d{1,4}-(0[1-9]|1[0-2])-\d{2}$/;
+
 /** The root calendar component that manages state and provides context */
 export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
   useStyles$(styles);
@@ -108,7 +110,7 @@ export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
     return `${labelStr} ${MONTHS_LG[locale][+month - 1]} ${year}`;
   });
 
-  if (!regex.test(initialDate))
+  if (!isoDateRegex.test(initialDate))
     throw new Error("Invalid date format in Calendar. Please use YYYY-MM-DD format.");
 
   useVisibleTask$(({ track, cleanup }) => {
