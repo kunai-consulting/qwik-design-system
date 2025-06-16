@@ -63,6 +63,32 @@ test.describe("basic functionality", () => {
     await expect(d.getCalendarGridDayButtons().last()).toHaveText("30");
     await expect(selectedDayButton).toBeHidden();
   });
+
+  test("GIVEN a calendar THEN the calendar grid show dates correctly for leap years", async ({
+    page
+  }) => {
+    const d = await setup(page, "reactive");
+    const calendarGrid = d.getCalendarGrid();
+    const daySegment = d.getDaySegment();
+    const monthSegment = d.getMonthSegment();
+    const yearSegment = d.getYearSegment();
+    const selectedDayButton = d.getSelectedDayButton();
+
+    await expect(calendarGrid).toBeVisible();
+
+    await yearSegment.fill("2020");
+    await daySegment.fill("29");
+    await monthSegment.fill("02");
+
+    await expect(selectedDayButton).toBeVisible();
+    await expect(selectedDayButton).toHaveText("29");
+    await expect(d.getCalendarTitle()).toHaveText("February 2020");
+    await expect(d.getCalendarGridDayButtons().last()).toHaveText("29");
+
+    await yearSegment.fill("2021");
+    await expect(d.getCalendarTitle()).toHaveText("February 2021");
+    await expect(d.getCalendarGridDayButtons().last()).toHaveText("28");
+  });
 });
 
 test.describe("popover calendar", () => {
