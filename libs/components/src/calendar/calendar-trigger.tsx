@@ -3,7 +3,7 @@ import { PopoverTriggerBase } from "../popover/popover-trigger";
 
 export const CalendarTrigger = component$((props: PropsOf<"button">) => {
   return (
-    <PopoverTriggerBase {...props}>
+    <PopoverTriggerBase {...props} data-qds-calendar-trigger>
       <Slot />
     </PopoverTriggerBase>
   );

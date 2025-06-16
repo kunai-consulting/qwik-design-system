@@ -1,4 +1,4 @@
-import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
+import { component$, useSignal, useStyles$ } from "@builder.io/qwik";
 import { Calendar } from "@kunai-consulting/qwik";
 import { NextIcon } from "../shared/next-icon";
 import { PreviousIcon } from "../shared/previous-icon";
@@ -6,7 +6,6 @@ import styles from "./calendar.css?inline";
 
 export default component$(() => {
   useStyles$(styles);
-  const selectedDate = useSignal<Calendar.ISODate | null>(null);
   const open = useSignal(false);
   return (
     <div class="calendar-example-container">
@@ -16,20 +15,16 @@ export default component$(() => {
             open.value = !open.value;
           }}
           type="button"
+          data-qds-calendar-test-external-toggle
         >
           Toggle popover from outside
         </button>
-        <span>Open status: {open.value ? "open" : "closed"}</span>
+        <span>
+          Open status:{" "}
+          <span data-qds-calendar-test-open-status>{open.value ? "open" : "closed"}</span>
+        </span>
       </div>
-      <Calendar.Root
-        mode="popover"
-        bind:open={open}
-        class="calendar-root"
-        onChange$={$((date) => {
-          console.log("Date changed:", date);
-          selectedDate.value = date;
-        })}
-      >
+      <Calendar.Root mode="popover" bind:open={open} class="calendar-root">
         <Calendar.Trigger>Trigger</Calendar.Trigger>
         <Calendar.Content>
           <Calendar.Header class="calendar-header">
@@ -42,12 +37,7 @@ export default component$(() => {
             </Calendar.Next>
           </Calendar.Header>
           <Calendar.Grid class="calendar-grid">
-            <Calendar.GridDay
-              class="calendar-grid-day"
-              onDateChange$={$((date) => {
-                console.log("Date changed:", date);
-              })}
-            />
+            <Calendar.GridDay class="calendar-grid-day" />
           </Calendar.Grid>
         </Calendar.Content>
       </Calendar.Root>

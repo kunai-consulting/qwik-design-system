@@ -157,6 +157,8 @@ Beyond that, the implementer needs to create their own CSS to handle placement a
 ## API Design
 
 ## Known Issues
+- Focus management needs improvement. Currently, it relies on a useVisibleTask$ in CalendarRoot, and it may be over-eager.
+- We do not yet have an API for range selection.
 
 ## Questions
 - Will we use native JS Date functionality for date parsing and formatting, or a third-party library, or a combo?

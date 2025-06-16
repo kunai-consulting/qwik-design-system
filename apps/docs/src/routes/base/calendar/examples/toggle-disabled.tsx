@@ -43,6 +43,7 @@ export default component$(() => {
           onClick$={() => (isDisabled.value = !isDisabled.value)}
           type="button"
           class="toggle-disabled-button"
+          data-qds-calendar-test-external-toggle
         >
           Toggle disabled
         </button>

@@ -57,6 +57,7 @@ export const CalendarGridDay = component$<PublicCalendarGridDayProps>(
                     // A cell in the calendar grid body, represented as a button
                     role="gridcell"
                     type="button"
+                    data-qds-calendar-grid-day-button
                     // Indicates if this date is the current date
                     data-current={day === context.currentDate}
                     // Indicates if this date is currently selected
@@ -64,6 +65,7 @@ export const CalendarGridDay = component$<PublicCalendarGridDayProps>(
                     aria-selected={day === context.dateSig.value ? "true" : undefined}
                     // Stores the date value for this calendar cell
                     data-value={day}
+                    date-day-of-month={day.split("-")[2]}
                     aria-label={label}
                     disabled={disabled || context.disabledSig.value}
                     tabIndex={day === context.dateToFocus.value ? 0 : -1}
