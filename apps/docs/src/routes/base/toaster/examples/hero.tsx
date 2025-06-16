@@ -2,7 +2,6 @@ import { component$, useSignal } from "@builder.io/qwik";
 import { Toaster } from "@kunai-consulting/qwik";
 
 interface ToastData {
-  id: string;
   title?: string;
   description?: string;
   open: boolean;
@@ -17,7 +16,7 @@ export default component$(() => {
         Show Toast
       </Toaster.Trigger>
       {toastsSig.value.map((toast) => (
-        <Toaster.Item key={toast.id} id={toast.id}>
+        <Toaster.Item key={`toast-item-${toast.title}`}>
           <Toaster.ItemTitle class="font-semibold text-black">
             {toast.title || "Notification"}
           </Toaster.ItemTitle>

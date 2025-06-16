@@ -1,7 +1,7 @@
 import { $, type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
-import { toasterContextId } from "./toaster-context";
 import { Render } from "../render/render";
+import { toasterContextId } from "./toaster-context";
 
 type ToasterTriggerProps = PropsOf<"button">;
 

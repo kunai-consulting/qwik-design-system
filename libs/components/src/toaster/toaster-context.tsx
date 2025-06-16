@@ -1,7 +1,6 @@
 import { type Signal, createContextId } from "@builder.io/qwik";
 
 export interface ToastData {
-  id: string;
   open: boolean;
   title?: string;
   description?: string;
@@ -14,7 +13,7 @@ export interface ToasterContext {
   gap?: number;
   duration: number;
   createToast: (data: Partial<ToastData>) => void;
-  dismissToast: (id: string) => void;
+  dismissToast: (_index: number) => void;
   dismissAll: () => void;
 }
 

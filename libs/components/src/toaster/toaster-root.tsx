@@ -8,11 +8,12 @@ import {
   useStyles$,
   useTask$
 } from "@builder.io/qwik";
+import { resetIndexes } from "@kunai-consulting/qwik-utils";
 import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
+import { Render } from "../render/render";
 import { type ToastData, type ToasterContext, toasterContextId } from "./toaster-context";
 import styles from "./toaster.css?inline";
-import {Render} from "../render/render";
 
 type ToasterRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   onToastChange$?: (toasts: ToastData[]) => void;
@@ -40,10 +41,7 @@ export const ToasterRootBase = component$((props: ToasterRootProps) => {
   const isInitialRenderSig = useSignal(true);
 
   const createToast = $((data: Partial<ToastData>) => {
-    const id =
-      data.id || `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     const newToast: ToastData = {
-      id,
       open: true,
       duration: data.duration ?? duration,
       ...data
@@ -57,13 +55,13 @@ export const ToasterRootBase = component$((props: ToasterRootProps) => {
       updatedToasts = updatedToasts.slice(-limit);
     }
 
-    console.log(newToast)
+    console.log(newToast);
     toastsSig.value = updatedToasts;
   });
 
-  const dismissToast = $((id: string) => {
-    toastsSig.value = toastsSig.value.map((toast) =>
-      toast.id === id ? { ...toast, open: false } : toast
+  const dismissToast = $((index: number) => {
+    toastsSig.value = toastsSig.value.map((toast, i) =>
+      i === index ? { ...toast, open: false } : toast
     );
   });
 
@@ -99,12 +97,13 @@ export const ToasterRootBase = component$((props: ToasterRootProps) => {
   });
 
   // Handle keyboard events (Escape to dismiss most recent toast)
-  const handleKeyDown$ = $((event: KeyboardEvent) => {
+  const handleKeyDown$ = $(async (event: KeyboardEvent) => {
     if (event.key === "Escape") {
       const openToasts = toastsSig.value.filter((toast) => toast.open);
       if (openToasts.length > 0) {
-        const mostRecentToast = openToasts[openToasts.length - 1];
-        dismissToast(mostRecentToast.id);
+        const mostRecent = openToasts[openToasts.length - 1];
+        const mostRecentIndex = toastsSig.value.lastIndexOf(mostRecent);
+        await dismissToast(mostRecentIndex);
       }
     }
   });
@@ -128,4 +127,8 @@ export const ToasterRootBase = component$((props: ToasterRootProps) => {
   );
 });
 
-export const ToasterRoot = withAsChild(ToasterRootBase);
+export const ToasterRoot = withAsChild(ToasterRootBase, (props) => {
+  resetIndexes("qds-toaster");
+
+  return props;
+});
