@@ -24,12 +24,14 @@
   border: 1px solid white;
   display: flex;
   align-items: center;
+  color: white;
 }
 
 .calendar-grid-day {
   width: 40px;
   height: 40px;
   border-radius: 6px;
+  color: white;
 }
 
 .calendar-grid-day[data-current] {
@@ -37,8 +39,8 @@
 }
 
 [data-qds-calendar-content] {
-  color: inherit;
-  background-color: inherit;
+  color: white;
+  background-color: black;
 }
 
 [data-qds-calendar-content] button {

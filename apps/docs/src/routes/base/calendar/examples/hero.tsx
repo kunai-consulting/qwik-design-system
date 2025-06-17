@@ -7,7 +7,7 @@ import styles from "./calendar.css?inline";
 
 export default component$(() => {
   useStyles$(styles);
-  const selectedDate = useSignal<`${number}-${number}-${number}`>();
+  const selectedDate = useSignal<Calendar.ISODate>();
 
   return (
     <div class="calendar-example-container">

@@ -20,7 +20,7 @@ test.describe("basic functionality", () => {
   test("GIVEN an inline calendar THEN the calendar grid should be visible", async ({
     page
   }) => {
-    const d = await setup(page, "inline");
+    const d = await setup(page, "hero");
     const calendarGrid = d.getCalendarGrid();
     await expect(calendarGrid).toBeVisible();
   });
