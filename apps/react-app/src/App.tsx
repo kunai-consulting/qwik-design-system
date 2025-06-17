@@ -1,7 +1,7 @@
 import "./App.css";
 import { useComputed, useSignal, useSignalEffect } from "@preact/signals-react";
 import { createReactivityAdapter } from "../../../libs/core/src/adapter";
-import { useDummy } from "../../../libs/core/src/dummy";
+import { useDummy } from "../../../libs/core/src/dummy.auto";
 
 function App() {
   const adapter = createReactivityAdapter("react", {

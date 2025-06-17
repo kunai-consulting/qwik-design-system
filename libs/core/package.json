@@ -19,6 +19,10 @@
     "dev": "tsdown --watch"
   },
   "devDependencies": {
-    "tsdown": "latest"
+    "@oxc-project/types": "^0.73.1",
+    "magic-string": "^0.30.17",
+    "oxc-parser": "^0.73.0",
+    "tsdown": "latest",
+    "vite": "^6.3.5"
   }
 }

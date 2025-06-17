@@ -2,6 +2,7 @@ import { isDev } from "@builder.io/qwik/build";
 import { qwikVite } from "@builder.io/qwik/optimizer";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+import unifiedAPIVite from "../core/src/vite/plugin";
 import pkg from "./package.json";
 
 type PackageJson = {
@@ -40,7 +41,7 @@ export default defineConfig(() => {
         ]
       }
     },
-    plugins: [qwikVite({ lint: false }), tsconfigPaths()],
+    plugins: [unifiedAPIVite(), qwikVite({ lint: false }), tsconfigPaths()],
     server: {
       fs: {
         allow: ["../.."]

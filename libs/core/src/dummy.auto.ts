@@ -1,4 +1,3 @@
-import { $ } from "@builder.io/qwik";
 import type { ReactivityAdapter } from "./adapter";
 
 export function useDummy(_, runtime: ReactivityAdapter) {
@@ -8,19 +7,15 @@ export function useDummy(_, runtime: ReactivityAdapter) {
   const lastNameSig = use.signal("Doe");
   const ageSig = use.signal(25);
 
-  const fullNameFn = $(() => {
+  const fullNameSig = use.computed(() => {
     return `${firstNameSig.value} ${lastNameSig.value}`;
   });
 
-  const fullNameSig = use.computed(fullNameFn);
-
-  const isAdultFn = $(() => {
+  const isAdultSig = use.computed(() => {
     return ageSig.value >= 18;
   });
 
-  const isAdultSig = use.computed(isAdultFn);
-
-  const loggerFn = $(({ track, cleanup }) => {
+  use.task(({ track, cleanup }) => {
     track(() => firstNameSig.value);
     track(() => lastNameSig.value);
     track(() => ageSig.value);
@@ -36,9 +31,7 @@ export function useDummy(_, runtime: ReactivityAdapter) {
     });
   });
 
-  use.task(loggerFn);
-
-  const ageTrackingFn = $(({ track, cleanup }) => {
+  use.task(({ track, cleanup }) => {
     track(() => ageSig.value);
 
     if (ageSig.value >= 18) {
@@ -51,8 +44,6 @@ export function useDummy(_, runtime: ReactivityAdapter) {
       console.log("Age tracking cleanup");
     });
   });
-
-  use.task(ageTrackingFn);
 
   return {
     firstNameSig,

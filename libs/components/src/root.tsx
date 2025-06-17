@@ -1,6 +1,6 @@
 import { component$, useComputedQrl, useSignal, useTaskQrl } from "@builder.io/qwik";
 import { createReactivityAdapter } from "../../../libs/core/src/adapter";
-import { useDummy } from "../../../libs/core/src/dummy";
+import { useDummy } from "../../core/src/dummy.auto";
 
 export default component$(() => {
   const adapter = createReactivityAdapter("qwik", {
