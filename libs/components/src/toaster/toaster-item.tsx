@@ -9,8 +9,8 @@ import {
 } from "@builder.io/qwik";
 import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
-import { toasterContextId } from "./toaster-context";
 import { ToastRootBase } from "../toast/toast-root";
+import { toasterContextId } from "./toaster-context";
 
 type ToasterItemProps = PropsOf<"div"> & {
   onDismiss$?: () => void;
