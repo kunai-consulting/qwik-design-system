@@ -1,9 +1,12 @@
 import "./App.css";
 import { useComputed, useSignal, useSignalEffect } from "@preact/signals-react";
+import { useSignals } from "@preact/signals-react/runtime";
 import { createReactivityAdapter } from "../../../libs/core/src/adapter";
 import { useDummy } from "../../../libs/core/src/dummy.auto";
 
 function App() {
+  useSignals();
+
   const adapter = createReactivityAdapter("react", {
     signal: useSignal,
     computed: useComputed,
@@ -15,8 +18,24 @@ function App() {
     adapter
   );
 
+  const countSig = useSignal(0);
+
+  useSignalEffect(() => {
+    console.log("isAdultSig", countSig.value);
+
+    console.log("isOver10", isOver10.value);
+  });
+
+  const isOver10 = useComputed(() => {
+    return countSig.value > 10;
+  });
+
   return (
     <div style={{ padding: "20px" }}>
+      <button onClick={() => countSig.value++}>Increment {countSig}</button>
+
+      <p>Is over 10: {isOver10.value ? "Yes" : "No"}</p>
+
       <h1>Reactivity Demo</h1>
 
       <div style={{ marginBottom: "20px" }}>
@@ -58,6 +77,8 @@ function App() {
           <h3>Computed Values:</h3>
           <p>Full Name: {fullNameSig}</p>
           <p>Is Adult: {isAdultSig ? "Yes" : "No"}</p>
+
+          <p>.value check: {isAdultSig.value ? "Yes" : "No"}</p>
         </div>
       </div>
     </div>
