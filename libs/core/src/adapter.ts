@@ -1,3 +1,5 @@
+import { useSignals } from "@preact/signals-react/runtime";
+
 type TaskCleanup = () => void;
 
 type TrackingContext = {
@@ -5,16 +7,7 @@ type TrackingContext = {
   cleanup: (cleanupFn: TaskCleanup) => void;
 };
 
-/**
- * This is "auto-tracking". For example, in useComputed(() => mySig.value). Whenever mySig's value is changed the computed will re-run.
- *
- * This happens for both computeds, and preact's regular effects.
- */
 type ImplicitTrackingTask = () => TaskCleanup | undefined;
-
-/**
- * Qwik-style explicit tracking with track() and cleanup() calls
- */
 type ExplicitTrackingTask = (context: TrackingContext) => Promise<void> | void;
 
 export type Signal<T> = {
@@ -32,6 +25,22 @@ export type ReactivityAdapter = {
   framework: "qwik" | "react";
 };
 
+export function useRuntime(runtime: ReactivityAdapter) {
+  if (runtime.framework !== "react") {
+    return runtime;
+  }
+
+  // React and Preact need to initialize signals. This is purposely a dev dependency, the CLI should install the @preact/signals-react in React apps.
+  useSignals();
+
+  return runtime;
+}
+
+/**
+ * This is "auto-tracking". For example, in useComputed(() => mySig.value). Whenever mySig's value is changed the computed will re-run.
+ *
+ * This happens for both computeds, and preact's regular effects.
+ */
 export function createReactivityAdapter(
   framework: "qwik",
   hooks: {

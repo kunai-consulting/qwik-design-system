@@ -1,7 +1,7 @@
-import type { ReactivityAdapter } from "./adapter";
+import { type ReactivityAdapter, useRuntime } from "./adapter";
 
-export function useDummy(_, runtime: ReactivityAdapter) {
-  const use = runtime;
+export function useDummy(_: unknown, runtime: ReactivityAdapter) {
+  const use = useRuntime(runtime);
 
   const firstNameSig = use.signal("John");
   const lastNameSig = use.signal("Doe");

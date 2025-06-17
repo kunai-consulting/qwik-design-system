@@ -215,6 +215,9 @@ importers:
       '@oxc-project/types':
         specifier: ^0.73.1
         version: 0.73.1
+      '@preact/signals-react':
+        specifier: ^3.2.0
+        version: 3.2.0(react@19.1.0)
       magic-string:
         specifier: ^0.30.17
         version: 0.30.17

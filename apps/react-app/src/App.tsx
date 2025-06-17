@@ -1,12 +1,9 @@
 import "./App.css";
 import { useComputed, useSignal, useSignalEffect } from "@preact/signals-react";
-import { useSignals } from "@preact/signals-react/runtime";
 import { createReactivityAdapter } from "../../../libs/core/src/adapter";
 import { useDummy } from "../../../libs/core/src/dummy.auto";
 
 function App() {
-  useSignals();
-
   const adapter = createReactivityAdapter("react", {
     signal: useSignal,
     computed: useComputed,
