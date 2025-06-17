@@ -43,7 +43,6 @@ export default function qwikAutoPlugin(): Plugin {
         const s = new MagicString(code);
         let hasChanges = false;
 
-        // Add $ import if not present
         if (!code.includes('import { $ } from "@builder.io/qwik"')) {
           s.prepend('import { $ } from "@builder.io/qwik";\n');
           hasChanges = true;
@@ -63,10 +62,8 @@ export default function qwikAutoPlugin(): Plugin {
               memberExpr.property.type === "Identifier" &&
               ["task", "computed"].includes((memberExpr.property as IdentifierNode).name)
             ) {
-              // Get the callback argument
               const callback = callExpr.arguments[0];
               if (callback && callback.type === "ArrowFunctionExpression") {
-                // Get the position of the callback
                 const start = callback.start;
                 const end = callback.end;
 
@@ -77,7 +74,6 @@ export default function qwikAutoPlugin(): Plugin {
             }
           }
 
-          // Recursively walk through child nodes
           for (const key in node) {
             const value = node[key];
             if (value && typeof value === "object") {
@@ -94,7 +90,6 @@ export default function qwikAutoPlugin(): Plugin {
           }
         };
 
-        // Cast the program to unknown first to satisfy TypeScript's type checking
         walk(result.program as unknown as ASTNode);
 
         if (hasChanges) {
