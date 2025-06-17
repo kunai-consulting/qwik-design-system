@@ -1,15 +1,15 @@
 import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
 import { withAsChild } from "../as-child/as-child";
-import * as Toast from "../toast";
+import { ToastDescriptionBase } from "../toast/toast-description";
 
-type ToasterItemDescriptionProps = PropsOf<typeof Toast.Description>;
+type ToasterItemDescriptionProps = PropsOf<typeof ToastDescriptionBase>;
 
 export const ToasterItemDescriptionBase = component$(
   (props: ToasterItemDescriptionProps) => {
     return (
-      <Toast.Description {...props} data-qds-toaster-item-description>
+      <ToastDescriptionBase {...props} data-qds-toaster-item-description>
         <Slot />
-      </Toast.Description>
+      </ToastDescriptionBase>
     );
   }
 );

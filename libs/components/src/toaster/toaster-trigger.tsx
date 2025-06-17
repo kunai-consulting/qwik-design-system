@@ -11,8 +11,10 @@ export const ToasterTriggerBase = component$((props: ToasterTriggerProps) => {
   const handleClick$ = $((event: MouseEvent) => {
     // Default toast creation - consumers can override this by providing their own onClick$
     context.createToast({
+      open: true,
       title: "Notification",
-      description: "This is a toast notification"
+      description: "This is a toast notification",
+      duration: context.duration
     });
   });
 

@@ -1,36 +1,17 @@
-/* Toaster Root Positioning */
 [data-qds-toaster-root] {
-  position: fixed;
-  z-index: 9999;
-  bottom: 1rem;
-  right: 1rem;
   display: flex;
-  flex-direction: column-reverse;
-  gap: var(--toaster-gap, 8px);
-  pointer-events: none;
+  flex-direction: column;
+  /*gap: var(--toaster-gap, 8px);*/
 }
 
-/* Make trigger clickable */
 [data-qds-toaster-trigger] {
   pointer-events: auto;
+  width: auto;
 }
 
 /* Toast Items */
-[data-qds-toaster-item] {
-  pointer-events: auto;
-  min-width: 300px;
-  max-width: 400px;
-  min-height: 48px;
-  margin: 0.25rem 0;
-  background: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  display: flex;
-  align-items: center;
-  color: black;
-}
+/* [data-qds-toaster-item] {
+} */
 
-[data-qds-toaster-item-title] {
-  color: black;
-  font-weight: bold;
-}
+/* [data-qds-toaster-item-title] {
+} */

@@ -41,6 +41,8 @@ export const ToasterRootBase = component$((props: ToasterRootProps) => {
   const isInitialRenderSig = useSignal(true);
 
   const createToast = $((data: Partial<ToastData>) => {
+    if (!data) return;
+
     const newToast: ToastData = {
       open: true,
       duration: data.duration ?? duration,
@@ -55,7 +57,6 @@ export const ToasterRootBase = component$((props: ToasterRootProps) => {
       updatedToasts = updatedToasts.slice(-limit);
     }
 
-    console.log(newToast);
     toastsSig.value = updatedToasts;
   });
 
@@ -63,6 +64,10 @@ export const ToasterRootBase = component$((props: ToasterRootProps) => {
     toastsSig.value = toastsSig.value.map((toast, i) =>
       i === index ? { ...toast, open: false } : toast
     );
+
+    setTimeout(() => {
+      toastsSig.value = toastsSig.value.filter((toast) => toast.open);
+    }, 300);
   });
 
   const dismissAll = $(() => {
@@ -109,7 +114,8 @@ export const ToasterRootBase = component$((props: ToasterRootProps) => {
   });
 
   const customStyle = {
-    "--toaster-gap": `${gap}px`
+    // "--toaster-gap": hasToasts ? `${gap}px` : "0px"
+    "--toaster-gap": "0px"
   };
 
   return (

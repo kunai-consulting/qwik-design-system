@@ -15,10 +15,10 @@ export default component$(() => {
       <Toaster.Trigger class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
         Show Toast
       </Toaster.Trigger>
-      {toastsSig.value.map((toast) => (
-        <Toaster.Item key={`toast-item-${toast.title}`}>
+      {toastsSig.value.map((toast, i) => (
+        <Toaster.Item key={`toast-item-${toast.title}-${i}`}>
           <Toaster.ItemTitle class="font-semibold text-black">
-            {toast.title || "Notification"}
+            {`Notification ${i}`}
           </Toaster.ItemTitle>
           <Toaster.ItemDescription class="text-gray-600 mt-1">
             {toast.description || "This is a toast notification"}
