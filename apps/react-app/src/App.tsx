@@ -32,7 +32,9 @@ function App() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <button onClick={() => countSig.value++}>Increment {countSig}</button>
+      <button type="button" onClick={() => countSig.value++} data-hi={countSig.value}>
+        Increment {countSig}
+      </button>
 
       <p>Is over 10: {isOver10.value ? "Yes" : "No"}</p>
 
@@ -45,7 +47,7 @@ function App() {
             First Name:
             <input
               type="text"
-              value={firstNameSig}
+              value={firstNameSig.value}
               onChange={(e) => (firstNameSig.value = e.target.value)}
             />
           </label>
@@ -56,7 +58,7 @@ function App() {
             Last Name:
             <input
               type="text"
-              value={lastNameSig}
+              value={lastNameSig.value}
               onChange={(e) => (lastNameSig.value = e.target.value)}
             />
           </label>
@@ -67,7 +69,7 @@ function App() {
             Age:
             <input
               type="number"
-              value={ageSig}
+              value={ageSig.value}
               onChange={(e) => (ageSig.value = Number.parseInt(e.target.value) || 0)}
             />
           </label>
@@ -75,10 +77,8 @@ function App() {
 
         <div style={{ marginTop: "20px" }}>
           <h3>Computed Values:</h3>
-          <p>Full Name: {fullNameSig}</p>
-          <p>Is Adult: {isAdultSig ? "Yes" : "No"}</p>
-
-          <p>.value check: {isAdultSig.value ? "Yes" : "No"}</p>
+          <p>Full Name: {fullNameSig.value}</p>
+          <p>Is Adult: {isAdultSig.value ? "Yes" : "No"}</p>
         </div>
       </div>
     </div>
