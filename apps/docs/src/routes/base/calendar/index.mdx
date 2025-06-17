@@ -41,6 +41,14 @@ In this mode, the date field is read-only and the calendar is opened when the us
 You can control the display of leading zeros in the calendar grid by setting the `showLeadingZeros` prop on the `Calendar.GridDay` component.
 <Showcase name="leading-zeros" />
 
+### Week numbers
+You can control the display of week numbers in the calendar grid by setting the `showWeekNumber` prop on the `Calendar.Root` component.
+<Showcase name="week-numbers" />
+
+### Full weeks
+You can control the display of full weeks in the calendar grid by setting the `fullWeeks` prop on the `Calendar.Root` component.
+<Showcase name="full-weeks" />
+
 ## Component State
 ### Using Component State
 The Calendar component's state can be controlled through several props on the `Calendar.Root` component:
@@ -99,7 +107,6 @@ The calendar component maintains its own internal state for:
 - Keyboard navigation within the calendar grid
 These aspects are handled automatically by the component and don't require manual management.
 
-Based on the provided implementation and examples, I'll document the Calendar component's configuration options.
 ## Core Configuration
 ### Locale and Date Format
 The Calendar component supports localization through the `locale` prop on `Calendar.Root`. Currently, it supports:
@@ -152,8 +159,6 @@ The calendar maintains internal state for:
 - Selected date
 - Focused date
 - Week number calculations (when enabled)
-
-
 
 
 

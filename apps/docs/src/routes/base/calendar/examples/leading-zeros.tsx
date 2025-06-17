@@ -6,7 +6,7 @@ import styles from "./calendar.css?inline";
 
 export default component$(() => {
   useStyles$(styles);
-  const selectedDate = useSignal<`${number}-${number}-${number}`>();
+  const selectedDate = useSignal<Calendar.ISODate | null>(null);
   return (
     <Calendar.Root mode="inline" class="calendar-root">
       <Calendar.Content>

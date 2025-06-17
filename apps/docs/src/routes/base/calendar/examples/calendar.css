@@ -24,27 +24,26 @@
   border: 1px solid white;
   display: flex;
   align-items: center;
-  color: white;
 }
 
 .calendar-grid-day {
   width: 40px;
   height: 40px;
   border-radius: 6px;
-  color: white;
 }
 
 .calendar-grid-day[data-current] {
   border: 1px dashed white;
 }
 
-[data-qds-calendar-content] {
+[data-qds-calendar-popover-content] {
   color: white;
   background-color: black;
 }
 
-[data-qds-calendar-content] button {
+[data-qds-calendar-popover-content] button {
   background-color: transparent;
+  color: white;
 }
 
 .calendar-grid-day[data-selected] {
