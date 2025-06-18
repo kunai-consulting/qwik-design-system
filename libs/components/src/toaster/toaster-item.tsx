@@ -12,7 +12,7 @@ import { withAsChild } from "../as-child/as-child";
 import * as Toast from "../toast";
 import { toasterContextId } from "./toaster-context";
 
-type ToasterItemProps = PropsOf<"div"> & {
+type ToasterItemProps = Omit<PropsOf<"div">, "onChange$"> & {
   onDismiss$?: () => void;
   duration?: number;
   role?: "status";
