@@ -2,8 +2,8 @@ name: Generate LLM Index
 
 on:
   schedule:
-    - cron: '0 0 * * 1'  
-  workflow_dispatch:     
+    - cron: '0 0 * * 1'  # Every Monday at midnight UTC
+  workflow_dispatch:
 
 jobs:
   generate-llms:
@@ -30,9 +30,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --recursive
 
       - name: Run LLM index generator
         run: node apps/docs/generate-llms.js
