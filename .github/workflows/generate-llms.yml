@@ -2,7 +2,7 @@ name: Generate LLM Index
 
 on:
   schedule:
-    - cron: '0 0 * * 1'  # Every Monday at midnight UTC
+    - cron: '0 0 * * 1'  # Every Monday
   workflow_dispatch:
 
 jobs:
@@ -10,10 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: ⬇️ Checkout
         uses: actions/checkout@v3
 
-      - name: Skip odd-numbered weeks (run biweekly)
+      - name: ⏳ Skip odd-numbered weeks (run biweekly)
+        shell: bash
         run: |
           if [ "${{ github.event_name }}" = "schedule" ]; then
             week=$(date +%V)
@@ -26,25 +27,36 @@ jobs:
             echo "Manual run – proceeding regardless of week."
           fi
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: 🟢 Setup Node
+        uses: actions/setup-node@v2
         with:
-          node-version: '20'
-          cache: 'pnpm'
+          node-version: lts/*
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v2
+      - name: 🥡 Setup pnpm
+        uses: pnpm/action-setup@v2.1.0
         with:
-          version: 8 # or whatever version your project uses
+          version: latest
           run_install: false
 
-      - name: Install dependencies
+      - name: 📦 Get pnpm cache directory
+        id: get-pnpm-cache-dir
+        run: echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: 💾 Cache pnpm
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.get-pnpm-cache-dir.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 📥 Install dependencies
         run: pnpm install --recursive
 
-      - name: Run LLM index generator
+      - name: 🧠 Generate LLM index
         run: node apps/docs/generate-llms.js
 
-      - name: Commit and push changes
+      - name: ✅ Commit and push changes
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
