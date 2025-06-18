@@ -2,8 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 
 const baseDir = process.cwd();
-const routesDir = path.join(baseDir, "src/routes");
-const publicDir = path.join(baseDir, "public");
+const routesDir = path.join(baseDir, "apps/docs/src/routes");
+const publicDir = path.join(baseDir, "apps/docs/public");
 const llmsDir = path.join(publicDir, "llms");
 const outputFile = path.join(publicDir, "llms.txt");
 
