@@ -22,10 +22,13 @@ export type ReactivityAdapter = {
   signal: <T>(initialValue: T) => Signal<T>;
   computed: <T>(computeFn: () => T) => Computed<T>;
   task: (taskFn: ExplicitTrackingTask) => TaskCleanup | undefined;
+  fn: <T extends (...args: unknown[]) => unknown>(fn: T) => T;
   framework: "qwik" | "react";
 };
 
 export function useRuntime(runtime: ReactivityAdapter) {
+  // TODO: check if a root context exists that specifics framework, if so skip the need for the adapter argument in each hook call.
+
   if (runtime.framework !== "react") {
     return runtime;
   }
@@ -47,6 +50,7 @@ export function createReactivityAdapter(
     signal: <T>(initialValue: T) => Signal<T>;
     computed: <T>(computeFn: () => T) => Computed<T>;
     task: (taskFn: ExplicitTrackingTask) => void;
+    fn: <T extends (...args: unknown[]) => unknown>(fn: T) => T;
   }
 ): ReactivityAdapter;
 
@@ -56,6 +60,7 @@ export function createReactivityAdapter(
     signal: <T>(initialValue: T) => Signal<T>;
     computed: <T>(computeFn: () => T) => Computed<T>;
     task: (cb: () => (() => void) | undefined) => void;
+    fn: <T extends (...args: unknown[]) => unknown>(fn: T) => T;
   }
 ): ReactivityAdapter;
 
@@ -97,7 +102,8 @@ export function createReactivityAdapter(
         return undefined;
       });
       return cleanup;
-    }
+    },
+    fn: <T extends (...args: unknown[]) => unknown>(fn: T) => fn
   };
 }
 

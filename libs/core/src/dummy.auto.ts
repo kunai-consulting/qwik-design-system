@@ -7,9 +7,14 @@ export function useDummy(_: unknown, runtime: ReactivityAdapter) {
   const lastNameSig = use.signal("Doe");
   const ageSig = use.signal(25);
 
-  const fullNameSig = use.computed(() => {
+  const fullNameFn = use.fn(() => {
     return `${firstNameSig.value} ${lastNameSig.value}`;
   });
+
+  console.log("fullNameFn", fullNameFn);
+
+  // to reference the function, we need to do use.fn(() => { ... }) for compilers to work
+  const fullNameSig = use.computed(fullNameFn);
 
   const isAdultSig = use.computed(() => {
     return ageSig.value >= 18;

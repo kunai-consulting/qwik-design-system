@@ -60,7 +60,9 @@ export default function qwikAutoPlugin(): Plugin {
               memberExpr.object.type === "Identifier" &&
               (memberExpr.object as IdentifierNode).name === "use" &&
               memberExpr.property.type === "Identifier" &&
-              ["task", "computed"].includes((memberExpr.property as IdentifierNode).name)
+              ["task", "computed", "fn"].includes(
+                (memberExpr.property as IdentifierNode).name
+              )
             ) {
               const callback = callExpr.arguments[0];
               if (callback && callback.type === "ArrowFunctionExpression") {
