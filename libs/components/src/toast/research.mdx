@@ -1,0 +1,109 @@
+# Toast Research
+
+## Overview
+A Toast component provides brief, non-intrusive messages or notifications that appear temporarily on the screen.
+The component follows WAI-ARIA alert pattern, ensuring accessibility while providing important feedback to users.
+
+## Research Links:
+- WAI-ARIA Alert Pattern (https://www.w3.org/WAI/ARIA/apg/patterns/alert/)
+- Ark UI Toast (https://ark-ui.com/docs/components/toast)
+- Kobalte Toast (https://kobalte.dev/docs/core/components/toast)
+- Radix UI Toast (https://www.radix-ui.com/primitives/docs/components/toast)
+- MUI Base Toast (https://base-ui.com/react/components/toast)
+
+---
+
+## Features:
+- [ ] Show/hide toast messages
+- [ ] Auto-dismiss functionality
+- [ ] Multiple toast positions
+- [ ] Custom duration
+- [ ] Close button
+- [ ] Toast queue management ?
+- [ ] Custom styling
+- [ ] Pause on hover
+- [ ] RTL support
+
+---
+
+## Component Structure
+
+Pieces:
+- Root (container and state management)
+- Title (accessible heading)
+- Description (message content)
+- Close (dismissal button)
+
+---
+
+## Keyboard Interactions
+- Escape: Dismiss active toast
+- Tab: Navigate through interactive elements
+- Enter/Space: Activate focused interactive element
+
+---
+
+## Attributes
+- role="status"
+- aria-live="polite"
+- aria-labelledby (references title)
+- aria-describedby (references description)
+- data-qds-toast-root
+- data-qds-toast-title
+- data-qds-toast-description
+- data-qds-toast-close
+- data-open
+- data-closed
+
+---
+
+## Use Cases
+- Success confirmations
+- Error notifications
+- Process completion alerts
+- System status updates
+- User action feedback
+- Connection status changes
+- Auto-save confirmations
+- Update notifications
+
+---
+
+## API:
+
+### Root:
+```typescript
+interface ToastRootProps {
+  open?: boolean;
+  onOpenChange$?: (open: boolean) => void;
+  duration?: number;
+}
+```
+
+### Title:
+```typescript
+interface ToastTitleProps {
+  // Inherits HTML span props
+}
+```
+
+### Description:
+```typescript
+interface ToastDescriptionProps {
+  // Inherits HTML div props
+}
+```
+
+### Close:
+```typescript
+interface ToastCloseProps {
+  // Inherits HTML button props
+}
+```
+
+## Important CSS:
+
+```css
+/* Required CSS */
+
+```

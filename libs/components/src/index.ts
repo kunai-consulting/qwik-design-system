@@ -15,6 +15,7 @@ export * as Tree from "./tree";
 export * as Switch from "./switch";
 export * as Tabs from "./tabs";
 export * as Toggle from "./toggle";
+export * as Toast from "./toast";
 export * as Menu from "./menu";
 export * as Progress from "./progress";
 
