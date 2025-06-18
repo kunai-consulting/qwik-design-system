@@ -1,0 +1,46 @@
+name: Generate LLM Index
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'  
+  workflow_dispatch:     
+
+jobs:
+  generate-llms:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Skip odd-numbered weeks (run biweekly)
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            week=$(date +%V)
+            echo "Current ISO week: $week"
+            if [ $((10#$week % 2)) -ne 0 ]; then
+              echo "Odd week – skipping this run."
+              exit 0
+            fi
+          else
+            echo "Manual run – proceeding regardless of week."
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run LLM index generator
+        run: node apps/docs/generate-llms.js
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add apps/docs/public/llms/*.md apps/docs/public/llms.txt
+          git diff --quiet && git diff --staged --quiet || git commit -m "🤖 Auto-regenerated llms files"
+          git push
