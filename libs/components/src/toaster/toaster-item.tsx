@@ -9,10 +9,10 @@ import {
 } from "@builder.io/qwik";
 import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
-import * as Toast from "../toast";
 import { toasterContextId } from "./toaster-context";
+import { ToastRootBase } from "../toast/toast-root";
 
-type ToasterItemProps = Omit<PropsOf<"div">, "onChange$"> & {
+type ToasterItemProps = PropsOf<typeof ToastRootBase> & {
   onDismiss$?: () => void;
   duration?: number;
   role?: "status";
@@ -58,7 +58,7 @@ export const ToasterItemBase = component$((props: ToasterItemProps) => {
   }
 
   return (
-    <Toast.Root
+    <ToastRootBase
       {...rest}
       data-qds-toaster-item
       bind:open={isOpenSig}
@@ -66,7 +66,7 @@ export const ToasterItemBase = component$((props: ToasterItemProps) => {
       duration={toastData.duration}
     >
       <Slot />
-    </Toast.Root>
+    </ToastRootBase>
   );
 });
 
