@@ -31,7 +31,7 @@ export default function qwikAutoPlugin(): Plugin {
     name: "qwik-auto",
     enforce: "pre",
     transform(code, id) {
-      if (!id.includes(".auto.ts")) return null;
+      if (!id.endsWith(".auto.ts")) return null;
 
       try {
         const result = parseSync(id, code);
