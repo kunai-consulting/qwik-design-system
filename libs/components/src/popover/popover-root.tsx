@@ -74,7 +74,6 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
   useContextProvider(popoverContextId, context);
 
   const handleExternalToggle$ = $(async () => {
-    console.log("contentRef", contentRef.value);
     if (!canExternallyChangeSig.value) return;
     if (!contentRef.value) return;
 
