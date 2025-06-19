@@ -1,0 +1,17 @@
+[data-qds-toaster-root] {
+  display: flex;
+  flex-direction: column;
+  /*gap: var(--toaster-gap, 8px);*/
+}
+
+[data-qds-toaster-trigger] {
+  pointer-events: auto;
+  width: auto;
+}
+
+/* Toast Items */
+/* [data-qds-toaster-item] {
+} */
+
+/* [data-qds-toaster-item-title] {
+} */
