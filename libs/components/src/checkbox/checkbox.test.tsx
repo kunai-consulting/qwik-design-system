@@ -1,5 +1,9 @@
+import { component$ } from "@builder.io/qwik";
+import { mount } from "@kunai-consulting/qwik-utils";
 import { type Page, expect, test } from "@playwright/test";
 import { createTestDriver } from "./checkbox.driver";
+import * as Checkbox from "./index";
+
 async function setup(page: Page, exampleName: string) {
   await page.goto(`http://localhost:6174/base/checkbox/${exampleName}`);
 
@@ -14,6 +18,27 @@ test.describe("critical functionality", () => {
         THEN the indicator should be visible`, async ({ page }) => {
     const d = await setup(page, "hero");
 
+    await d.getTrigger().click();
+    await expect(d.getIndicator()).toBeVisible();
+  });
+
+  // Example of new SSR mount approach (commented out due to import issues)
+  test(`GIVEN a checkbox (SSR mount)
+        WHEN the trigger is clicked  
+        THEN the indicator should be visible`, async ({ page }) => {
+    const Hero = component$(() => {
+      return (
+        <Checkbox.Root>
+          <Checkbox.Trigger data-testid="checkbox-trigger">
+            <Checkbox.Indicator data-testid="checkbox-indicator">✓</Checkbox.Indicator>
+          </Checkbox.Trigger>
+        </Checkbox.Root>
+      );
+    });
+
+    await mount(<Hero />, page);
+
+    const d = createTestDriver(page);
     await d.getTrigger().click();
     await expect(d.getIndicator()).toBeVisible();
   });

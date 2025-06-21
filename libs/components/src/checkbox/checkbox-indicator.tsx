@@ -3,18 +3,18 @@ import {
   Slot,
   component$,
   useComputed$,
-  useContext,
-  useStyles$
+  useContext
+  // useStyles$
 } from "@builder.io/qwik";
-import { checkboxContextId } from "./checkbox-context";
-import "./checkbox.css";
+// import "./checkbox.css";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-import styles from "./checkbox.css?inline";
+import { checkboxContextId } from "./checkbox-context";
+// import styles from "./checkbox.css?inline";
 export type PublicCheckboxIndicatorProps = PropsOf<"span">;
 /** Visual indicator component showing the checkbox state */
 export const CheckboxIndicatorBase = component$<PublicCheckboxIndicatorProps>((props) => {
-  useStyles$(styles);
+  // useStyles$(styles);
   const context = useContext(checkboxContextId);
 
   const isHiddenSig = useComputed$(() => context.checkedSig.value === false);

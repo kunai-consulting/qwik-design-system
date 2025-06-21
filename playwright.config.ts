@@ -5,7 +5,7 @@ import { defineConfig, devices } from "@playwright/test";
  */
 export default defineConfig({
   testDir: "./libs/components",
-  testMatch: "**/*.test.ts",
+  testMatch: "**/*.test.{ts,tsx}",
   timeout: 30000,
   /* Run tests in files in parallel */
   fullyParallel: true,

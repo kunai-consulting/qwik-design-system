@@ -53,6 +53,9 @@ importers:
       '@builder.io/qwik-city':
         specifier: ^1.14.1
         version: 1.14.1(rollup@4.41.0)(typescript@5.4.5)(vite@5.4.8(@types/node@20.14.11)(lightningcss@1.29.2))
+      '@kunai-consulting/qwik-utils':
+        specifier: workspace:*
+        version: link:../../libs/utils
       '@types/node':
         specifier: 20.14.11
         version: 20.14.11
