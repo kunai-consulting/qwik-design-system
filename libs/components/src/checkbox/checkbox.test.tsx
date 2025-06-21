@@ -1,8 +1,44 @@
-import { component$ } from "@builder.io/qwik";
-import { mount } from "@kunai-consulting/qwik-utils";
+import { writeFileSync } from "node:fs";
+import { join } from "node:path";
+// import { mount } from "@kunai-consulting/qwik-utils";
 import { type Page, expect, test } from "@playwright/test";
 import { createTestDriver } from "./checkbox.driver";
-import * as Checkbox from "./index";
+
+// Enhanced mount function that accepts component template
+async function mount(componentTemplate: string, page: Page): Promise<void> {
+  const id = Math.random().toString(36).substring(2, 15);
+
+  // Create the full component file content
+  const componentContent = `
+import { component$ } from "@builder.io/qwik";
+import * as Checkbox from "../../../../../../libs/components/src/checkbox/index";
+
+export default component$(() => {
+  return (
+    ${componentTemplate}
+  );
+});
+`;
+
+  // Write the component file to the tests directory
+  const testFilePath = join(
+    process.cwd(),
+    "apps/component-tests/src/routes/tests",
+    id,
+    "index.tsx"
+  );
+  const testDir = join(process.cwd(), "apps/component-tests/src/routes/tests", id);
+
+  // Create directory if it doesn't exist
+  const { mkdirSync } = await import("node:fs");
+  mkdirSync(testDir, { recursive: true });
+
+  // Write the component file
+  writeFileSync(testFilePath, componentContent);
+
+  // Navigate to the route
+  await page.goto(`http://localhost:6175/tests/${id}`);
+}
 
 async function setup(page: Page, exampleName: string) {
   await page.goto(`http://localhost:6174/base/checkbox/${exampleName}`);
@@ -22,21 +58,19 @@ test.describe("critical functionality", () => {
     await expect(d.getIndicator()).toBeVisible();
   });
 
-  // Example of new SSR mount approach (commented out due to import issues)
   test(`GIVEN a checkbox (SSR mount)
         WHEN the trigger is clicked  
         THEN the indicator should be visible`, async ({ page }) => {
-    const Hero = component$(() => {
-      return (
-        <Checkbox.Root>
-          <Checkbox.Trigger data-testid="checkbox-trigger">
-            <Checkbox.Indicator data-testid="checkbox-indicator">✓</Checkbox.Indicator>
-          </Checkbox.Trigger>
-        </Checkbox.Root>
-      );
-    });
-
-    await mount(<Hero />, page);
+    await mount(
+      `
+      <Checkbox.Root>
+        <Checkbox.Trigger data-testid="checkbox-trigger">
+          <Checkbox.Indicator data-testid="checkbox-indicator">✓</Checkbox.Indicator>
+        </Checkbox.Trigger>
+      </Checkbox.Root>
+    `,
+      page
+    );
 
     const d = createTestDriver(page);
     await d.getTrigger().click();
