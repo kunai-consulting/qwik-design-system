@@ -40,6 +40,9 @@ Tables should have `role="table"`, while grids should have `role="grid"`.
 While a table can be implemented with many different HTML elements in combination with the relevant ARIA roles, 
 the ARIA Authoring Practices Guide recommends using the native `<table>` elements whenever possible.
 
+The table element should have an aria-label or aria-labelledby attribute that provides a human-readable label for 
+the table.
+
 ### Other component libraries:
 - [Dice UI](https://www.diceui.com/docs/components/data-table)
   - > A powerful and flexible data table component for displaying, filtering, sorting, and paginating tabular data.
@@ -53,9 +56,14 @@ the ARIA Authoring Practices Guide recommends using the native `<table>` element
   - Uses native HTML `<table>` elements, but sets `role="grid"` and follows the ARIA **Grid** Pattern.
   - Supports drag and drop row reordering, but not drag and drop column reordering.
 - [flux](https://fluxui.dev/components/table)
-  - Flux is a styled component library for Laravel...
+  - Relatively simple feature set including sorting, filtering, and pagination.
 - [Angular Material](https://material.angular.dev/components/table/overview)
-  - Fully-featured, styled Table component...
+  - Table component that focuses on performance and accessibility. The basic table does not include sorting, filtering, selection,
+  or pagination, but it provides optional tools for adding these features.
+  - Paginator is a separate component, but can be easily integrated with the table.
+  - Sets `role="table"` on the table by default. The developer can easily override this by setting `role="grid"` or 
+  `role="treegrid"` on the table element.
+  - Developers can use native HTML `<table>` elements with directives or use the library components directly for a flex layout.
 
 Some comparable headless component libraries have no calendar component. These include: 
 - [Ariakit](https://ariakit.org/components)
