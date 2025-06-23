@@ -17,6 +17,7 @@ Target features. Some are essential, others are nice to have. Checked items are 
 - [ ] Virtual scrolling
 - [ ] Empty state
 - [ ] Loading state
+- [ ] Footer row (i.e. for showing totals, footnotes, etc.)
 
 ## Research Links
 Here are some resources that can inform and inspire our implementation
@@ -63,7 +64,7 @@ the table.
   - Paginator is a separate component, but can be easily integrated with the table.
   - Sets `role="table"` on the table by default. The developer can easily override this by setting `role="grid"` or 
   `role="treegrid"` on the table element.
-  - Developers can use native HTML `<table>` elements with directives or use the library components directly for a flex layout.
+  - Developers can use native HTML `<table>` elements plus Material directives or use the Material components directly for a flex layout.
 
 Some comparable headless component libraries have no calendar component. These include: 
 - [Ariakit](https://ariakit.org/components)
@@ -77,7 +78,10 @@ Some comparable headless component libraries have no calendar component. These i
 
 ## Component Structure
 - Root
-  - 
+  - Header
+  - Body
+  - Footer
+  - Pagination
 
 ## Keyboard Interactions
 - 
@@ -99,4 +103,5 @@ Some comparable headless component libraries have no calendar component. These i
 ## Known Issues
 
 ## Questions
-- Focus on the table patter or the grid pattern?
+- Focus on the table pattern or the grid pattern?
+- Should the root correspond to the table element or a container div?
