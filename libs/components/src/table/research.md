@@ -1,21 +1,53 @@
 # Table Research
+
+## Overview
+A Table component provides a way to display and interact with structured data in rows and columns. It follows
+the WAI-ARIA table pattern, offering an accessible solution for presenting tabular data with rich interactions 
+like sorting, filtering, pagination, and row selection. 
+
+The component uses native HTML table elements (table, tr, td) enhanced with additional functionality while maintaining 
+proper accessibility semantics. It focuses on the table pattern rather than the grid pattern, as it's primarily 
+designed for displaying and manipulating data rather than providing cell-level interaction.
+
 ## Features
 Target features. Some are essential, others are nice to have. Checked items are already implemented in our component.
+
+### Core Features
 - [ ] Display data in a table with headings, body, and footer
+- [ ] Sticky header/footer
+- [ ] Column spanning
+- [ ] Row spanning
+- [ ] Loading states
+- [ ] Error states
+- [ ] Empty states
+
+### Data Management
 - [ ] Sorting
   - [ ] Ascending and descending by a single column
   - [ ] Multiple column sorting
 - [ ] Filtering
 - [ ] Pagination
+- [ ] Virtual scrolling
+- [ ] Export functionality (CSV, Excel)
+
+### Column Features
 - [ ] Toggle column visibility
-- [ ] Row selection (single and multiple)
 - [ ] Drag and drop column reordering
-- [ ] Drag and drop row reordering
+- [ ] Responsive column behavior
 - [ ] Column resizing
+  - [ ] Mouse drag resize
+  - [ ] Keyboard resize
+
+### Row Features
+- [ ] Row selection (single and multiple)
+- [ ] Drag and drop row reordering
 - [ ] Row action callback
 - [ ] Row disabling
-- [ ] Virtual scrolling
-- [ ] Empty state
+- [ ] Expandable rows
+
+## Accessibility Features
+- [ ] ARIA attributes support
+- [ ] Keyboard navigation
 
 ## Research Links
 Here are some resources that can inform and inspire our implementation
@@ -98,13 +130,93 @@ Some comparable headless component libraries have no calendar component. These i
         - Cell
   - Pagination
 
+## State Management
+The table component manages several internal states:
+
+### Sorting State
+```tsx
+interface SortState {
+  column: string;
+  direction: 'asc' | 'desc' | null;
+  multiSort?: Array<{
+    column: string;
+    direction: 'asc' | 'desc';
+  }>;
+}
+```
+
+### Filter State
+```tsx
+interface FilterState {
+  [columnId: string]: {
+    value: any;
+    operator: 'equals' | 'contains' | 'startsWith' | 'endsWith' | 'gt' | 'lt' | 'gte' | 'lte';
+  };
+}
+```
+
+### Selection State
+```tsx
+interface SelectionState {
+  selectedRows: Set<string | number>;
+  isAllSelected: boolean;
+  isIndeterminate: boolean;
+}
+```
+
+### Pagination State
+```tsx
+interface PaginationState {
+  currentPage: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+}
+```
+
 ## Keyboard Interactions
-- 
+- Navigation
+  - Tab: Navigate between focusable elements
+  - Enter: Activate row/cell action
+  - Space: Select row (if selection enabled)
+  - Arrow keys: Navigate between cells
+  - Home/End: Navigate to first/last cell in row
+  - Ctrl + Home/End: Navigate to first/last cell in table
+  - Page Up/Down: Navigate between pages (if pagination enabled)
+- Actions
+  - Escape: Clear sorting/filtering
+  - Shift + Arrow keys: Extend selection (if multiple selection enabled)
+  - Ctrl + Arrow keys: Resize column (if resizing enabled)
 
 ## Attributes
-- 
+### ARIA attributes
+- role="table"
+- aria-rowcount
+- aria-colcount
+- aria-sort
+- aria-label/aria-labelledby
+- aria-describedby
+- aria-multiselectable
+- aria-selected
+- aria-expanded (for expandable rows)
+
+### Data attributes
+- data-qds-table-root
+- data-qds-table-header
+- data-qds-table-body
+- data-qds-table-footer
+- data-qds-table-row
+- data-qds-table-cell
+- data-selected
+- data-sorted
+- data-disabled
+- data-error
 
 ## Focus Management
+- Focus moves through interactive elements in a logical order
+- Selected rows maintain focus state
+- Sort headers are focusable when sorting is enabled
+- Pagination controls are focusable
 - 
 
 ## Use Cases
@@ -112,10 +224,55 @@ Some comparable headless component libraries have no calendar component. These i
 - Data visualization
 - Inventory management
 - Administration of data
+- Financial reporting
+- Product catalogs
+- Analytics dashboards
+- Content management systems
+
+## API Design
+### Root
+```tsx
+interface TableRootProps {
+  data: any[];
+  columns: ColumnDef[];
+  sortable?: boolean;
+  filterable?: boolean;
+  selectable?: boolean;
+  multiSelect?: boolean;
+  pagination?: boolean;
+  virtualScroll?: boolean;
+  loading?: boolean;
+  error?: string;
+  onRowClick$?: (row: any) => void;
+  onSort$?: (sortState: SortState) => void;
+  onFilter$?: (filterState: FilterState) => void;
+  onSelect$?: (selectedRows: any[]) => void;
+}
+```
+### Column Definition
+```tsx
+interface ColumnDef {
+  id: string;
+  header: string | JSXOutput;
+  accessor: string | ((row: any) => any);
+  sortable?: boolean;
+  filterable?: boolean;
+  width?: number | string;
+  minWidth?: number;
+  maxWidth?: number;
+  cell?: (props: { row: any; value: any }) => JSXOutput;
+  footer?: string | JSXOutput;
+  align?: 'left' | 'center' | 'right';
+}
+```
 
 ## CSS Considerations
 
 ## Known Issues
+- Virtual scrolling with variable row heights
+- Complex keyboard navigation with nested interactive elements
+- Performance with large datasets and multiple features enabled
+- Mobile responsiveness with many columns
 
 ## Questions
 - Focus on the table pattern or the grid pattern?
