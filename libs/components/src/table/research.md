@@ -1,7 +1,7 @@
 # Table Research
 ## Features
 Target features. Some are essential, others are nice to have. Checked items are already implemented in our component.
-- [ ] Display data in a table with headings
+- [ ] Display data in a table with headings, body, and footer
 - [ ] Sorting
   - [ ] Ascending and descending by a single column
   - [ ] Multiple column sorting
@@ -16,13 +16,13 @@ Target features. Some are essential, others are nice to have. Checked items are 
 - [ ] Row disabling
 - [ ] Virtual scrolling
 - [ ] Empty state
-- [ ] Loading state
-- [ ] Footer row (i.e. for showing totals, footnotes, etc.)
 
 ## Research Links
 Here are some resources that can inform and inspire our implementation
 
 ### Native HTML
+[MDN article on HTML tables](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/table)
+
 The React Aria docs [say it well](https://react-spectrum.adobe.com/react-aria/Table.html):
 > A table can be built using the \<table>, \<tr>, \<td>, and other table specific HTML elements, but is very limited in 
 functionality especially when it comes to user interactions. HTML tables are meant for static content, rather than 
@@ -65,6 +65,13 @@ the table.
   - Sets `role="table"` on the table by default. The developer can easily override this by setting `role="grid"` or 
   `role="treegrid"` on the table element.
   - Developers can use native HTML `<table>` elements plus Material directives or use the Material components directly for a flex layout.
+- [Material UI Table](https://mui.com/material-ui/react-table/)
+  - Offers both styled and unstyled versions of the table component.
+  - Can use in conjunction with an external library (`react-virtuoso`) for row virtualization.
+- [Material UI Data Grid](https://mui.com/x/react-data-grid/)
+  - Grid implementation with a less-composable API with tons of props.
+- [shadcdnd](https://ui.shadcn.com/docs/components/table)
+  - 
 
 Some comparable headless component libraries have no calendar component. These include: 
 - [Ariakit](https://ariakit.org/components)
@@ -78,9 +85,17 @@ Some comparable headless component libraries have no calendar component. These i
 
 ## Component Structure
 - Root
-  - Header
-  - Body
-  - Footer
+  - Table
+    - Caption
+    - Header
+      - Row
+        - Cell
+    - Body
+      - Row
+        - Cell 
+    - Footer
+      - Row
+        - Cell
   - Pagination
 
 ## Keyboard Interactions
