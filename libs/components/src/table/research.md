@@ -103,9 +103,10 @@ the table.
 - [Material UI Data Grid](https://mui.com/x/react-data-grid/)
   - Grid implementation with a less-composable API with tons of props.
 - [shadcdnd](https://ui.shadcn.com/docs/components/table)
-  - 
+  - Barebones, composable table component that puts styling on top of native HTML table elements.
+  - Provides a guide for making a more feature-rich data table using `@tanstack/react-table` (link)[https://tanstack.com/table/latest]
 
-Some comparable headless component libraries have no calendar component. These include: 
+Some comparable headless component libraries have no Table component. These include: 
 - [Ariakit](https://ariakit.org/components)
 - [Ark UI](https://ark-ui.com/)
 - [Melt UI](https://www.melt-ui.com/)
@@ -216,7 +217,6 @@ interface PaginationState {
 - Selected rows maintain focus state
 - Sort headers are focusable when sorting is enabled
 - Pagination controls are focusable
-- 
 
 ## Use Cases
 - Data analysis
