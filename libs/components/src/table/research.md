@@ -179,7 +179,6 @@ interface PaginationState {
   - Tab: Navigate between focusable elements
   - Enter: Activate row/cell action
   - Space: Select row (if selection enabled)
-  - Arrow keys: Navigate between cells
   - Home/End: Navigate to first/last cell in row
   - Ctrl + Home/End: Navigate to first/last cell in table
   - Page Up/Down: Navigate between pages (if pagination enabled)
