@@ -22,7 +22,7 @@ test.describe("Label", () => {
   }) => {
     const d = await setup(page, "basic");
     const labelId = await d.getLabel().getAttribute("id");
-    const entryLabeledBy = await d.getDateEntry().getAttribute("aria-labelledby");
+    const entryLabeledBy = await d.getDateField().getAttribute("aria-labelledby");
     expect(labelId).toEqual(entryLabeledBy);
   });
 });
