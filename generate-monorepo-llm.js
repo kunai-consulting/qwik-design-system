@@ -123,7 +123,7 @@ We use [pnpm](https://pnpm.io/) for package management.
 
 We use [Vitest](https://github.com/kunai-consulting/qwik-design-system/blob/main/vitest.config.ts) for unit testing.
 
----
+----
 
 `;
 
