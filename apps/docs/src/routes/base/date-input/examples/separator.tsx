@@ -5,11 +5,11 @@ export default component$(() => {
   return (
     <DateInput.Root>
       <DateInput.Label>When's your next pickleball match?</DateInput.Label>
-      <DateInput.Entry separator={<PickleballIcon />}>
+      <DateInput.Field separator={<PickleballIcon />}>
         <DateInput.Month />
         <DateInput.Day />
         <DateInput.Year />
-      </DateInput.Entry>
+      </DateInput.Field>
     </DateInput.Root>
   );
 });
