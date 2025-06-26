@@ -100,9 +100,32 @@ function generateSummary(rootDir) {
         f !== "node_modules"
     );
 
-  let output = "# Monorepo Overview\n\n";
-  // biome-ignore lint/style/useTemplate: <explanation>
-  output = "<!-- @source https://qwik.design/llms.txt -->\n\n" + output;
+  let output = `<!-- @source https://qwik.design/llms.txt -->
+
+# Monorepo Overview
+
+## Docs
+https://github.com/kunai-consulting/qwik-design-system/tree/main/apps/docs
+
+## Components Library
+https://github.com/kunai-consulting/qwik-design-system/tree/main/libs/components
+
+## Icons Library
+https://github.com/kunai-consulting/qwik-design-system/tree/main/libs/icons
+
+## Utils Library
+https://github.com/kunai-consulting/qwik-design-system/tree/main/libs/utils
+
+## Root package.json
+https://github.com/kunai-consulting/qwik-design-system/blob/main/package.json
+
+We use [pnpm](https://pnpm.io/) for package management.
+
+We use [Vitest](https://github.com/kunai-consulting/qwik-design-system/blob/main/vitest.config.ts) for unit testing.
+
+---
+
+`;
 
   for (const folder of folders) {
     const fullPath = path.join(rootDir, folder);

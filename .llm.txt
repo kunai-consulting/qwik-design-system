@@ -2,9 +2,33 @@
 
 # Monorepo Overview
 
+## Docs
+https://github.com/kunai-consulting/qwik-design-system/tree/main/apps/docs
+
+## Components Library
+https://github.com/kunai-consulting/qwik-design-system/tree/main/libs/components
+
+## Icons Library
+https://github.com/kunai-consulting/qwik-design-system/tree/main/libs/icons
+
+## Utils Library
+https://github.com/kunai-consulting/qwik-design-system/tree/main/libs/utils
+
+## Root package.json
+https://github.com/kunai-consulting/qwik-design-system/blob/main/package.json
+
+We use [pnpm](https://pnpm.io/) for package management.
+
+We use [Vitest](https://github.com/kunai-consulting/qwik-design-system/blob/main/vitest.config.ts) for unit testing.
+
+---
+
 ## apps
 - Key functions/classes:
   - apps/docs/generate-llms.js: toSlug, toRoute, findRouteFiles, ensureMdFile, generate
+  - apps/docs/src/routes/base/calendar/shared/calendar-icon.tsx: CalendarIcon
+  - apps/docs/src/routes/base/calendar/shared/next-icon.tsx: NextIcon
+  - apps/docs/src/routes/base/calendar/shared/previous-icon.tsx: PreviousIcon
   - apps/docs/src/routes/base/checkbox/examples/form-mixed.tsx: TermsCheckbox
   - apps/docs/src/routes/base/checkbox/examples/form.tsx: TermsCheckbox
   - apps/docs/src/routes/base/checkbox/examples/required.tsx: TermsCheckbox
@@ -168,15 +192,22 @@
   - libs/components/lib-types/src/visually-hidden/visually-hidden.d.ts: VisuallyHidden
   - libs/components/src/as-child/as-child.test.ts: setup
   - libs/components/src/as-child/as-child.tsx: syncFixedInV2, withAsChild
+  - libs/components/src/calendar/calendar-content.tsx: CalendarContentBase, CalendarContent
   - libs/components/src/calendar/calendar-context.tsx: calendarContextId
+  - libs/components/src/calendar/calendar-day.tsx: CalendarDay
+  - libs/components/src/calendar/calendar-field.tsx: CalendarField
   - libs/components/src/calendar/calendar-grid-day.tsx: CalendarGridDay
   - libs/components/src/calendar/calendar-grid.tsx: CalendarGrid
   - libs/components/src/calendar/calendar-header.tsx: CalendarHeader
+  - libs/components/src/calendar/calendar-month.tsx: CalendarMonth
   - libs/components/src/calendar/calendar-next.tsx: CalendarNext
-  - libs/components/src/calendar/calendar-popover.tsx: CalendarPopover
   - libs/components/src/calendar/calendar-previous.tsx: CalendarPrevious
-  - libs/components/src/calendar/calendar-root.tsx: CalendarRoot
+  - libs/components/src/calendar/calendar-root.tsx: CalendarRootBase, CalendarRoot
   - libs/components/src/calendar/calendar-title.tsx: CalendarTitle
+  - libs/components/src/calendar/calendar-trigger.tsx: CalendarTrigger
+  - libs/components/src/calendar/calendar-year.tsx: CalendarYear
+  - libs/components/src/calendar/calendar.driver.ts: createTestDriver
+  - libs/components/src/calendar/calendar.test.ts: setup, getToday
   - libs/components/src/calendar/constants.ts: MONTHS_LG, MONTHS_SM, ARIA_LABELS, WEEKDAYS, TRIGGER_LABELS
   - libs/components/src/calendar/icons.tsx: Calendar
   - libs/components/src/calendar/utils.tsx: daysArrGenerator, getWeekNumber
@@ -212,8 +243,8 @@
   - libs/components/src/date-input/constants.ts: MIN_YEAR, MAX_YEAR, MIN_MONTH, MAX_MONTH, MIN_DAY, MAX_DAY, DEFAULT_DAY_OF_MONTH_SEGMENT, DEFAULT_MONTH_SEGMENT, DEFAULT_YEAR_SEGMENT
   - libs/components/src/date-input/date-input-context.tsx: dateInputContextId
   - libs/components/src/date-input/date-input-day.tsx: DateInputDayBase, DateInputDay
-  - libs/components/src/date-input/date-input-entry-context.tsx: dateInputEntryContextId
-  - libs/components/src/date-input/date-input-entry.tsx: DateInputEntryBase, DateInputEntry
+  - libs/components/src/date-input/date-input-field-context.tsx: dateInputFieldContextId
+  - libs/components/src/date-input/date-input-field.tsx: DateInputFieldBase, DateInputField
   - libs/components/src/date-input/date-input-hidden-input.tsx: DateInputHiddenInput
   - libs/components/src/date-input/date-input-label.tsx: DateInputLabelBase, DateInputLabel
   - libs/components/src/date-input/date-input-month.tsx: DateInputMonthBase, DateInputMonth
