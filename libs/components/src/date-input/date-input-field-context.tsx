@@ -2,16 +2,16 @@ import { type QwikJSX, type Signal, createContextId } from "@builder.io/qwik";
 import type { ISODate } from "../calendar/types";
 import type { DateSegment } from "./types";
 
-export const dateInputEntryContextId = createContextId<DateInputEntryContext>(
-  "qds-date-input-entry-context"
+export const dateInputFieldContextId = createContextId<DateInputFieldContext>(
+  "qds-date-input-field-context"
 );
 
-export type DateInputEntryContext = {
+export type DateInputFieldContext = {
   dateSig: Signal<ISODate | null>;
   dayOfMonthSegmentSig: Signal<DateSegment>;
   monthSegmentSig: Signal<DateSegment>;
   yearSegmentSig: Signal<DateSegment>;
-  entryId: string;
+  fieldId: string;
   name?: string;
   required?: boolean;
   value?: string;

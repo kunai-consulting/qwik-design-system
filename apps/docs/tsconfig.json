@@ -23,7 +23,7 @@
       "~/*": ["./src/*"]
     }
   },
-  "include": ["src", "./*.d.ts", "./*.config.ts", "docs-widgets", "mdx"],
+  "include": ["src", "./*.d.ts", "./*.config.ts", "docs-widgets", "mdx", "**/api.json"],
   "references": [
     { "path": "../../libs/components" },
     { "path": "../../libs/icons" },

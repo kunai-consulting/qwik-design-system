@@ -1,15 +1,15 @@
 # Calendar/Date Picker Research
 ## Features
 Target features. Some are essential, others are nice to have. Checked items are already implemented in our component.
-- [ ] Date input
-- [ ] Date selection via popover calendar view
-- [x] Date selection via inline Calendar view
+- [ ] Date input integrated with the calendar
+- [x] Date selection via popover calendar view
+- [x] Date selection via inline calendar view
 - [ ] Date range input
 - [ ] Date range selection via calendar view
 - [ ] Multiple non-contiguous date selection via calendar view
 - [ ] Keyboard navigation
 - [ ] Specify date display format
-- [ ] Month view for selecting a day of the month
+- [x] Month view for selecting a day of the month
 - [ ] Year view for selecting a month in a given year
 - [ ] Multi-year view for selecting a year
 - [ ] Month and year dropdowns (alternative to having separate year and multi-year views)
@@ -23,7 +23,6 @@ Target features. Some are essential, others are nice to have. Checked items are 
 - [ ] Custom disabling/filtering of available dates via a callback function
 - [ ] Show multiple months at a time
 - [ ] Input hint (i.e. MM/DD/YYYY)
-- [ ] Calendar in popover
 - [ ] Confirmation action buttons in the calendar view: i.e. Apply, Cancel
 - [ ] Localization
 
@@ -54,7 +53,7 @@ that is worth consulting.
   - It includes month and year views for day and month selection, respectively.
   - Highly composable
 - [corvu](https://corvu.dev/docs/primitives/calendar/)
-  - >This calendar is designed to be simple and lightweight. It handles functionality and accessibility to cover the 
+  - This calendar is designed to be simple and lightweight. It handles functionality and accessibility to cover the 
   common use cases but leaves things like internationalization and more individual behavior up to the user to implement.
   - Can specify number of months to show at a time
 - [React Aria](https://react-spectrum.adobe.com/react-aria/DatePicker.html)
@@ -67,6 +66,8 @@ that is worth consulting.
   the value using the up and down arrows.
   - Strong Internationalization support with the help of [@internationalized/date](https://www.npmjs.com/package/@internationalized/date)
   - Can specify the first day of the week
+- [melt](https://www.melt-ui.com/docs/builders/date-picker)
+  - Has separate Date Field, Date Picker, Date Range Field, and Date Range Picker components
 - [flux Date Picker](https://fluxui.dev/components/date-picker) and [Calendar](https://fluxui.dev/components/calendar)
   - Flux is a styled component library for Laravel with fully-featured Date Picker and Calendar components. It is 
   a good source of inspiration for potential features to include in our component(s).
@@ -93,9 +94,9 @@ Some comparable headless component libraries have no calendar component. These i
 ### Date utility libraries
 We need to consider whether or not to use a third-party library for date parsing, formatting, validation, manipulation, etc.
 
-In my experience, few time-oriented web development teams build exclusively with the native JS Date object.
+The native JS Date object is universally supported but also widely criticized for its awkward API and lack of internationalization support.
 
-This comment from the @internationalized/date docs seems summarizes it:
+This comment from the @internationalized/date docs summarizes it well:
 > By default, JavaScript represents dates and times using the [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) object. However, Date has many problems, including a very difficult to use API, lack of all internationalization support, and more. The [Temporal](https://tc39.es/proposal-temporal/docs/index.html) proposal will eventually address this in the language
 
 As of now Temporal [has almost zero browser support](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal#browser_compatibility), and no clear expected date.
@@ -116,12 +117,15 @@ For Internationalization, we can likely use the browser's native [Intl.DateTimeF
 
 ## Component Structure
 - Root
-  - Header
-    - Previous
-    - Title
-    - Next
-  - Grid
-    - GridDay
+  - Field
+  - Trigger
+  - Content
+    - Header
+      - Previous
+      - Title
+      - Next
+    - Grid
+      - GridDay
 
 ## Keyboard Interactions
 - Arrow keys, page up/down, home/end for navigation within the calendar grid
@@ -136,6 +140,10 @@ For Internationalization, we can likely use the browser's native [Intl.DateTimeF
   - The year element should have `role="grid"`.
   - The month elements should have `role="gridcell"`.
 
+## Focus Management
+- On popover open, set focus to the currently selected date or the current date if no date is selected.
+- Move focus using keyboard navigation within the calendar grid (arrow keys, page up/down, home/end)
+
 ## Use Cases
 - Travel booking
 - Appointment scheduling
@@ -143,11 +151,14 @@ For Internationalization, we can likely use the browser's native [Intl.DateTimeF
 - Date of birth (although calendar views can be unwieldy for birthdays)
 
 ## CSS Considerations
-Implementer needs to create their own CSS to handle placement and styling of the calendar elements. See examples.
+We use CSS grid to place the calendar elements. 
+Beyond that, the implementer needs to create their own CSS to handle placement and styling of the calendar elements. See examples.
 
 ## API Design
 
 ## Known Issues
+- Focus management needs improvement. Currently, it relies on a useVisibleTask$ in CalendarRoot, and it may be over-eager.
+- We do not yet have an API for range selection.
 
 ## Questions
 - Will we use native JS Date functionality for date parsing and formatting, or a third-party library, or a combo?
