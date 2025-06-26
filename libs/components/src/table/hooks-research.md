@@ -313,7 +313,7 @@ interface CodePlaygroundProps {
 
 ## Interactive Documentation Examples
 
-```typescript
+```tsx
 // Example of interactive documentation component
 export const HookDemo = component$(() => {
   return (
@@ -358,6 +358,7 @@ export const HookDemo = component$(() => {
 3. How to maintain consistency while allowing framework-specific patterns?
 4. How to handle versioning and breaking changes?
 5. What level of type safety can we guarantee across frameworks?
+6. Would it be possible to create a unified context hook API?
 
 ## Next Steps
 
