@@ -273,6 +273,17 @@ interface CodePlaygroundProps {
     - Use consistent prefixes (`use` for React, `use$` for Qwik)
     - Descriptive names that indicate purpose
     - Consistent suffix patterns (`Sig` for signals, `Fn` for functions)
+    ```typescript
+    // ✅ Good
+    const userDataSig = use.signal<UserData>(initialData);
+    const computedValueFn = $(() => transform(data));
+    const handleUserActionFn = $(() => {});
+
+    // ❌ Bad
+    const userData = use.signal(initialData); // Missing Sig suffix
+    const computed = $(() => transform(data)); // Non-descriptive name
+    const fn = $(() => {}); // Too generic
+    ```
 
 2. **Type Safety**
    ```typescript
@@ -332,6 +343,13 @@ export const HookDemo = component$(() => {
 3. **Development Experience**
     - IDE support and intellisense
     - Hot reload behavior
+
+4. **Side Effects Handling**
+   - React uses synchronous effects
+   - Qwik has different types of tasks (useTask$, useVisibleTask$)
+   - Cleanup timing differences
+   - Server/Client execution differences
+   - Resource management differences
 
 ## Questions to Consider
 
