@@ -11,7 +11,7 @@ export const CalendarTitle = component$((props: PropsOf<"div">) => {
 
   return (
     // The title component showing current month and year
-    <div data-qds-datepicker-title aria-live="polite" role="presentation" {...props}>
+    <div data-qds-calendar-title aria-live="polite" role="presentation" {...props}>
       {title}
     </div>
   );
