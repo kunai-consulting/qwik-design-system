@@ -375,3 +375,130 @@ export const HookDemo = component$(() => {
 4. [React Aria Hooks Documentation](https://react-spectrum.adobe.com/react-aria/hooks.html)
 5. [Signals in @preact/signals-react](https://github.com/preactjs/signals/tree/main/packages/react)
 6. [SolidJS Reactivity Documentation](https://www.solidjs.com/guides/reactivity)
+
+## Proposed Most Common Table Features (Core Features):
+
+1. **Basic Data Display:**
+   - Row and column rendering
+   - Custom cell rendering
+   - Header, body, and footer sections
+
+2. **Data Management**
+   - Sorting (single column and multiple columns)
+   - Filtering
+   - Pagination
+   - Row selection (single and multiple)
+
+3. **Column Features**
+   - Column resizing
+   - Column visibility toggle
+   - Column reordering
+
+4. **Accessibility**
+   - ARIA attributes
+   - Keyboard navigation
+
+## Proposed Most Intuitive API Design:
+### Component API:
+```tsx
+// Simple usage
+<Table data={data} columns={columns}>
+   <Table.Header />
+   <Table.Body />
+   <Table.Footer />
+</Table>
+
+// Advanced usage
+<Table
+  data={data}
+  columns={columns}
+  sort={sortConfig}
+  onSortChange={handleSort}
+  selection={{
+    type: 'multiple',
+    selected: selectedRows,
+    onSelectionChange: handleSelection
+  }}
+  pagination={{
+    pageSize: 10,
+    currentPage: 1,
+    onPageChange: handlePageChange
+  }}
+>
+  <Table.Header />
+  <Table.Body />
+  <Table.Footer />
+</Table>
+```
+### Hook API
+```tsx
+// Configuration
+interface TableProps<T> {
+  data: T[];
+  columns: ColumnDef[];
+  sort?: {
+    initial?: { column: string; direction: 'asc' | 'desc' };
+  };
+  selection?: {
+    type: 'single' | 'multiple';
+    initial?: string[];
+  };
+  pagination?: {
+    pageSize: number;
+    initialPage?: number;
+  };
+}
+
+// Usage
+const table = useTable(props, adapter);
+
+// Resulting API
+const {
+  // Core
+  rows,
+  headers,
+  columns,
+
+  // Sorting
+  sortedData,
+  setSorting,
+  currentSort,
+
+  // Selection
+  selectedRows,
+  toggleRowSelection,
+  selectAll,
+  isAllSelected,
+  isPartiallySelected,
+
+  // Pagination
+  currentPage,
+  setPage,
+  totalPages,
+  hasNextPage,
+  hasPrevPage,
+
+  // Utilities
+  getRowProps,
+  getCellProps
+} = table;
+```
+
+### Proposed Column Definition:
+```tsx
+const columns = [
+  {
+    id: 'name',
+    header: 'Name',
+    // Simple accessor
+    accessor: 'name',
+    // Or custom accessor
+    accessor: (row) => `${row.firstName} ${row.lastName}`,
+    // Custom rendering
+    cell: ({ value, row }) => <UserCell user={row} />,
+    // Features
+    sortable: true,
+    filterable: true
+  }
+];
+```
