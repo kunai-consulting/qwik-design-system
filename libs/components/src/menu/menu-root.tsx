@@ -20,8 +20,6 @@ export type ItemRef = {
   ref: Signal;
 };
 
-export type MenuPosition = "right" | "left" | "bottom" | "top";
-
 export type MenuContext = {
   /** Whether the menu is open */
   isOpenSig: Signal<boolean>;
@@ -43,8 +41,6 @@ export type MenuContext = {
   triggerRef: Signal<HTMLElement | undefined>;
   /** Whether the menu is disabled */
   disabled: Signal<boolean>;
-  /** The position of the menu */
-  position?: MenuPosition;
   /** X coordinate for context menu positioning */
   contextMenuX?: Signal<number>;
   /** Y coordinate for context menu positioning */

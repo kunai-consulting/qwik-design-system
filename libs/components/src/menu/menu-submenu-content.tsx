@@ -35,7 +35,6 @@ export const MenuSubmenuContentBase = component$<PublicMenuSubmenuContentProps>(
         id={submenuContext.contentId}
         aria-labelledby={submenuContext.triggerId}
         data-qds-menu-submenu-content
-        data-position={submenuContext.position}
         ref={submenuContext.contentRef}
         {...props}
       >

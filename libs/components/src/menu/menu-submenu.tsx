@@ -14,10 +14,7 @@ import { type ItemRef, type MenuContext, menuContextId } from "./menu-root";
 import type { PublicMenuRootProps } from "./menu-root";
 import menuSubmenuStyles from "./menu-submenu.css?inline";
 
-export type PublicMenuSubmenuProps = PublicMenuRootProps & {
-  /** The position of the submenu relative to its trigger */
-  position?: "right" | "left" | "bottom" | "top";
-};
+export type PublicMenuSubmenuProps = PublicMenuRootProps;
 
 /** A component that renders a submenu */
 export const MenuSubmenuBase = component$<PublicMenuSubmenuProps>((props) => {
@@ -42,7 +39,6 @@ export const MenuSubmenuBase = component$<PublicMenuSubmenuProps>((props) => {
   const menuContext: MenuContext = {
     triggerId,
     contentId,
-    position: props.position ?? "right",
     isOpenSig,
     parentContext,
     itemRefs,
