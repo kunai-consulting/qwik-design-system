@@ -32,5 +32,8 @@
     "pathe": "^2.0.3",
     "tsx": "^4.19.3",
     "vitest": "^3.1.1"
+  },
+  "dependencies": {
+    "oxc-parser": "^0.75.0"
   }
 }
