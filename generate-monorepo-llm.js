@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import parser from "@babel/parser";
+import { parseSync } from "oxc-parser";
 
 const EXCLUDED_PATHS = [
   path.normalize("apps/docs/dist/build"),
@@ -33,16 +33,18 @@ function getAllFiles(dir, filelist = []) {
   return filelist;
 }
 
-function extractExportsWithBabel(content, filepath = "") {
+function extractExportsWithOxc(content, filepath = "") {
   try {
-    const ast = parser.parse(content, {
-      sourceType: "module",
-      plugins: ["typescript", "jsx"]
-    });
+    const ast = parseSync(filepath, content);
+    const program = ast?.body ?? ast?.program?.body;
+
+    if (!Array.isArray(program)) {
+      throw new Error("ast.body is not iterable");
+    }
 
     const exports = [];
 
-    for (const node of ast.program.body) {
+    for (const node of program) {
       if (node.type === "ExportNamedDeclaration" && node.declaration) {
         const decl = node.declaration;
         if (decl.type === "FunctionDeclaration" || decl.type === "ClassDeclaration") {
@@ -141,7 +143,7 @@ We use [Vitest](https://github.com/kunai-consulting/qwik-design-system/blob/main
 
     for (const file of files) {
       const content = fs.readFileSync(file, "utf-8");
-      const exports = extractExportsWithBabel(content, file);
+      const exports = extractExportsWithOxc(content, file);
       if (exports.length > 0) {
         fileSummaries.push(`  - ${path.relative(rootDir, file)}: ${exports.join(", ")}`);
       }
