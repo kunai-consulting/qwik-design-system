@@ -1,5 +1,19 @@
 # @kunai-consulting/qwik-headless
 
+## 0.3.0
+
+### Minor Changes
+
+- 8e70f8d: - Rework DateInput separator API
+  - Rename DateInput.DateEntry to DateInput.Entry
+
+### Patch Changes
+
+- 8c0cb1d: DS-452 Headless Progress component
+- 8961bb8: DS-442 Work on the toast component
+- 59ca322: DS-428 Dropdown component
+- c21f15c: latest calendar
+
 ## 0.2.0
 
 ### Minor Changes
