@@ -7,7 +7,9 @@ function App() {
   const adapter = createReactivityAdapter("react", {
     signal: useSignal,
     computed: useComputed,
-    task: useSignalEffect
+    task: useSignalEffect,
+    fn: (fn) => fn,
+    bindings: useBindings
   });
 
   const { firstNameSig, lastNameSig, ageSig, fullNameSig, isAdultSig } = useDummy(
@@ -26,6 +28,24 @@ function App() {
   const isOver10 = useComputed(() => {
     return countSig.value > 10;
   });
+
+  interface Signal<T> {
+    value: T;
+  }
+
+  function useBindings<T>(signals: Signal<T>[]): T[] {
+    return signals.map((sig) => sig.value);
+  }
+
+  const values = {
+    firstName: firstNameSig.value,
+    lastName: lastNameSig.value,
+    age: ageSig.value,
+    fullName: fullNameSig.value,
+    isAdult: isAdultSig.value,
+    count: countSig.value,
+    isOver10: isOver10.value
+  };
 
   return (
     <div style={{ padding: "20px" }}>
@@ -76,6 +96,14 @@ function App() {
           <h3>Computed Values:</h3>
           <p>Full Name: {fullNameSig.value}</p>
           <p>Is Adult: {isAdultSig.value ? "Yes" : "No"}</p>
+          <div style={{ textAlign: "left", paddingLeft: "120px" }}>
+            <div>Bindings:</div>
+            {Object.entries(values).map(([key, val]) => (
+              <div key={key}>
+                {key}: {String(val)}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

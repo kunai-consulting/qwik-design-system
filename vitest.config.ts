@@ -10,6 +10,6 @@ export default defineConfig({
     }
   },
   test: {
-    include: ["**/*.unit.ts", "**/*.smoke.ts"]
+    include: ["**/*.unit.ts", "**/*.smoke.ts", "src/**/*.test.ts"]
   }
 });

@@ -23,6 +23,7 @@ export type ReactivityAdapter = {
   computed: <T>(computeFn: () => T) => Computed<T>;
   task: (taskFn: ExplicitTrackingTask) => TaskCleanup | undefined;
   fn: <T extends (...args: unknown[]) => unknown>(fn: T) => T;
+  bindings: <T>(signals: Array<{ value: T }>) => T[];
   framework: "qwik" | "react";
 };
 
@@ -72,6 +73,7 @@ export function createReactivityAdapter(
     signal: <T>(initialValue: T) => Signal<T>;
     computed: <T>(computeFn: () => T) => Computed<T>;
     task: (cb: () => (() => void) | undefined) => void;
+    bindings?: <T>(signals: Array<{ value: T }>) => T[];
   };
 
   return {
@@ -103,7 +105,8 @@ export function createReactivityAdapter(
       });
       return cleanup;
     },
-    fn: <T extends (...args: unknown[]) => unknown>(fn: T) => fn
+    fn: <T extends (...args: unknown[]) => unknown>(fn: T) => fn,
+    bindings: (signals) => signals.map((sig) => sig.value)
   };
 }
 

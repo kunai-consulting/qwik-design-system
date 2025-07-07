@@ -3,9 +3,11 @@ import { type ReactivityAdapter, useRuntime } from "./adapter";
 export function useDummy(_: unknown, runtime: ReactivityAdapter) {
   const use = useRuntime(runtime);
 
-  const firstNameSig = use.signal("John");
+  const firstNameSig = use.signal("Jay");
   const lastNameSig = use.signal("Doe");
   const ageSig = use.signal(25);
+  const ageStringSig = use.computed(() => String(ageSig.value));
+  const values = use.bindings([firstNameSig, lastNameSig, ageStringSig]);
 
   const fullNameFn = use.fn(() => {
     return `${firstNameSig.value} ${lastNameSig.value}`;
@@ -24,17 +26,18 @@ export function useDummy(_: unknown, runtime: ReactivityAdapter) {
     track(() => firstNameSig.value);
     track(() => lastNameSig.value);
     track(() => ageSig.value);
-
-    console.log("=== Tracked Changes ===");
-    console.log(`Full Name: ${fullNameSig.value}`);
-    console.log(`Age: ${ageSig.value}`);
-    console.log(`Is Adult: ${isAdultSig.value}`);
-    console.log("=====================");
+    track(() => values);
 
     cleanup(() => {
       console.log("Cleaning up previous effect");
     });
   });
+  console.log("=== Tracked Changes ===");
+  console.log(`Full Name: ${fullNameSig.value}`);
+  console.log(`Age: ${ageSig.value}`);
+  console.log(`Is Adult: ${isAdultSig.value}`);
+  console.log(`Values: ${JSON.stringify(values)}`);
+  console.log("=====================");
 
   use.task(({ track, cleanup }) => {
     track(() => ageSig.value);
