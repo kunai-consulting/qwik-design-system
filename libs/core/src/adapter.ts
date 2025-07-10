@@ -1,5 +1,9 @@
-import { useSignals } from "@preact/signals-react/runtime";
-
+import { useSignal, useSignals } from "@preact/signals-react/runtime";
+import {
+  signal as reactSignal,
+  type Signal as ReactSignal,
+  type ReadonlySignal
+} from "@preact/signals-react";
 type TaskCleanup = () => void;
 
 type TrackingContext = {
@@ -10,22 +14,24 @@ type TrackingContext = {
 type ImplicitTrackingTask = () => TaskCleanup | undefined;
 type ExplicitTrackingTask = (context: TrackingContext) => Promise<void> | void;
 
-export type Signal<T> = {
-  value: T;
-};
+export type Signal<T> = ReactSignal<T>;
 
-export type Computed<T> = {
-  value: T;
-};
+export type Computed<T> = ReadonlySignal<Computed<T>>;
 
 export type ReactivityAdapter = {
+  framework: "qwik" | "react";
   signal: <T>(initialValue: T) => Signal<T>;
   computed: <T>(computeFn: () => T) => Computed<T>;
   task: (taskFn: ExplicitTrackingTask) => TaskCleanup | undefined;
   fn: <T extends (...args: unknown[]) => unknown>(fn: T) => T;
-  bindings: <T>(signals: Array<{ value: T }>) => T[];
-  framework: "qwik" | "react";
+  boundSignal: <T>(input: any, defaultValue: T) => Signal<T>;
 };
+
+function isSignal<T = any>(val: any): val is Signal<T> {
+  return (
+    val && typeof val === "object" && "value" in val && typeof val.value !== "function"
+  );
+}
 
 export function useRuntime(runtime: ReactivityAdapter) {
   // TODO: check if a root context exists that specifics framework, if so skip the need for the adapter argument in each hook call.
@@ -73,7 +79,8 @@ export function createReactivityAdapter(
     signal: <T>(initialValue: T) => Signal<T>;
     computed: <T>(computeFn: () => T) => Computed<T>;
     task: (cb: () => (() => void) | undefined) => void;
-    bindings?: <T>(signals: Array<{ value: T }>) => T[];
+    fn: <T extends (...args: unknown[]) => unknown>(fn: T) => T;
+    boundSignal: <T>(input: any, defaultValue: T) => Signal<T>;
   };
 
   return {
@@ -106,7 +113,17 @@ export function createReactivityAdapter(
       return cleanup;
     },
     fn: <T extends (...args: unknown[]) => unknown>(fn: T) => fn,
-    bindings: (signals) => signals.map((sig) => sig.value)
+    boundSignal: (input, defaultValue) => {
+      if (framework === "react") {
+        console.log("boundSignal", input, defaultValue);
+
+        if (isSignal(input)) {
+          return input;
+        }
+        return reactSignal(input ?? defaultValue);
+      }
+      return useSignal(input ?? defaultValue);
+    }
   };
 }
 

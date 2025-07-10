@@ -1,19 +1,16 @@
 import { type ReactivityAdapter, useRuntime } from "./adapter";
+import { useBinding } from "./bindings";
 
-export function useDummy(_: unknown, runtime: ReactivityAdapter) {
+export function useDummy(runtime: ReactivityAdapter, props: Record<string, any> = {}) {
   const use = useRuntime(runtime);
-
+  const favoriteColorSig = useBinding("blue", use, props?.["bind:favoriteColor"]);
   const firstNameSig = use.signal("Jay");
   const lastNameSig = use.signal("Doe");
   const ageSig = use.signal(25);
-  const ageStringSig = use.computed(() => String(ageSig.value));
-  const values = use.bindings([firstNameSig, lastNameSig, ageStringSig]);
 
   const fullNameFn = use.fn(() => {
     return `${firstNameSig.value} ${lastNameSig.value}`;
   });
-
-  console.log("fullNameFn", fullNameFn);
 
   // to reference the function, we need to do use.fn(() => { ... }) for compilers to work
   const fullNameSig = use.computed(fullNameFn);
@@ -26,7 +23,7 @@ export function useDummy(_: unknown, runtime: ReactivityAdapter) {
     track(() => firstNameSig.value);
     track(() => lastNameSig.value);
     track(() => ageSig.value);
-    track(() => values);
+    track(() => favoriteColorSig.value);
 
     cleanup(() => {
       console.log("Cleaning up previous effect");
@@ -36,7 +33,7 @@ export function useDummy(_: unknown, runtime: ReactivityAdapter) {
   console.log(`Full Name: ${fullNameSig.value}`);
   console.log(`Age: ${ageSig.value}`);
   console.log(`Is Adult: ${isAdultSig.value}`);
-  console.log(`Values: ${JSON.stringify(values)}`);
+  console.log(`Favorite Color: ${favoriteColorSig.value}`);
   console.log("=====================");
 
   use.task(({ track, cleanup }) => {
@@ -58,6 +55,7 @@ export function useDummy(_: unknown, runtime: ReactivityAdapter) {
     lastNameSig,
     ageSig,
     fullNameSig,
-    isAdultSig
+    isAdultSig,
+    favoriteColorSig
   };
 }

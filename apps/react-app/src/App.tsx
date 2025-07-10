@@ -2,40 +2,35 @@ import "./App.css";
 import { useComputed, useSignal, useSignalEffect } from "@preact/signals-react";
 import { createReactivityAdapter } from "../../../libs/core/src/adapter";
 import { useDummy } from "../../../libs/core/src/dummy.auto";
+import { useSignals } from "@preact/signals-react/runtime";
 
 function App() {
   const adapter = createReactivityAdapter("react", {
     signal: useSignal,
     computed: useComputed,
     task: useSignalEffect,
-    fn: (fn) => fn,
-    bindings: useBindings
+    fn: (fn) => fn
   });
+  useSignals();
 
-  const { firstNameSig, lastNameSig, ageSig, fullNameSig, isAdultSig } = useDummy(
-    null,
-    adapter
-  );
+  const { firstNameSig, lastNameSig, ageSig, fullNameSig, isAdultSig, favoriteColorSig } =
+    useDummy(adapter, {
+      "bind:favoriteColor": useSignal("blue")
+    });
 
   const countSig = useSignal(0);
 
   useSignalEffect(() => {
     console.log("isAdultSig", countSig.value);
-
     console.log("isOver10", isOver10.value);
+    console.log("favoriteColor object:", favoriteColorSig);
+
+    console.log("Favorite Color:", favoriteColorSig.value);
   });
 
   const isOver10 = useComputed(() => {
     return countSig.value > 10;
   });
-
-  interface Signal<T> {
-    value: T;
-  }
-
-  function useBindings<T>(signals: Signal<T>[]): T[] {
-    return signals.map((sig) => sig.value);
-  }
 
   const values = {
     firstName: firstNameSig.value,
@@ -44,8 +39,11 @@ function App() {
     fullName: fullNameSig.value,
     isAdult: isAdultSig.value,
     count: countSig.value,
-    isOver10: isOver10.value
+    isOver10: isOver10.value,
+    favoriteColorSig: favoriteColorSig.value
   };
+
+  const bindings = { favoriteColorSig: favoriteColorSig.value };
 
   return (
     <div style={{ padding: "20px" }}>
@@ -91,6 +89,23 @@ function App() {
             />
           </label>
         </div>
+        <div style={{ marginBottom: "10px" }}>
+          <label>
+            Color:
+            <input
+              type="text"
+              value={favoriteColorSig.value}
+              onChange={(e) => favoriteColorSig.setValue(e.target.value)}
+            />
+          </label>
+        </div>
+        {/* why doesn't this work? */}
+        <div style={{ marginBottom: "10px" }}>
+          <label>
+            bound:
+            <input bind:value={favoriteColorSig.value} />
+          </label>
+        </div>
 
         <div style={{ marginTop: "20px" }}>
           <h3>Computed Values:</h3>
@@ -98,7 +113,7 @@ function App() {
           <p>Is Adult: {isAdultSig.value ? "Yes" : "No"}</p>
           <div style={{ textAlign: "left", paddingLeft: "120px" }}>
             <div>Bindings:</div>
-            {Object.entries(values).map(([key, val]) => (
+            {Object.entries(bindings).map(([key, val]) => (
               <div key={key}>
                 {key}: {String(val)}
               </div>
