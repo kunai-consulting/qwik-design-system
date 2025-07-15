@@ -49,45 +49,28 @@ describe("useDummy fullNameFn", () => {
   });
 
   it("should return the correct full name when signals change", () => {
-    // Setup
-    const { firstNameSig, lastNameSig } = useDummy(null, adapter);
+    const { firstNameSig, lastNameSig } = useDummy(adapter);
 
     // Recreate fullNameFn as in useDummy
     const fullNameFn = adapter.fn(() => {
       return `${firstNameSig.value} ${lastNameSig.value}`;
     });
 
-    // Initial value
     expect(fullNameFn()).toBe("Jay Doe");
 
-    // Change first name
     firstNameSig.value = "Jane";
     expect(fullNameFn()).toBe("Jane Doe");
 
-    // Change last name
     lastNameSig.value = "Smith";
     expect(fullNameFn()).toBe("Jane Smith");
   });
 
   it("should return the correct age when ageSig changes", () => {
-    const { ageSig } = useDummy(null, adapter);
+    const { ageSig } = useDummy(adapter);
 
-    // Initial value
     expect(ageSig.value).toBe(25);
-
-    // Change age
     ageSig.value = 42;
     expect(ageSig.value).toBe(42);
-  });
-});
-
-describe("adapter.bindings", () => {
-  const adapter = createReactivityAdapter("test", {
-    signal: mockSignal,
-    computed: mockComputed,
-    task: mockTask,
-    fn: mockFn,
-    bindings: mockBindings
   });
 
   it("returns the current values of signals", () => {
