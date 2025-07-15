@@ -17,6 +17,10 @@ function App() {
     useDummy(adapter, {
       "bind:favoriteColor": useSignal("blue")
     });
+  // making changes to favoriteColorSig will update the input value
+  // the below doesn't work
+  // const { firstNameSig, lastNameSig, ageSig, fullNameSig, isAdultSig, favoriteColorSig } =
+  //   useDummy(adapter);
 
   const countSig = useSignal(0);
 
@@ -24,24 +28,12 @@ function App() {
     console.log("isAdultSig", countSig.value);
     console.log("isOver10", isOver10.value);
     console.log("favoriteColor object:", favoriteColorSig);
-
     console.log("Favorite Color:", favoriteColorSig.value);
   });
 
   const isOver10 = useComputed(() => {
     return countSig.value > 10;
   });
-
-  const values = {
-    firstName: firstNameSig.value,
-    lastName: lastNameSig.value,
-    age: ageSig.value,
-    fullName: fullNameSig.value,
-    isAdult: isAdultSig.value,
-    count: countSig.value,
-    isOver10: isOver10.value,
-    favoriteColorSig: favoriteColorSig.value
-  };
 
   const bindings = { favoriteColorSig: favoriteColorSig.value };
 
@@ -96,15 +88,27 @@ function App() {
               type="text"
               value={favoriteColorSig.value}
               onChange={(e) => favoriteColorSig.setValue(e.target.value)}
+              //  This would have to be done if the changes to dummy.auto.ts were made
+              //   onChange={(e) => favoriteColorSig.value = e.target.value}
             />
           </label>
-        </div>
-        {/* why doesn't this work? */}
-        <div style={{ marginBottom: "10px" }}>
-          <label>
-            bound:
-            <input bind:value={favoriteColorSig.value} />
-          </label>
+          <div>
+            <button onClick={() => favoriteColorSig.setValue("blue")} type="button">
+              {/* This would have to be done if the changes to dummy.auto.ts were made
+              <button onClick={() => favoriteColorSig.value = "blue"} type="button"> */}
+              default
+            </button>
+            <button onClick={() => favoriteColorSig.setValue("red")} type="button">
+              {/* This would have to be done if the changes to dummy.auto.ts were made
+              <button onClick={() => favoriteColorSig.value = "red"} type="button"> */}
+              red
+            </button>
+            <button onClick={() => favoriteColorSig.setValue("green")} type="button">
+              {/* This would have to be done if the changes to dummy.auto.ts were made
+              <button onClick={() => favoriteColorSig.value = "green"} type="button"> */}
+              green
+            </button>
+          </div>
         </div>
 
         <div style={{ marginTop: "20px" }}>

@@ -4,6 +4,8 @@ import {
   type Signal as ReactSignal,
   type ReadonlySignal
 } from "@preact/signals-react";
+// import { Signal } from "@preact/signals-core";
+
 type TaskCleanup = () => void;
 
 type TrackingContext = {
@@ -35,6 +37,7 @@ function isSignal<T = any>(val: any): val is Signal<T> {
 
 export function useRuntime(runtime: ReactivityAdapter) {
   // TODO: check if a root context exists that specifics framework, if so skip the need for the adapter argument in each hook call.
+  // console.log("useRuntime", runtime.framework);
 
   if (runtime.framework !== "react") {
     return runtime;

@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
 import { useDummy } from "./dummy.auto";
-import { mock } from "node:test";
 
 // Minimal mock adapter for testing
 function mockSignal(initial: unknown) {
@@ -29,15 +28,15 @@ function mockFn(fn: any) {
   return fn;
 }
 
+function mockBindings(signals) {
+  return signals.map((sig) => sig.value);
+}
+
 function createReactivityAdapter(framework: string, impls: any) {
   return {
     framework,
     ...impls
   };
-}
-
-function mockBindings(signals) {
-  return signals.map((sig) => sig.value);
 }
 
 describe("useDummy fullNameFn", () => {
@@ -46,7 +45,7 @@ describe("useDummy fullNameFn", () => {
     computed: mockComputed,
     task: mockTask,
     fn: mockFn,
-    bindings: (signals) => signals.map((sig) => sig.value)
+    bindings: mockBindings
   });
 
   it("should return the correct full name when signals change", () => {
