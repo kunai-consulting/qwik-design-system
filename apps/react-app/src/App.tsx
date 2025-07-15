@@ -14,13 +14,7 @@ function App() {
   useSignals();
 
   const { firstNameSig, lastNameSig, ageSig, fullNameSig, isAdultSig, favoriteColorSig } =
-    useDummy(adapter, {
-      "bind:favoriteColor": useSignal("blue")
-    });
-  // making changes to favoriteColorSig will update the input value
-  // the below doesn't work
-  // const { firstNameSig, lastNameSig, ageSig, fullNameSig, isAdultSig, favoriteColorSig } =
-  //   useDummy(adapter);
+    useDummy(adapter);
 
   const countSig = useSignal(0);
 
@@ -87,25 +81,17 @@ function App() {
             <input
               type="text"
               value={favoriteColorSig.value}
-              onChange={(e) => favoriteColorSig.setValue(e.target.value)}
-              //  This would have to be done if the changes to dummy.auto.ts were made
-              //   onChange={(e) => favoriteColorSig.value = e.target.value}
+              onChange={(e) => (favoriteColorSig.value = e.target.value)}
             />
           </label>
           <div>
-            <button onClick={() => favoriteColorSig.setValue("blue")} type="button">
-              {/* This would have to be done if the changes to dummy.auto.ts were made
-              <button onClick={() => favoriteColorSig.value = "blue"} type="button"> */}
+            <button onClick={() => (favoriteColorSig.value = "blue")} type="button">
               default
             </button>
-            <button onClick={() => favoriteColorSig.setValue("red")} type="button">
-              {/* This would have to be done if the changes to dummy.auto.ts were made
-              <button onClick={() => favoriteColorSig.value = "red"} type="button"> */}
+            <button onClick={() => (favoriteColorSig.value = "red")} type="button">
               red
             </button>
-            <button onClick={() => favoriteColorSig.setValue("green")} type="button">
-              {/* This would have to be done if the changes to dummy.auto.ts were made
-              <button onClick={() => favoriteColorSig.value = "green"} type="button"> */}
+            <button onClick={() => (favoriteColorSig.value = "green")} type="button">
               green
             </button>
           </div>

@@ -1,12 +1,8 @@
 import { type ReactivityAdapter, useRuntime } from "./adapter";
-import { useBinding } from "./bindings";
 
 export function useDummy(runtime: ReactivityAdapter, props: Record<string, any> = {}) {
   const use = useRuntime(runtime);
-  // making changes to favoriteColorSig will update the input value
-  const favoriteColorSig = useBinding("blue", use, props?.["bind:favoriteColor"]);
-  // the below line doesn't work. needs troubleshooting
-  // const favoriteColorSig = use.boundSignal(props?.["bind:favoriteColor"], "blue");
+  const favoriteColorSig = use.signal("blue");
 
   const firstNameSig = use.signal("Jay");
   const lastNameSig = use.signal("Doe");
