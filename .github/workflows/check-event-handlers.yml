@@ -30,9 +30,6 @@ jobs:
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "Checking $file for event handler patterns..."
             
-            # Read the entire file into a variable to handle multiline patterns
-            file_content=$(cat "$file")
-            
             # Read file line by line with line numbers for reporting
             line_num=0
             searching_multiline=false
@@ -47,26 +44,15 @@ jobs:
               if $searching_multiline; then
                 multiline_pattern="$multiline_pattern\n$line"
                 
-                # Check if this line contains the end of the event handler (closing curly brace)
-                if [[ "$line" =~ \} ]]; then
+                # Check if this line contains the end of the event handler (closing curly brace and bracket)
+                if [[ "$line" =~ \]\s*\}? ]]; then
                   searching_multiline=false
                   
-                  # Now validate the full multiline pattern
-                  # Check if it contains array syntax [...] with content anywhere in the pattern
-                  # Using a more flexible regex that checks for an opening square bracket followed by any content
-                  # followed by a closing square bracket
-                  if [[ "$multiline_pattern" =~ \[[^]]*\] ]]; then
+                  # Now validate the full multiline pattern to ensure it starts with `[`
+                  # It can be surrounded by optional `{}`
+                  if [[ "$multiline_pattern" =~ ^\s*\{?\s*\[ ]]; then
                     # Valid pattern with array syntax
                     continue
-                  elif [[ "$multiline_pattern" =~ \? ]]; then
-                    # It's a ternary - check if either branch has array syntax
-                    if [[ "$multiline_pattern" =~ \?[^:]*\[[^]]*\] ]] || [[ "$multiline_pattern" =~ :[^}]*\[[^]]*\] ]]; then
-                      # Valid ternary with array on either side
-                      continue
-                    else
-                      # Ternary without array syntax
-                      invalid_patterns+=("$file:$multiline_event_start_line:$multiline_event_name at line $multiline_event_start_line requires array pattern")
-                    fi
                   else
                     # No array syntax found
                     invalid_patterns+=("$file:$multiline_event_start_line:$multiline_event_name at line $multiline_event_start_line requires array pattern")
@@ -75,40 +61,46 @@ jobs:
                 continue
               fi
               
-              # Match event handlers like onXxx$={...}
-              if [[ "$line" =~ on[A-Z][a-zA-Z0-9]*\$= ]]; then
+              # Match event handlers like onXxx$={...} that are not single-line valid patterns
+              if [[ "$line" =~ on[A-Z][a-zA-Z0-9]*\$= ]] && ! [[ "$line" =~ \]\s*\}? ]]; then
                 # Extract the event name (without the trailing $=)
                 event_name=$(echo "$line" | grep -o 'on[A-Za-z0-9]*\$=' | sed 's/\$=//')
                 
                 # Skip if the event name contains "qds" (case insensitive) or is exactly "onQVisible"
-                # Note: Comparison is now against "onQVisible" because sed removes the '$='
                 if [[ "${event_name,,}" =~ qds ]] || [[ "$event_name" == "onQVisible" ]]; then
                   continue
                 fi
                 
-                # Check if the event handler is complete on this line
-                # Look for matching curly braces - if we have equal number of opening/closing, it's a single line
-                open_braces=$(echo "$line" | grep -o '{' | wc -l)
-                close_braces=$(echo "$line" | grep -o '}' | wc -l)
-                
-                if [[ $open_braces -eq $close_braces ]]; then
-                  # Single line pattern - check for array syntax
-                  if ! [[ "$line" =~ on[A-Z][a-zA-Z0-9]*\$=\{[^{}]*\[[^{}]*\][^{}]*\} ]]; then
-                    invalid_patterns+=("$file:$line_num:$event_name at line $line_num requires array pattern")
-                  fi
-                else
-                  # This is the start of a multiline pattern
-                  searching_multiline=true
-                  multiline_event_start_line=$line_num
-                  multiline_pattern=$line
-                  multiline_event_name=$event_name
+                # Check for ternaries on a single line, which is a valid exception
+                if [[ "$line" =~ \?.*:.*\} ]]; then
+                  continue
                 fi
+                
+                # This is the start of a multiline pattern
+                searching_multiline=true
+                multiline_event_start_line=$line_num
+                multiline_pattern=$(echo "$line" | sed -E 's/.*on[A-Z][a-zA-Z0-9]*\$=\{?//')
+                multiline_event_name=$event_name
               fi
-            done < "$file"
+            done < <(cat "$file")
           done
           
           # Report invalid patterns
           if [ ${#invalid_patterns[@]} -gt 0 ]; then
+            echo "❌ Found ${#invalid_patterns[@]} event handler(s) that don't use array pattern:"
+            echo ""
+            
+            # First, list all problematic files clearly
+            for pattern in "${invalid_patterns[@]}"; do
+              # Extract file, line number and content
+              file_path=$(echo "$pattern" | cut -d':' -f1)
+              line_num=$(echo "$pattern" | cut -d':' -f2)
+              line_content=$(echo "$pattern" | cut -d':' -f3-)
+              
+              echo "❌ $file_path:$line_num - $line_content"
+            done
+            
+            echo ""
             echo "::error title=Invalid Event Handler Patterns::❌ Event handlers must use array pattern"
             echo "::group::Event handlers with invalid patterns"
             

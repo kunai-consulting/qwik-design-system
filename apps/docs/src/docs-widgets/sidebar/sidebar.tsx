@@ -26,6 +26,7 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
             { id: "/base/checkbox", label: "Checkbox" },
             { id: "/base/checklist", label: "Checklist" },
             { id: "/base/date-input", label: "Date Input" },
+            { id: "/base/dropdown", label: "Dropdown" },
             { id: "/base/otp", label: "OTP" },
             { id: "/base/radio-group", label: "Radio Group" },
             { id: "/base/slider", label: "Slider" },
@@ -39,7 +40,9 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
             { id: "/base/resizable", label: "Resizable" },
             { id: "/base/scroll-area", label: "Scroll Area" },
             { id: "/base/tree", label: "Tree" },
-            { id: "/base/popover", label: "Popover" }
+            { id: "/base/popover", label: "Popover" },
+            { id: "/base/progress", label: "Progress" },
+            { id: "/base/toast", label: "Toast" }
           ]
         },
         {

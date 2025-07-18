@@ -1,0 +1,47 @@
+name: Generate Monorepo LLM Index
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'  # Every Monday
+  workflow_dispatch:
+
+jobs:
+  generate-monorepo-llm:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: ⏳ Skip odd-numbered weeks (biweekly schedule)
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            week=$(date +%V)
+            echo "Current ISO week: $week"
+            if [ $((10#$week % 2)) -ne 0 ]; then
+              echo "Odd week – skipping this run."
+              exit 0
+            fi
+          else
+            echo "Manual run – proceeding regardless of week."
+          fi
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+
+      - name: 📥 Install dependencies
+        run: npm install
+
+      - name: 🧠 Generate Monorepo LLM Summary
+        run: node generate-monorepo-llm.js
+
+      - name: ✅ Commit and push .llm.txt
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .llm.txt
+          git diff --quiet && git diff --staged --quiet || git commit -m "🤖 Auto-regenerated .llm.txt"
+          git push
