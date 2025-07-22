@@ -1,5 +1,5 @@
-import { type PropsOf, component$ } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
+import { type PropsOf, component$ } from "@qwik.dev/core";
+import type { DocumentHead } from "@qwik.dev/router";
 import { Otp } from "@kunai-consulting/qwik";
 
 export const head: DocumentHead = {

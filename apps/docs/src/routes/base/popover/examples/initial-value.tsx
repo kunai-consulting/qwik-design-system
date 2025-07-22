@@ -1,4 +1,4 @@
-import { component$ } from "@builder.io/qwik";
+import { component$ } from "@qwik.dev/core";
 import { Popover } from "@kunai-consulting/qwik";
 
 export default component$(() => {

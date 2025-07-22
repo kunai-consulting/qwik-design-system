@@ -6,12 +6,8 @@ import {
   useContextProvider,
   useSignal,
   useStyles$
-} from "@builder.io/qwik";
-import {
-  type ContentHeading,
-  type RequestHandler,
-  useContent
-} from "@builder.io/qwik-city";
+} from "@qwik.dev/core";
+import { type ContentHeading, type RequestHandler, useContent } from "@qwik.dev/router";
 import { ScrollArea } from "@kunai-consulting/qwik";
 import { NavFooter } from "~/docs-widgets/nav-footer/nav-footer";
 import { SearchModal } from "~/docs-widgets/search/search";

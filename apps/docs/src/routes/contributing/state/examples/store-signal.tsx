@@ -5,7 +5,7 @@ import {
   useStore,
   useStyles$,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { Checkbox } from "@kunai-consulting/qwik";
 import { LuCheck } from "@qwikest/icons/lucide";
 

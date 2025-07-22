@@ -1,4 +1,4 @@
-import { component$, useSignal, useStyles$ } from "@builder.io/qwik";
+import { component$, useSignal, useStyles$ } from "@qwik.dev/core";
 import { Calendar } from "@kunai-consulting/qwik";
 import { NextIcon } from "../shared/next-icon";
 import { PreviousIcon } from "../shared/previous-icon";

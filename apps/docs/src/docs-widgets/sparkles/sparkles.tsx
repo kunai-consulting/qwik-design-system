@@ -6,7 +6,7 @@ import {
   useSignal,
   useStyles$,
   useVisibleTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { random, useRandomInterval } from "~/utils/use-random-internal";
 import sparkleStyles from "./sparkles.css?inline";
 

@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
 import { Render, withAsChild } from "@kunai-consulting/qwik";
 
 const DummyCompBase = component$((props: PropsOf<"div">) => {

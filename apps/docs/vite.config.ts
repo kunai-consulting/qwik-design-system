@@ -1,5 +1,5 @@
-import { qwikCity } from "@builder.io/qwik-city/vite";
-import { qwikVite } from "@builder.io/qwik/optimizer";
+import { qwikRouter } from "@qwik.dev/router/vite";
+import { qwikVite } from "@qwik.dev/core/optimizer";
 import tailwindcss from "@tailwindcss/vite";
 import { resolve } from "pathe";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
@@ -33,7 +33,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
   return {
     plugins: [
       tailwindcss(),
-      qwikCity({
+      qwikRouter({
         mdx: {
           providerImportSource: "~/mdx/provider",
           recmaPlugins: [recmaProvideComponents]
@@ -92,7 +92,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
         "@kunai-consulting/qwik-icons": resolve(__dirname, "../../libs/icons/src"),
         "~": resolve(__dirname, "src")
       },
-      dedupe: ["@builder.io/qwik", "@builder.io/qwik-city"]
+      dedupe: ["@qwik.dev/core", "@qwik.dev/router"]
     }
   };
 });
@@ -114,7 +114,7 @@ function errorOnDuplicatesPkgDeps(devDependencies: PkgDep, dependencies: PkgDep)
   const qwikPkg = Object.keys(dependencies).filter((value) => /qwik/i.test(value));
 
   // any errors for missing "qwik-city-plan"
-  // [PLUGIN_ERROR]: Invalid module "@qwik-city-plan" is not a valid package
+  // [PLUGIN_ERROR]: Invalid module "@qwik-router-config" is not a valid package
   msg = `Move qwik packages ${qwikPkg.join(", ")} to devDependencies`;
 
   if (qwikPkg.length > 0) {

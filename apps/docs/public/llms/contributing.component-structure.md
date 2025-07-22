@@ -37,7 +37,7 @@ For example, a Dropdown component might be structured like this:
 A Root component that provides the context and state for the child pieces.
 
 ```tsx
-import { component$, Slot } from '@builder.io/qwik';
+import { component$, Slot } from '@qwik.dev/core';
 
 export const dropdownContextId = createContextId<DropdownContext>('qds-dropdown');
 

@@ -1,7 +1,7 @@
-import { $, type PropsOf, component$ } from "@builder.io/qwik";
-import { useSignal } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
-import { useNavigate } from "@builder.io/qwik-city";
+import { $, type PropsOf, component$ } from "@qwik.dev/core";
+import { useSignal } from "@qwik.dev/core";
+import { Link } from "@qwik.dev/router";
+import { useNavigate } from "@qwik.dev/router";
 import { Tree } from "@kunai-consulting/qwik";
 import { LuChevronRight } from "@qwikest/icons/lucide";
 

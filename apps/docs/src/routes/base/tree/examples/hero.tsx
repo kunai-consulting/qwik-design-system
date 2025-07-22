@@ -1,4 +1,4 @@
-import { component$, useStyles$ } from "@builder.io/qwik";
+import { component$, useStyles$ } from "@qwik.dev/core";
 import { Tree } from "@kunai-consulting/qwik";
 import { LuChevronRight } from "@qwikest/icons/lucide";
 import styles from "./tree.css?inline";

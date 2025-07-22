@@ -1,4 +1,4 @@
-import { component$, useSignal, useStyles$ } from "@builder.io/qwik";
+import { component$, useSignal, useStyles$ } from "@qwik.dev/core";
 import { Menu } from "@kunai-consulting/qwik";
 import styles from "./menu-custom.css?inline";
 

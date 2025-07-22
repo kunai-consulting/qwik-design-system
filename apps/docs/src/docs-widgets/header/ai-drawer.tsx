@@ -1,5 +1,5 @@
-import { $, Slot, component$, useSignal } from "@builder.io/qwik";
-import { useLocation } from "@builder.io/qwik-city";
+import { $, Slot, component$, useSignal } from "@qwik.dev/core";
+import { useLocation } from "@qwik.dev/router";
 import { Modal } from "@qwik-ui/headless";
 import { AIButton } from "../docs-ai/ai-button";
 import { Sparkles } from "../sparkles/sparkles";

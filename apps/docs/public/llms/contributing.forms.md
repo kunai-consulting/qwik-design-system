@@ -41,7 +41,7 @@ For example, when you use our Checkbox component, and a consumer wants to submit
 Under the hood it looks like this:
 
 ```tsx
-import { $, type PropsOf, component$, useContext } from "@builder.io/qwik";
+import { $, type PropsOf, component$, useContext } from "@qwik.dev/core";
 import { VisuallyHidden } from "../visually-hidden/visually-hidden";
 import { checkboxContextId } from "./checkbox-context";
 

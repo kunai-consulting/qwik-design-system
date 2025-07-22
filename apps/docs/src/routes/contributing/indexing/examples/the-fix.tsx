@@ -6,7 +6,7 @@ import {
   useContext,
   useContextProvider,
   useSignal
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { Render, withAsChild } from "@kunai-consulting/qwik";
 import { getNextIndex, resetIndexes } from "@kunai-consulting/qwik-utils";
 
