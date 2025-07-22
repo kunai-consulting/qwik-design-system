@@ -7,7 +7,7 @@ import {
   useContext,
   useContextProvider,
   useSignal
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { OTPContextId } from "./otp-context";
 type PublicOTPProps = {
   _index?: number;

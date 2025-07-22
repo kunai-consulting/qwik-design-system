@@ -8,8 +8,8 @@ import {
   useId,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
-import type { QRL, QwikJSX } from "@builder.io/qwik";
+} from "@qwik.dev/core";
+import type { QRL, QwikJSX } from "@qwik.dev/core";
 import type { BindableProps } from "@kunai-consulting/qwik-utils";
 import { getNextIndex, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";

@@ -5,7 +5,7 @@ import {
   Slot,
   component$,
   useContext
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { popoverContextId } from "./popover-root";

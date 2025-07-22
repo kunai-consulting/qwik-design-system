@@ -1,11 +1,4 @@
-import {
-  $,
-  type PropsOf,
-  Slot,
-  component$,
-  useContext,
-  useSignal
-} from "@builder.io/qwik";
+import { $, type PropsOf, Slot, component$, useContext, useSignal } from "@qwik.dev/core";
 import { sliderContextId } from "./slider-context";
 
 /** Component that renders the track along which the thumb slides */

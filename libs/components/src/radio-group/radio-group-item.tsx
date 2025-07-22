@@ -7,7 +7,7 @@ import {
   useComputed$,
   useContext,
   useContextProvider
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";

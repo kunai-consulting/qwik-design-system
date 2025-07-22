@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$, useContext, useTask$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$, useContext, useTask$ } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { switchContextId } from "./switch-context";

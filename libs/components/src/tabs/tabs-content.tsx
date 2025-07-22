@@ -1,10 +1,4 @@
-import {
-  type PropsOf,
-  Slot,
-  component$,
-  useComputed$,
-  useContext
-} from "@builder.io/qwik";
+import { type PropsOf, Slot, component$, useComputed$, useContext } from "@qwik.dev/core";
 import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";

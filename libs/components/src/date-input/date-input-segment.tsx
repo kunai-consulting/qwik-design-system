@@ -7,8 +7,8 @@ import {
   useSignal,
   useStyles$,
   useTask$
-} from "@builder.io/qwik";
-import type { Signal } from "@builder.io/qwik";
+} from "@qwik.dev/core";
+import type { Signal } from "@qwik.dev/core";
 import type { DayOfMonth, Month } from "../calendar/types";
 import { MAX_DAY } from "./constants";
 import { dateInputContextId } from "./date-input-context";

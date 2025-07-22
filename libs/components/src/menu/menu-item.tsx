@@ -1,11 +1,4 @@
-import {
-  $,
-  type PropsOf,
-  Slot,
-  component$,
-  useContext,
-  useSignal
-} from "@builder.io/qwik";
+import { $, type PropsOf, Slot, component$, useContext, useSignal } from "@qwik.dev/core";
 import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";

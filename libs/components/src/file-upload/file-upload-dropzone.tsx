@@ -8,7 +8,7 @@ import {
   useContext,
   useOn,
   useSignal
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { type FileInfo, fileUploadContextId } from "./file-upload-context";
 type PublicDropzoneProps = PropsOf<"div">;
 interface PublicRawFileInfo {

@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
 import { CheckboxDescriptionBase } from "../checkbox/checkbox-description";
 
 export const ChecklistItemDescription = component$(

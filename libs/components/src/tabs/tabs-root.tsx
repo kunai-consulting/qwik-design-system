@@ -8,7 +8,7 @@ import {
   useSignal,
   useStyles$,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import {
   type BindableProps,
   resetIndexes,

@@ -1,4 +1,4 @@
-import { $, type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
+import { $, type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
 import { calendarContextId } from "./calendar-context";
 import { ARIA_LABELS } from "./constants";
 import type { Month } from "./types";

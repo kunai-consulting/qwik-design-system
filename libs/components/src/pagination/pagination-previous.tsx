@@ -6,7 +6,7 @@ import {
   useContext,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { paginationContextId } from "./pagination-context";
 
 /** Previous page navigation button component */

@@ -1,5 +1,5 @@
-import { Slot, component$, useStyles$ } from "@builder.io/qwik";
-import { useContext } from "@builder.io/qwik";
+import { Slot, component$, useStyles$ } from "@qwik.dev/core";
+import { useContext } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverContentBase } from "../popover/popover-content";
 import { Render } from "../render/render";

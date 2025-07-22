@@ -3,7 +3,7 @@ import {
   type PropFunction,
   type Signal,
   createContextId
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 
 export interface FileInfo {
   name: string;

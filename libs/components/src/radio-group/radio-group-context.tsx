@@ -1,4 +1,4 @@
-import { type ReadonlySignal, type Signal, createContextId } from "@builder.io/qwik";
+import { type ReadonlySignal, type Signal, createContextId } from "@qwik.dev/core";
 
 type TriggerRef = {
   ref: Signal;

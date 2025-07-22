@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
 import { CheckboxTriggerBase } from "../checkbox/checkbox-trigger";
 
 export const ChecklistSelectAll = component$(
