@@ -1,6 +1,6 @@
 import {
   $,
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   useContext,
@@ -11,7 +11,7 @@ import { paginationContextId } from "./pagination-context";
 
 /** Previous page navigation button component */
 export const PaginationPrevious = component$(
-  ({ type, ...props }: PropsOf<"button"> & { isFirst?: boolean }) => {
+  ({ type, ...props }: HTMLElementAttrs<"button"> & { isFirst?: boolean }) => {
     const context = useContext(paginationContextId);
     const { selectedPageSig } = context;
     const isDisabled = useSignal(context.selectedPageSig.value === 1);

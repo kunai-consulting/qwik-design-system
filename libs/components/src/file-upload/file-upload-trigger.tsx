@@ -1,6 +1,6 @@
-import { $, type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
+import { $, type HTMLElementAttrs, Slot, component$, useContext } from "@qwik.dev/core";
 import { fileUploadContextId } from "./file-upload-context";
-type PublicTriggerProps = PropsOf<"button">;
+type PublicTriggerProps = HTMLElementAttrs<"button">;
 /**
  * Trigger component that opens the file selection dialog
  * Acts as a styled button that triggers the hidden file input

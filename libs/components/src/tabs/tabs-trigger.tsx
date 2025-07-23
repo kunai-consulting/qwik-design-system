@@ -1,6 +1,6 @@
 import {
   $,
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   sync$,
@@ -19,7 +19,7 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { tabsContextId } from "./tabs-root";
 
-export type TabsTriggerProps = PropsOf<"button"> & {
+export type TabsTriggerProps = HTMLElementAttrs<"button"> & {
   _index?: number;
   value?: string;
 };

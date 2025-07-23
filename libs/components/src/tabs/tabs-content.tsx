@@ -1,10 +1,10 @@
-import { type PropsOf, Slot, component$, useComputed$, useContext } from "@qwik.dev/core";
+import { type HTMLElementAttrs, Slot, component$, useComputed$, useContext } from "@qwik.dev/core";
 import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { tabsContextId } from "./tabs-root";
 
-export type TabsContentProps = PropsOf<"div"> & {
+export type TabsContentProps = HTMLElementAttrs<"div"> & {
   _index?: number;
   value?: string;
 };

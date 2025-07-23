@@ -1,5 +1,5 @@
 import {
-  type PropsOf,
+  type HTMLElementAttrs,
   type Signal,
   Slot,
   component$,
@@ -42,7 +42,7 @@ type ExampleContext = {
   isDisabledSig: Signal<boolean>;
 };
 
-const Root = component$((props: PropsOf<"div"> & { disabled: boolean }) => {
+const Root = component$((props: HTMLElementAttrs<"div"> & { disabled: boolean }) => {
   const isDisabledSig = useComputed$(() => props.disabled);
 
   const context: ExampleContext = {
@@ -58,7 +58,7 @@ const Root = component$((props: PropsOf<"div"> & { disabled: boolean }) => {
   );
 });
 
-const Child = component$((props: PropsOf<"button">) => {
+const Child = component$((props: HTMLElementAttrs<"button">) => {
   const context = useContext(exampleContextId);
 
   return (

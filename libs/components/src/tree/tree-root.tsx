@@ -1,7 +1,7 @@
 // no-bound-signal
 
 import {
-  type PropsOf,
+  type HTMLElementAttrs,
   type Signal,
   Slot,
   component$,
@@ -29,7 +29,7 @@ export type TreeNode = {
   children?: Record<number, TreeNode>;
 };
 
-export const TreeRootBase = component$((props: PropsOf<"div">) => {
+export const TreeRootBase = component$((props: HTMLElementAttrs<"div">) => {
   const rootRef = useSignal<HTMLDivElement>();
   const currentFocusEl = useSignal<HTMLElement>();
 

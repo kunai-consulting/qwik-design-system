@@ -1,9 +1,9 @@
-import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
+import { type HTMLElementAttrs, Slot, component$, useContext } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { popoverContextId } from "./popover-root";
 
-export const PopoverTriggerBase = component$((props: PropsOf<"button">) => {
+export const PopoverTriggerBase = component$((props: HTMLElementAttrs<"button">) => {
   const context = useContext(popoverContextId);
   const panelId = `${context.localId}-panel`;
 

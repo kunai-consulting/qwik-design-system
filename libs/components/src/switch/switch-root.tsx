@@ -1,5 +1,5 @@
 import {
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   useContextProvider,
@@ -27,7 +27,7 @@ type SwitchBinds = {
   value?: string;
 };
 
-type PublicRootProps = PropsOf<"div"> & {
+type PublicRootProps = HTMLElementAttrs<"div"> & {
   /** Callback when the switch state changes */
   onChange$?: (checked: boolean) => void;
   /** Whether the switch is in an error state */

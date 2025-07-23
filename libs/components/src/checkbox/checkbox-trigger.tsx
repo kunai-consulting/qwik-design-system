@@ -1,6 +1,6 @@
 import {
   $,
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   sync$,
@@ -11,7 +11,7 @@ import {
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { checkboxContextId } from "./checkbox-context";
-type PublicCheckboxControlProps = PropsOf<"button">;
+type PublicCheckboxControlProps = HTMLElementAttrs<"button">;
 
 /** Interactive trigger component that handles checkbox toggling */
 export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps) => {

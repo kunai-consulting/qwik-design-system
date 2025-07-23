@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
+import { type HTMLElementAttrs, Slot, component$ } from "@qwik.dev/core";
 import { Render, withAsChild } from "@kunai-consulting/qwik";
 
 export default component$(() => {
@@ -9,7 +9,7 @@ export default component$(() => {
   );
 });
 
-export const TooltipTriggerBase = component$((props: PropsOf<"button">) => {
+export const TooltipTriggerBase = component$((props: HTMLElementAttrs<"button">) => {
   return (
     <Render fallback="button" {...props}>
       <Slot />

@@ -1,4 +1,4 @@
-import { $, type PropsOf, Slot, component$, useSignal } from "@qwik.dev/core";
+import { $, type HTMLElementAttrs, Slot, component$, useSignal } from "@qwik.dev/core";
 import { Render } from "@kunai-consulting/qwik";
 
 export default component$(() => {
@@ -14,7 +14,7 @@ export default component$(() => {
   );
 });
 
-export const TooltipTrigger = component$((props: PropsOf<"button">) => {
+export const TooltipTrigger = component$((props: HTMLElementAttrs<"button">) => {
   const triggerRef = useSignal<HTMLElement | undefined>();
 
   const handleAlert$ = $(() => {

@@ -1,8 +1,8 @@
-import { $, type PropsOf, Slot, component$, useContext, useSignal } from "@qwik.dev/core";
+import { $, type HTMLElementAttrs, Slot, component$, useContext, useSignal } from "@qwik.dev/core";
 import { sliderContextId } from "./slider-context";
 
 /** Component that renders the track along which the thumb slides */
-export const SliderTrack = component$((props: PropsOf<"div">) => {
+export const SliderTrack = component$((props: HTMLElementAttrs<"div">) => {
   const context = useContext(sliderContextId);
   const trackRef = useSignal<HTMLDivElement>();
 

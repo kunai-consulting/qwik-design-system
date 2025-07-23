@@ -1,7 +1,7 @@
-import { type PropsOf, component$ } from "@qwik.dev/core";
+import { type HTMLElementAttrs, component$ } from "@qwik.dev/core";
 import { cn } from "~/utils/cn";
 
-export const Image = component$<PropsOf<"img">>(({ alt, ...props }) => {
+export const Image = component$<HTMLElementAttrs<"img">>(({ alt, ...props }) => {
   return (
     <img
       loading="lazy"

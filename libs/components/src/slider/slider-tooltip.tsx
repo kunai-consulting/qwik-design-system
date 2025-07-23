@@ -1,7 +1,7 @@
-import { type PropsOf, component$, useComputed$, useContext } from "@qwik.dev/core";
+import { type HTMLElementAttrs, component$, useComputed$, useContext } from "@qwik.dev/core";
 import { sliderContextId } from "./slider-context";
 type PublicTooltipPlacement = "top" | "bottom" | "left" | "right";
-interface PublicTooltipProps extends PropsOf<"div"> {
+interface PublicTooltipProps extends HTMLElementAttrs<"div"> {
   /** The placement of the tooltip relative to the thumb. Default is 'top' */
   placement?: PublicTooltipPlacement;
 }

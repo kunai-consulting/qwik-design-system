@@ -1,5 +1,5 @@
 import {
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   createContextId,
@@ -55,7 +55,7 @@ export const Root = withAsChild(RootBase, (props) => {
 
 type ItemProps = {
   _index?: number;
-} & PropsOf<"div">;
+} & HTMLElementAttrs<"div">;
 
 const ItemBase = component$((props: ItemProps) => {
   const context = useContext(dummyContextId);

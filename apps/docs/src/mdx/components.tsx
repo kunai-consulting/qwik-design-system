@@ -1,4 +1,4 @@
-import type { Component, PropsOf } from "@qwik.dev/core";
+import type { Component, HTMLElementAttrs } from "@qwik.dev/core";
 import { Slot, component$ } from "@qwik.dev/core";
 
 import { Features } from "~/docs-widgets/features/features";
@@ -9,7 +9,7 @@ import { Image } from "../docs-widgets/image/image";
 import { MainHeading, SubHeading } from "../docs-widgets/toc/toc";
 import { Showcase } from "./showcase";
 export const components: Record<string, Component> = {
-  p: component$<PropsOf<"p">>(({ ...props }) => {
+  p: component$<HTMLElementAttrs<"p">>(({ ...props }) => {
     return (
       <p
         {...props}
@@ -19,7 +19,7 @@ export const components: Record<string, Component> = {
       </p>
     );
   }),
-  h1: component$<PropsOf<"h1">>(({ ...props }) => {
+  h1: component$<HTMLElementAttrs<"h1">>(({ ...props }) => {
     return (
       <h1
         {...props}
@@ -34,7 +34,7 @@ export const components: Record<string, Component> = {
   }),
   h2: MainHeading,
   h3: SubHeading,
-  h4: component$<PropsOf<"h4">>(({ ...props }) => {
+  h4: component$<HTMLElementAttrs<"h4">>(({ ...props }) => {
     return (
       <h4
         {...props}
@@ -47,7 +47,7 @@ export const components: Record<string, Component> = {
       </h4>
     );
   }),
-  h5: component$<PropsOf<"h5">>(({ ...props }) => {
+  h5: component$<HTMLElementAttrs<"h5">>(({ ...props }) => {
     return (
       <h5
         {...props}
@@ -60,7 +60,7 @@ export const components: Record<string, Component> = {
       </h5>
     );
   }),
-  a: component$<PropsOf<"a">>(({ ...props }) => {
+  a: component$<HTMLElementAttrs<"a">>(({ ...props }) => {
     return (
       <a
         {...props}
@@ -75,28 +75,28 @@ export const components: Record<string, Component> = {
       </a>
     );
   }),
-  ul: component$<PropsOf<"ul">>(({ ...props }) => {
+  ul: component$<HTMLElementAttrs<"ul">>(({ ...props }) => {
     return (
       <ul {...props} class={cn("my-6 ml-6 list-disc text-cool-700", props.class)}>
         <Slot />
       </ul>
     );
   }),
-  ol: component$<PropsOf<"ol">>(({ ...props }) => {
+  ol: component$<HTMLElementAttrs<"ol">>(({ ...props }) => {
     return (
       <ol {...props} class={cn("my-6 ml-6 list-decimal text-cool-700", props.class)}>
         <Slot />
       </ol>
     );
   }),
-  li: component$<PropsOf<"li">>(({ ...props }) => {
+  li: component$<HTMLElementAttrs<"li">>(({ ...props }) => {
     return (
       <li {...props} class={cn("mt-2 text-[#b8c1cc]", props.class)}>
         <Slot />
       </li>
     );
   }),
-  blockquote: component$<PropsOf<"blockquote">>(({ ...props }) => {
+  blockquote: component$<HTMLElementAttrs<"blockquote">>(({ ...props }) => {
     return (
       <blockquote
         {...props}
@@ -109,13 +109,13 @@ export const components: Record<string, Component> = {
       </blockquote>
     );
   }),
-  hr: component$<PropsOf<"hr">>(({ ...props }) => {
+  hr: component$<HTMLElementAttrs<"hr">>(({ ...props }) => {
     return <hr {...props} class={cn("my-6 border-cool-200 md:my-8", props.class)} />;
   }),
-  img: component$<PropsOf<"img">>(({ alt, ...props }) => {
+  img: component$<HTMLElementAttrs<"img">>(({ alt, ...props }) => {
     return <img {...props} alt={alt} class={cn("border border-cool-200", props.class)} />;
   }),
-  pre: component$<PropsOf<"pre">>(({ ...props }) => {
+  pre: component$<HTMLElementAttrs<"pre">>(({ ...props }) => {
     return (
       <pre
         {...props}
@@ -129,7 +129,7 @@ export const components: Record<string, Component> = {
       </pre>
     );
   }),
-  code: component$<PropsOf<"code">>(({ ...props }) => {
+  code: component$<HTMLElementAttrs<"code">>(({ ...props }) => {
     return (
       <code
         {...props}
@@ -142,7 +142,7 @@ export const components: Record<string, Component> = {
       </code>
     );
   }),
-  table: component$<PropsOf<"table">>(({ ...props }) => {
+  table: component$<HTMLElementAttrs<"table">>(({ ...props }) => {
     return (
       <table
         {...props}
@@ -152,7 +152,7 @@ export const components: Record<string, Component> = {
       </table>
     );
   }),
-  th: component$<PropsOf<"th">>(({ ...props }) => {
+  th: component$<HTMLElementAttrs<"th">>(({ ...props }) => {
     return (
       <th
         {...props}
@@ -165,7 +165,7 @@ export const components: Record<string, Component> = {
       </th>
     );
   }),
-  td: component$<PropsOf<"td">>(({ ...props }) => {
+  td: component$<HTMLElementAttrs<"td">>(({ ...props }) => {
     return (
       <td
         {...props}
@@ -178,7 +178,7 @@ export const components: Record<string, Component> = {
       </td>
     );
   }),
-  tr: component$<PropsOf<"tr">>(({ ...props }) => {
+  tr: component$<HTMLElementAttrs<"tr">>(({ ...props }) => {
     return (
       <tr
         {...props}
@@ -186,14 +186,14 @@ export const components: Record<string, Component> = {
       />
     );
   }),
-  em: component$<PropsOf<"em">>(({ ...props }) => {
+  em: component$<HTMLElementAttrs<"em">>(({ ...props }) => {
     return (
       <em {...props} class={cn("font-medium text-white", props.class)}>
         <Slot />
       </em>
     );
   }),
-  strong: component$<PropsOf<"strong">>(({ ...props }) => {
+  strong: component$<HTMLElementAttrs<"strong">>(({ ...props }) => {
     return (
       <strong {...props} class={cn("text-white", props.class)}>
         <Slot />

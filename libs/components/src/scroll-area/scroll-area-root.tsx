@@ -1,6 +1,6 @@
 import {
   $,
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   useContextProvider,
@@ -10,7 +10,7 @@ import {
 import { scrollAreaContextId } from "./scroll-area-context";
 import styles from "./scroll-area.css?inline";
 type PublicScrollbarVisibility = "hover" | "scroll" | "auto" | "always";
-type PublicRootProps = PropsOf<"div"> & {
+type PublicRootProps = HTMLElementAttrs<"div"> & {
   /** Controls when the scrollbars are visible: 'hover', 'scroll', 'auto', or 'always' */
   type?: PublicScrollbarVisibility;
   /** Delay in milliseconds before hiding the scrollbars when type is 'scroll' */

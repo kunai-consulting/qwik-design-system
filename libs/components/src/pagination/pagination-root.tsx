@@ -1,6 +1,6 @@
 import {
   type JSXChildren,
-  type PropsOf,
+  type HTMLElementAttrs,
   type QRL,
   type Signal,
   Slot,
@@ -18,7 +18,7 @@ import {
 import { type PaginationContext, paginationContextId } from "./pagination-context";
 import { PaginationItem } from "./pagination-item";
 import { getPaginationItems } from "./utils";
-export type PublicPaginationRootProps = PropsOf<"div"> & {
+export type PublicPaginationRootProps = HTMLElementAttrs<"div"> & {
   /** The total number of pages to display */
   totalPages: number;
   /** The initial page number to display when component loads */

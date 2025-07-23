@@ -1,8 +1,8 @@
-import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
+import { type HTMLElementAttrs, Slot, component$ } from "@qwik.dev/core";
 import { Checkbox, Otp } from "@kunai-consulting/qwik";
 import { LuCheck } from "@qwikest/icons/lucide";
 
-export const MyDiv = component$((props: PropsOf<"div">) => {
+export const MyDiv = component$((props: HTMLElementAttrs<"div">) => {
   return (
     <div {...props}>
       <Slot />
@@ -55,7 +55,7 @@ export default component$(() => {
   );
 });
 
-const InformationCircle = component$((props: PropsOf<"svg">) => {
+const InformationCircle = component$((props: HTMLElementAttrs<"svg">) => {
   return (
     <svg
       width="32"

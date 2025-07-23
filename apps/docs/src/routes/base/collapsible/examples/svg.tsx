@@ -1,6 +1,6 @@
-import type { PropsOf } from "@qwik.dev/core";
+import type { HTMLElementAttrs } from "@qwik.dev/core";
 
-export default function SVG(props: PropsOf<"svg">) {
+export default function SVG(props: HTMLElementAttrs<"svg">) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

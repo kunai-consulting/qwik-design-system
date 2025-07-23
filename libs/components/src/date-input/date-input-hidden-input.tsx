@@ -1,7 +1,7 @@
-import { type PropsOf, component$, useContext } from "@qwik.dev/core";
+import { type HTMLElementAttrs, component$, useContext } from "@qwik.dev/core";
 import { VisuallyHidden } from "../visually-hidden/visually-hidden";
 import { dateInputFieldContextId } from "./date-input-field-context";
-type PublicDateInputHiddenNativeInputProps = PropsOf<"input">;
+type PublicDateInputHiddenNativeInputProps = HTMLElementAttrs<"input">;
 
 /** A hidden native text input for form submission */
 export const DateInputHiddenInput = component$(

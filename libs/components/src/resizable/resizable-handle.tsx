@@ -1,6 +1,6 @@
 import {
   $,
-  type PropsOf,
+  type HTMLElementAttrs,
   component$,
   useContext,
   useSignal,
@@ -10,7 +10,7 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { resizableContextId } from "./resizable-context";
 
-type PublicResizableHandleProps = PropsOf<"div">;
+type PublicResizableHandleProps = HTMLElementAttrs<"div">;
 
 type PublicSizeProperties = {
   sizeProp: "width" | "height";

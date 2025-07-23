@@ -1,6 +1,6 @@
 import {
   $,
-  type PropsOf,
+  type HTMLElementAttrs,
   type Signal,
   Slot,
   component$,
@@ -13,7 +13,7 @@ import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 
-type ToggleRootProps = Omit<PropsOf<"button">, "onChange$"> &
+type ToggleRootProps = Omit<HTMLElementAttrs<"button">, "onChange$"> &
   BindableProps<{ pressed: boolean; disabled: boolean }> & {
     onChange$?: (pressed: boolean) => void;
   };

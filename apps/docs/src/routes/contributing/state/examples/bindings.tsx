@@ -1,4 +1,4 @@
-import { type PropsOf, component$, useSignal, useStyles$ } from "@qwik.dev/core";
+import { type HTMLElementAttrs, component$, useSignal, useStyles$ } from "@qwik.dev/core";
 import { Slot } from "@qwik.dev/core";
 import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import styles from "./form.css?inline";
@@ -10,7 +10,7 @@ interface FormState {
   helloTest: string;
 }
 
-type TextInputProps = PropsOf<"input"> & BindableProps<FormState>;
+type TextInputProps = HTMLElementAttrs<"input"> & BindableProps<FormState>;
 
 export const TextInput = component$<TextInputProps>((props) => {
   useStyles$(styles);

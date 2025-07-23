@@ -1,5 +1,5 @@
 import {
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   useComputed$,
@@ -24,7 +24,7 @@ export type PublicCheckboxRootProps<T extends boolean | "mixed" = boolean> = {
   required?: boolean;
   /** Value attribute for the hidden input element */
   value?: string;
-} & Omit<PropsOf<"div">, "onChange$"> &
+} & Omit<HTMLElementAttrs<"div">, "onChange$"> &
   BindableProps<CheckboxBinds>;
 
 type CheckboxBinds = {

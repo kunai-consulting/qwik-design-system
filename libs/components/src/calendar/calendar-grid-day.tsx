@@ -1,9 +1,9 @@
-import { $, type PropsOf, component$, useContext } from "@qwik.dev/core";
+import { $, type HTMLElementAttrs, component$, useContext } from "@qwik.dev/core";
 import { calendarContextId } from "./calendar-context";
 import type { ISODate, Locale } from "./types";
 import { getWeekNumber } from "./utils";
 
-type PublicCalendarGridDayProps = PropsOf<"button"> & {
+type PublicCalendarGridDayProps = HTMLElementAttrs<"button"> & {
   showLeadingZeros?: boolean;
   /** Event handler called when a date is selected */
   onDateChange$?: (date: ISODate) => void;

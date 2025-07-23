@@ -1,6 +1,6 @@
 import {
   $,
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   useContextProvider,
@@ -16,7 +16,7 @@ import { Render } from "../render/render";
 import { type ToastContext, toastContextId } from "./toast-context";
 import styles from "./toast.css?inline";
 
-type ToastRootProps = Omit<PropsOf<"div">, "onChange$"> & {
+type ToastRootProps = Omit<HTMLElementAttrs<"div">, "onChange$"> & {
   onChange$?: (open: boolean) => void;
   duration?: number;
 } & BindableProps<{ open: boolean }>;

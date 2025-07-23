@@ -1,5 +1,5 @@
 import {
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   sync$,
@@ -25,7 +25,7 @@ import styles from "./resizable.css?inline";
 type PublicResizableRootProps = {
   /** Direction in which the contents can be resized */
   orientation?: "horizontal" | "vertical";
-} & PropsOf<"div"> &
+} & HTMLElementAttrs<"div"> &
   BindableProps<{
     /** When true, prevents resizing of contents */
     disabled: boolean;

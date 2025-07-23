@@ -1,8 +1,8 @@
-import { type PropsOf, Slot, component$, useContext, useTask$ } from "@qwik.dev/core";
+import { type HTMLElementAttrs, Slot, component$, useContext, useTask$ } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { checkboxContextId } from "./checkbox-context";
-type PublicCheckboxErrorProps = PropsOf<"div">;
+type PublicCheckboxErrorProps = HTMLElementAttrs<"div">;
 /** A component that displays error messages for a checkbox */
 export const CheckboxErrorBase = component$((props: PublicCheckboxErrorProps) => {
   const context = useContext(checkboxContextId);

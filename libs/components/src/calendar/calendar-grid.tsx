@@ -1,7 +1,7 @@
-import { $, type PropsOf, type QRL, Slot, component$, useContext } from "@qwik.dev/core";
+import { $, type HTMLElementAttrs, type QRL, Slot, component$, useContext } from "@qwik.dev/core";
 import { calendarContextId } from "./calendar-context";
 import type { ISODate, Month } from "./types";
-type PublicCalendarGridProps = PropsOf<"div"> & {
+type PublicCalendarGridProps = HTMLElementAttrs<"div"> & {
   /** Event handler called when a date is selected */
   onDateChange$?: QRL<(date: ISODate) => void>;
 };

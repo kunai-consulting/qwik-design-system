@@ -1,4 +1,4 @@
-import type { PropsOf } from "@qwik.dev/core";
+import type { HTMLElementAttrs } from "@qwik.dev/core";
 
 export type DateSegmentType = "month" | "day" | "year";
 
@@ -13,7 +13,7 @@ export type DateSegment = {
   maxLength: number;
 };
 
-export type PublicDateInputSegmentProps = PropsOf<"input"> & {
+export type PublicDateInputSegmentProps = HTMLElementAttrs<"input"> & {
   _index?: number;
   placeholder?: string;
   showLeadingZero?: boolean;

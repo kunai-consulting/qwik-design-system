@@ -1,8 +1,8 @@
-import { type PropsOf, component$, useComputed$, useContext } from "@qwik.dev/core";
+import { type HTMLElementAttrs, component$, useComputed$, useContext } from "@qwik.dev/core";
 import { sliderContextId } from "./slider-context";
 
 /** Component that displays the filled range between min value and current value */
-export const SliderRange = component$((props: PropsOf<"div">) => {
+export const SliderRange = component$((props: HTMLElementAttrs<"div">) => {
   const context = useContext(sliderContextId);
 
   const styles = useComputed$(() => {

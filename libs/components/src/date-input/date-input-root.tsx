@@ -1,5 +1,5 @@
 import {
-  type PropsOf,
+  type HTMLElementAttrs,
   type QRL,
   type Signal,
   Slot,
@@ -16,7 +16,7 @@ import { Render } from "../render/render";
 import type { DateInputContext } from "./date-input-context";
 import { dateInputContextId } from "./date-input-context";
 
-type PublicDateInputRootProps = Omit<PropsOf<"div">, "onChange$"> & {
+type PublicDateInputRootProps = Omit<HTMLElementAttrs<"div">, "onChange$"> & {
   onChange$?: QRL<(dates: (ISODate | null)[]) => void>;
 };
 

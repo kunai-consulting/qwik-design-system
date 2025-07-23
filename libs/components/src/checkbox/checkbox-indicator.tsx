@@ -1,5 +1,5 @@
 import {
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   useComputed$,
@@ -11,7 +11,7 @@ import "./checkbox.css";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import styles from "./checkbox.css?inline";
-export type PublicCheckboxIndicatorProps = PropsOf<"span">;
+export type PublicCheckboxIndicatorProps = HTMLElementAttrs<"span">;
 /** Visual indicator component showing the checkbox state */
 export const CheckboxIndicatorBase = component$<PublicCheckboxIndicatorProps>((props) => {
   useStyles$(styles);

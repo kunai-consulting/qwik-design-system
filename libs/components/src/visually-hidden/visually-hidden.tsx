@@ -1,6 +1,6 @@
-import { type PropsOf, Slot, component$, useStylesScoped$ } from "@qwik.dev/core";
+import { type HTMLElementAttrs, Slot, component$, useStylesScoped$ } from "@qwik.dev/core";
 
-export const VisuallyHidden = component$((props: PropsOf<"span">) => {
+export const VisuallyHidden = component$((props: HTMLElementAttrs<"span">) => {
   /* Visually hide text while keeping it accessible */
   /* Source: https://www.scottohara.me/blog/2017/04/14/inclusively-hidden.html */
   useStylesScoped$(`

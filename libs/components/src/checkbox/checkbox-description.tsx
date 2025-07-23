@@ -1,8 +1,8 @@
-import { type PropsOf, Slot, component$, useContext, useTask$ } from "@qwik.dev/core";
+import { type HTMLElementAttrs, Slot, component$, useContext, useTask$ } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { checkboxContextId } from "./checkbox-context";
-type PublicCheckboxDescriptionProps = PropsOf<"div">;
+type PublicCheckboxDescriptionProps = HTMLElementAttrs<"div">;
 /** A component that renders the description text for a checkbox */
 export const CheckboxDescriptionBase = component$(
   (props: PublicCheckboxDescriptionProps) => {

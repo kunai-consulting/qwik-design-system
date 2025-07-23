@@ -1,5 +1,5 @@
 import {
-  type PropsOf,
+  type HTMLElementAttrs,
   type Signal,
   Slot,
   component$,
@@ -12,7 +12,7 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 
-type PublicItemProps = PropsOf<"div"> & {
+type PublicItemProps = HTMLElementAttrs<"div"> & {
   value: string;
 };
 

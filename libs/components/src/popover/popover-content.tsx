@@ -1,7 +1,6 @@
 import {
   $,
-  type CorrectedToggleEvent,
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   useContext
@@ -10,11 +9,11 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { popoverContextId } from "./popover-root";
 
-export const PopoverContentBase = component$((props: PropsOf<"div">) => {
+export const PopoverContentBase = component$((props: HTMLElementAttrs<"div">) => {
   const context = useContext(popoverContextId);
   const panelId = `${context.localId}-panel`;
 
-  const handleToggle$ = $((e: CorrectedToggleEvent) => {
+  const handleToggle$ = $((e: any) => {
     context.isOpenSig.value = e.newState === "open";
 
     if (context.canExternallyChangeSig.value === false) {

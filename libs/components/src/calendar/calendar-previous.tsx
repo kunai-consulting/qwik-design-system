@@ -1,10 +1,10 @@
-import { $, type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
+import { $, type HTMLElementAttrs, Slot, component$, useContext } from "@qwik.dev/core";
 import { calendarContextId } from "./calendar-context";
 import { ARIA_LABELS } from "./constants";
 import type { Month } from "./types";
 
 /** A button component that handles navigation to the previous month */
-export const CalendarPrevious = component$((props: PropsOf<"button">) => {
+export const CalendarPrevious = component$((props: HTMLElementAttrs<"button">) => {
   const context = useContext(calendarContextId);
   const { monthToRender, yearToRender, dateToFocus, locale } = context;
   const decreaseDate = $(() => {

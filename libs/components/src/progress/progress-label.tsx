@@ -1,9 +1,9 @@
-import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
+import { type HTMLElementAttrs, Slot, component$, useContext } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { ProgressContext } from "./progress-context";
 
-type ProgressLabelElement = PropsOf<"span">;
+type ProgressLabelElement = HTMLElementAttrs<"span">;
 export const ProgressLabelBase = component$<ProgressLabelElement>((props) => {
   const { ...labelProps } = props;
 

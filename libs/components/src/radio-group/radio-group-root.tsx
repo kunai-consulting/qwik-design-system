@@ -1,6 +1,6 @@
 import {
   $,
-  type PropsOf,
+  type HTMLElementAttrs,
   type Signal,
   Slot,
   component$,
@@ -29,7 +29,7 @@ type PublicRootProps = {
   isDescription?: boolean;
   isError?: boolean;
   "bind:value"?: Signal<string | undefined>;
-} & Omit<PropsOf<"div">, "onChange$">;
+} & Omit<HTMLElementAttrs<"div">, "onChange$">;
 
 interface TriggerRef {
   ref: Signal;

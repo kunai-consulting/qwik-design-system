@@ -1,6 +1,6 @@
 import {
   $,
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   useContext,
@@ -11,7 +11,7 @@ import { paginationContextId } from "./pagination-context";
 
 /** Next page navigation button component */
 export const PaginationNext = component$(
-  ({ type, ...props }: PropsOf<"button"> & { isLast?: boolean }) => {
+  ({ type, ...props }: HTMLElementAttrs<"button"> & { isLast?: boolean }) => {
     const context = useContext(paginationContextId);
     const { selectedPageSig, totalPages } = context;
 

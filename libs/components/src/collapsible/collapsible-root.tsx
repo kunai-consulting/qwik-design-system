@@ -1,5 +1,5 @@
 import {
-  type PropsOf,
+  type HTMLElementAttrs,
   type QRL,
   type Signal,
   Slot,
@@ -28,7 +28,7 @@ export interface CollapsibleContext {
   collapsible?: boolean;
 }
 
-export type CollapsibleRootProps = PropsOf<"div"> & {
+export type CollapsibleRootProps = HTMLElementAttrs<"div"> & {
   id?: string;
   open?: boolean | undefined;
   "bind:open"?: Signal<boolean>;

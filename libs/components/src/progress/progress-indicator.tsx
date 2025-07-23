@@ -1,9 +1,9 @@
-import { type PropsOf, component$, useComputed$, useContext } from "@qwik.dev/core";
+import { type HTMLElementAttrs, component$, useComputed$, useContext } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { ProgressContext } from "./progress-context";
 
-type ProgressIndicatorElement = PropsOf<"div">;
+type ProgressIndicatorElement = HTMLElementAttrs<"div">;
 export const ProgressIndicatorBase = component$<ProgressIndicatorElement>((props) => {
   const { ...indicatorProps } = props;
 

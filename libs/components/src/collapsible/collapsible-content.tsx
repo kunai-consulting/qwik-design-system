@@ -1,9 +1,9 @@
-import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
+import { type HTMLElementAttrs, Slot, component$, useContext } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { collapsibleContextId } from "./collapsible-root";
 
-export type CollapsibleContentProps = PropsOf<"div">;
+export type CollapsibleContentProps = HTMLElementAttrs<"div">;
 
 export const CollapsibleContentBase = component$((props: CollapsibleContentProps) => {
   const context = useContext(collapsibleContextId);

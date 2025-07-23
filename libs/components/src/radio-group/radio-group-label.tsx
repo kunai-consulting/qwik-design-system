@@ -1,9 +1,9 @@
-import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
+import { type HTMLElementAttrs, Slot, component$, useContext } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 
-type PublicLabelProps = PropsOf<"span">;
+type PublicLabelProps = HTMLElementAttrs<"span">;
 
 export const RadioGroupLabelBase = component$((props: PublicLabelProps) => {
   const context = useContext(radioGroupContextId);

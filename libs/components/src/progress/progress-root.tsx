@@ -1,5 +1,5 @@
 import {
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   useComputed$,
@@ -25,7 +25,7 @@ type ProgressProps = {
 } & BindableProps<{ value: number | null }>;
 
 export type ProgressState = "indeterminate" | "complete" | "loading";
-export const ProgressRootBase = component$<ProgressProps & PropsOf<"div">>((props) => {
+export const ProgressRootBase = component$<ProgressProps & HTMLElementAttrs<"div">>((props) => {
   const { ...rest } = props;
 
   /** Default max value for progress bar **/

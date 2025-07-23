@@ -1,6 +1,6 @@
 import {
   $,
-  type PropsOf,
+  type HTMLElementAttrs,
   component$,
   sync$,
   useContext,
@@ -8,7 +8,7 @@ import {
   useSignal
 } from "@qwik.dev/core";
 import { OTPContextId } from "./otp-context";
-type PublicOtpNativeInputProps = PropsOf<"input"> & {
+type PublicOtpNativeInputProps = HTMLElementAttrs<"input"> & {
   pattern?: string | null;
 };
 /** Hidden input component that handles OTP input interactions and validation */

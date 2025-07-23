@@ -1,10 +1,10 @@
-import { $, type PropsOf, Slot, component$, useContext, useSignal } from "@qwik.dev/core";
+import { $, type HTMLElementAttrs, Slot, component$, useContext, useSignal } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { switchContextId } from "./switch-context";
 
 /** Interactive element that toggles the switch state */
-const SwitchTriggerBase = component$<PropsOf<"button">>((props) => {
+const SwitchTriggerBase = component$<HTMLElementAttrs<"button">>((props) => {
   const { ...restProps } = props;
   const context = useContext(switchContextId);
   const triggerRef = useSignal<HTMLButtonElement>();

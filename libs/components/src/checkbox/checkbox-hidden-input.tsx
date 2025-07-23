@@ -1,7 +1,7 @@
-import { $, type PropsOf, component$, useContext } from "@qwik.dev/core";
+import { $, type HTMLElementAttrs, component$, useContext } from "@qwik.dev/core";
 import { VisuallyHidden } from "../visually-hidden/visually-hidden";
 import { checkboxContextId } from "./checkbox-context";
-type PublicCheckboxHiddenNativeInputProps = PropsOf<"input">;
+type PublicCheckboxHiddenNativeInputProps = HTMLElementAttrs<"input">;
 /** A hidden native checkbox input for form submission */
 export const CheckboxHiddenInput = component$(
   (props: PublicCheckboxHiddenNativeInputProps) => {

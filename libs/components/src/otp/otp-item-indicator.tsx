@@ -1,9 +1,9 @@
-import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
+import { type HTMLElementAttrs, Slot, component$, useContext } from "@qwik.dev/core";
 import { OTPContextId } from "./otp-context";
 import { itemContextId } from "./otp-item";
 
 /** Component that renders a caret for OTP input focus indication */
-export const OtpItemIndicator = component$(({ ...props }: PropsOf<"span">) => {
+export const OtpItemIndicator = component$(({ ...props }: HTMLElementAttrs<"span">) => {
   const itemContext = useContext(itemContextId);
   const context = useContext(OTPContextId);
   const isHighlighted =

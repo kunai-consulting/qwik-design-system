@@ -1,6 +1,6 @@
-import { $, type PropsOf, component$, noSerialize, useContext } from "@qwik.dev/core";
+import { $, type HTMLElementAttrs, component$, noSerialize, useContext } from "@qwik.dev/core";
 import { type FileInfo, fileUploadContextId } from "./file-upload-context";
-type PublicInputProps = PropsOf<"input">;
+type PublicInputProps = HTMLElementAttrs<"input">;
 /**
  * Hidden file input component that handles file selection via system dialog
  */

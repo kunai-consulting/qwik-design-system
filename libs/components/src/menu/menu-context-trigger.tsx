@@ -1,4 +1,4 @@
-import { $, type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
+import { $, type HTMLElementAttrs, Slot, component$, useContext } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { menuContextId } from "./menu-root";
@@ -6,7 +6,7 @@ import { menuContextId } from "./menu-root";
 /**
  * A trigger that opens the menu on right-click (context menu)
  */
-export const MenuContextTriggerBase = component$<PropsOf<"div">>((props) => {
+export const MenuContextTriggerBase = component$<HTMLElementAttrs<"div">>((props) => {
   const context = useContext(menuContextId);
 
   const handleContextMenu = $((event: MouseEvent) => {

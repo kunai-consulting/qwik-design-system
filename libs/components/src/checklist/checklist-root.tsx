@@ -1,5 +1,5 @@
 import {
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   useContextProvider,
@@ -10,7 +10,7 @@ import { withAsChild } from "../as-child/as-child";
 import { CheckboxRootBase } from "../checkbox/checkbox-root";
 import { type ChecklistContext, checklistContextId } from "./checklist-context";
 
-type PublicChecklistRootProps = Omit<PropsOf<"div">, "onChange$">;
+type PublicChecklistRootProps = Omit<HTMLElementAttrs<"div">, "onChange$">;
 
 export const ChecklistRootBase = component$((props: PublicChecklistRootProps) => {
   const isAllCheckedSig = useSignal(false);

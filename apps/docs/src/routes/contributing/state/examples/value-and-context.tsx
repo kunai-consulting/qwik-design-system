@@ -1,5 +1,5 @@
 import {
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   createContextId,
@@ -40,7 +40,7 @@ type ExampleContext = {
   disabled?: boolean;
 };
 
-type RootProps = PropsOf<"div"> & ExampleContext;
+type RootProps = HTMLElementAttrs<"div"> & ExampleContext;
 
 const Root = component$((props: RootProps) => {
   const { disabled } = props;
@@ -58,7 +58,7 @@ const Root = component$((props: RootProps) => {
   );
 });
 
-const Child = component$((props: PropsOf<"button">) => {
+const Child = component$((props: HTMLElementAttrs<"button">) => {
   const context = useContext(exampleContextId);
 
   return (

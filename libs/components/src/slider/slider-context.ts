@@ -1,5 +1,4 @@
 import {
-  type PropFunction,
   type QRL,
   type Signal,
   createContextId
@@ -21,8 +20,8 @@ export interface SliderContext {
   setValue: QRL<(newValue: number, type?: ThumbType) => void>;
   calculateValue: QRL<(clientX: number, rect: DOMRect) => number>;
   thumbType: Signal<ThumbType | undefined>;
-  onChange$?: PropFunction<(value: SliderValue) => void>;
-  onChangeEnd$?: PropFunction<(value: SliderValue) => void>;
+  onChange$?: QRL<(value: SliderValue) => void>;
+  onChangeEnd$?: QRL<(value: SliderValue) => void>;
 }
 
 export const sliderContextId = createContextId<SliderContext>("slider-context");

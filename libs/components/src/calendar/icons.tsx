@@ -1,6 +1,6 @@
-import { type PropsOf, component$ } from "@qwik.dev/core";
+import { type HTMLElementAttrs, component$ } from "@qwik.dev/core";
 
-export const Calendar = component$((props: PropsOf<"svg">) => (
+export const Calendar = component$((props: HTMLElementAttrs<"svg">) => (
   <svg
     viewBox="0 0 15 15"
     fill="none"

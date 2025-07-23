@@ -1,6 +1,6 @@
 import {
   type NoSerialize,
-  type PropFunction,
+  type QRL,
   type Signal,
   createContextId
 } from "@qwik.dev/core";
@@ -20,7 +20,7 @@ export interface FileUploadContext {
   multiple: boolean;
   accept?: string;
   disabled?: boolean;
-  onFilesChange$?: PropFunction<(files: FileInfo[]) => void>;
+  onFilesChange$?: QRL<(files: FileInfo[]) => void>;
 }
 
 export const fileUploadContextId =

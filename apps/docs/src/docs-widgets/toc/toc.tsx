@@ -1,6 +1,6 @@
 import {
   $,
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   useContext,
@@ -12,7 +12,7 @@ import { type ContentHeading, useLocation } from "@qwik.dev/router";
 import { rootContextId } from "~/routes/layout";
 import { cn } from "~/utils/cn";
 
-export const MainHeading = component$((props: PropsOf<"h2">) => {
+export const MainHeading = component$((props: HTMLElementAttrs<"h2">) => {
   return (
     <h2
       {...props}
@@ -26,7 +26,7 @@ export const MainHeading = component$((props: PropsOf<"h2">) => {
   );
 });
 
-export const SubHeading = component$((props: PropsOf<"h3">) => {
+export const SubHeading = component$((props: HTMLElementAttrs<"h3">) => {
   return (
     <h3
       {...props}

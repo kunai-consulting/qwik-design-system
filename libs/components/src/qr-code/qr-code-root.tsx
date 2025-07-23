@@ -1,5 +1,5 @@
 import {
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   useContextProvider,
@@ -10,7 +10,7 @@ import {
 import { encode } from "uqr";
 import { qrCodeContextId } from "./qr-code-context";
 import styles from "./qr-code.css?inline";
-type PublicRootProps = PropsOf<"div"> & {
+type PublicRootProps = HTMLElementAttrs<"div"> & {
   /** The text value to encode in the QR code */
   value?: string;
   /** The error correction level of the QR code. L = Low, M = Medium, Q = Quartile, H = High */

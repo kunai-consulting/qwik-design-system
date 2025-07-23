@@ -1,9 +1,9 @@
-import { type PropsOf, component$, useContext } from "@qwik.dev/core";
+import { type HTMLElementAttrs, component$, useContext } from "@qwik.dev/core";
 import { calendarContextId } from "./calendar-context";
 import { MONTHS_LG } from "./constants";
 
 /** A component that displays the current month and year */
-export const CalendarTitle = component$((props: PropsOf<"div">) => {
+export const CalendarTitle = component$((props: HTMLElementAttrs<"div">) => {
   const context = useContext(calendarContextId);
   const { monthToRender, yearToRender, locale } = context;
   const month = MONTHS_LG[locale][+monthToRender.value - 1];

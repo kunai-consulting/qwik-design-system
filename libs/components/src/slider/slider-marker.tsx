@@ -1,6 +1,6 @@
-import { type PropsOf, Slot, component$, useComputed$, useContext } from "@qwik.dev/core";
+import { type HTMLElementAttrs, Slot, component$, useComputed$, useContext } from "@qwik.dev/core";
 import { sliderContextId } from "./slider-context";
-interface PublicMarkerProps extends PropsOf<"div"> {
+interface PublicMarkerProps extends HTMLElementAttrs<"div"> {
   /** The value at which to place the marker on the slider track */
   value: number;
 }

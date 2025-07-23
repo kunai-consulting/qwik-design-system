@@ -1,4 +1,4 @@
-import { $, type PropsOf, Slot, component$, useContext, useSignal } from "@qwik.dev/core";
+import { $, type HTMLElementAttrs, Slot, component$, useContext, useSignal } from "@qwik.dev/core";
 import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
@@ -10,7 +10,7 @@ import {
   getPreviousMenuItem
 } from "./utils";
 
-export type PublicMenuItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
+export type PublicMenuItemProps = Omit<HTMLElementAttrs<"div">, "onSelect$"> & {
   /** Event handler called when the item is selected */
   onSelect$?: (value: string | undefined) => void;
   /** Whether to close the menu when the item is selected (default: true) */

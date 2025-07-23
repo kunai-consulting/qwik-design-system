@@ -1,10 +1,10 @@
 // no-as-child
-import { $, type PropsOf, component$, useContext } from "@qwik.dev/core";
+import { $, type HTMLElementAttrs, component$, useContext } from "@qwik.dev/core";
 import { VisuallyHidden } from "@qwik-ui/headless";
 import { switchContextId } from "./switch-context";
 
 type PublicHiddenInputProps = Omit<
-  PropsOf<"input">,
+  HTMLElementAttrs<"input">,
   "type" | "checked" | "form" | "style"
 >;
 /**

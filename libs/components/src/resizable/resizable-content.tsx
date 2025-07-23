@@ -1,5 +1,5 @@
 import {
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   useContext,
@@ -12,7 +12,7 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { resizableContextId } from "./resizable-context";
 
-interface PublicResizableContentProps extends Omit<PropsOf<"div">, "onResize$"> {
+interface PublicResizableContentProps extends Omit<HTMLElementAttrs<"div">, "onResize$"> {
   // Default height of the content (in pixels)
   height?: number;
   // Default width of the content (in pixels)

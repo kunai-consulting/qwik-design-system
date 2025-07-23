@@ -1,7 +1,7 @@
 import {
   $,
   type CSSProperties,
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   sync$,
@@ -13,12 +13,13 @@ import {
   useVisibleTask$
 } from "@qwik.dev/core";
 import { type SliderContext, type ThumbType, sliderContextId } from "./slider-context";
-interface PublicThumbProps extends PropsOf<"div"> {
+interface PublicThumbProps extends HTMLElementAttrs<"div"> {
   /** The type of thumb - either 'start' or 'end' for range sliders */
   type?: ThumbType;
 }
 /** Draggable thumb component that users interact with to change slider values */
 export const SliderThumb = component$((props: PublicThumbProps) => {
+  const { type, ...rest } = props;
   useStylesScoped$(`
     .thumb {
       position: absolute;
@@ -27,7 +28,6 @@ export const SliderThumb = component$((props: PublicThumbProps) => {
     }
   `);
 
-  const { type, ...rest } = props;
   const context = useContext(sliderContextId);
   const isDragging = useSignal(false);
   const thumbRef = useSignal<HTMLDivElement>();

@@ -1,7 +1,7 @@
 import {
   $,
-  type PropFunction,
-  type PropsOf,
+  type QRL,
+  type HTMLElementAttrs,
   Slot,
   component$,
   sync$,
@@ -9,9 +9,9 @@ import {
   useOnDocument
 } from "@qwik.dev/core";
 import { scrollAreaContextId } from "./scroll-area-context";
-type PublicViewPortProps = PropsOf<"div"> & {
+type PublicViewPortProps = HTMLElementAttrs<"div"> & {
   /** Event handler for scroll events */
-  onScroll$?: PropFunction<(e: Event) => void>;
+  onScroll$?: QRL<(e: Event) => void>;
 };
 /** A viewport component that contains the scrollable content and manages overflow detection */
 export const ScrollAreaViewport = component$<PublicViewPortProps>((props) => {

@@ -1,5 +1,5 @@
 import {
-  type PropsOf,
+  type HTMLElementAttrs,
   type Signal,
   Slot,
   component$,
@@ -18,7 +18,7 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import tabsStyles from "./tabs.css?inline";
 
-export type TabsRootProps = Omit<PropsOf<"div">, "align" | "onChange$"> &
+export type TabsRootProps = Omit<HTMLElementAttrs<"div">, "align" | "onChange$"> &
   BindableProps<{
     value: string;
     orientation: "horizontal" | "vertical";

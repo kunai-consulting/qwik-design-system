@@ -1,6 +1,6 @@
 import {
   $,
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   useContext,
@@ -22,7 +22,7 @@ import {
 } from "./date-input-field-context";
 import { getInitialSegments } from "./utils";
 
-export type PublicDateInputFieldProps = Omit<PropsOf<"div">, "onChange$"> & {
+export type PublicDateInputFieldProps = Omit<HTMLElementAttrs<"div">, "onChange$"> & {
   /** Event handler called when a date is updated */
   onChange$?: QRL<(date: ISODate | null) => void>;
   separator?: string | QwikJSX.Element;

@@ -1,6 +1,6 @@
 import {
   $,
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   useSignal,
@@ -30,7 +30,7 @@ const generateSparkle = (color = DEFAULT_COLOR) => {
 type SparkleInstanceProps = {
   color: string;
   size: number;
-} & PropsOf<"svg">;
+} & HTMLElementAttrs<"svg">;
 
 type Sparkle = ReturnType<typeof generateSparkle>;
 

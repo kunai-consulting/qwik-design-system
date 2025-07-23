@@ -1,6 +1,6 @@
 import {
   type ClassList,
-  type PropsOf,
+  type HTMLElementAttrs,
   component$,
   useSignal,
   useTask$
@@ -8,7 +8,7 @@ import {
 
 import { cn } from "~/utils/cn";
 
-export type HighlightProps = PropsOf<"div"> & {
+export type HighlightProps = HTMLElementAttrs<"div"> & {
   code: string;
   copyCodeClass?: ClassList;
   splitCommentStart?: string;

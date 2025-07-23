@@ -1,6 +1,6 @@
 import {
   type JSXOutput,
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   useComputed$,
@@ -10,7 +10,7 @@ import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { toggleContextId } from "./toggle-root";
 
-type ToggleIndicatorProps = PropsOf<"span"> & {
+type ToggleIndicatorProps = HTMLElementAttrs<"span"> & {
   fallback?: JSXOutput;
 };
 

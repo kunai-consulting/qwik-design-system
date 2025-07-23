@@ -1,6 +1,6 @@
-import { $, type PropsOf, type QRL, Slot, component$, useContext } from "@qwik.dev/core";
+import { $, type HTMLElementAttrs, type QRL, Slot, component$, useContext } from "@qwik.dev/core";
 import { scrollAreaContextId } from "./scroll-area-context";
-type PublicScrollBarType = PropsOf<"div"> & {
+type PublicScrollBarType = HTMLElementAttrs<"div"> & {
   /** The orientation of the scrollbar */
   orientation?: "vertical" | "horizontal";
   /** Event handler for scroll events */

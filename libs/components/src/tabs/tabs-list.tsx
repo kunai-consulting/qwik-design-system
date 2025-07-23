@@ -1,9 +1,9 @@
-import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
+import { type HTMLElementAttrs, Slot, component$, useContext } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { tabsContextId } from "./tabs-root";
 
-export type TabsListProps = PropsOf<"div">;
+export type TabsListProps = HTMLElementAttrs<"div">;
 
 export const TabsListBase = component$((props: TabsListProps) => {
   const context = useContext(tabsContextId);

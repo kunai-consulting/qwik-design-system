@@ -1,7 +1,7 @@
-import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
+import { type HTMLElementAttrs, Slot, component$ } from "@qwik.dev/core";
 import { Render, withAsChild } from "@kunai-consulting/qwik";
 
-const DummyCompBase = component$((props: PropsOf<"div">) => {
+const DummyCompBase = component$((props: HTMLElementAttrs<"div">) => {
   return (
     <Render fallback="div" {...props}>
       <Slot />
@@ -11,7 +11,7 @@ const DummyCompBase = component$((props: PropsOf<"div">) => {
 
 const DummyComp = withAsChild(DummyCompBase);
 
-const AsChildComp = component$((props: PropsOf<"span">) => {
+const AsChildComp = component$((props: HTMLElementAttrs<"span">) => {
   return (
     <span {...props} data-inside-comp>
       Hello

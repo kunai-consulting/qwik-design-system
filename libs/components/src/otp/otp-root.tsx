@@ -1,6 +1,5 @@
 import {
-  type HTMLInputAutocompleteAttribute,
-  type PropsOf,
+  type HTMLElementAttrs,
   type QRL,
   type Signal,
   Slot,
@@ -20,13 +19,13 @@ import { OTPContextId } from "./otp-context";
 import { OtpItem } from "./otp-item";
 import styles from "./otp.css?inline";
 
-type PublicOtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
+type PublicOtpRootProps = Omit<HTMLElementAttrs<"div">, "onChange$"> & {
   /** Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property */
   "bind:value"?: Signal<string>;
   /** Number of OTP input items to display */
   _numItems?: number;
   /** HTML autocomplete attribute for the input */
-  autoComplete?: HTMLInputAutocompleteAttribute;
+  autoComplete?: string;
   /** Event handler for when all OTP items are filled */
   onComplete$?: QRL<() => void>;
   /** Event handler for when the OTP value changes */

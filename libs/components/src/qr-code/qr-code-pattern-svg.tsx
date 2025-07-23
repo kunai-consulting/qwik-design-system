@@ -1,8 +1,8 @@
-import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
+import { type HTMLElementAttrs, Slot, component$, useContext } from "@qwik.dev/core";
 import { qrCodeContextId } from "./qr-code-context";
 
 /** SVG container for the QR code pattern */
-export const QRCodePatternSvg = component$((props: PropsOf<"svg">) => {
+export const QRCodePatternSvg = component$((props: HTMLElementAttrs<"svg">) => {
   const context = useContext(qrCodeContextId);
   const size = context.data.value.length;
 

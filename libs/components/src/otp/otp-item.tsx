@@ -1,5 +1,5 @@
 import {
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   createContextId,
@@ -11,7 +11,7 @@ import {
 import { OTPContextId } from "./otp-context";
 type PublicOTPProps = {
   _index?: number;
-} & PropsOf<"div">;
+} & HTMLElementAttrs<"div">;
 export const itemContextId = createContextId<{
   index: number;
 }>("qd-otp-item");

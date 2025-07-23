@@ -1,4 +1,4 @@
-import { $, type PropsOf, component$ } from "@qwik.dev/core";
+import { $, type HTMLElementAttrs, component$ } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
 import { Link } from "@qwik.dev/router";
 import { useNavigate } from "@qwik.dev/router";
@@ -11,7 +11,7 @@ type TreeItemType = {
   children?: TreeItemType[];
 };
 
-export const Sidebar = component$((props: PropsOf<"nav">) => {
+export const Sidebar = component$((props: HTMLElementAttrs<"nav">) => {
   const { renderTreeItem } = useSidebar();
 
   const treeData: TreeItemType[] = [

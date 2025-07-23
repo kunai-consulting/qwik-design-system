@@ -1,9 +1,9 @@
-import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
+import { type HTMLElementAttrs, Slot, component$, useContext } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { radioGroupItemContextId } from "./radio-group-item";
 
-type PublicIndicatorProps = PropsOf<"span">;
+type PublicIndicatorProps = HTMLElementAttrs<"span">;
 
 const ItemIndicatorBase = component$((props: PublicIndicatorProps) => {
   const itemContext = useContext(radioGroupItemContextId);

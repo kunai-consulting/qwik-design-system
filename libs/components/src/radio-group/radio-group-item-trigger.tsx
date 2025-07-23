@@ -1,6 +1,6 @@
 import {
   $,
-  type PropsOf,
+  type HTMLElementAttrs,
   Slot,
   component$,
   useComputed$,
@@ -14,7 +14,7 @@ import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 import { radioGroupItemContextId } from "./radio-group-item";
 
-type PublicTriggerProps = PropsOf<"button"> & {
+type PublicTriggerProps = HTMLElementAttrs<"button"> & {
   _index?: number;
 };
 

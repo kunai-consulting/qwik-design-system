@@ -1,7 +1,7 @@
 import {
   $,
   type Component,
-  type PropsOf,
+  type HTMLElementAttrs,
   component$,
   useId,
   useSignal,
@@ -14,7 +14,7 @@ import { useLocation } from "@qwik.dev/router";
 import { Highlight } from "./highlight";
 import { createStackblitzProject } from "./stackblitz";
 
-type ShowcaseProps = PropsOf<"div"> & {
+type ShowcaseProps = HTMLElementAttrs<"div"> & {
   name?: string;
 };
 

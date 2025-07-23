@@ -1,7 +1,7 @@
-import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
+import { type HTMLElementAttrs, Slot, component$ } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-export type PublicMenuItemLabelProps = PropsOf<"span">;
+export type PublicMenuItemLabelProps = HTMLElementAttrs<"span">;
 
 /** Label component for menu items */
 export const MenuItemLabelBase = component$<PublicMenuItemLabelProps>((props) => {

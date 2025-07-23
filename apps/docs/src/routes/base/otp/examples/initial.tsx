@@ -1,4 +1,4 @@
-import { type PropsOf, component$ } from "@qwik.dev/core";
+import { type HTMLElementAttrs, component$ } from "@qwik.dev/core";
 import type { DocumentHead } from "@qwik.dev/router";
 import { Otp } from "@kunai-consulting/qwik";
 
@@ -39,7 +39,7 @@ export default component$(() => {
   );
 });
 
-const InformationCircle = component$((props: PropsOf<"svg">) => {
+const InformationCircle = component$((props: HTMLElementAttrs<"svg">) => {
   return (
     <svg
       width="32"

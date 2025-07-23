@@ -1,8 +1,8 @@
-import { $, type PropsOf, Slot, component$, sync$ } from "@qwik.dev/core";
+import { $, type HTMLElementAttrs, Slot, component$, sync$ } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 
-type LabelProps = PropsOf<"label">;
+type LabelProps = HTMLElementAttrs<"label">;
 
 export const LabelBase = component$<LabelProps>((props) => {
   const handleMouseDownSync$ = sync$((event: MouseEvent) => {

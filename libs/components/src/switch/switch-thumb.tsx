@@ -1,10 +1,10 @@
-import { type PropsOf, component$, useContext } from "@qwik.dev/core";
+import { type HTMLElementAttrs, component$, useContext } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { switchContextId } from "./switch-context";
 
 /** Visual indicator that moves to show the switch state */
-const SwitchThumbBase = component$<PropsOf<"div">>((props) => {
+const SwitchThumbBase = component$<HTMLElementAttrs<"div">>((props) => {
   const { ...restProps } = props;
   const context = useContext(switchContextId);
 

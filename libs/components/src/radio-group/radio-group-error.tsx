@@ -1,9 +1,9 @@
-import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
+import { type HTMLElementAttrs, Slot, component$, useContext } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 
-type PublicErrorProps = PropsOf<"div">;
+type PublicErrorProps = HTMLElementAttrs<"div">;
 
 export const RadioGroupErrorBase = component$((props: PublicErrorProps) => {
   const context = useContext(radioGroupContextId);
