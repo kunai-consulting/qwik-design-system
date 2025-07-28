@@ -11,7 +11,6 @@ import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { type UserConfig, defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import pkg from "./package.json";
-import { recmaProvideComponents } from "./src/mdx/recma-provide-comp";
 
 type PkgDep = Record<string, string>;
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -36,7 +35,6 @@ export default defineConfig(({ command, mode }): UserConfig => {
       qwikRouter({
         mdx: {
           providerImportSource: "~/mdx/provider",
-          recmaPlugins: [recmaProvideComponents]
         }
       }),
       qwikVite({ lint: false }),
