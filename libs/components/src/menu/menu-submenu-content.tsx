@@ -1,5 +1,5 @@
-import { Slot, component$, useContext, useVisibleTask$ } from "@builder.io/qwik";
-import type { PropsOf } from "@builder.io/qwik";
+import { Slot, component$, useContext, useVisibleTask$ } from "@qwik.dev/core";
+import type { PropsOf } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverContentBase } from "../popover/popover-content";
 import { menuContextId } from "./menu-root";

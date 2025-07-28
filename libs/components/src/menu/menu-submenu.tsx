@@ -6,7 +6,7 @@ import {
   useId,
   useSignal,
   useStyles$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";

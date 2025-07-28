@@ -7,7 +7,7 @@ import {
   useOnWindow,
   useSignal,
   useStyles$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import {
   type BindableProps,
   resetIndexes,

@@ -5,7 +5,7 @@ import {
   type Signal,
   Slot,
   component$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import type { AsChildProps } from "../as-child/as-child";
 
 // keyof slows the type server a bunch, instead we use the most common fallbacks

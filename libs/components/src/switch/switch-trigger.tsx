@@ -5,7 +5,7 @@ import {
   component$,
   useContext,
   useSignal
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { switchContextId } from "./switch-context";

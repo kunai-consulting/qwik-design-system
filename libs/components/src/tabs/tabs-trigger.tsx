@@ -9,7 +9,7 @@ import {
   useOnWindow,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import {
   getNextEnabledIndex,
   getNextIndex,

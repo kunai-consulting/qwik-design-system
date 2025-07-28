@@ -1,4 +1,4 @@
-import { type Signal, createContextId } from "@builder.io/qwik";
+import { type Signal, createContextId } from "@qwik.dev/core";
 
 export interface ProgressContext {
   valueSig: Signal<number | null>;

@@ -3,7 +3,7 @@ import {
   type QRL,
   type Signal,
   createContextId
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 
 export type ThumbType = "start" | "end";
 export type SliderValue = number | [number, number];

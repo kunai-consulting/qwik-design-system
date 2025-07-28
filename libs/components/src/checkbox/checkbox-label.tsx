@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { LabelBase } from "../label/label";
 import { checkboxContextId } from "./checkbox-context";

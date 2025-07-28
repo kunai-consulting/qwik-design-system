@@ -1,5 +1,5 @@
-import { $, Slot, component$ } from "@builder.io/qwik";
-import { useContext, useStyles$ } from "@builder.io/qwik";
+import { $, Slot, component$ } from "@qwik.dev/core";
+import { useContext, useStyles$ } from "@qwik.dev/core";
 import {
   DateInputField,
   type PublicDateInputFieldProps

@@ -154,15 +154,15 @@ importers:
       '@axe-core/playwright':
         specifier: ^4.9.1
         version: 4.10.0(playwright-core@1.46.0)
-      '@builder.io/qwik':
-        specifier: ^1.14.1
-        version: 1.14.1(vite@5.4.8(@types/node@22.14.0)(lightningcss@1.29.2))
       '@kunai-consulting/qwik-utils':
         specifier: workspace:*
         version: link:../utils
       '@qwik-ui/headless':
         specifier: ^0.6.5
         version: 0.6.5(@builder.io/qwik@1.14.1(vite@5.4.8(@types/node@22.14.0)(lightningcss@1.29.2)))
+      '@qwik.dev/core':
+        specifier: 2.0.0-beta.6
+        version: 2.0.0-beta.6(prettier@2.8.8)(vite@5.4.8(@types/node@22.14.0)(lightningcss@1.29.2))(vitest@3.1.1(@types/debug@4.1.12)(@types/node@22.14.0)(lightningcss@1.29.2))
       '@types/node':
         specifier: 22.14.0
         version: 22.14.0
