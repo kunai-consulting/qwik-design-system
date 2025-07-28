@@ -1,4 +1,4 @@
-import { component$, useStyles$ } from "@builder.io/qwik";
+import { component$, useStyles$ } from "@qwik.dev/core";
 import { FileUpload } from "@kunai-consulting/qwik";
 import styles from "./file-upload.css?inline";
 

@@ -4,7 +4,7 @@ import {
   useComputed$,
   useSignal,
   useStyles$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { Checkbox } from "@kunai-consulting/qwik";
 import { LuCheck } from "@qwikest/icons/lucide";
 

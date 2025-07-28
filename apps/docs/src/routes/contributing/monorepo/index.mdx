@@ -104,13 +104,13 @@ The Vite configuration for the consuming application (`apps/docs`) is critical f
             "@kunai-consulting/new-package": resolve(__dirname, "../../libs/new-package/src"),
             "~": resolve(__dirname, "src")
           },
-          dedupe: ["@builder.io/qwik", "@builder.io/qwik-city"]
+          dedupe: ["@qwik.dev/core", "@qwik.dev/router"]
         }
         ```
-*   **`resolve.dedupe`:** Essential for ensuring only one instance of core libraries like `@builder.io/qwik` is loaded. Keep this updated as needed.
+*   **`resolve.dedupe`:** Essential for ensuring only one instance of core libraries like `@qwik.dev/core` is loaded. Keep this updated as needed.
     ```typescript:apps/docs/vite.config.ts
         resolve: {
-          dedupe: ["@builder.io/qwik", "@builder.io/qwik-city"]
+          dedupe: ["@qwik.dev/core", "@qwik.dev/router"]
         }
     ```
 *   **`plugins: [tsconfigPaths()]`:** Keep this plugin, as it might still be useful for other path resolutions or build steps, even if explicit aliases are needed for HMR.

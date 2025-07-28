@@ -5,7 +5,7 @@ import {
   useContext,
   useContextProvider,
   useSignal
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 
 export default component$(() => {
   const isRenderedSig = useSignal(false);

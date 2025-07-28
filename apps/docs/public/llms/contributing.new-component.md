@@ -30,7 +30,7 @@ First, in your new route folder, create a `examples` folder.
 Then, add a new example, create a new file in the `examples` folder, and create a Qwik component that does a default export.
 
 ```tsx
-import { component$ } from "@builder.io/qwik";
+import { component$ } from "@qwik.dev/core";
 
 export default component$(() => {
     return <div>Hello World</div>;

@@ -1,4 +1,4 @@
-import { component$, useStyles$ } from "@builder.io/qwik";
+import { component$, useStyles$ } from "@qwik.dev/core";
 import { Switch } from "@kunai-consulting/qwik";
 import styles from "./switch-custom.css?inline";
 

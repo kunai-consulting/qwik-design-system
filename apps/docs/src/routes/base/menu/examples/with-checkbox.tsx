@@ -1,4 +1,4 @@
-import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
+import { $, component$, useSignal, useStyles$ } from "@qwik.dev/core";
 import { Checkbox, Menu } from "@kunai-consulting/qwik";
 import { LuCheck } from "@qwikest/icons/lucide";
 import styles from "./menu-custom.css?inline";

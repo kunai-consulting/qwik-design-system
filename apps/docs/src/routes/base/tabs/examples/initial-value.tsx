@@ -1,4 +1,4 @@
-import { component$, useStyles$ } from "@builder.io/qwik";
+import { component$, useStyles$ } from "@qwik.dev/core";
 import { Tabs } from "@kunai-consulting/qwik";
 import tabsStyles from "./tabs.css?inline";
 

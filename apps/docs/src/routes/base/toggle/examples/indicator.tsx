@@ -1,4 +1,4 @@
-import { component$, useStyles$ } from "@builder.io/qwik";
+import { component$, useStyles$ } from "@qwik.dev/core";
 import { Toggle } from "@kunai-consulting/qwik"; // Adjust import path
 import styles from "./toggle.css?inline";
 

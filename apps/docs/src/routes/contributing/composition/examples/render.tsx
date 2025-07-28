@@ -1,4 +1,4 @@
-import { $, type PropsOf, Slot, component$, useSignal } from "@builder.io/qwik";
+import { $, type PropsOf, Slot, component$, useSignal } from "@qwik.dev/core";
 import { Render } from "@kunai-consulting/qwik";
 
 export default component$(() => {

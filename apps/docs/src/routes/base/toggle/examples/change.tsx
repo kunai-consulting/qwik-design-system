@@ -1,4 +1,4 @@
-import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
+import { $, component$, useSignal, useStyles$ } from "@qwik.dev/core";
 import { Toggle } from "@kunai-consulting/qwik";
 import { LuThumbsUp } from "@qwikest/icons/lucide";
 import styles from "./toggle.css?inline";
