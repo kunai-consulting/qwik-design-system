@@ -1,10 +1,10 @@
-import { component$ } from "@builder.io/qwik";
+import { component$ } from "@qwik.dev/core";
 import {
-  QwikCityProvider,
+  QwikRouterProvider,
   RouterOutlet,
   ServiceWorkerRegister
-} from "@builder.io/qwik-city";
-import { isDev } from "@builder.io/qwik/build";
+} from "@qwik.dev/router";
+import { isDev } from "@qwik.dev/core/build";
 import { RouterHead } from "./components/router-head/router-head";
 
 export default component$(() => {
@@ -16,7 +16,7 @@ export default component$(() => {
    */
 
   return (
-    <QwikCityProvider>
+    <QwikRouterProvider>
       <head>
         <meta charset="utf-8" />
         {!isDev && (
@@ -28,6 +28,6 @@ export default component$(() => {
         <RouterOutlet />
         {!isDev && <ServiceWorkerRegister />}
       </body>
-    </QwikCityProvider>
+    </QwikRouterProvider>
   );
 });

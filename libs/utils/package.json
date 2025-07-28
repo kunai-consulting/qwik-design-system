@@ -13,7 +13,10 @@
     }
   },
   "license": "MIT",
-  "files": ["lib", "lib-types"],
+  "files": [
+    "lib",
+    "lib-types"
+  ],
   "engines": {
     "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
   },
@@ -30,11 +33,11 @@
     "qwik": "qwik"
   },
   "devDependencies": {
-    "@builder.io/qwik": "^1.14.1",
     "@types/node": "22.14.0",
     "typescript": "5.4.5",
     "undici": "*",
-    "vite": "5.3.5",
-    "vite-tsconfig-paths": "^4.2.1"
+    "vite": "^7",
+    "vite-tsconfig-paths": "^4.2.1",
+    "@qwik.dev/core": "2.0.0-beta.6"
   }
 }

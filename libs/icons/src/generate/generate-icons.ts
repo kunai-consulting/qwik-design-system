@@ -41,7 +41,7 @@ export async function generateIcon(
   const symbolName = createSymbolName(pascalCaseName);
 
   const jsxSource = `
-  import { jsx } from "@builder.io/qwik/jsx-runtime";
+  import { jsx } from "@qwik.dev/core";
   
   export const ${symbolName} = props => jsx('svg', {
     ...${JSON.stringify(result.attributes)},
@@ -54,7 +54,7 @@ export async function generateIcon(
   const compiled = await transform(jsxSource, {
     loader: "jsx",
     jsxFactory: "jsx",
-    jsxImportSource: "@builder.io/qwik",
+    jsxImportSource: "@qwik.dev/core",
     target: "es2020",
     format: "esm"
   });
@@ -84,7 +84,7 @@ async function generateIndexFile(prefix: string, icons: GeneratedIcon[]) {
     return `export const ${icon.pascalCaseName}Qrl = /* @__PURE__ */ qrl(() => import('./${relativePath}.js'), "${icon.symbolName}");`;
   });
 
-  const indexContent = ['import { qrl } from "@builder.io/qwik";', ...qrlExports].join(
+  const indexContent = ['import { qrl } from "@qwik.dev/core";', ...qrlExports].join(
     "\n"
   );
 
@@ -105,7 +105,7 @@ async function generateDeclarationFile(prefix: string, icons: GeneratedIcon[]) {
   );
 
   const declarationContent = [
-    "import type { Component, ComponentProps, QRL } from '@builder.io/qwik';",
+    "import type { Component, ComponentProps, QRL } from '@qwik.dev/core';",
     ...qrlDeclarations,
     ""
   ].join("\n");
@@ -122,7 +122,7 @@ async function generateRootIndex(
   const rootIndexPath = join(config.iconsDir, "..", "index.qwik.mjs");
 
   const imports: string[] = [
-    'import { componentQrl } from "@builder.io/qwik";' // Need componentQrl
+    'import { componentQrl } from "@qwik.dev/core";' // Need componentQrl
   ];
   const exports: string[] = [];
 
@@ -170,7 +170,7 @@ async function generateRootDeclaration(
   const iconTypesPath = join(config.iconsDir, "..", "icon-types.d.ts");
 
   const imports: string[] = [
-    "import type { Component, PropsOf } from '@builder.io/qwik';"
+    "import type { Component, PropsOf } from '@qwik.dev/core';"
   ];
   const exports: string[] = [];
 

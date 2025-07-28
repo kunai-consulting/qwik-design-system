@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
-import { qwikCity } from "@builder.io/qwik-city/vite";
-import { qwikVite } from "@builder.io/qwik/optimizer";
+import { qwikRouter } from "@qwik.dev/router/vite";
+import { qwikVite } from "@qwik.dev/core/optimizer";
 /**
  * This is the base config for vite.
  * When building, the adapter config is used which loads this file and extends it.
@@ -23,7 +23,7 @@ errorOnDuplicatesPkgDeps(devDependencies, dependencies);
  */
 export default defineConfig(({ command, mode }): UserConfig => {
   return {
-    plugins: [qwikCity(), qwikVite({ lint: false }), tsconfigPaths()],
+    plugins: [qwikRouter(), qwikVite({ lint: false }), tsconfigPaths()],
     // This tells Vite which dependencies to pre-build in dev mode.
     optimizeDeps: {
       // Put problematic deps that break bundling here, mostly those with binaries.
@@ -72,7 +72,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
         "@kunai-consulting/qwik-icons": resolve(__dirname, "../../libs/icons/src"),
         "~": resolve(__dirname, "src")
       },
-      dedupe: ["@builder.io/qwik", "@builder.io/qwik-city"]
+      dedupe: ["@qwik.dev/core", "@qwik.dev/router"]
     }
   };
 });
@@ -94,7 +94,7 @@ function errorOnDuplicatesPkgDeps(devDependencies: PkgDep, dependencies: PkgDep)
   const qwikPkg = Object.keys(dependencies).filter((value) => /qwik/i.test(value));
 
   // any errors for missing "qwik-city-plan"
-  // [PLUGIN_ERROR]: Invalid module "@qwik-city-plan" is not a valid package
+  // [PLUGIN_ERROR]: Invalid module "@qwik-router-config" is not a valid package
   msg = `Move qwik packages ${qwikPkg.join(", ")} to devDependencies`;
 
   if (qwikPkg.length > 0) {

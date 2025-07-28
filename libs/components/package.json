@@ -25,7 +25,6 @@
   "scripts": {
     "build": "qwik build",
     "build.lib": "vite build --mode lib",
-    "build.types": "tsc --emitDeclarationOnly --project tsconfig.json --outDir ./lib-types --pretty",
     "dev": "vite --mode ssr",
     "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
     "start": "vite --open --mode ssr",
@@ -40,7 +39,7 @@
     "typescript": "5.4.5",
     "undici": "*",
     "uqr": "^0.1.2",
-    "vite": "^5.4",
+    "vite": "^7",
     "vite-tsconfig-paths": "^4.2.1",
     "@qwik.dev/core": "2.0.0-beta.6"
   },
