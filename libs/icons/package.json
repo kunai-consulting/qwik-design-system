@@ -37,6 +37,6 @@
     "esbuild": "^0.25.2",
     "typescript": "5.4.5",
     "undici": "*",
-    "@qwik.dev/core": "2.0.0-beta.6"
+    "@qwik.dev/core": "https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc"
   }
 }

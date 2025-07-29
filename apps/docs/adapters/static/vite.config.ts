@@ -6,9 +6,6 @@ export default extendConfig(baseConfig, () => {
   return {
     build: {
       ssr: true,
-      rollupOptions: {
-        input: ["@qwik-router-config"]
-      }
     },
     plugins: [
       staticAdapter({
