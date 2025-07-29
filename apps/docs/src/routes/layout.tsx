@@ -1,3 +1,4 @@
+import { ScrollArea } from "@kunai-consulting/qwik";
 import {
   type Signal,
   Slot,
@@ -7,12 +8,7 @@ import {
   useSignal,
   useStyles$
 } from "@qwik.dev/core";
-import {
-  type ContentHeading,
-  type RequestHandler,
-  useContent
-} from "@qwik.dev/router";
-import { ScrollArea } from "@kunai-consulting/qwik";
+import { type ContentHeading, type RequestHandler, useContent } from "@qwik.dev/router";
 import { NavFooter } from "~/docs-widgets/nav-footer/nav-footer";
 import { SearchModal } from "~/docs-widgets/search/search";
 import { Sidebar } from "~/docs-widgets/sidebar/sidebar";

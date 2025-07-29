@@ -1,5 +1,5 @@
-import { $, component$, useSignal, useStyles$ } from "@qwik.dev/core";
 import { Menu } from "@kunai-consulting/qwik";
+import { $, component$, useSignal, useStyles$ } from "@qwik.dev/core";
 import { LuChevronRight } from "@qwikest/icons/lucide";
 import styles from "./menu-custom.css?inline";
 

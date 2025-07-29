@@ -1,6 +1,6 @@
 import { component$ } from "@qwik.dev/core";
-import { QwikRouterProvider, RouterOutlet } from "@qwik.dev/router";
 import { isDev } from "@qwik.dev/core/build";
+import { QwikRouterProvider, RouterOutlet } from "@qwik.dev/router";
 import { RouterHead } from "./docs-widgets/router-head/router-head";
 
 import "./global.css";

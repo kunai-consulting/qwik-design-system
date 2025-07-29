@@ -1,5 +1,5 @@
-import { component$, useContext } from "@qwik.dev/core";
 import { getNextIndex } from "@kunai-consulting/qwik-utils";
+import { component$, useContext } from "@qwik.dev/core";
 import { dateInputFieldContextId } from "./date-input-field-context";
 import { DateInputSegment } from "./date-input-segment";
 import type { PublicDateInputSegmentProps } from "./types";

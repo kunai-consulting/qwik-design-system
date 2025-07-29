@@ -1,4 +1,9 @@
 import {
+  findComponent,
+  processChildren,
+  useBoundSignal
+} from "@kunai-consulting/qwik-utils";
+import {
   type JSXChildren,
   type PropsOf,
   type QRL,
@@ -10,11 +15,6 @@ import {
   useSignal,
   useTask$
 } from "@qwik.dev/core";
-import {
-  findComponent,
-  processChildren,
-  useBoundSignal
-} from "@kunai-consulting/qwik-utils";
 import { type PaginationContext, paginationContextId } from "./pagination-context";
 import { PaginationItem } from "./pagination-item";
 import { getPaginationItems } from "./utils";

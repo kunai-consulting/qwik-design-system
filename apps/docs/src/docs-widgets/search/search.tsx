@@ -1,6 +1,6 @@
+import { Combobox, Modal } from "@qwik-ui/headless";
 import { $, Slot, component$, useOnWindow, useSignal, useTask$ } from "@qwik.dev/core";
 import { isServer } from "@qwik.dev/core/build";
-import { Combobox, Modal } from "@qwik-ui/headless";
 import { cn } from "~/utils/cn";
 
 interface PagefindSearchResult {

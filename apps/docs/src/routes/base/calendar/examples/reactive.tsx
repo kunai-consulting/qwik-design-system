@@ -1,6 +1,6 @@
+import { Calendar } from "@kunai-consulting/qwik";
 import { component$, useSignal } from "@qwik.dev/core";
 import { useStyles$ } from "@qwik.dev/core";
-import { Calendar } from "@kunai-consulting/qwik";
 import { NextIcon } from "../shared/next-icon";
 import { PreviousIcon } from "../shared/previous-icon";
 import styles from "./calendar.css?inline";

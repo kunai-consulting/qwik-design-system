@@ -1,3 +1,4 @@
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import {
   type PropsOf,
   Slot,
@@ -8,7 +9,6 @@ import {
   useStyles$,
   useTask$
 } from "@qwik.dev/core";
-import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { type SwitchContext, switchContextId } from "./switch-context";

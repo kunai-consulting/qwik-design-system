@@ -1,5 +1,5 @@
-import { component$, useStyles$ } from "@qwik.dev/core";
 import { Progress } from "@kunai-consulting/qwik";
+import { component$, useStyles$ } from "@qwik.dev/core";
 
 export default component$(() => {
   useStyles$(styles);

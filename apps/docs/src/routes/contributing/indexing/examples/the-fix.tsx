@@ -1,3 +1,5 @@
+import { Render, withAsChild } from "@kunai-consulting/qwik";
+import { getNextIndex, resetIndexes } from "@kunai-consulting/qwik-utils";
 import {
   type PropsOf,
   Slot,
@@ -7,8 +9,6 @@ import {
   useContextProvider,
   useSignal
 } from "@qwik.dev/core";
-import { Render, withAsChild } from "@kunai-consulting/qwik";
-import { getNextIndex, resetIndexes } from "@kunai-consulting/qwik-utils";
 
 export default component$(() => {
   const isRenderedSig = useSignal(false);

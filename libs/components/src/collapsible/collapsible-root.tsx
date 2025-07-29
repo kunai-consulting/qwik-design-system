@@ -10,9 +10,9 @@ import {
   useTask$
 } from "@qwik.dev/core";
 
+import { useBoundSignal } from "@kunai-consulting/qwik-utils";
 import { createContextId } from "@qwik.dev/core";
 import { useStyles$ } from "@qwik.dev/core";
-import { useBoundSignal } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import collapsibleStyles from "./collapsible.css?inline";

@@ -1,4 +1,9 @@
 import {
+  getNextEnabledIndex,
+  getNextIndex,
+  getPrevEnabledIndex
+} from "@kunai-consulting/qwik-utils";
+import {
   $,
   type PropsOf,
   Slot,
@@ -9,11 +14,6 @@ import {
   useSignal,
   useTask$
 } from "@qwik.dev/core";
-import {
-  getNextEnabledIndex,
-  getNextIndex,
-  getPrevEnabledIndex
-} from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { tabsContextId } from "./tabs-root";

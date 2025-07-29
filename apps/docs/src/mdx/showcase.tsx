@@ -1,3 +1,4 @@
+import { Tabs } from "@kunai-consulting/qwik";
 import {
   $,
   type Component,
@@ -7,7 +8,6 @@ import {
   useSignal,
   useTask$
 } from "@qwik.dev/core";
-import { Tabs } from "@kunai-consulting/qwik";
 import { metaGlobComponents, rawComponents } from "~/utils/component-import";
 
 import { useLocation } from "@qwik.dev/router";

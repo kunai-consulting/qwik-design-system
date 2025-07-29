@@ -1,3 +1,4 @@
+import { useBindings } from "@kunai-consulting/qwik-utils";
 import {
   Slot,
   component$,
@@ -7,7 +8,6 @@ import {
   useSignal,
   useStyles$
 } from "@qwik.dev/core";
-import { useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";
 import { type ItemRef, type MenuContext, menuContextId } from "./menu-root";

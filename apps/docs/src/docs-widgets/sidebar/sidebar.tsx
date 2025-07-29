@@ -1,8 +1,8 @@
+import { Tree } from "@kunai-consulting/qwik";
 import { $, type PropsOf, component$ } from "@qwik.dev/core";
 import { useSignal } from "@qwik.dev/core";
 import { Link } from "@qwik.dev/router";
 import { useNavigate } from "@qwik.dev/router";
-import { Tree } from "@kunai-consulting/qwik";
 import { LuChevronRight } from "@qwikest/icons/lucide";
 
 type TreeItemType = {

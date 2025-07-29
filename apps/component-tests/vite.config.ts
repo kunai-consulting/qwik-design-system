@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
-import { qwikRouter } from "@qwik.dev/router/vite";
 import { qwikVite } from "@qwik.dev/core/optimizer";
+import { qwikRouter } from "@qwik.dev/router/vite";
 /**
  * This is the base config for vite.
  * When building, the adapter config is used which loads this file and extends it.

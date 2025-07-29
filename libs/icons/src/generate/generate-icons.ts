@@ -169,9 +169,7 @@ async function generateRootDeclaration(
   const rootDeclarationPath = join(config.iconsDir, "..", "index.d.ts");
   const iconTypesPath = join(config.iconsDir, "..", "icon-types.d.ts");
 
-  const imports: string[] = [
-    "import type { Component, PropsOf } from '@qwik.dev/core';"
-  ];
+  const imports: string[] = ["import type { Component, PropsOf } from '@qwik.dev/core';"];
   const exports: string[] = [];
 
   for (const prefix of prefixes) {

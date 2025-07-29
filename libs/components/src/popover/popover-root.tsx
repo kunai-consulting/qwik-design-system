@@ -1,3 +1,4 @@
+import polyfill from "@oddbird/css-anchor-positioning/fn";
 import {
   $,
   type PropsOf,
@@ -13,7 +14,6 @@ import {
   useStyles$,
   useTask$
 } from "@qwik.dev/core";
-import polyfill from "@oddbird/css-anchor-positioning/fn";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 
