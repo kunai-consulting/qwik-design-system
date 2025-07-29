@@ -2,16 +2,18 @@ import { isDev } from "@qwik.dev/core/build";
 import { qwikVite } from "@qwik.dev/core/optimizer";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
-import pkg from "./package.json";
+import { asChildPlugin } from "./src/plugins/vite-as-child";
 
 type PackageJson = {
   dependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
 };
 
-const { dependencies = {}, peerDependencies = {} } = pkg as PackageJson;
-const makeRegex = (dep) => new RegExp(`^${dep}(/.*)?$`);
-const excludeAll = (obj) => Object.keys(obj).map(makeRegex);
+// Use require to avoid TypeScript module resolution issues
+const pkg = require("./package.json") as PackageJson;
+const { dependencies = {}, peerDependencies = {} } = pkg;
+const makeRegex = (dep: string) => new RegExp(`^${dep}(/.*)?$`);
+const excludeAll = (obj: Record<string, string>) => Object.keys(obj).map(makeRegex);
 
 export default defineConfig(() => {
   return {
@@ -40,7 +42,17 @@ export default defineConfig(() => {
         ]
       }
     },
-    plugins: [qwikVite({ lint: false }), tsconfigPaths()],
+    plugins: [
+      qwikVite({ lint: false }),
+      tsconfigPaths(),
+      asChildPlugin({
+        autoWrap: false, // Manual wrapping since components already use withAsChild
+        addValidation: true,
+        generateTypes: true,
+        optimize: true,
+        debug: true // Keep debug enabled to see plugin activity
+      })
+    ],
     server: {
       fs: {
         allow: ["../.."]
