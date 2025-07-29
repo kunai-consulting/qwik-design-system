@@ -5,8 +5,7 @@ import {
   component$,
   sync$,
   useComputed$,
-  useContext,
-  useOnWindow
+  useContext
 } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
@@ -37,15 +36,10 @@ export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps
     }
   });
 
-  useOnWindow(
-    "keydown",
-    sync$((e: KeyboardEvent) => {
-      if (e.key !== "Enter") return;
-      if (document.activeElement?.hasAttribute("data-qds-checkbox-trigger")) {
-        e.preventDefault();
-      }
-    })
-  );
+  const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+  });
 
   return (
     <Render
@@ -59,6 +53,7 @@ export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps
       aria-invalid={context.isErrorSig.value}
       disabled={context.isDisabledSig.value}
       onClick$={[handleClick$, props.onClick$]}
+      onKeyDown$={[handleKeyDownSync$, props.onKeyDown$]}
       data-qds-checkbox-trigger
       {...context.dataAttributes.value}
       {...props}

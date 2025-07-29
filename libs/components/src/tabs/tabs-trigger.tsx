@@ -6,7 +6,6 @@ import {
   sync$,
   useComputed$,
   useContext,
-  useOnWindow,
   useSignal,
   useTask$
 } from "@qwik.dev/core";
@@ -51,18 +50,11 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
     return isIndexBased || isValueBased;
   });
 
-  useOnWindow(
-    "keydown",
-    sync$((e: KeyboardEvent) => {
-      if (!document.activeElement?.hasAttribute("data-qds-tabs-trigger")) return;
-
-      const keys = ["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "Home", "End"];
-
-      if (!keys.includes(e.key)) return;
-
-      e.preventDefault();
-    })
-  );
+  const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
+    const keys = ["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "Home", "End"];
+    if (!keys.includes(e.key)) return;
+    e.preventDefault();
+  });
 
   const handleNavigation$ = $((e: KeyboardEvent) => {
     switch (e.key) {
@@ -161,7 +153,7 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
       }
       onClick$={[handleSelect$, props.onClick$]}
       onFocus$={[context.selectOnFocus ? handleSelect$ : undefined, props.onFocus$]}
-      onKeyDown$={[handleNavigation$, props.onKeyDown$]}
+      onKeyDown$={[handleKeyDownSync$, handleNavigation$, props.onKeyDown$]}
       tabIndex={isSelectedSig.value ? 0 : -1}
       data-selected={isSelectedSig.value}
       aria-selected={isSelectedSig.value ? "true" : "false"}

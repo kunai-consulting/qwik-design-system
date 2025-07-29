@@ -10,7 +10,6 @@ import {
   useContext,
   useContextProvider,
   useId,
-  useOnWindow,
   useSignal,
   useTask$
 } from "@qwik.dev/core";
@@ -126,22 +125,11 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
     isHighlightedSig.value = context.currentFocusEl.value === itemRef.value;
   });
 
-  /**
-   *  Todo: Change this to a sync$ passed to the Render component once v2 is 
-   released (sync QRL serialization issue)
-   *
-   */
-  useOnWindow(
-    "keydown",
-    sync$((e: KeyboardEvent) => {
-      if (!(e.target as Element)?.hasAttribute("data-qds-tree-item")) return;
-      const keys = ["ArrowDown", "ArrowUp", "Home", "End"];
-
-      if (!keys.includes(e.key)) return;
-
-      e.preventDefault();
-    })
-  );
+  const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
+    const keys = ["ArrowDown", "ArrowUp", "Home", "End"];
+    if (!keys.includes(e.key)) return;
+    e.preventDefault();
+  });
 
   return (
     <CollapsibleRootBase
@@ -157,7 +145,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
           : -1
       }
       onFocus$={[handleFocus$, props.onFocus$]}
-      onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
+      onKeyDown$={[handleKeyDownSync$, handleKeyNavigation$, props.onKeyDown$]}
       data-qds-tree-item
       data-level={level}
       aria-level={level}
