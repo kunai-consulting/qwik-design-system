@@ -1,5 +1,5 @@
 {
-  "name": "tsdown-starter",
+  "name": "@kunai-consulting/core",
   "version": "0.0.0",
   "private": true,
   "description": "A simple example library built by tsdown",
@@ -10,7 +10,8 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./vite/as-child": "./vite/as-child.ts"
   },
   "scripts": {
     "build": "tsdown",

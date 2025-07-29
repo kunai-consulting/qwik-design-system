@@ -308,6 +308,72 @@ describe("asChildPlugin", () => {
     expect(result.code).toContain('title: "Test Link"');
     expect(result.code).toContain('target: "_blank"');
   });
+
+  it("should remove child element wrapper and keep grandchildren", () => {
+    const code = `
+      function App() {
+        return (
+          <div asChild data-from-div>
+            <span data-yo>
+              <p>I am a p tag</p>
+            </span>
+          </div>
+        );
+      }
+    `;
+    const result = transform(code, "test.tsx");
+    expect(result).toBeTruthy();
+    expect(result.code).toContain('jsxType="span"');
+    expect(result.code).toContain("movedProps={{ data-yo: true }}");
+    expect(result.code).toContain("data-from-div");
+    expect(result.code).toContain("<p>I am a p tag</p>");
+    expect(result.code).not.toContain("<span data-yo>");
+    expect(result.code).not.toContain("</span>");
+  });
+
+  it("should remove child element completely if it has no children", () => {
+    const code = `
+      function App() {
+        return (
+          <Button asChild>
+            <input type="submit" />
+          </Button>
+        );
+      }
+    `;
+    const result = transform(code, "test.tsx");
+    expect(result).toBeTruthy();
+    expect(result.code).toContain('jsxType="input"');
+    expect(result.code).toContain('movedProps={{ type: "submit" }}');
+    expect(result.code).not.toContain("<input");
+    expect(result.code).not.toContain('type="submit"');
+  });
+
+  it("should handle nested children properly", () => {
+    const code = `
+      function App() {
+        return (
+          <Card asChild className="card">
+            <article data-article>
+              <h1>Title</h1>
+              <p>Content here</p>
+              <footer>Footer</footer>
+            </article>
+          </Card>
+        );
+      }
+    `;
+    const result = transform(code, "test.tsx");
+    expect(result).toBeTruthy();
+    expect(result.code).toContain('jsxType="article"');
+    expect(result.code).toContain("movedProps={{ data-article: true }}");
+    expect(result.code).toContain('className="card"');
+    expect(result.code).toContain("<h1>Title</h1>");
+    expect(result.code).toContain("<p>Content here</p>");
+    expect(result.code).toContain("<footer>Footer</footer>");
+    expect(result.code).not.toContain("<article data-article>");
+    expect(result.code).not.toContain("</article>");
+  });
 });
 
 describe("asChildPlugin error cases", () => {

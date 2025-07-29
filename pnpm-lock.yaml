@@ -93,6 +93,9 @@ importers:
       '@kunai-consulting/code-notate-core':
         specifier: 0.0.2
         version: 0.0.2
+      '@kunai-consulting/core':
+        specifier: workspace:*
+        version: link:../../libs/core
       '@kunai-consulting/qwik':
         specifier: workspace:*
         version: link:../../libs/components

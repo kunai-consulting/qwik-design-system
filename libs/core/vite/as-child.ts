@@ -24,6 +24,8 @@ export default function asChildPlugin(): Plugin {
     transform(code, id) {
       if (!id.endsWith(".tsx") && !id.endsWith(".jsx")) return null;
 
+      console.log(`🔧 asChild plugin processing: ${id}`);
+
       const parsed = parseSync(id, code);
       if (parsed.errors.length > 0) return null; // Handle errors if needed
 
@@ -80,10 +82,14 @@ function isJSXText(node: Node): node is JSXText {
 }
 
 function hasAsChild(opening: JSXOpeningElement): boolean {
-  return opening.attributes.some(
+  const hasAsChildAttr = opening.attributes.some(
     (attr) =>
       attr.type === "JSXAttribute" && (attr.name as JSXIdentifier).name === "asChild"
   );
+  if (hasAsChildAttr) {
+    console.log("🔄 Found asChild element!");
+  }
+  return hasAsChildAttr;
 }
 
 interface Extracted {
@@ -116,6 +122,20 @@ function processAsChild(elem: JSXElement, s: MagicString, source: string) {
       const start = attrs[0].start;
       const end = attrs[attrs.length - 1].end;
       s.remove(start - 1, end); // -1 to remove space before first attr
+    }
+
+    // Remove the child element wrapper, keeping only its children
+    if (child.children.length > 0) {
+      // Replace the entire child element with just its children
+      const childStart = child.start;
+      const childEnd = child.end;
+      const childrenCode = child.children
+        .map((grandchild) => source.slice(grandchild.start, grandchild.end))
+        .join("");
+      s.overwrite(childStart, childEnd, childrenCode);
+    } else {
+      // If no children, remove the entire child element
+      s.remove(child.start, child.end);
     }
   } else if (
     isJSXExpressionContainer(child) &&
