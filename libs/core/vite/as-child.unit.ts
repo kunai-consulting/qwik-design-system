@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import asChildPlugin from "./as-child";
 
 type TransformResult = { code: string; map: unknown } | null;
@@ -236,7 +236,7 @@ describe("asChildPlugin", () => {
       }
     `;
     const result = transform(code, "test.tsx");
-    expect(result).toBeNull(); // Should return null as there's no transformation needed
+    expect(result).toBeNull();
   });
 
   it("should handle complex nested conditional", () => {
@@ -374,13 +374,55 @@ describe("asChildPlugin", () => {
     expect(result.code).not.toContain("<article data-article>");
     expect(result.code).not.toContain("</article>");
   });
+
+  it("should handle JSX member expressions like Menu.Item", () => {
+    const code = `
+      function App() {
+        return (
+          <Button asChild>
+            <Menu.Item value="option1" className="menu-item">
+              Option 1
+            </Menu.Item>
+          </Button>
+        );
+      }
+    `;
+    const result = transform(code, "test.tsx");
+    expect(result).toBeTruthy();
+    expect(result.code).toContain("jsxType={Menu.Item}");
+    expect(result.code).toContain(
+      'movedProps={{ "value": "option1", "className": "menu-item" }}'
+    );
+    expect(result.code).toContain("Option 1");
+    expect(result.code).not.toContain("<Menu.Item");
+    expect(result.code).not.toContain("</Menu.Item>");
+  });
+
+  it("should handle deeply nested JSX member expressions", () => {
+    const code = `
+      function App() {
+        return (
+          <Container asChild>
+            <Dropdown.Content.Item id="nested" disabled>
+              Nested Item
+            </Dropdown.Content.Item>
+          </Container>
+        );
+      }
+    `;
+    const result = transform(code, "test.tsx");
+    expect(result).toBeTruthy();
+    expect(result.code).toContain("jsxType={Dropdown.Content.Item}");
+    expect(result.code).toContain('movedProps={{ "id": "nested", "disabled": true }}');
+    expect(result.code).toContain("Nested Item");
+  });
 });
 
 describe("asChildPlugin error cases", () => {
   const plugin = asChildPlugin();
   const transform = plugin.transform as (code: string, id: string) => TransformResult;
 
-  it("should throw for unsupported child types", () => {
+  it("should skip transformation for unsupported child types gracefully", () => {
     const code = `
       function App() {
         return (
@@ -390,9 +432,8 @@ describe("asChildPlugin error cases", () => {
         );
       }
     `;
-    expect(() => transform(code, "test.tsx")).toThrow(
-      "Unsupported child type for asChild"
-    );
+    const result = transform(code, "test.tsx");
+    expect(result).toBeTruthy();
   });
 
   it("should handle parse errors gracefully", () => {
@@ -425,5 +466,293 @@ describe("asChildPlugin type guards", () => {
     const transform = plugin.transform as (code: string, id: string) => TransformResult;
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
+  });
+});
+
+describe("asChildPlugin robustness improvements", () => {
+  const plugin = asChildPlugin({ debug: true });
+  const transform = plugin.transform as (code: string, id: string) => TransformResult;
+
+  describe("Expression type validation", () => {
+    it("should handle logical expressions (&&)", () => {
+      const code = `
+        function App() {
+          return (
+            <Button asChild>
+              {condition && <a href="/test">Link</a>}
+            </Button>
+          );
+        }
+      `;
+      const result = transform(code, "test.tsx");
+      expect(result).toBeTruthy();
+      expect(result.code).toContain('jsxType={condition && "a"}');
+      expect(result.code).toContain('movedProps={condition ? { "href": "/test" } : {}}');
+    });
+
+    it("should handle identifier expressions (variables)", () => {
+      const code = `
+        function App() {
+          return (
+            <Button asChild>
+              {myElement}
+            </Button>
+          );
+        }
+      `;
+      const result = transform(code, "test.tsx");
+      expect(result).toBeTruthy();
+      expect(result.code).toContain("jsxType={myElement}");
+      expect(result.code).toContain("movedProps={{}}");
+    });
+
+    it("should handle call expressions (function calls)", () => {
+      const code = `
+        function App() {
+          return (
+            <Button asChild>
+              {renderElement()}
+            </Button>
+          );
+        }
+      `;
+      const result = transform(code, "test.tsx");
+      expect(result).toBeTruthy();
+      expect(result.code).toContain("jsxType={renderElement()}");
+      expect(result.code).toContain("movedProps={{}}");
+    });
+
+    it("should handle member expressions (object.method)", () => {
+      const code = `
+         function App() {
+           return (
+             <Button asChild>
+               {items.map(item => <div key={item.id}>{item.name}</div>)}
+             </Button>
+           );
+         }
+       `;
+      const result = transform(code, "test.tsx");
+      expect(result).toBeTruthy();
+      expect(result.code).toContain(
+        "jsxType={items.map(item => <div key={item.id}>{item.name}</div>)}"
+      );
+    });
+
+    it("should skip truly unsupported expressions gracefully", () => {
+      const code = `
+         function App() {
+           return (
+             <Button asChild>
+               {items[dynamicKey] + "complex" * math.operation}
+             </Button>
+           );
+         }
+       `;
+      const result = transform(code, "test.tsx");
+      expect(result).toBeNull();
+    });
+
+    it("should handle JSX member expressions in conditionals", () => {
+      const code = `
+         function App() {
+           return (
+             <Button asChild>
+               {isDropdown ? <Menu.Item value="test">Item</Menu.Item> : <Menu.Trigger>Trigger</Menu.Trigger>}
+             </Button>
+           );
+         }
+       `;
+      const result = transform(code, "test.tsx");
+      expect(result).toBeTruthy();
+      expect(result.code).toContain("jsxType={isDropdown ? Menu.Item : Menu.Trigger}");
+      expect(result.code).toContain(
+        'movedProps={isDropdown ? { "value": "test" } : {  }}'
+      );
+    });
+  });
+
+  describe("Spacing resilience", () => {
+    it("should handle no space before attributes", () => {
+      const code = `
+        function App() {
+          return (
+            <Button asChild>
+              <a href="/test">Link</a>
+            </Button>
+          );
+        }
+      `;
+      const result = transform(code, "test.tsx");
+      expect(result).toBeTruthy();
+      expect(result.code).toContain('jsxType="a"');
+      expect(result.code).not.toContain('href="/test"');
+    });
+
+    it("should handle multiple spaces around attributes", () => {
+      const code = `
+        function App() {
+          return (
+            <Button asChild>
+              <a   href="/test"   className="link"  >Link</a>
+            </Button>
+          );
+        }
+      `;
+      const result = transform(code, "test.tsx");
+      expect(result).toBeTruthy();
+      expect(result.code).toContain('jsxType="a"');
+      expect(result.code).toContain('"href": "/test"');
+      expect(result.code).toContain('"className": "link"');
+    });
+
+    it("should handle newlines in attributes", () => {
+      const code = `
+        function App() {
+          return (
+            <Button asChild>
+              <a
+                href="/test"
+                className="link"
+              >
+                Link
+              </a>
+            </Button>
+          );
+        }
+      `;
+      const result = transform(code, "test.tsx");
+      expect(result).toBeTruthy();
+      expect(result.code).toContain('jsxType="a"');
+      expect(result.code).toContain('"href": "/test"');
+    });
+  });
+
+  describe("Error handling improvements", () => {
+    it("should provide line numbers in debug messages", () => {
+      const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+
+      const code = `function App() {
+  return (
+    <Button asChild>
+      {unsupportedExpression.something}
+    </Button>
+  );
+}`;
+
+      const result = transform(code, "test.tsx");
+      expect(result).toBeNull();
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("line 3"));
+
+      consoleSpy.mockRestore();
+    });
+
+    it("should handle malformed JSX gracefully", () => {
+      const code = `
+        function App() {
+          return (
+            <Button asChild>
+              <a href="/test" unclosed
+            </Button>
+          );
+        }
+      `;
+      const result = transform(code, "test.tsx");
+      expect(result).toBeNull();
+    });
+  });
+
+  describe("AST traversal safety", () => {
+    it("should handle deeply nested structures", () => {
+      const code = `
+        function App() {
+          return (
+            <div>
+              <div>
+                <div>
+                  <Button asChild>
+                    <a href="/test">Link</a>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          );
+        }
+      `;
+      const result = transform(code, "test.tsx");
+      expect(result).toBeTruthy();
+      expect(result.code).toContain('jsxType="a"');
+    });
+
+    it("should handle multiple asChild elements at different nesting levels", () => {
+      const code = `
+        function App() {
+          return (
+            <div>
+              <Button asChild>
+                <a href="/link1">Link 1</a>
+              </Button>
+              <div>
+                <Label asChild>
+                  <span>Label</span>
+                </Label>
+              </div>
+            </div>
+          );
+        }
+      `;
+      const result = transform(code, "test.tsx");
+      expect(result).toBeTruthy();
+      expect(result.code).toContain('jsxType="a"');
+      expect(result.code).toContain('jsxType="span"');
+    });
+  });
+
+  describe("Debug mode", () => {
+    it("should log debug messages when debug mode is enabled", () => {
+      const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+
+      const code = `
+        function App() {
+          return (
+            <Button asChild>
+              <a href="/test">Link</a>
+            </Button>
+          );
+        }
+      `;
+
+      transform(code, "test.tsx");
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining("🔧 asChild plugin processing")
+      );
+      expect(consoleSpy).toHaveBeenCalledWith("🔄 Found asChild element!");
+
+      consoleSpy.mockRestore();
+    });
+
+    it("should not log when debug mode is disabled", () => {
+      const pluginNoDebug = asChildPlugin({ debug: false });
+      const transformNoDebug = pluginNoDebug.transform as (
+        code: string,
+        id: string
+      ) => TransformResult;
+      const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+
+      const code = `
+        function App() {
+          return (
+            <Button asChild>
+              <a href="/test">Link</a>
+            </Button>
+          );
+        }
+      `;
+
+      transformNoDebug(code, "test.tsx");
+      expect(consoleSpy).not.toHaveBeenCalled();
+
+      consoleSpy.mockRestore();
+    });
   });
 });

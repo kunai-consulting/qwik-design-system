@@ -6,8 +6,10 @@ import type {
   JSXElement,
   JSXExpressionContainer,
   JSXIdentifier,
+  JSXMemberExpression,
   JSXOpeningElement,
   JSXText,
+  LogicalExpression,
   Node,
   Program
 } from "@oxc-project/types";
@@ -55,8 +57,12 @@ export default function asChildPlugin(options: AsChildPluginOptions = {}): Plugi
       /**
        * Recursively traverses AST nodes to find JSX elements with asChild prop
        * @param node - AST node to traverse
+       * @param visited - Set of visited nodes for cycle detection
        */
-      function traverse(node: Node) {
+      function traverse(node: Node, visited = new Set<Node>()) {
+        if (visited.has(node)) return;
+        visited.add(node);
+
         if (isJSXElement(node) && hasAsChild(node.openingElement)) {
           processAsChild(node, s, code);
         }
@@ -65,10 +71,10 @@ export default function asChildPlugin(options: AsChildPluginOptions = {}): Plugi
           const child = (node as unknown as Record<string, unknown>)[key];
           if (Array.isArray(child)) {
             for (const c of child as Node[]) {
-              if (c) traverse(c);
+              if (c && typeof c === "object" && c.type) traverse(c, visited);
             }
-          } else if (child && typeof child === "object") {
-            traverse(child as Node);
+          } else if (child && typeof child === "object" && (child as Node).type) {
+            traverse(child as Node, visited);
           }
         }
       }
@@ -127,7 +133,17 @@ export default function asChildPlugin(options: AsChildPluginOptions = {}): Plugi
 
       const attrs = child.openingElement.attributes;
       if (attrs.length > 0) {
-        s.remove(attrs[0].start - 1, attrs[attrs.length - 1].end);
+        const nameEnd = child.openingElement.name.end;
+        const firstAttrStart = attrs[0].start;
+        const lastAttrEnd = attrs[attrs.length - 1].end;
+
+        const startPos = Math.max(nameEnd, firstAttrStart - 10);
+        const actualStart =
+          source.slice(startPos, firstAttrStart).search(/\s/) + startPos;
+        s.remove(
+          actualStart === startPos - 1 ? firstAttrStart : actualStart,
+          lastAttrEnd
+        );
       }
 
       if (child.children.length > 0) {
@@ -138,19 +154,23 @@ export default function asChildPlugin(options: AsChildPluginOptions = {}): Plugi
       } else {
         s.remove(child.start, child.end);
       }
-    } else if (
-      isJSXExpressionContainer(child) &&
-      isConditionalExpression(child.expression)
-    ) {
-      const condExpr = child.expression as ConditionalExpression;
-      const testCode = source.slice(condExpr.test.start, condExpr.test.end);
-      const cons = extractFromNode(condExpr.consequent, source);
-      const alt = extractFromNode(condExpr.alternate, source);
-      jsxType = `${testCode} ? ${cons.type} : ${alt.type}`;
-      movedProps = `${testCode} ? ${cons.props} : ${alt.props}`;
-      debug("⚠️ Conditional asChild: props not removed from children");
+    } else if (isJSXExpressionContainer(child)) {
+      const result = handleExpression(child.expression, source);
+      if (result) {
+        jsxType = result.type;
+        movedProps = result.props;
+        debug("⚠️ Expression asChild: props not removed from children");
+      } else {
+        debug(
+          `⚠️ Skipping unsupported expression type: ${child.expression.type} at line ${getLineNumber(source, elem.start)}`
+        );
+        return;
+      }
     } else {
-      throw new Error(`Unsupported child type for asChild at ${elem.start}`);
+      debug(
+        `⚠️ Skipping unsupported child type: ${child.type} at line ${getLineNumber(source, elem.start)}`
+      );
+      return;
     }
 
     const opening = elem.openingElement;
@@ -166,6 +186,103 @@ export default function asChildPlugin(options: AsChildPluginOptions = {}): Plugi
 
     const propsAttr = ` movedProps={${movedProps}}`;
     s.appendLeft(insertPos, propsAttr);
+  }
+
+  /**
+   * Handles various expression types in asChild elements
+   * @param expression - The expression to handle
+   * @param source - Original source code
+   * @returns Extracted type and props, or null if unsupported
+   */
+  function handleExpression(expression: Node, source: string): Extracted | null {
+    switch (expression.type) {
+      case "ConditionalExpression":
+        return handleConditionalExpression(expression as ConditionalExpression, source);
+      case "LogicalExpression":
+        return handleLogicalExpression(expression, source);
+      case "Identifier":
+        return handleIdentifierExpression(expression, source);
+      case "CallExpression":
+        return handleCallExpression(expression, source);
+      default:
+        return null;
+    }
+  }
+
+  /**
+   * Handles conditional expressions (ternary operator)
+   * @param expr - Conditional expression
+   * @param source - Original source code
+   * @returns Extracted type and props
+   */
+  function handleConditionalExpression(
+    expr: ConditionalExpression,
+    source: string
+  ): Extracted {
+    const testCode = source.slice(expr.test.start, expr.test.end);
+    const isTrue = extractFromNode(expr.consequent, source);
+    const isFalse = extractFromNode(expr.alternate, source);
+    return {
+      type: `${testCode} ? ${isTrue.type} : ${isFalse.type}`,
+      props: `${testCode} ? ${isTrue.props} : ${isFalse.props}`
+    };
+  }
+
+  /**
+   * Handles logical expressions (&&, ||)
+   * @param expr - Logical expression
+   * @param source - Original source code
+   * @returns Extracted type and props, or null if unsupported
+   */
+  function handleLogicalExpression(expr: Node, source: string): Extracted | null {
+    const logicalExpr = expr as LogicalExpression;
+    if (logicalExpr.operator === "&&") {
+      const testCode = source.slice(logicalExpr.left.start, logicalExpr.left.end);
+      const rightSide = extractFromNode(logicalExpr.right, source);
+      return {
+        type: `${testCode} && ${rightSide.type}`,
+        props: `${testCode} ? ${rightSide.props} : {}`
+      };
+    }
+    return null;
+  }
+
+  /**
+   * Handles identifier expressions (variables)
+   * @param expr - Identifier expression
+   * @param source - Original source code
+   * @returns Extracted type and props
+   */
+  function handleIdentifierExpression(expr: Node, source: string): Extracted {
+    const name = source.slice(expr.start, expr.end);
+    return {
+      type: name,
+      props: "{}"
+    };
+  }
+
+  /**
+   * Handles call expressions (function calls)
+   * @param expr - Call expression
+   * @param source - Original source code
+   * @returns Extracted type and props
+   */
+  function handleCallExpression(expr: Node, source: string): Extracted {
+    const callCode = source.slice(expr.start, expr.end);
+    return {
+      type: callCode,
+      props: "{}"
+    };
+  }
+
+  /**
+   * Gets line number from source position for better error messages
+   * @param source - Original source code
+   * @param position - Character position in source
+   * @returns Line number (1-based)
+   */
+  function getLineNumber(source: string, position: number): number {
+    return source.slice(0, position).split("\n").length;
   }
 }
 
@@ -185,15 +302,6 @@ function isJSXElement(node: Node): node is JSXElement {
  */
 function isJSXExpressionContainer(node: Node): node is JSXExpressionContainer {
   return node.type === "JSXExpressionContainer";
-}
-
-/**
- * Type guard to check if a node is a conditional expression
- * @param node - AST node to check
- * @returns True if node is a conditional expression
- */
-function isConditionalExpression(node: Node): node is ConditionalExpression {
-  return node.type === "ConditionalExpression";
 }
 
 /**
@@ -252,16 +360,34 @@ function extractFromNode(node: Node, source: string): Extracted {
  */
 function extractFromElement(elem: JSXElement, source: string): Extracted {
   const nameNode = elem.openingElement.name;
-  if (nameNode.type !== "JSXIdentifier") {
-    throw new Error("Complex names not supported");
+  let type: string;
+
+  if (nameNode.type === "JSXIdentifier") {
+    const name = nameNode.name;
+    const isIntrinsic = name[0] === name[0].toLowerCase();
+    type = isIntrinsic ? `"${name}"` : name;
+  } else if (nameNode.type === "JSXMemberExpression") {
+    type = extractJSXMemberExpressionName(nameNode, source);
+  } else {
+    throw new Error(`Unsupported JSX name type: ${nameNode.type}`);
   }
-  const name = nameNode.name;
-  const isIntrinsic = name[0] === name[0].toLowerCase();
-  const type = isIntrinsic ? `"${name}"` : name;
 
   const propsObj = extractProps(elem.openingElement.attributes, source);
 
   return { type, props: propsObj };
+}
+
+/**
+ * Extracts the full name from a JSX member expression (e.g., Menu.Item)
+ * @param memberExpr - JSX member expression node
+ * @param source - Original source code
+ * @returns The full member expression as a string
+ */
+function extractJSXMemberExpressionName(
+  memberExpr: JSXMemberExpression,
+  source: string
+): string {
+  return source.slice(memberExpr.start, memberExpr.end);
 }
 
 /**
