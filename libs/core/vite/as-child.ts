@@ -20,6 +20,10 @@ import {
 
 import { handleExpression } from "../utils/expressions";
 
+export type AsChildTypes = {
+  asChild: true;
+};
+
 export type AsChildPluginOptions = {
   debug?: boolean;
 };
