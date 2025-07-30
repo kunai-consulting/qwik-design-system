@@ -1,14 +1,9 @@
 import type {
   ConditionalExpression,
-  JSXAttribute,
-  JSXAttributeItem,
   JSXChild,
   JSXElement,
-  JSXExpressionContainer,
   JSXIdentifier,
-  JSXMemberExpression,
   JSXOpeningElement,
-  JSXText,
   LogicalExpression,
   Node,
   Program
@@ -16,6 +11,16 @@ import type {
 import MagicString from "magic-string";
 import { parseSync } from "oxc-parser";
 import type { Plugin } from "vite";
+
+import {
+  type Extracted,
+  extractFromElement,
+  extractFromNode,
+  getLineNumber,
+  isJSXElement,
+  isJSXExpressionContainer,
+  isJSXText
+} from "../src/jsx-utils.js";
 
 export type AsChildPluginOptions = {
   debug?: boolean;
@@ -274,157 +279,4 @@ export default function asChildPlugin(options: AsChildPluginOptions = {}): Plugi
       props: "{}"
     };
   }
-
-  /**
-   * Gets line number from source position for better error messages
-   * @param source - Original source code
-   * @param position - Character position in source
-   * @returns Line number (1-based)
-   */
-  function getLineNumber(source: string, position: number): number {
-    return source.slice(0, position).split("\n").length;
-  }
-}
-
-/**
- * Type guard to check if a node is a JSX element
- * @param node - AST node to check
- * @returns True if node is a JSX element
- */
-function isJSXElement(node: Node): node is JSXElement {
-  return node.type === "JSXElement";
-}
-
-/**
- * Type guard to check if a node is a JSX expression container
- * @param node - AST node to check
- * @returns True if node is a JSX expression container
- */
-function isJSXExpressionContainer(node: Node): node is JSXExpressionContainer {
-  return node.type === "JSXExpressionContainer";
-}
-
-/**
- * Type guard to check if a node is JSX text
- * @param node - AST node to check
- * @returns True if node is JSX text
- */
-function isJSXText(node: Node): node is JSXText {
-  return node.type === "JSXText";
-}
-
-interface Extracted {
-  type: string;
-  props: string;
-}
-
-/**
- * Extracts type and props from various node types in conditional expressions
- * @param node - AST node to extract from
- * @param source - Original source code
- * @returns Object containing extracted type and props
- */
-function extractFromNode(node: Node, source: string): Extracted {
-  if (isJSXElement(node)) {
-    return extractFromElement(node, source);
-  }
-  if (node.type === "ParenthesizedExpression") {
-    return extractFromNode((node as { expression: Node }).expression, source);
-  }
-  if (node.type === "ConditionalExpression") {
-    const conditionalExpression = node as ConditionalExpression;
-    const { start, end, consequent, alternate } = conditionalExpression;
-
-    const testCode = source.slice(start, end);
-    const isTrue = extractFromNode(consequent, source);
-    const isFalse = extractFromNode(alternate, source);
-    return {
-      type: `${testCode} ? ${isTrue.type} : ${isFalse.type}`,
-      props: `${testCode} ? ${isTrue.props} : ${isFalse.props}`
-    };
-  }
-  if (node.type === "Identifier") {
-    return {
-      type: source.slice(node.start, node.end),
-      props: "{}"
-    };
-  }
-  throw new Error(`Unsupported node in conditional: ${node.type} at ${node.start}`);
-}
-
-/**
- * Extracts type and props from a JSX element
- * @param elem - JSX element to extract from
- * @param source - Original source code
- * @returns Object containing extracted type and props
- */
-function extractFromElement(elem: JSXElement, source: string): Extracted {
-  const nameNode = elem.openingElement.name;
-  let type: string;
-
-  if (nameNode.type === "JSXIdentifier") {
-    const name = nameNode.name;
-    const isIntrinsic = name[0] === name[0].toLowerCase();
-    type = isIntrinsic ? `"${name}"` : name;
-  } else if (nameNode.type === "JSXMemberExpression") {
-    type = extractJSXMemberExpressionName(nameNode, source);
-  } else {
-    throw new Error(`Unsupported JSX name type: ${nameNode.type}`);
-  }
-
-  const propsObj = extractProps(elem.openingElement.attributes, source);
-
-  return { type, props: propsObj };
-}
-
-/**
- * Extracts the full name from a JSX member expression (e.g., Menu.Item)
- * @param memberExpr - JSX member expression node
- * @param source - Original source code
- * @returns The full member expression as a string
- */
-function extractJSXMemberExpressionName(
-  memberExpr: JSXMemberExpression,
-  source: string
-): string {
-  return source.slice(memberExpr.start, memberExpr.end);
-}
-
-/**
- * Extracts props from JSX attributes into object literal string
- * @param attributes - Array of JSX attributes
- * @param source - Original source code
- * @returns Object literal string representation of props
- */
-function extractProps(attributes: JSXAttributeItem[], source: string): string {
-  const props: string[] = [];
-
-  for (const attr of attributes) {
-    if (attr.type !== "JSXAttribute") continue;
-
-    const a = attr as JSXAttribute;
-    if (a.name.type !== "JSXIdentifier") continue;
-
-    const key = a.name.name;
-    const value = getAttributeValue(a, source);
-    props.push(`"${key}": ${value}`);
-  }
-
-  return `{ ${props.join(", ")} }`;
-}
-
-/**
- * Extracts the value from a JSX attribute
- * @param attr - JSX attribute to extract value from
- * @param source - Original source code
- * @returns String representation of the attribute value
- */
-function getAttributeValue(attr: JSXAttribute, source: string): string {
-  if (!attr.value) return "true";
-  if (attr.value.type === "Literal")
-    return source.slice(attr.value.start, attr.value.end);
-  if (isJSXExpressionContainer(attr.value)) {
-    return source.slice(attr.value.expression.start, attr.value.expression.end);
-  }
-  return "true";
 }
