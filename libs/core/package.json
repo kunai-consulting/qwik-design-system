@@ -11,7 +11,7 @@
   "exports": {
     ".": "./dist/index.js",
     "./package.json": "./package.json",
-    "./vite/as-child": "./vite/as-child.ts"
+    "./vite/as-child": "./dist/vite/as-child.js"
   },
   "scripts": {
     "build": "tsdown",
