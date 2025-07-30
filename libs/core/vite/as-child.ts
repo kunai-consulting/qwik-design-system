@@ -57,12 +57,10 @@ export default function asChildPlugin(options: AsChildPluginOptions = {}): Plugi
        * @param node - AST node to traverse
        */
       function traverse(node: Node) {
-        if (isJSXElement(node)) {
-          const jsxElem = node as JSXElement;
-          if (hasAsChild(jsxElem.openingElement)) {
-            processAsChild(jsxElem, s, code);
-          }
+        if (isJSXElement(node) && hasAsChild(node.openingElement)) {
+          processAsChild(node, s, code);
         }
+
         for (const key in node) {
           const child = (node as unknown as Record<string, unknown>)[key];
           if (Array.isArray(child)) {
@@ -93,14 +91,12 @@ export default function asChildPlugin(options: AsChildPluginOptions = {}): Plugi
    * @returns True if element has asChild attribute
    */
   function hasAsChild(opening: JSXOpeningElement): boolean {
-    const hasAsChildAttr = opening.attributes.some(
+    const isAsChildProp = opening.attributes.some(
       (attr) =>
         attr.type === "JSXAttribute" && (attr.name as JSXIdentifier).name === "asChild"
     );
-    if (hasAsChildAttr) {
-      debug("🔄 Found asChild element!");
-    }
-    return hasAsChildAttr;
+    if (isAsChildProp) debug("🔄 Found asChild element!");
+    return isAsChildProp;
   }
 
   /**
@@ -113,10 +109,11 @@ export default function asChildPlugin(options: AsChildPluginOptions = {}): Plugi
     const children = elem.children.filter(
       (child) => !isJSXText(child) || child.value.trim() !== ""
     );
+
+    if (children.length === 0) return;
     if (children.length > 1) {
       throw new Error(`asChild elements must have exactly one child at ${elem.start}`);
     }
-    if (children.length === 0) return;
 
     const child = children[0] as JSXChild;
 
@@ -124,23 +121,20 @@ export default function asChildPlugin(options: AsChildPluginOptions = {}): Plugi
     let movedProps: string;
 
     if (isJSXElement(child)) {
-      const extracted = extractFromElement(child, source);
-      jsxType = extracted.type;
-      movedProps = extracted.props;
+      const { type, props } = extractFromElement(child, source);
+      jsxType = type;
+      movedProps = props;
+
       const attrs = child.openingElement.attributes;
       if (attrs.length > 0) {
-        const start = attrs[0].start;
-        const end = attrs[attrs.length - 1].end;
-        s.remove(start - 1, end);
+        s.remove(attrs[0].start - 1, attrs[attrs.length - 1].end);
       }
 
       if (child.children.length > 0) {
-        const childStart = child.start;
-        const childEnd = child.end;
         const childrenCode = child.children
           .map((grandchild) => source.slice(grandchild.start, grandchild.end))
           .join("");
-        s.overwrite(childStart, childEnd, childrenCode);
+        s.overwrite(child.start, child.end, childrenCode);
       } else {
         s.remove(child.start, child.end);
       }
@@ -230,13 +224,15 @@ function extractFromNode(node: Node, source: string): Extracted {
     return extractFromNode((node as { expression: Node }).expression, source);
   }
   if (node.type === "ConditionalExpression") {
-    const cond = node as ConditionalExpression;
-    const testCode = source.slice(cond.test.start, cond.test.end);
-    const cons = extractFromNode(cond.consequent, source);
-    const alt = extractFromNode(cond.alternate, source);
+    const conditionalExpression = node as ConditionalExpression;
+    const { start, end, consequent, alternate } = conditionalExpression;
+
+    const testCode = source.slice(start, end);
+    const isTrue = extractFromNode(consequent, source);
+    const isFalse = extractFromNode(alternate, source);
     return {
-      type: `${testCode} ? ${cons.type} : ${alt.type}`,
-      props: `${testCode} ? ${cons.props} : ${alt.props}`
+      type: `${testCode} ? ${isTrue.type} : ${isFalse.type}`,
+      props: `${testCode} ? ${isTrue.props} : ${isFalse.props}`
     };
   }
   if (node.type === "Identifier") {
@@ -276,24 +272,33 @@ function extractFromElement(elem: JSXElement, source: string): Extracted {
  */
 function extractProps(attributes: JSXAttributeItem[], source: string): string {
   const props: string[] = [];
-  for (const attr of attributes) {
-    if (attr.type === "JSXAttribute") {
-      const a = attr as JSXAttribute;
-      if (a.name.type !== "JSXIdentifier") continue;
-      const key = a.name.name;
-      let value: string;
-      if (!a.value) {
-        value = "true";
-      } else if (a.value.type === "Literal") {
-        value = source.slice(a.value.start, a.value.end);
-      } else if (isJSXExpressionContainer(a.value)) {
-        value = source.slice(a.value.expression.start, a.value.expression.end);
-      } else {
-        value = "true";
-      }
 
-      props.push(`"${key}": ${value}`);
-    }
+  for (const attr of attributes) {
+    if (attr.type !== "JSXAttribute") continue;
+
+    const a = attr as JSXAttribute;
+    if (a.name.type !== "JSXIdentifier") continue;
+
+    const key = a.name.name;
+    const value = getAttributeValue(a, source);
+    props.push(`"${key}": ${value}`);
   }
+
   return `{ ${props.join(", ")} }`;
+}
+
+/**
+ * Extracts the value from a JSX attribute
+ * @param attr - JSX attribute to extract value from
+ * @param source - Original source code
+ * @returns String representation of the attribute value
+ */
+function getAttributeValue(attr: JSXAttribute, source: string): string {
+  if (!attr.value) return "true";
+  if (attr.value.type === "Literal")
+    return source.slice(attr.value.start, attr.value.end);
+  if (isJSXExpressionContainer(attr.value)) {
+    return source.slice(attr.value.expression.start, attr.value.expression.end);
+  }
+  return "true";
 }
