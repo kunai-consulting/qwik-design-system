@@ -8,7 +8,7 @@ import {
   useSignal,
   useTask$
 } from "@qwik.dev/core";
-import { metaGlobComponents, rawComponents } from "~/utils/component-import";
+import { metaGlobComponents, rawComponents } from "../utils/component-import";
 
 import { useLocation } from "@qwik.dev/router";
 import { Highlight } from "./highlight";

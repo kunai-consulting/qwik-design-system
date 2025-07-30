@@ -1,4 +1,5 @@
-import { Render, withAsChild } from "@kunai-consulting/qwik";
+import type { AsChildTypes } from "@kunai-consulting/core";
+import { Render } from "@kunai-consulting/qwik";
 import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
 
 export default component$(() => {
@@ -9,12 +10,10 @@ export default component$(() => {
   );
 });
 
-export const TooltipTriggerBase = component$((props: PropsOf<"button">) => {
+export const TooltipTrigger = component$((props: PropsOf<"button"> & AsChildTypes) => {
   return (
     <Render fallback="button" {...props}>
       <Slot />
     </Render>
   );
 });
-
-export const TooltipTrigger = withAsChild(TooltipTriggerBase);

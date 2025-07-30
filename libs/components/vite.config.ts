@@ -2,7 +2,6 @@ import { isDev } from "@qwik.dev/core/build";
 import { qwikVite } from "@qwik.dev/core/optimizer";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
-import { asChildPlugin } from "./src/plugins/vite-as-child";
 
 type PackageJson = {
   dependencies?: Record<string, string>;
@@ -42,17 +41,7 @@ export default defineConfig(() => {
         ]
       }
     },
-    plugins: [
-      qwikVite({ lint: false }),
-      tsconfigPaths(),
-      asChildPlugin({
-        autoWrap: false, // Manual wrapping since components already use withAsChild
-        addValidation: true,
-        generateTypes: true,
-        optimize: true,
-        debug: true // Keep debug enabled to see plugin activity
-      })
-    ],
+    plugins: [qwikVite({ lint: false }), tsconfigPaths()],
     server: {
       fs: {
         allow: ["../.."]
