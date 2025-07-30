@@ -159,7 +159,11 @@ function processAsChild(elem: JSXElement, s: MagicString, source: string) {
 
   // Find position to insert new attributes
   const opening = elem.openingElement;
-  const insertPos = opening.name.end; // After name
+  // Insert after existing attributes, or after name if no attributes
+  const insertPos =
+    opening.attributes.length > 0
+      ? opening.attributes[opening.attributes.length - 1].end
+      : opening.name.end;
 
   // Insert jsxType - use quotes for strings, braces for everything else
   const typeAttr = jsxType.startsWith('"')
@@ -235,7 +239,10 @@ function extractProps(attributes: JSXAttributeItem[], source: string): string {
       } else {
         value = "true"; // Fallback
       }
-      props.push(`${key}: ${value}`);
+      // Quote property names only if they contain hyphens or other special chars
+      const needsQuotes = /[^a-zA-Z0-9_$]/.test(key);
+      const quotedKey = needsQuotes ? `"${key}"` : key;
+      props.push(`${quotedKey}: ${value}`);
     }
   }
   return `{ ${props.join(", ")} }`;

@@ -324,7 +324,7 @@ describe("asChildPlugin", () => {
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
     expect(result.code).toContain('jsxType="span"');
-    expect(result.code).toContain("movedProps={{ data-yo: true }}");
+    expect(result.code).toContain('movedProps={{ "data-yo": true }}');
     expect(result.code).toContain("data-from-div");
     expect(result.code).toContain("<p>I am a p tag</p>");
     expect(result.code).not.toContain("<span data-yo>");
@@ -366,7 +366,7 @@ describe("asChildPlugin", () => {
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
     expect(result.code).toContain('jsxType="article"');
-    expect(result.code).toContain("movedProps={{ data-article: true }}");
+    expect(result.code).toContain('movedProps={{ "data-article": true }}');
     expect(result.code).toContain('className="card"');
     expect(result.code).toContain("<h1>Title</h1>");
     expect(result.code).toContain("<p>Content here</p>");
