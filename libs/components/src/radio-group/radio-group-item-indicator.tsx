@@ -1,11 +1,10 @@
 import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { radioGroupItemContextId } from "./radio-group-item";
 
 type PublicIndicatorProps = PropsOf<"span">;
 
-const ItemIndicatorBase = component$((props: PublicIndicatorProps) => {
+export const RadioGroupItemIndicator = component$((props: PublicIndicatorProps) => {
   const itemContext = useContext(radioGroupItemContextId);
 
   return (
@@ -21,5 +20,3 @@ const ItemIndicatorBase = component$((props: PublicIndicatorProps) => {
     </Render>
   );
 });
-
-export const RadioGroupItemIndicator = withAsChild(ItemIndicatorBase);

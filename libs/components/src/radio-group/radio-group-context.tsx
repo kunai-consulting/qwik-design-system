@@ -15,6 +15,7 @@ export interface RadioGroupContext {
   orientation: "horizontal" | "vertical";
   isDescription?: boolean;
   triggerRefsArray: Signal<TriggerRef[]>;
+  currItemIndex: number;
 }
 
 export const radioGroupContextId =
