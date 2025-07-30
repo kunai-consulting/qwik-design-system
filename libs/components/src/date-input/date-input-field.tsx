@@ -1,3 +1,5 @@
+import type { BindableProps } from "@kunai-consulting/qwik-utils";
+import { getNextIndex, useBindings } from "@kunai-consulting/qwik-utils";
 import {
   $,
   type PropsOf,
@@ -10,8 +12,6 @@ import {
   useTask$
 } from "@qwik.dev/core";
 import type { QRL, QwikJSX } from "@qwik.dev/core";
-import type { BindableProps } from "@kunai-consulting/qwik-utils";
-import { getNextIndex, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import type { ISODate } from "../calendar/types";
 import { Render } from "../render/render";

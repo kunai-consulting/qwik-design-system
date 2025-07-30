@@ -1,5 +1,5 @@
-import { $, component$, useSignal, useStyles$ } from "@qwik.dev/core";
 import { Toast } from "@kunai-consulting/qwik";
+import { $, component$, useSignal, useStyles$ } from "@qwik.dev/core";
 import styles from "./toast-example.css?inline";
 
 export default component$(() => {

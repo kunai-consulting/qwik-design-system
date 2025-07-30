@@ -5,7 +5,7 @@ import baseConfig from "../../vite.config";
 export default extendConfig(baseConfig, () => {
   return {
     build: {
-      ssr: true,
+      ssr: true
     },
     plugins: [
       staticAdapter({

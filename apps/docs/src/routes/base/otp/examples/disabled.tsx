@@ -1,6 +1,6 @@
+import { Otp } from "@kunai-consulting/qwik";
 import { component$, useSignal } from "@qwik.dev/core";
 import type { DocumentHead } from "@qwik.dev/router";
-import { Otp } from "@kunai-consulting/qwik";
 
 export const head: DocumentHead = {
   title: "Qwik Design System",

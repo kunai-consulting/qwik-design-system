@@ -1,3 +1,4 @@
+import { resetIndexes } from "@kunai-consulting/qwik-utils";
 import {
   type PropsOf,
   type QRL,
@@ -9,7 +10,6 @@ import {
   useSignal,
   useTask$
 } from "@qwik.dev/core";
-import { resetIndexes } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import type { ISODate } from "../calendar/types";
 import { Render } from "../render/render";

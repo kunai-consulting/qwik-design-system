@@ -1,3 +1,4 @@
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import {
   $,
   type PropsOf,
@@ -9,7 +10,6 @@ import {
   useStyles$,
   useTask$
 } from "@qwik.dev/core";
-import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import * as Popover from "../popover";
 import { Render } from "../render/render";

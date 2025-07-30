@@ -1,3 +1,4 @@
+import qwikRouterConfig from "@qwik-router-config";
 /*
  * WHAT IS THIS FILE?
  *
@@ -11,7 +12,6 @@
  *
  */
 import { createQwikRouter } from "@qwik.dev/router/middleware/node";
-import qwikRouterConfig from "@qwik-router-config";
 // make sure qwikCityPlan is imported before entry
 import render from "./entry.ssr";
 

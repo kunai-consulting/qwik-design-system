@@ -1,4 +1,9 @@
 import {
+  type BindableProps,
+  resetIndexes,
+  useBindings
+} from "@kunai-consulting/qwik-utils";
+import {
   type PropsOf,
   type Signal,
   Slot,
@@ -9,11 +14,6 @@ import {
   useStyles$,
   useTask$
 } from "@qwik.dev/core";
-import {
-  type BindableProps,
-  resetIndexes,
-  useBindings
-} from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import tabsStyles from "./tabs.css?inline";
