@@ -108,7 +108,7 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
   /**
    *  Prevent the left arrow key from skipping over filled slots when traveling from empty slots
    */
-  const handleKeyDownSync = sync$((e: KeyboardEvent) => {
+  const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
     const input = e.target as HTMLInputElement;
 
     if (e.key === "ArrowLeft" && input.selectionStart === input.selectionEnd) {
@@ -245,7 +245,7 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
       data-shift={context.shiftPWManagers ? "" : undefined}
       inputMode="numeric"
       onInput$={[handleInput, props.onInput$]}
-      onKeyDown$={[handleKeyDownSync, handleKeyDown, props.onKeyDown$]}
+      onKeyDown$={[handleKeyDownSync$, handleKeyDown, props.onKeyDown$]}
       onKeyUp$={[handleKeyUp, props.onKeyUp$]}
       onFocus$={[handleFocus, props.onFocus$]}
       onBlur$={[handleBlur, props.onBlur$]}
