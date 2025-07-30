@@ -635,7 +635,7 @@ describe("asChildPlugin robustness improvements", () => {
       const code = `function App() {
   return (
     <Button asChild>
-      {unsupportedExpression.something}
+      {a + b * c}
     </Button>
   );
 }`;

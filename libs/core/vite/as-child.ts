@@ -1,10 +1,8 @@
 import type {
-  ConditionalExpression,
   JSXChild,
   JSXElement,
   JSXIdentifier,
   JSXOpeningElement,
-  LogicalExpression,
   Node,
   Program
 } from "@oxc-project/types";
@@ -13,14 +11,14 @@ import { parseSync } from "oxc-parser";
 import type { Plugin } from "vite";
 
 import {
-  type Extracted,
   extractFromElement,
-  extractFromNode,
   getLineNumber,
   isJSXElement,
   isJSXExpressionContainer,
   isJSXText
 } from "../src/jsx-utils.js";
+
+import { handleExpression } from "../src/expression-utils.js";
 
 export type AsChildPluginOptions = {
   debug?: boolean;
@@ -191,92 +189,5 @@ export default function asChildPlugin(options: AsChildPluginOptions = {}): Plugi
 
     const propsAttr = ` movedProps={${movedProps}}`;
     s.appendLeft(insertPos, propsAttr);
-  }
-
-  /**
-   * Handles various expression types in asChild elements
-   * @param expression - The expression to handle
-   * @param source - Original source code
-   * @returns Extracted type and props, or null if unsupported
-   */
-  function handleExpression(expression: Node, source: string): Extracted | null {
-    switch (expression.type) {
-      case "ConditionalExpression":
-        return handleConditionalExpression(expression as ConditionalExpression, source);
-      case "LogicalExpression":
-        return handleLogicalExpression(expression, source);
-      case "Identifier":
-        return handleIdentifierExpression(expression, source);
-      case "CallExpression":
-        return handleCallExpression(expression, source);
-      default:
-        return null;
-    }
-  }
-
-  /**
-   * Handles conditional expressions (ternary operator)
-   * @param expr - Conditional expression
-   * @param source - Original source code
-   * @returns Extracted type and props
-   */
-  function handleConditionalExpression(
-    expr: ConditionalExpression,
-    source: string
-  ): Extracted {
-    const testCode = source.slice(expr.test.start, expr.test.end);
-    const isTrue = extractFromNode(expr.consequent, source);
-    const isFalse = extractFromNode(expr.alternate, source);
-    return {
-      type: `${testCode} ? ${isTrue.type} : ${isFalse.type}`,
-      props: `${testCode} ? ${isTrue.props} : ${isFalse.props}`
-    };
-  }
-
-  /**
-   * Handles logical expressions (&&, ||)
-   * @param expr - Logical expression
-   * @param source - Original source code
-   * @returns Extracted type and props, or null if unsupported
-   */
-  function handleLogicalExpression(expr: Node, source: string): Extracted | null {
-    const logicalExpr = expr as LogicalExpression;
-    if (logicalExpr.operator === "&&") {
-      const testCode = source.slice(logicalExpr.left.start, logicalExpr.left.end);
-      const rightSide = extractFromNode(logicalExpr.right, source);
-      return {
-        type: `${testCode} && ${rightSide.type}`,
-        props: `${testCode} ? ${rightSide.props} : {}`
-      };
-    }
-    return null;
-  }
-
-  /**
-   * Handles identifier expressions (variables)
-   * @param expr - Identifier expression
-   * @param source - Original source code
-   * @returns Extracted type and props
-   */
-  function handleIdentifierExpression(expr: Node, source: string): Extracted {
-    const name = source.slice(expr.start, expr.end);
-    return {
-      type: name,
-      props: "{}"
-    };
-  }
-
-  /**
-   * Handles call expressions (function calls)
-   * @param expr - Call expression
-   * @param source - Original source code
-   * @returns Extracted type and props
-   */
-  function handleCallExpression(expr: Node, source: string): Extracted {
-    const callCode = source.slice(expr.start, expr.end);
-    return {
-      type: callCode,
-      props: "{}"
-    };
   }
 }
