@@ -10,14 +10,12 @@ import {
   useSignal
 } from "@qwik.dev/core";
 import { OTPContextId } from "./otp-context";
-type PublicOTPProps = {
-  currItemIndex?: number;
-} & PropsOf<"div">;
+type PublicOTPProps = PropsOf<"div">;
 export const itemContextId = createContextId<{
   index: number;
 }>("qd-otp-item");
 /** Individual item component for displaying a single OTP digit */
-export const OtpItem = component$(({ ...props }: PublicOTPProps) => {
+export const OtpItem = component$((props: PublicOTPProps) => {
   const context = useContext(OTPContextId);
 
   const currItemIndex = useConstant(() => {
