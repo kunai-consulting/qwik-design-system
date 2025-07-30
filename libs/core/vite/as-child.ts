@@ -1,5 +1,3 @@
-// Implementing asChild Vite plugin for Qwik Design System
-
 import type {
   ConditionalExpression,
   JSXAttribute,
@@ -12,26 +10,52 @@ import type {
   JSXText,
   Node,
   Program
-} from "@oxc-project/types"; // Assuming types from oxc
+} from "@oxc-project/types";
 import MagicString from "magic-string";
 import { parseSync } from "oxc-parser";
 import type { Plugin } from "vite";
 
-export default function asChildPlugin(): Plugin {
+export type AsChildPluginOptions = {
+  debug?: boolean;
+};
+
+/**
+ * Vite plugin that transforms JSX elements with asChild prop by moving child element props to the parent
+ * @param options - Plugin configuration options
+ * @returns Vite plugin object
+ */
+export default function asChildPlugin(options: AsChildPluginOptions = {}): Plugin {
+  const { debug: isDebugMode = false } = options;
+
+  /**
+   * Debug logging function that only outputs when debug mode is enabled
+   * @param message - Debug message to log
+   */
+  const debug = (message: string) => {
+    if (!isDebugMode) return;
+    console.log(message);
+  };
+
   return {
     name: "vite-plugin-as-child",
     enforce: "pre",
     transform(code, id) {
-      if (!id.endsWith(".tsx") && !id.endsWith(".jsx")) return null;
+      const isJSXFile = id.endsWith(".tsx") || id.endsWith(".jsx");
 
-      console.log(`🔧 asChild plugin processing: ${id}`);
+      if (!isJSXFile) return null;
+
+      debug(`🔧 asChild plugin processing: ${id}`);
 
       const parsed = parseSync(id, code);
-      if (parsed.errors.length > 0) return null; // Handle errors if needed
+      if (parsed.errors.length > 0) return null;
 
       const ast: Program = parsed.program;
       const s = new MagicString(code);
 
+      /**
+       * Recursively traverses AST nodes to find JSX elements with asChild prop
+       * @param node - AST node to traverse
+       */
       function traverse(node: Node) {
         if (isJSXElement(node)) {
           const jsxElem = node as JSXElement;
@@ -39,7 +63,6 @@ export default function asChildPlugin(): Plugin {
             processAsChild(jsxElem, s, code);
           }
         }
-        // Traverse children
         for (const key in node) {
           const child = (node as unknown as Record<string, unknown>)[key];
           if (Array.isArray(child)) {
@@ -63,33 +86,129 @@ export default function asChildPlugin(): Plugin {
       return null;
     }
   };
+
+  /**
+   * Checks if a JSX opening element has an asChild attribute
+   * @param opening - JSX opening element to check
+   * @returns True if element has asChild attribute
+   */
+  function hasAsChild(opening: JSXOpeningElement): boolean {
+    const hasAsChildAttr = opening.attributes.some(
+      (attr) =>
+        attr.type === "JSXAttribute" && (attr.name as JSXIdentifier).name === "asChild"
+    );
+    if (hasAsChildAttr) {
+      debug("🔄 Found asChild element!");
+    }
+    return hasAsChildAttr;
+  }
+
+  /**
+   * Processes a JSX element with asChild prop, moving child props to parent
+   * @param elem - JSX element with asChild prop
+   * @param s - MagicString instance for code transformation
+   * @param source - Original source code
+   */
+  function processAsChild(elem: JSXElement, s: MagicString, source: string) {
+    const children = elem.children.filter(
+      (child) => !isJSXText(child) || child.value.trim() !== ""
+    );
+    if (children.length > 1) {
+      throw new Error(`asChild elements must have exactly one child at ${elem.start}`);
+    }
+    if (children.length === 0) return;
+
+    const child = children[0] as JSXChild;
+
+    let jsxType: string;
+    let movedProps: string;
+
+    if (isJSXElement(child)) {
+      const extracted = extractFromElement(child, source);
+      jsxType = extracted.type;
+      movedProps = extracted.props;
+      const attrs = child.openingElement.attributes;
+      if (attrs.length > 0) {
+        const start = attrs[0].start;
+        const end = attrs[attrs.length - 1].end;
+        s.remove(start - 1, end);
+      }
+
+      if (child.children.length > 0) {
+        const childStart = child.start;
+        const childEnd = child.end;
+        const childrenCode = child.children
+          .map((grandchild) => source.slice(grandchild.start, grandchild.end))
+          .join("");
+        s.overwrite(childStart, childEnd, childrenCode);
+      } else {
+        s.remove(child.start, child.end);
+      }
+    } else if (
+      isJSXExpressionContainer(child) &&
+      isConditionalExpression(child.expression)
+    ) {
+      const condExpr = child.expression as ConditionalExpression;
+      const testCode = source.slice(condExpr.test.start, condExpr.test.end);
+      const cons = extractFromNode(condExpr.consequent, source);
+      const alt = extractFromNode(condExpr.alternate, source);
+      jsxType = `${testCode} ? ${cons.type} : ${alt.type}`;
+      movedProps = `${testCode} ? ${cons.props} : ${alt.props}`;
+      debug("⚠️ Conditional asChild: props not removed from children");
+    } else {
+      throw new Error(`Unsupported child type for asChild at ${elem.start}`);
+    }
+
+    const opening = elem.openingElement;
+    const insertPos =
+      opening.attributes.length > 0
+        ? opening.attributes[opening.attributes.length - 1].end
+        : opening.name.end;
+
+    const typeAttr = jsxType.startsWith('"')
+      ? ` jsxType=${jsxType}`
+      : ` jsxType={${jsxType}}`;
+    s.appendLeft(insertPos, typeAttr);
+
+    const propsAttr = ` movedProps={${movedProps}}`;
+    s.appendLeft(insertPos, propsAttr);
+  }
 }
 
+/**
+ * Type guard to check if a node is a JSX element
+ * @param node - AST node to check
+ * @returns True if node is a JSX element
+ */
 function isJSXElement(node: Node): node is JSXElement {
   return node.type === "JSXElement";
 }
 
+/**
+ * Type guard to check if a node is a JSX expression container
+ * @param node - AST node to check
+ * @returns True if node is a JSX expression container
+ */
 function isJSXExpressionContainer(node: Node): node is JSXExpressionContainer {
   return node.type === "JSXExpressionContainer";
 }
 
+/**
+ * Type guard to check if a node is a conditional expression
+ * @param node - AST node to check
+ * @returns True if node is a conditional expression
+ */
 function isConditionalExpression(node: Node): node is ConditionalExpression {
   return node.type === "ConditionalExpression";
 }
 
+/**
+ * Type guard to check if a node is JSX text
+ * @param node - AST node to check
+ * @returns True if node is JSX text
+ */
 function isJSXText(node: Node): node is JSXText {
   return node.type === "JSXText";
-}
-
-function hasAsChild(opening: JSXOpeningElement): boolean {
-  const hasAsChildAttr = opening.attributes.some(
-    (attr) =>
-      attr.type === "JSXAttribute" && (attr.name as JSXIdentifier).name === "asChild"
-  );
-  if (hasAsChildAttr) {
-    console.log("🔄 Found asChild element!");
-  }
-  return hasAsChildAttr;
 }
 
 interface Extracted {
@@ -97,97 +216,19 @@ interface Extracted {
   props: string;
 }
 
-function processAsChild(elem: JSXElement, s: MagicString, source: string) {
-  // Get non-text children
-  const children = elem.children.filter(
-    (child) => !isJSXText(child) || child.value.trim() !== ""
-  );
-  if (children.length > 1) {
-    throw new Error(`asChild elements must have exactly one child at ${elem.start}`);
-  }
-  if (children.length === 0) return; // No child, skip
-
-  const child = children[0] as JSXChild;
-
-  let jsxType: string;
-  let movedProps: string;
-
-  if (isJSXElement(child)) {
-    const extracted = extractFromElement(child, source);
-    jsxType = extracted.type;
-    movedProps = extracted.props;
-    // Remove props from child
-    const attrs = child.openingElement.attributes;
-    if (attrs.length > 0) {
-      const start = attrs[0].start;
-      const end = attrs[attrs.length - 1].end;
-      s.remove(start - 1, end); // -1 to remove space before first attr
-    }
-
-    // Remove the child element wrapper, keeping only its children
-    if (child.children.length > 0) {
-      // Replace the entire child element with just its children
-      const childStart = child.start;
-      const childEnd = child.end;
-      const childrenCode = child.children
-        .map((grandchild) => source.slice(grandchild.start, grandchild.end))
-        .join("");
-      s.overwrite(childStart, childEnd, childrenCode);
-    } else {
-      // If no children, remove the entire child element
-      s.remove(child.start, child.end);
-    }
-  } else if (
-    isJSXExpressionContainer(child) &&
-    isConditionalExpression(child.expression)
-  ) {
-    const cond = child.expression as ConditionalExpression;
-    const testCode = source.slice(cond.test.start, cond.test.end);
-    const cons = extractFromNode(cond.consequent, source);
-    const alt = extractFromNode(cond.alternate, source);
-    jsxType = `${testCode} ? ${cons.type} : ${alt.type}`;
-    movedProps = `${testCode} ? ${cons.props} : ${alt.props}`;
-    // Replace the entire expression with something? But since we're moving, perhaps remove props from the expressions, but that's complex.
-    // For simplicity, we'll assume the transformation is to add the props without removing, or handle manually.
-    // To remove, we'd need to transform the consequent and alternate AST, but since we're using MagicString, it's tricky.
-    // For now, let's just add without removing for conditionals.
-    console.warn("Conditional asChild: props not removed from children");
-  } else {
-    // Other cases, perhaps throw or skip
-    throw new Error(`Unsupported child type for asChild at ${elem.start}`);
-  }
-
-  // Find position to insert new attributes
-  const opening = elem.openingElement;
-  // Insert after existing attributes, or after name if no attributes
-  const insertPos =
-    opening.attributes.length > 0
-      ? opening.attributes[opening.attributes.length - 1].end
-      : opening.name.end;
-
-  // Insert jsxType - use quotes for strings, braces for everything else
-  const typeAttr = jsxType.startsWith('"')
-    ? ` jsxType=${jsxType}`
-    : ` jsxType={${jsxType}}`;
-  s.appendLeft(insertPos, typeAttr);
-
-  // Insert movedProps - always wrap in braces for JSX expression
-  const propsAttr = ` movedProps={${movedProps}}`;
-  s.appendLeft(insertPos, propsAttr);
-
-  // If self-closing, but has child, might need to adjust, but since child is kept, ensure not self-closing.
-  // Actually, keep the child but props removed for simple case.
-}
-
+/**
+ * Extracts type and props from various node types in conditional expressions
+ * @param node - AST node to extract from
+ * @param source - Original source code
+ * @returns Object containing extracted type and props
+ */
 function extractFromNode(node: Node, source: string): Extracted {
   if (isJSXElement(node)) {
     return extractFromElement(node, source);
   }
-  // Handle ParenthesizedExpression
   if (node.type === "ParenthesizedExpression") {
     return extractFromNode((node as { expression: Node }).expression, source);
   }
-  // Handle ConditionalExpression
   if (node.type === "ConditionalExpression") {
     const cond = node as ConditionalExpression;
     const testCode = source.slice(cond.test.start, cond.test.end);
@@ -198,7 +239,6 @@ function extractFromNode(node: Node, source: string): Extracted {
       props: `${testCode} ? ${cons.props} : ${alt.props}`
     };
   }
-  // Assume it's Identifier for component
   if (node.type === "Identifier") {
     return {
       type: source.slice(node.start, node.end),
@@ -208,6 +248,12 @@ function extractFromNode(node: Node, source: string): Extracted {
   throw new Error(`Unsupported node in conditional: ${node.type} at ${node.start}`);
 }
 
+/**
+ * Extracts type and props from a JSX element
+ * @param elem - JSX element to extract from
+ * @param source - Original source code
+ * @returns Object containing extracted type and props
+ */
 function extractFromElement(elem: JSXElement, source: string): Extracted {
   const nameNode = elem.openingElement.name;
   if (nameNode.type !== "JSXIdentifier") {
@@ -222,6 +268,12 @@ function extractFromElement(elem: JSXElement, source: string): Extracted {
   return { type, props: propsObj };
 }
 
+/**
+ * Extracts props from JSX attributes into object literal string
+ * @param attributes - Array of JSX attributes
+ * @param source - Original source code
+ * @returns Object literal string representation of props
+ */
 function extractProps(attributes: JSXAttributeItem[], source: string): string {
   const props: string[] = [];
   for (const attr of attributes) {
@@ -237,8 +289,9 @@ function extractProps(attributes: JSXAttributeItem[], source: string): string {
       } else if (isJSXExpressionContainer(a.value)) {
         value = source.slice(a.value.expression.start, a.value.expression.end);
       } else {
-        value = "true"; // Fallback
+        value = "true";
       }
+
       props.push(`"${key}": ${value}`);
     }
   }

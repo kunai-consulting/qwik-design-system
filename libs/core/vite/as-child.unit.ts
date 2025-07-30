@@ -36,7 +36,7 @@ describe("asChildPlugin", () => {
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
     expect(result.code).toContain('jsxType="a"');
-    expect(result.code).toContain('movedProps={{ href: "/test" }}');
+    expect(result.code).toContain('movedProps={{ "href": "/test" }}');
     expect(result.code).not.toContain('<a href="/test">');
   });
 
@@ -53,7 +53,7 @@ describe("asChildPlugin", () => {
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
     expect(result.code).toContain("jsxType={CustomLink}");
-    expect(result.code).toContain('movedProps={{ to: "/test" }}');
+    expect(result.code).toContain('movedProps={{ "to": "/test" }}');
     expect(result.code).not.toContain('<CustomLink to="/test">');
   });
 
@@ -85,8 +85,8 @@ describe("asChildPlugin", () => {
     `;
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
-    expect(result.code).toContain("disabled: true");
-    expect(result.code).toContain("required: true");
+    expect(result.code).toContain('"disabled": true');
+    expect(result.code).toContain('"required": true');
   });
 
   it("should handle expression props", () => {
@@ -102,8 +102,8 @@ describe("asChildPlugin", () => {
     `;
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
-    expect(result.code).toContain("href: href");
-    expect(result.code).toContain("onClick: handleClick");
+    expect(result.code).toContain('"href": href');
+    expect(result.code).toContain('"onClick": handleClick');
   });
 
   it("should handle conditional expressions", () => {
@@ -120,7 +120,7 @@ describe("asChildPlugin", () => {
     expect(result).toBeTruthy();
     expect(result.code).toContain('jsxType={isLink ? "a" : "button"}');
     expect(result.code).toContain(
-      'movedProps={isLink ? { href: "/test" } : { type: "button" }}'
+      'movedProps={isLink ? { "href": "/test" } : { "type": "button" }}'
     );
   });
 
@@ -138,7 +138,7 @@ describe("asChildPlugin", () => {
     expect(result).toBeTruthy();
     expect(result.code).toContain("jsxType={external ? Link : InternalLink}");
     expect(result.code).toContain(
-      'movedProps={external ? { to: "/external" } : { route: "/internal" }}'
+      'movedProps={external ? { "to": "/external" } : { "route": "/internal" }}'
     );
   });
 
@@ -188,8 +188,8 @@ describe("asChildPlugin", () => {
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
     expect(result.code).toContain('jsxType="input"');
-    expect(result.code).toContain('type: "text"');
-    expect(result.code).toContain('name: "username"');
+    expect(result.code).toContain('"type": "text"');
+    expect(result.code).toContain('"name": "username"');
   });
 
   it("should handle complex prop values", () => {
@@ -204,9 +204,9 @@ describe("asChildPlugin", () => {
     `;
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
-    expect(result.code).toContain("href: getUrl()");
-    expect(result.code).toContain("className: `btn ${variant}`");
-    expect(result.code).toContain("style: { color: 'red' }");
+    expect(result.code).toContain('"href": getUrl()');
+    expect(result.code).toContain('"className": `btn ${variant}`');
+    expect(result.code).toContain("\"style\": { color: 'red' }");
   });
 
   it("should preserve existing props on asChild element", () => {
@@ -288,8 +288,8 @@ describe("asChildPlugin", () => {
     expect(result).toBeTruthy();
     expect(result.code).toContain('jsxType="a"');
     expect(result.code).toContain('jsxType="span"');
-    expect(result.code).toContain('href: "/link1"');
-    expect(result.code).toContain('className: "label"');
+    expect(result.code).toContain('"href": "/link1"');
+    expect(result.code).toContain('"className": "label"');
   });
 
   it("should handle literal string props correctly", () => {
@@ -304,9 +304,9 @@ describe("asChildPlugin", () => {
     `;
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
-    expect(result.code).toContain('href: "/test"');
-    expect(result.code).toContain('title: "Test Link"');
-    expect(result.code).toContain('target: "_blank"');
+    expect(result.code).toContain('"href": "/test"');
+    expect(result.code).toContain('"title": "Test Link"');
+    expect(result.code).toContain('"target": "_blank"');
   });
 
   it("should remove child element wrapper and keep grandchildren", () => {
@@ -344,7 +344,7 @@ describe("asChildPlugin", () => {
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
     expect(result.code).toContain('jsxType="input"');
-    expect(result.code).toContain('movedProps={{ type: "submit" }}');
+    expect(result.code).toContain('movedProps={{ "type": "submit" }}');
     expect(result.code).not.toContain("<input");
     expect(result.code).not.toContain('type="submit"');
   });
@@ -406,13 +406,12 @@ describe("asChildPlugin error cases", () => {
       }
     `;
     const result = transform(code, "test.tsx");
-    expect(result).toBeNull(); // Should handle parse errors gracefully
+    expect(result).toBeNull();
   });
 });
 
 describe("asChildPlugin type guards", () => {
   it("should correctly identify JSX elements", () => {
-    // These are internal functions, but we can test the transform behavior
     const code = `
       function App() {
         return (
