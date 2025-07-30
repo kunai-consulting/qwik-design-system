@@ -1,5 +1,6 @@
-import { qwikRouter } from "@qwik.dev/router/vite";
+import { asChild } from "@kunai-consulting/core/vite";
 import { qwikVite } from "@qwik.dev/core/optimizer";
+import { qwikRouter } from "@qwik.dev/router/vite";
 import tailwindcss from "@tailwindcss/vite";
 import { resolve } from "pathe";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
@@ -31,10 +32,11 @@ export default defineConfig(({ command, mode }): UserConfig => {
 
   return {
     plugins: [
+      asChild(),
       tailwindcss(),
       qwikRouter({
         mdx: {
-          providerImportSource: "~/mdx/provider",
+          providerImportSource: "~/mdx/provider"
         }
       }),
       qwikVite({ lint: false }),

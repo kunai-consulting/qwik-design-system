@@ -1,15 +1,13 @@
+import { Render } from "@kunai-consulting/qwik";
 import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
-import { Render, withAsChild } from "@kunai-consulting/qwik";
 
-const DummyCompBase = component$((props: PropsOf<"div">) => {
+const DummyComp = component$((props: PropsOf<"div"> & { asChild?: boolean }) => {
   return (
     <Render fallback="div" {...props}>
       <Slot />
     </Render>
   );
 });
-
-const DummyComp = withAsChild(DummyCompBase);
 
 const AsChildComp = component$((props: PropsOf<"span">) => {
   return (

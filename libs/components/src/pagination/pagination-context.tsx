@@ -1,9 +1,4 @@
-import {
-  type JSXChildren,
-  type QRL,
-  type Signal,
-  createContextId
-} from "@qwik.dev/core";
+import { type JSXChildren, type QRL, type Signal, createContextId } from "@qwik.dev/core";
 
 export const paginationContextId = createContextId<PaginationContext>(
   "qds-pagination-context"

@@ -1,3 +1,4 @@
+import { resetIndexes } from "@kunai-consulting/qwik-utils";
 import {
   type PropsOf,
   Slot,
@@ -5,7 +6,6 @@ import {
   useContextProvider,
   useSignal
 } from "@qwik.dev/core";
-import { resetIndexes } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { CheckboxRootBase } from "../checkbox/checkbox-root";
 import { type ChecklistContext, checklistContextId } from "./checklist-context";

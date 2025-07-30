@@ -1,3 +1,4 @@
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import {
   type QRL,
   Slot,
@@ -10,7 +11,6 @@ import {
   useTask$,
   useVisibleTask$
 } from "@qwik.dev/core";
-import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase, type PopoverRootProps } from "../popover/popover-root";
 import type { CalendarContext } from "./calendar-context";

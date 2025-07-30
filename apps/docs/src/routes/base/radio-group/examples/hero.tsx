@@ -1,5 +1,5 @@
-import { component$, useStyles$ } from "@qwik.dev/core";
 import { RadioGroup } from "@kunai-consulting/qwik";
+import { component$, useStyles$ } from "@qwik.dev/core";
 import styles from "./radio-group-custom.css?inline";
 
 export default component$(() => {

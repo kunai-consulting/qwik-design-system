@@ -1,5 +1,5 @@
-import { component$, useStyles$ } from "@qwik.dev/core";
 import { Checklist } from "@kunai-consulting/qwik";
+import { component$, useStyles$ } from "@qwik.dev/core";
 import { LuCheck, LuMinus } from "@qwikest/icons/lucide";
 
 export default component$(() => {

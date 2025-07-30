@@ -1,3 +1,4 @@
+import { useBoundSignal } from "@kunai-consulting/qwik-utils";
 import {
   $,
   type PropsOf,
@@ -14,7 +15,6 @@ import {
   useSignal,
   useTask$
 } from "@qwik.dev/core";
-import { useBoundSignal } from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { CollapsibleRootBase } from "../collapsible/collapsible-root";
 import { TreeRootContextId } from "./tree-root";

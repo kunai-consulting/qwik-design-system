@@ -1,3 +1,4 @@
+import { Checkbox } from "@kunai-consulting/qwik";
 import {
   type Signal,
   component$,
@@ -5,7 +6,6 @@ import {
   useSignal,
   useStyles$
 } from "@qwik.dev/core";
-import { Checkbox } from "@kunai-consulting/qwik";
 import { LuCheck } from "@qwikest/icons/lucide";
 
 export default component$(() => {

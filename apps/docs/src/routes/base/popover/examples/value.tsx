@@ -1,5 +1,5 @@
-import { component$, useSignal } from "@qwik.dev/core";
 import { Popover } from "@kunai-consulting/qwik";
+import { component$, useSignal } from "@qwik.dev/core";
 
 export default component$(() => {
   const isOpen = useSignal(false);

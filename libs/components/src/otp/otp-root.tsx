@@ -1,4 +1,9 @@
 import {
+  findComponent,
+  processChildren,
+  useBoundSignal
+} from "@kunai-consulting/qwik-utils";
+import {
   type HTMLInputAutocompleteAttribute,
   type PropsOf,
   type QRL,
@@ -11,11 +16,6 @@ import {
   useStyles$,
   useTask$
 } from "@qwik.dev/core";
-import {
-  findComponent,
-  processChildren,
-  useBoundSignal
-} from "@kunai-consulting/qwik-utils";
 import { OTPContextId } from "./otp-context";
 import { OtpItem } from "./otp-item";
 import styles from "./otp.css?inline";

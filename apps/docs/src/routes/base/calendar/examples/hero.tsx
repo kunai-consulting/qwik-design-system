@@ -1,5 +1,5 @@
-import { $, component$, useSignal, useStyles$ } from "@qwik.dev/core";
 import { Calendar } from "@kunai-consulting/qwik";
+import { $, component$, useSignal, useStyles$ } from "@qwik.dev/core";
 
 import { NextIcon } from "../shared/next-icon";
 import { PreviousIcon } from "../shared/previous-icon";

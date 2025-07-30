@@ -1,3 +1,4 @@
+import { manifest } from "@qwik-client-manifest";
 /**
  * WHAT IS THIS FILE?
  *
@@ -11,7 +12,6 @@
  *
  */
 import { type RenderToStreamOptions, renderToStream } from "@qwik.dev/core/server";
-import { manifest } from "@qwik-client-manifest";
 import Root from "./root";
 
 export default function (opts: RenderToStreamOptions) {

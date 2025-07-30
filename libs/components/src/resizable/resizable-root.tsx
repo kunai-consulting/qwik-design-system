@@ -1,4 +1,9 @@
 import {
+  type BindableProps,
+  resetIndexes,
+  useBindings
+} from "@kunai-consulting/qwik-utils";
+import {
   type PropsOf,
   Slot,
   component$,
@@ -8,11 +13,6 @@ import {
   useSignal,
   useStyles$
 } from "@qwik.dev/core";
-import {
-  type BindableProps,
-  resetIndexes,
-  useBindings
-} from "@kunai-consulting/qwik-utils";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import {

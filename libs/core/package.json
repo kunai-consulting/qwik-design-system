@@ -1,0 +1,30 @@
+{
+  "name": "@kunai-consulting/core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A simple example library built by tsdown",
+  "type": "module",
+  "files": ["dist"],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/src/index.js",
+    "./package.json": "./package.json",
+    "./vite": "./dist/vite/index.js",
+    "./utils": "./dist/utils/index.js"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@oxc-project/types": "^0.78.0",
+    "magic-string": "^0.30.17",
+    "oxc-parser": "^0.78.0",
+    "oxc-walker": "^0.4.0",
+    "tsdown": "latest",
+    "vite": "^7.0.6"
+  }
+}

@@ -1,12 +1,12 @@
 import {
   $,
+  type Component,
   type JSXOutput,
   type QwikIntrinsicElements,
   type Signal,
   Slot,
   component$
 } from "@qwik.dev/core";
-import type { AsChildProps } from "../as-child/as-child";
 
 // keyof slows the type server a bunch, instead we use the most common fallbacks
 type AllowedFallbacks = "div" | "span" | "a" | "button" | "label";
@@ -18,8 +18,10 @@ type RenderInternalProps<T extends AllowedFallbacks> = {
    *  Library authors use this to pass refs to the component. Consumers of this library use the standard ref prop.
    */
   internalRef?: Signal<HTMLElement | undefined>;
-} & QwikIntrinsicElements[T] &
-  AsChildProps;
+
+  jsxType?: unknown;
+  movedProps?: Record<string, unknown>;
+} & QwikIntrinsicElements[T];
 
 /**
  * Render component enables flexible composition by allowing a component to be rendered with a fallback
@@ -33,18 +35,19 @@ type RenderInternalProps<T extends AllowedFallbacks> = {
  */
 export const Render = component$(
   <T extends AllowedFallbacks>(props: RenderInternalProps<T>): JSXOutput => {
-    const { fallback, _jsxType, _allProps, asChild, internalRef, ...rest } = props;
+    const { fallback, jsxType, movedProps, internalRef, ...rest } = props;
 
     fallback;
-    _jsxType;
+    jsxType;
     internalRef;
+    movedProps;
 
-    const Comp = props._jsxType ?? props.fallback;
+    const Comp = (props.jsxType ?? props.fallback) as Component;
 
     return (
       <Comp
         {...rest}
-        {...props._allProps}
+        {...movedProps}
         ref={$((el: HTMLElement) => {
           if (props.ref && "value" in props.ref) {
             (props.ref as Signal<HTMLElement>).value = el;
