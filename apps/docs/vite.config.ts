@@ -1,4 +1,4 @@
-import asChildPlugin from "@kunai-consulting/core/vite/as-child";
+import { asChild } from "@kunai-consulting/core/vite";
 import { qwikVite } from "@qwik.dev/core/optimizer";
 import { qwikRouter } from "@qwik.dev/router/vite";
 import tailwindcss from "@tailwindcss/vite";
@@ -32,7 +32,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
 
   return {
     plugins: [
-      asChildPlugin(),
+      asChild(),
       tailwindcss(),
       qwikRouter({
         mdx: {

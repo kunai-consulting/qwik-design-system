@@ -10,7 +10,7 @@ import {
   isJSXElement,
   isJSXExpressionContainer,
   isJSXText
-} from "./jsx-utils.js";
+} from "./jsx";
 
 describe("jsx-utils", () => {
   describe("Type guards", () => {

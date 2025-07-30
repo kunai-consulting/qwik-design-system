@@ -8,7 +8,7 @@ import type {
 } from "@oxc-project/types";
 import MagicString from "magic-string";
 import { parseSync } from "oxc-parser";
-import type { Plugin } from "vite";
+import type { Plugin as VitePlugin } from "vite";
 
 import {
   extractFromElement,
@@ -16,9 +16,9 @@ import {
   isJSXElement,
   isJSXExpressionContainer,
   isJSXText
-} from "../src/jsx-utils.js";
+} from "../utils/jsx";
 
-import { handleExpression } from "../src/expression-utils.js";
+import { handleExpression } from "../utils/expressions";
 
 export type AsChildPluginOptions = {
   debug?: boolean;
@@ -29,7 +29,7 @@ export type AsChildPluginOptions = {
  * @param options - Plugin configuration options
  * @returns Vite plugin object
  */
-export default function asChildPlugin(options: AsChildPluginOptions = {}): Plugin {
+export const asChild = (options: AsChildPluginOptions = {}): VitePlugin => {
   const { debug: isDebugMode = false } = options;
 
   /**
@@ -190,4 +190,4 @@ export default function asChildPlugin(options: AsChildPluginOptions = {}): Plugi
     const propsAttr = ` movedProps={${movedProps}}`;
     s.appendLeft(insertPos, propsAttr);
   }
-}
+};

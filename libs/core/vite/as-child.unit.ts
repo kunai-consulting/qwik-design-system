@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
-import asChildPlugin from "./as-child";
+import { asChild } from "./as-child";
 
 type TransformResult = { code: string; map: unknown } | null;
 
-describe("asChildPlugin", () => {
-  const plugin = asChildPlugin();
+describe("asChild", () => {
+  const plugin = asChild();
   const transform = plugin.transform as (code: string, id: string) => TransformResult;
 
   it("should skip non-JSX files", () => {
@@ -418,8 +418,8 @@ describe("asChildPlugin", () => {
   });
 });
 
-describe("asChildPlugin error cases", () => {
-  const plugin = asChildPlugin();
+describe("asChild error cases", () => {
+  const plugin = asChild();
   const transform = plugin.transform as (code: string, id: string) => TransformResult;
 
   it("should skip transformation for unsupported child types gracefully", () => {
@@ -451,7 +451,7 @@ describe("asChildPlugin error cases", () => {
   });
 });
 
-describe("asChildPlugin type guards", () => {
+describe("asChild type guards", () => {
   it("should correctly identify JSX elements", () => {
     const code = `
       function App() {
@@ -462,15 +462,15 @@ describe("asChildPlugin type guards", () => {
         );
       }
     `;
-    const plugin = asChildPlugin();
+    const plugin = asChild();
     const transform = plugin.transform as (code: string, id: string) => TransformResult;
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
   });
 });
 
-describe("asChildPlugin robustness improvements", () => {
-  const plugin = asChildPlugin({ debug: true });
+describe("asChild robustness improvements", () => {
+  const plugin = asChild({ debug: true });
   const transform = plugin.transform as (code: string, id: string) => TransformResult;
 
   describe("Expression type validation", () => {
@@ -732,7 +732,7 @@ describe("asChildPlugin robustness improvements", () => {
     });
 
     it("should not log when debug mode is disabled", () => {
-      const pluginNoDebug = asChildPlugin({ debug: false });
+      const pluginNoDebug = asChild({ debug: false });
       const transformNoDebug = pluginNoDebug.transform as (
         code: string,
         id: string

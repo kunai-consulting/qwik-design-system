@@ -10,7 +10,7 @@ import {
   handleLogicalExpression,
   handleMemberExpression,
   isSupportedExpressionType
-} from "./expression-utils.js";
+} from "./expressions";
 
 describe("expression-utils", () => {
   describe("handleExpression", () => {

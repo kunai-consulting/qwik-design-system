@@ -1,6 +1,6 @@
 import type { ConditionalExpression, LogicalExpression, Node } from "@oxc-project/types";
 
-import { type Extracted, extractFromNode } from "./jsx-utils.js";
+import { type Extracted, extractFromNode } from "./jsx";
 
 /**
  * Handles various expression types in asChild elements
