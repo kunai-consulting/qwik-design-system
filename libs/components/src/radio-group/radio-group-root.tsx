@@ -1,4 +1,4 @@
-import { resetIndexes, useBoundSignal } from "@kunai-consulting/qwik-utils";
+import { useBoundSignal } from "@kunai-consulting/qwik-utils";
 import {
   $,
   type PropsOf,
@@ -12,7 +12,6 @@ import {
   useStyles$,
   useTask$
 } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 import styles from "./radio-group.css?inline";
@@ -34,7 +33,7 @@ interface TriggerRef {
   value: string;
 }
 
-export const RadioGroupRootBase = component$((props: PublicRootProps) => {
+export const RadioGroupRoot = component$((props: PublicRootProps) => {
   useStyles$(styles);
 
   const {
@@ -62,6 +61,7 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
   const localId = useId();
   const computedIsError = useComputed$(() => !!props.isError);
   const triggerRefsArray = useSignal<TriggerRef[]>([]);
+  const currItemIndex = 0;
 
   useTask$(function handleChange({ track }) {
     track(() => selectedValueSig.value);
@@ -147,7 +147,8 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
     name: props.name,
     orientation: props.orientation || "vertical",
     isDescription: props.isDescription,
-    triggerRefsArray
+    triggerRefsArray,
+    currItemIndex
   });
 
   return (
@@ -171,9 +172,4 @@ export const RadioGroupRootBase = component$((props: PublicRootProps) => {
       <Slot />
     </Render>
   );
-});
-
-export const RadioGroupRoot = withAsChild(RadioGroupRootBase, (props) => {
-  resetIndexes("radioGroup");
-  return props;
 });
