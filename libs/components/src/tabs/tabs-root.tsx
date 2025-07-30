@@ -1,8 +1,4 @@
-import {
-  type BindableProps,
-  resetIndexes,
-  useBindings
-} from "@kunai-consulting/qwik-utils";
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import {
   type PropsOf,
   type Signal,
@@ -14,7 +10,6 @@ import {
   useStyles$,
   useTask$
 } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import tabsStyles from "./tabs.css?inline";
 
@@ -38,14 +33,18 @@ type TabsContext = {
   orientationSig: Signal<string>;
   loopSig: Signal<boolean>;
   selectOnFocus: boolean;
+  currTriggerIndex: number;
+  currContentIndex: number;
 };
 
-export const TabsRootBase = component$((props: TabsRootProps) => {
+export const TabsRoot = component$((props: TabsRootProps) => {
   const { onChange$, selectOnFocus = true, ...rest } = props;
 
   useStyles$(tabsStyles);
   const triggerRefs = useSignal<TriggerRef[]>([]);
   const isInitialRenderSig = useSignal(true);
+  const currTriggerIndex = 0;
+  const currContentIndex = 0;
 
   /**
    *  If the consumer does not pass a distinct value, then we set the value to the index as a string, to handle types and conditional logic easier
@@ -66,7 +65,9 @@ export const TabsRootBase = component$((props: TabsRootProps) => {
     selectedValueSig,
     orientationSig,
     loopSig,
-    selectOnFocus
+    selectOnFocus,
+    currTriggerIndex,
+    currContentIndex
   };
 
   useContextProvider(tabsContextId, context);
@@ -95,11 +96,4 @@ export const TabsRootBase = component$((props: TabsRootProps) => {
       <Slot />
     </Render>
   );
-});
-
-export const TabsRoot = withAsChild(TabsRootBase, (props) => {
-  resetIndexes("tabs-trigger");
-  resetIndexes("tabs-content");
-
-  return props;
 });
