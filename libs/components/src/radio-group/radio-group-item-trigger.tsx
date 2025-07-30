@@ -4,6 +4,7 @@ import {
   type PropsOf,
   Slot,
   component$,
+  sync$,
   useComputed$,
   useContext,
   useSignal,
@@ -60,6 +61,20 @@ const TriggerBase = component$((props: PublicTriggerProps) => {
     }
   });
 
+  const handleKeyDownSync$ = sync$((event: KeyboardEvent) => {
+    const preventKeys = [
+      "ArrowRight",
+      "ArrowLeft",
+      "ArrowUp",
+      "ArrowDown",
+      "Home",
+      "End"
+    ];
+    if (preventKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  });
+
   return (
     <Render
       fallback="button"
@@ -73,7 +88,7 @@ const TriggerBase = component$((props: PublicTriggerProps) => {
       data-disabled={isDisabledSig.value || undefined}
       value={value}
       onClick$={[handleSelection$, props.onClick$]}
-      onKeyDown$={[handleKeyDown$, props.onKeyDown$]}
+      onKeyDown$={[handleKeyDownSync$, handleKeyDown$, props.onKeyDown$]}
       disabled={isDisabledSig.value}
       tabIndex={tabIndexSig.value}
       aria-labelledby={itemLabelId}
