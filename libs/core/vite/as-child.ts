@@ -239,10 +239,7 @@ function extractProps(attributes: JSXAttributeItem[], source: string): string {
       } else {
         value = "true"; // Fallback
       }
-      // Quote property names only if they contain hyphens or other special chars
-      const needsQuotes = /[^a-zA-Z0-9_$]/.test(key);
-      const quotedKey = needsQuotes ? `"${key}"` : key;
-      props.push(`${quotedKey}: ${value}`);
+      props.push(`"${key}": ${value}`);
     }
   }
   return `{ ${props.join(", ")} }`;
