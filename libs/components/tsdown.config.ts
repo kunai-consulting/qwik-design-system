@@ -9,11 +9,5 @@ export default defineConfig({
     })
   ],
   entry: ["src/**/index.ts"],
-  external: [
-    "@playwright/test",
-    "@axe-core/playwright",
-    /^node:/,
-    "@oddbird/css-anchor-positioning"
-  ],
   format: ["esm"]
 });
