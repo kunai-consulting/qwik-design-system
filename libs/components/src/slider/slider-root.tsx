@@ -1,6 +1,5 @@
 import {
   $,
-  type PropFunction,
   type PropsOf,
   type QRL,
   type Signal,
@@ -29,13 +28,9 @@ interface PublicSliderProps {
   /** Whether the slider is disabled. Default is false */
   disabled?: boolean | Signal<boolean>;
   /** Event handler called when the slider value changes */
-  onChange$?:
-    | QRL<(value: SliderValue) => void>
-    | PropFunction<(value: SliderValue) => void>;
+  onChange$?: QRL<(value: SliderValue) => void> | ((value: SliderValue) => void);
   /** Event handler called when the slider value changes are committed (on drag end or keyboard navigation) */
-  onChangeEnd$?:
-    | QRL<(value: SliderValue) => void>
-    | PropFunction<(value: SliderValue) => void>;
+  onChangeEnd$?: QRL<(value: SliderValue) => void> | ((value: SliderValue) => void);
 }
 
 type PublicRootProps = DivProps & PublicSliderProps;
