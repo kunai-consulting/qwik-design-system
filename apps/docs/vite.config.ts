@@ -95,6 +95,31 @@ export default defineConfig(({ command, mode }): UserConfig => {
                   if (shortSymbols.length > 0) {
                     console.log("⚠️ SHORT SYMBOLS FOUND:", shortSymbols);
                   }
+
+                  // Log total symbol count and some examples
+                  const allSymbols = Object.keys(manifestObj.mapping);
+                  console.log("📊 TOTAL SYMBOLS:", allSymbols.length);
+                  console.log("📝 FIRST 10 SYMBOLS:", allSymbols.slice(0, 10));
+                  console.log("📝 LAST 10 SYMBOLS:", allSymbols.slice(-10));
+
+                  // 🔍 DEBUG: Check for _run references and array access patterns
+                  const runRefs = allSymbols.filter((k) => k.includes("_run"));
+                  console.log("🏃 _RUN REFERENCES:", runRefs);
+
+                  // Check if manifest contains _run[2] pattern
+                  if (manifest.includes("_run[2]")) {
+                    console.log("✅ FOUND _run[2] pattern in manifest");
+                  } else {
+                    console.log("❌ NO _run[2] pattern found in manifest");
+                  }
+
+                  // Look for any array access patterns [0], [1], [2]
+                  const arrayPatterns = ["[0]", "[1]", "[2]", "[3]"];
+                  arrayPatterns.forEach((pattern) => {
+                    if (manifest.includes(pattern)) {
+                      console.log(`✅ Found array pattern ${pattern} in manifest`);
+                    }
+                  });
                 }
               } catch (e) {
                 console.log("❌ Failed to parse manifest:", e);
