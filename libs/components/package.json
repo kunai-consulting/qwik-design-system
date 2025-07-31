@@ -5,16 +5,16 @@
   "description": "A simple example library built by tsdown",
   "type": "module",
   "files": ["dist"],
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
+  "main": "./dist/index.qwik.mjs",
+  "module": "./dist/index.qwik.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
+      "import": "./dist/index.qwik.mjs",
       "types": "./dist/index.d.ts"
     },
     "./*": {
-      "import": "./dist/*/index.js",
+      "import": "./dist/*/index.qwik.mjs",
       "types": "./dist/*/index.d.ts"
     },
     "./package.json": "./package.json"

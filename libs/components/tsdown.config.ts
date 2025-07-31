@@ -10,6 +10,5 @@ export default defineConfig({
       js: ".qwik.mjs"
     };
   },
-  unbundle: true,
-  fromVite: true
+  unbundle: true
 });
