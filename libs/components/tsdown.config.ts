@@ -1,3 +1,4 @@
+import * as fs from "node:fs";
 import { defineConfig } from "tsdown";
 
 export default defineConfig({
@@ -54,5 +55,38 @@ export default defineConfig({
   // Debug options (temporary)
   experimental: {
     attachDebugInfo: "simple"
+  },
+
+  // 🕵️ ADD DEBUGGING HOOKS:
+  hooks: {
+    "build:before": (ctx) => {
+      console.log("🔍 Starting tsdown build...");
+    },
+    "build:done": (ctx) => {
+      console.log("✅ tsdown build complete, checking for s1...");
+
+      // Log all generated files
+      const distDir = "dist";
+      if (fs.existsSync(distDir)) {
+        const files = fs.readdirSync(distDir, { recursive: true });
+        files.forEach((file) => {
+          const filePath = `${distDir}/${file}`;
+          if (file.endsWith(".qwik.mjs")) {
+            const content = fs.readFileSync(filePath, "utf8");
+            console.log(`📄 ${file}:`);
+
+            // Check for s1 symbol
+            if (content.includes("s1")) {
+              console.log(`🚨 FOUND s1 in ${file}!`);
+              console.log(content.substring(0, 500)); // First 500 chars
+            }
+
+            // Log imports
+            const imports = content.match(/import .* from ['"](.*)['"]/g) || [];
+            console.log(`📥 Imports: ${imports.join(", ")}`);
+          }
+        });
+      }
+    }
   }
 });
