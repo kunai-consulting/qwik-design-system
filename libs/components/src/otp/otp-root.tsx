@@ -8,11 +8,10 @@ import {
   useComputed$,
   useContextProvider,
   useSignal,
-  useStyles$,
   useTask$
 } from "@qwik.dev/core";
 import { OTPContextId } from "./otp-context";
-import styles from "./otp.css?inline";
+import "./otp.css";
 
 type PublicOtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   /** Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property */
@@ -41,8 +40,6 @@ export const OtpRoot = component$((props: PublicOtpRootProps) => {
     shiftPWManagers = true,
     ...rest
   } = props;
-
-  useStyles$(styles);
 
   const currItemIndex = 0;
   const numItems = 0;

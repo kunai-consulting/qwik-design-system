@@ -9,12 +9,11 @@ import {
   useContextProvider,
   useId,
   useSignal,
-  useStyles$,
   useTask$
 } from "@qwik.dev/core";
 import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
-import styles from "./radio-group.css?inline";
+import "./radio-group.css";
 
 type PublicRootProps = {
   value?: string;
@@ -34,8 +33,6 @@ interface TriggerRef {
 }
 
 export const RadioGroupRoot = component$((props: PublicRootProps) => {
-  useStyles$(styles);
-
   const {
     "bind:value": givenValueSig,
     onChange$,

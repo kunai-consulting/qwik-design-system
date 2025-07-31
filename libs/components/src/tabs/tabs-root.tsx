@@ -7,11 +7,10 @@ import {
   createContextId,
   useContextProvider,
   useSignal,
-  useStyles$,
   useTask$
 } from "@qwik.dev/core";
 import { Render } from "../render/render";
-import tabsStyles from "./tabs.css?inline";
+import "./tabs.css";
 
 export type TabsRootProps = Omit<PropsOf<"div">, "align" | "onChange$"> &
   BindableProps<{
@@ -40,7 +39,6 @@ type TabsContext = {
 export const TabsRoot = component$((props: TabsRootProps) => {
   const { onChange$, selectOnFocus = true, ...rest } = props;
 
-  useStyles$(tabsStyles);
   const triggerRefs = useSignal<TriggerRef[]>([]);
   const isInitialRenderSig = useSignal(true);
   const currTriggerIndex = 0;

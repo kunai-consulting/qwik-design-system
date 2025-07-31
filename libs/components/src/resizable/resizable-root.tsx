@@ -10,8 +10,7 @@ import {
   sync$,
   useContextProvider,
   useOnWindow,
-  useSignal,
-  useStyles$
+  useSignal
 } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
@@ -20,7 +19,7 @@ import {
   type ResizableContext,
   resizableContextId
 } from "./resizable-context";
-import styles from "./resizable.css?inline";
+import "./resizable.css";
 
 type PublicResizableRootProps = {
   /** Direction in which the contents can be resized */
@@ -34,7 +33,6 @@ type PublicResizableRootProps = {
 /** Root container component that manages the resizable contents and handles */
 export const ResizableRootBase = component$<PublicResizableRootProps>((props) => {
   const rootRef = useSignal<HTMLElement>();
-  useStyles$(styles);
   const { orientation = "horizontal" } = props;
 
   const { disabledSig } = useBindings(props, {

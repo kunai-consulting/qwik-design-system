@@ -5,14 +5,13 @@ import {
   useContext,
   useContextProvider,
   useId,
-  useSignal,
-  useStyles$
+  useSignal
 } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";
 import { type ItemRef, type MenuContext, menuContextId } from "./menu-root";
 import type { PublicMenuRootProps } from "./menu-root";
-import menuSubmenuStyles from "./menu-submenu.css?inline";
+import "./menu-submenu.css";
 
 export type PublicMenuSubmenuProps = PublicMenuRootProps & {
   /** The position of the submenu relative to its trigger */
@@ -21,8 +20,6 @@ export type PublicMenuSubmenuProps = PublicMenuRootProps & {
 
 /** A component that renders a submenu */
 export const MenuSubmenuBase = component$<PublicMenuSubmenuProps>((props) => {
-  useStyles$(menuSubmenuStyles);
-
   const parentContext = useContext(menuContextId);
   const itemRefs = useSignal<ItemRef[]>([]);
   const submenuRef = useSignal<HTMLElement>();

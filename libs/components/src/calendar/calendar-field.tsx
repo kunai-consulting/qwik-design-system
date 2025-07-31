@@ -1,12 +1,12 @@
 import { $, Slot, component$ } from "@qwik.dev/core";
-import { useContext, useStyles$ } from "@qwik.dev/core";
+import { useContext } from "@qwik.dev/core";
 import {
   DateInputField,
   type PublicDateInputFieldProps
 } from "../date-input/date-input-field";
 import { DateInputRoot } from "../date-input/date-input-root";
 import { calendarContextId } from "./calendar-context";
-import styles from "./calendar-field.css?inline";
+import "./calendar-field.css";
 
 type PublicCalendarFieldProps = PublicDateInputFieldProps & {
   openCalendarOnClick?: boolean;
@@ -14,7 +14,6 @@ type PublicCalendarFieldProps = PublicDateInputFieldProps & {
 
 export const CalendarField = component$(
   ({ openCalendarOnClick = false, ...props }: PublicCalendarFieldProps) => {
-    useStyles$(styles);
     const context = useContext(calendarContextId);
 
     const handleClick$ = $(() => {

@@ -1,13 +1,12 @@
-import { Slot, component$, useStyles$ } from "@qwik.dev/core";
+import { Slot, component$ } from "@qwik.dev/core";
 import { useContext } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverContentBase } from "../popover/popover-content";
 import { Render } from "../render/render";
-import styles from "./calendar-content.css?inline";
+import "./calendar-content.css";
 import { calendarContextId } from "./calendar-context";
 
 export const CalendarContentBase = component$(() => {
-  useStyles$(styles);
   const context = useContext(calendarContextId);
   const mode = context.mode;
 

@@ -5,7 +5,6 @@ import {
   useComputed$,
   useContext,
   useSignal,
-  useStyles$,
   useTask$
 } from "@qwik.dev/core";
 import type { Signal } from "@qwik.dev/core";
@@ -13,7 +12,7 @@ import type { DayOfMonth, Month } from "../calendar/types";
 import { MAX_DAY } from "./constants";
 import { dateInputContextId } from "./date-input-context";
 import { dateInputFieldContextId } from "./date-input-field-context";
-import styles from "./date-input-segment.css?inline";
+import "./date-input-segment.css";
 import type { DateSegment, DateSegmentType } from "./types";
 import type { PublicDateInputSegmentProps } from "./types";
 import { getLastDayOfMonth, getTwoDigitPaddedValue } from "./utils";
@@ -39,8 +38,6 @@ export const DateInputSegment = component$(
     // Show the separator if there is a separator in the context and the index is not the last segment in a group of 3
     const showSeparator = context.separator && index % 3 < 2;
     const inputRef = useSignal<HTMLInputElement>();
-
-    useStyles$(styles);
 
     useTask$(() => {
       rootContext.segmentRefs.value[index] = inputRef;

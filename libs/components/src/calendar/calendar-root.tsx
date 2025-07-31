@@ -7,7 +7,6 @@ import {
   useContextProvider,
   useId,
   useSignal,
-  useStyles$,
   useTask$,
   useVisibleTask$
 } from "@qwik.dev/core";
@@ -15,7 +14,7 @@ import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase, type PopoverRootProps } from "../popover/popover-root";
 import type { CalendarContext } from "./calendar-context";
 import { calendarContextId } from "./calendar-context";
-import styles from "./calendar-root.css?inline";
+import "./calendar-root.css";
 import { ARIA_LABELS, MONTHS_LG, WEEKDAYS } from "./constants";
 import type { ISODate, Locale, Month } from "./types";
 import { daysArrGenerator } from "./utils";
@@ -49,7 +48,6 @@ const isoDateRegex = /^\d{1,4}-(0[1-9]|1[0-2])-\d{2}$/;
 
 /** The root calendar component that manages state and provides context */
 export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
-  useStyles$(styles);
   const {
     fullWeeks = false,
     locale = "en",

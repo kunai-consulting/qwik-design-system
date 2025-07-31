@@ -4,11 +4,10 @@ import {
   Slot,
   component$,
   useContextProvider,
-  useSignal,
-  useStyles$
+  useSignal
 } from "@qwik.dev/core";
 import { scrollAreaContextId } from "./scroll-area-context";
-import styles from "./scroll-area.css?inline";
+import "./scroll-area.css";
 type PublicScrollbarVisibility = "hover" | "scroll" | "auto" | "always";
 type PublicRootProps = PropsOf<"div"> & {
   /** Controls when the scrollbars are visible: 'hover', 'scroll', 'auto', or 'always' */
@@ -18,7 +17,6 @@ type PublicRootProps = PropsOf<"div"> & {
 };
 /** A root component for scrollable content areas with customizable scrollbar behavior */
 export const ScrollAreaRoot = component$<PublicRootProps>((props) => {
-  useStyles$(styles);
   const viewportRef = useSignal<HTMLDivElement>();
   const verticalScrollbarRef = useSignal<HTMLDivElement>();
   const horizontalScrollbarRef = useSignal<HTMLDivElement>();

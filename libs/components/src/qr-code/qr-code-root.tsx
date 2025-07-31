@@ -4,12 +4,11 @@ import {
   component$,
   useContextProvider,
   useSignal,
-  useStyles$,
   useTask$
 } from "@qwik.dev/core";
 import { encode } from "uqr";
 import { qrCodeContextId } from "./qr-code-context";
-import styles from "./qr-code.css?inline";
+import "./qr-code.css";
 type PublicRootProps = PropsOf<"div"> & {
   /** The text value to encode in the QR code */
   value?: string;
@@ -18,7 +17,6 @@ type PublicRootProps = PropsOf<"div"> & {
 };
 /** Root component for the QR code that manages state and context */
 export const QRCodeRoot = component$<PublicRootProps>((props) => {
-  useStyles$(styles);
   const value = useSignal(props.value || "");
   const level = useSignal(props.level || "L");
   const data = useSignal<boolean[][]>([]);
