@@ -19,14 +19,17 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.9.1",
-    "@kunai-consulting/qwik-utils": "workspace:*",
     "@types/node": "22.14.0",
     "typescript": "5.4.5",
-    "uqr": "^0.1.2",
     "@qwik.dev/core": "https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc",
-    "tsdown": "latest"
+    "tsdown": "latest",
+    "uqr": "^0.1.2",
+    "@kunai-consulting/qwik-utils": "workspace:*"
   },
   "dependencies": {
     "@oddbird/css-anchor-positioning": "^0.6"
+  },
+  "peerDependencies": {
+    "@qwik.dev/core": "*"
   }
 }
