@@ -4,7 +4,7 @@ export default defineConfig({
   target: "es2020",
   entry: ["src/**/index.ts"],
   format: ["esm"],
-  external: [/^node:.*/, /^@qwik\.dev\/.*/],
+  external: [/^node:.*/, /^@qwik\.dev\/.*/, "@kunai-consulting/qwik-utils"],
   unbundle: true,
 
   outputOptions: (options) => ({
