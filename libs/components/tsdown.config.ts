@@ -11,5 +11,5 @@ export default defineConfig({
     };
   },
   unbundle: true,
-  hash: false
+  skipNodeModulesBundle: true
 });
