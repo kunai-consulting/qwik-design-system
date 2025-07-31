@@ -10,7 +10,6 @@
     "jsx": "react-jsx",
     "jsxImportSource": "@qwik.dev/core",
     "strict": true,
-    "noEmit": true,
     "declaration": true,
     "declarationDir": "lib-types",
     "resolveJsonModule": true,
