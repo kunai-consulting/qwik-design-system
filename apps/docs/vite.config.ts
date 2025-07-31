@@ -1,3 +1,4 @@
+import * as fs from "node:fs";
 import { asChild } from "@kunai-consulting/core/vite";
 import { qwikVite } from "@qwik.dev/core/optimizer";
 import { qwikRouter } from "@qwik.dev/router/vite";
@@ -48,7 +49,60 @@ export default defineConfig(({ command, mode }): UserConfig => {
         webp: mainQuality,
         avif: mainQuality
       }),
-      tsconfigPaths()
+      tsconfigPaths(),
+
+      // 🕵️ Manifest logger plugin for debugging s1 symbol in Cloudflare
+      {
+        name: "manifest-logger",
+        writeBundle(options, bundle) {
+          // Log during CF build
+          if (process.env.CF_PAGES) {
+            console.log("🔍 Checking for q-manifest.json...");
+
+            const manifestPath = "dist/q-manifest.json";
+            if (fs.existsSync(manifestPath)) {
+              const manifest = fs.readFileSync(manifestPath, "utf8");
+              console.log("📋 CLOUDFLARE MANIFEST SIZE:", manifest.length);
+
+              // Check for s1 symbol
+              if (manifest.includes('"s1"')) {
+                console.log("🚨 FOUND s1 in Cloudflare manifest!");
+                console.log(
+                  "🚨 Manifest around s1:",
+                  manifest.substring(
+                    manifest.indexOf('"s1"') - 100,
+                    manifest.indexOf('"s1"') + 100
+                  )
+                );
+              }
+
+              // Log first 500 chars of mapping section
+              const mappingStart = manifest.indexOf('"mapping"');
+              if (mappingStart > -1) {
+                console.log(
+                  "📥 CLOUDFLARE MAPPING START:",
+                  manifest.substring(mappingStart, mappingStart + 500)
+                );
+              }
+
+              // Log any suspiciously short symbols
+              try {
+                const manifestObj = JSON.parse(manifest);
+                if (manifestObj.mapping) {
+                  const shortSymbols = Object.keys(manifestObj.mapping).filter(
+                    (k) => k.length < 5
+                  );
+                  if (shortSymbols.length > 0) {
+                    console.log("⚠️ SHORT SYMBOLS FOUND:", shortSymbols);
+                  }
+                }
+              } catch (e) {
+                console.log("❌ Failed to parse manifest:", e);
+              }
+            }
+          }
+        }
+      }
     ],
     // This tells Vite which dependencies to pre-build in dev mode.
     optimizeDeps: {
