@@ -1,38 +1,42 @@
 {
   "name": "@kunai-consulting/qwik",
   "version": "0.3.0",
-  "description": "Create a Qwik library",
-  "main": "./lib/index.qwik.mjs",
-  "qwik": "./lib/index.qwik.mjs",
-  "types": "./lib-types/src/index.d.ts",
+  "private": true,
+  "description": "A simple example library built by tsdown",
+  "type": "module",
+  "files": ["dist"],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./lib/index.qwik.mjs",
-      "types": "./lib-types/src/index.d.ts"
-    }
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./*": {
+      "import": "./dist/*/index.js",
+      "types": "./dist/*/index.d.ts"
+    },
+    "./package.json": "./package.json"
   },
-  "files": ["lib", "lib-types"],
-  "private": false,
-  "type": "module",
-  "license": "MIT",
   "scripts": {
-    "build": "qwik build",
-    "build.lib": "vite build --mode lib",
-    "build.types": "tsc --emitDeclarationOnly --project tsconfig.json --outDir ./lib-types --pretty",
-    "dev": "vite --mode ssr",
-    "qwik": "qwik"
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.9.1",
-    "@kunai-consulting/qwik-utils": "workspace:*",
     "@types/node": "22.14.0",
     "typescript": "5.4.5",
+    "@qwik.dev/core": "https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc",
+    "tsdown": "0.13.0",
     "uqr": "^0.1.2",
-    "vite": "^7",
-    "vite-tsconfig-paths": "^4.2.1",
-    "@qwik.dev/core": "https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc"
+    "@kunai-consulting/qwik-utils": "workspace:*"
   },
   "dependencies": {
     "@oddbird/css-anchor-positioning": "^0.6"
+  },
+  "peerDependencies": {
+    "@qwik.dev/core": "*"
   }
 }

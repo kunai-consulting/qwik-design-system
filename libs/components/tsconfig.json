@@ -17,6 +17,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "incremental": true,
+    "noEmit": true,
     "isolatedModules": true,
     "types": ["node"]
   },
