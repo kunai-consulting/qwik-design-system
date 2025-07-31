@@ -31,9 +31,6 @@ export default defineConfig(({ command, mode }): UserConfig => {
   };
 
   return {
-    build: {
-      minify: false
-    },
     plugins: [
       asChild(),
       tailwindcss(),
