@@ -4,7 +4,9 @@
   "private": true,
   "description": "A simple example library built by tsdown",
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "./dist/index.qwik.mjs",
   "module": "./dist/index.qwik.mjs",
   "types": "./dist/index.d.ts",
@@ -26,12 +28,14 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.9.1",
-    "@types/node": "22.14.0",
-    "typescript": "5.4.5",
+    "@kunai-consulting/qwik-utils": "workspace:*",
     "@qwik.dev/core": "https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc",
+    "@types/node": "22.14.0",
     "tsdown": "0.13.0",
+    "typescript": "5.4.5",
     "uqr": "^0.1.2",
-    "@kunai-consulting/qwik-utils": "workspace:*"
+    "vite": "^7.0.6",
+    "vite-tsconfig-paths": "^4.2.1"
   },
   "dependencies": {
     "@oddbird/css-anchor-positioning": "^0.6"
