@@ -90,6 +90,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
         "@kunai-consulting/qwik": resolve(__dirname, "../../libs/components/src"),
         "@kunai-consulting/qwik-utils": resolve(__dirname, "../../libs/utils/src"),
         "@kunai-consulting/qwik-icons": resolve(__dirname, "../../libs/icons/src"),
+        "@kunai-consulting/core": resolve(__dirname, "../../libs/core/src"),
         "~": resolve(__dirname, "src")
       },
       dedupe: ["@qwik.dev/core", "@qwik.dev/router"]
