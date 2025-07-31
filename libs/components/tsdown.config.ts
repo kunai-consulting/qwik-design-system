@@ -2,15 +2,19 @@ import { defineConfig } from "tsdown";
 
 export default defineConfig({
   target: "es2020",
-  entry: ["src/**/index.ts"],
+  entry: ["src/index.ts"],
   format: ["esm"],
-  platform: "browser",
   external: [/^node:.*/],
   outExtensions: () => {
     return {
       js: ".qwik.mjs"
     };
   },
-  unbundle: true,
-  skipNodeModulesBundle: true
+  outputOptions: (options) => {
+    return {
+      ...options,
+      preserveModules: true,
+      preserveModulesRoot: "src"
+    };
+  }
 });
