@@ -9,5 +9,6 @@ export default defineConfig({
     return {
       js: ".qwik.mjs"
     };
-  }
+  },
+  unbundle: true
 });
