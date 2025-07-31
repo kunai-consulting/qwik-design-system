@@ -12,10 +12,9 @@ import {
 
 import { useBoundSignal } from "@kunai-consulting/qwik-utils";
 import { createContextId } from "@qwik.dev/core";
-import { useStyles$ } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
-import collapsibleStyles from "./collapsible.css?inline";
+import "./collapsible.css";
 
 export const collapsibleContextId = createContextId<CollapsibleContext>("Collapsible");
 
@@ -48,8 +47,6 @@ export const CollapsibleRootBase = component$((props: CollapsibleRootProps) => {
     open,
     ...rest
   } = props;
-
-  useStyles$(collapsibleStyles);
 
   const isOpenSig = useBoundSignal(givenIsOpenSig, open ?? false);
 

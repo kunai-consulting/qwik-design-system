@@ -7,14 +7,13 @@ import {
   useContextProvider,
   useId,
   useSignal,
-  useStyles$,
   useTask$
 } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import * as Popover from "../popover";
 import { Render } from "../render/render";
 import { type ToastContext, toastContextId } from "./toast-context";
-import styles from "./toast.css?inline";
+import "./toast.css";
 
 type ToastRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   onChange$?: (open: boolean) => void;
@@ -22,7 +21,6 @@ type ToastRootProps = Omit<PropsOf<"div">, "onChange$"> & {
 } & BindableProps<{ open: boolean }>;
 
 export const ToastRootBase = component$((props: ToastRootProps) => {
-  useStyles$(styles);
   const { "bind:open": givenOpenSig, onChange$, duration = 5000, ...rest } = props;
 
   const localId = useId();

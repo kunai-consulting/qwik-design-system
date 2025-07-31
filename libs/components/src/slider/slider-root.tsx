@@ -8,11 +8,10 @@ import {
   useComputed$,
   useContextProvider,
   useSignal,
-  useStyles$,
   useTask$
 } from "@qwik.dev/core";
 import { type SliderValue, type ThumbType, sliderContextId } from "./slider-context";
-import styles from "./slider.css?inline";
+import "./slider.css";
 type DivProps = Omit<PropsOf<"div">, "value" | "min" | "max" | "step" | "disabled">;
 interface PublicSliderProps {
   /** Whether the slider should act as a range slider with two thumbs. Default is false */
@@ -36,8 +35,6 @@ interface PublicSliderProps {
 type PublicRootProps = DivProps & PublicSliderProps;
 /** Root component that provides slider context and handles core slider functionality */
 export const SliderRoot = component$<PublicRootProps>((props) => {
-  useStyles$(styles);
-
   const {
     isRange = false,
     value: initialValue = isRange ? [0, 100] : 0,

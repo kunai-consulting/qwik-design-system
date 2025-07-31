@@ -6,13 +6,12 @@ import {
   useContextProvider,
   useId,
   useSignal,
-  useStyles$,
   useTask$
 } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { type SwitchContext, switchContextId } from "./switch-context";
-import styles from "./switch.css?inline";
+import "./switch.css";
 
 type SwitchBinds = {
   /** Initial checked state of the switch */
@@ -36,7 +35,6 @@ type PublicRootProps = PropsOf<"div"> & {
 
 /** Root component that manages the switch state and context */
 const SwitchRootBase = component$<PublicRootProps>((props) => {
-  useStyles$(styles);
   const { onChange$, hasError, ...restProps } = props;
   const isInitialLoadSig = useSignal(true);
   const hasErrorMessageSig = useSignal(false);

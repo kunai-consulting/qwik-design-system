@@ -11,7 +11,6 @@ import {
   useContextProvider,
   useId,
   useSignal,
-  useStyles$,
   useTask$
 } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
@@ -22,7 +21,7 @@ export type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
 } & BindableProps<{ open: boolean }>;
 
 import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
-import anchorStyles from "./anchor-logic.css?inline";
+import "./anchor-logic.css";
 
 export const popoverContextId = createContextId<PopoverContext>("qds-popover");
 
@@ -37,8 +36,6 @@ type PopoverContext = {
 
 export const PopoverRootBase = component$((props: PopoverRootProps) => {
   const { "bind:open": givenOpenSig, onChange$, ...rest } = props;
-
-  useStyles$(anchorStyles);
 
   const contentRef = useSignal<HTMLDivElement>();
   const triggerRef = useSignal<HTMLButtonElement>();
