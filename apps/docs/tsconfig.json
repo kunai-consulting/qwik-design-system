@@ -24,9 +24,5 @@
     }
   },
   "include": ["src", "./*.d.ts", "./*.config.ts", "docs-widgets", "mdx", "**/api.json"],
-  "references": [
-    { "path": "../../libs/components" },
-    { "path": "../../libs/icons" },
-    { "path": "../../libs/utils" }
-  ]
+  "references": [{ "path": "../../libs/components" }, { "path": "../../libs/utils" }]
 }

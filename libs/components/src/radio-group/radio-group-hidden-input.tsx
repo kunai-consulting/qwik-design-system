@@ -1,6 +1,6 @@
-import { VisuallyHidden } from "@qwik-ui/headless";
 // no-as-child
 import { $, type PropsOf, component$, useContext } from "@qwik.dev/core";
+import { VisuallyHidden } from "../visually-hidden/visually-hidden";
 import { radioGroupContextId } from "./radio-group-context";
 import { radioGroupItemContextId } from "./radio-group-item";
 

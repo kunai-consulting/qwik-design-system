@@ -7,17 +7,17 @@ import {
   useOnDocument,
   useSignal
 } from "@qwik.dev/core";
-import type { PropFunction } from "@qwik.dev/core";
+
 import { scrollAreaContextId } from "./scroll-area-context";
 type PublicScrollAreaThumb = {
   /** Reference to the thumb element */
   ref?: Signal<HTMLDivElement | undefined>;
   /** Event handler for when thumb dragging starts */
-  onDragStart$?: PropFunction<(e: MouseEvent) => void>;
+  onDragStart$?: (e: MouseEvent) => void;
   /** Event handler for when thumb is being dragged */
-  onDragMove$?: PropFunction<(e: MouseEvent) => void>;
+  onDragMove$?: (e: MouseEvent) => void;
   /** Event handler for when thumb dragging ends */
-  onDragEnd$?: PropFunction<() => void>;
+  onDragEnd$?: () => void;
 } & PropsOf<"div">;
 /** A draggable thumb component for the scrollbar that handles scroll position */
 export const ScrollAreaThumb = component$<PublicScrollAreaThumb>((props) => {

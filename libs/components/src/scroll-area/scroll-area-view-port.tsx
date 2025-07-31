@@ -1,6 +1,5 @@
 import {
   $,
-  type PropFunction,
   type PropsOf,
   Slot,
   component$,
@@ -11,7 +10,7 @@ import {
 import { scrollAreaContextId } from "./scroll-area-context";
 type PublicViewPortProps = PropsOf<"div"> & {
   /** Event handler for scroll events */
-  onScroll$?: PropFunction<(e: Event) => void>;
+  onScroll$?: (e: Event) => void;
 };
 /** A viewport component that contains the scrollable content and manages overflow detection */
 export const ScrollAreaViewport = component$<PublicViewPortProps>((props) => {
