@@ -1,5 +1,25 @@
 import { resolve } from "pathe";
-import { defineConfig } from "vitest/config";
+import { type TestProjectConfiguration, defineConfig } from "vitest/config";
+
+const unitConfig: TestProjectConfiguration = {
+  test: {
+    include: ["**/*.unit.ts"],
+    name: "unit",
+    environment: "node"
+  }
+};
+
+// uses a real browser for component testing
+const domConfig: TestProjectConfiguration = {
+  test: {
+    include: ["**/*.dom.ts"],
+    name: "dom",
+    browser: {
+      enabled: true,
+      instances: [{ browser: "chromium" }]
+    }
+  }
+};
 
 export default defineConfig({
   resolve: {
@@ -9,6 +29,6 @@ export default defineConfig({
     }
   },
   test: {
-    include: ["**/*.unit.ts", "**/*.smoke.ts"]
+    projects: [unitConfig, domConfig]
   }
 });
