@@ -14,7 +14,6 @@ import {
   useSignal,
   useTask$
 } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { CollapsibleRoot } from "../collapsible/collapsible-root";
 import { TreeRootContextId } from "./tree-root";
 import { useTree } from "./use-tree";
@@ -33,7 +32,7 @@ interface TreeItemProps extends PropsOf<typeof CollapsibleRoot> {
   groupId?: string;
 }
 
-export const TreeItemBase = component$((props: TreeItemProps) => {
+export const TreeItem = component$((props: TreeItemProps) => {
   const context = useContext(TreeRootContextId);
   const parentContext = useContext(itemContextId, null);
   const id = useId();
@@ -159,5 +158,3 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
     </CollapsibleRoot>
   );
 });
-
-export const TreeItem = withAsChild(TreeItemBase);
