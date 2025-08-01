@@ -5,15 +5,14 @@ import {
   useComputed$,
   useContext,
   useStyles$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { checkboxContextId } from "./checkbox-context";
 import "./checkbox.css";
-import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import styles from "./checkbox.css?inline";
 export type PublicCheckboxIndicatorProps = PropsOf<"span">;
 /** Visual indicator component showing the checkbox state */
-export const CheckboxIndicatorBase = component$<PublicCheckboxIndicatorProps>((props) => {
+export const CheckboxIndicator = component$<PublicCheckboxIndicatorProps>((props) => {
   useStyles$(styles);
   const context = useContext(checkboxContextId);
 
@@ -38,5 +37,3 @@ export const CheckboxIndicatorBase = component$<PublicCheckboxIndicatorProps>((p
     </Render>
   );
 });
-
-export const CheckboxIndicator = withAsChild(CheckboxIndicatorBase);

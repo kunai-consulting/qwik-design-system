@@ -1,10 +1,10 @@
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
-import { CheckboxErrorBase } from "../checkbox/checkbox-error";
+import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
+import { CheckboxError } from "../checkbox/checkbox-error";
 
-export const ChecklistError = component$((props: PropsOf<typeof CheckboxErrorBase>) => {
+export const ChecklistError = component$((props: PropsOf<typeof CheckboxError>) => {
   return (
-    <CheckboxErrorBase {...props}>
+    <CheckboxError {...props}>
       <Slot />
-    </CheckboxErrorBase>
+    </CheckboxError>
   );
 });

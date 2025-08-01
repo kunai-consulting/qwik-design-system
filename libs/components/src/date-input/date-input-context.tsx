@@ -1,4 +1,4 @@
-import { type Signal, createContextId } from "@builder.io/qwik";
+import { type Signal, createContextId } from "@qwik.dev/core";
 import type { ISODate } from "../calendar/types";
 
 export const dateInputContextId = createContextId<DateInputContext>(
@@ -9,4 +9,6 @@ export type DateInputContext = {
   localId: string;
   segmentRefs: Signal<Signal<HTMLInputElement | undefined>[]>; // for focus management
   datesSig: Signal<(ISODate | null)[]>;
+  currSegmentIndex: number;
+  currFieldIndex: number;
 };

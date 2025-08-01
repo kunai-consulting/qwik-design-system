@@ -1,13 +1,10 @@
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
-import { withAsChild } from "../as-child/as-child";
+import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
 import { Render } from "../render/render";
 
-export const TreeItemLabelBase = component$((props: PropsOf<"span">) => {
+export const TreeItemLabel = component$((props: PropsOf<"span">) => {
   return (
     <Render fallback="span" tabIndex={-1} {...props}>
       <Slot />
     </Render>
   );
 });
-
-export const TreeItemLabel = withAsChild(TreeItemLabelBase);

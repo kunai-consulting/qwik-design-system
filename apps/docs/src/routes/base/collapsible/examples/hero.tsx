@@ -1,5 +1,5 @@
-import { component$, useStyles$ } from "@builder.io/qwik";
 import { Collapsible } from "@qwik-ui/headless";
+import { component$, useStyles$ } from "@qwik.dev/core";
 import { LuChevronDown } from "@qwikest/icons/lucide";
 
 export default component$(() => {

@@ -45,7 +45,7 @@ These styles should also be easy for consumers to override. (no specificity wars
 3. Inline the css file in the root component piece using the `useStyles$` hook.
 
 ```tsx
-import { component$, useStyles$ } from "@builder.io/qwik";
+import { component$, useStyles$ } from "@qwik.dev/core";
 import styles from "./checkbox.css?inline";
 
 export const CheckboxRoot = component$(() => {

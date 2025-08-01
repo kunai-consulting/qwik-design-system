@@ -1,5 +1,5 @@
-import { component$, useSignal } from "@builder.io/qwik";
 import { Pagination } from "@kunai-consulting/qwik";
+import { component$, useSignal } from "@qwik.dev/core";
 
 export default component$(() => {
   const selectedPageSig = useSignal(5); // Start in middle to show siblings

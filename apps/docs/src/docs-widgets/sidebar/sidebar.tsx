@@ -1,8 +1,8 @@
-import { $, type PropsOf, component$ } from "@builder.io/qwik";
-import { useSignal } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
-import { useNavigate } from "@builder.io/qwik-city";
 import { Tree } from "@kunai-consulting/qwik";
+import { $, type PropsOf, component$ } from "@qwik.dev/core";
+import { useSignal } from "@qwik.dev/core";
+import { Link } from "@qwik.dev/router";
+import { useNavigate } from "@qwik.dev/router";
 import { LuChevronRight } from "@qwikest/icons/lucide";
 
 type TreeItemType = {
@@ -41,8 +41,7 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
             { id: "/base/scroll-area", label: "Scroll Area" },
             { id: "/base/tree", label: "Tree" },
             { id: "/base/popover", label: "Popover" },
-            { id: "/base/progress", label: "Progress" },
-            { id: "/base/toast", label: "Toast" }
+            { id: "/base/progress", label: "Progress" }
           ]
         },
         {

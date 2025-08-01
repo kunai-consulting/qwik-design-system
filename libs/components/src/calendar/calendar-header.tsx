@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
 
 /** A component that renders the calendar header section */
 export const CalendarHeader = component$((props: PropsOf<"header">) => {

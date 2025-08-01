@@ -3,9 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "pnpm --filter ./apps/docs dev",
+    "dev": "pnpm --filter ./libs/core dev & pnpm --filter ./apps/docs dev",
     "dev.ct": "pnpm --filter ./apps/component-tests dev -- --port 6174",
-    "build": "pnpm --filter ./libs/utils build && pnpm --filter ./libs/components build && pnpm --filter ./apps/docs build && cp -r ./apps/docs/dist/pagefind ./apps/docs/public",
+    "build": "pnpm --filter ./libs/core build && pnpm --filter ./libs/utils build && pnpm --filter ./libs/components build && pnpm --filter ./apps/docs build && cp -r ./apps/docs/dist/pagefind ./apps/docs/public",
     "preview": "pnpm --filter ./apps/docs preview",
     "check": "biome ci .",
     "check.format": "biome format .",
@@ -26,14 +26,11 @@
     "@changesets/cli": "^2.27.7",
     "@linear/sdk": "^27.0.0",
     "@playwright/test": "^1.46.0",
-    "@qwik-ui/headless": "0.6.4",
     "@types/node": "22.14.0",
     "pagefind": "1.2.0",
     "pathe": "^2.0.3",
     "tsx": "^4.19.3",
-    "vitest": "^3.1.1"
-  },
-  "dependencies": {
-    "@babel/parser": "^7.27.5"
+    "vitest": "^3.1.1",
+    "oxc-parser": "^0.75.0"
   }
 }

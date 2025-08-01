@@ -1,11 +1,10 @@
-import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
-import { withAsChild } from "../as-child/as-child";
+import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
 import { Render } from "../render/render";
 import { tabsContextId } from "./tabs-root";
 
 export type TabsListProps = PropsOf<"div">;
 
-export const TabsListBase = component$((props: TabsListProps) => {
+export const TabsList = component$((props: TabsListProps) => {
   const context = useContext(tabsContextId);
 
   return (
@@ -22,5 +21,3 @@ export const TabsListBase = component$((props: TabsListProps) => {
     </Render>
   );
 });
-
-export const TabsList = withAsChild(TabsListBase);

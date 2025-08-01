@@ -4,13 +4,12 @@ import {
   Slot,
   component$,
   useContext
-} from "@builder.io/qwik";
-import { withAsChild } from "../as-child/as-child";
+} from "@qwik.dev/core";
 import { CollapsibleTrigger } from "../collapsible/collapsible-trigger";
 import { itemContextId } from "./tree-item";
 
-export const TreeItemTriggerBase: Component<PropsOf<typeof CollapsibleTrigger>> =
-  component$(({ ...props }) => {
+export const TreeItemTrigger: Component<PropsOf<typeof CollapsibleTrigger>> = component$(
+  ({ ...props }) => {
     const itemContext = useContext(itemContextId);
 
     return (
@@ -18,6 +17,5 @@ export const TreeItemTriggerBase: Component<PropsOf<typeof CollapsibleTrigger>> 
         <Slot />
       </CollapsibleTrigger>
     );
-  });
-
-export const TreeItemTrigger = withAsChild(TreeItemTriggerBase);
+  }
+);

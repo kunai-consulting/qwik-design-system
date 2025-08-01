@@ -1,3 +1,4 @@
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import {
   $,
   type PropsOf,
@@ -11,16 +12,12 @@ import {
   useOnWindow,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
-import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
-import { withAsChild } from "../as-child/as-child";
-import { PopoverRootBase } from "../popover/popover-root";
+} from "@qwik.dev/core";
+import { PopoverRoot } from "../popover/popover-root";
 
 export type ItemRef = {
   ref: Signal;
 };
-
-export type MenuPosition = "right" | "left" | "bottom" | "top";
 
 export type MenuContext = {
   /** Whether the menu is open */
@@ -43,8 +40,6 @@ export type MenuContext = {
   triggerRef: Signal<HTMLElement | undefined>;
   /** Whether the menu is disabled */
   disabled: Signal<boolean>;
-  /** The position of the menu */
-  position?: MenuPosition;
   /** X coordinate for context menu positioning */
   contextMenuX?: Signal<number>;
   /** Y coordinate for context menu positioning */
@@ -59,7 +54,7 @@ export type MenuContext = {
 
 export const menuContextId = createContextId<MenuContext>("menu-context");
 
-type MenuRootBaseProps = PropsOf<typeof PopoverRootBase>;
+type MenuRootBaseProps = PropsOf<typeof PopoverRoot>;
 
 /** Initial open state of the menu */
 export type PublicMenuRootProps = Omit<MenuRootBaseProps, "onChange$"> &
@@ -72,7 +67,7 @@ export type PublicMenuRootProps = Omit<MenuRootBaseProps, "onChange$"> &
   };
 
 /** Root container component for the menu */
-const MenuRootBase = component$<PublicMenuRootProps>((props) => {
+export const MenuRoot = component$<PublicMenuRootProps>((props) => {
   const { openSig: isOpenSig, disabledSig: isDisabledSig } = useBindings(props, {
     open: false,
     disabled: false
@@ -156,10 +151,8 @@ const MenuRootBase = component$<PublicMenuRootProps>((props) => {
   const { open: _o, "bind:open": _bo, onChange$: _oc, ...rest } = props;
 
   return (
-    <PopoverRootBase bind:open={isOpenSig} data-qds-menu-root ref={rootRef} {...rest}>
+    <PopoverRoot bind:open={isOpenSig} data-qds-menu-root ref={rootRef} {...rest}>
       <Slot />
-    </PopoverRootBase>
+    </PopoverRoot>
   );
 });
-
-export const MenuRoot = withAsChild(MenuRootBase);

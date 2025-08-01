@@ -4,28 +4,28 @@ import {
   component$,
   useContextProvider,
   useSignal
-} from "@builder.io/qwik";
-import { resetIndexes } from "@kunai-consulting/qwik-utils";
-import { withAsChild } from "../as-child/as-child";
-import { CheckboxRootBase } from "../checkbox/checkbox-root";
+} from "@qwik.dev/core";
+import { CheckboxRoot } from "../checkbox/checkbox-root";
 import { type ChecklistContext, checklistContextId } from "./checklist-context";
 
 type PublicChecklistRootProps = Omit<PropsOf<"div">, "onChange$">;
 
-export const ChecklistRootBase = component$((props: PublicChecklistRootProps) => {
+export const ChecklistRoot = component$((props: PublicChecklistRootProps) => {
   const isAllCheckedSig = useSignal(false);
   const checkedStatesSig = useSignal<(boolean | "mixed")[]>([]);
+  const currItemIndex = 0;
 
   const context: ChecklistContext = {
     isAllCheckedSig,
-    checkedStatesSig
+    checkedStatesSig,
+    currItemIndex
   };
 
   useContextProvider(checklistContextId, context);
 
   // The checkbox root to the select all checkbox
   return (
-    <CheckboxRootBase
+    <CheckboxRoot
       role="group"
       bind:checked={isAllCheckedSig}
       // Identifies the root container element of the checklist component
@@ -33,12 +33,6 @@ export const ChecklistRootBase = component$((props: PublicChecklistRootProps) =>
       {...props}
     >
       <Slot />
-    </CheckboxRootBase>
+    </CheckboxRoot>
   );
-});
-
-export const ChecklistRoot = withAsChild(ChecklistRootBase, (props) => {
-  resetIndexes("qds-checklist");
-
-  return props;
 });

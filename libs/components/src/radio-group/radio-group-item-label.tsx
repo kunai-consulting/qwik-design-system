@@ -1,11 +1,10 @@
-import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
-import { withAsChild } from "../as-child/as-child";
+import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
 import { Render } from "../render/render";
 import { radioGroupItemContextId } from "./radio-group-item";
 
 type PublicLabelProps = PropsOf<"span">;
 
-const ItemLabelBase = component$((props: PublicLabelProps) => {
+export const RadioGroupItemLabel = component$((props: PublicLabelProps) => {
   const itemContext = useContext(radioGroupItemContextId);
   const itemLabelId = `${itemContext.itemId}-label`;
 
@@ -15,5 +14,3 @@ const ItemLabelBase = component$((props: PublicLabelProps) => {
     </Render>
   );
 });
-
-export const RadioGroupItemLabel = withAsChild(ItemLabelBase);

@@ -5,8 +5,7 @@ import {
   component$,
   useComputed$,
   useContext
-} from "@builder.io/qwik";
-import { withAsChild } from "../as-child/as-child";
+} from "@qwik.dev/core";
 import { Render } from "../render/render";
 import { toggleContextId } from "./toggle-root";
 
@@ -14,7 +13,7 @@ type ToggleIndicatorProps = PropsOf<"span"> & {
   fallback?: JSXOutput;
 };
 
-export const ToggleIndicatorBase = component$((props: ToggleIndicatorProps) => {
+export const ToggleIndicator = component$((props: ToggleIndicatorProps) => {
   const { fallback, ...rest } = props;
 
   const context = useContext(toggleContextId);
@@ -35,5 +34,3 @@ export const ToggleIndicatorBase = component$((props: ToggleIndicatorProps) => {
     </Render>
   );
 });
-
-export const ToggleIndicator = withAsChild(ToggleIndicatorBase);

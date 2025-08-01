@@ -1,4 +1,4 @@
-import { type Signal, createContextId } from "@builder.io/qwik";
+import { type Signal, createContextId } from "@qwik.dev/core";
 
 export interface ContentRef {
   ref: Signal<HTMLElement | undefined>;
@@ -14,6 +14,7 @@ export interface ResizableContext {
   startPosition: Signal<number | null>;
   isDragging: Signal<boolean>;
   contents: Signal<ContentRef[]>;
+  currContentIndex: number;
 }
 
 export const resizableContextId = createContextId<ResizableContext>("resizable-context");

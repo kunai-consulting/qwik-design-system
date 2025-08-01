@@ -1,5 +1,5 @@
-import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
 import { Switch } from "@kunai-consulting/qwik";
+import { $, component$, useSignal, useStyles$ } from "@qwik.dev/core";
 import styles from "./switch-custom.css?inline";
 
 export default component$(() => {

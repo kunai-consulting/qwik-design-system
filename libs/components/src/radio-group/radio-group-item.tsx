@@ -5,10 +5,10 @@ import {
   component$,
   createContextId,
   useComputed$,
+  useConstant,
   useContext,
   useContextProvider
-} from "@builder.io/qwik";
-import { withAsChild } from "../as-child/as-child";
+} from "@qwik.dev/core";
 import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 
@@ -24,11 +24,18 @@ type RadioGroupItemContext = {
   isSelectedSig: Signal<boolean>;
   itemValue: string;
   itemId: string;
+  itemIndex: number;
 };
 
-export const RadioGroupItemBase = component$((props: PublicItemProps) => {
+export const RadioGroupItem = component$((props: PublicItemProps) => {
   const context = useContext(radioGroupContextId);
   const itemId = `${context.localId}-item-${props.value}`;
+
+  const itemIndex = useConstant(() => {
+    const currItemIndex = context.currItemIndex;
+    context.currItemIndex++;
+    return currItemIndex;
+  });
 
   const isSelectedSig = useComputed$(
     () => context.selectedValueSig.value === props.value
@@ -37,7 +44,8 @@ export const RadioGroupItemBase = component$((props: PublicItemProps) => {
   const itemContext: RadioGroupItemContext = {
     isSelectedSig,
     itemValue: props.value,
-    itemId
+    itemId,
+    itemIndex
   };
 
   useContextProvider(radioGroupItemContextId, itemContext);
@@ -54,5 +62,3 @@ export const RadioGroupItemBase = component$((props: PublicItemProps) => {
     </Render>
   );
 });
-
-export const RadioGroupItem = withAsChild(RadioGroupItemBase);

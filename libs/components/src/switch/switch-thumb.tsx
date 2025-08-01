@@ -1,17 +1,16 @@
-import { type PropsOf, component$, useContext } from "@builder.io/qwik";
-import { withAsChild } from "../as-child/as-child";
+import { type PropsOf, component$, useContext } from "@qwik.dev/core";
 import { Render } from "../render/render";
 import { switchContextId } from "./switch-context";
 
 /** Visual indicator that moves to show the switch state */
-const SwitchThumbBase = component$<PropsOf<"div">>((props) => {
+export const SwitchThumb = component$<PropsOf<"span">>((props) => {
   const { ...restProps } = props;
   const context = useContext(switchContextId);
 
   return (
     <Render
       {...restProps}
-      fallback="div"
+      fallback="span"
       data-qds-switch-thumb
       // Indicates whether the switch is currently checked
       data-checked={context.checked.value}
@@ -20,5 +19,3 @@ const SwitchThumbBase = component$<PropsOf<"div">>((props) => {
     />
   );
 });
-
-export const SwitchThumb = withAsChild(SwitchThumbBase);

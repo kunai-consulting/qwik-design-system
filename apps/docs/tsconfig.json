@@ -8,7 +8,7 @@
     "module": "ES2022",
     "lib": ["es2022", "DOM", "WebWorker", "DOM.Iterable"],
     "jsx": "react-jsx",
-    "jsxImportSource": "@builder.io/qwik",
+    "jsxImportSource": "@qwik.dev/core",
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
@@ -24,9 +24,5 @@
     }
   },
   "include": ["src", "./*.d.ts", "./*.config.ts", "docs-widgets", "mdx", "**/api.json"],
-  "references": [
-    { "path": "../../libs/components" },
-    { "path": "../../libs/icons" },
-    { "path": "../../libs/utils" }
-  ]
+  "references": [{ "path": "../../libs/components" }, { "path": "../../libs/utils" }]
 }

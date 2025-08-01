@@ -1,5 +1,5 @@
-import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
 import { DateInput } from "@kunai-consulting/qwik";
+import { $, component$, useSignal, useStyles$ } from "@qwik.dev/core";
 
 export default component$(() => {
   useStyles$(styles);

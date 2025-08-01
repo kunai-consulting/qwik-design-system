@@ -3,35 +3,41 @@ import {
   type PropsOf,
   Slot,
   component$,
+  sync$,
   useComputed$,
   useContext,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
-import { getNextIndex } from "@kunai-consulting/qwik-utils";
-import { withAsChild } from "../as-child/as-child";
+} from "@qwik.dev/core";
+import { menuContextId } from "../menu/menu-root";
 import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 import { radioGroupItemContextId } from "./radio-group-item";
 
-type PublicTriggerProps = PropsOf<"button"> & {
-  _index?: number;
-};
+type PublicTriggerProps = PropsOf<"button">;
 
-const TriggerBase = component$((props: PublicTriggerProps) => {
+export const RadioGroupItemTrigger = component$((props: PublicTriggerProps) => {
   const context = useContext(radioGroupContextId);
   const itemContext = useContext(radioGroupItemContextId);
   const triggerRef = useSignal<HTMLElement>();
-  const { _index, ...restProps } = props;
+  const { ...restProps } = props;
   const value = itemContext.itemValue;
   const itemLabelId = `${itemContext.itemId}-label`;
 
+  const menuContext = useContext(menuContextId, null);
+
+  const role = useComputed$(() => {
+    return menuContext ? "menuitemradio" : "radio";
+  });
+
+  const itemIndex = itemContext.itemIndex;
+
   useTask$(function getIndexOrder() {
-    if (_index === undefined) {
+    if (itemIndex === undefined) {
       throw new Error("RadioGroupTrigger cannot find its proper index.");
     }
 
-    context.triggerRefsArray.value[_index] = {
+    context.triggerRefsArray.value[itemIndex] = {
       ref: triggerRef,
       value
     };
@@ -41,7 +47,7 @@ const TriggerBase = component$((props: PublicTriggerProps) => {
 
   const tabIndexSig = useComputed$(() => {
     const isSelected = itemContext.isSelectedSig.value;
-    const isFirstItem = _index === 0;
+    const isFirstItem = itemIndex === 0;
     const noSelection = !context.selectedValueSig.value;
 
     return isSelected || (noSelection && isFirstItem) ? 0 : -1;
@@ -60,20 +66,34 @@ const TriggerBase = component$((props: PublicTriggerProps) => {
     }
   });
 
+  const handleKeyDownSync$ = sync$((event: KeyboardEvent) => {
+    const preventKeys = [
+      "ArrowRight",
+      "ArrowLeft",
+      "ArrowUp",
+      "ArrowDown",
+      "Home",
+      "End"
+    ];
+    if (preventKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  });
+
   return (
     <Render
       fallback="button"
+      role={role.value}
+      type="button"
       {...restProps}
       internalRef={triggerRef}
-      type="button"
-      role="radio"
       aria-checked={itemContext.isSelectedSig.value}
       data-checked={itemContext.isSelectedSig.value}
       data-qds-radio-group-trigger
       data-disabled={isDisabledSig.value || undefined}
       value={value}
       onClick$={[handleSelection$, props.onClick$]}
-      onKeyDown$={[handleKeyDown$, props.onKeyDown$]}
+      onKeyDown$={[handleKeyDownSync$, handleKeyDown$, props.onKeyDown$]}
       disabled={isDisabledSig.value}
       tabIndex={tabIndexSig.value}
       aria-labelledby={itemLabelId}
@@ -81,10 +101,4 @@ const TriggerBase = component$((props: PublicTriggerProps) => {
       <Slot />
     </Render>
   );
-});
-
-export const RadioGroupItemTrigger = withAsChild(TriggerBase, (props) => {
-  const nextIndex = getNextIndex("radioGroup");
-  props._index = nextIndex;
-  return props;
 });

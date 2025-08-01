@@ -1,3 +1,4 @@
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import {
   type PropsOf,
   Slot,
@@ -5,9 +6,7 @@ import {
   useComputed$,
   useContextProvider,
   useTask$
-} from "@builder.io/qwik";
-import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
-import { withAsChild } from "../as-child/as-child";
+} from "@qwik.dev/core";
 import { Render } from "../render/render";
 import { ProgressContext } from "./progress-context";
 
@@ -25,7 +24,7 @@ type ProgressProps = {
 } & BindableProps<{ value: number | null }>;
 
 export type ProgressState = "indeterminate" | "complete" | "loading";
-export const ProgressRootBase = component$<ProgressProps & PropsOf<"div">>((props) => {
+export const ProgressRoot = component$<ProgressProps & PropsOf<"div">>((props) => {
   const { ...rest } = props;
 
   /** Default max value for progress bar **/
@@ -112,5 +111,3 @@ export const ProgressRootBase = component$<ProgressProps & PropsOf<"div">>((prop
     </Render>
   );
 });
-
-export const ProgressRoot = withAsChild(ProgressRootBase);

@@ -1,5 +1,5 @@
-import { component$, useSignal } from "@builder.io/qwik";
 import { Pagination } from "@kunai-consulting/qwik";
+import { component$, useSignal } from "@qwik.dev/core";
 
 export default component$(() => {
   const selectedPageSig = useSignal(5); // Middle page to show ellipsis on both sides

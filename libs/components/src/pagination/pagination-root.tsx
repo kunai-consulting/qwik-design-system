@@ -1,3 +1,4 @@
+import { useBoundSignal } from "@kunai-consulting/qwik-utils";
 import {
   type JSXChildren,
   type PropsOf,
@@ -9,14 +10,8 @@ import {
   useContextProvider,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
-import {
-  findComponent,
-  processChildren,
-  useBoundSignal
-} from "@kunai-consulting/qwik-utils";
+} from "@qwik.dev/core";
 import { type PaginationContext, paginationContextId } from "./pagination-context";
-import { PaginationItem } from "./pagination-item";
 import { getPaginationItems } from "./utils";
 export type PublicPaginationRootProps = PropsOf<"div"> & {
   /** The total number of pages to display */
@@ -36,20 +31,9 @@ export type PublicPaginationRootProps = PropsOf<"div"> & {
   /** Number of siblings to show on each side of current page */
   siblingCount?: number;
 };
-export const PaginationRoot = (props: PublicPaginationRootProps) => {
-  let currPageIndex = 0;
 
-  findComponent(PaginationItem, (pageProps) => {
-    pageProps._index = currPageIndex;
-    currPageIndex++;
-  });
-
-  processChildren(props.children);
-
-  return <PaginationBase {...props}>{props.children}</PaginationBase>;
-};
 /** Root pagination container component that provides context and handles page management */
-export const PaginationBase = component$((props: PublicPaginationRootProps) => {
+export const PaginationRoot = component$((props: PublicPaginationRootProps) => {
   const {
     "bind:page": givenPageSig,
     totalPages,
@@ -69,6 +53,7 @@ export const PaginationBase = component$((props: PublicPaginationRootProps) => {
     getPaginationItems(totalPages, selectedPageSig.value, siblingCount || 1)
   );
   const pagesSig = useSignal(pages);
+  const currItemIndex = 0;
 
   const context: PaginationContext = {
     isDisabledSig,
@@ -79,7 +64,8 @@ export const PaginationBase = component$((props: PublicPaginationRootProps) => {
     selectedPageSig,
     ellipsisSig,
     ellipsis,
-    focusedIndexSig
+    focusedIndexSig,
+    currItemIndex
   };
 
   useContextProvider(paginationContextId, context);

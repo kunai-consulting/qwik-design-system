@@ -8,8 +8,7 @@ import {
   createContextId,
   useContextProvider,
   useSignal
-} from "@builder.io/qwik";
-import { withAsChild } from "../as-child/as-child";
+} from "@qwik.dev/core";
 import { Render } from "../render/render";
 
 type TreeRootContext = {
@@ -29,7 +28,7 @@ export type TreeNode = {
   children?: Record<number, TreeNode>;
 };
 
-export const TreeRootBase = component$((props: PropsOf<"div">) => {
+export const TreeRoot = component$((props: PropsOf<"div">) => {
   const rootRef = useSignal<HTMLDivElement>();
   const currentFocusEl = useSignal<HTMLElement>();
 
@@ -46,5 +45,3 @@ export const TreeRootBase = component$((props: PropsOf<"div">) => {
     </Render>
   );
 });
-
-export const TreeRoot = withAsChild(TreeRootBase);

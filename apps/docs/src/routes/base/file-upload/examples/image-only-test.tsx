@@ -1,5 +1,5 @@
-import { component$ } from "@builder.io/qwik";
 import { FileUpload } from "@kunai-consulting/qwik";
+import { component$ } from "@qwik.dev/core";
 
 export default component$(() => {
   return (

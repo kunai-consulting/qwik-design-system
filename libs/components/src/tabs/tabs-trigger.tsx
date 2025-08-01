@@ -1,3 +1,4 @@
+import { getNextEnabledIndex, getPrevEnabledIndex } from "@kunai-consulting/qwik-utils";
 import {
   $,
   type PropsOf,
@@ -5,17 +6,11 @@ import {
   component$,
   sync$,
   useComputed$,
+  useConstant,
   useContext,
-  useOnWindow,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
-import {
-  getNextEnabledIndex,
-  getNextIndex,
-  getPrevEnabledIndex
-} from "@kunai-consulting/qwik-utils";
-import { withAsChild } from "../as-child/as-child";
+} from "@qwik.dev/core";
 import { Render } from "../render/render";
 import { tabsContextId } from "./tabs-root";
 
@@ -24,12 +19,19 @@ export type TabsTriggerProps = PropsOf<"button"> & {
   value?: string;
 };
 
-export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
+export const TabsTrigger = component$((props: TabsTriggerProps) => {
   const triggerRef = useSignal<HTMLButtonElement>();
   const context = useContext(tabsContextId);
 
+  const currIndex = useConstant(() => {
+    const currTriggerIndex = context.currTriggerIndex;
+    context.currTriggerIndex++;
+
+    return currTriggerIndex;
+  });
+
   useTask$(function setIndexOrder() {
-    const index = props._index;
+    const index = currIndex;
     if (index === undefined) return;
 
     context.triggerRefs.value[index] = triggerRef;
@@ -39,30 +41,23 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
     if (props.value) {
       context.selectedValueSig.value = props.value;
     } else {
-      context.selectedValueSig.value = props._index?.toString() ?? "No index";
+      context.selectedValueSig.value = currIndex?.toString() ?? "No index";
     }
   });
 
   const isSelectedSig = useComputed$(() => {
-    const isIndexBased = Number.parseInt(context.selectedValueSig.value) === props._index;
+    const isIndexBased = Number.parseInt(context.selectedValueSig.value) === currIndex;
 
     const isValueBased = props.value === context.selectedValueSig.value;
 
     return isIndexBased || isValueBased;
   });
 
-  useOnWindow(
-    "keydown",
-    sync$((e: KeyboardEvent) => {
-      if (!document.activeElement?.hasAttribute("data-qds-tabs-trigger")) return;
-
-      const keys = ["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "Home", "End"];
-
-      if (!keys.includes(e.key)) return;
-
-      e.preventDefault();
-    })
-  );
+  const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
+    const keys = ["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", "Home", "End"];
+    if (!keys.includes(e.key)) return;
+    e.preventDefault();
+  });
 
   const handleNavigation$ = $((e: KeyboardEvent) => {
     switch (e.key) {
@@ -73,7 +68,7 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
 
         const nextIndex = getNextEnabledIndex({
           items: context.triggerRefs.value,
-          currentIndex: props._index ?? 0,
+          currentIndex: currIndex ?? 0,
           loop: context.loopSig.value
         });
 
@@ -88,7 +83,7 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
 
         const nextIndex = getNextEnabledIndex({
           items: context.triggerRefs.value,
-          currentIndex: props._index ?? 0,
+          currentIndex: currIndex ?? 0,
           loop: context.loopSig.value
         });
 
@@ -103,7 +98,7 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
 
         const prevIndex = getPrevEnabledIndex({
           items: context.triggerRefs.value,
-          currentIndex: props._index ?? 0,
+          currentIndex: currIndex ?? 0,
           loop: context.loopSig.value
         });
 
@@ -118,7 +113,7 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
 
         const prevIndex = getPrevEnabledIndex({
           items: context.triggerRefs.value,
-          currentIndex: props._index ?? 0,
+          currentIndex: currIndex ?? 0,
           loop: context.loopSig.value
         });
 
@@ -161,7 +156,7 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
       }
       onClick$={[handleSelect$, props.onClick$]}
       onFocus$={[context.selectOnFocus ? handleSelect$ : undefined, props.onFocus$]}
-      onKeyDown$={[handleNavigation$, props.onKeyDown$]}
+      onKeyDown$={[handleKeyDownSync$, handleNavigation$, props.onKeyDown$]}
       tabIndex={isSelectedSig.value ? 0 : -1}
       data-selected={isSelectedSig.value}
       aria-selected={isSelectedSig.value ? "true" : "false"}
@@ -170,11 +165,4 @@ export const TabsTriggerBase = component$((props: TabsTriggerProps) => {
       <Slot />
     </Render>
   );
-});
-
-export const TabsTrigger = withAsChild(TabsTriggerBase, (props) => {
-  const index = getNextIndex("tabs-trigger");
-  props._index = index;
-
-  return props;
 });

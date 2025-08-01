@@ -1,13 +1,13 @@
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
-import { CheckboxLabelBase } from "../checkbox/checkbox-label";
+import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
+import { CheckboxLabel } from "../checkbox/checkbox-label";
 
 // no-as-child TODO: remove this comment
 
-export const ChecklistLabel = component$((props: PropsOf<typeof CheckboxLabelBase>) => {
+export const ChecklistLabel = component$((props: PropsOf<typeof CheckboxLabel>) => {
   return (
     // Identifies the label element for the select all checkbox in the checklist
-    <CheckboxLabelBase data-qds-checklist-select-all-label {...props}>
+    <CheckboxLabel data-qds-checklist-select-all-label {...props}>
       <Slot />
-    </CheckboxLabelBase>
+    </CheckboxLabel>
   );
 });

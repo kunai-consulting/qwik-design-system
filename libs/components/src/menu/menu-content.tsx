@@ -5,38 +5,28 @@ import {
   useContext,
   useTask$,
   useVisibleTask$
-} from "@builder.io/qwik";
-import { withAsChild } from "../as-child/as-child";
-import { PopoverContentBase } from "../popover/popover-content";
+} from "@qwik.dev/core";
+import { PopoverContent } from "../popover/popover-content";
 import { menuContextId } from "./menu-root";
 import { getFirstMenuItem, getLastMenuItem } from "./utils";
 
-export type MenuContentProps = PropsOf<typeof PopoverContentBase>;
+export type MenuContentProps = PropsOf<typeof PopoverContent>;
 
 /** A component that renders the menu content */
-export const MenuContentBase = component$<MenuContentProps>((props) => {
+export const MenuContent = component$<MenuContentProps>((props) => {
   const context = useContext(menuContextId);
 
   // Position the content at mouse coordinates when opened via context menu
-  useTask$(({ track, cleanup }) => {
+  useTask$(({ track }) => {
     // Track these values to reposition when any of them change
     const isOpen = track(() => context.isOpenSig.value);
     const isContextMenu = track(() => context.isContextMenu?.value ?? false);
     const x = track(() => context.contextMenuX?.value ?? 0);
     const y = track(() => context.contextMenuY?.value ?? 0);
     const contentEl = track(() => context.contentRef.value);
-    let initialMargin = 0;
 
     // Check if this is a context menu and should be positioned
     if (isOpen && isContextMenu && x > 0 && y > 0 && contentEl) {
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-      const body = document.body;
-      const styles = window.getComputedStyle(body);
-      initialMargin = Number.parseFloat(styles.marginRight);
-      body.style.overflow = "hidden";
-      body.style.userSelect = "none";
-      document.body.style.marginRight = `${initialMargin + scrollbarWidth}px`;
-
       const { innerWidth, innerHeight } = window;
       const contentRect = contentEl.getBoundingClientRect();
 
@@ -57,14 +47,6 @@ export const MenuContentBase = component$<MenuContentProps>((props) => {
       contentEl.style.position = "fixed";
       contentEl.style.left = `${posX}px`;
       contentEl.style.top = `${posY}px`;
-
-      cleanup(() => {
-        document.body.style.overflow = "";
-        document.body.style.userSelect = "";
-        if (initialMargin !== 0) {
-          document.body.style.marginRight = `${initialMargin}px`;
-        }
-      });
     }
   });
 
@@ -85,7 +67,7 @@ export const MenuContentBase = component$<MenuContentProps>((props) => {
   });
 
   return (
-    <PopoverContentBase
+    <PopoverContent
       id={context.contentId} // Use ID from main context
       ref={context.contentRef}
       role="menu"
@@ -94,8 +76,6 @@ export const MenuContentBase = component$<MenuContentProps>((props) => {
       {...props}
     >
       <Slot />
-    </PopoverContentBase>
+    </PopoverContent>
   );
 });
-
-export const MenuContent = withAsChild(MenuContentBase);

@@ -1,4 +1,4 @@
-import { type Signal, createContextId } from "@builder.io/qwik";
+import { type Signal, createContextId } from "@qwik.dev/core";
 import type { ISODate, Locale, Month } from "./types";
 
 export const calendarContextId = createContextId<CalendarContext>("qds-calendar-context");

@@ -1,4 +1,4 @@
-import { type QwikJSX, type Signal, createContextId } from "@builder.io/qwik";
+import { type QwikJSX, type Signal, createContextId } from "@qwik.dev/core";
 import type { ISODate } from "../calendar/types";
 import type { DateSegment } from "./types";
 

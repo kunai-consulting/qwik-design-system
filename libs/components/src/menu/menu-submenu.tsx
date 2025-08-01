@@ -1,3 +1,4 @@
+import { useBindings } from "@kunai-consulting/qwik-utils";
 import {
   Slot,
   component$,
@@ -6,21 +7,16 @@ import {
   useId,
   useSignal,
   useStyles$
-} from "@builder.io/qwik";
-import { useBindings } from "@kunai-consulting/qwik-utils";
-import { withAsChild } from "../as-child/as-child";
-import { PopoverRootBase } from "../popover/popover-root";
+} from "@qwik.dev/core";
+import { PopoverRoot } from "../popover/popover-root";
 import { type ItemRef, type MenuContext, menuContextId } from "./menu-root";
 import type { PublicMenuRootProps } from "./menu-root";
 import menuSubmenuStyles from "./menu-submenu.css?inline";
 
-export type PublicMenuSubmenuProps = PublicMenuRootProps & {
-  /** The position of the submenu relative to its trigger */
-  position?: "right" | "left" | "bottom" | "top";
-};
+export type PublicMenuSubmenuProps = PublicMenuRootProps;
 
 /** A component that renders a submenu */
-export const MenuSubmenuBase = component$<PublicMenuSubmenuProps>((props) => {
+export const MenuSubmenu = component$<PublicMenuSubmenuProps>((props) => {
   useStyles$(menuSubmenuStyles);
 
   const parentContext = useContext(menuContextId);
@@ -42,7 +38,6 @@ export const MenuSubmenuBase = component$<PublicMenuSubmenuProps>((props) => {
   const menuContext: MenuContext = {
     triggerId,
     contentId,
-    position: props.position ?? "right",
     isOpenSig,
     parentContext,
     itemRefs,
@@ -60,7 +55,7 @@ export const MenuSubmenuBase = component$<PublicMenuSubmenuProps>((props) => {
   const { open: _o, "bind:open": _bo, onChange$: _oc, ...rest } = props;
 
   return (
-    <PopoverRootBase
+    <PopoverRoot
       bind:open={isOpenSig}
       data-qds-menu-submenu
       tabIndex={-1}
@@ -68,8 +63,6 @@ export const MenuSubmenuBase = component$<PublicMenuSubmenuProps>((props) => {
       {...rest}
     >
       <Slot />
-    </PopoverRootBase>
+    </PopoverRoot>
   );
 });
-
-export const MenuSubmenu = withAsChild(MenuSubmenuBase);

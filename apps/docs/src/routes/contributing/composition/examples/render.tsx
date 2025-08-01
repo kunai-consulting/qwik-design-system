@@ -1,5 +1,5 @@
-import { $, type PropsOf, Slot, component$, useSignal } from "@builder.io/qwik";
 import { Render } from "@kunai-consulting/qwik";
+import { $, type PropsOf, Slot, component$, useSignal } from "@qwik.dev/core";
 
 export default component$(() => {
   const tooltipRef = useSignal<HTMLButtonElement>();

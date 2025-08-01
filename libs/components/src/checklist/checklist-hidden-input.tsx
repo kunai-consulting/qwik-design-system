@@ -1,4 +1,4 @@
-import { component$ } from "@builder.io/qwik";
+import { component$ } from "@qwik.dev/core";
 import { CheckboxHiddenInput } from "../checkbox/checkbox-hidden-input";
 
 type PublicCheckboxHiddenInputProps = {

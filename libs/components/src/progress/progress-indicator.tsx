@@ -1,10 +1,9 @@
-import { type PropsOf, component$, useComputed$, useContext } from "@builder.io/qwik";
-import { withAsChild } from "../as-child/as-child";
+import { type PropsOf, component$, useComputed$, useContext } from "@qwik.dev/core";
 import { Render } from "../render/render";
 import { ProgressContext } from "./progress-context";
 
 type ProgressIndicatorElement = PropsOf<"div">;
-export const ProgressIndicatorBase = component$<ProgressIndicatorElement>((props) => {
+export const ProgressIndicator = component$<ProgressIndicatorElement>((props) => {
   const { ...indicatorProps } = props;
 
   const context = useContext(ProgressContext);
@@ -28,5 +27,3 @@ export const ProgressIndicatorBase = component$<ProgressIndicatorElement>((props
     />
   );
 });
-
-export const ProgressIndicator = withAsChild(ProgressIndicatorBase);

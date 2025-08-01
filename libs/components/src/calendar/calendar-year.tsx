@@ -1,4 +1,4 @@
-import { component$ } from "@builder.io/qwik";
+import { component$ } from "@qwik.dev/core";
 import { DateInputYear } from "../date-input/date-input-year";
 import type { PublicDateInputSegmentProps } from "../date-input/types";
 

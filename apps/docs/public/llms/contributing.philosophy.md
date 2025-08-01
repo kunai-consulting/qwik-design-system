@@ -70,7 +70,7 @@ The files API is a synchronous API, meaning on the first drop of a file, that mu
 What we can do is the synchronous work in the sync$ function, grab the necessary data, and then fire a custom event to the rest of our async code.
 
 ```tsx
-import { component$, useSignal, useOn, sync$, $ } from "@builder.io/qwik";
+import { component$, useSignal, useOn, sync$, $ } from "@qwik.dev/core";
 
 export const SimpleFileUpload = component$(() => {
   const files = useSignal<File[]>([]);

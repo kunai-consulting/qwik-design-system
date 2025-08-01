@@ -1,13 +1,5 @@
-import {
-  $,
-  type PropsOf,
-  Slot,
-  component$,
-  useContext,
-  useSignal
-} from "@builder.io/qwik";
 import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
-import { withAsChild } from "../as-child/as-child";
+import { $, type PropsOf, Slot, component$, useContext, useSignal } from "@qwik.dev/core";
 import { Render } from "../render/render";
 import { menuContextId } from "./menu-root";
 import {
@@ -28,7 +20,7 @@ export type PublicMenuItemProps = Omit<PropsOf<"div">, "onSelect$"> & {
   }>;
 
 /** Interactive item within a menu */
-export const MenuItemBase = component$<PublicMenuItemProps>(
+export const MenuItem = component$<PublicMenuItemProps>(
   ({ onSelect$, closeOnSelect = true, ...rest }) => {
     const context = useContext(menuContextId);
     const itemRef = useSignal<HTMLElement>();
@@ -168,5 +160,3 @@ export const MenuItemBase = component$<PublicMenuItemProps>(
     );
   }
 );
-
-export const MenuItem = withAsChild(MenuItemBase);

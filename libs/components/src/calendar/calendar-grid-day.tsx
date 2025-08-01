@@ -1,4 +1,4 @@
-import { $, type PropsOf, component$, useContext } from "@builder.io/qwik";
+import { $, type PropsOf, component$, useContext } from "@qwik.dev/core";
 import { calendarContextId } from "./calendar-context";
 import type { ISODate, Locale } from "./types";
 import { getWeekNumber } from "./utils";

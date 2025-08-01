@@ -5,17 +5,18 @@ import {
   component$,
   sync$,
   useComputed$,
-  useContext,
-  useOnWindow
-} from "@builder.io/qwik";
-import { withAsChild } from "../as-child/as-child";
+  useContext
+} from "@qwik.dev/core";
+import { menuContextId } from "../menu/menu-root";
 import { Render } from "../render/render";
 import { checkboxContextId } from "./checkbox-context";
-type PublicCheckboxControlProps = PropsOf<"button">;
+
+export type PublicCheckboxControlProps = PropsOf<"button">;
 
 /** Interactive trigger component that handles checkbox toggling */
-export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps) => {
+export const CheckboxTrigger = component$((props: PublicCheckboxControlProps) => {
   const context = useContext(checkboxContextId);
+  const menuContext = useContext(menuContextId, null);
   const triggerId = `${context.localId}-trigger`;
   const descriptionId = `${context.localId}-description`;
   const errorId = `${context.localId}-error`;
@@ -29,6 +30,11 @@ export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps
     }
     return labels.join(" ") || undefined;
   });
+
+  const role = useComputed$(() => {
+    return menuContext ? "menuitemcheckbox" : "checkbox";
+  });
+
   const handleClick$ = $(() => {
     if (context.checkedSig.value === "mixed") {
       context.checkedSig.value = true;
@@ -37,28 +43,24 @@ export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps
     }
   });
 
-  useOnWindow(
-    "keydown",
-    sync$((e: KeyboardEvent) => {
-      if (e.key !== "Enter") return;
-      if (document.activeElement?.hasAttribute("data-qds-checkbox-trigger")) {
-        e.preventDefault();
-      }
-    })
-  );
+  const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+  });
 
   return (
     <Render
       id={triggerId}
       internalRef={context.triggerRef}
       type="button"
-      role="checkbox"
+      role={role.value}
       fallback="button"
       aria-checked={`${context.checkedSig.value}`}
       aria-describedby={describedByLabels ? describedByLabels.value : undefined}
       aria-invalid={context.isErrorSig.value}
       disabled={context.isDisabledSig.value}
       onClick$={[handleClick$, props.onClick$]}
+      onKeyDown$={[handleKeyDownSync$, props.onKeyDown$]}
       data-qds-checkbox-trigger
       {...context.dataAttributes.value}
       {...props}
@@ -67,5 +69,3 @@ export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps
     </Render>
   );
 });
-
-export const CheckboxTrigger = withAsChild(CheckboxTriggerBase);

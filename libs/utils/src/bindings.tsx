@@ -1,4 +1,4 @@
-import { type Signal, useComputed$ } from "@builder.io/qwik";
+import { type Signal, useComputed$ } from "@qwik.dev/core";
 import { useBoundSignal } from "./bound-signal";
 
 /**

@@ -1,11 +1,10 @@
-import { type PropsOf, Slot, component$, useContext, useTask$ } from "@builder.io/qwik";
-import { withAsChild } from "../as-child/as-child";
+import { type PropsOf, Slot, component$, useContext, useTask$ } from "@qwik.dev/core";
 import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 
 type PublicDescriptionProps = PropsOf<"div">;
 
-export const RadioGroupDescriptionBase = component$((props: PublicDescriptionProps) => {
+export const RadioGroupDescription = component$((props: PublicDescriptionProps) => {
   const context = useContext(radioGroupContextId);
   const descriptionId = `${context.localId}-description`;
 
@@ -23,5 +22,3 @@ export const RadioGroupDescriptionBase = component$((props: PublicDescriptionPro
     </Render>
   );
 });
-
-export const RadioGroupDescription = withAsChild(RadioGroupDescriptionBase);

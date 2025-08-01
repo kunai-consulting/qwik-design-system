@@ -7,8 +7,8 @@ import {
   useOnWindow,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
-import { type ContentHeading, useLocation } from "@builder.io/qwik-city";
+} from "@qwik.dev/core";
+import { type ContentHeading, useLocation } from "@qwik.dev/router";
 import { rootContextId } from "~/routes/layout";
 import { cn } from "~/utils/cn";
 

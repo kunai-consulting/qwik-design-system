@@ -1,9 +1,8 @@
-import { type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
-import { withAsChild } from "../as-child/as-child";
+import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
 import { Render } from "../render/render";
 import { popoverContextId } from "./popover-root";
 
-export const PopoverTriggerBase = component$((props: PropsOf<"button">) => {
+export const PopoverTrigger = component$((props: PropsOf<"button">) => {
   const context = useContext(popoverContextId);
   const panelId = `${context.localId}-panel`;
 
@@ -19,5 +18,3 @@ export const PopoverTriggerBase = component$((props: PropsOf<"button">) => {
     </Render>
   );
 });
-
-export const PopoverTrigger = withAsChild(PopoverTriggerBase);

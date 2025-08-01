@@ -1,12 +1,11 @@
-import { $, type PropsOf, Slot, component$, useContext } from "@builder.io/qwik";
-import { withAsChild } from "../as-child/as-child";
+import { $, type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
 import { Render } from "../render/render";
 import { menuContextId } from "./menu-root";
 
 /**
  * A trigger that opens the menu on right-click (context menu)
  */
-export const MenuContextTriggerBase = component$<PropsOf<"div">>((props) => {
+export const MenuContextTrigger = component$<PropsOf<"div">>((props) => {
   const context = useContext(menuContextId);
 
   const handleContextMenu = $((event: MouseEvent) => {
@@ -34,5 +33,3 @@ export const MenuContextTriggerBase = component$<PropsOf<"div">>((props) => {
     </Render>
   );
 });
-
-export const MenuContextTrigger = withAsChild(MenuContextTriggerBase);

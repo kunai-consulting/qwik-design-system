@@ -1,10 +1,9 @@
-import { $, type PropsOf, Slot, component$, sync$ } from "@builder.io/qwik";
-import { withAsChild } from "../as-child/as-child";
+import { $, type PropsOf, Slot, component$, sync$ } from "@qwik.dev/core";
 import { Render } from "../render/render";
 
 type LabelProps = PropsOf<"label">;
 
-export const LabelBase = component$<LabelProps>((props) => {
+export const Label = component$<LabelProps>((props) => {
   const handleMouseDownSync$ = sync$((event: MouseEvent) => {
     if (!event.defaultPrevented && event.detail > 1) {
       event.preventDefault();
@@ -28,5 +27,3 @@ export const LabelBase = component$<LabelProps>((props) => {
     </Render>
   );
 });
-
-export const Label = withAsChild(LabelBase);

@@ -1,3 +1,4 @@
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import {
   type PropsOf,
   Slot,
@@ -7,9 +8,7 @@ import {
   useId,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
-import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
-import { withAsChild } from "../as-child/as-child";
+} from "@qwik.dev/core";
 import { Render } from "../render/render";
 import { type CheckboxContext, checkboxContextId } from "./checkbox-context";
 
@@ -35,7 +34,7 @@ type CheckboxBinds = {
 };
 
 /** Root component that provides context and state management for the checkbox */
-export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
+export const CheckboxRoot = component$((props: PublicCheckboxRootProps) => {
   const { onChange$, description, name, required, value, ...rest } = props;
 
   const { checkedSig, disabledSig: isDisabledSig } = useBindings<CheckboxBinds>(props, {
@@ -101,5 +100,3 @@ export const CheckboxRootBase = component$((props: PublicCheckboxRootProps) => {
     </Render>
   );
 });
-
-export const CheckboxRoot = withAsChild(CheckboxRootBase);

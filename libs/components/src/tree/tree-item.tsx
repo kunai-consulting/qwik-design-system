@@ -1,3 +1,4 @@
+import { useBoundSignal } from "@kunai-consulting/qwik-utils";
 import {
   $,
   type PropsOf,
@@ -10,13 +11,10 @@ import {
   useContext,
   useContextProvider,
   useId,
-  useOnWindow,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
-import { useBoundSignal } from "@kunai-consulting/qwik-utils";
-import { withAsChild } from "../as-child/as-child";
-import { CollapsibleRootBase } from "../collapsible/collapsible-root";
+} from "@qwik.dev/core";
+import { CollapsibleRoot } from "../collapsible/collapsible-root";
 import { TreeRootContextId } from "./tree-root";
 import { useTree } from "./use-tree";
 
@@ -28,13 +26,13 @@ type TreeItemContext = {
 
 export const itemContextId = createContextId<TreeItemContext>("tree-item");
 
-interface TreeItemProps extends PropsOf<typeof CollapsibleRootBase> {
+interface TreeItemProps extends PropsOf<typeof CollapsibleRoot> {
   _index?: number;
   groupTrigger?: boolean;
   groupId?: string;
 }
 
-export const TreeItemBase = component$((props: TreeItemProps) => {
+export const TreeItem = component$((props: TreeItemProps) => {
   const context = useContext(TreeRootContextId);
   const parentContext = useContext(itemContextId, null);
   const id = useId();
@@ -126,25 +124,14 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
     isHighlightedSig.value = context.currentFocusEl.value === itemRef.value;
   });
 
-  /**
-   *  Todo: Change this to a sync$ passed to the Render component once v2 is 
-   released (sync QRL serialization issue)
-   *
-   */
-  useOnWindow(
-    "keydown",
-    sync$((e: KeyboardEvent) => {
-      if (!(e.target as Element)?.hasAttribute("data-qds-tree-item")) return;
-      const keys = ["ArrowDown", "ArrowUp", "Home", "End"];
-
-      if (!keys.includes(e.key)) return;
-
-      e.preventDefault();
-    })
-  );
+  const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
+    const keys = ["ArrowDown", "ArrowUp", "Home", "End"];
+    if (!keys.includes(e.key)) return;
+    e.preventDefault();
+  });
 
   return (
-    <CollapsibleRootBase
+    <CollapsibleRoot
       {...props}
       id={id}
       ref={itemRef}
@@ -157,7 +144,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
           : -1
       }
       onFocus$={[handleFocus$, props.onFocus$]}
-      onKeyDown$={[handleKeyNavigation$, props.onKeyDown$]}
+      onKeyDown$={[handleKeyDownSync$, handleKeyNavigation$, props.onKeyDown$]}
       data-qds-tree-item
       data-level={level}
       aria-level={level}
@@ -168,8 +155,6 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       <div role="gridcell" style={{ display: "contents" }} tabIndex={-1}>
         <Slot />
       </div>
-    </CollapsibleRootBase>
+    </CollapsibleRoot>
   );
 });
-
-export const TreeItem = withAsChild(TreeItemBase);
