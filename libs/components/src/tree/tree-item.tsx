@@ -14,8 +14,7 @@ import {
   useSignal,
   useTask$
 } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
-import { CollapsibleRootBase } from "../collapsible/collapsible-root";
+import { CollapsibleRoot } from "../collapsible/collapsible-root";
 import { TreeRootContextId } from "./tree-root";
 import { useTree } from "./use-tree";
 
@@ -27,13 +26,13 @@ type TreeItemContext = {
 
 export const itemContextId = createContextId<TreeItemContext>("tree-item");
 
-interface TreeItemProps extends PropsOf<typeof CollapsibleRootBase> {
+interface TreeItemProps extends PropsOf<typeof CollapsibleRoot> {
   _index?: number;
   groupTrigger?: boolean;
   groupId?: string;
 }
 
-export const TreeItemBase = component$((props: TreeItemProps) => {
+export const TreeItem = component$((props: TreeItemProps) => {
   const context = useContext(TreeRootContextId);
   const parentContext = useContext(itemContextId, null);
   const id = useId();
@@ -132,7 +131,7 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
   });
 
   return (
-    <CollapsibleRootBase
+    <CollapsibleRoot
       {...props}
       id={id}
       ref={itemRef}
@@ -156,8 +155,6 @@ export const TreeItemBase = component$((props: TreeItemProps) => {
       <div role="gridcell" style={{ display: "contents" }} tabIndex={-1}>
         <Slot />
       </div>
-    </CollapsibleRootBase>
+    </CollapsibleRoot>
   );
 });
-
-export const TreeItem = withAsChild(TreeItemBase);

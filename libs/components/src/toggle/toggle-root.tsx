@@ -10,7 +10,6 @@ import {
   useSignal,
   useTask$
 } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 
 type ToggleRootProps = Omit<PropsOf<"button">, "onChange$"> &
@@ -25,7 +24,7 @@ type ToggleContext = {
 
 export const toggleContextId = createContextId<ToggleContext>("toggle");
 
-export const ToggleRootBase = component$((props: ToggleRootProps) => {
+export const ToggleRoot = component$((props: ToggleRootProps) => {
   const { onChange$, ...rest } = props;
 
   const isInitialRenderSig = useSignal(true);
@@ -77,5 +76,3 @@ export const ToggleRootBase = component$((props: ToggleRootProps) => {
     </Render>
   );
 });
-
-export const ToggleRoot = withAsChild(ToggleRootBase);

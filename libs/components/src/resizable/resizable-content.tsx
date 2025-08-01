@@ -1,14 +1,13 @@
-import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import {
   type PropsOf,
   Slot,
   component$,
+  useConstant,
   useContext,
   useId,
   useSignal,
   useTask$
 } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { resizableContextId } from "./resizable-context";
 
@@ -38,10 +37,9 @@ interface PublicResizableContentProps extends Omit<PropsOf<"div">, "onResize$"> 
   onCollapse$?: () => void;
   // Callback fired when the content is expanded
   onExpand$?: () => void;
-  _index?: number;
 }
 /** A resizable content component that can be adjusted using a ResizableHandle */
-export const ResizableContentBase = component$<PublicResizableContentProps>((props) => {
+export const ResizableContent = component$<PublicResizableContentProps>((props) => {
   const context = useContext(resizableContextId);
   const isVertical = context.orientation.value === "vertical";
   const isCollapsed = useSignal(!!props.collapsed);
@@ -59,21 +57,26 @@ export const ResizableContentBase = component$<PublicResizableContentProps>((pro
     collapsedSize = 0,
     collapseThreshold = 0.05,
     onResize$,
-    _index,
     ...rest
   } = props;
 
+  const index = useConstant(() => {
+    const currIndex = context.currContentIndex;
+    context.currContentIndex++;
+    return currIndex;
+  });
+
   useTask$(function getIndexOrder() {
-    if (_index === undefined) {
+    if (index === undefined) {
       throw new Error("ResizableContent cannot find its proper index.");
     }
 
-    context.contents.value[_index] = {
+    context.contents.value[index] = {
       ref: contentRef,
       onResize$: props.onResize$,
       onCollapse$: props.onCollapse$,
       onExpand$: props.onExpand$,
-      _index: _index
+      _index: index
     };
   });
 
@@ -125,10 +128,4 @@ export const ResizableContentBase = component$<PublicResizableContentProps>((pro
       <Slot />
     </Render>
   );
-});
-
-export const ResizableContent = withAsChild(ResizableContentBase, (props) => {
-  const nextIndex = getNextIndex("resizable");
-  props._index = nextIndex;
-  return props;
 });

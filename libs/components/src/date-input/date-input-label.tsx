@@ -1,11 +1,10 @@
 import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { dateInputContextId } from "./date-input-context";
 type PublicDateInputLabelProps = PropsOf<"div">;
 
 /** Label component for the Date Input */
-export const DateInputLabelBase = component$((props: PublicDateInputLabelProps) => {
+export const DateInputLabel = component$((props: PublicDateInputLabelProps) => {
   const context = useContext(dateInputContextId);
   const id = `${context.localId}-label`;
   return (
@@ -15,5 +14,3 @@ export const DateInputLabelBase = component$((props: PublicDateInputLabelProps) 
     </Render>
   );
 });
-
-export const DateInputLabel = withAsChild(DateInputLabelBase);

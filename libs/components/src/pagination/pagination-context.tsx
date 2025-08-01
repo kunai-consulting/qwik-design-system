@@ -14,4 +14,5 @@ export type PaginationContext = {
   ellipsisSig: Signal<(number | "...")[]>;
   focusedIndexSig: Signal<number | null>;
   ellipsis?: JSXChildren;
+  currItemIndex: number;
 };

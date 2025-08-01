@@ -1,12 +1,12 @@
 import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
-import { CheckboxIndicatorBase } from "../checkbox/checkbox-indicator";
+import { CheckboxIndicator } from "../checkbox/checkbox-indicator";
 
 export const ChecklistItemIndicator = component$(
-  (props: PropsOf<typeof CheckboxIndicatorBase>) => {
+  (props: PropsOf<typeof CheckboxIndicator>) => {
     return (
-      <CheckboxIndicatorBase {...props}>
+      <CheckboxIndicator {...props}>
         <Slot />
-      </CheckboxIndicatorBase>
+      </CheckboxIndicator>
     );
   }
 );

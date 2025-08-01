@@ -1,10 +1,9 @@
 import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { switchContextId } from "./switch-context";
 
 /** Description component for a switch that provides additional context */
-const SwitchDescriptionBase = component$<PropsOf<"div">>((props) => {
+export const SwitchDescription = component$<PropsOf<"div">>((props) => {
   const { ...restProps } = props;
   const context = useContext(switchContextId);
   const descriptionId = `${context.localId}-description`;
@@ -25,5 +24,3 @@ const SwitchDescriptionBase = component$<PropsOf<"div">>((props) => {
     </Render>
   );
 });
-
-export const SwitchDescription = withAsChild(SwitchDescriptionBase);

@@ -9,7 +9,6 @@ import {
   useStyles$,
   useTask$
 } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { type SwitchContext, switchContextId } from "./switch-context";
 import styles from "./switch.css?inline";
@@ -35,7 +34,7 @@ type PublicRootProps = PropsOf<"div"> & {
 } & BindableProps<SwitchBinds>;
 
 /** Root component that manages the switch state and context */
-const SwitchRootBase = component$<PublicRootProps>((props) => {
+export const SwitchRoot = component$<PublicRootProps>((props) => {
   useStyles$(styles);
   const { onChange$, hasError, ...restProps } = props;
   const isInitialLoadSig = useSignal(true);
@@ -105,5 +104,3 @@ const SwitchRootBase = component$<PublicRootProps>((props) => {
     </Render>
   );
 });
-
-export const SwitchRoot = withAsChild(SwitchRootBase);

@@ -6,15 +6,14 @@ import {
   useTask$,
   useVisibleTask$
 } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
-import { PopoverContentBase } from "../popover/popover-content";
+import { PopoverContent } from "../popover/popover-content";
 import { menuContextId } from "./menu-root";
 import { getFirstMenuItem, getLastMenuItem } from "./utils";
 
-export type MenuContentProps = PropsOf<typeof PopoverContentBase>;
+export type MenuContentProps = PropsOf<typeof PopoverContent>;
 
 /** A component that renders the menu content */
-export const MenuContentBase = component$<MenuContentProps>((props) => {
+export const MenuContent = component$<MenuContentProps>((props) => {
   const context = useContext(menuContextId);
 
   // Position the content at mouse coordinates when opened via context menu
@@ -68,7 +67,7 @@ export const MenuContentBase = component$<MenuContentProps>((props) => {
   });
 
   return (
-    <PopoverContentBase
+    <PopoverContent
       id={context.contentId} // Use ID from main context
       ref={context.contentRef}
       role="menu"
@@ -77,8 +76,6 @@ export const MenuContentBase = component$<MenuContentProps>((props) => {
       {...props}
     >
       <Slot />
-    </PopoverContentBase>
+    </PopoverContent>
   );
 });
-
-export const MenuContent = withAsChild(MenuContentBase);

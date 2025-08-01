@@ -41,8 +41,7 @@ export const Sidebar = component$((props: PropsOf<"nav">) => {
             { id: "/base/scroll-area", label: "Scroll Area" },
             { id: "/base/tree", label: "Tree" },
             { id: "/base/popover", label: "Popover" },
-            { id: "/base/progress", label: "Progress" },
-            { id: "/base/toast", label: "Toast" }
+            { id: "/base/progress", label: "Progress" }
           ]
         },
         {

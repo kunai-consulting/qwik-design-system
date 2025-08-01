@@ -1,15 +1,10 @@
 import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
-import { CollapsibleContentBase } from "../collapsible/collapsible-content";
+import { CollapsibleContent } from "../collapsible/collapsible-content";
 
-export const TreeItemContentBase = component$(
-  (props: PropsOf<typeof CollapsibleContentBase>) => {
-    return (
-      <CollapsibleContentBase {...props}>
-        <Slot />
-      </CollapsibleContentBase>
-    );
-  }
-);
-
-export const TreeItemContent = withAsChild(TreeItemContentBase);
+export const TreeItemContent = component$((props: PropsOf<typeof CollapsibleContent>) => {
+  return (
+    <CollapsibleContent {...props}>
+      <Slot />
+    </CollapsibleContent>
+  );
+});

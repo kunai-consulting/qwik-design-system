@@ -1,10 +1,9 @@
 import { $, type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
 import type { CorrectedToggleEvent } from "@qwik.dev/core/internal";
-import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { popoverContextId } from "./popover-root";
 
-export const PopoverContentBase = component$((props: PropsOf<"div">) => {
+export const PopoverContent = component$((props: PropsOf<"div">) => {
   const context = useContext(popoverContextId);
   const panelId = `${context.localId}-panel`;
 
@@ -31,5 +30,3 @@ export const PopoverContentBase = component$((props: PropsOf<"div">) => {
     </Render>
   );
 });
-
-export const PopoverContent = withAsChild(PopoverContentBase);

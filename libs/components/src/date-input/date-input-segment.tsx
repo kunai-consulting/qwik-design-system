@@ -3,6 +3,7 @@ import {
   component$,
   sync$,
   useComputed$,
+  useConstant,
   useContext,
   useSignal,
   useStyles$,
@@ -29,13 +30,16 @@ export const DateInputSegment = component$(
     segmentSig,
     showLeadingZero,
     placeholder,
-    _index,
     ...otherProps
   }: DateInputSegmentProps) => {
     const rootContext = useContext(dateInputContextId);
     const context = useContext(dateInputFieldContextId);
     const inputId = `${context.fieldId}-segment-${segmentSig.value.type}`;
-    const index = _index ?? -1;
+    const index = useConstant(() => {
+      const currIndex = rootContext.currSegmentIndex;
+      rootContext.currSegmentIndex++;
+      return currIndex;
+    });
     // Show the separator if there is a separator in the context and the index is not the last segment in a group of 3
     const showSeparator = context.separator && index % 3 < 2;
     const inputRef = useSignal<HTMLInputElement>();
@@ -450,7 +454,7 @@ export const DateInputSegment = component$(
           data-qds-date-input-segment-day={segmentSig.value.type === "day"}
           data-qds-date-input-segment-month={segmentSig.value.type === "month"}
           data-qds-date-input-segment-year={segmentSig.value.type === "year"}
-          data-qds-date-input-segment-index={_index}
+          data-qds-date-input-segment-index={index}
           value={displayValueSig.value}
           onKeyDown$={[onKeyDownSync$, onKeyDown$, otherProps.onKeyDown$]}
           onInput$={[onInput$, otherProps.onInput$]}

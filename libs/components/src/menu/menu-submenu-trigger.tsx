@@ -1,5 +1,4 @@
 import { $, Slot, component$, useContext } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { MenuItem, type PublicMenuItemProps } from "./menu-item";
 import { menuContextId } from "./menu-root";
 
@@ -10,35 +9,31 @@ export type PublicMenuSubmenuTriggerProps = Omit<
 >;
 
 /** A component that renders the submenu trigger */
-export const MenuSubmenuTriggerBase = component$<PublicMenuSubmenuTriggerProps>(
-  (props) => {
-    const submenuContext = useContext(menuContextId);
+export const MenuSubmenuTrigger = component$<PublicMenuSubmenuTriggerProps>((props) => {
+  const submenuContext = useContext(menuContextId);
 
-    if (!submenuContext) {
-      console.warn("Submenu content not found in trigger");
-      return null;
-    }
-
-    const handleClick$ = $(() => {
-      submenuContext.isOpenSig.value = !submenuContext.isOpenSig.value;
-    });
-
-    return (
-      <MenuItem
-        closeOnSelect={false}
-        data-qds-menu-submenu-trigger
-        data-qds-menu-parent={submenuContext.parentContext?.contentId}
-        aria-haspopup="menu"
-        aria-controls={submenuContext.contentId}
-        aria-expanded={submenuContext.isOpenSig.value}
-        onClick$={[handleClick$, props.onClick$]}
-        ref={submenuContext.triggerRef}
-        {...props}
-      >
-        <Slot />
-      </MenuItem>
-    );
+  if (!submenuContext) {
+    console.warn("Submenu content not found in trigger");
+    return null;
   }
-);
 
-export const MenuSubmenuTrigger = withAsChild(MenuSubmenuTriggerBase);
+  const handleClick$ = $(() => {
+    submenuContext.isOpenSig.value = !submenuContext.isOpenSig.value;
+  });
+
+  return (
+    <MenuItem
+      closeOnSelect={false}
+      data-qds-menu-submenu-trigger
+      data-qds-menu-parent={submenuContext.parentContext?.contentId}
+      aria-haspopup="menu"
+      aria-controls={submenuContext.contentId}
+      aria-expanded={submenuContext.isOpenSig.value}
+      onClick$={[handleClick$, props.onClick$]}
+      ref={submenuContext.triggerRef}
+      {...props}
+    >
+      <Slot />
+    </MenuItem>
+  );
+});

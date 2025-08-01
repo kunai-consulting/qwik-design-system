@@ -1,10 +1,9 @@
 import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { ProgressContext } from "./progress-context";
 
 type ProgressLabelElement = PropsOf<"span">;
-export const ProgressLabelBase = component$<ProgressLabelElement>((props) => {
+export const ProgressLabel = component$<ProgressLabelElement>((props) => {
   const { ...labelProps } = props;
 
   const context = useContext(ProgressContext);
@@ -20,5 +19,3 @@ export const ProgressLabelBase = component$<ProgressLabelElement>((props) => {
     </Render>
   );
 });
-
-export const ProgressLabel = withAsChild(ProgressLabelBase);
