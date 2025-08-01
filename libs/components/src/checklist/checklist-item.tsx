@@ -1,13 +1,12 @@
-import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import {
   type PropsOf,
   Slot,
   component$,
+  useConstant,
   useContext,
   useSignal,
   useTask$
 } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { CheckboxRoot } from "../checkbox/checkbox-root";
 import { checklistContextId } from "./checklist-context";
 
@@ -17,14 +16,15 @@ type PublicChecklistItemProps = {
 } & Omit<PropsOf<typeof CheckboxRoot>, "_index">;
 
 /** Internal prop for tracking item position in checklist */
-export const ChecklistItemBase = component$((props: PublicChecklistItemProps) => {
+export const ChecklistItem = component$((props: PublicChecklistItemProps) => {
   const context = useContext(checklistContextId);
 
-  if (props._index === undefined) {
-    throw new Error("Qwik Design System: Checklist Item must have an index");
-  }
+  const index = useConstant(() => {
+    const currIndex = context.currItemIndex;
+    context.currItemIndex++;
+    return currIndex;
+  });
 
-  const index = props._index;
   const isCheckedSig = useSignal(false);
 
   useTask$(function checkAllManager({ track }) {
@@ -56,10 +56,4 @@ export const ChecklistItemBase = component$((props: PublicChecklistItemProps) =>
       <Slot />
     </CheckboxRoot>
   );
-});
-
-export const ChecklistItem = withAsChild(ChecklistItemBase, (props) => {
-  props._index = getNextIndex("qds-checklist");
-
-  return props;
 });
