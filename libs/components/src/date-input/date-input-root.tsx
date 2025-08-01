@@ -1,3 +1,4 @@
+import { resetIndexes } from "@kunai-consulting/qwik-utils";
 import {
   type PropsOf,
   type QRL,
@@ -8,8 +9,7 @@ import {
   useId,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
-import { resetIndexes } from "@kunai-consulting/qwik-utils";
+} from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import type { ISODate } from "../calendar/types";
 import { Render } from "../render/render";
@@ -20,7 +20,7 @@ type PublicDateInputRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   onChange$?: QRL<(dates: (ISODate | null)[]) => void>;
 };
 
-// no-bindings -- bindings handled by DateInputEntry
+// no-bindings -- bindings handled by DateInputField
 /** The root Date Input component that manages state and provides context */
 export const DateInputRootBase = component$<PublicDateInputRootProps>(
   ({ onChange$, ...props }) => {
@@ -58,7 +58,7 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>(
 );
 
 export const DateInputRoot = withAsChild(DateInputRootBase, (props) => {
-  resetIndexes("date-input-entry");
+  resetIndexes("date-input-field");
   resetIndexes("date-input-segment");
   return props;
 });

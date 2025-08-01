@@ -1,4 +1,4 @@
-import { type PropsOf, component$, useContext } from "@builder.io/qwik";
+import { type PropsOf, component$, useContext } from "@qwik.dev/core";
 import { calendarContextId } from "./calendar-context";
 import { MONTHS_LG } from "./constants";
 
@@ -11,7 +11,7 @@ export const CalendarTitle = component$((props: PropsOf<"div">) => {
 
   return (
     // The title component showing current month and year
-    <div data-qds-datepicker-title aria-live="polite" role="presentation" {...props}>
+    <div data-qds-calendar-title aria-live="polite" role="presentation" {...props}>
       {title}
     </div>
   );

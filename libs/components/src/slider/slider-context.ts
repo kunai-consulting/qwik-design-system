@@ -1,9 +1,4 @@
-import {
-  type PropFunction,
-  type QRL,
-  type Signal,
-  createContextId
-} from "@builder.io/qwik";
+import { type QRL, type Signal, createContextId } from "@qwik.dev/core";
 
 export type ThumbType = "start" | "end";
 export type SliderValue = number | [number, number];
@@ -21,8 +16,8 @@ export interface SliderContext {
   setValue: QRL<(newValue: number, type?: ThumbType) => void>;
   calculateValue: QRL<(clientX: number, rect: DOMRect) => number>;
   thumbType: Signal<ThumbType | undefined>;
-  onChange$?: PropFunction<(value: SliderValue) => void>;
-  onChangeEnd$?: PropFunction<(value: SliderValue) => void>;
+  onChange$?: (value: SliderValue) => void;
+  onChangeEnd$?: (value: SliderValue) => void;
 }
 
 export const sliderContextId = createContextId<SliderContext>("slider-context");

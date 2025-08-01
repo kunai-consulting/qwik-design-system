@@ -1,4 +1,4 @@
-import { component$, useSignal, useStylesScoped$ } from "@builder.io/qwik";
+import { component$, useSignal, useStylesScoped$ } from "@qwik.dev/core";
 
 export default component$(() => {
   useStylesScoped$(styles);

@@ -1,3 +1,4 @@
+import { manifest } from "@qwik-client-manifest";
 /**
  * WHAT IS THIS FILE?
  *
@@ -10,8 +11,7 @@
  * - npm run build
  *
  */
-import { type RenderToStreamOptions, renderToStream } from "@builder.io/qwik/server";
-import { manifest } from "@qwik-client-manifest";
+import { type RenderToStreamOptions, renderToStream } from "@qwik.dev/core/server";
 import Root from "./root";
 
 export default function (opts: RenderToStreamOptions) {

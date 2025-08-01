@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
 
 /** A container component for QR code frame styling */
 export const QRCodeFrame = component$((props: PropsOf<"div">) => {

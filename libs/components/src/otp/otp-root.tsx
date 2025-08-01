@@ -1,5 +1,5 @@
+import { useBoundSignal } from "@kunai-consulting/qwik-utils";
 import {
-  type HTMLInputAutocompleteAttribute,
   type PropsOf,
   type QRL,
   type Signal,
@@ -10,14 +10,8 @@ import {
   useSignal,
   useStyles$,
   useTask$
-} from "@builder.io/qwik";
-import {
-  findComponent,
-  processChildren,
-  useBoundSignal
-} from "@kunai-consulting/qwik-utils";
+} from "@qwik.dev/core";
 import { OTPContextId } from "./otp-context";
-import { OtpItem } from "./otp-item";
 import styles from "./otp.css?inline";
 
 type PublicOtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
@@ -25,8 +19,6 @@ type PublicOtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   "bind:value"?: Signal<string>;
   /** Number of OTP input items to display */
   _numItems?: number;
-  /** HTML autocomplete attribute for the input */
-  autoComplete?: HTMLInputAutocompleteAttribute;
   /** Event handler for when all OTP items are filled */
   onComplete$?: QRL<() => void>;
   /** Event handler for when the OTP value changes */
@@ -39,30 +31,8 @@ type PublicOtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   shiftPWManagers?: boolean;
 };
 
-/** Here's a comment for you! */
-/** Root component for OTP input that manages multiple input items */
-/** Root component for OTP input that manages multiple input items */
-export const OtpRoot = ({ children, ...props }: PublicOtpRootProps) => {
-  let currItemIndex = 0;
-  let numItems = 0;
-
-  findComponent(OtpItem, (itemProps) => {
-    itemProps._index = currItemIndex;
-    currItemIndex++;
-    numItems = currItemIndex;
-  });
-
-  processChildren(children);
-
-  return (
-    <OtpBase _numItems={numItems} {...props}>
-      {children}
-    </OtpBase>
-  );
-};
-
 /** Base implementation of the OTP root component with context provider */
-export const OtpBase = component$((props: PublicOtpRootProps) => {
+export const OtpRoot = component$((props: PublicOtpRootProps) => {
   const {
     "bind:value": givenValueSig,
     onChange$,
@@ -74,31 +44,29 @@ export const OtpBase = component$((props: PublicOtpRootProps) => {
 
   useStyles$(styles);
 
+  const currItemIndex = 0;
+  const numItems = 0;
+
   const inputValueSig = useBoundSignal<string>(givenValueSig, props.value || "");
   const currIndexSig = useSignal(0);
   const nativeInputRef = useSignal<HTMLInputElement>();
-  const numItemsSig = useComputed$(() => props._numItems || 0);
   const isFocusedSig = useSignal(false);
   const isDisabledSig = useComputed$(() => props.disabled);
   const selectionStartSig = useSignal<number | null>(null);
   const selectionEndSig = useSignal<number | null>(null);
   const isInitialLoadSig = useSignal(true);
 
-  const isLastItemSig = useComputed$(
-    () => inputValueSig.value.length === numItemsSig.value
-  );
-
   const context = {
     inputValueSig,
     currIndexSig,
     nativeInputRef,
-    numItemsSig,
-    isLastItemSig,
+    numItems,
     isFocusedSig,
     isDisabledSig,
     selectionStartSig,
     selectionEndSig,
-    shiftPWManagers
+    shiftPWManagers,
+    currItemIndex
   };
 
   useTask$(async function handleChange({ track }) {
@@ -110,7 +78,7 @@ export const OtpBase = component$((props: PublicOtpRootProps) => {
 
     isInitialLoadSig.value = false;
 
-    if (inputValueSig.value.length !== numItemsSig.value) return;
+    if (inputValueSig.value.length !== numItems) return;
 
     await onComplete$?.();
   });

@@ -220,7 +220,7 @@ test.describe("drag and drop functionality", () => {
         if (!dropzone) throw new Error("Dropzone not found");
 
         // Create file content as Blob
-        const blob = new Blob([new Uint8Array(fileData.content)], {
+        const blob = new Blob([Uint8Array.from(fileData.content)], {
           type: fileData.type
         });
 

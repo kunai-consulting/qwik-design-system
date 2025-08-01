@@ -1,5 +1,5 @@
-import { component$, useStyles$ } from "@builder.io/qwik";
 import { Tabs } from "@kunai-consulting/qwik";
+import { component$, useStyles$ } from "@qwik.dev/core";
 import tabsStyles from "./tabs.css?inline";
 
 export default component$(() => {

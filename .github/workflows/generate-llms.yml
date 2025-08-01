@@ -1,0 +1,65 @@
+name: Generate LLM Index
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'  # Every Monday
+  workflow_dispatch:
+
+jobs:
+  generate-llms:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v3
+
+      - name: ⏳ Skip odd-numbered weeks (run biweekly)
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            week=$(date +%V)
+            echo "Current ISO week: $week"
+            if [ $((10#$week % 2)) -ne 0 ]; then
+              echo "Odd week – skipping this run."
+              exit 0
+            fi
+          else
+            echo "Manual run – proceeding regardless of week."
+          fi
+
+      - name: 🟢 Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+
+      - name: 🥡 Setup pnpm
+        uses: pnpm/action-setup@v2.1.0
+        with:
+          version: latest
+          run_install: false
+
+      - name: 📦 Get pnpm cache directory
+        id: get-pnpm-cache-dir
+        run: echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: 💾 Cache pnpm
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.get-pnpm-cache-dir.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 📥 Install dependencies
+        run: pnpm install --recursive
+
+      - name: 🧠 Generate LLM index
+        run: node apps/docs/generate-llms.js
+
+      - name: ✅ Commit and push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add apps/docs/public/llms/*.md apps/docs/public/llms.txt
+          git diff --quiet && git diff --staged --quiet || git commit -m "🤖 Auto-regenerated llms files"
+          git push

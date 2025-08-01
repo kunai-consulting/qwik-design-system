@@ -1,4 +1,4 @@
-import { component$, useSignal, useStyles$ } from "@builder.io/qwik";
+import { component$, useSignal, useStyles$ } from "@qwik.dev/core";
 
 import { DateInput } from "@kunai-consulting/qwik";
 
@@ -20,19 +20,19 @@ export default component$(() => {
       <DateInput.Root>
         <DateInput.Label>Travel dates</DateInput.Label>
         <div class="date-input-date-range">
-          <DateInput.Entry bind:date={departureDate} data-range-start-entry separator="-">
+          <DateInput.Field bind:date={departureDate} data-range-start-entry separator="-">
             <DateInput.Year />
             <DateInput.Month showLeadingZero={true} />
             <DateInput.Day showLeadingZero={true} />
             <DateInput.HiddenInput name="departure-date" />
-          </DateInput.Entry>
+          </DateInput.Field>
           <span>to</span>
-          <DateInput.Entry bind:date={returnDate} data-range-end-entry separator="-">
+          <DateInput.Field bind:date={returnDate} data-range-end-entry separator="-">
             <DateInput.Year />
             <DateInput.Month showLeadingZero={true} />
             <DateInput.Day showLeadingZero={true} />
             <DateInput.HiddenInput name="return-date" />
-          </DateInput.Entry>
+          </DateInput.Field>
         </div>
       </DateInput.Root>
 

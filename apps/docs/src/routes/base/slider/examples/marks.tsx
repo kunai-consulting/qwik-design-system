@@ -1,5 +1,5 @@
-import { component$, useStyles$ } from "@builder.io/qwik";
 import { Slider } from "@kunai-consulting/qwik";
+import { component$, useStyles$ } from "@qwik.dev/core";
 import styles from "./slider-custom.css?inline";
 
 export default component$(() => {

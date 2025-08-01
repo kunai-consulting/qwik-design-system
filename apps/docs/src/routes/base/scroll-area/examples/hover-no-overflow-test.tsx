@@ -1,6 +1,6 @@
-// hover-no-overflow-test.tsx
-import { component$, useStyles$ } from "@builder.io/qwik";
 import { ScrollArea } from "@kunai-consulting/qwik";
+// hover-no-overflow-test.tsx
+import { component$, useStyles$ } from "@qwik.dev/core";
 import styles from "./scroll-area.css?inline";
 
 export default component$(() => {

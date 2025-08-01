@@ -8,11 +8,11 @@ import {
   useId,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 
-import { createContextId } from "@builder.io/qwik";
-import { useStyles$ } from "@builder.io/qwik";
 import { useBoundSignal } from "@kunai-consulting/qwik-utils";
+import { createContextId } from "@qwik.dev/core";
+import { useStyles$ } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import collapsibleStyles from "./collapsible.css?inline";

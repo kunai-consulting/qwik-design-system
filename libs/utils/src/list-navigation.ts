@@ -1,4 +1,4 @@
-import type { Signal } from "@builder.io/qwik";
+import type { Signal } from "@qwik.dev/core";
 
 type ItemWithPotentialDisabledRef<E extends { disabled?: boolean } = HTMLButtonElement> =
   | Signal<E | undefined>

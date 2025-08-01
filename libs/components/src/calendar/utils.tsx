@@ -9,6 +9,13 @@ export const daysArrGenerator = ({
   year: string;
   fullWeeks?: boolean;
 }) => {
+  // Year values less than 1000 are considered invalid and would throw a runtime error
+  // This reassigns the year value to the current year if it's less than 1000, preventing the runtime error,
+  // but possibly showing unexpected dates in the calendar for such values.
+  // Alternatively, we could change the handling in the DateInput component to prevent bubbling-up dates with less than 4 digits
+  if (year.length !== 4) {
+    year = new Date().getFullYear().toString();
+  }
   const date = new Date(+year, +month - 1, 1);
   const firstDayOfWeek = date.getDay();
   const daysInMonth = new Date(+year, +month, 0).getDate();

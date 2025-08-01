@@ -1,6 +1,6 @@
-import { $, component$, useSignal } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
 import { Otp } from "@kunai-consulting/qwik";
+import { $, component$, useSignal } from "@qwik.dev/core";
+import type { DocumentHead } from "@qwik.dev/router";
 
 export const head: DocumentHead = {
   title: "Qwik Design System",

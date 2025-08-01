@@ -1,6 +1,6 @@
 import { exec } from "node:child_process";
 import { promisify } from "node:util";
-import { server$ } from "@builder.io/qwik-city";
+import { server$ } from "@qwik.dev/router";
 
 // Convert exec to promise-based
 const execPromise = promisify(exec);

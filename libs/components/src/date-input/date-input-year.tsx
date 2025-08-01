@@ -1,6 +1,6 @@
-import { component$, useContext } from "@builder.io/qwik";
 import { getNextIndex } from "@kunai-consulting/qwik-utils";
-import { dateInputEntryContextId } from "./date-input-entry-context";
+import { component$, useContext } from "@qwik.dev/core";
+import { dateInputFieldContextId } from "./date-input-field-context";
 import { DateInputSegment } from "./date-input-segment";
 import type { PublicDateInputSegmentProps } from "./types";
 
@@ -14,7 +14,7 @@ export const DateInputYearBase = component$(
     showLeadingZero = false,
     ...otherProps
   }: PublicDateInputSegmentProps) => {
-    const context = useContext(dateInputEntryContextId);
+    const context = useContext(dateInputFieldContextId);
     const segmentSig = context.yearSegmentSig;
 
     return (

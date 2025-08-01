@@ -1,5 +1,5 @@
-import { component$, useSignal } from "@builder.io/qwik";
 import { RadioGroup } from "@kunai-consulting/qwik";
+import { component$, useSignal } from "@qwik.dev/core";
 
 export default component$(() => {
   const isGroupDisabled = useSignal(false);

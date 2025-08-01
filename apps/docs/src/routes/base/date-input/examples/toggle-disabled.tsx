@@ -1,4 +1,4 @@
-import { component$, useSignal, useStyles$ } from "@builder.io/qwik";
+import { component$, useSignal, useStyles$ } from "@qwik.dev/core";
 
 import { DateInput } from "@kunai-consulting/qwik";
 
@@ -10,11 +10,11 @@ export default component$(() => {
     <div class="date-input-container">
       <DateInput.Root class="date-input-root-col">
         <DateInput.Label>My date input</DateInput.Label>
-        <DateInput.Entry disabled={isDisabled.value} date="1998-11-01" separator="/">
+        <DateInput.Field disabled={isDisabled.value} date="1998-11-01" separator="/">
           <DateInput.Month />
           <DateInput.Day />
           <DateInput.Year />
-        </DateInput.Entry>
+        </DateInput.Field>
       </DateInput.Root>
 
       <div class="date-input-button-container">

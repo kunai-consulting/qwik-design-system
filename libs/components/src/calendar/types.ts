@@ -8,7 +8,6 @@ export type DateFormat =
   | `${MonthFormats}${Separator}${DayFormats}${Separator}${YearFormats}`;
 
 export type Locale = "en";
-export type LocalDate = `${number}-${number}-${number}`;
 export type Month =
   | "01"
   | "02"

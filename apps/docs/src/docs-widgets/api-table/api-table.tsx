@@ -1,9 +1,9 @@
-import { component$, useContext, useTask$ } from "@builder.io/qwik";
 import type {
   AnatomyItem,
   ComponentEntry,
   ParsedProps
 } from "@kunai-consulting/code-notate-core";
+import { component$, useContext, useTask$ } from "@qwik.dev/core";
 
 import { Popover } from "@qwik-ui/headless";
 import { rootContextId } from "~/routes/layout";

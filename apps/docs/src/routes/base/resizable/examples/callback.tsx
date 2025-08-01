@@ -1,5 +1,5 @@
-import { $, component$, useSignal, useStyles$ } from "@builder.io/qwik";
 import { Resizable } from "@kunai-consulting/qwik";
+import { $, component$, useSignal, useStyles$ } from "@qwik.dev/core";
 import styles from "./resizable-custom.css?inline";
 
 export default component$(() => {

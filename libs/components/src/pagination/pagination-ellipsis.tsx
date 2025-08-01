@@ -1,4 +1,4 @@
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
+import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
 
 /** Renders an ellipsis item in the pagination */
 export const PaginationEllipsis = component$((props: PropsOf<"div">) => {

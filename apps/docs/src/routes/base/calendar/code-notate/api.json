@@ -255,7 +255,6 @@
   "features": [
     "WAI ARIA Calendar design pattern implementation",
     "Full keyboard navigation support (arrow keys, home/end, page up/down)",
-    "Month and year switching controls",
     "Optional week numbers display",
     "Localization support (dates, labels, formatting)",
     "Full/partial week display options",

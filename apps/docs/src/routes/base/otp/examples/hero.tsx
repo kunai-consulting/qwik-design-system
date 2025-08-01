@@ -1,5 +1,5 @@
-import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
 import { Checkbox, Otp } from "@kunai-consulting/qwik";
+import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
 import { LuCheck } from "@qwikest/icons/lucide";
 
 export const MyDiv = component$((props: PropsOf<"div">) => {

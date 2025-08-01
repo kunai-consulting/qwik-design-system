@@ -1,0 +1,279 @@
+<!-- @source https://qwik.design/llms.txt -->
+
+# Monorepo Overview
+
+## Docs
+https://github.com/kunai-consulting/qwik-design-system/tree/main/apps/docs
+
+## Components Library
+https://github.com/kunai-consulting/qwik-design-system/tree/main/libs/components
+
+## Icons Library
+https://github.com/kunai-consulting/qwik-design-system/tree/main/libs/icons
+
+## Utils Library
+https://github.com/kunai-consulting/qwik-design-system/tree/main/libs/utils
+
+## Root package.json
+https://github.com/kunai-consulting/qwik-design-system/blob/main/package.json
+
+## Linter and Formatter - Biome
+https://github.com/kunai-consulting/qwik-design-system/blob/main/biome.json
+
+We use [pnpm](https://pnpm.io/) for package management.
+
+We use [Vitest](https://github.com/kunai-consulting/qwik-design-system/blob/main/vitest.config.ts) for testing.
+
+----
+
+## apps
+- Key functions/classes:
+  - apps/docs/generate-llms.js: toSlug, toRoute, findRouteFiles, ensureMdFile, generate
+  - apps/docs/src/routes/base/calendar/shared/calendar-icon.tsx: CalendarIcon
+  - apps/docs/src/routes/base/calendar/shared/next-icon.tsx: NextIcon
+  - apps/docs/src/routes/base/calendar/shared/previous-icon.tsx: PreviousIcon
+  - apps/docs/src/routes/base/checkbox/examples/form-mixed.tsx: TermsCheckbox
+  - apps/docs/src/routes/base/checkbox/examples/form.tsx: TermsCheckbox
+  - apps/docs/src/routes/base/checkbox/examples/required.tsx: TermsCheckbox
+  - apps/docs/src/routes/base/checkbox/examples/validation.tsx: TermsCheckbox
+  - apps/docs/src/routes/base/checkbox/examples/value.tsx: TermsCheckbox
+  - apps/docs/src/routes/base/checklist/examples/form.tsx: SubscribeChecklist
+  - apps/docs/src/routes/base/menu/examples/submenu-multilevel.tsx: renderMenuItem
+  - apps/docs/src/routes/base/menu/examples/submenu.tsx: renderMenuItem
+  - apps/docs/src/routes/base/otp/examples/change.tsx: head
+  - apps/docs/src/routes/base/otp/examples/complete.tsx: head
+  - apps/docs/src/routes/base/otp/examples/disabled.tsx: head
+  - apps/docs/src/routes/base/otp/examples/hero.tsx: MyDiv, TrustedCheckbox
+  - apps/docs/src/routes/base/otp/examples/initial.tsx: head
+  - apps/docs/src/routes/base/otp/examples/reactive.tsx: head
+  - apps/docs/src/routes/base/toggle/examples/initial.tsx: VolumeComp
+  - apps/docs/src/routes/base/toggle/examples/signal.tsx: VolumeComp
+  - apps/docs/src/routes/base/tree/examples/hero.tsx: renderTreeItem
+  - apps/docs/src/routes/contributing/composition/examples/as-child.tsx: TooltipTriggerBase, TooltipTrigger
+  - apps/docs/src/routes/contributing/composition/examples/render.tsx: TooltipTrigger
+  - apps/docs/src/routes/contributing/forms/examples/form.tsx: TermsCheckbox
+  - apps/docs/src/routes/contributing/forms/examples/validation.tsx: TermsCheckbox
+  - apps/docs/src/routes/contributing/indexing/examples/the-fix.tsx: dummyContextId, Root, Item
+  - apps/docs/src/routes/contributing/indexing/examples/the-problem.tsx: dummyContextId
+  - apps/docs/src/routes/contributing/indexing/examples/wrapped.tsx: UserComp, dummyContextId, Root, Item
+  - apps/docs/src/routes/contributing/state/examples/bindings.tsx: TextInput
+  - apps/docs/src/routes/contributing/state/examples/signal-and-context.tsx: exampleContextId
+  - apps/docs/src/routes/contributing/state/examples/store-signal.tsx: useStoreSignal
+  - apps/docs/src/routes/contributing/state/examples/value-and-context.tsx: exampleContextId
+  - apps/docs/src/routes/layout.tsx: rootContextId, onGet
+  - apps/docs/src/utils/cn.ts: cn
+  - apps/docs/src/utils/component-import.ts: metaGlobComponents, rawComponents
+  - apps/docs/src/utils/use-random-internal.ts: random, useRandomInterval
+  - apps/docs/src/utils/visually-hidden.tsx: VisuallyHidden
+  - apps/docs/vite.config.ts: errorOnDuplicatesPkgDeps
+
+## libs
+- Key functions/classes:
+  - libs/components/src/as-child/as-child.test.ts: setup
+  - libs/components/src/as-child/as-child.tsx: syncFixedInV2, withAsChild
+  - libs/components/src/calendar/calendar-content.tsx: CalendarContentBase, CalendarContent
+  - libs/components/src/calendar/calendar-context.tsx: calendarContextId
+  - libs/components/src/calendar/calendar-day.tsx: CalendarDay
+  - libs/components/src/calendar/calendar-field.tsx: CalendarField
+  - libs/components/src/calendar/calendar-grid-day.tsx: CalendarGridDay
+  - libs/components/src/calendar/calendar-grid.tsx: CalendarGrid
+  - libs/components/src/calendar/calendar-header.tsx: CalendarHeader
+  - libs/components/src/calendar/calendar-month.tsx: CalendarMonth
+  - libs/components/src/calendar/calendar-next.tsx: CalendarNext
+  - libs/components/src/calendar/calendar-previous.tsx: CalendarPrevious
+  - libs/components/src/calendar/calendar-root.tsx: CalendarRootBase, CalendarRoot
+  - libs/components/src/calendar/calendar-title.tsx: CalendarTitle
+  - libs/components/src/calendar/calendar-trigger.tsx: CalendarTrigger
+  - libs/components/src/calendar/calendar-year.tsx: CalendarYear
+  - libs/components/src/calendar/calendar.driver.ts: createTestDriver
+  - libs/components/src/calendar/calendar.test.ts: setup, getToday
+  - libs/components/src/calendar/constants.ts: MONTHS_LG, MONTHS_SM, ARIA_LABELS, WEEKDAYS, TRIGGER_LABELS
+  - libs/components/src/calendar/icons.tsx: Calendar
+  - libs/components/src/calendar/utils.tsx: daysArrGenerator, getWeekNumber
+  - libs/components/src/checkbox/checkbox-context.tsx: checkboxContextId
+  - libs/components/src/checkbox/checkbox-description.tsx: CheckboxDescriptionBase, CheckboxDescription
+  - libs/components/src/checkbox/checkbox-error.tsx: CheckboxErrorBase, CheckboxError
+  - libs/components/src/checkbox/checkbox-hidden-input.tsx: CheckboxHiddenInput
+  - libs/components/src/checkbox/checkbox-indicator.tsx: CheckboxIndicatorBase, CheckboxIndicator
+  - libs/components/src/checkbox/checkbox-label.tsx: CheckboxLabelBase, CheckboxLabel
+  - libs/components/src/checkbox/checkbox-root.tsx: CheckboxRootBase, CheckboxRoot
+  - libs/components/src/checkbox/checkbox-trigger.tsx: CheckboxTriggerBase, CheckboxTrigger
+  - libs/components/src/checkbox/checkbox.driver.ts: createTestDriver
+  - libs/components/src/checkbox/checkbox.test.ts: setup
+  - libs/components/src/checklist/checklist-context.tsx: checklistContextId
+  - libs/components/src/checklist/checklist-error.tsx: ChecklistError
+  - libs/components/src/checklist/checklist-hidden-input.tsx: ChecklistHiddenInput
+  - libs/components/src/checklist/checklist-item-description.tsx: ChecklistItemDescription
+  - libs/components/src/checklist/checklist-item-indicator.tsx: ChecklistItemIndicator
+  - libs/components/src/checklist/checklist-item-label.tsx: ChecklistItemLabel
+  - libs/components/src/checklist/checklist-item-trigger.tsx: ChecklistItemTrigger
+  - libs/components/src/checklist/checklist-item.tsx: ChecklistItemBase, ChecklistItem
+  - libs/components/src/checklist/checklist-label.tsx: ChecklistLabel
+  - libs/components/src/checklist/checklist-root.tsx: ChecklistRootBase, ChecklistRoot
+  - libs/components/src/checklist/checklist-select-all-indicator.tsx: ChecklistSelectAllIndicator
+  - libs/components/src/checklist/checklist-select-all.tsx: ChecklistSelectAll
+  - libs/components/src/checklist/checklist.driver.ts: createTestDriver
+  - libs/components/src/checklist/checklist.test.ts: setup, verifyAllCheckboxStates, allCheckboxes
+  - libs/components/src/collapsible/collapsible-content.tsx: CollapsibleContentBase, CollapsibleContent
+  - libs/components/src/collapsible/collapsible-root.tsx: collapsibleContextId, CollapsibleRootBase, CollapsibleRoot
+  - libs/components/src/collapsible/collapsible-trigger.tsx: CollapsibleTriggerBase, CollapsibleTrigger
+  - libs/components/src/collapsible/collapsible.driver.ts: createTestDriver
+  - libs/components/src/collapsible/collapsible.test.ts: setup
+  - libs/components/src/date-input/constants.ts: MIN_YEAR, MAX_YEAR, MIN_MONTH, MAX_MONTH, MIN_DAY, MAX_DAY, DEFAULT_DAY_OF_MONTH_SEGMENT, DEFAULT_MONTH_SEGMENT, DEFAULT_YEAR_SEGMENT
+  - libs/components/src/date-input/date-input-context.tsx: dateInputContextId
+  - libs/components/src/date-input/date-input-day.tsx: DateInputDayBase, DateInputDay
+  - libs/components/src/date-input/date-input-field-context.tsx: dateInputFieldContextId
+  - libs/components/src/date-input/date-input-field.tsx: DateInputFieldBase, DateInputField
+  - libs/components/src/date-input/date-input-hidden-input.tsx: DateInputHiddenInput
+  - libs/components/src/date-input/date-input-label.tsx: DateInputLabelBase, DateInputLabel
+  - libs/components/src/date-input/date-input-month.tsx: DateInputMonthBase, DateInputMonth
+  - libs/components/src/date-input/date-input-root.tsx: DateInputRootBase, DateInputRoot
+  - libs/components/src/date-input/date-input-segment.tsx: DateInputSegment
+  - libs/components/src/date-input/date-input-year.tsx: DateInputYearBase, DateInputYear
+  - libs/components/src/date-input/date-input.driver.ts: createTestDriver
+  - libs/components/src/date-input/date-input.test.ts: setup, getToday
+  - libs/components/src/date-input/utils.ts: getSeparatorFromFormat, getInitialSegments, getLastDayOfMonth, getDisplayValue, getTwoDigitPaddedValue
+  - libs/components/src/file-upload/file-upload-context.ts: fileUploadContextId
+  - libs/components/src/file-upload/file-upload-dropzone.tsx: FileUploadDropzone
+  - libs/components/src/file-upload/file-upload-input.tsx: FileUploadInput
+  - libs/components/src/file-upload/file-upload-root.tsx: FileUploadRoot
+  - libs/components/src/file-upload/file-upload-trigger.tsx: FileUploadTrigger
+  - libs/components/src/file-upload/file-upload.driver.ts: createTestDriver
+  - libs/components/src/file-upload/file-upload.test.ts: setup
+  - libs/components/src/label/label.driver.ts: createTestDriver
+  - libs/components/src/label/label.test.ts: setup
+  - libs/components/src/label/label.tsx: LabelBase, Label
+  - libs/components/src/menu/menu-content.tsx: MenuContentBase, MenuContent
+  - libs/components/src/menu/menu-context-trigger.tsx: MenuContextTriggerBase, MenuContextTrigger
+  - libs/components/src/menu/menu-item-label.tsx: MenuItemLabelBase, MenuItemLabel
+  - libs/components/src/menu/menu-item.tsx: MenuItemBase, MenuItem
+  - libs/components/src/menu/menu-root.tsx: menuContextId, MenuRoot
+  - libs/components/src/menu/menu-submenu-content.tsx: MenuSubmenuContentBase, MenuSubmenuContent
+  - libs/components/src/menu/menu-submenu-trigger.tsx: MenuSubmenuTriggerBase, MenuSubmenuTrigger
+  - libs/components/src/menu/menu-submenu.tsx: MenuSubmenuBase, MenuSubmenu
+  - libs/components/src/menu/menu-trigger.tsx: MenuTriggerBase, MenuTrigger
+  - libs/components/src/menu/menu.driver.ts: createTestDriver
+  - libs/components/src/menu/menu.test.ts: setup
+  - libs/components/src/menu/utils.ts: createMenuWalker, getNextMenuItem, getPreviousMenuItem, getFirstMenuItem, getLastMenuItem, waitForVisible
+  - libs/components/src/otp/otp-context.ts: OTPContextId
+  - libs/components/src/otp/otp-hidden-input.tsx: OtpHiddenInput
+  - libs/components/src/otp/otp-item-indicator.tsx: OtpItemIndicator
+  - libs/components/src/otp/otp-item.tsx: itemContextId, OtpItem
+  - libs/components/src/otp/otp-root.tsx: OtpRoot, OtpBase
+  - libs/components/src/otp/otp.driver.ts: createTestDriver
+  - libs/components/src/otp/otp.test.ts: setupEventListeners, setup
+  - libs/components/src/otp/utils/modifier.ts: modifier
+  - libs/components/src/pagination/pagination-context.tsx: paginationContextId
+  - libs/components/src/pagination/pagination-ellipsis.tsx: PaginationEllipsis
+  - libs/components/src/pagination/pagination-item.tsx: PaginationItem
+  - libs/components/src/pagination/pagination-next.tsx: PaginationNext
+  - libs/components/src/pagination/pagination-previous.tsx: PaginationPrevious
+  - libs/components/src/pagination/pagination-root.tsx: PaginationRoot, PaginationBase
+  - libs/components/src/pagination/pagination.driver.ts: createTestDriver
+  - libs/components/src/pagination/pagination.test.ts: setup
+  - libs/components/src/pagination/utils.ts: getPaginationItems
+  - libs/components/src/popover/popover-content.tsx: PopoverContentBase, PopoverContent
+  - libs/components/src/popover/popover-root.tsx: popoverContextId, PopoverRootBase, PopoverRoot
+  - libs/components/src/popover/popover-trigger.tsx: PopoverTriggerBase, PopoverTrigger
+  - libs/components/src/popover/popover.driver.ts: createTestDriver
+  - libs/components/src/popover/popover.test.ts: setup
+  - libs/components/src/progress/progress-context.ts: ProgressContext
+  - libs/components/src/progress/progress-indicator.tsx: ProgressIndicatorBase, ProgressIndicator
+  - libs/components/src/progress/progress-label.tsx: ProgressLabelBase, ProgressLabel
+  - libs/components/src/progress/progress-root.tsx: ProgressRootBase, ProgressRoot
+  - libs/components/src/progress/progress-track.tsx: ProgressTrackBase, ProgressTrack
+  - libs/components/src/progress/progress.driver.ts: createTestDriver
+  - libs/components/src/progress/progress.test.ts: setup
+  - libs/components/src/qr-code/qr-code-context.ts: qrCodeContextId
+  - libs/components/src/qr-code/qr-code-frame.tsx: QRCodeFrame
+  - libs/components/src/qr-code/qr-code-overlay.tsx: QRCodeOverlay
+  - libs/components/src/qr-code/qr-code-pattern-path.tsx: QRCodePatternPath
+  - libs/components/src/qr-code/qr-code-pattern-svg.tsx: QRCodePatternSvg
+  - libs/components/src/qr-code/qr-code-root.tsx: QRCodeRoot
+  - libs/components/src/qr-code/qr-code.driver.ts: createTestDriver
+  - libs/components/src/qr-code/qr-code.test.ts: setup
+  - libs/components/src/radio-group/radio-group-context.tsx: radioGroupContextId
+  - libs/components/src/radio-group/radio-group-description.tsx: RadioGroupDescriptionBase, RadioGroupDescription
+  - libs/components/src/radio-group/radio-group-error.tsx: RadioGroupErrorBase, RadioGroupError
+  - libs/components/src/radio-group/radio-group-hidden-input.tsx: RadioGroupHiddenInput
+  - libs/components/src/radio-group/radio-group-item-indicator.tsx: RadioGroupItemIndicator
+  - libs/components/src/radio-group/radio-group-item-label.tsx: RadioGroupItemLabel
+  - libs/components/src/radio-group/radio-group-item-trigger.tsx: RadioGroupItemTrigger
+  - libs/components/src/radio-group/radio-group-item.tsx: radioGroupItemContextId, RadioGroupItemBase, RadioGroupItem
+  - libs/components/src/radio-group/radio-group-label.tsx: RadioGroupLabelBase, RadioGroupLabel
+  - libs/components/src/radio-group/radio-group-root.tsx: RadioGroupRootBase, RadioGroupRoot
+  - libs/components/src/radio-group/radio-group.driver.ts: createTestDriver
+  - libs/components/src/radio-group/radio-group.test.ts: setup
+  - libs/components/src/render/render.tsx: Render
+  - libs/components/src/resizable/resizable-content.tsx: ResizableContentBase, ResizableContent
+  - libs/components/src/resizable/resizable-context.tsx: resizableContextId
+  - libs/components/src/resizable/resizable-handle.tsx: ResizableHandleBase, ResizableHandle
+  - libs/components/src/resizable/resizable-root.tsx: ResizableRootBase, ResizableRoot
+  - libs/components/src/resizable/resizable.driver.ts: createTestDriver
+  - libs/components/src/resizable/resizable.test.ts: setup
+  - libs/components/src/scroll-area/scroll-area-context.ts: scrollAreaContextId
+  - libs/components/src/scroll-area/scroll-area-root.tsx: ScrollAreaRoot
+  - libs/components/src/scroll-area/scroll-area-scrollbar.tsx: ScrollAreaScrollbar
+  - libs/components/src/scroll-area/scroll-area-thumb.tsx: ScrollAreaThumb
+  - libs/components/src/scroll-area/scroll-area-view-port.tsx: ScrollAreaViewport
+  - libs/components/src/scroll-area/scroll-area.driver.ts: createTestDriver
+  - libs/components/src/scroll-area/scroll-area.test.ts: setup
+  - libs/components/src/slider/slider-context.ts: sliderContextId
+  - libs/components/src/slider/slider-marker-group.tsx: SliderMarkerGroup
+  - libs/components/src/slider/slider-marker.tsx: SliderMarker
+  - libs/components/src/slider/slider-range.tsx: SliderRange
+  - libs/components/src/slider/slider-root.tsx: SliderRoot
+  - libs/components/src/slider/slider-thumb.tsx: SliderThumb
+  - libs/components/src/slider/slider-tooltip.tsx: SliderTooltip
+  - libs/components/src/slider/slider-track.tsx: SliderTrack
+  - libs/components/src/slider/slider.driver.ts: createTestDriver
+  - libs/components/src/slider/slider.test.ts: setup
+  - libs/components/src/switch/switch-context.tsx: switchContextId
+  - libs/components/src/switch/switch-description.tsx: SwitchDescription
+  - libs/components/src/switch/switch-error.tsx: SwitchError
+  - libs/components/src/switch/switch-hidden-input.tsx: SwitchHiddenInput
+  - libs/components/src/switch/switch-label.tsx: SwitchLabel
+  - libs/components/src/switch/switch-root.tsx: SwitchRoot
+  - libs/components/src/switch/switch-thumb.tsx: SwitchThumb
+  - libs/components/src/switch/switch-trigger.tsx: SwitchTrigger
+  - libs/components/src/switch/switch.driver.ts: createTestDriver
+  - libs/components/src/switch/switch.test.ts: setup
+  - libs/components/src/tabs/tabs-content.tsx: TabsContentBase, TabsContent
+  - libs/components/src/tabs/tabs-list.tsx: TabsListBase, TabsList
+  - libs/components/src/tabs/tabs-root.tsx: tabsContextId, TabsRootBase, TabsRoot
+  - libs/components/src/tabs/tabs-trigger.tsx: TabsTriggerBase, TabsTrigger
+  - libs/components/src/tabs/tabs.driver.ts: createTestDriver
+  - libs/components/src/tabs/tabs.test.ts: setup
+  - libs/components/src/toast/toast-close.tsx: ToastCloseBase, ToastClose
+  - libs/components/src/toast/toast-context.tsx: toastContextId
+  - libs/components/src/toast/toast-description.tsx: ToastDescriptionBase, ToastDescription
+  - libs/components/src/toast/toast-root.tsx: ToastRootBase, ToastRoot
+  - libs/components/src/toast/toast-title.tsx: ToastTitleBase, ToastTitle
+  - libs/components/src/toast/toast.driver.ts: createTestDriver
+  - libs/components/src/toast/toast.test.ts: setup
+  - libs/components/src/toggle/toggle-indicator.tsx: ToggleIndicatorBase, ToggleIndicator
+  - libs/components/src/toggle/toggle-root.tsx: toggleContextId, ToggleRootBase, ToggleRoot
+  - libs/components/src/toggle/toggle.driver.ts: createTestDriver
+  - libs/components/src/toggle/toggle.test.ts: setup
+  - libs/components/src/tree/tree-item-content.tsx: TreeItemContentBase, TreeItemContent
+  - libs/components/src/tree/tree-item-indicator.tsx: TreeItemIndicatorBase, TreeItemIndicator
+  - libs/components/src/tree/tree-item-label.tsx: TreeItemLabelBase, TreeItemLabel
+  - libs/components/src/tree/tree-item-trigger.tsx: TreeItemTriggerBase, TreeItemTrigger
+  - libs/components/src/tree/tree-item.tsx: itemContextId, TreeItemBase, TreeItem
+  - libs/components/src/tree/tree-label.tsx: TreeLabelBase, TreeLabel
+  - libs/components/src/tree/tree-root.tsx: TreeRootContextId, TreeRootBase, TreeRoot
+  - libs/components/src/tree/use-tree.ts: useTree
+  - libs/components/src/visually-hidden/visually-hidden.tsx: VisuallyHidden
+  - libs/icons/config.ts: resolver, debug, config
+  - libs/icons/src/build.ts: cleanDir, copyDirectories, copyTypeDefinitions, buildLib
+  - libs/icons/src/generate/generate-icons.ts: generateIcon, generateIndexFile, generateDeclarationFile, generateRootIndex, generateRootDeclaration, generateIcons, run
+  - libs/icons/src/generate/get-icons.ts: getIconSets
+  - libs/icons/src/resolver.ts: createResolver
+  - libs/utils/src/bindings.tsx: useBindings
+  - libs/utils/src/bound-signal.tsx: useBoundSignal
+  - libs/utils/src/indexer.ts: resetIndexes, getNextIndex
+  - libs/utils/src/inline-component.ts: processChildren, findComponent
+  - libs/utils/src/list-navigation.ts: getElementValue, getNextEnabledIndex, getPrevEnabledIndex
+  - libs/utils/src/store-signal.tsx: useStoreSignal
+  - libs/utils/src/symbol.ts: createSymbolName
+

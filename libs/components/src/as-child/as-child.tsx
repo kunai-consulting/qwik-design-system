@@ -3,8 +3,8 @@ import {
   type JSXChildren,
   type NoSerialize,
   noSerialize
-} from "@builder.io/qwik";
-import type { FunctionComponent } from "@builder.io/qwik/jsx-runtime";
+} from "@qwik.dev/core";
+import type { FunctionComponent } from "@qwik.dev/core";
 
 export type AsChildProps = {
   _allProps?: object;

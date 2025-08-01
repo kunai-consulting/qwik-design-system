@@ -24,12 +24,11 @@
     "cn": "cn"
   },
   "devDependencies": {
-    "@builder.io/qwik": "^1.14.1",
-    "@builder.io/qwik-city": "^1.14.1",
     "@kunai-consulting/code-notate": "0.0.2",
     "@kunai-consulting/code-notate-core": "0.0.2",
     "@kunai-consulting/qwik": "workspace:*",
     "@kunai-consulting/qwik-utils": "workspace:*",
+    "@kunai-consulting/core": "workspace:*",
     "@qwik-ui/headless": "^0.6.4",
     "@qwikest/icons": "^0.0.13",
     "@tailwindcss/vite": "^4.1.3",
@@ -40,9 +39,11 @@
     "typescript": "5.4.5",
     "undici": "*",
     "unified": "^11.0.4",
-    "vite": "^5.4",
+    "vite": "^7",
     "vite-plugin-image-optimizer": "^1.1.8",
-    "vite-tsconfig-paths": "^4.2.1"
+    "vite-tsconfig-paths": "^4.2.1",
+    "@qwik.dev/router": "2.0.0-beta.6",
+    "@qwik.dev/core": "https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc"
   },
   "dependencies": {
     "@stackblitz/sdk": "^1.11.0",

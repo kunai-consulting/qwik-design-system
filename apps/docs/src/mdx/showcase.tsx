@@ -1,3 +1,4 @@
+import { Tabs } from "@kunai-consulting/qwik";
 import {
   $,
   type Component,
@@ -6,11 +7,10 @@ import {
   useId,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
-import { Tabs } from "@kunai-consulting/qwik";
-import { metaGlobComponents, rawComponents } from "~/utils/component-import";
+} from "@qwik.dev/core";
+import { metaGlobComponents, rawComponents } from "../utils/component-import";
 
-import { useLocation } from "@builder.io/qwik-city";
+import { useLocation } from "@qwik.dev/router";
 import { Highlight } from "./highlight";
 import { createStackblitzProject } from "./stackblitz";
 

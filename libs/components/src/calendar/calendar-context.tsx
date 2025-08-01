@@ -1,13 +1,12 @@
-import { type Signal, createContextId } from "@builder.io/qwik";
-import type { LocalDate, Locale, Month } from "./types";
+import { type Signal, createContextId } from "@qwik.dev/core";
+import type { ISODate, Locale, Month } from "./types";
 
 export const calendarContextId = createContextId<CalendarContext>("qds-calendar-context");
 
 export type CalendarContext = {
   locale: Locale;
-  defaultDate: LocalDate;
-  activeDate: Signal<LocalDate | null>;
-  dateToFocus: Signal<LocalDate>;
+  dateSig: Signal<ISODate | null>;
+  dateToFocus: Signal<ISODate>;
   showWeekNumber: boolean;
   showDaysOfWeek: boolean;
   daysOfWeek: [
@@ -22,7 +21,9 @@ export type CalendarContext = {
   datesArray: Signal<(string | null)[][]>;
   monthToRender: Signal<Month>;
   yearToRender: Signal<number>;
-  currentDate: LocalDate;
+  currentDate: ISODate;
   localId: string;
   isPopoverOpenSig: Signal<boolean>;
+  mode: "inline" | "popover";
+  disabledSig: Signal<boolean>;
 };

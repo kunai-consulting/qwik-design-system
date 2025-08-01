@@ -1,3 +1,4 @@
+import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import {
   type PropsOf,
   Slot,
@@ -5,8 +6,7 @@ import {
   useContext,
   useSignal,
   useTask$
-} from "@builder.io/qwik";
-import { getNextIndex } from "@kunai-consulting/qwik-utils";
+} from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { CheckboxRootBase } from "../checkbox/checkbox-root";
 import { checklistContextId } from "./checklist-context";

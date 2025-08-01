@@ -1,11 +1,10 @@
 import {
-  type PropFunction,
   type PropsOf,
   Slot,
   component$,
   useContextProvider,
   useSignal
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { type FileInfo, fileUploadContextId } from "./file-upload-context";
 type HTMLDivProps = PropsOf<"div">;
 /**
@@ -16,7 +15,7 @@ interface PublicFileUploadProps {
   multiple?: boolean; // Allow multiple file selection
   accept?: string; // File type filter (e.g. "image/*")
   disabled?: boolean; // Disable file upload
-  onFilesChange$?: PropFunction<(files: FileInfo[]) => void>; // File change callback
+  onFilesChange$?: (files: FileInfo[]) => void; // File change callback
 }
 type PublicRootProps = HTMLDivProps & PublicFileUploadProps;
 /**

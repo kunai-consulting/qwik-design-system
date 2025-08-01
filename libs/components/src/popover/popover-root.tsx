@@ -1,3 +1,4 @@
+import polyfill from "@oddbird/css-anchor-positioning/fn";
 import {
   $,
   type PropsOf,
@@ -12,12 +13,11 @@ import {
   useSignal,
   useStyles$,
   useTask$
-} from "@builder.io/qwik";
-import polyfill from "@oddbird/css-anchor-positioning/fn";
+} from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 
-type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
+export type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
   onChange$?: (open: boolean) => void;
 } & BindableProps<{ open: boolean }>;
 

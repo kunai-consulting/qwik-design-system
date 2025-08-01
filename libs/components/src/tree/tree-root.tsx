@@ -8,7 +8,7 @@ import {
   createContextId,
   useContextProvider,
   useSignal
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 

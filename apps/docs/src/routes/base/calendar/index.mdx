@@ -23,26 +23,43 @@ Key props used:
 - `data-current`: Highlights the current date
 - `class`: Custom styling applied to various components
 The calendar supports full keyboard navigation and follows WAI-ARIA calendar design patterns for accessibility.
-Note: Since there are no additional examples available in the provided list, I cannot document other sections like Visual Features or Advanced Usage. The documentation is limited to the basic usage example shown in the hero showcase.
+
+### Date picker
+The Calendar component can be used to create a 
+[date picker](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/) by including 
+the `Calendar.Field` component and setting the `mode` prop to "popover". 
+The `Calendar.Field` component is a wrapper around the `DateInput` component providing a text input that works in 
+conjunction with the calendar.
+<Showcase name="date-picker" />
+
+### Date picker with readonly date field
+You can prevent users from manually entering a date by setting the `Calendar.Field` component's `openCalendarOnClick` prop.
+In this mode, the date field is read-only and the calendar is opened when the user clicks on the field.
+<Showcase name="date-picker-no-manual-entry" />
+
+### Showing leading zeros
+You can control the display of leading zeros in the calendar grid by setting the `showLeadingZeros` prop on the `Calendar.GridDay` component.
+<Showcase name="leading-zeros" />
+
+### Week numbers
+You can control the display of week numbers in the calendar grid by setting the `showWeekNumber` prop on the `Calendar.Root` component.
+<Showcase name="week-numbers" />
+
+### Full weeks
+You can control the display of full weeks in the calendar grid by setting the `fullWeeks` prop on the `Calendar.Root` component.
+<Showcase name="full-weeks" />
 
 ## Component State
 ### Using Component State
 The Calendar component's state can be controlled through several props on the `Calendar.Root` component:
-1. **Default Date**
-Set the initial date to display when the calendar loads using the `defaultDate` prop:
-```tsx
-<Calendar.Root defaultDate="2024-03-15">
-  {/* Calendar content */}
-</Calendar.Root>
-```
-2. **Selected Date**
+1. **Selected Date**
 Track the currently selected date using the `date` prop:
 ```tsx
 <Calendar.Root date={selectedDate}>
   {/* Calendar content */}
 </Calendar.Root>
 ```
-3. **Display Options**
+2. **Display Options**
 Control what information is shown in the calendar:
 ```tsx
 <Calendar.Root 
@@ -90,7 +107,6 @@ The calendar component maintains its own internal state for:
 - Keyboard navigation within the calendar grid
 These aspects are handled automatically by the component and don't require manual management.
 
-Based on the provided implementation and examples, I'll document the Calendar component's configuration options.
 ## Core Configuration
 ### Locale and Date Format
 The Calendar component supports localization through the `locale` prop on `Calendar.Root`. Currently, it supports:
@@ -143,8 +159,6 @@ The calendar maintains internal state for:
 - Selected date
 - Focused date
 - Week number calculations (when enabled)
-
-
 
 
 

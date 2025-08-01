@@ -3,10 +3,11 @@ import {
   type PropsOf,
   component$,
   sync$,
+  useComputed$,
   useContext,
   useOnDocument,
   useSignal
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { OTPContextId } from "./otp-context";
 type PublicOtpNativeInputProps = PropsOf<"input"> & {
   pattern?: string | null;
@@ -17,6 +18,7 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
   const previousValue = useSignal<string>("");
   const shiftKeyDown = useSignal(false);
   const pattern = props.pattern ?? "^[0-9]*$";
+  const hasBeenFocused = useSignal(false);
 
   const previousSelection = useSignal({
     inserting: false,
@@ -41,7 +43,7 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
       }
 
       context.selectionStartSig.value = start;
-      context.selectionEndSig.value = Math.min(end, context.numItemsSig.value);
+      context.selectionEndSig.value = Math.min(end, context.numItems);
       context.currIndexSig.value = start;
     }
   );
@@ -53,7 +55,7 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
       return;
     }
 
-    const maxLength = context.numItemsSig.value;
+    const maxLength = context.numItems;
     const start = input.selectionStart;
     const end = input.selectionEnd;
     const value = input.value;
@@ -106,7 +108,7 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
   /**
    *  Prevent the left arrow key from skipping over filled slots when traveling from empty slots
    */
-  const handleKeyDownSync = sync$((e: KeyboardEvent) => {
+  const handleKeyDownSync$ = sync$((e: KeyboardEvent) => {
     const input = e.target as HTMLInputElement;
 
     if (e.key === "ArrowLeft" && input.selectionStart === input.selectionEnd) {
@@ -147,7 +149,7 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
 
   const handleInput = $((e: InputEvent) => {
     const input = e.target as HTMLInputElement;
-    const newValue = input.value.slice(0, context.numItemsSig.value);
+    const newValue = input.value.slice(0, context.numItems);
 
     // validate input if pattern provided
     if (!new RegExp(pattern).test(newValue)) {
@@ -205,6 +207,7 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
   });
 
   const handleFocus = $(() => {
+    hasBeenFocused.value = true;
     // Reset first keystroke flag on focus
     isFirstKeystroke.value = true;
     const input = context.nativeInputRef.value;
@@ -222,20 +225,27 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
     syncSelection(null, null, false);
   });
 
+  const maxLength = useComputed$(() => {
+    if (hasBeenFocused.value) {
+      return context.numItems;
+    }
+    return context.inputValueSig.value.length;
+  });
+
   return (
     <input
       {...props}
       ref={context.nativeInputRef}
       value={context.inputValueSig.value}
       disabled={context.isDisabledSig.value ?? false}
-      maxLength={context.numItemsSig.value}
+      maxLength={maxLength.value}
       // The identifier for the hidden input element that handles OTP input
       data-qds-otp-hidden-input
       // Indicates whether password manager suggestions should be shifted
       data-shift={context.shiftPWManagers ? "" : undefined}
       inputMode="numeric"
       onInput$={[handleInput, props.onInput$]}
-      onKeyDown$={[handleKeyDownSync, handleKeyDown, props.onKeyDown$]}
+      onKeyDown$={[handleKeyDownSync$, handleKeyDown, props.onKeyDown$]}
       onKeyUp$={[handleKeyUp, props.onKeyUp$]}
       onFocus$={[handleFocus, props.onFocus$]}
       onBlur$={[handleBlur, props.onBlur$]}

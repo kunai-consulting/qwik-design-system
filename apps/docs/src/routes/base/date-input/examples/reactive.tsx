@@ -1,6 +1,6 @@
-import { component$, useSignal } from "@builder.io/qwik";
-import { useStyles$ } from "@builder.io/qwik";
 import { DateInput } from "@kunai-consulting/qwik";
+import { component$, useSignal } from "@qwik.dev/core";
+import { useStyles$ } from "@qwik.dev/core";
 
 export default component$(() => {
   useStyles$(styles);
@@ -10,13 +10,13 @@ export default component$(() => {
     <div class="date-input-container">
       <DateInput.Root class="date-input-root-col">
         <DateInput.Label>Party like it's:</DateInput.Label>
-        <DateInput.Entry bind:date={selectedDate}>
+        <DateInput.Field bind:date={selectedDate}>
           <DateInput.Month />
           <span>/</span>
           <DateInput.Day />
           <span>/</span>
           <DateInput.Year />
-        </DateInput.Entry>
+        </DateInput.Field>
       </DateInput.Root>
       <p>
         Bound date: <span class="external-value">{selectedDate.value}</span>

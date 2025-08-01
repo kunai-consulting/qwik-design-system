@@ -5,7 +5,7 @@ import {
   useContext,
   useTask$,
   useVisibleTask$
-} from "@builder.io/qwik";
+} from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { PopoverContentBase } from "../popover/popover-content";
 import { menuContextId } from "./menu-root";

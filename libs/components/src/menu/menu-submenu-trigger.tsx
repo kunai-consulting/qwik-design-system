@@ -1,4 +1,4 @@
-import { $, Slot, component$, useContext } from "@builder.io/qwik";
+import { $, Slot, component$, useContext } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
 import { MenuItem, type PublicMenuItemProps } from "./menu-item";
 import { menuContextId } from "./menu-root";

@@ -1,5 +1,5 @@
 export { DateInputRoot as Root } from "./date-input-root";
-export { DateInputEntry as Entry } from "./date-input-entry";
+export { DateInputField as Field } from "./date-input-field";
 export { DateInputHiddenInput as HiddenInput } from "./date-input-hidden-input";
 export { DateInputLabel as Label } from "./date-input-label";
 export { DateInputSegment as Segment } from "./date-input-segment";
