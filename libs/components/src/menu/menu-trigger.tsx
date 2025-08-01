@@ -1,5 +1,4 @@
 import { $, type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { PopoverTriggerBase } from "../popover/popover-trigger";
 import { menuContextId } from "./menu-root";
 
@@ -8,7 +7,7 @@ export type PublicMenuTriggerProps = Omit<
   "popovertarget" | "id" | "aria-haspopup" | "aria-expanded" | "aria-controls"
 >;
 
-export const MenuTriggerBase = component$<PublicMenuTriggerProps>((props) => {
+export const MenuTrigger = component$<PublicMenuTriggerProps>((props) => {
   const context = useContext(menuContextId);
 
   const handleKeyDown = $((event: KeyboardEvent) => {
@@ -46,5 +45,3 @@ export const MenuTriggerBase = component$<PublicMenuTriggerProps>((props) => {
     </PopoverTriggerBase>
   );
 });
-
-export const MenuTrigger = withAsChild(MenuTriggerBase);

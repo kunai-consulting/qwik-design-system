@@ -13,7 +13,6 @@ import {
   useSignal,
   useTask$
 } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";
 
 export type ItemRef = {
@@ -68,7 +67,7 @@ export type PublicMenuRootProps = Omit<MenuRootBaseProps, "onChange$"> &
   };
 
 /** Root container component for the menu */
-const MenuRootBase = component$<PublicMenuRootProps>((props) => {
+export const MenuRoot = component$<PublicMenuRootProps>((props) => {
   const { openSig: isOpenSig, disabledSig: isDisabledSig } = useBindings(props, {
     open: false,
     disabled: false
@@ -157,5 +156,3 @@ const MenuRootBase = component$<PublicMenuRootProps>((props) => {
     </PopoverRootBase>
   );
 });
-
-export const MenuRoot = withAsChild(MenuRootBase);

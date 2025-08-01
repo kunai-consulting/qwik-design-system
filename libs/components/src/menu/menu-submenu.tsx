@@ -8,7 +8,6 @@ import {
   useSignal,
   useStyles$
 } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase } from "../popover/popover-root";
 import { type ItemRef, type MenuContext, menuContextId } from "./menu-root";
 import type { PublicMenuRootProps } from "./menu-root";
@@ -17,7 +16,7 @@ import menuSubmenuStyles from "./menu-submenu.css?inline";
 export type PublicMenuSubmenuProps = PublicMenuRootProps;
 
 /** A component that renders a submenu */
-export const MenuSubmenuBase = component$<PublicMenuSubmenuProps>((props) => {
+export const MenuSubmenu = component$<PublicMenuSubmenuProps>((props) => {
   useStyles$(menuSubmenuStyles);
 
   const parentContext = useContext(menuContextId);
@@ -67,5 +66,3 @@ export const MenuSubmenuBase = component$<PublicMenuSubmenuProps>((props) => {
     </PopoverRootBase>
   );
 });
-
-export const MenuSubmenu = withAsChild(MenuSubmenuBase);
