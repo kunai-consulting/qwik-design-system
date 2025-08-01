@@ -1,10 +1,9 @@
 import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { ProgressContext } from "./progress-context";
 
 type ProgressTrackElement = PropsOf<"div">;
-export const ProgressTrackBase = component$<ProgressTrackElement>((props) => {
+export const ProgressTrack = component$<ProgressTrackElement>((props) => {
   const { ...trackProps } = props;
 
   const context = useContext(ProgressContext);
@@ -20,5 +19,3 @@ export const ProgressTrackBase = component$<ProgressTrackElement>((props) => {
     </Render>
   );
 });
-
-export const ProgressTrack = withAsChild(ProgressTrackBase);
