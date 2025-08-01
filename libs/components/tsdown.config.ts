@@ -1,6 +1,7 @@
+import { qwikRollup } from "@qwik.dev/core/optimizer";
 import { defineConfig } from "tsdown";
 
-// 🎯 SIMPLIFIED LIBRARY MODE CONFIG (matching Vite library mode)
+// 🎯 QWIK LIBRARY MODE CONFIG with Optimizer
 export default defineConfig({
   // LIBRARY MODE ESSENTIALS (like Vite's build.lib)
   entry: ["src/index.ts"], // Single entry point like Vite library mode
@@ -10,6 +11,16 @@ export default defineConfig({
   // EXTERNALS (like Vite's rollupOptions.external)
   external: [/^@qwik\.dev\/.*/, /^@kunai-consulting\/.*/, /^node:.*/],
 
+  // QWIK OPTIMIZER PLUGIN (critical for proper component processing)
+  plugins: [
+    qwikRollup({
+      buildMode: "production", // Production build mode
+      target: "lib", // Library build target
+      lint: false, // Skip linting during build
+      debug: true // Disable debug output
+    })
+  ],
+
   // LIBRARY OUTPUT (like Vite's rollupOptions.output)
   outputOptions: {
     // Preserve individual modules (like Vite library mode)
@@ -18,17 +29,8 @@ export default defineConfig({
 
     // Library-style file naming (consistent with Vite)
     entryFileNames: "[name].qwik.mjs",
-    chunkFileNames: "[name].qwik.mjs",
-
-    // Library optimizations (matching Vite)
-    minifyInternalExports: false,
-    externalLiveBindings: false
+    chunkFileNames: "[name].qwik.mjs"
   },
-
-  // CLEAN BUILD (remove complexity that might break Qwik)
-  treeshake: false, // Like Vite library mode
-  minify: false, // Like Vite library mode
-  platform: "browser",
 
   // FILE EXTENSIONS
   outExtensions: () => {
