@@ -9,6 +9,7 @@ import {
   useSignal,
   useTask$
 } from "@qwik.dev/core";
+import { menuContextId } from "../menu/menu-root";
 import { Render } from "../render/render";
 import { radioGroupContextId } from "./radio-group-context";
 import { radioGroupItemContextId } from "./radio-group-item";
@@ -22,6 +23,13 @@ export const RadioGroupItemTrigger = component$((props: PublicTriggerProps) => {
   const { ...restProps } = props;
   const value = itemContext.itemValue;
   const itemLabelId = `${itemContext.itemId}-label`;
+
+  const menuContext = useContext(menuContextId, null);
+
+  const role = useComputed$(() => {
+    return menuContext ? "menuitemradio" : "radio";
+  });
+
   const itemIndex = itemContext.itemIndex;
 
   useTask$(function getIndexOrder() {
@@ -75,10 +83,10 @@ export const RadioGroupItemTrigger = component$((props: PublicTriggerProps) => {
   return (
     <Render
       fallback="button"
+      role={role.value}
+      type="button"
       {...restProps}
       internalRef={triggerRef}
-      type="button"
-      role="radio"
       aria-checked={itemContext.isSelectedSig.value}
       data-checked={itemContext.isSelectedSig.value}
       data-qds-radio-group-trigger
