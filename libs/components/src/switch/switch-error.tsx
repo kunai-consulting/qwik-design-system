@@ -1,10 +1,9 @@
 import { type PropsOf, Slot, component$, useContext, useTask$ } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { switchContextId } from "./switch-context";
 
 /** Error message component that displays when the switch is in an error state */
-const SwitchErrorBase = component$<PropsOf<"div">>((props) => {
+export const SwitchError = component$<PropsOf<"div">>((props) => {
   const { ...restProps } = props;
   const context = useContext(switchContextId);
 
@@ -39,5 +38,3 @@ const SwitchErrorBase = component$<PropsOf<"div">>((props) => {
     </Render>
   );
 });
-
-export const SwitchError = withAsChild(SwitchErrorBase);
