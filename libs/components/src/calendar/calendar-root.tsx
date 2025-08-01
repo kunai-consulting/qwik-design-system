@@ -11,7 +11,6 @@ import {
   useTask$,
   useVisibleTask$
 } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { PopoverRootBase, type PopoverRootProps } from "../popover/popover-root";
 import type { CalendarContext } from "./calendar-context";
 import { calendarContextId } from "./calendar-context";
@@ -48,7 +47,7 @@ export type CalendarRootBoundProps = {
 const isoDateRegex = /^\d{1,4}-(0[1-9]|1[0-2])-\d{2}$/;
 
 /** The root calendar component that manages state and provides context */
-export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
+export const CalendarRoot = component$<PublicCalendarRootProps>((props) => {
   useStyles$(styles);
   const {
     fullWeeks = false,
@@ -152,5 +151,3 @@ export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
     </PopoverRootBase>
   );
 });
-
-export const CalendarRoot = withAsChild(CalendarRootBase);
