@@ -13,7 +13,6 @@ import {
 import { useBoundSignal } from "@kunai-consulting/qwik-utils";
 import { createContextId } from "@qwik.dev/core";
 import { useStyles$ } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import collapsibleStyles from "./collapsible.css?inline";
 
@@ -37,7 +36,7 @@ export type CollapsibleRootProps = PropsOf<"div"> & {
   collapsible?: boolean;
 };
 
-export const CollapsibleRootBase = component$((props: CollapsibleRootProps) => {
+export const CollapsibleRoot = component$((props: CollapsibleRootProps) => {
   const {
     disabled,
     onChange$,
@@ -96,5 +95,3 @@ export const CollapsibleRootBase = component$((props: CollapsibleRootProps) => {
     </Render>
   );
 });
-
-export const CollapsibleRoot = withAsChild(CollapsibleRootBase);
