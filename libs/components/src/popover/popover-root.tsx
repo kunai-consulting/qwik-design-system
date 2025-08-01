@@ -14,7 +14,6 @@ import {
   useStyles$,
   useTask$
 } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 
 export type PopoverRootProps = Omit<PropsOf<"div">, "onChange$"> & {
@@ -35,7 +34,7 @@ type PopoverContext = {
   isHiddenSig: Signal<boolean>;
 };
 
-export const PopoverRootBase = component$((props: PopoverRootProps) => {
+export const PopoverRoot = component$((props: PopoverRootProps) => {
   const { "bind:open": givenOpenSig, onChange$, ...rest } = props;
 
   useStyles$(anchorStyles);
@@ -140,5 +139,3 @@ export const PopoverRootBase = component$((props: PopoverRootProps) => {
     </Render>
   );
 });
-
-export const PopoverRoot = withAsChild(PopoverRootBase);

@@ -8,7 +8,7 @@ import {
   useSignal,
   useStyles$
 } from "@qwik.dev/core";
-import { PopoverRootBase } from "../popover/popover-root";
+import { PopoverRoot } from "../popover/popover-root";
 import { type ItemRef, type MenuContext, menuContextId } from "./menu-root";
 import type { PublicMenuRootProps } from "./menu-root";
 import menuSubmenuStyles from "./menu-submenu.css?inline";
@@ -55,7 +55,7 @@ export const MenuSubmenu = component$<PublicMenuSubmenuProps>((props) => {
   const { open: _o, "bind:open": _bo, onChange$: _oc, ...rest } = props;
 
   return (
-    <PopoverRootBase
+    <PopoverRoot
       bind:open={isOpenSig}
       data-qds-menu-submenu
       tabIndex={-1}
@@ -63,6 +63,6 @@ export const MenuSubmenu = component$<PublicMenuSubmenuProps>((props) => {
       {...rest}
     >
       <Slot />
-    </PopoverRootBase>
+    </PopoverRoot>
   );
 });

@@ -11,7 +11,7 @@ import {
   useTask$,
   useVisibleTask$
 } from "@qwik.dev/core";
-import { PopoverRootBase, type PopoverRootProps } from "../popover/popover-root";
+import { PopoverRoot, type PopoverRootProps } from "../popover/popover-root";
 import type { CalendarContext } from "./calendar-context";
 import { calendarContextId } from "./calendar-context";
 import styles from "./calendar-root.css?inline";
@@ -141,13 +141,13 @@ export const CalendarRoot = component$<PublicCalendarRootProps>((props) => {
   });
 
   return (
-    <PopoverRootBase
+    <PopoverRoot
       data-qds-calendar-root
       aria-label={labelSignal.value}
       bind:open={openSig}
       {...otherProps}
     >
       <Slot />
-    </PopoverRootBase>
+    </PopoverRoot>
   );
 });

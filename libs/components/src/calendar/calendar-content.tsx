@@ -1,6 +1,6 @@
 import { Slot, component$, useStyles$ } from "@qwik.dev/core";
 import { useContext } from "@qwik.dev/core";
-import { PopoverContentBase } from "../popover/popover-content";
+import { PopoverContent } from "../popover/popover-content";
 import { Render } from "../render/render";
 import styles from "./calendar-content.css?inline";
 import { calendarContextId } from "./calendar-context";
@@ -12,9 +12,9 @@ export const CalendarContent = component$(() => {
 
   if (mode === "popover") {
     return (
-      <PopoverContentBase data-qds-calendar-content data-qds-calendar-popover-content>
+      <PopoverContent data-qds-calendar-content data-qds-calendar-popover-content>
         <Slot />
-      </PopoverContentBase>
+      </PopoverContent>
     );
   }
   return (

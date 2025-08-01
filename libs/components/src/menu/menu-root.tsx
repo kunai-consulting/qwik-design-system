@@ -13,7 +13,7 @@ import {
   useSignal,
   useTask$
 } from "@qwik.dev/core";
-import { PopoverRootBase } from "../popover/popover-root";
+import { PopoverRoot } from "../popover/popover-root";
 
 export type ItemRef = {
   ref: Signal;
@@ -54,7 +54,7 @@ export type MenuContext = {
 
 export const menuContextId = createContextId<MenuContext>("menu-context");
 
-type MenuRootBaseProps = PropsOf<typeof PopoverRootBase>;
+type MenuRootBaseProps = PropsOf<typeof PopoverRoot>;
 
 /** Initial open state of the menu */
 export type PublicMenuRootProps = Omit<MenuRootBaseProps, "onChange$"> &
@@ -151,8 +151,8 @@ export const MenuRoot = component$<PublicMenuRootProps>((props) => {
   const { open: _o, "bind:open": _bo, onChange$: _oc, ...rest } = props;
 
   return (
-    <PopoverRootBase bind:open={isOpenSig} data-qds-menu-root ref={rootRef} {...rest}>
+    <PopoverRoot bind:open={isOpenSig} data-qds-menu-root ref={rootRef} {...rest}>
       <Slot />
-    </PopoverRootBase>
+    </PopoverRoot>
   );
 });

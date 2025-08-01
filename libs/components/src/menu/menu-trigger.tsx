@@ -1,9 +1,9 @@
 import { $, type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
-import { PopoverTriggerBase } from "../popover/popover-trigger";
+import { PopoverTrigger } from "../popover/popover-trigger";
 import { menuContextId } from "./menu-root";
 
 export type PublicMenuTriggerProps = Omit<
-  PropsOf<typeof PopoverTriggerBase>,
+  PropsOf<typeof PopoverTrigger>,
   "popovertarget" | "id" | "aria-haspopup" | "aria-expanded" | "aria-controls"
 >;
 
@@ -29,7 +29,7 @@ export const MenuTrigger = component$<PublicMenuTriggerProps>((props) => {
   });
 
   return (
-    <PopoverTriggerBase
+    <PopoverTrigger
       popovertarget={context.contentId}
       id={context.triggerId}
       aria-haspopup="menu"
@@ -42,6 +42,6 @@ export const MenuTrigger = component$<PublicMenuTriggerProps>((props) => {
       {...props}
     >
       <Slot />
-    </PopoverTriggerBase>
+    </PopoverTrigger>
   );
 });

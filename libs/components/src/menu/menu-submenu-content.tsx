@@ -1,11 +1,11 @@
 import { Slot, component$, useContext, useVisibleTask$ } from "@qwik.dev/core";
 import type { PropsOf } from "@qwik.dev/core";
-import { PopoverContentBase } from "../popover/popover-content";
+import { PopoverContent } from "../popover/popover-content";
 import { menuContextId } from "./menu-root";
 import { getFirstMenuItem } from "./utils";
 
 /** Props for the submenu content component */
-export type PublicMenuSubmenuContentProps = PropsOf<typeof PopoverContentBase>;
+export type PublicMenuSubmenuContentProps = PropsOf<typeof PopoverContent>;
 
 /** A component that renders the submenu content */
 export const MenuSubmenuContent = component$<PublicMenuSubmenuContentProps>((props) => {
@@ -28,7 +28,7 @@ export const MenuSubmenuContent = component$<PublicMenuSubmenuContentProps>((pro
   });
 
   return (
-    <PopoverContentBase
+    <PopoverContent
       role="menu"
       id={submenuContext.contentId}
       aria-labelledby={submenuContext.triggerId}
@@ -37,6 +37,6 @@ export const MenuSubmenuContent = component$<PublicMenuSubmenuContentProps>((pro
       {...props}
     >
       <Slot />
-    </PopoverContentBase>
+    </PopoverContent>
   );
 });
