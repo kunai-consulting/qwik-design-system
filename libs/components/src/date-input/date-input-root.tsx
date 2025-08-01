@@ -1,4 +1,3 @@
-import { resetIndexes } from "@kunai-consulting/qwik-utils";
 import {
   type PropsOf,
   type QRL,
@@ -10,7 +9,6 @@ import {
   useSignal,
   useTask$
 } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import type { ISODate } from "../calendar/types";
 import { Render } from "../render/render";
 import type { DateInputContext } from "./date-input-context";
@@ -22,7 +20,7 @@ type PublicDateInputRootProps = Omit<PropsOf<"div">, "onChange$"> & {
 
 // no-bindings -- bindings handled by DateInputField
 /** The root Date Input component that manages state and provides context */
-export const DateInputRootBase = component$<PublicDateInputRootProps>(
+export const DateInputRoot = component$<PublicDateInputRootProps>(
   ({ onChange$, ...props }) => {
     // items to store in context
     const localId = useId();
@@ -30,11 +28,15 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>(
     const datesSig = useSignal<(ISODate | null)[]>([]);
 
     const isInitialLoadSig = useSignal(true);
+    const currSegmentIndex = 0;
+    const currFieldIndex = 0;
 
     const context: DateInputContext = {
       localId,
       segmentRefs,
-      datesSig
+      datesSig,
+      currSegmentIndex,
+      currFieldIndex
     };
 
     useContextProvider(dateInputContextId, context);
@@ -56,9 +58,3 @@ export const DateInputRootBase = component$<PublicDateInputRootProps>(
     );
   }
 );
-
-export const DateInputRoot = withAsChild(DateInputRootBase, (props) => {
-  resetIndexes("date-input-field");
-  resetIndexes("date-input-segment");
-  return props;
-});

@@ -1,10 +1,11 @@
 import type { BindableProps } from "@kunai-consulting/qwik-utils";
-import { getNextIndex, useBindings } from "@kunai-consulting/qwik-utils";
+import { useBindings } from "@kunai-consulting/qwik-utils";
 import {
   $,
   type PropsOf,
   Slot,
   component$,
+  useConstant,
   useContext,
   useContextProvider,
   useId,
@@ -12,7 +13,6 @@ import {
   useTask$
 } from "@qwik.dev/core";
 import type { QRL, QwikJSX } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import type { ISODate } from "../calendar/types";
 import { Render } from "../render/render";
 import { dateInputContextId } from "./date-input-context";
@@ -26,8 +26,6 @@ export type PublicDateInputFieldProps = Omit<PropsOf<"div">, "onChange$"> & {
   /** Event handler called when a date is updated */
   onChange$?: QRL<(date: ISODate | null) => void>;
   separator?: string | QwikJSX.Element;
-  /** The index of the date field */
-  _index?: number;
 } & BindableProps<DateInputFieldBoundProps>;
 
 export type DateInputFieldBoundProps = {
@@ -43,8 +41,8 @@ const isoDateRegex = /^\d{1,4}-(0[1-9]|1[0-2])-\d{2}$/;
 /** Container for the segments of the Date Input that assists with accessibility
  * by giving a target for the label and providing a role for screen readers.
  */
-export const DateInputFieldBase = component$((props: PublicDateInputFieldProps) => {
-  const { onChange$, separator, _index, ...rest } = props;
+export const DateInputField = component$((props: PublicDateInputFieldProps) => {
+  const { onChange$, separator, ...rest } = props;
   const rootContext = useContext(dateInputContextId);
   const isInitialLoadSig = useSignal(true);
   const { dateSig, disabledSig } = useBindings<DateInputFieldBoundProps>(props, {
@@ -59,7 +57,11 @@ export const DateInputFieldBase = component$((props: PublicDateInputFieldProps) 
   const dayOfMonthSegmentSig = useSignal(dayOfMonthSegment);
   const monthSegmentSig = useSignal(monthSegment);
   const yearSegmentSig = useSignal(yearSegment);
-  const index = _index ?? -1;
+  const index = useConstant(() => {
+    const currIndex = rootContext.currFieldIndex;
+    rootContext.currFieldIndex++;
+    return currIndex;
+  });
 
   // This flag helps maintain two behaviors when the date changes to null.
   // 1. When the date signal changes to null programmatically, we want to clear all segments.
@@ -172,7 +174,7 @@ export const DateInputFieldBase = component$((props: PublicDateInputFieldProps) 
       fallback={"div"}
       {...rest}
       data-qds-date-input-field
-      data-qds-date-input-field-index={_index}
+      data-qds-date-input-field-index={index}
       role="group"
       id={elementId}
       aria-labelledby={`${rootContext.localId}-label`}
@@ -180,9 +182,4 @@ export const DateInputFieldBase = component$((props: PublicDateInputFieldProps) 
       <Slot />
     </Render>
   );
-});
-
-export const DateInputField = withAsChild(DateInputFieldBase, (props) => {
-  props._index = getNextIndex("date-input-field");
-  return props;
 });

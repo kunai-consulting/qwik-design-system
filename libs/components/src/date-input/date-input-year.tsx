@@ -1,4 +1,3 @@
-import { getNextIndex } from "@kunai-consulting/qwik-utils";
 import { component$, useContext } from "@qwik.dev/core";
 import { dateInputFieldContextId } from "./date-input-field-context";
 import { DateInputSegment } from "./date-input-segment";
@@ -8,7 +7,7 @@ import type { PublicDateInputSegmentProps } from "./types";
  * Year segment component for the Date Input.
  * Handles 4-digit year values.
  */
-export const DateInputYearBase = component$(
+export const DateInputYear = component$(
   ({
     placeholder = "yyyy",
     showLeadingZero = false,
@@ -27,9 +26,3 @@ export const DateInputYearBase = component$(
     );
   }
 );
-
-export function DateInputYear(props: PublicDateInputSegmentProps) {
-  const index = getNextIndex("date-input-segment");
-  props._index = index;
-  return <DateInputYearBase {...props} />;
-}

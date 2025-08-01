@@ -9,4 +9,6 @@ export type DateInputContext = {
   localId: string;
   segmentRefs: Signal<Signal<HTMLInputElement | undefined>[]>; // for focus management
   datesSig: Signal<(ISODate | null)[]>;
+  currSegmentIndex: number;
+  currFieldIndex: number;
 };
