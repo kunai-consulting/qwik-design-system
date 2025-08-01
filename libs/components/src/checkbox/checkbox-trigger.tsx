@@ -7,13 +7,12 @@ import {
   useComputed$,
   useContext
 } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { checkboxContextId } from "./checkbox-context";
 type PublicCheckboxControlProps = PropsOf<"button">;
 
 /** Interactive trigger component that handles checkbox toggling */
-export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps) => {
+export const CheckboxTrigger = component$((props: PublicCheckboxControlProps) => {
   const context = useContext(checkboxContextId);
   const triggerId = `${context.localId}-trigger`;
   const descriptionId = `${context.localId}-description`;
@@ -62,5 +61,3 @@ export const CheckboxTriggerBase = component$((props: PublicCheckboxControlProps
     </Render>
   );
 });
-
-export const CheckboxTrigger = withAsChild(CheckboxTriggerBase);
