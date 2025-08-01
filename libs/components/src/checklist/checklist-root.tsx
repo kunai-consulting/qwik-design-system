@@ -7,7 +7,7 @@ import {
   useSignal
 } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
-import { CheckboxRootBase } from "../checkbox/checkbox-root";
+import { CheckboxRoot } from "../checkbox/checkbox-root";
 import { type ChecklistContext, checklistContextId } from "./checklist-context";
 
 type PublicChecklistRootProps = Omit<PropsOf<"div">, "onChange$">;
@@ -25,7 +25,7 @@ export const ChecklistRootBase = component$((props: PublicChecklistRootProps) =>
 
   // The checkbox root to the select all checkbox
   return (
-    <CheckboxRootBase
+    <CheckboxRoot
       role="group"
       bind:checked={isAllCheckedSig}
       // Identifies the root container element of the checklist component
@@ -33,7 +33,7 @@ export const ChecklistRootBase = component$((props: PublicChecklistRootProps) =>
       {...props}
     >
       <Slot />
-    </CheckboxRootBase>
+    </CheckboxRoot>
   );
 });
 

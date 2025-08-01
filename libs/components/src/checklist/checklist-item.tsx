@@ -8,13 +8,13 @@ import {
   useTask$
 } from "@qwik.dev/core";
 import { withAsChild } from "../as-child/as-child";
-import { CheckboxRootBase } from "../checkbox/checkbox-root";
+import { CheckboxRoot } from "../checkbox/checkbox-root";
 import { checklistContextId } from "./checklist-context";
 
 type PublicChecklistItemProps = {
   /** Internal prop for tracking item position in checklist */
   _index?: number;
-} & Omit<PropsOf<typeof CheckboxRootBase>, "_index">;
+} & Omit<PropsOf<typeof CheckboxRoot>, "_index">;
 
 /** Internal prop for tracking item position in checklist */
 export const ChecklistItemBase = component$((props: PublicChecklistItemProps) => {
@@ -52,9 +52,9 @@ export const ChecklistItemBase = component$((props: PublicChecklistItemProps) =>
   });
 
   return (
-    <CheckboxRootBase bind:checked={isCheckedSig} {...props}>
+    <CheckboxRoot bind:checked={isCheckedSig} {...props}>
       <Slot />
-    </CheckboxRootBase>
+    </CheckboxRoot>
   );
 });
 
