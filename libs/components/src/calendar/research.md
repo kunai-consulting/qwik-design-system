@@ -89,7 +89,7 @@ that is worth consulting.
 
 Some comparable headless component libraries have no calendar component. These include: 
 [Ariakit](https://ariakit.org/components) [Dice UI](https://www.diceui.com/), [Kobalte](https://kobalte.dev/), [Base UI](https://base-ui.com/),
-[HeadlessUI](https://headlessui.com/), [Radix UI](https://www.radix-ui.com), [Dice UI](https://www.diceui.com/).
+[HeadlessUI](https://headlessui.com/), [Radix UI](https://www.radix-ui.com), [melt](https://next.melt-ui.com/).
 
 ### Date utility libraries
 We need to consider whether or not to use a third-party library for date parsing, formatting, validation, manipulation, etc.
