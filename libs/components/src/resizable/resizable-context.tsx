@@ -14,6 +14,7 @@ export interface ResizableContext {
   startPosition: Signal<number | null>;
   isDragging: Signal<boolean>;
   contents: Signal<ContentRef[]>;
+  currContentIndex: number;
 }
 
 export const resizableContextId = createContextId<ResizableContext>("resizable-context");

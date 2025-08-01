@@ -1,8 +1,4 @@
-import {
-  type BindableProps,
-  resetIndexes,
-  useBindings
-} from "@kunai-consulting/qwik-utils";
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import {
   type PropsOf,
   Slot,
@@ -13,7 +9,6 @@ import {
   useSignal,
   useStyles$
 } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import {
   type ContentRef,
@@ -32,8 +27,9 @@ type PublicResizableRootProps = {
   }>;
 
 /** Root container component that manages the resizable contents and handles */
-export const ResizableRootBase = component$<PublicResizableRootProps>((props) => {
+export const ResizableRoot = component$<PublicResizableRootProps>((props) => {
   const rootRef = useSignal<HTMLElement>();
+  const currContentIndex = 0;
   useStyles$(styles);
   const { orientation = "horizontal" } = props;
 
@@ -70,7 +66,8 @@ export const ResizableRootBase = component$<PublicResizableRootProps>((props) =>
     disabled: disabledSig,
     startPosition,
     isDragging,
-    contents
+    contents,
+    currContentIndex
   };
 
   useContextProvider(resizableContextId, context);
@@ -89,8 +86,4 @@ export const ResizableRootBase = component$<PublicResizableRootProps>((props) =>
       <Slot />
     </Render>
   );
-});
-export const ResizableRoot = withAsChild(ResizableRootBase, (props) => {
-  resetIndexes("resizable");
-  return props;
 });

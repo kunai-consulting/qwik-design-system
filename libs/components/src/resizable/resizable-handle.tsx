@@ -6,7 +6,6 @@ import {
   useSignal,
   useTask$
 } from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
 import { Render } from "../render/render";
 import { resizableContextId } from "./resizable-context";
 
@@ -37,7 +36,7 @@ type PublicContentSizes = {
 };
 
 /** A resizable handle component that allows users to drag and resize adjacent contents */
-export const ResizableHandleBase = component$<PublicResizableHandleProps>((props) => {
+export const ResizableHandle = component$<PublicResizableHandleProps>((props) => {
   const context = useContext(resizableContextId);
   const handleRef = useSignal<HTMLElement>();
   const prevContentId = useSignal<string>();
@@ -340,4 +339,3 @@ export const ResizableHandleBase = component$<PublicResizableHandleProps>((props
     />
   );
 });
-export const ResizableHandle = withAsChild(ResizableHandleBase);
