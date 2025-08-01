@@ -9,6 +9,24 @@ export default defineConfig({
     }
   },
   test: {
-    include: ["**/*.unit.ts", "**/*.smoke.ts"]
+    projects: [
+      {
+        test: {
+          include: ["**/*.unit.ts"],
+          name: "unit",
+          environment: "node"
+        }
+      },
+      {
+        test: {
+          include: ["**/*.dom.ts"],
+          name: "dom",
+          browser: {
+            enabled: true,
+            instances: [{ browser: "chromium" }]
+          }
+        }
+      }
+    ]
   }
 });

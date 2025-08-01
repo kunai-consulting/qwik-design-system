@@ -13,8 +13,9 @@
     "fix": "pnpm lint && pnpm format",
     "format": "biome format --write .",
     "lint": "biome check --write --unsafe .",
-    "test": "playwright test",
-    "test.ui": "playwright test --ui",
+    "pw.test": "playwright test",
+    "pw.test.ui": "playwright test --ui",
+    "test": "vitest",
     "changeset": "changeset",
     "publish:packages": "changeset publish",
     "version:packages": "changeset version",
@@ -30,7 +31,7 @@
     "pagefind": "1.2.0",
     "pathe": "^2.0.3",
     "tsx": "^4.19.3",
-    "vitest": "^3.1.1",
+    "vitest": "^3.2.4",
     "oxc-parser": "^0.75.0"
   }
 }
