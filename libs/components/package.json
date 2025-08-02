@@ -30,7 +30,8 @@
     "uqr": "^0.1.2",
     "vite": "^7",
     "vite-tsconfig-paths": "^4.2.1",
-    "@qwik.dev/core": "https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc"
+    "@qwik.dev/core": "https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc",
+    "vitest-browser-qwik": "https://pkg.pr.new/kunai-consulting/vitest-browser-qwik@949e6ac"
   },
   "dependencies": {
     "@oddbird/css-anchor-positioning": "^0.6"

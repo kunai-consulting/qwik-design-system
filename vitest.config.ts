@@ -15,6 +15,7 @@ const domConfig: TestProjectConfiguration = {
     include: ["**/*.dom.ts"],
     name: "dom",
     browser: {
+      provider: "playwright",
       enabled: true,
       instances: [{ browser: "chromium" }]
     }
