@@ -1,3 +1,4 @@
+import { qwikVite } from "@qwik.dev/core/optimizer";
 import { resolve } from "pathe";
 import { type TestProjectConfiguration, defineConfig } from "vitest/config";
 
@@ -9,8 +10,9 @@ const unitConfig: TestProjectConfiguration = {
   }
 };
 
-// uses a real browser for component testing
+// TODO: once multiple frameworks are supported, each framework should have its own config
 const domConfig: TestProjectConfiguration = {
+  plugins: [qwikVite()],
   test: {
     include: ["**/*.browser.ts", "**/*.browser.tsx"],
     name: "dom",
