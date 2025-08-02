@@ -10,7 +10,7 @@ const unitConfig: TestProjectConfiguration = {
   }
 };
 
-// TODO: once multiple frameworks are supported, each framework should have its own config
+// TODO: once multiple frameworks are supported, filter this to /qwik folder
 const domConfig: TestProjectConfiguration = {
   plugins: [qwikVite()],
   test: {
