@@ -12,7 +12,7 @@ const unitConfig: TestProjectConfiguration = {
 // uses a real browser for component testing
 const domConfig: TestProjectConfiguration = {
   test: {
-    include: ["**/*.dom.ts"],
+    include: ["**/*.browser.ts", "**/*.browser.tsx"],
     name: "dom",
     browser: {
       provider: "playwright",
