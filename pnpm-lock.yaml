@@ -166,6 +166,9 @@ importers:
       '@types/node':
         specifier: 22.14.0
         version: 22.14.0
+      '@vitest/browser':
+        specifier: ^3.2.4
+        version: 3.2.4(playwright@1.46.0)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
@@ -180,7 +183,7 @@ importers:
         version: 4.3.2(typescript@5.4.5)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))
       vitest-browser-qwik:
         specifier: https://pkg.pr.new/kunai-consulting/vitest-browser-qwik@949e6ac
-        version: https://pkg.pr.new/kunai-consulting/vitest-browser-qwik@949e6ac(@qwik.dev/core@https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(@vitest/browser@3.2.4)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4)
+        version: https://pkg.pr.new/kunai-consulting/vitest-browser-qwik@949e6ac(@qwik.dev/core@https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(@vitest/browser@3.2.4(playwright@1.46.0)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.14.0)(@vitest/browser@3.2.4)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))
 
   libs/core:
     devDependencies:
@@ -6968,7 +6971,7 @@ snapshots:
       lightningcss: 1.30.1
       tsx: 4.19.3
 
-  vitest-browser-qwik@https://pkg.pr.new/kunai-consulting/vitest-browser-qwik@949e6ac(@qwik.dev/core@https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(@vitest/browser@3.2.4)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4):
+  vitest-browser-qwik@https://pkg.pr.new/kunai-consulting/vitest-browser-qwik@949e6ac(@qwik.dev/core@https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(@vitest/browser@3.2.4(playwright@1.46.0)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.14.0)(@vitest/browser@3.2.4)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3)):
     dependencies:
       '@qwik.dev/core': https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4)
       '@vitest/browser': 3.2.4(playwright@1.46.0)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4)

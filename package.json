@@ -32,6 +32,7 @@
     "pathe": "^2.0.3",
     "tsx": "^4.19.3",
     "vitest": "^3.2.4",
+    "@vitest/browser": "^3.2.4",
     "oxc-parser": "^0.75.0",
     "@qwik.dev/core": "https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc"
   }
