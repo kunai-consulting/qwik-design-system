@@ -47,8 +47,6 @@ const FormBasic = component$(() => {
     <form preventdefault:submit noValidate onSubmit$={handleSubmit$}>
       <RadioGroup.Root
         required
-        isDescription
-        isError={isError.value}
         name="subscription"
         data-testid="root"
         onChange$={() => {
@@ -70,11 +68,9 @@ const FormBasic = component$(() => {
           </RadioGroup.Item>
         ))}
 
-        {isError.value && (
-          <RadioGroup.Error data-testid="error">
-            Please select a subscription plan
-          </RadioGroup.Error>
-        )}
+        <RadioGroup.Error data-testid="error">
+          Please select a subscription plan
+        </RadioGroup.Error>
       </RadioGroup.Root>
 
       <button type="submit">Subscribe</button>
