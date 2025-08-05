@@ -1,5 +1,6 @@
 import { type PropsOf, component$, useSignal } from "@qwik.dev/core";
 import { page, userEvent } from "@vitest/browser/context";
+import axe from "axe-core";
 import { expect, test } from "vitest";
 import { render } from "vitest-browser-qwik";
 import { RadioGroup } from "..";
@@ -13,7 +14,7 @@ const ItemLabels = page.getByTestId("item-label");
 const Triggers = page.getByTestId("trigger");
 const Indicators = page.getByTestId("indicator");
 const HiddenInputs = page.getByTestId("hidden-input");
-const ErrorElement = page.getByTestId("error");
+const Errors = page.getByTestId("error");
 
 const Basic = component$((props: PropsOf<typeof RadioGroup.Root>) => {
   return (
@@ -81,6 +82,16 @@ const FormBasic = component$(() => {
   );
 });
 
+test("should meet axe accessibility requirements", async () => {
+  const screen = render(<Basic />);
+
+  await expect.element(Root).toBeVisible();
+
+  const results = await axe.run(screen.container);
+
+  expect(results.violations).toHaveLength(0);
+});
+
 test("radio group role visible", async () => {
   render(<Basic />);
   await expect.element(Root).toBeVisible();
@@ -91,6 +102,7 @@ test("first radio button can be clicked and checked", async () => {
 
   await userEvent.click(Triggers.nth(0));
   await expect.element(Triggers.nth(0)).toHaveAttribute("data-checked");
+  await expect.element(Triggers.nth(0)).toHaveAttribute("aria-checked", "true");
 });
 
 test("clicking different radio button unchecks previous", async () => {
@@ -104,6 +116,14 @@ test("clicking different radio button unchecks previous", async () => {
   await expect.element(Triggers.nth(1)).toHaveAttribute("data-checked");
 });
 
+test("indicator should be visible when radio button is clicked", async () => {
+  render(<Basic />);
+
+  await userEvent.click(Triggers.nth(0));
+  await expect.element(Indicators.nth(0)).toBeVisible();
+  await expect.element(Indicators.nth(0)).not.toHaveAttribute("data-hidden");
+});
+
 test("horizontal orientation keyboard navigation", async () => {
   render(<Basic orientation="horizontal" />);
 
@@ -111,6 +131,7 @@ test("horizontal orientation keyboard navigation", async () => {
   await userEvent.keyboard("{ArrowRight}");
 
   await expect.element(Triggers.nth(1)).toHaveAttribute("data-checked");
+  await expect.element(Triggers.nth(1)).toHaveAttribute("aria-checked", "true");
 });
 
 test("vertical orientation keyboard navigation", async () => {
@@ -120,6 +141,7 @@ test("vertical orientation keyboard navigation", async () => {
   await userEvent.keyboard("{ArrowDown}");
 
   await expect.element(Triggers.nth(1)).toHaveAttribute("data-checked");
+  await expect.element(Triggers.nth(1)).toHaveAttribute("aria-checked", "true");
 });
 
 test("Home key selects first item", async () => {
@@ -129,6 +151,7 @@ test("Home key selects first item", async () => {
   await userEvent.keyboard("{Home}");
 
   await expect.element(Triggers.nth(0)).toHaveAttribute("data-checked");
+  await expect.element(Triggers.nth(0)).toHaveAttribute("aria-checked", "true");
 });
 
 test("End key selects last item", async () => {
@@ -138,6 +161,7 @@ test("End key selects last item", async () => {
   await userEvent.keyboard("{End}");
 
   await expect.element(Triggers.nth(3)).toHaveAttribute("data-checked");
+  await expect.element(Triggers.nth(3)).toHaveAttribute("aria-checked", "true");
 });
 
 test("Space key selects focused item", async () => {
@@ -147,6 +171,7 @@ test("Space key selects focused item", async () => {
   await userEvent.keyboard("{Space}");
 
   await expect.element(Triggers.nth(0)).toHaveAttribute("data-checked");
+  await expect.element(Triggers.nth(0)).toHaveAttribute("aria-checked", "true");
 });
 
 test("horizontal orientation attribute", async () => {
@@ -169,17 +194,17 @@ test("form integration - error message shows when required and not selected", as
   render(<FormBasic />);
 
   await userEvent.click(page.getByText("Subscribe"));
-  await expect.element(ErrorElement).toBeVisible();
+  await expect.element(Errors).toBeVisible();
 });
 
 test("form integration - error clears when option selected", async () => {
   render(<FormBasic />);
 
   await userEvent.click(page.getByText("Subscribe"));
-  await expect.element(ErrorElement).toBeVisible();
+  await expect.element(Errors).toBeVisible();
 
   await userEvent.click(Triggers.nth(0));
-  await expect.element(ErrorElement).not.toBeVisible();
+  await expect.element(Errors).not.toBeVisible();
 });
 
 test("required attribute present", async () => {
