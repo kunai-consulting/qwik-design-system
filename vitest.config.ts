@@ -12,10 +12,15 @@ const unitConfig: TestProjectConfiguration = {
 
 // TODO: once multiple frameworks are supported, filter this to /qwik folder
 const domConfig: TestProjectConfiguration = {
-  plugins: [qwikVite()],
+  plugins: [
+    qwikVite({
+      srcDir: "libs/components/src"
+    })
+  ],
   test: {
     include: ["**/*.browser.ts", "**/*.browser.tsx"],
     name: "dom",
+    testTimeout: 1000,
     browser: {
       provider: "playwright",
       enabled: true,

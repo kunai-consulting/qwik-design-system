@@ -27,12 +27,13 @@
     "@changesets/cli": "^2.27.7",
     "@linear/sdk": "^27.0.0",
     "@playwright/test": "^1.46.0",
+    "@qwik.dev/core": "https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc",
     "@types/node": "22.14.0",
+    "oxc-parser": "^0.75.0",
     "pagefind": "1.2.0",
     "pathe": "^2.0.3",
     "tsx": "^4.19.3",
     "vitest": "^3.2.4",
-    "oxc-parser": "^0.75.0",
-    "@qwik.dev/core": "https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc"
+    "@vitest/browser": "^3.2.4"
   }
 }
