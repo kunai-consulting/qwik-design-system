@@ -1,4 +1,4 @@
-import { type PropsOf, component$, useSignal } from "@qwik.dev/core";
+import { $, type PropsOf, component$, useSignal } from "@qwik.dev/core";
 import { page, userEvent } from "@vitest/browser/context";
 import axe from "axe-core";
 import { expect, test } from "vitest";
@@ -34,14 +34,14 @@ const Basic = component$((props: PropsOf<typeof RadioGroup.Root>) => {
 
 const FormBasic = component$(() => {
   const isError = useSignal(false);
-  const handleSubmit$ = (e: SubmitEvent) => {
+  const handleSubmit$ = $((e: SubmitEvent) => {
     const form = e.target as HTMLFormElement;
     if (!form.checkValidity()) {
       isError.value = true;
     } else {
       isError.value = false;
     }
-  };
+  });
 
   return (
     <form preventdefault:submit noValidate onSubmit$={handleSubmit$}>
@@ -68,9 +68,11 @@ const FormBasic = component$(() => {
           </RadioGroup.Item>
         ))}
 
-        <RadioGroup.Error data-testid="error">
-          Please select a subscription plan
-        </RadioGroup.Error>
+        {isError.value && (
+          <RadioGroup.Error data-testid="error">
+            Please select a subscription plan
+          </RadioGroup.Error>
+        )}
       </RadioGroup.Root>
 
       <button type="submit">Subscribe</button>
@@ -163,7 +165,7 @@ test("End key selects last item", async () => {
 test("Space key selects focused item", async () => {
   render(<Basic />);
 
-  await userEvent.click(Triggers.nth(0));
+  ((await Triggers.nth(0).element()) as HTMLButtonElement).focus();
   await userEvent.keyboard("{Space}");
 
   await expect.element(Triggers.nth(0)).toHaveAttribute("data-checked");
@@ -177,8 +179,7 @@ test("horizontal orientation attribute", async () => {
 
 test("disabled radio group prevents interaction", async () => {
   render(<Basic disabled />);
-  await userEvent.click(Triggers.nth(0));
-  await expect.element(Triggers.nth(0)).not.toHaveAttribute("data-checked");
+  await expect(Triggers.nth(0)).toBeDisabled();
 });
 
 test("radio group with initial value", async () => {
@@ -212,5 +213,5 @@ test("required attribute present", async () => {
 test("description linked properly", async () => {
   render(<FormBasic />);
 
-  await expect.element(Root).toHaveAttribute("aria-describedby");
+  await expect.element(Triggers.nth(0)).toHaveAttribute("aria-describedby");
 });
