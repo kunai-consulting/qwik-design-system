@@ -24,7 +24,9 @@ const Basic = component$((props: PropsOf<typeof RadioGroup.Root>) => {
         <RadioGroup.Item value={value} key={value} data-testid="item">
           <RadioGroup.ItemLabel data-testid="item-label">{value}</RadioGroup.ItemLabel>
           <RadioGroup.ItemTrigger data-testid="trigger">
-            <RadioGroup.ItemIndicator data-testid="indicator" />
+            <RadioGroup.ItemIndicator data-testid="indicator">
+              Indicator
+            </RadioGroup.ItemIndicator>
           </RadioGroup.ItemTrigger>
         </RadioGroup.Item>
       ))}
@@ -62,7 +64,9 @@ const FormBasic = component$(() => {
           <RadioGroup.Item value={item} key={item} data-testid="item">
             <RadioGroup.ItemLabel data-testid="item-label">{item}</RadioGroup.ItemLabel>
             <RadioGroup.ItemTrigger data-testid="trigger">
-              <RadioGroup.ItemIndicator data-testid="indicator" />
+              <RadioGroup.ItemIndicator data-testid="indicator">
+                Indicator
+              </RadioGroup.ItemIndicator>
             </RadioGroup.ItemTrigger>
             <RadioGroup.HiddenInput data-testid="hidden-input" />
           </RadioGroup.Item>
