@@ -23,7 +23,6 @@ type PublicRootProps = {
   name?: string;
   required?: boolean;
   orientation?: "horizontal" | "vertical";
-  isDescription?: boolean;
   isError?: boolean;
   "bind:value"?: Signal<string | undefined>;
 } & Omit<PropsOf<"div">, "onChange$">;
@@ -43,7 +42,6 @@ export const RadioGroupRoot = component$((props: PublicRootProps) => {
     name,
     required,
     orientation,
-    isDescription,
     isError,
     onKeyDown$,
     ...rest
@@ -148,7 +146,6 @@ export const RadioGroupRoot = component$((props: PublicRootProps) => {
     required: props.required,
     name: props.name,
     orientation: props.orientation || "vertical",
-    isDescription: props.isDescription,
     triggerRefsArray,
     currItemIndex
   });

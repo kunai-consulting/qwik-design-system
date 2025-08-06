@@ -13,7 +13,6 @@ export interface RadioGroupContext {
   required?: boolean;
   name?: string;
   orientation: "horizontal" | "vertical";
-  isDescription?: boolean;
   triggerRefsArray: Signal<TriggerRef[]>;
   currItemIndex: number;
 }
