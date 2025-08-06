@@ -1,4 +1,4 @@
-import { $, type PropsOf, component$, useSignal } from "@qwik.dev/core";
+import { $, type PropsOf, component$, useSignal, useStore } from "@qwik.dev/core";
 import { page, userEvent } from "@vitest/browser/context";
 import { expect, test } from "vitest";
 import { render } from "vitest-browser-qwik";
@@ -261,16 +261,20 @@ test("disabled items navigation - should skip disabled items", async () => {
   await expect.element(Triggers.nth(1)).toHaveAttribute("data-disabled");
 });
 
-const ValueChange = component$(() => {
-  const selectedItem = useSignal("Option 1");
+const ExternalState = component$(() => {
+  const selectedSignal = useSignal("Option 1");
+  const selectedStore = useStore({ item: "Option 1" });
 
   return (
     <div>
       <RadioGroup.Root
         data-testid="root"
-        value={selectedItem.value}
+        // test signal
+        bind:value={selectedSignal}
+        // test value based
+        value={selectedStore.item}
         onChange$={(newValue) => {
-          selectedItem.value = newValue;
+          selectedStore.item = newValue;
         }}
       >
         <RadioGroup.Label data-testid="label">Choose option</RadioGroup.Label>
@@ -288,16 +292,24 @@ const ValueChange = component$(() => {
       <button
         type="button"
         data-testid="change-value"
-        onClick$={() => (selectedItem.value = "Option 2")}
+        onClick$={() => (selectedStore.item = "Option 2")}
       >
         Change to Option 2
+      </button>
+
+      <button
+        type="button"
+        data-testid="change-signal"
+        onClick$={() => (selectedSignal.value = "Option 3")}
+      >
+        Change to Option 3
       </button>
     </div>
   );
 });
 
 test("external value changes update selection", async () => {
-  render(<ValueChange />);
+  render(<ExternalState />);
 
   await expect.element(Triggers.nth(0)).toHaveAttribute("data-checked");
 
@@ -307,38 +319,8 @@ test("external value changes update selection", async () => {
   await expect.element(Triggers.nth(0)).not.toHaveAttribute("data-checked");
 });
 
-const SignalChange = component$(() => {
-  const selectedItem = useSignal("Option 1");
-
-  return (
-    <div>
-      <RadioGroup.Root data-testid="root" bind:value={selectedItem}>
-        <RadioGroup.Label data-testid="label">Choose option</RadioGroup.Label>
-        {["Option 1", "Option 2", "Option 3"].map((option) => (
-          <RadioGroup.Item value={option} key={option} data-testid="item">
-            <RadioGroup.ItemLabel data-testid="item-label">{option}</RadioGroup.ItemLabel>
-            <RadioGroup.ItemTrigger data-testid="trigger">
-              <RadioGroup.ItemIndicator data-testid="indicator">
-                Indicator
-              </RadioGroup.ItemIndicator>
-            </RadioGroup.ItemTrigger>
-          </RadioGroup.Item>
-        ))}
-      </RadioGroup.Root>
-
-      <button
-        type="button"
-        data-testid="change-signal"
-        onClick$={() => (selectedItem.value = "Option 3")}
-      >
-        Change to Option 3
-      </button>
-    </div>
-  );
-});
-
-test("external signal changes update selection", async () => {
-  render(<SignalChange />);
+test("external store changes update selection", async () => {
+  render(<ExternalState />);
 
   await expect.element(Triggers.nth(0)).toHaveAttribute("data-checked");
 
