@@ -33,56 +33,6 @@ const Basic = component$((props: PropsOf<typeof RadioGroup.Root>) => {
   );
 });
 
-const FormBasic = component$(() => {
-  const isError = useSignal(false);
-  const handleSubmit$ = $((e: SubmitEvent) => {
-    const form = e.target as HTMLFormElement;
-    if (!form.checkValidity()) {
-      isError.value = true;
-    } else {
-      isError.value = false;
-    }
-  });
-
-  return (
-    <form preventdefault:submit noValidate onSubmit$={handleSubmit$}>
-      <RadioGroup.Root
-        required
-        name="subscription"
-        data-testid="root"
-        onChange$={() => {
-          isError.value = false;
-        }}
-      >
-        <RadioGroup.Label data-testid="label">Subscription Plan</RadioGroup.Label>
-        <RadioGroup.Description data-testid="description">
-          Choose your preferred subscription plan
-        </RadioGroup.Description>
-
-        {["Basic", "Pro"].map((item) => (
-          <RadioGroup.Item value={item} key={item} data-testid="item">
-            <RadioGroup.ItemLabel data-testid="item-label">{item}</RadioGroup.ItemLabel>
-            <RadioGroup.ItemTrigger data-testid="trigger">
-              <RadioGroup.ItemIndicator data-testid="indicator">
-                Indicator
-              </RadioGroup.ItemIndicator>
-            </RadioGroup.ItemTrigger>
-            <RadioGroup.HiddenInput data-testid="hidden-input" />
-          </RadioGroup.Item>
-        ))}
-
-        {isError.value && (
-          <RadioGroup.Error data-testid="error">
-            Please select a subscription plan
-          </RadioGroup.Error>
-        )}
-      </RadioGroup.Root>
-
-      <button type="submit">Subscribe</button>
-    </form>
-  );
-});
-
 /**
  *  TODO: We need StreamPause in qwik core to fix this
  *
@@ -102,6 +52,7 @@ const FormBasic = component$(() => {
 test("radio group role visible", async () => {
   render(<Basic />);
   await expect.element(Root).toBeVisible();
+  await expect.element(Root).toHaveAttribute("role", "radiogroup");
 });
 
 test("first radio button can be clicked and checked", async () => {
@@ -197,6 +148,56 @@ test("radio group with initial value", async () => {
   await expect.element(Triggers.nth(0)).toHaveAttribute("data-checked");
 });
 
+const FormBasic = component$(() => {
+  const isError = useSignal(false);
+  const handleSubmit$ = $((e: SubmitEvent) => {
+    const form = e.target as HTMLFormElement;
+    if (!form.checkValidity()) {
+      isError.value = true;
+    } else {
+      isError.value = false;
+    }
+  });
+
+  return (
+    <form preventdefault:submit noValidate onSubmit$={handleSubmit$}>
+      <RadioGroup.Root
+        required
+        name="subscription"
+        data-testid="root"
+        onChange$={() => {
+          isError.value = false;
+        }}
+      >
+        <RadioGroup.Label data-testid="label">Subscription Plan</RadioGroup.Label>
+        <RadioGroup.Description data-testid="description">
+          Choose your preferred subscription plan
+        </RadioGroup.Description>
+
+        {["Basic", "Pro"].map((item) => (
+          <RadioGroup.Item value={item} key={item} data-testid="item">
+            <RadioGroup.ItemLabel data-testid="item-label">{item}</RadioGroup.ItemLabel>
+            <RadioGroup.ItemTrigger data-testid="trigger">
+              <RadioGroup.ItemIndicator data-testid="indicator">
+                Indicator
+              </RadioGroup.ItemIndicator>
+            </RadioGroup.ItemTrigger>
+            <RadioGroup.HiddenInput data-testid="hidden-input" />
+          </RadioGroup.Item>
+        ))}
+
+        {isError.value && (
+          <RadioGroup.Error data-testid="error">
+            Please select a subscription plan
+          </RadioGroup.Error>
+        )}
+      </RadioGroup.Root>
+
+      <button type="submit">Subscribe</button>
+    </form>
+  );
+});
+
 test("form integration - error message shows when required and not selected", async () => {
   render(<FormBasic />);
 
@@ -224,4 +225,78 @@ test("description linked properly", async () => {
   render(<FormBasic />);
 
   await expect.element(Root).toHaveAttribute("aria-describedby");
+});
+
+test("aria-labelledby attribute present when label exists", async () => {
+  render(<FormBasic />);
+  await expect.element(Root).toHaveAttribute("aria-labelledby");
+});
+
+const OneDisabledItem = component$(() => {
+  return (
+    <RadioGroup.Root data-testid="root">
+      <RadioGroup.Label data-testid="label">Choose option</RadioGroup.Label>
+      {["Option 1", "Option 2", "Option 3", "Option 4"].map((value, index) => (
+        <RadioGroup.Item value={value} key={value} data-testid="item">
+          <RadioGroup.ItemLabel data-testid="item-label">{value}</RadioGroup.ItemLabel>
+          <RadioGroup.ItemTrigger data-testid="trigger" disabled={index === 1}>
+            <RadioGroup.ItemIndicator data-testid="indicator">
+              Indicator
+            </RadioGroup.ItemIndicator>
+          </RadioGroup.ItemTrigger>
+        </RadioGroup.Item>
+      ))}
+    </RadioGroup.Root>
+  );
+});
+
+test("disabled items navigation - should skip disabled items", async () => {
+  render(<OneDisabledItem />);
+
+  await expect.element(Triggers.nth(0)).toBeVisible();
+  await ((await Triggers.nth(0).element()) as HTMLButtonElement)?.focus();
+  await userEvent.keyboard("{ArrowDown}");
+
+  await expect.element(Triggers.nth(2)).toHaveAttribute("data-checked");
+  await expect.element(Triggers.nth(1)).toHaveAttribute("data-disabled");
+});
+
+const ExternalValue = component$(() => {
+  const value = useSignal("Option 1");
+
+  return (
+    <div>
+      <RadioGroup.Root data-testid="root" value="Option 1">
+        <RadioGroup.Label data-testid="label">Choose option</RadioGroup.Label>
+        {["Option 1", "Option 2", "Option 3"].map((option) => (
+          <RadioGroup.Item value={option} key={option} data-testid="item">
+            <RadioGroup.ItemLabel data-testid="item-label">{option}</RadioGroup.ItemLabel>
+            <RadioGroup.ItemTrigger data-testid="trigger">
+              <RadioGroup.ItemIndicator data-testid="indicator">
+                Indicator
+              </RadioGroup.ItemIndicator>
+            </RadioGroup.ItemTrigger>
+          </RadioGroup.Item>
+        ))}
+      </RadioGroup.Root>
+      <button
+        type="button"
+        data-testid="change-value"
+        onClick$={() => (value.value = "Option 2")}
+      >
+        Change to Option 2
+      </button>
+    </div>
+  );
+});
+
+test("external value changes update selection", async () => {
+  render(<ExternalValue />);
+
+  await expect.element(Triggers.nth(0)).toHaveAttribute("data-checked");
+
+  await userEvent.click(page.getByTestId("change-value"));
+
+  await expect.element(Triggers.nth(1)).toHaveAttribute("data-checked");
+  await expect.element(Triggers.nth(0)).not.toHaveAttribute("data-checked");
 });
