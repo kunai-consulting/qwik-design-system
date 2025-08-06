@@ -169,7 +169,9 @@ test("End key selects last item", async () => {
 test("Space key selects focused item", async () => {
   render(<Basic />);
 
+  await expect.element(Triggers.nth(0)).toBeVisible();
   ((await Triggers.nth(0).element()) as HTMLButtonElement).focus();
+  console.log("trigger 0:", await Triggers.nth(0).element());
   await userEvent.keyboard("{Space}");
 
   await expect.element(Triggers.nth(0)).toHaveAttribute("data-checked");
