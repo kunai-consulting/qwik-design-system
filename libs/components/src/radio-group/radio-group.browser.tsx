@@ -261,12 +261,18 @@ test("disabled items navigation - should skip disabled items", async () => {
   await expect.element(Triggers.nth(1)).toHaveAttribute("data-disabled");
 });
 
-const ExternalValue = component$(() => {
-  const value = useSignal("Option 1");
+const ValueChange = component$(() => {
+  const selectedItem = useSignal("Option 1");
 
   return (
     <div>
-      <RadioGroup.Root data-testid="root" value="Option 1">
+      <RadioGroup.Root
+        data-testid="root"
+        value={selectedItem.value}
+        onChange$={(newValue) => {
+          selectedItem.value = newValue;
+        }}
+      >
         <RadioGroup.Label data-testid="label">Choose option</RadioGroup.Label>
         {["Option 1", "Option 2", "Option 3"].map((option) => (
           <RadioGroup.Item value={option} key={option} data-testid="item">
@@ -282,7 +288,7 @@ const ExternalValue = component$(() => {
       <button
         type="button"
         data-testid="change-value"
-        onClick$={() => (value.value = "Option 2")}
+        onClick$={() => (selectedItem.value = "Option 2")}
       >
         Change to Option 2
       </button>
@@ -291,12 +297,53 @@ const ExternalValue = component$(() => {
 });
 
 test("external value changes update selection", async () => {
-  render(<ExternalValue />);
+  render(<ValueChange />);
 
   await expect.element(Triggers.nth(0)).toHaveAttribute("data-checked");
 
   await userEvent.click(page.getByTestId("change-value"));
 
   await expect.element(Triggers.nth(1)).toHaveAttribute("data-checked");
+  await expect.element(Triggers.nth(0)).not.toHaveAttribute("data-checked");
+});
+
+const SignalChange = component$(() => {
+  const selectedItem = useSignal("Option 1");
+
+  return (
+    <div>
+      <RadioGroup.Root data-testid="root" bind:value={selectedItem}>
+        <RadioGroup.Label data-testid="label">Choose option</RadioGroup.Label>
+        {["Option 1", "Option 2", "Option 3"].map((option) => (
+          <RadioGroup.Item value={option} key={option} data-testid="item">
+            <RadioGroup.ItemLabel data-testid="item-label">{option}</RadioGroup.ItemLabel>
+            <RadioGroup.ItemTrigger data-testid="trigger">
+              <RadioGroup.ItemIndicator data-testid="indicator">
+                Indicator
+              </RadioGroup.ItemIndicator>
+            </RadioGroup.ItemTrigger>
+          </RadioGroup.Item>
+        ))}
+      </RadioGroup.Root>
+
+      <button
+        type="button"
+        data-testid="change-signal"
+        onClick$={() => (selectedItem.value = "Option 3")}
+      >
+        Change to Option 3
+      </button>
+    </div>
+  );
+});
+
+test("external signal changes update selection", async () => {
+  render(<SignalChange />);
+
+  await expect.element(Triggers.nth(0)).toHaveAttribute("data-checked");
+
+  await userEvent.click(page.getByTestId("change-signal"));
+
+  await expect.element(Triggers.nth(2)).toHaveAttribute("data-checked");
   await expect.element(Triggers.nth(0)).not.toHaveAttribute("data-checked");
 });
