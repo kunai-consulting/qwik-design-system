@@ -319,7 +319,7 @@ test("external value changes update selection", async () => {
   await expect.element(Triggers.nth(0)).not.toHaveAttribute("data-checked");
 });
 
-test("external store changes update selection", async () => {
+test("external signal changes update selection", async () => {
   render(<ExternalState />);
 
   await expect.element(Triggers.nth(0)).toHaveAttribute("data-checked");
