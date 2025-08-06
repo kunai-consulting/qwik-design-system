@@ -205,7 +205,7 @@ test("form integration - error clears when option selected", async () => {
   await expect.element(Errors).toBeVisible();
 
   await userEvent.click(Triggers.nth(0));
-  await expect.element(Errors).not.toBeVisible();
+  await expect.element(Errors).not.toBeInTheDocument();
 });
 
 test("required attribute present", async () => {
