@@ -27,7 +27,9 @@ export const OtpItem = component$((props: PublicOTPProps) => {
 
   const itemRef = useSignal<HTMLInputElement>();
   useContextProvider(itemContextId, { index: currItemIndex });
-  const itemValue = context.inputValueSig.value[currItemIndex] || "";
+  const itemValue = useComputed$(() => {
+    return context.inputValueSig.value[currItemIndex] || "";
+  });
 
   const isHighlightedSig = useComputed$(() => {
     if (!context.isFocusedSig.value) {
@@ -63,7 +65,7 @@ export const OtpItem = component$((props: PublicOTPProps) => {
       // Indicates if the OTP item is disabled
       data-disabled={context.isDisabledSig.value ? "" : undefined}
     >
-      {itemValue}
+      {itemValue.value}
       <Slot />
     </div>
   );
