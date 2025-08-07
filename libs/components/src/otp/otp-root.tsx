@@ -78,7 +78,11 @@ export const OtpRoot = component$((props: PublicOtpRootProps) => {
 
     isInitialLoadSig.value = false;
 
-    if (inputValueSig.value.length !== numItems) return;
+    const isPopulated = inputValueSig.value.length > 0;
+    const isFull = inputValueSig.value.length === context.numItems;
+
+    if (!isPopulated) return;
+    if (!isFull) return;
 
     await onComplete$?.();
   });

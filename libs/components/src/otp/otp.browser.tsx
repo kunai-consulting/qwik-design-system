@@ -210,14 +210,14 @@ const CompleteHandler = component$(() => {
 test("onComplete handler should be called when OTP is full", async () => {
   render(<CompleteHandler />);
 
-  // Input should not be disabled initially
+  await expect.element(Input).toBeVisible();
   await expect.element(Input).not.toBeDisabled();
 
   await userEvent.click(Input);
   await userEvent.keyboard("1234");
   await expect.element(Input).toHaveValue("1234");
 
-  // we disable it in onComplete$
+  await expect.element(Input).toHaveAttribute("disabled");
   await expect(Input).toBeDisabled();
 });
 
