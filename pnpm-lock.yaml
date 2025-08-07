@@ -24,8 +24,8 @@ importers:
         specifier: ^1.46.0
         version: 1.46.0
       '@qwik.dev/core':
-        specifier: https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc
-        version: https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4)
+        specifier: 2.0.0-beta.7
+        version: 2.0.0-beta.7(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4)
       '@types/node':
         specifier: 22.14.0
         version: 22.14.0
@@ -54,11 +54,11 @@ importers:
   apps/component-tests:
     devDependencies:
       '@qwik.dev/core':
-        specifier: https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc
-        version: https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc(prettier@2.8.8)(vite@7.0.6(@types/node@20.14.11)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@2.1.9(@types/node@20.14.11)(@vitest/browser@3.2.4(playwright@1.46.0)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(lightningcss@1.30.1))
+        specifier: 2.0.0-beta.7
+        version: 2.0.0-beta.7(prettier@2.8.8)(vite@7.0.6(@types/node@20.14.11)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@2.1.9(@types/node@20.14.11)(@vitest/browser@3.2.4(playwright@1.46.0)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(lightningcss@1.30.1))
       '@qwik.dev/router':
-        specifier: 2.0.0-beta.6
-        version: 2.0.0-beta.6(rollup@4.46.1)(typescript@5.4.5)(vite@7.0.6(@types/node@20.14.11)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))
+        specifier: 2.0.0-beta.7
+        version: 2.0.0-beta.7(rollup@4.46.1)(typescript@5.4.5)(vite@7.0.6(@types/node@20.14.11)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))
       '@types/node':
         specifier: 20.14.11
         version: 20.14.11
@@ -112,11 +112,11 @@ importers:
         specifier: ^0.6.4
         version: 0.6.4(@builder.io/qwik@1.14.1(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3)))
       '@qwik.dev/core':
-        specifier: https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc
-        version: https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@2.1.9(@types/node@22.14.0)(@vitest/browser@3.2.4(playwright@1.46.0)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(lightningcss@1.30.1))
+        specifier: 2.0.0-beta.7
+        version: 2.0.0-beta.7(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@2.1.9(@types/node@22.14.0)(@vitest/browser@3.2.4(playwright@1.46.0)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(lightningcss@1.30.1))
       '@qwik.dev/router':
-        specifier: 2.0.0-beta.6
-        version: 2.0.0-beta.6(rollup@4.46.1)(typescript@5.4.5)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))
+        specifier: 2.0.0-beta.7
+        version: 2.0.0-beta.7(rollup@4.46.1)(typescript@5.4.5)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))
       '@qwikest/icons':
         specifier: ^0.0.13
         version: 0.0.13(@builder.io/qwik@1.14.1(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3)))
@@ -167,8 +167,8 @@ importers:
         specifier: workspace:*
         version: link:../utils
       '@qwik.dev/core':
-        specifier: https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc
-        version: https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4)
+        specifier: 2.0.0-beta.7
+        version: 2.0.0-beta.7(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4)
       '@types/node':
         specifier: 22.14.0
         version: 22.14.0
@@ -186,7 +186,7 @@ importers:
         version: 4.3.2(typescript@5.4.5)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))
       vitest-browser-qwik:
         specifier: https://pkg.pr.new/kunai-consulting/vitest-browser-qwik@949e6ac
-        version: https://pkg.pr.new/kunai-consulting/vitest-browser-qwik@949e6ac(@qwik.dev/core@https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(@vitest/browser@3.2.4)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4)
+        version: https://pkg.pr.new/kunai-consulting/vitest-browser-qwik@949e6ac(@qwik.dev/core@2.0.0-beta.7(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(@vitest/browser@3.2.4)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4)
 
   libs/core:
     devDependencies:
@@ -212,8 +212,8 @@ importers:
   libs/utils:
     devDependencies:
       '@qwik.dev/core':
-        specifier: https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc
-        version: https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@2.1.9(@types/node@22.14.0)(@vitest/browser@3.2.4(playwright@1.46.0)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(lightningcss@1.30.1))
+        specifier: 2.0.0-beta.7
+        version: 2.0.0-beta.7(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@2.1.9(@types/node@22.14.0)(@vitest/browser@3.2.4(playwright@1.46.0)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(lightningcss@1.30.1))
       '@types/node':
         specifier: 22.14.0
         version: 22.14.0
@@ -1231,9 +1231,8 @@ packages:
     peerDependencies:
       '@builder.io/qwik': '>=1.3.1'
 
-  '@qwik.dev/core@https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc':
-    resolution: {tarball: https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc}
-    version: 2.0.0-beta.6
+  '@qwik.dev/core@2.0.0-beta.7':
+    resolution: {integrity: sha512-QxMBuuD84rXkAUzekz4nk+q9xBjkFPGoXrqExcK8ZXUR7OKr5hknkYic/wtwgwGgnMVRNeuCpWW3xwma2HKIuw==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     hasBin: true
     peerDependencies:
@@ -1246,8 +1245,8 @@ packages:
       vitest:
         optional: true
 
-  '@qwik.dev/router@2.0.0-beta.6':
-    resolution: {integrity: sha512-ym8sDWZP0waOBhLoS7DDUSiMI5yRUZlh7wfViZ0Hz9xTM+X9GfoS0HfEDmBMjCljoQK9JVtbOQoC4Ko3ViiDtw==}
+  '@qwik.dev/router@2.0.0-beta.7':
+    resolution: {integrity: sha512-If1FeTO0T/c/CAKaAi62wSM+Em3S8kNUKIKUhvVRxvbMtM0+ONbjpOPJjAAZS4G5wY/0Ti9p/JQEXrfj9Oh6Cw==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     peerDependencies:
       vite: '>=5 <8'
@@ -4509,7 +4508,7 @@ snapshots:
       body-scroll-lock-upgrade: 1.1.0
       focus-trap: 7.5.4
 
-  '@qwik.dev/core@https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc(prettier@2.8.8)(vite@7.0.6(@types/node@20.14.11)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@2.1.9(@types/node@20.14.11)(@vitest/browser@3.2.4(playwright@1.46.0)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(lightningcss@1.30.1))':
+  '@qwik.dev/core@2.0.0-beta.7(prettier@2.8.8)(vite@7.0.6(@types/node@20.14.11)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@2.1.9(@types/node@20.14.11)(@vitest/browser@3.2.4(playwright@1.46.0)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(lightningcss@1.30.1))':
     dependencies:
       csstype: 3.1.3
       rollup: 4.46.1
@@ -4518,7 +4517,7 @@ snapshots:
       prettier: 2.8.8
       vitest: 2.1.9(@types/node@20.14.11)(@vitest/browser@3.2.4(playwright@1.46.0)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(lightningcss@1.30.1)
 
-  '@qwik.dev/core@https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@2.1.9(@types/node@22.14.0)(@vitest/browser@3.2.4(playwright@1.46.0)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(lightningcss@1.30.1))':
+  '@qwik.dev/core@2.0.0-beta.7(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@2.1.9(@types/node@22.14.0)(@vitest/browser@3.2.4(playwright@1.46.0)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(lightningcss@1.30.1))':
     dependencies:
       csstype: 3.1.3
       rollup: 4.46.1
@@ -4527,7 +4526,7 @@ snapshots:
       prettier: 2.8.8
       vitest: 2.1.9(@types/node@22.14.0)(@vitest/browser@3.2.4(playwright@1.46.0)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(lightningcss@1.30.1)
 
-  '@qwik.dev/core@https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4)':
+  '@qwik.dev/core@2.0.0-beta.7(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4)':
     dependencies:
       csstype: 3.1.3
       rollup: 4.46.1
@@ -4536,7 +4535,7 @@ snapshots:
       prettier: 2.8.8
       vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.14.0)(@vitest/browser@3.2.4)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3)
 
-  '@qwik.dev/router@2.0.0-beta.6(rollup@4.46.1)(typescript@5.4.5)(vite@7.0.6(@types/node@20.14.11)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))':
+  '@qwik.dev/router@2.0.0-beta.7(rollup@4.46.1)(typescript@5.4.5)(vite@7.0.6(@types/node@20.14.11)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))':
     dependencies:
       '@mdx-js/mdx': 3.0.1
       '@types/mdx': 2.0.13
@@ -4553,7 +4552,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@qwik.dev/router@2.0.0-beta.6(rollup@4.46.1)(typescript@5.4.5)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))':
+  '@qwik.dev/router@2.0.0-beta.7(rollup@4.46.1)(typescript@5.4.5)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))':
     dependencies:
       '@mdx-js/mdx': 3.0.1
       '@types/mdx': 2.0.13
@@ -4972,9 +4971,9 @@ snapshots:
     dependencies:
       event-target-shim: 5.0.1
 
-  acorn-jsx@5.3.2(acorn@8.14.0):
+  acorn-jsx@5.3.2(acorn@8.15.0):
     dependencies:
-      acorn: 8.14.0
+      acorn: 8.15.0
 
   acorn@8.14.0: {}
 
@@ -5980,8 +5979,8 @@ snapshots:
 
   micromark-extension-mdxjs@3.0.0:
     dependencies:
-      acorn: 8.14.0
-      acorn-jsx: 5.3.2(acorn@8.14.0)
+      acorn: 8.15.0
+      acorn-jsx: 5.3.2(acorn@8.15.0)
       micromark-extension-mdx-expression: 3.0.0
       micromark-extension-mdx-jsx: 3.0.0
       micromark-extension-mdx-md: 2.0.0
@@ -6987,9 +6986,9 @@ snapshots:
       lightningcss: 1.30.1
       tsx: 4.19.3
 
-  vitest-browser-qwik@https://pkg.pr.new/kunai-consulting/vitest-browser-qwik@949e6ac(@qwik.dev/core@https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(@vitest/browser@3.2.4)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4):
+  vitest-browser-qwik@https://pkg.pr.new/kunai-consulting/vitest-browser-qwik@949e6ac(@qwik.dev/core@2.0.0-beta.7(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4))(@vitest/browser@3.2.4)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4):
     dependencies:
-      '@qwik.dev/core': https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4)
+      '@qwik.dev/core': 2.0.0-beta.7(prettier@2.8.8)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4)
       '@vitest/browser': 3.2.4(playwright@1.46.0)(vite@7.0.6(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.3))(vitest@3.2.4)
       magic-string: 0.30.17
       oxc-parser: 0.73.2
