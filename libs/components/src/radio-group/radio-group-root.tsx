@@ -23,7 +23,6 @@ type PublicRootProps = {
   name?: string;
   required?: boolean;
   orientation?: "horizontal" | "vertical";
-  isDescription?: boolean;
   isError?: boolean;
   "bind:value"?: Signal<string | undefined>;
 } & Omit<PropsOf<"div">, "onChange$">;
@@ -43,7 +42,6 @@ export const RadioGroupRoot = component$((props: PublicRootProps) => {
     name,
     required,
     orientation,
-    isDescription,
     isError,
     onKeyDown$,
     ...rest
@@ -62,6 +60,8 @@ export const RadioGroupRoot = component$((props: PublicRootProps) => {
   const computedIsError = useComputed$(() => !!props.isError);
   const triggerRefsArray = useSignal<TriggerRef[]>([]);
   const currItemIndex = 0;
+  const descriptionId = `${localId}-description`;
+  const labelId = `${localId}-label`;
 
   useTask$(function handleChange({ track }) {
     track(() => selectedValueSig.value);
@@ -146,7 +146,6 @@ export const RadioGroupRoot = component$((props: PublicRootProps) => {
     required: props.required,
     name: props.name,
     orientation: props.orientation || "vertical",
-    isDescription: props.isDescription,
     triggerRefsArray,
     currItemIndex
   });
@@ -163,8 +162,8 @@ export const RadioGroupRoot = component$((props: PublicRootProps) => {
       aria-disabled={isDisabledSig.value}
       aria-required={props.required}
       aria-invalid={computedIsError.value}
-      aria-labelledby={`${localId}-label`}
-      aria-describedby={props.isDescription ? `${localId}-description` : undefined}
+      aria-labelledby={labelId}
+      aria-describedby={descriptionId}
       aria-errormessage={computedIsError.value ? `${localId}-error` : undefined}
       aria-orientation={props.orientation || "vertical"}
       onKeyDown$={[handleKeyDown$, props.onKeyDown$]}

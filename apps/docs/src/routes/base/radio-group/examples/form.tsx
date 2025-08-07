@@ -10,6 +10,7 @@ export default component$(() => {
   const handleSubmit$ = $((e: SubmitEvent) => {
     const form = e.target as HTMLFormElement;
     if (!form.checkValidity()) {
+      console.log("Form submitted with error");
       isError.value = true;
     } else {
       isError.value = false;
@@ -40,9 +41,10 @@ export default component$(() => {
             <RadioGroup.ItemTrigger class="radio-group-trigger">
               <RadioGroup.ItemIndicator class="radio-group-indicator" />
             </RadioGroup.ItemTrigger>
-            <RadioGroup.HiddenInput />
           </RadioGroup.Item>
         ))}
+
+        <RadioGroup.HiddenInput />
 
         {isError.value && (
           <RadioGroup.Error class="radio-group-error">

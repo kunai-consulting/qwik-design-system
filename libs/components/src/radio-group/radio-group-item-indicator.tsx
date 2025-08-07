@@ -14,7 +14,7 @@ export const RadioGroupItemIndicator = component$((props: PublicIndicatorProps) 
       data-qds-indicator
       data-checked={itemContext.isSelectedSig.value}
       data-hidden={!itemContext.isSelectedSig.value}
-      aria-hidden="true"
+      aria-hidden={!itemContext.isSelectedSig.value ? "true" : "false"}
     >
       <Slot />
     </Render>
