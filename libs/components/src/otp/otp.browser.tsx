@@ -11,11 +11,12 @@ const Input = page.getByTestId("input");
 const ItemIndicators = page.getByTestId("item-indicator");
 
 const Basic = component$((props: PropsOf<typeof Otp.Root>) => {
+  const slots = [...Array(4).keys()];
   return (
     <Otp.Root {...props} data-testid="root">
       <Otp.HiddenInput data-testid="input" />
-      {Array.from({ length: 4 }, (num) => (
-        <Otp.Item key={`item-${num}`} data-testid="item">
+      {slots.map((slot) => (
+        <Otp.Item key={slot} data-testid="item">
           <Otp.ItemIndicator data-testid="item-indicator" />
         </Otp.Item>
       ))}
@@ -186,6 +187,7 @@ test("backspace and arrow right should maintain highlight position", async () =>
 });
 
 const CompleteHandler = component$(() => {
+  const slots = [...Array(4).keys()];
   const isDisabled = useSignal(false);
   const handleComplete$ = $(() => {
     isDisabled.value = true;
@@ -198,8 +200,8 @@ const CompleteHandler = component$(() => {
       disabled={isDisabled.value}
     >
       <Otp.HiddenInput data-testid="input" />
-      {Array.from({ length: 4 }, (num) => (
-        <Otp.Item key={`item-${num}`} data-testid="item">
+      {slots.map((slot) => (
+        <Otp.Item key={slot} data-testid="item">
           <Otp.ItemIndicator data-testid="item-indicator" />
         </Otp.Item>
       ))}
@@ -222,11 +224,12 @@ test("onComplete handler should be called when OTP is full", async () => {
 });
 
 const InitialValue = component$(() => {
+  const slots = [...Array(4).keys()];
   return (
     <Otp.Root data-testid="root" value="1234">
       <Otp.HiddenInput data-testid="input" />
-      {Array.from({ length: 4 }, (num) => (
-        <Otp.Item key={`item-${num}`} data-testid="item">
+      {slots.map((slot) => (
+        <Otp.Item key={slot} data-testid="item">
           <Otp.ItemIndicator data-testid="item-indicator" />
         </Otp.Item>
       ))}
@@ -241,13 +244,14 @@ test("initial value should be displayed", async () => {
 
 const ReactiveValue = component$(() => {
   const otpValue = useSignal("");
+  const slots = [...Array(4).keys()];
 
   return (
     <div>
       <Otp.Root data-testid="root" bind:value={otpValue}>
         <Otp.HiddenInput data-testid="input" />
-        {Array.from({ length: 4 }, (num) => (
-          <Otp.Item key={`item-${num}`} data-testid="item">
+        {slots.map((slot) => (
+          <Otp.Item key={slot} data-testid="item">
             <Otp.ItemIndicator data-testid="item-indicator" />
           </Otp.Item>
         ))}
@@ -274,6 +278,7 @@ test("reactive value changes should update OTP", async () => {
 
 const ChangeHandler = component$(() => {
   const hasChanged = useSignal(false);
+  const slots = [...Array(4).keys()];
   const handleChange$ = $(() => {
     hasChanged.value = true;
   });
@@ -282,8 +287,8 @@ const ChangeHandler = component$(() => {
     <div>
       <Otp.Root data-testid="root" onChange$={handleChange$}>
         <Otp.HiddenInput data-testid="input" />
-        {Array.from({ length: 4 }, (num) => (
-          <Otp.Item key={`item-${num}`} data-testid="item">
+        {slots.map((slot) => (
+          <Otp.Item key={slot} data-testid="item">
             <Otp.ItemIndicator data-testid="item-indicator" />
           </Otp.Item>
         ))}
@@ -305,13 +310,14 @@ test("onChange handler should be called when value changes", async () => {
 
 const DisabledToggle = component$(() => {
   const isDisabled = useSignal(false);
+  const slots = [...Array(4).keys()];
 
   return (
     <div>
       <Otp.Root data-testid="root" disabled={isDisabled.value}>
         <Otp.HiddenInput data-testid="input" />
-        {Array.from({ length: 4 }, (num) => (
-          <Otp.Item key={`item-${num}`} data-testid="item">
+        {slots.map((slot) => (
+          <Otp.Item key={slot} data-testid="item">
             <Otp.ItemIndicator data-testid="item-indicator" />
           </Otp.Item>
         ))}

@@ -11,7 +11,7 @@ export const MyDiv = component$((props: PropsOf<"div">) => {
 });
 
 export default component$(() => {
-  const slots = Array.from({ length: 4 });
+  const slots = [...Array(4).keys()];
 
   return (
     <div class="flex flex-col items-center gap-4">

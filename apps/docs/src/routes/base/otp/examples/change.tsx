@@ -14,7 +14,7 @@ export const head: DocumentHead = {
 
 export default component$(() => {
   const isChange = useSignal(false);
-  const nums = [1, 2, 3, 4];
+  const slots = [...Array(4).keys()];
 
   return (
     <>
@@ -27,10 +27,10 @@ export default component$(() => {
       >
         <Otp.HiddenInput />
         <div class="otp-container flex flex-row justify-center gap-2">
-          {nums.map((num) => {
+          {slots.map((slot) => {
             return (
               <Otp.Item
-                key={num.toString()}
+                key={slot}
                 class={
                   "h-9 w-10 border-2 text-center data-[highlighted]:border-blue-600 rounded data-[highlighted]:ring-blue-100  data-[highlighted]:ring-[3px] data-[highlighted]:pl-1 data-[highlighted]:pr-1 caret-blue-600"
                 }
