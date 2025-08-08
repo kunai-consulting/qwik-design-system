@@ -1,11 +1,10 @@
-import { useBoundSignal } from "@kunai-consulting/qwik-utils";
+import { useBindings } from "@kunai-consulting/qwik-utils";
 import {
   type PropsOf,
   type QRL,
   type Signal,
   Slot,
   component$,
-  useComputed$,
   useContextProvider,
   useSignal,
   useStyles$,
@@ -45,13 +44,15 @@ export const OtpRoot = component$((props: PublicOtpRootProps) => {
   useStyles$(styles);
 
   // The OTP code value
-  const code = useBoundSignal<string>(givenValueBind, props.value || "");
+  const { valueSig: code, disabledSig: isDisabled } = useBindings(props, {
+    value: "",
+    disabled: false
+  });
 
   const itemIds = useSignal<string[]>([]);
   const currIndex = useSignal(0);
   const nativeInputRef = useSignal<HTMLInputElement>();
   const isFocused = useSignal(false);
-  const isDisabled = useComputed$(() => props.disabled);
   const selectionStart = useSignal<number | null>(null);
   const selectionEnd = useSignal<number | null>(null);
   const isInitialLoad = useSignal(true);
