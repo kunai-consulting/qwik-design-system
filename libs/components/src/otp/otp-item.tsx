@@ -1,5 +1,6 @@
 import {
   type PropsOf,
+  type Signal,
   Slot,
   component$,
   createContextId,
@@ -12,9 +13,13 @@ import {
 } from "@qwik.dev/core";
 import { OTPContextId } from "./otp-context";
 type PublicOTPProps = PropsOf<"div">;
-export const itemContextId = createContextId<{
-  index: number;
-}>("qd-otp-item");
+
+type ItemContext = {
+  index: Signal<number>;
+};
+
+export const itemContextId = createContextId<ItemContext>("qd-otp-item");
+
 /** Individual item component for displaying a single OTP digit */
 export const OtpItem = component$((props: PublicOTPProps) => {
   const context = useContext(OTPContextId);
@@ -24,14 +29,18 @@ export const OtpItem = component$((props: PublicOTPProps) => {
     context.itemIds.value = [...context.itemIds.value, itemId];
   });
 
-  const currItemIndex = useComputed$(() => context.itemIds.value.indexOf(itemId));
+  const index = useComputed$(() => context.itemIds.value.indexOf(itemId));
 
   const itemRef = useSignal<HTMLInputElement>();
 
-  useContextProvider(itemContextId, { index: currItemIndex.value });
+  const itemContext: ItemContext = {
+    index
+  };
+
+  useContextProvider(itemContextId, itemContext);
 
   const itemValue = useComputed$(() => {
-    const idx = currItemIndex.value;
+    const idx = index.value;
     return idx >= 0 ? context.code.value[idx] || "" : "";
   });
 
@@ -44,7 +53,7 @@ export const OtpItem = component$((props: PublicOTPProps) => {
 
     const start = context.selectionStart.value;
     const end = context.selectionEnd.value;
-    const idx = currItemIndex.value;
+    const idx = index.value;
     if (start !== null && end !== null && start !== end) {
       return idx >= start && idx < end;
     }
@@ -57,7 +66,7 @@ export const OtpItem = component$((props: PublicOTPProps) => {
       {...props}
       ref={itemRef}
       // The identifier for individual OTP input items with their index
-      data-qds-otp-item={currItemIndex.value}
+      data-qds-otp-item={index.value}
       // Indicates if the OTP item is currently highlighted
       data-highlighted={isHighlighted.value ? "" : undefined}
       // Indicates if the OTP item is disabled
