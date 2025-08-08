@@ -4,14 +4,13 @@ export interface OTPContext {
   code: Signal<string>;
   currentIndex: Signal<number | null>;
   nativeInputRef: Signal<HTMLInputElement | undefined>;
-  /** Ordered list of item keys for the current render pass */
-  itemIds: Signal<string[]>;
   isFocused: Signal<boolean>;
   isDisabled: Signal<boolean | undefined>;
   selectionStart: Signal<number | null>;
   selectionEnd: Signal<number | null>;
   shiftPWManagers: boolean;
   hasBeenFocused: Signal<boolean>;
+  numItems: number;
 }
 
 export const OTPContextId = createContextId<OTPContext>("OTPContext");

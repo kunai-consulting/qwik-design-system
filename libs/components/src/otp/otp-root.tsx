@@ -37,6 +37,7 @@ export const OtpRoot = component$((props: PublicOtpRootProps) => {
 
   const itemIds = useSignal<string[]>([]);
   const currentIndex = useSignal(0);
+  const numItems = 0;
   const nativeInputRef = useSignal<HTMLInputElement>();
   const isFocused = useSignal(false);
   const selectionStart = useSignal<number | null>(null);
@@ -49,6 +50,7 @@ export const OtpRoot = component$((props: PublicOtpRootProps) => {
   const context = {
     code,
     currentIndex,
+    numItems,
     nativeInputRef,
     itemIds,
     hasBeenFocused,

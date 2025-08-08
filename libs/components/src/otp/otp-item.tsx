@@ -1,21 +1,19 @@
 import {
   type PropsOf,
-  type Signal,
   Slot,
   component$,
   createContextId,
   useComputed$,
+  useConstant,
   useContext,
   useContextProvider,
-  useId,
-  useSignal,
-  useTask$
+  useSignal
 } from "@qwik.dev/core";
 import { OTPContextId } from "./otp-context";
 type PublicOTPProps = PropsOf<"div">;
 
 type ItemContext = {
-  index: Signal<number>;
+  index: number;
 };
 
 export const itemContextId = createContextId<ItemContext>("qd-otp-item");
@@ -23,12 +21,11 @@ export const itemContextId = createContextId<ItemContext>("qd-otp-item");
 /** Individual item component for displaying a single OTP digit */
 export const OtpItem = component$((props: PublicOTPProps) => {
   const context = useContext(OTPContextId);
-  const itemId = useId();
-  const index = useSignal(0);
 
-  useTask$(() => {
-    context.itemIds.value = [...context.itemIds.value, itemId];
-    index.value = context.itemIds.value.indexOf(itemId);
+  const index = useConstant(() => {
+    const idx = context.numItems;
+    context.numItems++;
+    return idx;
   });
 
   const itemRef = useSignal<HTMLInputElement>();
@@ -39,7 +36,7 @@ export const OtpItem = component$((props: PublicOTPProps) => {
 
   useContextProvider(itemContextId, itemContext);
 
-  const itemValue = useComputed$(() => context.code.value[index.value] ?? "");
+  const itemValue = useComputed$(() => context.code.value[index] ?? "");
 
   const isHighlighted = useComputed$(() => {
     if (!context.isFocused.value) {
@@ -50,7 +47,7 @@ export const OtpItem = component$((props: PublicOTPProps) => {
 
     const start = context.selectionStart.value;
     const end = context.selectionEnd.value;
-    const idx = index.value;
+    const idx = index;
     if (start !== null && end !== null && start !== end) {
       return idx >= start && idx < end;
     }
@@ -63,7 +60,7 @@ export const OtpItem = component$((props: PublicOTPProps) => {
       {...props}
       ref={itemRef}
       // The identifier for individual OTP input items with their index
-      data-qds-otp-item={index.value}
+      data-qds-otp-item={index}
       // Indicates if the OTP item is currently highlighted
       data-highlighted={isHighlighted.value ? "" : undefined}
       // Indicates if the OTP item is disabled

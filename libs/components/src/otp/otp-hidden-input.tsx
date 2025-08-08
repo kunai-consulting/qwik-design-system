@@ -43,7 +43,7 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
       }
 
       context.selectionStart.value = start;
-      context.selectionEnd.value = Math.min(end, context.itemIds.value.length);
+      context.selectionEnd.value = Math.min(end, context.numItems);
       context.currentIndex.value = start;
     }
   );
@@ -55,7 +55,7 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
       return;
     }
 
-    const maxLength = context.itemIds.value.length;
+    const maxLength = context.numItems;
     const start = input.selectionStart;
     const end = input.selectionEnd;
     const value = input.value;
@@ -149,7 +149,7 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
 
   const handleInput = $((e: InputEvent) => {
     const input = e.target as HTMLInputElement;
-    const newValue = input.value.slice(0, context.itemIds.value.length);
+    const newValue = input.value.slice(0, context.numItems);
 
     // validate input if pattern provided
     if (!new RegExp(pattern).test(newValue)) {
@@ -227,7 +227,7 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
 
   const maxLength = useComputed$(() => {
     if (hasBeenFocused.value) {
-      return context.itemIds.value.length;
+      return context.numItems;
     }
     return context.code.value.length;
   });
