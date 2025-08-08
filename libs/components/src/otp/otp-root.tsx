@@ -72,7 +72,7 @@ export const OtpRoot = component$((props: PublicOtpRootProps) => {
     isInitialLoad.value = false;
 
     const isPopulated = code.value.length > 0;
-    const isFull = code.value.length === context.itemIds.value.length;
+    const isFull = code.value.length === context.numItems;
 
     if (!isPopulated) return;
     if (!isFull) return;
