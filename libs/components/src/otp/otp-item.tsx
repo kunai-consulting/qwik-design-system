@@ -24,12 +24,12 @@ export const itemContextId = createContextId<ItemContext>("qd-otp-item");
 export const OtpItem = component$((props: PublicOTPProps) => {
   const context = useContext(OTPContextId);
   const itemId = useId();
+  const index = useSignal(0);
 
   useTask$(() => {
     context.itemIds.value = [...context.itemIds.value, itemId];
+    index.value = context.itemIds.value.indexOf(itemId);
   });
-
-  const index = useComputed$(() => context.itemIds.value.indexOf(itemId));
 
   const itemRef = useSignal<HTMLInputElement>();
 
@@ -39,10 +39,7 @@ export const OtpItem = component$((props: PublicOTPProps) => {
 
   useContextProvider(itemContextId, itemContext);
 
-  const itemValue = useComputed$(() => {
-    const idx = index.value;
-    return idx >= 0 ? context.code.value[idx] || "" : "";
-  });
+  const itemValue = useComputed$(() => context.code.value[index.value] ?? "");
 
   const isHighlighted = useComputed$(() => {
     if (!context.isFocused.value) {
@@ -58,7 +55,7 @@ export const OtpItem = component$((props: PublicOTPProps) => {
       return idx >= start && idx < end;
     }
 
-    return idx === context.currIndex.value && !value[idx];
+    return idx === context.currentIndex.value && !value[idx];
   });
 
   return (

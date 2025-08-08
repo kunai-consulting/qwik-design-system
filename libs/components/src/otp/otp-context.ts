@@ -2,7 +2,7 @@ import { type Signal, createContextId } from "@qwik.dev/core";
 
 export interface OTPContext {
   code: Signal<string>;
-  currIndex: Signal<number | null>;
+  currentIndex: Signal<number | null>;
   nativeInputRef: Signal<HTMLInputElement | undefined>;
   /** Ordered list of item keys for the current render pass */
   itemIds: Signal<string[]>;

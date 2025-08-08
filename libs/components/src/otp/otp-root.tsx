@@ -1,8 +1,6 @@
-import { useBindings } from "@kunai-consulting/qwik-utils";
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import {
   type PropsOf,
-  type QRL,
-  type Signal,
   Slot,
   component$,
   useContextProvider,
@@ -14,32 +12,20 @@ import { OTPContextId } from "./otp-context";
 import styles from "./otp.css?inline";
 
 type PublicOtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
-  /** Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property */
-  "bind:value"?: Signal<string>;
-  /** Number of OTP input items to display */
-  _numItems?: number;
   /** Event handler for when all OTP items are filled */
-  onComplete$?: QRL<() => void>;
+  onComplete$?: () => void;
   /** Event handler for when the OTP value changes */
-  onChange$?: QRL<(value: string) => void>;
-  /** Initial value of the OTP input */
-  value?: string;
-  /** Whether the OTP input is disabled */
-  disabled?: boolean;
+  onChange$?: (value: string) => void;
   /** Whether password manager popups should shift to the right of the OTP. By default enabled */
   shiftPWManagers?: boolean;
-};
+} & BindableProps<{
+    value: string;
+    disabled: boolean;
+  }>;
 
 /** Base implementation of the OTP root component with context provider */
 export const OtpRoot = component$((props: PublicOtpRootProps) => {
-  const {
-    "bind:value": givenValueBind,
-    onChange$,
-    onComplete$,
-    disabled = false,
-    shiftPWManagers = true,
-    ...rest
-  } = props;
+  const { onChange$, onComplete$, shiftPWManagers = true, ...rest } = props;
 
   useStyles$(styles);
 
@@ -50,7 +36,7 @@ export const OtpRoot = component$((props: PublicOtpRootProps) => {
   });
 
   const itemIds = useSignal<string[]>([]);
-  const currIndex = useSignal(0);
+  const currentIndex = useSignal(0);
   const nativeInputRef = useSignal<HTMLInputElement>();
   const isFocused = useSignal(false);
   const selectionStart = useSignal<number | null>(null);
@@ -62,7 +48,7 @@ export const OtpRoot = component$((props: PublicOtpRootProps) => {
 
   const context = {
     code,
-    currIndex,
+    currentIndex,
     nativeInputRef,
     itemIds,
     hasBeenFocused,

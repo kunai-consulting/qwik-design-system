@@ -37,14 +37,14 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
       if (start === null || end === null) {
         context.selectionStart.value = null;
         context.selectionEnd.value = null;
-        context.currIndex.value = null;
+        context.currentIndex.value = null;
         context.isFocused.value = false;
         return;
       }
 
       context.selectionStart.value = start;
       context.selectionEnd.value = Math.min(end, context.itemIds.value.length);
-      context.currIndex.value = start;
+      context.currentIndex.value = start;
     }
   );
 
@@ -156,7 +156,7 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
       input.value = context.code.value;
       // make sure invalid characters don't affect the highlight position
       if (isFirstKeystroke.value) {
-        context.currIndex.value = 0;
+        context.currentIndex.value = 0;
         context.selectionStart.value = 0;
         context.selectionEnd.value = 1;
         input.setSelectionRange(0, 1);
@@ -176,7 +176,7 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
     // backspacing and not at last filled position, move back
     if (isBackspace && position > 0 && position !== previousValue.value.length) {
       const newPos = position - 1;
-      context.currIndex.value = newPos;
+      context.currentIndex.value = newPos;
       context.selectionStart.value = newPos;
       context.selectionEnd.value = newPos + 1;
       input.setSelectionRange(newPos, newPos + 1);
@@ -187,7 +187,7 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
         end: newPos + 1
       };
     } else {
-      context.currIndex.value = position;
+      context.currentIndex.value = position;
       context.selectionStart.value = position;
       context.selectionEnd.value = position + 1;
       input.setSelectionRange(position, position + 1);
