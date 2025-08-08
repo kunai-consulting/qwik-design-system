@@ -8,6 +8,7 @@ import {
   useStyles$,
   useTask$
 } from "@qwik.dev/core";
+import { Render } from "../render/render";
 import { OTPContextId } from "./otp-context";
 import styles from "./otp.css?inline";
 
@@ -82,7 +83,8 @@ export const OtpRoot = component$((props: PublicOtpRootProps) => {
   useContextProvider(OTPContextId, context);
 
   return (
-    <div
+    <Render
+      fallback="div"
       // The identifier for the root OTP input container
       data-qds-otp-root
       // Indicates if the entire OTP input is disabled
@@ -90,6 +92,6 @@ export const OtpRoot = component$((props: PublicOtpRootProps) => {
       {...rest}
     >
       <Slot />
-    </div>
+    </Render>
   );
 });

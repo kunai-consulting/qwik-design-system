@@ -1,4 +1,5 @@
 import { type PropsOf, Slot, component$, useContext } from "@qwik.dev/core";
+import { Render } from "../render/render";
 import { OTPContextId } from "./otp-context";
 import { itemContextId } from "./otp-item";
 
@@ -13,8 +14,8 @@ export const OtpItemIndicator = component$(({ ...props }: PropsOf<"span">) => {
 
   return (
     // The identifier for the OTP caret element with its specific index
-    <span {...props} data-qds-otp-caret={itemContext.index}>
+    <Render {...props} fallback="span" data-qds-otp-caret={itemContext.index}>
       {showCaret && <Slot />}
-    </span>
+    </Render>
   );
 });

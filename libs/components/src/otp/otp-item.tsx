@@ -9,6 +9,7 @@ import {
   useContextProvider,
   useSignal
 } from "@qwik.dev/core";
+import { Render } from "../render/render";
 import { OTPContextId } from "./otp-context";
 type PublicOTPProps = PropsOf<"div">;
 
@@ -56,9 +57,10 @@ export const OtpItem = component$((props: PublicOTPProps) => {
   });
 
   return (
-    <div
+    <Render
+      fallback="div"
       {...props}
-      ref={itemRef}
+      internalRef={itemRef}
       // The identifier for individual OTP input items with their index
       data-qds-otp-item={index}
       // Indicates if the OTP item is currently highlighted
@@ -68,6 +70,6 @@ export const OtpItem = component$((props: PublicOTPProps) => {
     >
       {itemValue.value}
       <Slot />
-    </div>
+    </Render>
   );
 });
