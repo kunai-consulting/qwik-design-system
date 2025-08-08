@@ -7,8 +7,8 @@ export const OtpItemIndicator = component$(({ ...props }: PropsOf<"span">) => {
   const itemContext = useContext(itemContextId);
   const context = useContext(OTPContextId);
   const isHighlighted =
-    context.currIndexSig.value === itemContext.index && context.isFocusedSig.value;
-  const isEmpty = !context.inputValueSig.value[itemContext.index];
+    context.currIndex.value === itemContext.index && context.isFocused.value;
+  const isEmpty = !context.code.value[itemContext.index];
   const showCaret = isHighlighted && isEmpty;
 
   return (

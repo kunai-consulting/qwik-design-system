@@ -35,16 +35,16 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
       };
 
       if (start === null || end === null) {
-        context.selectionStartSig.value = null;
-        context.selectionEndSig.value = null;
-        context.currIndexSig.value = null;
-        context.isFocusedSig.value = false;
+        context.selectionStart.value = null;
+        context.selectionEnd.value = null;
+        context.currIndex.value = null;
+        context.isFocused.value = false;
         return;
       }
 
-      context.selectionStartSig.value = start;
-      context.selectionEndSig.value = Math.min(end, context.numItems);
-      context.currIndexSig.value = start;
+      context.selectionStart.value = start;
+      context.selectionEnd.value = Math.min(end, context.itemIds.value.length);
+      context.currIndex.value = start;
     }
   );
 
@@ -55,7 +55,7 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
       return;
     }
 
-    const maxLength = context.numItems;
+    const maxLength = context.itemIds.value.length;
     const start = input.selectionStart;
     const end = input.selectionEnd;
     const value = input.value;
@@ -149,16 +149,16 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
 
   const handleInput = $((e: InputEvent) => {
     const input = e.target as HTMLInputElement;
-    const newValue = input.value.slice(0, context.numItems);
+    const newValue = input.value.slice(0, context.itemIds.value.length);
 
     // validate input if pattern provided
     if (!new RegExp(pattern).test(newValue)) {
-      input.value = context.inputValueSig.value;
+      input.value = context.code.value;
       // make sure invalid characters don't affect the highlight position
       if (isFirstKeystroke.value) {
-        context.currIndexSig.value = 0;
-        context.selectionStartSig.value = 0;
-        context.selectionEndSig.value = 1;
+        context.currIndex.value = 0;
+        context.selectionStart.value = 0;
+        context.selectionEnd.value = 1;
         input.setSelectionRange(0, 1);
       }
       return;
@@ -170,15 +170,15 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
     const isBackspace = previousValue.value.length > newValue.length;
     const position = input.selectionStart ?? 0;
 
-    context.inputValueSig.value = newValue;
+    context.code.value = newValue;
     previousValue.value = newValue;
 
     // backspacing and not at last filled position, move back
     if (isBackspace && position > 0 && position !== previousValue.value.length) {
       const newPos = position - 1;
-      context.currIndexSig.value = newPos;
-      context.selectionStartSig.value = newPos;
-      context.selectionEndSig.value = newPos + 1;
+      context.currIndex.value = newPos;
+      context.selectionStart.value = newPos;
+      context.selectionEnd.value = newPos + 1;
       input.setSelectionRange(newPos, newPos + 1);
       // after backspace
       previousSelection.value = {
@@ -187,9 +187,9 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
         end: newPos + 1
       };
     } else {
-      context.currIndexSig.value = position;
-      context.selectionStartSig.value = position;
-      context.selectionEndSig.value = position + 1;
+      context.currIndex.value = position;
+      context.selectionStart.value = position;
+      context.selectionEnd.value = position + 1;
       input.setSelectionRange(position, position + 1);
       // normal input
       previousSelection.value = {
@@ -213,31 +213,31 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
     const input = context.nativeInputRef.value;
     if (!input) return;
 
-    context.isFocusedSig.value = true;
-    const pos = context.inputValueSig.value.length;
+    context.isFocused.value = true;
+    const pos = context.code.value.length;
     input.setSelectionRange(pos, pos);
     syncSelection(pos, pos, false);
   });
 
   const handleBlur = $(() => {
     shiftKeyDown.value = false;
-    context.isFocusedSig.value = false;
+    context.isFocused.value = false;
     syncSelection(null, null, false);
   });
 
   const maxLength = useComputed$(() => {
     if (hasBeenFocused.value) {
-      return context.numItems;
+      return context.itemIds.value.length;
     }
-    return context.inputValueSig.value.length;
+    return context.code.value.length;
   });
 
   return (
     <input
       {...props}
       ref={context.nativeInputRef}
-      value={context.inputValueSig.value}
-      disabled={context.isDisabledSig.value ?? false}
+      value={context.code.value}
+      disabled={context.isDisabled.value ?? false}
       maxLength={maxLength.value}
       // The identifier for the hidden input element that handles OTP input
       data-qds-otp-hidden-input

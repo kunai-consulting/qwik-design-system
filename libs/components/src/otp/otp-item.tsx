@@ -4,10 +4,11 @@ import {
   component$,
   createContextId,
   useComputed$,
-  useConstant,
   useContext,
   useContextProvider,
-  useSignal
+  useId,
+  useSignal,
+  useTask$
 } from "@qwik.dev/core";
 import { OTPContextId } from "./otp-context";
 type PublicOTPProps = PropsOf<"div">;
@@ -17,53 +18,50 @@ export const itemContextId = createContextId<{
 /** Individual item component for displaying a single OTP digit */
 export const OtpItem = component$((props: PublicOTPProps) => {
   const context = useContext(OTPContextId);
+  const itemId = useId();
 
-  const currItemIndex = useConstant(() => {
-    const index = context.currItemIndex;
-    context.numItems++;
-    context.currItemIndex++;
-    return index;
+  useTask$(() => {
+    context.itemIds.value = [...context.itemIds.value, itemId];
   });
+
+  const currItemIndex = useComputed$(() => context.itemIds.value.indexOf(itemId));
 
   const itemRef = useSignal<HTMLInputElement>();
-  useContextProvider(itemContextId, { index: currItemIndex });
+
+  useContextProvider(itemContextId, { index: currItemIndex.value });
+
   const itemValue = useComputed$(() => {
-    return context.inputValueSig.value[currItemIndex] || "";
+    const idx = currItemIndex.value;
+    return idx >= 0 ? context.code.value[idx] || "" : "";
   });
 
-  const isHighlightedSig = useComputed$(() => {
-    if (!context.isFocusedSig.value) {
+  const isHighlighted = useComputed$(() => {
+    if (!context.isFocused.value) {
       return false;
     }
 
-    const value = context.inputValueSig.value;
+    const value = context.code.value;
 
-    const start = context.selectionStartSig.value;
-    const end = context.selectionEndSig.value;
+    const start = context.selectionStart.value;
+    const end = context.selectionEnd.value;
+    const idx = currItemIndex.value;
     if (start !== null && end !== null && start !== end) {
-      return currItemIndex >= start && currItemIndex < end;
+      return idx >= start && idx < end;
     }
 
-    const isHighlighted =
-      currItemIndex === context.currIndexSig.value && !value[currItemIndex];
-
-    return isHighlighted;
+    return idx === context.currIndex.value && !value[idx];
   });
-
-  if (currItemIndex === undefined) {
-    throw new Error("Qwik UI: Otp Item must have an index. This is a bug in Qwik UI");
-  }
 
   return (
     <div
       {...props}
       ref={itemRef}
       // The identifier for individual OTP input items with their index
-      data-qds-otp-item={currItemIndex}
+      data-qds-otp-item={currItemIndex.value}
       // Indicates if the OTP item is currently highlighted
-      data-highlighted={isHighlightedSig.value ? "" : undefined}
+      data-highlighted={isHighlighted.value ? "" : undefined}
       // Indicates if the OTP item is disabled
-      data-disabled={context.isDisabledSig.value ? "" : undefined}
+      data-disabled={context.isDisabled.value ? "" : undefined}
     >
       {itemValue.value}
       <Slot />

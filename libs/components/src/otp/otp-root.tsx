@@ -34,7 +34,7 @@ type PublicOtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
 /** Base implementation of the OTP root component with context provider */
 export const OtpRoot = component$((props: PublicOtpRootProps) => {
   const {
-    "bind:value": givenValueSig,
+    "bind:value": givenValueBind,
     onChange$,
     onComplete$,
     disabled = false,
@@ -44,42 +44,45 @@ export const OtpRoot = component$((props: PublicOtpRootProps) => {
 
   useStyles$(styles);
 
-  const currItemIndex = 0;
-  const numItems = 0;
+  // The OTP code value
+  const code = useBoundSignal<string>(givenValueBind, props.value || "");
 
-  const inputValueSig = useBoundSignal<string>(givenValueSig, props.value || "");
-  const currIndexSig = useSignal(0);
+  const itemIds = useSignal<string[]>([]);
+  const currIndex = useSignal(0);
   const nativeInputRef = useSignal<HTMLInputElement>();
-  const isFocusedSig = useSignal(false);
-  const isDisabledSig = useComputed$(() => props.disabled);
-  const selectionStartSig = useSignal<number | null>(null);
-  const selectionEndSig = useSignal<number | null>(null);
-  const isInitialLoadSig = useSignal(true);
+  const isFocused = useSignal(false);
+  const isDisabled = useComputed$(() => props.disabled);
+  const selectionStart = useSignal<number | null>(null);
+  const selectionEnd = useSignal<number | null>(null);
+  const isInitialLoad = useSignal(true);
+  const hasBeenFocused = useSignal(false);
+
+  itemIds.value = [];
 
   const context = {
-    inputValueSig,
-    currIndexSig,
+    code,
+    currIndex,
     nativeInputRef,
-    numItems,
-    isFocusedSig,
-    isDisabledSig,
-    selectionStartSig,
-    selectionEndSig,
-    shiftPWManagers,
-    currItemIndex
+    itemIds,
+    hasBeenFocused,
+    isFocused,
+    isDisabled,
+    selectionStart,
+    selectionEnd,
+    shiftPWManagers
   };
 
-  useTask$(async function handleChange({ track }) {
-    track(() => inputValueSig.value);
+  useTask$(async ({ track }) => {
+    track(code);
 
-    if (!isInitialLoadSig.value) {
-      await onChange$?.(inputValueSig.value);
+    if (!isInitialLoad.value) {
+      await onChange$?.(code.value);
     }
 
-    isInitialLoadSig.value = false;
+    isInitialLoad.value = false;
 
-    const isPopulated = inputValueSig.value.length > 0;
-    const isFull = inputValueSig.value.length === context.numItems;
+    const isPopulated = code.value.length > 0;
+    const isFull = code.value.length === context.itemIds.value.length;
 
     if (!isPopulated) return;
     if (!isFull) return;
@@ -94,7 +97,7 @@ export const OtpRoot = component$((props: PublicOtpRootProps) => {
       // The identifier for the root OTP input container
       data-qds-otp-root
       // Indicates if the entire OTP input is disabled
-      data-disabled={isDisabledSig.value ? "" : undefined}
+      data-disabled={isDisabled.value ? "" : undefined}
       {...rest}
     >
       <Slot />
