@@ -7,7 +7,8 @@ import {
   useConstant,
   useContext,
   useContextProvider,
-  useSignal
+  useSignal,
+  useTask$
 } from "@qwik.dev/core";
 import { Render } from "../render/render";
 import { OTPContextId } from "./otp-context";
@@ -35,25 +36,34 @@ export const OtpItem = component$((props: PublicOTPProps) => {
     index
   };
 
-  useContextProvider(itemContextId, itemContext);
-
   const itemValue = useComputed$(() => context.code.value[index] ?? "");
 
-  const isHighlighted = useComputed$(() => {
+  const isHighlighted = useSignal(false);
+
+  useContextProvider(itemContextId, itemContext);
+
+  useTask$(({ track }) => {
+    track(context.isFocused);
+    track(context.code);
+    track(context.selectionStart);
+    track(context.selectionEnd);
+
     if (!context.isFocused.value) {
-      return false;
+      isHighlighted.value = false;
+      return;
     }
 
     const value = context.code.value;
-
     const start = context.selectionStart.value;
     const end = context.selectionEnd.value;
     const idx = index;
+
     if (start !== null && end !== null && start !== end) {
-      return idx >= start && idx < end;
+      isHighlighted.value = idx >= start && idx < end;
+      return;
     }
 
-    return idx === context.currentIndex.value && !value[idx];
+    isHighlighted.value = idx === context.currentIndex.value && !value[idx];
   });
 
   return (
