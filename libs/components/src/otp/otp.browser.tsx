@@ -321,7 +321,8 @@ const DisabledToggle = component$(() => {
         <Otp.HiddenInput data-testid="input" />
         {slots.map((slot) => (
           <Otp.Item key={slot} data-testid="item">
-            <Otp.ItemIndicator data-testid="item-indicator" />
+            Item
+            <Otp.ItemIndicator data-testid="item-indicator">Indicator</Otp.ItemIndicator>
           </Otp.Item>
         ))}
       </Otp.Root>
@@ -336,9 +337,18 @@ const DisabledToggle = component$(() => {
   );
 });
 
-test("programmatic disable should make OTP non-interactive", async () => {
+test("OTP should be disabled when disabled prop is true", async () => {
   render(<DisabledToggle />);
 
-  await userEvent.click(page.getByTestId("disable-toggle"));
-  await expect(Input).toBeDisabled();
+  await expect.element(Root).toBeVisible();
+  await expect.element(Input).not.toBeDisabled();
+
+  const programmaticDisable = page.getByTestId("disable-toggle");
+
+  await expect.element(programmaticDisable).toBeVisible();
+  await userEvent.click(programmaticDisable);
+
+  // Wait for both the input to be disabled and the root to have data-disabled
+  await expect.element(Input).toBeDisabled();
+  await expect.element(Root).toHaveAttribute("data-disabled");
 });
