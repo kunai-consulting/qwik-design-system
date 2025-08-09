@@ -1,5 +1,5 @@
 import { Checkbox, Otp } from "@kunai-consulting/qwik";
-import { type PropsOf, Slot, component$ } from "@qwik.dev/core";
+import { type PropsOf, Slot, component$, useSignal } from "@qwik.dev/core";
 import { LuCheck } from "@qwikest/icons/lucide";
 
 export const MyDiv = component$((props: PropsOf<"div">) => {
@@ -12,6 +12,7 @@ export const MyDiv = component$((props: PropsOf<"div">) => {
 
 export default component$(() => {
   const slots = [...Array(4).keys()];
+  const isRendered = useSignal(false);
 
   return (
     <div class="flex flex-col items-center gap-4">
@@ -23,6 +24,31 @@ export default component$(() => {
           verify this device.
         </p>
       </div>
+
+      <button type="button" onClick$={() => (isRendered.value = true)}>
+        Render OTP
+      </button>
+
+      {isRendered.value && (
+        <Otp.Root class="flex flex-col items-center justify-center">
+          <Otp.HiddenInput />
+
+          <div class="otp-container flex flex-row justify-center gap-2">
+            {slots.map((slot) => (
+              <Otp.Item
+                key={`otp-item-${slot}`}
+                class={
+                  "h-9 w-10 border-2 text-center rounded data-[highlighted]:ring-qwik-blue-800 data-[highlighted]:ring-[3px] caret-blue-600"
+                }
+              >
+                <Otp.ItemIndicator class="text-blue-500 text-xl animate-blink-caret">
+                  |
+                </Otp.ItemIndicator>
+              </Otp.Item>
+            ))}
+          </div>
+        </Otp.Root>
+      )}
 
       <Otp.Root class="flex flex-col items-center justify-center">
         <Otp.HiddenInput />

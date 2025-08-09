@@ -17,7 +17,6 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
   const context = useContext(OTPContextId);
   const previousValue = useSignal<string>("");
   const shiftKeyDown = useSignal(false);
-  const pattern = props.pattern ?? "^[0-9]*$";
   const hasBeenFocused = useSignal(false);
 
   const previousSelection = useSignal({
@@ -147,22 +146,18 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
 
   const isFirstKeystroke = useSignal(true);
 
+  const handleKeyPressSync$ = sync$((e: KeyboardEvent, input: HTMLInputElement) => {
+    if (e.key.length > 1) return;
+
+    if (!new RegExp(input.pattern).test(e.key)) {
+      e.preventDefault();
+      return;
+    }
+  });
+
   const handleInput = $((e: InputEvent) => {
     const input = e.target as HTMLInputElement;
     const newValue = input.value.slice(0, context.numItems);
-
-    // validate input if pattern provided
-    if (!new RegExp(pattern).test(newValue)) {
-      input.value = context.code.value;
-      // make sure invalid characters don't affect the highlight position
-      if (isFirstKeystroke.value) {
-        context.currentIndex.value = 0;
-        context.selectionStart.value = 0;
-        context.selectionEnd.value = 1;
-        input.setSelectionRange(0, 1);
-      }
-      return;
-    }
 
     // No longer first keystroke
     isFirstKeystroke.value = false;
@@ -215,6 +210,7 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
 
     context.isFocused.value = true;
     const pos = context.code.value.length;
+
     input.setSelectionRange(pos, pos);
     syncSelection(pos, pos, false);
   });
@@ -246,6 +242,8 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
       inputMode="numeric"
       onInput$={[handleInput, props.onInput$]}
       onKeyDown$={[handleKeyDownSync$, handleKeyDown, props.onKeyDown$]}
+      pattern={props.pattern ?? "^[0-9]*$"}
+      onKeyPress$={[handleKeyPressSync$, props.onKeyPress$]}
       onKeyUp$={[handleKeyUp, props.onKeyUp$]}
       onFocus$={[handleFocus, props.onFocus$]}
       onBlur$={[handleBlur, props.onBlur$]}

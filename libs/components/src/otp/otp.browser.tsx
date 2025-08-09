@@ -17,7 +17,8 @@ const Basic = component$((props: PropsOf<typeof Otp.Root>) => {
       <Otp.HiddenInput data-testid="input" />
       {slots.map((slot) => (
         <Otp.Item key={slot} data-testid="item">
-          <Otp.ItemIndicator data-testid="item-indicator" />
+          Item
+          <Otp.ItemIndicator data-testid="item-indicator">Indicator</Otp.ItemIndicator>
         </Otp.Item>
       ))}
     </Otp.Root>
@@ -151,7 +152,9 @@ test("delete in middle should remove character at cursor", async () => {
 test("invalid character should not change value", async () => {
   render(<Basic />);
 
+  await expect.element(Input).toBeVisible();
   await userEvent.click(Input);
+  await expect.element(Items.nth(0)).toBeVisible();
   await userEvent.keyboard("-");
   await expect.element(Items.nth(0)).toHaveAttribute("data-highlighted");
   await expect.element(Input).toHaveValue("");
