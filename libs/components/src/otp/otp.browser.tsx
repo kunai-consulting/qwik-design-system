@@ -1,4 +1,4 @@
-import { $, type PropsOf, component$, useSignal } from "@qwik.dev/core";
+import { $, type PropsOf, component$, useSignal, useStore } from "@qwik.dev/core";
 import { page, userEvent } from "@vitest/browser/context";
 import { expect, test } from "vitest";
 import { render } from "vitest-browser-qwik";
@@ -33,7 +33,6 @@ test("OTP control should be empty when rendered", async () => {
 test("typing numbers should update hidden input", async () => {
   render(<Basic />);
 
-  // Focus the input first and use keyboard for typing
   await userEvent.click(Input);
   await userEvent.keyboard("1");
   await expect.element(Input).toHaveValue("1");
@@ -226,34 +225,29 @@ test("onComplete handler should be called when OTP is full", async () => {
   await expect(Input).toBeDisabled();
 });
 
-const InitialValue = component$(() => {
-  const slots = [...Array(4).keys()];
-  return (
-    <Otp.Root data-testid="root" value="1234">
-      <Otp.HiddenInput data-testid="input" />
-      {slots.map((slot) => (
-        <Otp.Item key={slot} data-testid="item">
-          <Otp.ItemIndicator data-testid="item-indicator" />
-        </Otp.Item>
-      ))}
-    </Otp.Root>
-  );
-});
-
 test("initial value should be displayed", async () => {
-  render(<InitialValue />);
+  render(<Basic value="1234" />);
   await expect.element(Input).toHaveValue("1234");
 });
 
-const ReactiveValue = component$(() => {
-  const otpValue = useSignal("");
-  const slots = [...Array(4).keys()];
+const ExternalState = component$(() => {
+  const selectedSignal = useSignal("1234");
+  const selectedStore = useStore({ item: "1234" });
 
   return (
     <div>
-      <Otp.Root data-testid="root" bind:value={otpValue}>
+      <Otp.Root
+        data-testid="root"
+        // test signal
+        bind:value={selectedSignal}
+        // test value based
+        value={selectedStore.item}
+        onChange$={(newValue) => {
+          selectedStore.item = newValue;
+        }}
+      >
         <Otp.HiddenInput data-testid="input" />
-        {slots.map((slot) => (
+        {[...Array(4).keys()].map((slot) => (
           <Otp.Item key={slot} data-testid="item">
             <Otp.ItemIndicator data-testid="item-indicator" />
           </Otp.Item>
@@ -261,22 +255,41 @@ const ReactiveValue = component$(() => {
       </Otp.Root>
       <button
         type="button"
-        data-testid="set-value"
-        onClick$={() => (otpValue.value = "1234")}
+        data-testid="change-value"
+        onClick$={() => (selectedStore.item = "5678")}
       >
-        Set Value
+        Change to 5678
+      </button>
+
+      <button
+        type="button"
+        data-testid="change-signal"
+        onClick$={() => (selectedSignal.value = "9012")}
+      >
+        Change to 9012
       </button>
     </div>
   );
 });
 
-test("reactive value changes should update OTP", async () => {
-  render(<ReactiveValue />);
+test("external value changes update OTP", async () => {
+  render(<ExternalState />);
 
-  await expect.element(Input).toHaveValue("");
-
-  await userEvent.click(page.getByTestId("set-value"));
   await expect.element(Input).toHaveValue("1234");
+
+  await userEvent.click(page.getByTestId("change-value"));
+
+  await expect.element(Input).toHaveValue("5678");
+});
+
+test("external signal changes update OTP", async () => {
+  render(<ExternalState />);
+
+  await expect.element(Input).toHaveValue("1234");
+
+  await userEvent.click(page.getByTestId("change-signal"));
+
+  await expect.element(Input).toHaveValue("9012");
 });
 
 const ChangeHandler = component$(() => {
@@ -311,7 +324,7 @@ test("onChange handler should be called when value changes", async () => {
   await expect.element(page.getByRole("paragraph")).toBeVisible();
 });
 
-const DisabledToggle = component$(() => {
+const ExternalDisable = component$(() => {
   const isDisabled = useSignal(false);
   const slots = [...Array(4).keys()];
 
@@ -338,7 +351,7 @@ const DisabledToggle = component$(() => {
 });
 
 test("OTP should be disabled when disabled prop is true", async () => {
-  render(<DisabledToggle />);
+  render(<ExternalDisable />);
 
   await expect.element(Root).toBeVisible();
   await expect.element(Input).not.toBeDisabled();
@@ -348,7 +361,6 @@ test("OTP should be disabled when disabled prop is true", async () => {
   await expect.element(programmaticDisable).toBeVisible();
   await userEvent.click(programmaticDisable);
 
-  // Wait for both the input to be disabled and the root to have data-disabled
   await expect.element(Input).toBeDisabled();
   await expect.element(Root).toHaveAttribute("data-disabled");
 });
