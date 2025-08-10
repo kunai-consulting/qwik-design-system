@@ -20,7 +20,7 @@ const domConfig: TestProjectConfiguration = {
   test: {
     include: ["**/*.browser.ts", "**/*.browser.tsx"],
     name: "dom",
-    testTimeout: 2000,
+    testTimeout: 1000,
     browser: {
       provider: "playwright",
       enabled: true,
