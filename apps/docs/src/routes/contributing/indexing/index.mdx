@@ -65,9 +65,9 @@ export const RadioGroupRoot = component$((props) => {
   useContextProvider(radioGroupContextId, context);
 
   return (
-    <div>
+    <Render fallback="div" {...props}>
       <Slot />
-    </div>
+    </Render>
   );
 });
 ```
@@ -90,39 +90,9 @@ export const RadioGroupItem = component$((props) => {
   });
 
   return (
-    <Render {...props}>
+    <Render fallback="div" {...props}>
       <Slot />
     </Render>
-  );
-});
-```
-
-## Usage Examples
-
-### Custom Component with Indexing
-
-```tsx
-export const MyListRoot = component$(() => {
-  const itemCount = 0;
-  
-  useContextProvider(myListContextId, { itemCount });
-  
-  return <ul><Slot /></ul>;
-});
-
-export const MyListItem = component$((props) => {
-  const context = useContext(myListContextId);
-  
-  const index = useConstant(() => {
-    const idx = context.itemCount;
-    context.itemCount++;
-    return idx;
-  });
-  
-  return (
-    <li data-index={index}>
-      Item {index}: <Slot />
-    </li>
   );
 });
 ```
