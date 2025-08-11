@@ -19,22 +19,22 @@ export const PaginationItem = component$((props: PublicPaginationPageProps) => {
   const itemRef = useSignal<HTMLElement>();
 
   const index = useConstant(() => {
-    const itemIndex = context.currItemIndex;
-    context.currItemIndex++;
+    const itemIndex = context.currentIndex;
+    context.currentIndex++;
     return itemIndex;
   });
 
-  const isVisible = useComputed$(() => context.ellipsisSig.value.includes(index + 1));
+  const isVisible = useComputed$(() => context.displayItems.value.includes(index + 1));
 
   if (!isVisible.value) {
-    const isPrevVisible = context.ellipsisSig.value.includes(index);
+    const isPrevVisible = context.displayItems.value.includes(index);
     return isPrevVisible ? <span>{context.ellipsis}</span> : null;
   }
 
-  const isCurrentPage = useComputed$(() => index + 1 === context.selectedPageSig.value);
+  const isCurrentPage = useComputed$(() => index + 1 === context.selectedPage.value);
 
   useTask$(({ track }) => {
-    const focusedIndex = track(() => context.focusedIndexSig.value);
+    const focusedIndex = track(context.focusedIndex);
     if (focusedIndex !== index) return;
     itemRef.value?.focus();
   });
@@ -47,39 +47,39 @@ export const PaginationItem = component$((props: PublicPaginationPageProps) => {
   });
 
   const handleKeyDown$ = $((e: KeyboardEvent) => {
-    const currentFocusedIndex = context.focusedIndexSig.value;
+    const currentFocusedIndex = context.focusedIndex.value;
     if (currentFocusedIndex === null) return;
 
     switch (e.key) {
       case "ArrowRight": {
-        if (currentFocusedIndex < context.pagesSig.value.length - 1) {
-          context.focusedIndexSig.value = currentFocusedIndex + 1;
+        if (currentFocusedIndex < context.legacyPages.value.length - 1) {
+          context.focusedIndex.value = currentFocusedIndex + 1;
         }
         break;
       }
       case "ArrowLeft": {
         if (currentFocusedIndex > 0) {
-          context.focusedIndexSig.value = currentFocusedIndex - 1;
+          context.focusedIndex.value = currentFocusedIndex - 1;
         }
         break;
       }
       case "Home": {
-        context.focusedIndexSig.value = 0;
+        context.focusedIndex.value = 0;
         break;
       }
       case "End": {
-        context.focusedIndexSig.value = context.pagesSig.value.length - 1;
+        context.focusedIndex.value = context.legacyPages.value.length - 1;
         break;
       }
     }
   });
 
   const handleFocus$ = $(() => {
-    context.focusedIndexSig.value = index;
+    context.focusedIndex.value = index;
   });
 
   const handleClick$ = $(() => {
-    context.selectedPageSig.value = index + 1;
+    context.selectedPage.value = index + 1;
   });
 
   return (

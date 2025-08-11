@@ -5,14 +5,14 @@ export const paginationContextId = createContextId<PaginationContext>(
 );
 
 export type PaginationContext = {
-  selectedPageSig: Signal<number>;
-  isDisabledSig: Signal<boolean | undefined>;
+  selectedPage: Signal<number>;
+  isDisabled: Signal<boolean | undefined>;
   totalPages: number;
   onPageChange$: QRL<(page: number) => void> | undefined;
   currentPage: number | undefined;
-  pagesSig: Signal<number[]>;
-  ellipsisSig: Signal<(number | "...")[]>;
-  focusedIndexSig: Signal<number | null>;
+  legacyPages: Signal<number[]>;
+  displayItems: Signal<(number | "...")[]>;
+  focusedIndex: Signal<number | null>;
   ellipsis?: JSXChildren;
-  currItemIndex: number;
+  currentIndex: number;
 };

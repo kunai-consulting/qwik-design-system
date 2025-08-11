@@ -13,25 +13,25 @@ import { paginationContextId } from "./pagination-context";
 export const PaginationNext = component$(
   ({ type, ...props }: PropsOf<"button"> & { isLast?: boolean }) => {
     const context = useContext(paginationContextId);
-    const { selectedPageSig, totalPages } = context;
+    const { selectedPage, totalPages } = context;
 
-    const isDisabled = useSignal(selectedPageSig.value === totalPages);
+    const isDisabled = useSignal(selectedPage.value === totalPages);
 
     useTask$(({ track }) => {
-      track(() => context.selectedPageSig.value);
-      isDisabled.value = context.selectedPageSig.value === totalPages;
+      track(context.selectedPage);
+      isDisabled.value = context.selectedPage.value === totalPages;
     });
 
     const handleClick = $(() => {
       if (props.isLast) {
-        selectedPageSig.value = totalPages;
+        selectedPage.value = totalPages;
         return;
       }
-      if (selectedPageSig.value < totalPages) {
-        if (selectedPageSig.value + 1 <= totalPages) {
-          selectedPageSig.value += 1;
+      if (selectedPage.value < totalPages) {
+        if (selectedPage.value + 1 <= totalPages) {
+          selectedPage.value += 1;
         } else {
-          selectedPageSig.value = totalPages;
+          selectedPage.value = totalPages;
         }
       }
     });

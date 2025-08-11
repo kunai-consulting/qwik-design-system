@@ -45,44 +45,44 @@ export const PaginationRoot = component$((props: PublicPaginationRootProps) => {
     ellipsis,
     ...rest
   } = props;
-  const isInitialLoadSig = useSignal(true);
-  const isDisabledSig = useComputed$(() => disabled);
-  const selectedPageSig = useBoundSignal(givenPageSig, currentPage || 1);
-  const focusedIndexSig = useSignal<number | null>(null);
-  const ellipsisSig = useComputed$(() =>
-    getPaginationItems(totalPages, selectedPageSig.value, siblingCount || 1)
+  const isInitialLoad = useSignal(true);
+  const isDisabled = useComputed$(() => disabled);
+  const selectedPage = useBoundSignal(givenPageSig, currentPage || 1);
+  const focusedIndex = useSignal<number | null>(null);
+  const displayItems = useComputed$(() =>
+    getPaginationItems(totalPages, selectedPage.value, siblingCount || 1)
   );
-  const pagesSig = useSignal(pages);
-  const currItemIndex = 0;
+  const legacyPages = useSignal(pages);
+  const currentIndex = 0;
 
   const context: PaginationContext = {
-    isDisabledSig,
+    isDisabled,
     totalPages,
     onPageChange$,
     currentPage,
-    pagesSig,
-    selectedPageSig,
-    ellipsisSig,
+    legacyPages,
+    selectedPage,
+    displayItems,
     ellipsis,
-    focusedIndexSig,
-    currItemIndex
+    focusedIndex,
+    currentIndex
   };
 
   useContextProvider(paginationContextId, context);
 
   useTask$(async function handleChange({ track }) {
-    track(() => context.selectedPageSig.value);
-    if (isInitialLoadSig.value) {
+    track(context.selectedPage);
+    if (isInitialLoad.value) {
       return;
     }
 
-    selectedPageSig.value = context.selectedPageSig.value;
+    selectedPage.value = context.selectedPage.value;
 
-    await onPageChange$?.(context.selectedPageSig.value);
+    await onPageChange$?.(context.selectedPage.value);
   });
 
   useTask$(() => {
-    isInitialLoadSig.value = false;
+    isInitialLoad.value = false;
   });
 
   return (
@@ -91,8 +91,8 @@ export const PaginationRoot = component$((props: PublicPaginationRootProps) => {
       // Identifies the root pagination container element
       data-qds-pagination-root
       // Indicates whether the pagination component is disabled
-      data-disabled={context.isDisabledSig.value ? "" : undefined}
-      aria-disabled={context.isDisabledSig.value ? "true" : "false"}
+      data-disabled={context.isDisabled.value ? "" : undefined}
+      aria-disabled={context.isDisabled.value ? "true" : "false"}
     >
       <Slot />
     </div>
