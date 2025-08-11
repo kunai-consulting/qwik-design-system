@@ -1,4 +1,4 @@
-import { useBoundSignal } from "@kunai-consulting/qwik-utils";
+import { useBindings } from "@kunai-consulting/qwik-utils";
 import {
   type JSXChildren,
   type PropsOf,
@@ -35,23 +35,26 @@ export type PublicPaginationRootProps = PropsOf<"div"> & {
 /** Root pagination container component that provides context and handles page management */
 export const PaginationRoot = component$((props: PublicPaginationRootProps) => {
   const {
-    "bind:page": givenPageSig,
     totalPages,
     onPageChange$,
     currentPage,
-    disabled,
     siblingCount,
     pages,
     ellipsis,
     ...rest
   } = props;
   const isInitialLoad = useSignal(true);
-  const isDisabled = useComputed$(() => disabled);
-  const selectedPage = useBoundSignal(givenPageSig, currentPage || 1);
+
+  const { pageSig: selectedPage, disabledSig: isDisabled } = useBindings(props, {
+    page: currentPage || 1,
+    disabled: false
+  });
+
   const focusedIndex = useSignal<number | null>(null);
   const displayItems = useComputed$(() =>
     getPaginationItems(totalPages, selectedPage.value, siblingCount || 1)
   );
+
   const legacyPages = useSignal(pages);
   const currentIndex = 0;
 
@@ -71,12 +74,9 @@ export const PaginationRoot = component$((props: PublicPaginationRootProps) => {
   useContextProvider(paginationContextId, context);
 
   useTask$(async function handleChange({ track }) {
-    track(context.selectedPage);
-    if (isInitialLoad.value) {
-      return;
-    }
+    if (isInitialLoad.value) return;
 
-    selectedPage.value = context.selectedPage.value;
+    track(context.selectedPage);
 
     await onPageChange$?.(context.selectedPage.value);
   });
