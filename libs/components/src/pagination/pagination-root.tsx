@@ -1,4 +1,4 @@
-import { useBindings } from "@kunai-consulting/qwik-utils";
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import {
   type JSXChildren,
   type PropsOf,
@@ -16,21 +16,20 @@ import { getPaginationItems } from "./utils";
 export type PublicPaginationRootProps = PropsOf<"div"> & {
   /** The total number of pages to display */
   totalPages: number;
-  /** The initial page number to display when component loads */
-  currentPage?: number;
   /** Reactive value that can be controlled via signal. Sets the current active page number */
   "bind:page"?: Signal<number | 1>;
   /** Event handler for page change events */
   onPageChange$?: QRL<(page: number) => void>;
-  /** Whether the pagination component is disabled */
-  disabled?: boolean;
   /** Array of page numbers to display */
   pages: number[];
   /** Custom element to display for ellipsis */
   ellipsis?: JSXChildren;
   /** Number of siblings to show on each side of current page */
   siblingCount?: number;
-};
+} & BindableProps<{
+    currentPage: number;
+    disabled: boolean;
+  }>;
 
 /** Root pagination container component that provides context and handles page management */
 export const PaginationRoot = component$((props: PublicPaginationRootProps) => {
@@ -45,8 +44,8 @@ export const PaginationRoot = component$((props: PublicPaginationRootProps) => {
   } = props;
   const isInitialLoad = useSignal(true);
 
-  const { pageSig: selectedPage, disabledSig: isDisabled } = useBindings(props, {
-    page: currentPage || 1,
+  const { currentPageSig: selectedPage, disabledSig: isDisabled } = useBindings(props, {
+    currentPage: 1,
     disabled: false
   });
 
