@@ -33,7 +33,7 @@ export const CalendarGridDay = component$<PublicCalendarGridDayProps>(
               data-qds-calendar-grid-body-row
               role="row"
             >
-              {context.showWeekNumber && (
+              {context.showWeekNumber.value && (
                 // Displays the week number in the calendar grid
                 <div role="rowheader" data-qds-calendar-grid-body-week-number>
                   <span>

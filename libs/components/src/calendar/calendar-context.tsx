@@ -7,8 +7,8 @@ export type CalendarContext = {
   locale: Locale;
   dateSig: Signal<ISODate | null>;
   dateToFocus: Signal<ISODate>;
-  showWeekNumber: boolean;
-  showDaysOfWeek: boolean;
+  showWeekNumber: Signal<boolean>;
+  showDaysOfWeek: Signal<boolean>;
   daysOfWeek: [
     "Sunday",
     "Monday",

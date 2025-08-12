@@ -167,13 +167,13 @@ export const CalendarGrid = component$<PublicCalendarGridProps>((props) => {
       data-qds-calendar-grid
       role="grid"
       {...divProps}
-      data-show-week-numbers={context.showWeekNumber ? "true" : "false"}
+      data-show-week-numbers={context.showWeekNumber.value ? "true" : "false"}
     >
-      {context.showDaysOfWeek && (
+      {context.showDaysOfWeek.value && (
         // The header section of the calendar grid
         // biome-ignore lint/a11y/useFocusableInteractive: The header section contains no elements that a user needs to interact with or focus on.
         <div data-qds-calendar-grid-header-row role="row">
-          {context.showWeekNumber && (
+          {context.showWeekNumber.value && (
             <div role="columnheader" data-qds-calendar-grid-header-cell>
               Wk
             </div>
