@@ -21,7 +21,7 @@
     "serve": "wrangler pages dev ./dist --compatibility-flags=nodejs_als",
     "start": "vite --open --mode ssr",
     "qwik": "qwik",
-    "cn": "cn"
+    "code-notate": "code-notate"
   },
   "devDependencies": {
     "@builder.io/qwik": "^1.14.1",
