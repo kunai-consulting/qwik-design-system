@@ -49,37 +49,6 @@ In this example, the `Root` component provides context for the `Trigger` and `La
 
 The `Trigger` has already been streamed before we discover the `Description` exists!
 
-## Current Solution: Props-Based Approach
-
-Our current approach passes information up front through props:
-
-```jsx
-<Checkbox.Root description>
-  <Checkbox.Trigger />
-  <Checkbox.Description>Read our terms</Checkbox.Description>
-</Checkbox.Root>
-```
-
-What's happening under the hood:
-
-```tsx
-<button aria-describedby={context.description ? descriptionId : undefined}>
-    <Slot />
-</button>
-```
-
-This pattern:
-- Informs `Root` ahead of time that a description exists
-- Allows proper ARIA attributes to be added when components render
-- Creates a more predictable rendering pattern
-
-### Limitations
-
-While functional, this approach:
-- Makes the API more verbose
-- Requires manual ID management
-- Reduces the intuitiveness of the component composition
-
 ### Future Improvements
 
 Some potential solutions:
@@ -88,15 +57,9 @@ Some potential solutions:
 
 Qwik could support mechanisms to revisit and update already-streamed HTML, allowing components to communicate after initial rendering.
 
-This has been [proposed in a Qwik](https://github.com/QwikDev/qwik-evolution/discussions/16) and would enable more intuitive component APIs.
+This has been [proposed in a Qwik RFC](https://github.com/QwikDev/qwik-evolution/discussions/16) and would enable more intuitive component APIs.
 
-#### 2. Inline components
-
-A root component could collect information about children before rendering the parent, enabling automatic connection of related components.
-
-> The downside here is that user composed components make getting this information difficult.
-
-#### 3. Deferred Rendering
+#### 2. Deferred Rendering
 
 Components could defer rendering critical attributes until all children have been analyzed, then "catch up" with the necessary connections.
 
@@ -105,50 +68,3 @@ Components could defer rendering critical attributes until all children have bee
 This remains an active area of research in Qwik's component model. We welcome contributions and ideas for solving this streaming composition problem!
 
 If you have approaches that might help balance accessibility needs with intuitive APIs, please share them with the community.
-
-## asChild and inline components
-
-The `asChild` prop is a powerful feature that allows a component to render another component as its child. This is useful for creating more complex components that can be reused in different contexts.
-
-Take for example a use case in the `Tree` component:
-
-```tsx
-import {
-  type Component,
-  type PropsOf,
-  Slot,
-  component$,
-  useContext
-} from "@qwik.dev/core";
-import { withAsChild } from "../as-child/as-child";
-import {
-  type CollapsibleTrigger,
-  CollapsibleTriggerBase
-} from "../collapsible/collapsible-trigger";
-import { groupContextId } from "./tree-group";
-import { TreeItem } from "./tree-item";
-
-export const TreeGroupTriggerBase: Component<PropsOf<typeof CollapsibleTrigger>> =
-  component$((props) => {
-    const groupContext = useContext(groupContextId);
-    
-    return (
-      <TreeItem asChild groupTrigger groupId={groupContext?.id}>
-        <CollapsibleTriggerBase {...props}>
-          <Slot />
-        </CollapsibleTriggerBase>
-      </TreeItem>
-    );
-});
-
-export const TreeGroupTrigger = withAsChild(TreeGroupTriggerBase);
-
-```
-
-The Collapsible Trigger is becoming a tree item. This allows us to get the logic inside the tree item, and combine it with the collapsible trigger logic.
-
-### Why the base component?
-
-When using asChild internally, you must always use asChild **on the base**, which is a `component$` component, not the inline component.
-
-If the child being rendered is not a normal Qwik component, that information **cannot be serialized**. As a result, we use Qwik's `noSerialize` function to render the child, and state / props can be lost as we transfer from environments.

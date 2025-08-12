@@ -142,6 +142,7 @@ const BasicForm = component$((props: PublicCheckboxRootProps) => {
       noValidate
       onSubmit$={(e) => {
         const form = e.target as HTMLFormElement;
+        // @ts-ignore - FormData is iterable but TypeScript doesn't recognize it in this context
         formData.value = Object.fromEntries(new FormData(form));
       }}
       style={{ display: "flex", flexDirection: "column", gap: "8px" }}
@@ -237,6 +238,7 @@ const BasicFormWithValidation = component$((props: PublicCheckboxRootProps) => {
           return;
         }
 
+        // @ts-ignore - FormData is iterable but TypeScript doesn't recognize it in this context
         formData.value = Object.fromEntries(new FormData(form));
       }}
       style={{ display: "flex", flexDirection: "column", gap: "8px" }}

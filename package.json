@@ -1,6 +1,7 @@
 {
   "name": "qwik-design-system",
   "private": true,
+  "type": "module",
   "version": "0.0.0",
   "scripts": {
     "dev": "pnpm --filter ./libs/core dev & pnpm --filter ./apps/docs dev",
@@ -27,13 +28,14 @@
     "@changesets/cli": "^2.27.7",
     "@linear/sdk": "^27.0.0",
     "@playwright/test": "^1.46.0",
-    "@qwik.dev/core": "https://pkg.pr.new/QwikDev/qwik/@qwik.dev/core@08f10bc",
+    "@qwik.dev/core": "2.0.0-beta.7",
     "@types/node": "22.14.0",
+    "@vitest/browser": "^3.2.4",
+    "axe-core": "^4.10.3",
     "oxc-parser": "^0.75.0",
     "pagefind": "1.2.0",
     "pathe": "^2.0.3",
     "tsx": "^4.19.3",
-    "vitest": "^3.2.4",
-    "@vitest/browser": "^3.2.4"
+    "vitest": "^3.2.4"
   }
 }

@@ -154,45 +154,61 @@ You can write this:
 
 ### Implementing asChild in Your Components
 
+To enable `asChild` functionality in your components, use the `Render` component. It handles all the complexity of merging props and element types automatically.
+
 #### Step 1: Import the Render Component
 
-The `Render` component is the foundation of the `asChild` pattern in Qwik Design System. It handles:
-
-- Merging props between your component and the consumer's element
-- Handling the JSX type given by the consumer
-- Giving fallback types to the author, with a better DX.
-
-<Showcase name="render" />
-
-- `fallback` is the default element type to render if `asChild` is not used. 
-- `internalRef` is the prop to pass refs from context or in the library f. (leave `ref` for the consumer's use)
-
-#### Step 2: Use the withAsChild Function
-
-The `withAsChild` function creates a wrapper around your base component that enables the `asChild` functionality:
-
-<Showcase name="as-child" />
-
-In this example:
-1. `TooltipTriggerBase` is your original component implementation
-2. `withAsChild` wraps it to create the consumer-facing `TooltipTrigger` component
-3. The consumer passes a `div` element as the child, and the `TooltipTrigger` component will now become the `div` element.
-
-> The returned component is an inline component. This is needed to be able to find the consumer's children, and pass the props to the consumer's children.
-
-### Usage Example
-
-```jsx
-// Default usage (renders a button)
-<TooltipTrigger>Click me</TooltipTrigger>
-
-// With asChild (renders a div)
-<TooltipTrigger asChild>
-  <div>Custom trigger element</div>
-</TooltipTrigger>
+```tsx
+import { Render } from "../render/render";
 ```
 
-Be careful with the `asChild` and inline components. There is a [common pitfall where library authors pass inline components to the asChild prop](/contributing/tradeoffs/#aschild-and-inline-components), and then wonder why the component is not behaving as expected.
+#### Step 2: Use Render in Your Component
+
+```tsx
+export const TooltipTrigger = component$((props) => {
+  const triggerRef = useSignal<HTMLElement>();
+  
+  return (
+    <Render
+      fallback="button"  // Default element type
+      internalRef={triggerRef}  // Your component's ref
+      {...props}
+    >
+      <Slot />
+    </Render>
+  );
+});
+```
+
+#### Key Props
+
+- **`fallback`**: The default element type (e.g., "button", "div") when `asChild` is not used
+- **`internalRef`**: Your component's ref - gets automatically merged with consumer's ref
+- **`...props`**: All other props are passed through and merged appropriately
+
+#### Consumer Setup
+
+Consumers need the Vite plugin in their project for `asChild` to work:
+
+```js
+// vite.config.ts
+import { asChild } from '@kunai-consulting/core/vite';
+
+export default defineConfig({
+  plugins: [
+    qwikVite(),
+    asChild(),
+  ],
+});
+```
+
+#### Why Use the Render Component?
+
+- **Automatic prop merging**: Handles complex prop collision scenarios
+- **Ref management**: Automatically merges your `internalRef` with consumer's `ref`
+- **Type safety**: Full TypeScript support for fallback element types
+- **Accessibility preservation**: Maintains ARIA attributes and event handlers
+- **Simple API**: Just specify `fallback` and `internalRef` - everything else is handled as if it were a normal JSX element
 
 
 ### Accessibility Considerations

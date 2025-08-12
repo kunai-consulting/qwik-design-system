@@ -14,6 +14,7 @@ export const head: DocumentHead = {
 
 export default component$(() => {
   const isDisabled = useSignal(false);
+  const slots = [...Array(4).keys()];
 
   return (
     <>
@@ -24,12 +25,10 @@ export default component$(() => {
         <Otp.HiddenInput />
 
         <div class="otp-container flex flex-row justify-center gap-2">
-          {Array.from({ length: 4 }, (_, index) => {
-            const uniqueKey = `otp-${index}-${Date.now()}`;
-
+          {slots.map((slot) => {
             return (
               <Otp.Item
-                key={uniqueKey}
+                key={slot}
                 class={
                   "h-9 w-10 border-2 text-center data-[highlighted]:border-blue-600 rounded data-[highlighted]:ring-blue-100  data-[highlighted]:ring-[3px] data-[highlighted]:pl-1 data-[highlighted]:pr-1 caret-blue-600 data-[disabled]:opacity-50"
                 }

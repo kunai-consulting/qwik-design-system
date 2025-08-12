@@ -1,84 +1,81 @@
-import { useBoundSignal } from "@kunai-consulting/qwik-utils";
+import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import {
   type PropsOf,
-  type QRL,
-  type Signal,
   Slot,
   component$,
-  useComputed$,
   useContextProvider,
   useSignal,
   useStyles$,
   useTask$
 } from "@qwik.dev/core";
+import { Render } from "../render/render";
 import { OTPContextId } from "./otp-context";
 import styles from "./otp.css?inline";
 
 type PublicOtpRootProps = Omit<PropsOf<"div">, "onChange$"> & {
-  /** Reactive value that can be controlled via signal. Describe what passing their signal does for this bind property */
-  "bind:value"?: Signal<string>;
-  /** Number of OTP input items to display */
-  _numItems?: number;
   /** Event handler for when all OTP items are filled */
-  onComplete$?: QRL<() => void>;
+  onComplete$?: () => void;
   /** Event handler for when the OTP value changes */
-  onChange$?: QRL<(value: string) => void>;
-  /** Initial value of the OTP input */
-  value?: string;
-  /** Whether the OTP input is disabled */
-  disabled?: boolean;
+  onChange$?: (value: string) => void;
   /** Whether password manager popups should shift to the right of the OTP. By default enabled */
   shiftPWManagers?: boolean;
-};
+} & BindableProps<{
+    value: string;
+    disabled: boolean;
+  }>;
 
 /** Base implementation of the OTP root component with context provider */
 export const OtpRoot = component$((props: PublicOtpRootProps) => {
-  const {
-    "bind:value": givenValueSig,
-    onChange$,
-    onComplete$,
-    disabled = false,
-    shiftPWManagers = true,
-    ...rest
-  } = props;
+  const { onChange$, onComplete$, shiftPWManagers = true, ...rest } = props;
 
   useStyles$(styles);
 
-  const currItemIndex = 0;
-  const numItems = 0;
+  // The OTP code value
+  const { valueSig: code, disabledSig: isDisabled } = useBindings(props, {
+    value: "",
+    disabled: false
+  });
 
-  const inputValueSig = useBoundSignal<string>(givenValueSig, props.value || "");
-  const currIndexSig = useSignal(0);
+  const itemIds = useSignal<string[]>([]);
+  const currentIndex = useSignal(0);
+  const numItems = 0;
   const nativeInputRef = useSignal<HTMLInputElement>();
-  const isFocusedSig = useSignal(false);
-  const isDisabledSig = useComputed$(() => props.disabled);
-  const selectionStartSig = useSignal<number | null>(null);
-  const selectionEndSig = useSignal<number | null>(null);
-  const isInitialLoadSig = useSignal(true);
+  const isFocused = useSignal(false);
+  const selectionStart = useSignal<number | null>(null);
+  const selectionEnd = useSignal<number | null>(null);
+  const isInitialLoad = useSignal(true);
+  const hasBeenFocused = useSignal(false);
+
+  itemIds.value = [];
 
   const context = {
-    inputValueSig,
-    currIndexSig,
-    nativeInputRef,
+    code,
+    currentIndex,
     numItems,
-    isFocusedSig,
-    isDisabledSig,
-    selectionStartSig,
-    selectionEndSig,
-    shiftPWManagers,
-    currItemIndex
+    nativeInputRef,
+    itemIds,
+    hasBeenFocused,
+    isFocused,
+    isDisabled,
+    selectionStart,
+    selectionEnd,
+    shiftPWManagers
   };
 
-  useTask$(async function handleChange({ track }) {
-    track(() => inputValueSig.value);
+  useTask$(async ({ track }) => {
+    track(code);
 
-    if (!isInitialLoadSig.value) {
-      await onChange$?.(inputValueSig.value);
+    if (!isInitialLoad.value) {
+      await onChange$?.(code.value);
     }
 
-    isInitialLoadSig.value = false;
+    isInitialLoad.value = false;
 
-    if (inputValueSig.value.length !== numItems) return;
+    const isPopulated = code.value.length > 0;
+    const isFull = code.value.length === context.numItems;
+
+    if (!isPopulated) return;
+    if (!isFull) return;
 
     await onComplete$?.();
   });
@@ -86,14 +83,15 @@ export const OtpRoot = component$((props: PublicOtpRootProps) => {
   useContextProvider(OTPContextId, context);
 
   return (
-    <div
+    <Render
+      fallback="div"
       // The identifier for the root OTP input container
       data-qds-otp-root
       // Indicates if the entire OTP input is disabled
-      data-disabled={isDisabledSig.value ? "" : undefined}
+      data-disabled={isDisabled.value ? "" : undefined}
       {...rest}
     >
       <Slot />
-    </div>
+    </Render>
   );
 });
