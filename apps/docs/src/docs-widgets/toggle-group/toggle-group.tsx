@@ -1,4 +1,4 @@
-import { component$, type Signal } from "@builder.io/qwik";
+import { type Signal, component$ } from "@builder.io/qwik";
 
 export type ToggleItem = {
   value: string;
@@ -26,7 +26,7 @@ export const DocsToggleGroup = component$<DocsToggleGroupProps>((props) => {
       class={[
         "inline-flex overflow-hidden rounded-md border shadow-sm",
         "border-neutral-300 bg-white dark:border-neutral-700 dark:bg-neutral-900",
-        className,
+        className
       ]
         .filter(Boolean)
         .join(" ")}
@@ -47,13 +47,11 @@ export const DocsToggleGroup = component$<DocsToggleGroupProps>((props) => {
               "focus-visible:ring-2 focus-visible:ring-sky-500 ring-offset-2",
               "ring-offset-white dark:ring-offset-neutral-900",
               // borders between items
-              idx !== 0
-                ? "border-l border-neutral-300 dark:border-neutral-700"
-                : "",
+              idx !== 0 ? "border-l border-neutral-300 dark:border-neutral-700" : "",
               // selected vs idle
               selected
                 ? "bg-neutral-200 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-50"
-                : "text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800",
+                : "text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
             ]
               .filter(Boolean)
               .join(" ")}

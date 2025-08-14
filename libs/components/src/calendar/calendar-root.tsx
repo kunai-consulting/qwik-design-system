@@ -50,12 +50,16 @@ const isoDateRegex = /^\d{1,4}-(0[1-9]|1[0-2])-\d{2}$/;
 /** The root calendar component that manages state and provides context */
 export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
   useStyles$(styles);
+  const { locale = "en", onChange$, ...otherProps } = props;
   const {
-    locale = "en",
-    onChange$,
-    ...otherProps
-  } = props;
-  const { dateSig, disabledSig, openSig, fullWeeksSig, showWeekNumberSig, showDaysOfWeekSig, modeSig } = useBindings<CalendarRootBoundProps>(props, {
+    dateSig,
+    disabledSig,
+    openSig,
+    fullWeeksSig,
+    showWeekNumberSig,
+    showDaysOfWeekSig,
+    modeSig
+  } = useBindings<CalendarRootBoundProps>(props, {
     date: props.date ?? null,
     disabled: false,
     open: false,
@@ -79,7 +83,7 @@ export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
     const dates = daysArrGenerator({
       month: monthToRender.value,
       year: yearToRender.value.toString(),
-      fullWeeks: fullWeeksSig.value,
+      fullWeeks: fullWeeksSig.value
     });
     return dates;
   });

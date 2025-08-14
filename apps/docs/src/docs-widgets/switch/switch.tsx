@@ -1,15 +1,11 @@
-import {
-  component$,
-  useStyles$,
-  Signal
-} from "@builder.io/qwik";
+import { type Signal, component$, useStyles$ } from "@builder.io/qwik";
 import { Switch } from "@kunai-consulting/qwik";
 import styles from "../../routes/base/switch/examples/switch-custom.css?inline";
 //import styles from "./switch.css?inline";
 type Props = {
   value: Signal<boolean>;
   label: string;
-}
+};
 export const DocsSwitch = component$((props: Props) => {
   useStyles$(styles);
 
