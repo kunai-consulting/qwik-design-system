@@ -15,7 +15,7 @@ export default component$(() => {
       })}
       pages={paginationItems}
     >
-      <Pagination.Ellipsis>...</Pagination.Ellipsis>
+      <Pagination.Separator>...</Pagination.Separator>
       <Pagination.Previous>Previous</Pagination.Previous>
 
       {/* creates 10 pages */}

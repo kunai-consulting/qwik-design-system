@@ -1,6 +1,6 @@
 export { PaginationRoot as Root } from "./pagination-root";
 export { PaginationItem as Item } from "./pagination-item";
-export { PaginationNext as Next } from "./pagination-next";
-export { PaginationPrevious as Previous } from "./pagination-previous";
-export { PaginationEllipsis as Ellipsis } from "./pagination-ellipsis";
-export { getPaginationItems } from "./utils";
+export { PaginationNextTrigger as NextTrigger } from "./pagination-trigger";
+export { PaginationPrevTrigger as PrevTrigger } from "./pagination-trigger";
+export { PaginationSeparator as Separator } from "./pagination-separator";
+export { createPaginationPositions, type PaginationPosition } from "./utils";

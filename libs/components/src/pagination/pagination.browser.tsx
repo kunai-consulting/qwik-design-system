@@ -1,8 +1,15 @@
-import { $, type PropsOf, component$, useSignal, useStore } from "@qwik.dev/core";
+import {
+  $,
+  type PropsOf,
+  component$,
+  useComputed$,
+  useSignal,
+  useStore
+} from "@qwik.dev/core";
 import { page, userEvent } from "@vitest/browser/context";
 import { expect, test } from "vitest";
 import { render } from "vitest-browser-qwik";
-import { Pagination } from "..";
+import { Pagination, createPaginationItems } from "..";
 
 const Root = page.getByTestId("root");
 const NextButtons = page.getByTestId("next");
@@ -10,25 +17,43 @@ const PrevButtons = page.getByTestId("previous");
 const Items = page.getByTestId("item");
 const Ellipsis = page.getByTestId("ellipsis");
 
-const Basic = component$((props: PropsOf<typeof Pagination.Root>) => {
-  const totalPages = props.totalPages || 10;
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+const Basic = component$(
+  (props: PropsOf<typeof Pagination.Root> & { totalPages?: number }) => {
+    const totalPages = props.totalPages || 10;
+    const currentPage = useSignal(props.currentPage || 1);
 
-  return (
-    <Pagination.Root {...props} data-testid="root" totalPages={totalPages} pages={pages}>
-      <Pagination.Previous data-testid="previous">Previous</Pagination.Previous>
+    const items = useComputed$(() =>
+      createPaginationItems({
+        currentPage: currentPage.value,
+        totalPages,
+        siblingCount: 1
+      })
+    );
 
-      {pages.map((page) => (
-        <Pagination.Item key={page} data-testid="item">
-          {page}
-        </Pagination.Item>
-      ))}
+    return (
+      <Pagination.Root {...props} data-testid="root" currentPage={currentPage.value}>
+        <Pagination.PrevTrigger data-testid="previous">Previous</Pagination.PrevTrigger>
 
-      <Pagination.Ellipsis data-testid="ellipsis">...</Pagination.Ellipsis>
-      <Pagination.Next data-testid="next">Next</Pagination.Next>
-    </Pagination.Root>
-  );
-});
+        {items.value.map((item) => {
+          if (item.type === "separator") {
+            return (
+              <Pagination.Separator key={item.key} data-testid="ellipsis">
+                ...
+              </Pagination.Separator>
+            );
+          }
+          return (
+            <Pagination.Item key={item.key} page={item.page!} data-testid="item">
+              {item.page}
+            </Pagination.Item>
+          );
+        })}
+
+        <Pagination.NextTrigger data-testid="next">Next</Pagination.NextTrigger>
+      </Pagination.Root>
+    );
+  }
+);
 
 const WithFirstLast = component$((props: PropsOf<typeof Pagination.Root>) => {
   const totalPages = props.totalPages || 12;
@@ -36,10 +61,8 @@ const WithFirstLast = component$((props: PropsOf<typeof Pagination.Root>) => {
 
   return (
     <Pagination.Root {...props} data-testid="root" totalPages={totalPages} pages={pages}>
-      <Pagination.Previous isFirst data-testid="previous">
-        First
-      </Pagination.Previous>
-      <Pagination.Previous data-testid="previous">Previous</Pagination.Previous>
+      <Pagination.PrevTrigger data-testid="previous">First</Pagination.PrevTrigger>
+      <Pagination.PrevTrigger data-testid="previous">Previous</Pagination.PrevTrigger>
 
       {pages.map((page) => (
         <Pagination.Item key={page} data-testid="item">
@@ -47,11 +70,9 @@ const WithFirstLast = component$((props: PropsOf<typeof Pagination.Root>) => {
         </Pagination.Item>
       ))}
 
-      <Pagination.Ellipsis data-testid="ellipsis">...</Pagination.Ellipsis>
-      <Pagination.Next data-testid="next">Next</Pagination.Next>
-      <Pagination.Next isLast data-testid="next">
-        Last
-      </Pagination.Next>
+      <Pagination.Separator data-testid="ellipsis">...</Pagination.Separator>
+      <Pagination.NextTrigger data-testid="next">Next</Pagination.NextTrigger>
+      <Pagination.NextTrigger data-testid="next">Last</Pagination.NextTrigger>
     </Pagination.Root>
   );
 });
@@ -152,7 +173,7 @@ const ExternalState = component$(() => {
           selectedStore.page = newPage;
         })}
       >
-        <Pagination.Previous data-testid="previous">Previous</Pagination.Previous>
+        <Pagination.PrevTrigger data-testid="previous">Previous</Pagination.PrevTrigger>
 
         {pages.map((page) => (
           <Pagination.Item key={page} data-testid="item">
@@ -160,8 +181,8 @@ const ExternalState = component$(() => {
           </Pagination.Item>
         ))}
 
-        <Pagination.Ellipsis data-testid="ellipsis">...</Pagination.Ellipsis>
-        <Pagination.Next data-testid="next">Next</Pagination.Next>
+        <Pagination.Separator data-testid="ellipsis">...</Pagination.Separator>
+        <Pagination.NextTrigger data-testid="next">Next</Pagination.NextTrigger>
       </Pagination.Root>
 
       <button

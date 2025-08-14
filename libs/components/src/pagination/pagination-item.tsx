@@ -12,9 +12,15 @@ import {
 } from "@qwik.dev/core";
 import { Render } from "../render/render";
 import { paginationContextId } from "./pagination-context";
-type PublicPaginationPageProps = PropsOf<"button">;
+
+export type PublicPaginationItemProps = PropsOf<"button"> & {
+  /** The page number this item represents */
+  page: number;
+};
+
 /** Individual page number button component */
-export const PaginationItem = component$((props: PublicPaginationPageProps) => {
+export const PaginationItem = component$((props: PublicPaginationItemProps) => {
+  const { page, ...buttonProps } = props;
   const context = useContext(paginationContextId);
   const itemRef = useSignal<HTMLElement>();
 
@@ -24,14 +30,7 @@ export const PaginationItem = component$((props: PublicPaginationPageProps) => {
     return itemIndex;
   });
 
-  const isVisible = useComputed$(() => context.displayItems.value.includes(index + 1));
-
-  if (!isVisible.value) {
-    const isPrevVisible = context.displayItems.value.includes(index);
-    return isPrevVisible ? <span>{context.ellipsis}</span> : null;
-  }
-
-  const isCurrentPage = useComputed$(() => index + 1 === context.selectedPage.value);
+  const isCurrentPage = useComputed$(() => page === context.selectedPage.value);
 
   useTask$(({ track }) => {
     const focusedIndex = track(context.focusedIndex);
@@ -50,9 +49,11 @@ export const PaginationItem = component$((props: PublicPaginationPageProps) => {
     const currentFocusedIndex = context.focusedIndex.value;
     if (currentFocusedIndex === null) return;
 
+    const itemCount = context.currentIndex;
+
     switch (e.key) {
       case "ArrowRight": {
-        if (currentFocusedIndex < context.legacyPages.value.length - 1) {
+        if (currentFocusedIndex < itemCount - 1) {
           context.focusedIndex.value = currentFocusedIndex + 1;
         }
         break;
@@ -68,7 +69,7 @@ export const PaginationItem = component$((props: PublicPaginationPageProps) => {
         break;
       }
       case "End": {
-        context.focusedIndex.value = context.legacyPages.value.length - 1;
+        context.focusedIndex.value = itemCount - 1;
         break;
       }
     }
@@ -79,27 +80,24 @@ export const PaginationItem = component$((props: PublicPaginationPageProps) => {
   });
 
   const handleClick$ = $(() => {
-    context.selectedPage.value = index + 1;
+    context.selectedPage.value = page;
   });
 
   return (
     <Render
-      {...props}
+      {...buttonProps}
       fallback="button"
       internalRef={itemRef}
       // Identifies a pagination page element
       data-qds-pagination-item
-      // Specifies the index of the pagination page
-      data-index={index}
       // Indicates if this is the currently selected page
       data-current={isCurrentPage.value}
       aria-current={isCurrentPage.value ? "page" : undefined}
-      aria-label={`Page ${index + 1}`}
-      role="button"
+      aria-label={`Page ${page}`}
       tabIndex={0}
-      onClick$={[handleClick$, props.onClick$]}
-      onFocus$={[handleFocus$, props.onFocus$]}
-      onKeyDown$={[handleKeyDownSync$, handleKeyDown$, props.onKeyDown$]}
+      onClick$={[handleClick$, buttonProps.onClick$]}
+      onFocus$={[handleFocus$, buttonProps.onFocus$]}
+      onKeyDown$={[handleKeyDownSync$, handleKeyDown$, buttonProps.onKeyDown$]}
     >
       <Slot />
     </Render>

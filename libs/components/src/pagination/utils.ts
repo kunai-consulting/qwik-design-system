@@ -1,66 +1,67 @@
-interface PaginationItem {
-  type: "page" | "ellipsis";
-  value?: number;
-  key: string;
+/**
+ * Represents a position in the pagination
+ */
+export interface PaginationPosition {
+  page?: number;
+  separator: boolean;
 }
 
-interface PaginationProps {
-  page: number;
-  totalPages: number;
-  siblingCount?: number;
-}
-
-export function getPaginationItems(
+/**
+ * Creates pagination positions with smart page selection and separators.
+ *
+ * @param currentPage - The currently active page
+ * @param totalPages - Total number of pages
+ * @param siblingCount - Number of pages to show on each side of current page
+ * @returns Array of positions to render
+ */
+export function createPaginationPositions(
+  currentPage: number,
   totalPages: number,
-  selectedPage: number,
   siblingCount = 1
-): Array<number | "..."> {
+): PaginationPosition[] {
   // Input validation
   if (totalPages < 1) throw new Error("Total pages must be at least 1");
+  if (currentPage < 1 || currentPage > totalPages) {
+    throw new Error(`Current page must be between 1 and ${totalPages}`);
+  }
   if (siblingCount < 0) throw new Error("Sibling count must be non-negative");
 
-  // Ensure page is within valid range
-  const page = Math.min(Math.max(1, selectedPage), totalPages);
+  const positions: PaginationPosition[] = [];
 
-  const generatePaginationRange = ({
-    page,
-    totalPages,
-    siblingCount = 1
-  }: PaginationProps): PaginationItem[] => {
-    const visiblePages = new Set([1, totalPages]);
+  // Always show first page
+  positions.push({ page: 1, separator: false });
 
-    // Calculate threshold points
-    const minVisiblePages = 5 + siblingCount * 2; // 1 + ellipsis + siblings + current + ellipsis + last
-
-    if (totalPages <= minVisiblePages) {
-      // Show all pages if total is small
-      for (let i = 2; i < totalPages; i++) {
-        visiblePages.add(i);
-      }
-    } else {
-      // Calculate visible range around current page
-      const leftSiblingIndex = Math.max(page - siblingCount, 2);
-      const rightSiblingIndex = Math.min(page + siblingCount, totalPages - 1);
-
-      // Add visible pages to set
-      for (let i = leftSiblingIndex; i <= rightSiblingIndex; i++) {
-        visiblePages.add(i);
-      }
+  // For small page counts, show all pages
+  if (totalPages <= 2 + siblingCount * 2) {
+    for (let page = 2; page <= totalPages; page++) {
+      positions.push({ page, separator: false });
     }
+    return positions;
+  }
 
-    // Convert set to sorted array with ellipsis
-    return Array.from(visiblePages)
-      .sort((a, b) => a - b)
-      .reduce<PaginationItem[]>((items, pageNum, idx, array) => {
-        if (idx > 0 && pageNum - array[idx - 1] > 1) {
-          items.push({ type: "ellipsis", key: `ellipsis-${items.length}` });
-        }
-        items.push({ type: "page", value: pageNum, key: `page-${pageNum}` });
-        return items;
-      }, []);
-  };
+  // Calculate visible range around current page
+  const startPage = Math.max(2, currentPage - siblingCount);
+  const endPage = Math.min(totalPages - 1, currentPage + siblingCount);
 
-  return generatePaginationRange({ page, totalPages, siblingCount }).map((item) =>
-    item.type === "page" && item.value !== undefined ? item.value : "..."
-  );
+  // Add left separator if needed
+  if (startPage > 2) {
+    positions.push({ separator: true });
+  }
+
+  // Add pages around current
+  for (let page = startPage; page <= endPage; page++) {
+    positions.push({ page, separator: false });
+  }
+
+  // Add right separator if needed
+  if (endPage < totalPages - 1) {
+    positions.push({ separator: true });
+  }
+
+  // Always show last page (if not first)
+  if (totalPages > 1) {
+    positions.push({ page: totalPages, separator: false });
+  }
+
+  return positions;
 }
