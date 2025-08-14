@@ -25,8 +25,6 @@ export type PublicCalendarRootProps = Omit<PopoverRootProps, "onChange$"> & {
   locale?: Locale;
   /** Event handler called when a date is selected */
   onChange$?: QRL<(date: ISODate | null) => void>;
-  /** The display mode of the calendar */
-  mode?: "inline" | "popover";
 } & BindableProps<CalendarRootBoundProps>;
 
 export type CalendarRootBoundProps = {
@@ -34,6 +32,8 @@ export type CalendarRootBoundProps = {
   date: ISODate | null;
   /** When enabled prevents the user from interacting with the controls */
   disabled: boolean;
+  /** The display mode of the calendar */
+  mode: "inline" | "popover";
   /** The open state of the calendar popover */
   open: boolean;
   /** Whether to show week numbers in the calendar */
@@ -53,16 +53,16 @@ export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
   const {
     locale = "en",
     onChange$,
-    mode = "inline",
     ...otherProps
   } = props;
-  const { dateSig, disabledSig, openSig, fullWeeksSig, showWeekNumberSig, showDaysOfWeekSig } = useBindings<CalendarRootBoundProps>(props, {
+  const { dateSig, disabledSig, openSig, fullWeeksSig, showWeekNumberSig, showDaysOfWeekSig, modeSig } = useBindings<CalendarRootBoundProps>(props, {
     date: props.date ?? null,
     disabled: false,
     open: false,
     fullWeeks: false,
     showWeekNumber: false,
-    showDaysOfWeek: true
+    showDaysOfWeek: true,
+    mode: "inline"
   });
   const labelStr = props["aria-label"] ?? ARIA_LABELS[locale].root;
   const daysOfWeek = WEEKDAYS[locale];
@@ -97,7 +97,7 @@ export const CalendarRootBase = component$<PublicCalendarRootProps>((props) => {
     currentDate,
     localId,
     isPopoverOpenSig: openSig,
-    mode,
+    mode: modeSig,
     disabledSig
   };
 

@@ -24,6 +24,6 @@ export type CalendarContext = {
   currentDate: ISODate;
   localId: string;
   isPopoverOpenSig: Signal<boolean>;
-  mode: "inline" | "popover";
+  mode: Signal<"inline" | "popover">;
   disabledSig: Signal<boolean>;
 };
