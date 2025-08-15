@@ -1,6 +1,7 @@
 import { type PropsOf, Slot, component$ } from "@builder.io/qwik";
 import { CheckboxTriggerBase } from "../checkbox/checkbox-trigger";
 
+/** Select all trigger component for the checklist */
 export const ChecklistSelectAll = component$(
   (props: PropsOf<typeof CheckboxTriggerBase>) => {
     return (

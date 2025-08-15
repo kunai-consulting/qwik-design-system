@@ -98,5 +98,7 @@
     "Independent item state management",
     "Automated item indexing",
     "Context-based state propagation"
-  ]
+  ],
+  "name": "Checklist",
+  "summary": "A group of checkboxes with a select all option for choosing multiple items."
 }

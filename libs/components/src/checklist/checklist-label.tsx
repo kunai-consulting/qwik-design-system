@@ -3,6 +3,7 @@ import { CheckboxLabelBase } from "../checkbox/checkbox-label";
 
 // no-as-child TODO: remove this comment
 
+/** Label component for the checklist */
 export const ChecklistLabel = component$((props: PropsOf<typeof CheckboxLabelBase>) => {
   return (
     // Identifies the label element for the select all checkbox in the checklist
