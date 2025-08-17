@@ -163,6 +163,9 @@ importers:
       '@axe-core/playwright':
         specifier: ^4.9.1
         version: 4.10.0(playwright-core@1.46.0)
+      '@fluejs/noscroll':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@kunai-consulting/qwik-utils':
         specifier: workspace:*
         version: link:../utils
@@ -707,6 +710,9 @@ packages:
 
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
+
+  '@fluejs/noscroll@1.0.0':
+    resolution: {integrity: sha512-fyu6jPL/BzUWkrxpwmG8RC/8LM4Fp2GprYRco2BBTypIl7zDyuipRHg6NcuoTGh4s5fAV8D1DBDMS2aDhuGclg==}
 
   '@graphql-typed-document-node/core@3.2.0':
     resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
@@ -4076,6 +4082,8 @@ snapshots:
   '@floating-ui/utils@0.2.7': {}
 
   '@floating-ui/utils@0.2.9': {}
+
+  '@fluejs/noscroll@1.0.0': {}
 
   '@graphql-typed-document-node/core@3.2.0(graphql@15.9.0)':
     dependencies:

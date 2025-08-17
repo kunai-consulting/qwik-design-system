@@ -1,0 +1,125 @@
+# Modal Research
+
+## Features
+Target features. Some are essential, others are nice to have.
+- [ ] Modal dialog (standard dialog pattern)
+- [ ] Alert dialog (for important messages/confirmations)
+- [ ] Focus management and trapping
+- [ ] Inert background content
+- [ ] Initial focus placement strategies
+- [ ] Return focus on close
+- [ ] ESC key to close
+- [ ] Click outside to close (optional)
+- [ ] Multiple dialog layers support
+- [ ] Prevent background scroll
+- [ ] Animation/transition support
+
+## Component Structure
+A potential structure for the Modal component:
+
+- Root (dialog container with backdrop)
+- Trigger (the button that opens the dialog)
+- Content (the actual dialog content container)
+- Title (dialog title/header)
+- Description (dialog description/content)
+- Close (close button)
+
+```tsx
+<Modal.Root>
+  <Modal.Trigger>Open Modal</Modal.Trigger>
+  <Modal.Content>
+    <Modal.Title />
+    <Modal.Description />
+    <Modal.Close />
+  </Modal.Content>
+</Modal.Root>
+```
+
+## API
+
+### Root
+- `open` (boolean - controls dialog visibility)
+- `bind:open` (signal-based open state)
+- `onChange$` (callback when open state changes)
+- `role` ('dialog' | 'alertdialog' - default 'dialog')
+- `initialFocus` (element selector for initial focus)
+- `restoreFocus` (boolean - restore focus on close, default true)
+- `closeOnOutsideClick` (boolean - close on backdrop click, default false for alertdialog)
+
+### Content
+- `aria-labelledby` (references title element)
+- `aria-describedby` (references description element)
+- `aria-modal` (set to true for modal dialogs)
+
+### Native HTML Dialog Note
+
+The native `<dialog>` element has a `closedBy` property with values like `"any"`, `"closerequest"`, `"none"` but these are not intuitive (not fully supported by all browsers). Our API uses more explicit boolean props like `closeOnOutsideClick` for better developer experience.
+
+## Dialog vs Alert Dialog Differences
+
+### Dialog (role="dialog")
+- **Purpose**: General overlay window for any content
+- **Use cases**: Forms, settings, content viewers, multi-step processes
+- **Focus**: Can be placed on first interactive element or content start
+- **Closing**: Can be closed via ESC, close button, or outside click
+- **ARIA**: `aria-describedby` is optional
+
+### Alert Dialog (role="alertdialog") 
+- **Purpose**: Interrupts workflow for important messages requiring response
+- **Use cases**: Confirmation prompts, error messages, destructive action warnings
+- **Focus**: Often placed on least destructive action (Cancel button)
+- **Closing**: Typically requires explicit user action (button press)
+- **ARIA**: `aria-describedby` is required and must reference the alert message
+- **Special behavior**: May trigger system alert sounds in assistive technologies
+
+## Research Links
+
+- [WAI-ARIA Authoring Practices - Dialog (Modal)](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)
+- [WAI-ARIA Authoring Practices - Alert Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/)
+- [Base UI Dialog](https://base-ui.com/react/components/dialog)
+- [Kobalte Dialog](https://kobalte.dev/docs/core/components/dialog)
+- [Ark UI Dialog](https://ark-ui.com/docs/components/dialog)
+- [Melt UI Dialog](https://www.melt-ui.com/docs/builders/dialog)
+
+## Accessibility (ARIA)
+
+### Common Requirements (Both Dialog Types)
+- `role="dialog"` or `role="alertdialog"` on container element
+- `aria-modal="true"` for modal dialogs
+- `aria-labelledby` referencing visible title OR `aria-label` if no visible title
+- All dialog elements must be descendants of the dialog container
+
+### Dialog-Specific
+- `aria-describedby` is optional - only use for simple content that can be understood as unbroken string
+- Avoid `aria-describedby` for complex content with semantic structures (lists, tables, paragraphs)
+
+### Alert Dialog-Specific  
+- `aria-describedby` is required and must reference the alert message element
+- Role enables assistive technologies to provide special treatment (system sounds)
+
+## Keyboard Navigation
+
+### Focus Management
+- **Dialog opens**: Focus moves to element inside dialog based on content type:
+  - First focusable element (default)
+  - Static element with `tabindex="-1"` for complex content
+  - Least destructive action for irreversible processes
+  - Most frequently used element for simple workflows
+
+### Standard Interactions
+- `Tab`: Moves to next tabbable element within dialog (wraps to first)
+- `Shift + Tab`: Moves to previous tabbable element within dialog (wraps to last)  
+- `Escape`: Closes the dialog
+- Focus is trapped within dialog boundaries
+
+### Focus Return
+- **Dialog closes**: Focus returns to invoking element unless:
+  - Invoking element no longer exists → focus another logical element
+  - Workflow continues to related next step → focus relevant element
+
+## Open Questions
+- Default initial focus strategy?
+- Should alert dialogs prevent outside click closing by default?
+- Animation/transition timing and accessibility considerations?
+- How to handle multiple dialog layers and z-index management?
+- Should we provide built-in confirmation dialog presets?
