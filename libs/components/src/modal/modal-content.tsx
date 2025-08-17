@@ -3,65 +3,70 @@ import { modalContextId } from "./modal-root";
 
 export const ModalContent = component$((props: PropsOf<"dialog">) => {
   const context = useContext(modalContextId);
-  const pointerDownOnBackdrop = useSignal(false);
+  const isDownOnBackdrop = useSignal(false);
 
   /**
    * Determines if the backdrop of the Modal has been clicked.
    */
-  const wasModalBackdropClicked = $(
-    (modal: HTMLDialogElement | undefined, clickEvent: PointerEvent): boolean => {
-      if (!modal) {
+  const isBackdropEvent$ = $(
+    (dialogEl: HTMLDialogElement | undefined, event: PointerEvent): boolean => {
+      if (!dialogEl) return false;
+      if (event.pointerId === -1) return false;
+
+      const modal = dialogEl.getBoundingClientRect();
+
+      const { clientX: x, clientY: y } = event;
+
+      const isInsideModal =
+        x >= modal.left && x <= modal.right && y >= modal.top && y <= modal.bottom;
+
+      if (isInsideModal) {
         return false;
       }
 
-      const rect = modal.getBoundingClientRect();
-
-      const wasBackdropClicked =
-        rect.left > clickEvent.clientX ||
-        rect.right < clickEvent.clientX ||
-        rect.top > clickEvent.clientY ||
-        rect.bottom < clickEvent.clientY;
-
-      /**
-       * If the inside focusable elements are not prevented, such as a button it will also fire a click event.
-       *
-       * Hitting the enter or space keys on a button inside of the dialog for example, will fire a "pointer" event. In reality, it fires our onClick$ handler because we have not prevented the default behavior.
-       *
-       * This is why we check if the pointerId is -1.
-       **/
-      return clickEvent.pointerId === -1 ? false : wasBackdropClicked;
+      return true;
     }
   );
 
-  const handleBackdropInit$ = $(async (event: PointerEvent) => {
-    // Track if pointer down started on backdrop
-    const wasBackdropClicked = await wasModalBackdropClicked(
-      context.contentRef.value,
-      event
-    );
-    pointerDownOnBackdrop.value = wasBackdropClicked;
+  const handleBackdropDown$ = $(async (event: PointerEvent) => {
+    if (!context.contentRef.value) {
+      isDownOnBackdrop.value = false;
+      return;
+    }
+    isDownOnBackdrop.value = await isBackdropEvent$(context.contentRef.value, event);
   });
 
   const handleBackdropSlide$ = $(async (event: PointerEvent) => {
-    // Only close if both pointer down and up happened on backdrop (not a drag operation)
-    if (pointerDownOnBackdrop.value && context.closeOnOutsideClick) {
-      const wasBackdropClicked = await wasModalBackdropClicked(
-        context.contentRef.value,
-        event
-      );
-      if (wasBackdropClicked) {
-        context.isOpen.value = false;
-      }
+    if (!isDownOnBackdrop.value) {
+      isDownOnBackdrop.value = false;
+      return;
     }
-    pointerDownOnBackdrop.value = false;
+
+    if (!context.closeOnOutsideClick) {
+      isDownOnBackdrop.value = false;
+      return;
+    }
+
+    if (!context.contentRef.value) {
+      isDownOnBackdrop.value = false;
+      return;
+    }
+
+    const isBackdrop = await isBackdropEvent$(context.contentRef.value, event);
+
+    if (isBackdrop) {
+      context.isOpen.value = false;
+    }
+
+    isDownOnBackdrop.value = false;
   });
 
   return (
     <dialog
-      ref={context.contentRef}
-      onPointerDown$={[handleBackdropInit$, props.onPointerDown$]}
-      onPointerUp$={[handleBackdropSlide$, props.onPointerUp$]}
       {...props}
+      ref={context.contentRef}
+      onPointerDown$={[handleBackdropDown$, props.onPointerDown$]}
+      onPointerUp$={[handleBackdropSlide$, props.onPointerUp$]}
     >
       <Slot />
     </dialog>
