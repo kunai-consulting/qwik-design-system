@@ -10,7 +10,6 @@ import {
   createContextId,
   noSerialize,
   useContextProvider,
-  useOnDocument,
   useOnWindow,
   useSignal,
   useTask$
@@ -33,7 +32,7 @@ type ModalRootProps = PropsOf<"div"> &
 
 export const ModalRoot = component$((props: ModalRootProps) => {
   const contentRef = useSignal<HTMLDialogElement | undefined>();
-  const isMarked = useSignal(false);
+  const isInitialized = useSignal(false);
   const disablePageScrollFn = useSignal<() => void>();
   const enablePageScrollFn = useSignal<() => void>();
 
@@ -44,10 +43,10 @@ export const ModalRoot = component$((props: ModalRootProps) => {
   useTask$(({ track, cleanup }) => {
     track(isOpen);
 
-    if (!isMarked.value) {
+    if (!isInitialized.value) {
       if (!contentRef.value) return;
       markScrollable(contentRef.value);
-      isMarked.value = true;
+      isInitialized.value = true;
 
       const { disablePageScroll, enablePageScroll } = createNoScroll({
         onInitScrollDisable: initTouchHandler,
@@ -79,19 +78,6 @@ export const ModalRoot = component$((props: ModalRootProps) => {
       if (!isOpen.value) return;
 
       if (event.key === "Escape") {
-        isOpen.value = false;
-      }
-    })
-  );
-
-  // TODO: check if this works with dragging
-  useOnDocument(
-    "click",
-    $((event) => {
-      if (!isOpen.value) return;
-      if (!contentRef.value) return;
-      if (contentRef.value.contains(event.target as Node)) return;
-      if (props.closeOnOutsideClick ?? true) {
         isOpen.value = false;
       }
     })
