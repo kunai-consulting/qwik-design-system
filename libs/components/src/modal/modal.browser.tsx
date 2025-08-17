@@ -2,14 +2,7 @@ import { type PropsOf, component$, useSignal } from "@qwik.dev/core";
 import { page, userEvent } from "@vitest/browser/context";
 import { expect, test } from "vitest";
 import { render } from "vitest-browser-qwik";
-import {
-  Close as ModalClose,
-  Content as ModalContent,
-  Description as ModalDescription,
-  Root as ModalRoot,
-  Title as ModalTitle,
-  Trigger as ModalTrigger
-} from ".";
+import { Modal } from "..";
 
 // Top-level locator constants using data-testid
 const Root = page.getByTestId("root");
@@ -20,19 +13,19 @@ const Description = page.getByTestId("description");
 const CloseButton = page.getByTestId("close");
 const NestedTrigger = page.getByRole("button", { name: "Nested Modal Trigger" });
 
-const Basic = component$((props: PropsOf<typeof ModalRoot>) => {
+const Basic = component$((props: PropsOf<typeof Modal.Root>) => {
   return (
-    <ModalRoot {...props} data-testid="root">
-      <ModalTrigger data-testid="trigger">Open Modal</ModalTrigger>
-      <ModalContent data-testid="content">
-        <ModalTitle data-testid="title">Modal Title</ModalTitle>
-        <ModalDescription data-testid="description">
+    <Modal.Root {...props} data-testid="root">
+      <Modal.Trigger data-testid="trigger">Open Modal</Modal.Trigger>
+      <Modal.Content data-testid="content">
+        <Modal.Title data-testid="title">Modal Title</Modal.Title>
+        <Modal.Description data-testid="description">
           This is a modal description that provides context.
-        </ModalDescription>
+        </Modal.Description>
         <p>Modal content goes here.</p>
-        <ModalClose data-testid="close">Close</ModalClose>
-      </ModalContent>
-    </ModalRoot>
+        <Modal.Close data-testid="close">Close</Modal.Close>
+      </Modal.Content>
+    </Modal.Root>
   );
 });
 
@@ -97,29 +90,29 @@ test("body overflow is restored when modal is closed", async () => {
   // Note: Body overflow styles tested via computed style evaluation
 });
 
-const Nested = component$((props: PropsOf<typeof ModalRoot>) => {
+const Nested = component$((props: PropsOf<typeof Modal.Root>) => {
   const nestedOpen = useSignal(false);
 
   return (
-    <ModalRoot {...props} data-testid="root">
-      <ModalTrigger data-testid="trigger">Open Modal</ModalTrigger>
-      <ModalContent data-testid="content">
-        <ModalTitle data-testid="title">First Modal</ModalTitle>
+    <Modal.Root {...props} data-testid="root">
+      <Modal.Trigger data-testid="trigger">Open Modal</Modal.Trigger>
+      <Modal.Content data-testid="content">
+        <Modal.Title data-testid="title">First Modal</Modal.Title>
         <p>This is the first modal.</p>
 
         {/* Nested Modal */}
-        <ModalRoot bind:open={nestedOpen}>
-          <ModalTrigger>Nested Modal Trigger</ModalTrigger>
-          <ModalContent>
-            <ModalTitle>Nested Modal Title</ModalTitle>
+        <Modal.Root bind:open={nestedOpen}>
+          <Modal.Trigger>Nested Modal Trigger</Modal.Trigger>
+          <Modal.Content>
+            <Modal.Title>Nested Modal Title</Modal.Title>
             <p>Nested Modal Content</p>
-            <ModalClose>Close Nested</ModalClose>
-          </ModalContent>
-        </ModalRoot>
+            <Modal.Close>Close Nested</Modal.Close>
+          </Modal.Content>
+        </Modal.Root>
 
-        <ModalClose data-testid="close">Close</ModalClose>
-      </ModalContent>
-    </ModalRoot>
+        <Modal.Close data-testid="close">Close</Modal.Close>
+      </Modal.Content>
+    </Modal.Root>
   );
 });
 
