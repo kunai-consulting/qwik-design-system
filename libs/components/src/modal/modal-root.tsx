@@ -10,6 +10,7 @@ import {
   createContextId,
   noSerialize,
   useContextProvider,
+  useOnDocument,
   useOnWindow,
   useSignal,
   useTask$
@@ -26,7 +27,9 @@ type ModalContext = {
 type ModalRootProps = PropsOf<"div"> &
   BindableProps<{
     open: boolean;
-  }>;
+  }> & {
+    closeOnOutsideClick?: boolean;
+  };
 
 export const ModalRoot = component$((props: ModalRootProps) => {
   const contentRef = useSignal<HTMLDialogElement | undefined>();
@@ -76,6 +79,19 @@ export const ModalRoot = component$((props: ModalRootProps) => {
       if (!isOpen.value) return;
 
       if (event.key === "Escape") {
+        isOpen.value = false;
+      }
+    })
+  );
+
+  // TODO: check if this works with dragging
+  useOnDocument(
+    "click",
+    $((event) => {
+      if (!isOpen.value) return;
+      if (!contentRef.value) return;
+      if (contentRef.value.contains(event.target as Node)) return;
+      if (props.closeOnOutsideClick ?? true) {
         isOpen.value = false;
       }
     })
