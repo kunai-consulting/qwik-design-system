@@ -10,7 +10,12 @@ export const ModalClose = component$((props: PropsOf<"button">) => {
   });
 
   return (
-    <Render fallback="button" onClick$={[handleClose$, props.onClick$]} {...props}>
+    <Render
+      type="button"
+      fallback="button"
+      onClick$={[handleClose$, props.onClick$]}
+      {...props}
+    >
       <Slot />
     </Render>
   );

@@ -21,6 +21,7 @@ export const modalContextId = createContextId<ModalContext>("qds-modal");
 type ModalContext = {
   contentRef: Signal<HTMLDialogElement | undefined>;
   isOpen: Signal<boolean>;
+  closeOnOutsideClick: boolean;
 };
 
 type ModalRootProps = PropsOf<"div"> &
@@ -36,7 +37,9 @@ export const ModalRoot = component$((props: ModalRootProps) => {
   const disablePageScrollFn = useSignal<() => void>();
   const enablePageScrollFn = useSignal<() => void>();
 
-  const { openSig: isOpen } = useBindings(props, {
+  const { closeOnOutsideClick = true, ...restProps } = props;
+
+  const { openSig: isOpen } = useBindings(restProps, {
     open: false
   });
 
@@ -85,13 +88,14 @@ export const ModalRoot = component$((props: ModalRootProps) => {
 
   const context: ModalContext = {
     contentRef,
-    isOpen
+    isOpen,
+    closeOnOutsideClick
   };
 
   useContextProvider(modalContextId, context);
 
   return (
-    <Render fallback="div" {...props}>
+    <Render fallback="div" {...restProps}>
       <Slot />
     </Render>
   );

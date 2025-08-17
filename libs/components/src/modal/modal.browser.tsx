@@ -23,6 +23,10 @@ const Basic = component$((props: PropsOf<typeof Modal.Root>) => {
           This is a modal description that provides context.
         </Modal.Description>
         <p>Modal content goes here.</p>
+        <input type="text" aria-label="inside input" />
+        <button type="button" aria-label="inside button">
+          Inside Button
+        </button>
         <Modal.Close data-testid="close">Close</Modal.Close>
       </Modal.Content>
     </Modal.Root>
