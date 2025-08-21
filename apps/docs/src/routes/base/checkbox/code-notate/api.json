@@ -208,5 +208,7 @@
     "Focus management with ref tracking",
     "Disabled state handling",
     "Enter key prevention for form submissions"
-  ]
+  ],
+  "name": "Checkbox",
+  "summary": "A clickable box that can be checked or unchecked to select options."
 }
