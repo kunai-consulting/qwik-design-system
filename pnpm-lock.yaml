@@ -193,6 +193,9 @@ importers:
       '@iconify/json':
         specifier: ^2.2.382
         version: 2.2.382
+      '@iconify/types':
+        specifier: ^2
+        version: 2.0.0
       '@iconify/utils':
         specifier: ^3.0.1
         version: 3.0.1

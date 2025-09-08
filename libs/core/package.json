@@ -23,6 +23,7 @@
   "devDependencies": {
     "@iconify/json": "^2.2.382",
     "@iconify/utils": "^3.0.1",
+    "@iconify/types": "^2",
     "@oxc-project/types": "^0.78.0",
     "magic-string": "^0.30.17",
     "oxc-parser": "^0.78.0",
