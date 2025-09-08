@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 import { writeFileSync } from "node:fs";
-import { lookupCollection } from "@iconify/json";
-import type { IconifyJSON } from "@iconify/types";
+
+// Export for testing
+export { DEFAULT_PACKS, sanitizeIconName, generateIconTypes };
 
 // Default icon packs configuration
 const DEFAULT_PACKS: Record<string, { iconifyPrefix: string }> = {
@@ -51,16 +52,6 @@ async function generateIconTypes() {
   declarations.push(``);
   declarations.push(`export type Icon = Component<PropsOf<"svg">>;`);
   declarations.push(``);
-  declarations.push(`// Ambient module declaration for the virtual icons module`);
-  declarations.push(`// Auto-generated from Iconify collections - DO NOT EDIT MANUALLY`);
-  declarations.push(`declare module "virtual:qds-icons" {`);
-  declarations.push(`  import type { Component, PropsOf } from "@qwik.dev/core";`);
-  declarations.push(``);
-  declarations.push(`  export type Icon = Component<PropsOf<"svg">>;`);
-  declarations.push(``);
-  declarations.push(`  // Type declarations generated from Iconify collections`);
-  declarations.push(`  // Only actually used icons will be exported at runtime`);
-  declarations.push(``);
 
   // Generate declarations for each pack
   for (const [packName, packConfig] of Object.entries(DEFAULT_PACKS)) {
@@ -69,24 +60,35 @@ async function generateIconTypes() {
     console.log(`Loading ${packName} collection (${iconifyPrefix})...`);
 
     try {
-      const collection = lookupCollection(iconifyPrefix);
+      // Use direct import instead of lookupCollection
+      const collectionModule = await import(`@iconify/json/json/${iconifyPrefix}.json`);
+      const collection = collectionModule.default;
+
       if (!collection) {
         console.warn(`Collection not found: ${iconifyPrefix}`);
+        continue;
+      }
+
+      console.log(`Collection loaded, checking icons...`);
+      if (!collection.icons) {
+        console.warn(`Collection ${iconifyPrefix} has no icons property`);
         continue;
       }
 
       const icons = collection.icons;
       const iconNames = Object.keys(icons).sort();
 
-      declarations.push(`  // ${packName} icons (${iconifyPrefix})`);
-      declarations.push(`  export const ${packName}: {`);
+      console.log(`Found ${iconNames.length} icons in ${packName}`);
+
+      declarations.push(`// ${packName} icons (${iconifyPrefix})`);
+      declarations.push(`export namespace ${packName} {`);
 
       for (const iconName of iconNames) {
         const pascalName = sanitizeIconName(iconName);
-        declarations.push(`    readonly ${pascalName}: Icon;`);
+        declarations.push(`  export const ${pascalName}: Icon;`);
       }
 
-      declarations.push(`  };`);
+      declarations.push(`}`);
       declarations.push(``);
 
       iconCounts[packName] = iconNames.length;
@@ -98,37 +100,6 @@ async function generateIconTypes() {
     }
   }
 
-  declarations.push(`}`);
-  declarations.push(``);
-
-  // Generate namespace exports
-  declarations.push(`// Namespace exports for direct usage`);
-  declarations.push(``);
-
-  for (const [packName, packConfig] of Object.entries(DEFAULT_PACKS)) {
-    const { iconifyPrefix } = packConfig;
-
-    try {
-      const collection = lookupCollection(iconifyPrefix);
-      if (!collection) continue;
-
-      const icons = collection.icons;
-      const iconNames = Object.keys(icons).sort();
-
-      declarations.push(`export namespace ${packName} {`);
-
-      for (const iconName of iconNames) {
-        const pascalName = sanitizeIconName(iconName);
-        declarations.push(`  export const ${pascalName}: Icon;`);
-      }
-
-      declarations.push(`}`);
-      declarations.push(``);
-
-    } catch (error) {
-      continue;
-    }
-  }
 
   const output = declarations.join('\n');
 
@@ -141,9 +112,6 @@ async function generateIconTypes() {
   console.log(`✓ Output: ${outputPath}`);
 }
 
-// Run the generator if this script is executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  generateIconTypes().catch(console.error);
-}
+// Run the generator
+generateIconTypes().catch(console.error);
 
-export { generateIconTypes };

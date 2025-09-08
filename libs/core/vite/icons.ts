@@ -350,7 +350,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
       collections.clear();
       iconCache.clear();
 
-      // Preload default collections
+      // Preload default collections using direct imports
       for (const [packName, packConfig] of Object.entries(packs)) {
         try {
           const collectionModule = await import(`@iconify/json/json/${packConfig.iconifyPrefix}.json`);
