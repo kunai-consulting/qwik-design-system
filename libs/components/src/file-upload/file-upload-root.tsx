@@ -10,7 +10,7 @@ type HTMLDivProps = PropsOf<"div">;
 /**
  * Props specific to file upload functionality
  */
-interface PublicFileUploadProps {
+export interface PublicFileUploadProps {
   /** Whether multiple files can be selected or uploaded at once */
   multiple?: boolean; // Allow multiple file selection
   accept?: string; // File type filter (e.g. "image/*")
