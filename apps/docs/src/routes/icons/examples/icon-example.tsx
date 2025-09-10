@@ -40,7 +40,6 @@ export default component$(() => {
         <h2 class="text-2xl font-bold">Icon with Title (A11y)</h2>
         <div class="flex gap-4 items-center">
           <Lucide.Info width={24} class="text-blue-500" />
-          {/* <Lucide.Warning title="Warning message" width={24} class="text-yellow-500" /> */}
         </div>
       </div>
 

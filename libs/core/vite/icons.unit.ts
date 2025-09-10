@@ -572,15 +572,31 @@ describe("icons", () => {
       `;
       const result = transform(code, "icon-example.tsx");
       expect(result).toBeTruthy();
+
+      // Debug: print the generated code for troubleshooting
+      // if (result) {
+      //   console.log("=== GENERATED CODE ===");
+      //   console.log(result.code);
+      //   console.log("=== END GENERATED CODE ===");
+      // }
+
       // Should contain all the transformed icons
-      expect(result.code).toContain('<svg width={24} class="text-green-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_check} />');
-      expect(result.code).toContain('<svg width={24} class="text-red-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_x} />');
-      expect(result.code).toContain('<svg width={24} class="text-red-500 fill-current" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_heart} />');
-      expect(result.code).toContain('<svg width={24} class="text-yellow-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_star} />');
-      expect(result.code).toContain('<svg width={24} class="text-gray-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_search} />');
-      expect(result.code).toContain('<svg width={24} class="text-green-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_heroicons_check_circle} />');
-      expect(result.code).toContain('<svg width={24} class="text-red-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_heroicons_x_circle} />');
-      expect(result.code).toContain('<svg width={24} class="text-green-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_tabler_check} />');
+      expect(result!.code).toContain('<svg width={24} class="text-green-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_check} />');
+      expect(result!.code).toContain('<svg width={24} class="text-red-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_x} />');
+      expect(result!.code).toContain('<svg width={24} class="text-red-500 fill-current" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_heart} />');
+      expect(result!.code).toContain('<svg width={24} class="text-yellow-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_star} />');
+      expect(result!.code).toContain('<svg width={24} class="text-gray-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_search} />');
+      expect(result!.code).toContain('<svg width={24} class="text-green-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_heroicons_check_circle} />');
+      expect(result!.code).toContain('<svg width={24} class="text-red-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_heroicons_x_circle} />');
+      expect(result!.code).toContain('<svg width={24} class="text-green-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_tabler_check} />');
+
+      // Validate JSX syntax using oxc-parser
+      const validation = validateJSXSyntax(result!.code);
+      if (!validation.isValid) {
+        console.error("JSX validation errors for complete icon-example:", validation.errors);
+        console.error("Generated code:", result!.code);
+      }
+      expect(validation.isValid).toBe(true);
     });
   });
 });
@@ -771,6 +787,222 @@ export default component$(() => {
     const validation = validateJSXSyntax(result!.code);
     if (!validation.isValid) {
       console.error("JSX validation errors for test:", validation.errors);
+      console.error("Generated code:", result!.code);
+    }
+    expect(validation.isValid).toBe(true);
+  });
+
+  it("should reproduce the build error with complex JSX structure", () => {
+    const code = `
+import { component$ } from "@qwik.dev/core";
+import { Lucide, Heroicons } from "@kunai-consulting/qwik";
+
+export default component$(() => {
+  return (
+    <div class="space-y-8 p-8">
+      <div class="space-y-4">
+        <h2 class="text-2xl font-bold">Test</h2>
+        <div class="flex gap-4 items-center">
+          <Lucide.Check width={24} class="text-green-500" />
+          <Lucide.X width={24} class="text-red-500" />
+        </div>
+      </div>
+    </div>
+  );
+});
+`;
+
+    const result = transform(code, "test.tsx");
+
+    expect(result).toBeTruthy();
+
+    // Debug: print the generated code for troubleshooting
+    // if (result) {
+    //   console.log("=== REPRODUCED GENERATED CODE ===");
+    //   console.log(result.code);
+    //   console.log("=== END REPRODUCED GENERATED CODE ===");
+    // }
+
+    // Validate JSX syntax using oxc-parser
+    const validation = validateJSXSyntax(result!.code);
+    if (!validation.isValid) {
+      console.error("JSX validation errors for reproduction test:", validation.errors);
+      console.error("Generated code:", result!.code);
+    }
+    expect(validation.isValid).toBe(true);
+  });
+
+  it("should handle complex nested JSX structures with mixed content", () => {
+    const code = `
+import { component$ } from "@qwik.dev/core";
+import { Lucide, Heroicons } from "@kunai-consulting/qwik";
+
+export default component$(() => {
+  const isActive = true;
+  return (
+    <div className="container">
+      <header>
+        <nav className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <Lucide.Menu width={24} className="text-gray-600" />
+            <span className="font-bold text-xl">App</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Heroicons.Bell width={20} className="text-gray-500" />
+            <Lucide.User width={24} className="text-blue-500" />
+          </div>
+        </nav>
+      </header>
+
+      <main className="flex-1">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white p-6 rounded-lg shadow">
+            <div className="flex items-center mb-4">
+              <Lucide.Star width={24} className="text-yellow-500 mr-2" />
+              <h3 className="text-lg font-semibold">Dashboard</h3>
+            </div>
+            <p className="text-gray-600">Welcome to your dashboard</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow">
+            <div className="flex items-center mb-4">
+              <Heroicons.ChartBar width={24} className="text-green-500 mr-2" />
+              <h3 className="text-lg font-semibold">Analytics</h3>
+            </div>
+            <p className="text-gray-600">View your analytics data</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow">
+            <div className="flex items-center mb-4">
+              <Lucide.Settings width={24} className="text-gray-500 mr-2" />
+              <h3 className="text-lg font-semibold">Settings</h3>
+            </div>
+            <p className="text-gray-600">Configure your preferences</p>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+});
+`;
+
+    const result = transform(code, "complex-jsx.tsx");
+
+    expect(result).toBeTruthy();
+
+    // Validate JSX syntax using oxc-parser
+    const validation = validateJSXSyntax(result!.code);
+    if (!validation.isValid) {
+      console.error("JSX validation errors for complex nested JSX:", validation.errors);
+      console.error("Generated code:", result!.code);
+    }
+    expect(validation.isValid).toBe(true);
+  });
+
+  it("should handle edge cases that could break JSX parsing", () => {
+    const code = `
+import { component$ } from "@qwik.dev/core";
+import { Lucide } from "@kunai-consulting/qwik";
+
+export default component$(() => {
+  return (
+    <>
+      <div>
+        <Lucide.Check />
+        <span>Text</span>
+        <Lucide.X />
+      </div>
+      <Lucide.Heart />
+      <div>
+        <p>Paragraph</p>
+        <Lucide.Star />
+        <em>Emphasis</em>
+        <Lucide.Circle />
+      </div>
+    </>
+  );
+});
+`;
+
+    const result = transform(code, "edge-cases.tsx");
+
+    expect(result).toBeTruthy();
+
+    // Validate JSX syntax using oxc-parser
+    const validation = validateJSXSyntax(result!.code);
+    if (!validation.isValid) {
+      console.error("JSX validation errors for edge cases:", validation.errors);
+      console.error("Generated code:", result!.code);
+    }
+    expect(validation.isValid).toBe(true);
+  });
+
+  it("should handle JSX fragments with icons correctly", () => {
+    const code = `
+import { component$ } from "@qwik.dev/core";
+import { Lucide } from "@kunai-consulting/qwik";
+
+export default component$(() => {
+  return (
+    <>
+      <Lucide.Check width={16} />
+      <Lucide.X width={20} />
+      <Lucide.Heart width={24} />
+      <span>Text between icons</span>
+      <Lucide.Star width={16} />
+    </>
+  );
+});
+`;
+
+    const result = transform(code, "fragments.tsx");
+
+    expect(result).toBeTruthy();
+
+    // Validate JSX syntax using oxc-parser
+    const validation = validateJSXSyntax(result!.code);
+    if (!validation.isValid) {
+      console.error("JSX validation errors for JSX fragments:", validation.errors);
+      console.error("Generated code:", result!.code);
+    }
+    expect(validation.isValid).toBe(true);
+  });
+
+  it("should handle conditional rendering with icons", () => {
+    const code = `
+import { component$ } from "@qwik.dev/core";
+import { Lucide } from "@kunai-consulting/qwik";
+
+export default component$(() => {
+  const isLoading = true;
+  const hasError = false;
+  const count = 5;
+
+  return (
+    <div>
+      {isLoading ? (
+        <Lucide.Loader width={24} className="animate-spin" />
+      ) : hasError ? (
+        <Lucide.AlertTriangle width={24} className="text-red-500" />
+      ) : (
+        <div className="flex items-center">
+          <Lucide.Check width={20} className="text-green-500" />
+          <span className="ml-2">Success ({count})</span>
+        </div>
+      )}
+    </div>
+  );
+});
+`;
+
+    const result = transform(code, "conditional.tsx");
+
+    expect(result).toBeTruthy();
+
+    // Validate JSX syntax using oxc-parser
+    const validation = validateJSXSyntax(result!.code);
+    if (!validation.isValid) {
+      console.error("JSX validation errors for conditional rendering:", validation.errors);
       console.error("Generated code:", result!.code);
     }
     expect(validation.isValid).toBe(true);
