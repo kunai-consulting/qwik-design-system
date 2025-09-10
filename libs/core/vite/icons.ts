@@ -6,6 +6,7 @@ import type { Plugin as VitePlugin } from "vite";
 import { getIconData, iconToSVG } from "@iconify/utils";
 import MagicString from "magic-string";
 import { parseSync } from "oxc-parser";
+import { walk } from "oxc-walker";
 import type {
   JSXAttribute,
   JSXElement,
@@ -20,8 +21,7 @@ import {
   extractProps,
   isJSXElement,
   isJSXExpressionContainer,
-  isJSXText,
-  traverseAST
+  isJSXText
 } from "../utils/jsx";
 import { IconifyJSON } from "@iconify/types";
 
@@ -139,13 +139,17 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
    * @returns Array of JSX elements that are icon elements
    */
   function findIconElements(ast: Program, pack: Map<string, string>): JSXElement[] {
-    const handleNode = (node: Node) => {
-      if (isJSXElement(node) && isIconElement(node, pack)) {
-        return node;
-      }
-    }
+    const iconElements: JSXElement[] = [];
 
-    return traverseAST(ast, handleNode);
+    walk(ast, {
+      enter(node) {
+        if (isJSXElement(node) && isIconElement(node, pack)) {
+          iconElements.push(node);
+        }
+      }
+    });
+
+    return iconElements;
   }
 
 
@@ -235,41 +239,41 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
   function resolveImportAliases(ast: Program, importSources: string[]): Map<string, string> {
     const aliasToPack = new Map<string, string>();
 
-    const handleNode = (node: Node) => {
-      if (node.type !== "ImportDeclaration") {
-        return;
-      }
-
-      const importDeclaration = node;
-      const importSource = importDeclaration.source.value;
-
-      if (!importSources.includes(importSource)) {
-        return;
-      }
-
-      debug(`Found import from ${importSource}`);
-
-      for (const specifier of importDeclaration.specifiers) {
-        if (specifier.type !== "ImportSpecifier") {
-          continue;
+    walk(ast, {
+      enter(node) {
+        if (node.type !== "ImportDeclaration") {
+          return;
         }
-        const spec = specifier as any;
-        const importedName = spec.imported?.name || spec.imported?.value || spec.local.name;
-        const localAlias = spec.local.name;
 
-        if (availableCollections.has(importedName.toLowerCase())) {
-          aliasToPack.set(localAlias, importedName);
-          debug(`Mapped alias ${localAlias} -> ${importedName} (auto-discovered)`);
-          continue;
+        const importDeclaration = node;
+        const importSource = importDeclaration.source.value;
+
+        if (!importSources.includes(importSource)) {
+          return;
         }
-        if (options.packs?.[importedName]) {
-          aliasToPack.set(localAlias, importedName);
-          debug(`Mapped alias ${localAlias} -> ${importedName} (custom pack)`);
+
+        debug(`Found import from ${importSource}`);
+
+        for (const specifier of importDeclaration.specifiers) {
+          if (specifier.type !== "ImportSpecifier") {
+            continue;
+          }
+          const spec = specifier as any;
+          const importedName = spec.imported?.name || spec.imported?.value || spec.local.name;
+          const localAlias = spec.local.name;
+
+          if (availableCollections.has(importedName.toLowerCase())) {
+            aliasToPack.set(localAlias, importedName);
+            debug(`Mapped alias ${localAlias} -> ${importedName} (auto-discovered)`);
+            continue;
+          }
+          if (options.packs?.[importedName]) {
+            aliasToPack.set(localAlias, importedName);
+            debug(`Mapped alias ${localAlias} -> ${importedName} (custom pack)`);
+          }
         }
       }
-    }
-
-    traverseAST(ast, handleNode);
+    });
 
     return aliasToPack;
   }

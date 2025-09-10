@@ -26,8 +26,8 @@
     "@iconify/types": "^2",
     "@oxc-project/types": "^0.78.0",
     "magic-string": "^0.30.17",
-    "oxc-parser": "^0.78.0",
-    "oxc-walker": "^0.4.0",
+    "oxc-parser": "^0.87",
+    "oxc-walker": "^0.5.2",
     "tsdown": "latest",
     "vite": "^7.0.6"
   }

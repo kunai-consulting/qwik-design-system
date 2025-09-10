@@ -8,6 +8,7 @@ import type {
 } from "@oxc-project/types";
 import MagicString from "magic-string";
 import { parseSync } from "oxc-parser";
+import { walk } from "oxc-walker";
 import type { Plugin as VitePlugin } from "vite";
 
 import {
@@ -15,8 +16,7 @@ import {
   getLineNumber,
   isJSXElement,
   isJSXExpressionContainer,
-  isJSXText,
-  traverseAST
+  isJSXText
 } from "../utils/jsx";
 
 import { handleExpression } from "../utils/expressions";
@@ -62,13 +62,13 @@ export const asChild = (options: AsChildPluginOptions = {}): VitePlugin => {
       const ast: Program = parsed.program;
       const s = new MagicString(code);
 
-      const handleNode = (node: Node) => {
-        if (isJSXElement(node) && hasAsChild(node.openingElement)) {
-          processAsChild(node, s, code);
+      walk(ast, {
+        enter(node) {
+          if (isJSXElement(node) && hasAsChild(node.openingElement)) {
+            processAsChild(node, s, code);
+          }
         }
-      }
-
-      traverseAST(ast, handleNode);
+      });
 
       if (s.hasChanged()) {
         return {

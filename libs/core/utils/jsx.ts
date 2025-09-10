@@ -15,44 +15,6 @@ export interface Extracted {
 }
 
 /**
- * Generic AST traversal utility with cycle detection and customizable callback
- * @param node - Root AST node to start traversal
- * @param callback - Function called for each node, can return a value to control traversal
- * @param visited - Set of visited nodes for cycle detection (optional, auto-created)
- * @returns Array of results from callback invocations
- */
-export function traverseAST<T = void>(
-  node: Node,
-  callback: (node: Node, visited: Set<Node>) => T | undefined,
-  visited: Set<Node> = new Set<Node>()
-): T[] {
-  if (visited.has(node)) return [];
-  visited.add(node);
-
-  const results: T[] = [];
-
-  const result = callback(node, visited);
-  if (result !== undefined) {
-    results.push(result);
-  }
-
-  for (const key in node) {
-    const child = (node)[key];
-    if (Array.isArray(child)) {
-      for (const c of child) {
-        if (c && typeof c === "object" && c.type) {
-          results.push(...traverseAST(c, callback, visited));
-        }
-      }
-    } else if (child && typeof child === "object" && (child).type) {
-      results.push(...traverseAST(child, callback, visited));
-    }
-  }
-
-  return results;
-}
-
-/**
  * Type guard to check if a node is a JSX element
  * @param node - AST node to check
  * @returns True if node is a JSX element
