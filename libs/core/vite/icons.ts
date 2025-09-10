@@ -21,7 +21,8 @@ import {
   extractProps,
   isJSXElement,
   isJSXExpressionContainer,
-  isJSXText
+  isJSXText,
+  traverseAST
 } from "../utils/jsx";
 import { IconifyJSON } from "@iconify/types";
 
@@ -35,11 +36,13 @@ export type PacksMap = Record<
 
 export type IconsPluginOptions = {
   debug?: boolean;
+  /**
+   * The sources to scan for imports. By default this includes QDS, you can also add your own when creating library wrappers.
+   */
   importSources?: string[];
   packs?: PacksMap;
 };
 
-// Auto-discover all available Iconify collections
 function getAvailableCollections(): string[] {
   try {
     const iconifyJsonPath = require.resolve("@iconify/json/package.json");
@@ -49,47 +52,41 @@ function getAvailableCollections(): string[] {
       .filter((file: string) => file.endsWith('.json'))
       .map((file: string) => file.replace('.json', ''));
   } catch (error) {
-    // debugLog is not available at module level, so we'll return empty array
     return [];
   }
 }
 
-// Lazy-loaded collections and individual icons
 type LazyCollections = Map<string, Promise<IconifyJSON>>;
 type IconData = { body: string; viewBox: string };
 type LazyIconCache = Map<string, Promise<IconData>>;
 
 /**
- * Vite plugin that transforms icon JSX elements to direct jsx("svg", {...}) calls
+ * Vite plugin that transforms icon JSX elements to direct <svg /> calls
  * @param options - Plugin configuration options
  * @returns Vite plugin object
  */
 export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
   const importSources = options.importSources ?? ["@kunai-consulting/qwik"];
-  const debug = !!options.debug;
+  const isDebugMode = !!options.debug;
   const require = createRequire(import.meta.url);
 
-  // Lazy-loaded collections and icons
   const lazyCollections: LazyCollections = new Map();
   const lazyIconCache: LazyIconCache = new Map();
   const availableCollections = new Set<string>();
 
-  const debugLog = (message: string, ...data: any[]) => {
-    // Enable debug logging when debug is true or DEBUG_ICONS env var is set
-    if (!debug && !process.env.DEBUG_ICONS) return;
+  const debug = (message: string, ...data: any[]) => {
+    if (!isDebugMode) return;
     console.log(`[icons] ${message}`, ...data);
   };
 
-  // Auto-discover all available Iconify collections immediately
   function discoverCollections() {
     if (availableCollections.size > 0) return;
 
     const collections = getAvailableCollections();
     collections.forEach(name => availableCollections.add(name));
-    debugLog(`Discovered ${collections.length} Iconify collections:`, collections.slice(0, 10), collections.length > 10 ? `...and ${collections.length - 10} more` : '');
+    debug(`Discovered ${collections.length} Iconify collections:`, collections.slice(0, 10), collections.length > 10 ? `...and ${collections.length - 10} more` : '');
   }
 
-  // Discover collections immediately when plugin is created
   discoverCollections();
 
   /**
@@ -102,12 +99,12 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
     try {
       const parsed = parseSync(id, code);
       if (parsed.errors.length > 0) {
-        debugLog(`Parse errors in ${id}:`, parsed.errors.map(e => e.message));
+        debug(`Parse errors in ${id}:`, parsed.errors.map(e => e.message));
         return null;
       }
       return parsed.program;
     } catch (error) {
-      debugLog(`Error parsing ${id}:`, error);
+      debug(`Error parsing ${id}:`, error);
       return null;
     }
   }
@@ -115,10 +112,10 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
   /**
    * Check if a JSX element is an icon element based on its structure
    * @param elem - JSX element to check
-   * @param aliasToPack - Map of aliases to pack names
+   * @param pack - Map of aliases to pack names
    * @returns True if the element is an icon element
    */
-  function isIconElement(elem: JSXElement, aliasToPack: Map<string, string>): boolean {
+  function isIconElement(elem: JSXElement, pack: Map<string, string>): boolean {
     const name = elem.openingElement.name;
     if (name.type !== "JSXMemberExpression") {
       return false;
@@ -132,42 +129,22 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
       return false;
     }
 
-    const alias = (memberExpr.object as JSXIdentifier).name;
-    return aliasToPack.has(alias);
+    const memberName = (memberExpr.object as JSXIdentifier).name;
+    return pack.has(memberName);
   }
 
   /**
    * Find all icon elements in an AST
    * @param ast - AST to search
-   * @param aliasToPack - Map of aliases to pack names
+   * @param pack - Map of aliases to pack names
    * @returns Array of JSX elements that are icon elements
    */
-  function findIconElements(ast: Program, aliasToPack: Map<string, string>): JSXElement[] {
-    const iconElements: JSXElement[] = [];
-    const visited = new Set<Node>();
-
-    function traverse(node: Node) {
-      if (visited.has(node)) return;
-      visited.add(node);
-
-      if (isJSXElement(node) && isIconElement(node as JSXElement, aliasToPack)) {
-        iconElements.push(node as JSXElement);
+  function findIconElements(ast: Program, pack: Map<string, string>): JSXElement[] {
+    return traverseAST(ast, (node) => {
+      if (isJSXElement(node) && isIconElement(node, pack)) {
+        return node;
       }
-
-      for (const key in node) {
-        const child = (node as any)[key];
-        if (Array.isArray(child)) {
-          for (const c of child as Node[]) {
-            if (c && typeof c === "object" && c.type) traverse(c);
-          }
-        } else if (child && typeof child === "object" && (child as Node).type) {
-          traverse(child as Node);
-        }
-      }
-    }
-
-    traverse(ast);
-    return iconElements;
+    });
   }
 
   /**
@@ -239,10 +216,10 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
         const collectionPath = require.resolve(`@iconify/json/json/${prefix}.json`);
         const collectionData = readFileSync(collectionPath, 'utf-8');
         const collection = JSON.parse(collectionData);
-        debugLog(`Lazy-loaded ${prefix} collection with ${Object.keys(collection.icons || {}).length} icons`);
+        debug(`Lazy-loaded ${prefix} collection with ${Object.keys(collection.icons || {}).length} icons`);
         return collection;
       } catch (error) {
-        debugLog(`Failed to load ${prefix} collection: ${error}`);
+        debug(`Failed to load ${prefix} collection: ${error}`);
         throw error;
       }
     })();
@@ -263,7 +240,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
         const iconDataRaw = getIconData(collection, name);
 
         if (!iconDataRaw) {
-          debugLog(`Icon "${name}" not found in ${prefix} collection`);
+          debug(`Icon "${name}" not found in ${prefix} collection`);
           return null;
         }
 
@@ -275,7 +252,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
 
         return result;
       } catch (error) {
-        debugLog(`Error loading icon "${name}" from ${prefix}: ${error}`);
+        debug(`Error loading icon "${name}" from ${prefix}: ${error}`);
         return null;
       }
     })();
@@ -300,7 +277,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
         const source = (importDecl.source as StringLiteral).value;
 
         if (importSources.includes(source)) {
-          debugLog(`Found import from ${source}`);
+          debug(`Found import from ${source}`);
 
           for (const specifier of importDecl.specifiers) {
             if (specifier.type === "ImportSpecifier") {
@@ -311,10 +288,10 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
               // Support any Iconify collection, or custom packs
               if (availableCollections.has(imported.toLowerCase())) {
                 aliasToPack.set(local, imported);
-                debugLog(`Mapped alias ${local} -> ${imported} (auto-discovered)`);
+                debug(`Mapped alias ${local} -> ${imported} (auto-discovered)`);
               } else if (options.packs?.[imported]) {
                 aliasToPack.set(local, imported);
-                debugLog(`Mapped alias ${local} -> ${imported} (custom pack)`);
+                debug(`Mapped alias ${local} -> ${imported} (custom pack)`);
               }
             }
           }
@@ -432,12 +409,12 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
     enforce: "pre",
 
     async configResolved() {
-      debugLog("Icons plugin initialized with lazy loading");
+      debug("Icons plugin initialized with lazy loading");
 
       // Discover all available Iconify collections
       discoverCollections();
 
-      debugLog(`Plugin ready - ${availableCollections.size} collections available on-demand`);
+      debug(`Plugin ready - ${availableCollections.size} collections available on-demand`);
     },
 
     transform(code, id) {
@@ -445,33 +422,33 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
         return null;
       }
 
-      debugLog(`[TRANSFORM] Starting transformation for ${id}`);
+      debug(`[TRANSFORM] Starting transformation for ${id}`);
 
       try {
         const ast = parseAndValidateFile(code, id);
         if (!ast) {
-          debugLog(`[TRANSFORM] Failed to parse ${id}`);
+          debug(`[TRANSFORM] Failed to parse ${id}`);
           return null;
         }
 
         const aliasToPack = findPackAliases(ast, importSources);
 
         if (aliasToPack.size === 0) {
-          debugLog(`[TRANSFORM] No icon imports found in ${id}`);
+          debug(`[TRANSFORM] No icon imports found in ${id}`);
           return null;
         }
 
-        debugLog(`[TRANSFORM] Processing ${id} with ${aliasToPack.size} aliases:`, Array.from(aliasToPack.entries()));
+        debug(`[TRANSFORM] Processing ${id} with ${aliasToPack.size} aliases:`, Array.from(aliasToPack.entries()));
 
         // Find all icon elements in the file
         const iconElements = findIconElements(ast, aliasToPack);
 
         if (iconElements.length === 0) {
-          debugLog(`[TRANSFORM] No icon elements found in ${id}`);
+          debug(`[TRANSFORM] No icon elements found in ${id}`);
           return null;
         }
 
-        debugLog(`[TRANSFORM] Found ${iconElements.length} icon elements in ${id}`);
+        debug(`[TRANSFORM] Found ${iconElements.length} icon elements in ${id}`);
 
         // Traverse AST to find and transform icon elements
         const s = new MagicString(code);
@@ -490,11 +467,11 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
        * @returns True if transformation was applied
        */
       function transformIconElement(elem: JSXElement, s: MagicString, source: string, aliasToPack: Map<string, string>): boolean {
-        debugLog(`[TRANSFORM_ICON] Starting transformation for element at ${elem.start}-${elem.end}`);
+        debug(`[TRANSFORM_ICON] Starting transformation for element at ${elem.start}-${elem.end}`);
 
         const name = elem.openingElement.name;
         if (name.type !== "JSXMemberExpression") {
-          debugLog(`[TRANSFORM_ICON] Not a member expression`);
+          debug(`[TRANSFORM_ICON] Not a member expression`);
           return false;
         }
 
@@ -503,22 +480,22 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
           memberExpr.object.type !== "JSXIdentifier" ||
           memberExpr.property.type !== "JSXIdentifier"
         ) {
-          debugLog(`[TRANSFORM_ICON] Invalid member expression structure`);
+          debug(`[TRANSFORM_ICON] Invalid member expression structure`);
           return false;
         }
 
         const alias = (memberExpr.object as JSXIdentifier).name;
         const iconName = (memberExpr.property as JSXIdentifier).name;
 
-        debugLog(`[TRANSFORM_ICON] Processing ${alias}.${iconName}`);
+        debug(`[TRANSFORM_ICON] Processing ${alias}.${iconName}`);
 
         const pack = aliasToPack.get(alias);
         if (!pack) {
-          debugLog(`[TRANSFORM_ICON] No pack found for alias ${alias}`);
+          debug(`[TRANSFORM_ICON] No pack found for alias ${alias}`);
           return false;
         }
 
-        debugLog(`[TRANSFORM_ICON] Found pack ${pack} for alias ${alias}`);
+        debug(`[TRANSFORM_ICON] Found pack ${pack} for alias ${alias}`);
 
         // Get pack configuration - either custom or auto-discovered
         const packConfig = options.packs?.[pack] || { iconifyPrefix: pack.toLowerCase() };
@@ -534,14 +511,14 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
             sanitizedIconName.toLowerCase().includes('invalid') ||
             sanitizedIconName.toLowerCase().includes('test') ||
             sanitizedIconName === 'NonExistentIcon') {
-          debugLog(`Skipping test/non-existent icon name: ${sanitizedIconName}`);
+          debug(`Skipping test/non-existent icon name: ${sanitizedIconName}`);
           return false;
         }
 
         // For lazy loading, check if collection exists first
         // If collection doesn't exist, don't transform
         if (!availableCollections.has(prefix.toLowerCase())) {
-          debugLog(`Collection not found: ${prefix}`);
+          debug(`Collection not found: ${prefix}`);
           return false;
         }
 
@@ -552,14 +529,14 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
         if (availableCollections.has(prefix.toLowerCase())) {
           // Collection is available, assume the first variant exists
           foundIconName = iconNames[0];
-          debugLog(`[TRANSFORM_ICON] Using optimistic loading for ${pack}.${iconName} -> ${foundIconName}`);
+          debug(`[TRANSFORM_ICON] Using optimistic loading for ${pack}.${iconName} -> ${foundIconName}`);
         } else {
-          debugLog(`[TRANSFORM_ICON] Collection not available for ${prefix}`);
+          debug(`[TRANSFORM_ICON] Collection not available for ${prefix}`);
           return false;
         }
 
         if (!foundIconName) {
-          debugLog(`[TRANSFORM_ICON] No valid icon name found for ${pack}.${iconName}`);
+          debug(`[TRANSFORM_ICON] No valid icon name found for ${pack}.${iconName}`);
           return false;
         }
 
@@ -630,7 +607,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
           svgElement = `<svg ${allAttributes} />`;
         }
 
-        debugLog(`Generated JSX element: ${svgElement}`);
+        debug(`Generated JSX element: ${svgElement}`);
         // Ensure no trailing whitespace in the generated SVG element
         const trimmedSvgElement = svgElement.trim();
 
@@ -644,7 +621,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
 
         s.overwrite(elem.start, endPos, trimmedSvgElement);
 
-        debugLog(`[TRANSFORM_ICON] Successfully transformed ${alias}.${iconName} to SVG JSX`);
+        debug(`[TRANSFORM_ICON] Successfully transformed ${alias}.${iconName} to SVG JSX`);
         return true;
       }
 
@@ -676,26 +653,26 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
             }
           }
 
-          debugLog(`Found ${importCount} imports, inserting at position ${insertPos}`);
+          debug(`Found ${importCount} imports, inserting at position ${insertPos}`);
 
           // Insert virtual imports after regular imports with proper spacing
           s.appendLeft(insertPos, '\n' + virtualImports.trimEnd() + '\n');
         }
 
         const resultCode = s.toString();
-        debugLog(`Final transformed code length: ${resultCode.length}`);
+        debug(`Final transformed code length: ${resultCode.length}`);
 
-        debugLog(`[TRANSFORM] Transformation successful for ${id}, returning transformed code`);
+        debug(`[TRANSFORM] Transformation successful for ${id}, returning transformed code`);
         return {
           code: resultCode,
           map: s.generateMap({ hires: true })
         };
       }
 
-      debugLog(`[TRANSFORM] No changes made to ${id}`);
+      debug(`[TRANSFORM] No changes made to ${id}`);
       return null;
       } catch (error) {
-        debugLog(`[TRANSFORM] Error during transformation of ${id}:`, error);
+        debug(`[TRANSFORM] Error during transformation of ${id}:`, error);
         // Return original code unchanged if transformation fails
         return null;
       }
@@ -717,24 +694,24 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
       const name = parts[2];
 
       if (!prefix || !name) {
-        debugLog(`Invalid virtual icon path: ${virtualPath}`);
+        debug(`Invalid virtual icon path: ${virtualPath}`);
         return null;
       }
 
       try {
         const iconData = await loadIconDataLazy(prefix, name);
         if (!iconData) {
-          debugLog(`Failed to load icon data for ${prefix}:${name}`);
+          debug(`Failed to load icon data for ${prefix}:${name}`);
           // Return a safe fallback that won't break JSX parsing
           return { code: `export default '<path d="M12 2L2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>';\n` };
         }
 
         // Virtual module only contains the icon path data (children are handled in JSX)
         const code = `export default \`${iconData.body}\`;`;
-        debugLog(`Generated virtual module for ${prefix}:${name}`);
+        debug(`Generated virtual module for ${prefix}:${name}`);
         return { code };
       } catch (error) {
-        debugLog(`Error loading virtual module ${virtualPath}:`, error);
+        debug(`Error loading virtual module ${virtualPath}:`, error);
         // Return a safe fallback that won't break JSX parsing
         return { code: `export default '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>';\n` };
       }
@@ -743,7 +720,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
     async     handleHotUpdate(ctx) {
       const fileId = ctx.file;
       if (fileId.endsWith(".tsx") || fileId.endsWith(".jsx")) {
-        debugLog(`Hot update detected for ${fileId}`);
+        debug(`Hot update detected for ${fileId}`);
 
         try {
           // Read the file content to check if it contains icon usage
@@ -761,12 +738,12 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
 
           // If this file contains icon imports, force a full reload to ensure transformations work
           if (aliasToPack.size > 0) {
-            debugLog(`File ${fileId} contains icon usage - forcing full reload for proper transformation`);
+            debug(`File ${fileId} contains icon usage - forcing full reload for proper transformation`);
             ctx.server.ws.send({ type: "full-reload" });
             return [];
           }
         } catch (error) {
-          debugLog(`Error in handleHotUpdate for ${fileId}:`, error);
+          debug(`Error in handleHotUpdate for ${fileId}:`, error);
           // If there's an error, still force a reload to be safe
           ctx.server.ws.send({ type: "full-reload" });
           return [];

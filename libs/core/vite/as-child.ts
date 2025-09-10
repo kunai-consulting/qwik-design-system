@@ -15,7 +15,8 @@ import {
   getLineNumber,
   isJSXElement,
   isJSXExpressionContainer,
-  isJSXText
+  isJSXText,
+  traverseAST
 } from "../utils/jsx";
 
 import { handleExpression } from "../utils/expressions";
@@ -61,32 +62,11 @@ export const asChild = (options: AsChildPluginOptions = {}): VitePlugin => {
       const ast: Program = parsed.program;
       const s = new MagicString(code);
 
-      /**
-       * Recursively traverses AST nodes to find JSX elements with asChild prop
-       * @param node - AST node to traverse
-       * @param visited - Set of visited nodes for cycle detection
-       */
-      function traverse(node: Node, visited = new Set<Node>()) {
-        if (visited.has(node)) return;
-        visited.add(node);
-
+      traverseAST(ast, (node) => {
         if (isJSXElement(node) && hasAsChild(node.openingElement)) {
           processAsChild(node, s, code);
         }
-
-        for (const key in node) {
-          const child = (node as unknown as Record<string, unknown>)[key];
-          if (Array.isArray(child)) {
-            for (const c of child as Node[]) {
-              if (c && typeof c === "object" && c.type) traverse(c, visited);
-            }
-          } else if (child && typeof child === "object" && (child as Node).type) {
-            traverse(child as Node, visited);
-          }
-        }
-      }
-
-      traverse(ast);
+      });
 
       if (s.hasChanged()) {
         return {
