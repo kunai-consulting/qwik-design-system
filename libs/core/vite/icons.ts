@@ -13,7 +13,6 @@ import type {
   JSXMemberExpression,
   Node,
   Program,
-  StringLiteral
 } from "@oxc-project/types";
 
 import { handleExpression } from "../utils/expressions";
@@ -233,49 +232,45 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
    * @param packs - Available packs configuration
    * @returns Map of local alias to pack name
    */
-  function findPackAliases(ast: Program, importSources: string[]): Map<string, string> {
+  function resolveImportAliases(ast: Program, importSources: string[]): Map<string, string> {
     const aliasToPack = new Map<string, string>();
 
-    function traverse(node: Node) {
-      if (node.type === "ImportDeclaration") {
-        const importDecl = node as any;
-        const source = (importDecl.source as StringLiteral).value;
-
-        if (importSources.includes(source)) {
-          debug(`Found import from ${source}`);
-
-          for (const specifier of importDecl.specifiers) {
-            if (specifier.type === "ImportSpecifier") {
-              const spec = specifier as any;
-              const imported = spec.imported?.name || spec.imported?.value || spec.local.name;
-              const local = spec.local.name;
-
-              // Support any Iconify collection, or custom packs
-              if (availableCollections.has(imported.toLowerCase())) {
-                aliasToPack.set(local, imported);
-                debug(`Mapped alias ${local} -> ${imported} (auto-discovered)`);
-              } else if (options.packs?.[imported]) {
-                aliasToPack.set(local, imported);
-                debug(`Mapped alias ${local} -> ${imported} (custom pack)`);
-              }
-            }
-          }
-        }
+    const handleNode = (node: Node) => {
+      if (node.type !== "ImportDeclaration") {
+        return;
       }
 
-      for (const key in node) {
-        const child = (node as any)[key];
-        if (Array.isArray(child)) {
-          for (const c of child) {
-            if (c && typeof c === "object" && c.type) traverse(c);
-          }
-        } else if (child && typeof child === "object" && (child as Node).type) {
-          traverse(child as Node);
+      const importDeclaration = node;
+      const importSource = importDeclaration.source.value;
+
+      if (!importSources.includes(importSource)) {
+        return;
+      }
+
+      debug(`Found import from ${importSource}`);
+
+      for (const specifier of importDeclaration.specifiers) {
+        if (specifier.type !== "ImportSpecifier") {
+          continue;
+        }
+        const spec = specifier as any;
+        const importedName = spec.imported?.name || spec.imported?.value || spec.local.name;
+        const localAlias = spec.local.name;
+
+        if (availableCollections.has(importedName.toLowerCase())) {
+          aliasToPack.set(localAlias, importedName);
+          debug(`Mapped alias ${localAlias} -> ${importedName} (auto-discovered)`);
+          continue;
+        }
+        if (options.packs?.[importedName]) {
+          aliasToPack.set(localAlias, importedName);
+          debug(`Mapped alias ${localAlias} -> ${importedName} (custom pack)`);
         }
       }
     }
 
-    traverse(ast);
+    traverseAST(ast, handleNode);
+
     return aliasToPack;
   }
 
@@ -396,7 +391,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
           return null;
         }
 
-        const aliasToPack = findPackAliases(ast, importSources);
+        const aliasToPack = resolveImportAliases(ast, importSources);
 
         if (aliasToPack.size === 0) {
           debug(`[TRANSFORM] No icon imports found in ${id}`);
@@ -699,7 +694,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
           const ast = parseAndValidateFile(sourceCode, fileId);
           if (!ast) return [];
 
-          const aliasToPack = findPackAliases(ast, importSources);
+          const aliasToPack = resolveImportAliases(ast, importSources);
 
           // If this file contains icon imports, force a full reload to ensure transformations work
           if (aliasToPack.size > 0) {
