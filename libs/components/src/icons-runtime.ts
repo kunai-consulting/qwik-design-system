@@ -10,7 +10,7 @@ type IconComponent = Component<PropsOf<"svg">>;
 const proxyHandler = {
   get(target: any, prop: string | symbol) {
     // This will never be called at runtime - the Vite plugin transforms the JSX
-    throw new Error(`Icon components should be transformed by the Vite plugin. Tried to access: ${String(prop)}`);
+    // throw new Error(`Icon components should be transformed by the Vite plugin. Tried to access: ${String(prop)}`);
   }
 };
 

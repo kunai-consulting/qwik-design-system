@@ -91,6 +91,132 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
   // Discover collections immediately when plugin is created
   discoverCollections();
 
+  /**
+   * Parse and validate a file, returning the AST if valid
+   * @param code - Source code to parse
+   * @param id - File ID for debugging
+   * @returns AST program if valid, null if invalid
+   */
+  function parseAndValidateFile(code: string, id: string): Program | null {
+    try {
+      const parsed = parseSync(id, code);
+      if (parsed.errors.length > 0) {
+        debugLog(`Parse errors in ${id}:`, parsed.errors.map(e => e.message));
+        return null;
+      }
+      return parsed.program;
+    } catch (error) {
+      debugLog(`Error parsing ${id}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Check if a JSX element is an icon element based on its structure
+   * @param elem - JSX element to check
+   * @param aliasToPack - Map of aliases to pack names
+   * @returns True if the element is an icon element
+   */
+  function isIconElement(elem: JSXElement, aliasToPack: Map<string, string>): boolean {
+    const name = elem.openingElement.name;
+    if (name.type !== "JSXMemberExpression") {
+      return false;
+    }
+
+    const memberExpr = name as JSXMemberExpression;
+    if (
+      memberExpr.object.type !== "JSXIdentifier" ||
+      memberExpr.property.type !== "JSXIdentifier"
+    ) {
+      return false;
+    }
+
+    const alias = (memberExpr.object as JSXIdentifier).name;
+    return aliasToPack.has(alias);
+  }
+
+  /**
+   * Find all icon elements in an AST
+   * @param ast - AST to search
+   * @param aliasToPack - Map of aliases to pack names
+   * @returns Array of JSX elements that are icon elements
+   */
+  function findIconElements(ast: Program, aliasToPack: Map<string, string>): JSXElement[] {
+    const iconElements: JSXElement[] = [];
+    const visited = new Set<Node>();
+
+    function traverse(node: Node) {
+      if (visited.has(node)) return;
+      visited.add(node);
+
+      if (isJSXElement(node) && isIconElement(node as JSXElement, aliasToPack)) {
+        iconElements.push(node as JSXElement);
+      }
+
+      for (const key in node) {
+        const child = (node as any)[key];
+        if (Array.isArray(child)) {
+          for (const c of child as Node[]) {
+            if (c && typeof c === "object" && c.type) traverse(c);
+          }
+        } else if (child && typeof child === "object" && (child as Node).type) {
+          traverse(child as Node);
+        }
+      }
+    }
+
+    traverse(ast);
+    return iconElements;
+  }
+
+  /**
+   * Collect virtual module IDs from icon elements
+   * @param iconElements - Array of icon elements
+   * @param aliasToPack - Map of aliases to pack names
+   * @param source - Original source code
+   * @returns Set of virtual module IDs
+   */
+  function collectVirtualIds(
+    iconElements: JSXElement[],
+    aliasToPack: Map<string, string>,
+    source: string
+  ): Set<string> {
+    const virtualIds = new Set<string>();
+
+    for (const elem of iconElements) {
+      const name = elem.openingElement.name;
+      if (name.type === "JSXMemberExpression") {
+        const memberExpr = name as JSXMemberExpression;
+        if (
+          memberExpr.object.type === "JSXIdentifier" &&
+          memberExpr.property.type === "JSXIdentifier"
+        ) {
+          const alias = (memberExpr.object as JSXIdentifier).name;
+          const iconName = (memberExpr.property as JSXIdentifier).name;
+          const pack = aliasToPack.get(alias);
+
+          if (pack) {
+            const packConfig = options.packs?.[pack] || { iconifyPrefix: pack.toLowerCase() };
+            const prefix = packConfig.iconifyPrefix;
+            const kebabName = toKebabCase(iconName);
+            const baseVirtualId = `virtual:icons/${prefix}/${kebabName}`;
+
+            // Check for children in the element
+            const childrenCode = extractChildren(elem, source);
+            if (childrenCode) {
+              const encodedChildren = Buffer.from(childrenCode).toString('base64');
+              virtualIds.add(`${baseVirtualId}/${encodedChildren}`);
+            } else {
+              virtualIds.add(baseVirtualId);
+            }
+          }
+        }
+      }
+    }
+
+    return virtualIds;
+  }
+
   function toKebabCase(str: string): string {
     return str
       .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
@@ -328,55 +454,34 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
         return null;
       }
 
-      const parsed = parseSync(id, code);
-      if (parsed.errors.length > 0) {
-        debugLog(`Parse errors in ${id}, skipping`);
-        return null;
-      }
-
-      const ast: Program = parsed.program;
-      const aliasToPack = findPackAliases(ast, importSources);
-
-      if (aliasToPack.size === 0) {
-        return null;
-      }
-
-      debugLog(`Processing ${id} with ${aliasToPack.size} aliases:`, Array.from(aliasToPack.entries()));
-
-      // Traverse AST to find and transform icon elements
-      const s = new MagicString(code);
-      const usedImports = new Set<string>();
-      const importVars = new Set<string>();
-      const virtualToVar = new Map<string, string>();
-      let hasChanges = false;
-
-      /**
-       * Recursively traverses AST nodes to find JSX icon elements
-       * @param node - AST node to traverse
-       * @param visited - Set of visited nodes for cycle detection
-       */
-      function traverse(node: Node, visited = new Set<Node>()) {
-        if (visited.has(node)) return;
-        visited.add(node);
-
-        if (isJSXElement(node) && isIconElement(node as JSXElement)) {
-          const transformed = transformIconElement(node as JSXElement, s, code);
-          if (transformed) {
-            hasChanges = true;
-          }
+      try {
+        const ast = parseAndValidateFile(code, id);
+        if (!ast) {
+          return null;
         }
 
-        for (const key in node) {
-          const child = (node as any)[key];
-          if (Array.isArray(child)) {
-            for (const c of child as Node[]) {
-              if (c && typeof c === "object" && c.type) traverse(c, visited);
-            }
-          } else if (child && typeof child === "object" && (child as Node).type) {
-            traverse(child as Node, visited);
-          }
+        const aliasToPack = findPackAliases(ast, importSources);
+
+        if (aliasToPack.size === 0) {
+          return null;
         }
-      }
+
+        debugLog(`Processing ${id} with ${aliasToPack.size} aliases:`, Array.from(aliasToPack.entries()));
+
+        // Find all icon elements in the file
+        const iconElements = findIconElements(ast, aliasToPack);
+
+        if (iconElements.length === 0) {
+          return null;
+        }
+
+        // Traverse AST to find and transform icon elements
+        const s = new MagicString(code);
+        const usedImports = new Set<string>();
+        const importVars = new Set<string>();
+        const virtualToVar = new Map<string, string>();
+        let hasChanges = false;
+
 
       /**
        * Transform a JSX icon element to SVG JSX
@@ -550,49 +655,8 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
       }
 
 
-      function isIconElement(elem: JSXElement): boolean {
-        const name = elem.openingElement.name;
-        if (name.type !== "JSXMemberExpression") {
-          return false;
-        }
 
-        const memberExpr = name as JSXMemberExpression;
-        if (
-          memberExpr.object.type !== "JSXIdentifier" ||
-          memberExpr.property.type !== "JSXIdentifier"
-        ) {
-          return false;
-        }
-
-        const alias = (memberExpr.object as JSXIdentifier).name;
-        return aliasToPack.has(alias);
-      }
-
-      const iconElements: JSXElement[] = [];
-      const visited = new Set<Node>();
-
-      function collectIcons(node: Node, visited: Set<Node>) {
-        if (visited.has(node)) return;
-        visited.add(node);
-
-        if (isJSXElement(node) && isIconElement(node as JSXElement)) {
-          iconElements.push(node as JSXElement);
-        }
-
-        for (const key in node) {
-          const child = (node as any)[key];
-          if (Array.isArray(child)) {
-            for (const c of child as Node[]) {
-              if (c && typeof c === "object" && c.type) collectIcons(c, visited);
-            }
-          } else if (child && typeof child === "object" && (child as Node).type) {
-            collectIcons(child as Node, visited);
-          }
-        }
-      }
-
-      collectIcons(ast, visited);
-
+      // Transform each icon element
       for (let i = iconElements.length - 1; i >= 0; i--) {
         if (transformIconElement(iconElements[i], s, code)) {
           hasChanges = true;
@@ -634,6 +698,11 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
       }
 
       return null;
+      } catch (error) {
+        debugLog(`Error during transformation of ${id}:`, error);
+        // Return original code unchanged if transformation fails
+        return null;
+      }
     },
 
     resolveId(source) {
@@ -690,29 +759,56 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
     handleHotUpdate(ctx) {
       const fileId = ctx.file;
       if (fileId.endsWith(".tsx") || fileId.endsWith(".jsx")) {
+        debugLog(`Hot update detected for ${fileId}`);
+
+        // Check if the file contains icon usage that needs transformation
         const code = ctx.read?.();
         if (!code) return;
 
         const processCode = async (sourceCode: string) => {
-          const parsed = parseSync(fileId, sourceCode);
-          if (parsed.errors.length > 0) return;
+          try {
+            const ast = parseAndValidateFile(sourceCode, fileId);
+            if (!ast) {
+              debugLog(`Parse errors in ${fileId}, skipping hot update`);
+              return;
+            }
 
-          const ast: Program = parsed.program;
-          const aliasToPack = findPackAliases(ast, importSources);
+            const aliasToPack = findPackAliases(ast, importSources);
 
-          for (const [alias, pack] of Array.from(aliasToPack)) {
-            const packConfig = options.packs?.[pack];
-            if (!packConfig) continue;
+            // If file contains icon imports, we need to invalidate virtual modules
+            if (aliasToPack.size > 0) {
+              debugLog(`File ${fileId} contains icon usage, checking for virtual modules to invalidate`);
 
-            ctx.server.ws.send({ type: "full-reload" });
-            return;
+              // Find all icon elements in the file
+              const iconElements = findIconElements(ast, aliasToPack);
+
+              // Collect virtual module IDs from icon elements
+              const usedVirtualIds = collectVirtualIds(iconElements, aliasToPack, sourceCode);
+
+              // Invalidate all virtual modules used by this file
+              for (const virtualId of usedVirtualIds) {
+                const moduleId = `\0${virtualId}`;
+                const module = ctx.server.moduleGraph.getModuleById(moduleId);
+                if (module) {
+                  debugLog(`Invalidating virtual module: ${virtualId}`);
+                  ctx.server.moduleGraph.invalidateModule(module);
+                }
+              }
+
+              // Let Vite handle the hot update normally - it will re-run the transform
+              debugLog(`Hot update processed for ${fileId} with ${usedVirtualIds.size} virtual modules invalidated`);
+            }
+          } catch (error) {
+            debugLog(`Error processing hot update for ${fileId}:`, error);
           }
         };
 
         if (typeof code === "string") {
           processCode(code);
         } else {
-          code.then(processCode).catch(() => {});
+          code.then(processCode).catch((error) => {
+            debugLog(`Failed to read code for hot update ${fileId}:`, error);
+          });
         }
       }
     }
