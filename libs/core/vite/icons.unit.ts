@@ -178,7 +178,7 @@ describe("icons", () => {
     `;
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
-    expect(result.code).toContain('<svg viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_check}><>{<title>Checked item</title><desc>Extra a11y</desc>}</></svg>');
+    expect(result.code).toContain('<svg viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_check}><title>Checked item</title><desc>Extra a11y</desc></svg>');
   });
 
   it("should handle self-closing and non-self-closing tags", () => {
@@ -332,7 +332,7 @@ describe("icons", () => {
     `;
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
-    expect(result.code).toContain('<svg viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_check}><>{<title>Check</title><desc>Description</desc>}</></svg>');
+    expect(result.code).toContain('<svg viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_check}><title>Check</title><desc>Description</desc></svg>');
   });
 
   it("should generate source maps", () => {
