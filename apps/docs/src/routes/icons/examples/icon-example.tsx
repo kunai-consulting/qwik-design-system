@@ -1,5 +1,5 @@
 import { component$ } from "@qwik.dev/core";
-import { Lucide, Heroicons, Tabler } from "@kunai-consulting/qwik";
+import { Lucide, Heroicons, Tabler, Hugeicons } from "@kunai-consulting/qwik";
 
 export default component$(() => {
   return (
@@ -12,6 +12,7 @@ export default component$(() => {
           <Lucide.Heart width={24} class="text-red-500 fill-current" />
           <Lucide.Star width={24} class="text-yellow-500" />
           <Lucide.Search width={24} class="text-gray-500" />
+          {/* <Hugeicons.Abacus /> */}
         </div>
       </div>
 
@@ -38,7 +39,7 @@ export default component$(() => {
       <div class="space-y-4">
         <h2 class="text-2xl font-bold">Icon with Title (A11y)</h2>
         <div class="flex gap-4 items-center">
-          <Lucide.Info title="Information" width={24} class="text-blue-500" />
+          <Lucide.Info width={24} class="text-blue-500" />
           {/* <Lucide.Warning title="Warning message" width={24} class="text-yellow-500" /> */}
         </div>
       </div>

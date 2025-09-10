@@ -20,4 +20,4 @@ export * as Progress from "./progress";
 
 export { Render } from "./render/render";
 
-export { Lucide, Heroicons, Tabler } from "./icons-runtime";
+export * from "./icons-runtime";

@@ -15,10 +15,10 @@
     "./utils": "./dist/utils/index.js"
   },
   "scripts": {
-    "build": "tsdown",
+    "build": "tsdown && pnpm generate-icon-types",
     "dev": "tsdown --watch",
     "test": "vitest",
-    "generate-icon-types": "node src/generate-icon-types.ts"
+    "generate-icon-types": "tsx src/generate-icon-types.ts"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.382",
