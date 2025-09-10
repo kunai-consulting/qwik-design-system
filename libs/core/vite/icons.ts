@@ -1,8 +1,9 @@
 import { readFileSync } from "node:fs";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
-
+import type { Plugin as VitePlugin } from "vite";
+import { getIconData, iconToSVG, stringToIcon } from "@iconify/utils";
+import MagicString from "magic-string";
+import { parseSync } from "oxc-parser";
 import type {
   JSXAttribute,
   JSXChild,
@@ -15,13 +16,8 @@ import type {
   Program,
   StringLiteral
 } from "@oxc-project/types";
-import MagicString from "magic-string";
-import { parseSync } from "oxc-parser";
-import type { Plugin as VitePlugin } from "vite";
-import { lookupCollection } from "@iconify/json";
-import type { IconifyJSON } from "@iconify/types";
-import { getIconData, iconToSVG } from "@iconify/utils";
 
+import { handleExpression } from "../utils/expressions";
 import {
   extractFromElement,
   extractJSXMemberExpressionName,
@@ -32,8 +28,8 @@ import {
   isJSXExpressionContainer,
   isJSXText
 } from "../utils/jsx";
-
-import { handleExpression } from "../utils/expressions";
+import { toPascalCase } from "../utils/icons";
+import { IconifyJSON } from "@iconify/types";
 
 export type PacksMap = Record<
   string, // e.g. "Lucide"
@@ -104,17 +100,6 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
       .toLowerCase();
   }
 
-  /**
-   * Convert kebab-case to PascalCase
-   * @param str - kebab-case string
-   * @returns PascalCase string
-   */
-  function toPascalCase(str: string): string {
-    return str
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join('');
-  }
 
   /**
    * Sanitize icon name (handle leading digits, etc.)
@@ -145,7 +130,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
   }
 
   /**
-   * Load icon data from Iconify collection
+   * Load icon data from Iconify collection with caching
    * @param prefix - Iconify prefix (e.g., "lucide")
    * @param name - Icon name (kebab-case)
    * @returns Icon data or null if not found
@@ -153,29 +138,19 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
   function loadIconData(prefix: string, name: string): { body: string; viewBox: string } | null {
     const cacheKey = `${prefix}:${name}`;
 
+    // Return cached result if available
     if (iconCache.has(cacheKey)) {
       return iconCache.get(cacheKey)!;
     }
 
     try {
       // Load collection if not already loaded
-      console.log(`[icons] Checking if collection ${prefix} is loaded: ${collections.has(prefix)}`);
       if (!collections.has(prefix)) {
-        try {
-          // Use require.resolve to find the @iconify/json package reliably
-          const collectionPath = require.resolve(`@iconify/json/json/${prefix}.json`);
-          console.log(`[icons] Loading collection from: ${collectionPath}`);
-
-          const collectionData = readFileSync(collectionPath, 'utf-8');
-          const collection = JSON.parse(collectionData);
-          collections.set(prefix, collection);
-          console.log(`[icons] Successfully loaded ${prefix} collection, icons count: ${Object.keys(collection.icons || {}).length}`);
-        } catch (e) {
-          console.log(`[icons] Collection load error for ${prefix}: ${e}`);
-          return null;
-        }
-      } else {
-        console.log(`[icons] Collection ${prefix} already loaded`);
+        const collectionPath = require.resolve(`@iconify/json/json/${prefix}.json`);
+        const collectionData = readFileSync(collectionPath, 'utf-8');
+        const collection = JSON.parse(collectionData);
+        collections.set(prefix, collection);
+        debugLog(`Loaded ${prefix} collection with ${Object.keys(collection.icons || {}).length} icons`);
       }
 
       const collection = collections.get(prefix)!;
@@ -352,36 +327,36 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
     async configResolved() {
       debugLog("Icons plugin initialized");
 
+      // Clear caches
       usage.clear();
       fileUsages.clear();
       collections.clear();
       iconCache.clear();
 
-      // Preload default collections using file system access
-      console.log(`[icons] Starting preload of collections for packs:`, Object.keys(packs));
+      // Preload default collections
+      debugLog(`Preloading collections for packs:`, Object.keys(packs));
       for (const [packName, packConfig] of Object.entries(packs)) {
         try {
-          // Use require.resolve to find the @iconify/json package reliably
           const collectionPath = require.resolve(`@iconify/json/json/${packConfig.iconifyPrefix}.json`);
-          console.log(`[icons] Preloading ${packName} from: ${collectionPath}`);
-
           const collectionData = readFileSync(collectionPath, 'utf-8');
           const collection = JSON.parse(collectionData);
           collections.set(packConfig.iconifyPrefix, collection);
-          console.log(`[icons] Successfully preloaded ${packName} collection (${packConfig.iconifyPrefix}), icons: ${Object.keys(collection.icons || {}).length}`);
+          debugLog(`Preloaded ${packName} collection with ${Object.keys(collection.icons || {}).length} icons`);
         } catch (error) {
-          console.log(`[icons] Failed to preload ${packName} collection: ${error}`);
+          debugLog(`Failed to preload ${packName} collection: ${error}`);
         }
       }
-      console.log(`[icons] Preload complete, loaded collections:`, Array.from(collections.keys()));
+      debugLog(`Preload complete, loaded collections:`, Array.from(collections.keys()));
     },
 
     transform(code, id) {
-      const isJSXFile = id.endsWith(".tsx") || id.endsWith(".jsx");
-      if (!isJSXFile) return null;
+      // Skip non-JSX files
+      if (!id.endsWith(".tsx") && !id.endsWith(".jsx")) {
+        return null;
+      }
 
-      console.log(`[icons] Processing: ${id}`);
 
+      // Parse the file
       const parsed = parseSync(id, code);
       if (parsed.errors.length > 0) {
         debugLog(`Parse errors in ${id}, skipping`);
@@ -391,44 +366,18 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
       const ast: Program = parsed.program;
       const aliasToPack = findPackAliases(ast, importSources, packs);
 
-      console.log(`[icons] Parsed AST for ${id}, found ${aliasToPack.size} aliases:`, Array.from(aliasToPack.entries()));
-
+      // Skip files with no icon pack aliases
       if (aliasToPack.size === 0) {
-        console.log(`[icons] No icon pack aliases found in ${id}`);
         return null;
       }
 
-      console.log(`[icons] Starting transformation of ${id}...`);
+      debugLog(`Processing ${id} with ${aliasToPack.size} aliases:`, Array.from(aliasToPack.entries()));
 
-      // Debug: Count all JSX elements
-      let jsxElementCount = 0;
-      let jsxMemberExpressionCount = 0;
-      function countJSX(node: Node) {
-        if (node.type === "JSXElement") {
-          jsxElementCount++;
-          const element = node as any;
-          if (element.openingElement?.name?.type === "JSXMemberExpression") {
-            jsxMemberExpressionCount++;
-            console.log(`[icons] Found JSXMemberExpression: ${(element.openingElement.name.object as any)?.name}.${(element.openingElement.name.property as any)?.name}`);
-          }
-        }
-        for (const key in node) {
-          if (node[key] && typeof node[key] === "object" && key !== "parent") {
-            if (Array.isArray(node[key])) {
-              node[key].forEach(countJSX);
-            } else {
-              countJSX(node[key]);
-            }
-          }
-        }
-      }
-      countJSX(ast);
-      console.log(`[icons] Found ${jsxElementCount} JSX elements, ${jsxMemberExpressionCount} JSX member expressions`);
-
-      // Now traverse to find and transform icon elements
+      // Traverse AST to find and transform icon elements
       const s = new MagicString(code);
       const usedImports = new Set<string>();
       const importVars = new Set<string>();
+      const virtualToVar = new Map<string, string>();
       let hasChanges = false;
 
       /**
@@ -460,18 +409,17 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
       }
 
       /**
-       * Transform a JSX icon element to jsx("svg", {...}) call
+       * Transform a JSX icon element to SVG JSX
        * @param elem - JSX element to transform
        * @param s - MagicString instance
        * @param source - Original source code
        * @returns True if transformation was applied
        */
       function transformIconElement(elem: JSXElement, s: MagicString, source: string): boolean {
-        console.log(`[icons] transformIconElement called for element at ${getLineNumber(source, elem.start)}`);
         const name = elem.openingElement.name;
 
+        // Validate JSX member expression structure
         if (name.type !== "JSXMemberExpression") {
-          console.log(`[icons] Element is not JSXMemberExpression, type: ${name.type}`);
           return false;
         }
 
@@ -484,51 +432,39 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
         }
 
         const alias = (memberExpr.object as JSXIdentifier).name;
-        const iconName = memberExpr.property.name;
-        console.log(`[icons] Processing icon: ${alias}.${iconName}`);
-        const pack = aliasToPack.get(alias);
+        const iconName = (memberExpr.property as JSXIdentifier).name;
 
+        // Get pack configuration
+        const pack = aliasToPack.get(alias);
         if (!pack) {
-          console.log(`[icons] No pack found for alias: ${alias}`);
           return false;
         }
-
-        console.log(`[icons] Found pack: ${pack} for alias: ${alias}`);
 
         const packConfig = packs[pack];
         if (!packConfig) {
-          debugLog(`Pack config not found: ${pack}`);
           return false;
         }
 
-        // Sanitize and resolve icon name
+        // Try to load icon data
         const sanitizedIconName = sanitizeIconName(iconName, pack);
         const iconNames = resolveIconNames(sanitizedIconName);
 
-        console.log(`[icons] Loading icon data for ${packConfig.iconifyPrefix}:${iconNames.join(', ')}`);
         let iconData = null;
         for (const iconNameTry of iconNames) {
-          console.log(`[icons] Trying to load: ${packConfig.iconifyPrefix}:${iconNameTry}`);
           iconData = loadIconData(packConfig.iconifyPrefix, iconNameTry);
-          console.log(`[icons] Load result for ${packConfig.iconifyPrefix}:${iconNameTry}:`, iconData ? 'SUCCESS' : 'FAILED');
           if (iconData) break;
         }
 
         if (!iconData) {
-          console.log(`[icons] Icon not found: ${pack}.${iconName} (tried: ${iconNames.join(', ')})`);
+          debugLog(`Icon not found: ${pack}.${iconName}`);
           return false;
         }
 
-        console.log(`[icons] Successfully loaded icon data for ${pack}.${iconName}`);
-
-        debugLog(`Transforming ${pack}.${iconName} at line ${getLineNumber(source, elem.start)}`);
-
-        // Extract props and title
-        debugLog(`Pack config for ${pack}:`, packConfig);
+        // Process attributes and children
         const attributes = elem.openingElement.attributes;
         let titleProp: string | undefined;
 
-        // Separate title prop from other props
+        // Extract title prop
         const otherAttributes = attributes.filter(attr => {
           if (attr.type === "JSXAttribute" && (attr.name as JSXIdentifier).name === "title") {
             const jsxAttr = attr as JSXAttribute;
@@ -538,34 +474,28 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
           return true;
         });
 
-        // Extract props from remaining attributes using existing utility
+        // Extract props and children
         const propsObj = extractProps(otherAttributes, source);
-
-        // Extract children
         const childrenCode = extractChildren(elem, source, titleProp);
 
-        // Generate import variable
+        // Generate unique import variable
         const kebabName = toKebabCase(iconName);
         const importVar = generateImportVar(packConfig.iconifyPrefix, kebabName, importVars);
         const virtualId = `virtual:icons/${packConfig.iconifyPrefix}/${kebabName}`;
 
-        // Add import if not already added
+        // Add import if not already present
         if (!usedImports.has(virtualId)) {
           usedImports.add(virtualId);
-          const importCode = `\nimport ${importVar} from '${virtualId}';`;
-          s.appendLeft(0, importCode);
+          virtualToVar.set(virtualId, importVar);
         }
 
-        // Build JSX attributes directly from extracted props
-        const jsxAttributes = [];
-        let childrenJSX = '';
+        // Build the SVG JSX element with proper attributes
+        const svgAttrList: string[] = [];
 
-        // Process extracted props object into JSX attributes
+        // Add other attributes from the original element first
         if (propsObj.trim() && propsObj !== '{}') {
-          // Extract the inner content of the props object
           const innerProps = propsObj.slice(1, -1).trim(); // Remove { }
           if (innerProps) {
-            // Split by comma and process each property
             const propPairs = innerProps.split(',').map(p => p.trim()).filter(p => p);
             for (const prop of propPairs) {
               const colonIndex = prop.indexOf(':');
@@ -574,41 +504,36 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
               const key = prop.substring(0, colonIndex).replace(/"/g, '').trim();
               const value = prop.substring(colonIndex + 1).trim();
 
-              if (key === 'children') {
-                // Handle children separately
-                childrenJSX = value.replace(/^\(|\)$/g, ''); // Remove surrounding parentheses
-              } else if (value === 'true') {
-                jsxAttributes.push(key);
+              if (value === 'true') {
+                svgAttrList.push(`${key}={true}`);
+              } else if (value === 'false') {
+                svgAttrList.push(`${key}={false}`);
               } else if (value.startsWith('"') && value.endsWith('"')) {
-                // String literal - keep quotes
-                jsxAttributes.push(`${key}=${value}`);
+                svgAttrList.push(`${key}=${value}`);
               } else {
-                // Expression - wrap in braces
-                jsxAttributes.push(`${key}={${value}}`);
+                svgAttrList.push(`${key}={${value}}`);
               }
             }
           }
         }
 
-        // Add viewBox as JSX attribute
-        jsxAttributes.push(`viewBox="${iconData.viewBox}"`);
+        // Add SVG-specific attributes
+        svgAttrList.push(`viewBox="${iconData.viewBox}"`);
+        svgAttrList.push(`dangerouslySetInnerHTML={${importVar}}`);
 
-        // Add dangerouslySetInnerHTML as JSX attribute
-        jsxAttributes.push(`dangerouslySetInnerHTML={${importVar}}`);
+        // Generate the SVG JSX element with proper attributes
+        const allAttributes = svgAttrList.filter(attr => attr.trim()).join(' ').trim();
+        const svgElement = `<svg ${allAttributes} />`;
 
-        // Generate JSX element with proper children handling
-        const jsxElement = childrenJSX
-          ? `<svg ${jsxAttributes.join(' ')}>${childrenJSX}</svg>`
-          : `<svg ${jsxAttributes.join(' ')} />`;
+        debugLog(`Generated JSX element: ${svgElement}`);
 
-        console.log(`[icons] Replacing JSX element from ${elem.start} to ${elem.end} with: ${jsxElement}`);
+        // Replace just the JSX element
+        s.overwrite(elem.start, elem.end, svgElement);
 
-        // Replace the entire JSX element
-        s.overwrite(elem.start, elem.end, jsxElement);
-
-        console.log(`[icons] Successfully transformed ${alias}.${iconName} to jsx call`);
+        debugLog(`Transformed ${alias}.${iconName} to SVG JSX`);
         return true;
       }
+
 
       /**
        * Checks if a JSX element is an icon element
@@ -618,44 +543,91 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
       function isIconElement(elem: JSXElement): boolean {
         const name = elem.openingElement.name;
 
+        // Must be a JSX member expression (e.g., Pack.Icon)
         if (name.type !== "JSXMemberExpression") {
-          console.log(`[icons] Element name is not JSXMemberExpression, type: ${name.type}`);
           return false;
         }
 
         const memberExpr = name as JSXMemberExpression;
+
+        // Both object and property must be JSX identifiers
         if (
           memberExpr.object.type !== "JSXIdentifier" ||
           memberExpr.property.type !== "JSXIdentifier"
         ) {
-          console.log(`[icons] Member expression parts are not JSXIdentifier: object=${memberExpr.object.type}, property=${memberExpr.property.type}`);
           return false;
         }
 
         const alias = (memberExpr.object as JSXIdentifier).name;
         const iconName = (memberExpr.property as JSXIdentifier).name;
-        const hasAlias = aliasToPack.has(alias);
 
-        console.log(`[icons] Checking element ${alias}.${iconName}, has alias: ${hasAlias}`);
-
-        return hasAlias;
+        return aliasToPack.has(alias);
       }
 
-      console.log(`[icons] About to traverse AST`);
-      traverse(ast);
-      console.log(`[icons] Finished traversing, hasChanges: ${hasChanges}`);
+      // Collect all icon transformations first
+      const transformations: Array<{
+        elem: any;
+        alias: string;
+        iconName: string;
+        propsObj: string;
+        childrenCode: string;
+        importVar: string;
+        hasChanges: boolean;
+      }> = [];
+
+      // Collect all icon elements first
+      const iconElements: JSXElement[] = [];
+      const visited = new Set<Node>();
+
+      function collectIcons(node: Node, visited: Set<Node>) {
+        if (visited.has(node)) return;
+        visited.add(node);
+
+        if (isJSXElement(node) && isIconElement(node as JSXElement)) {
+          iconElements.push(node as JSXElement);
+        }
+
+        for (const key in node) {
+          const child = (node as any)[key];
+          if (Array.isArray(child)) {
+            for (const c of child as Node[]) {
+              if (c && typeof c === "object" && c.type) collectIcons(c, visited);
+            }
+          } else if (child && typeof child === "object" && (child as Node).type) {
+            collectIcons(child as Node, visited);
+          }
+        }
+      }
+
+      collectIcons(ast, visited);
+
+      // Apply transformations in reverse order to avoid conflicts
+      for (let i = iconElements.length - 1; i >= 0; i--) {
+        const elem = iconElements[i];
+        const transformed = transformIconElement(elem, s, code);
+        if (transformed) {
+          hasChanges = true;
+        }
+      }
 
       if (hasChanges) {
-        console.log(`[icons] Returning transformed code`);
-        const result = {
+        // Add all virtual imports at the very beginning
+        if (usedImports.size > 0) {
+          const virtualImports = Array.from(usedImports)
+            .map(virtualId => {
+              const importVar = virtualToVar.get(virtualId);
+              return `import ${importVar} from '${virtualId}';`;
+            })
+            .join('\n') + '\n';
+          s.appendLeft(0, virtualImports);
+        }
+
+        return {
           code: s.toString(),
           map: s.generateMap({ hires: true })
         };
-        console.log(`[icons] Transformed code length: ${result.code.length}`);
-        return result;
       }
 
-      console.log(`[icons] No changes made, returning null`);
       return null;
     },
 
