@@ -1,5 +1,5 @@
 import { component$ } from "@qwik.dev/core";
-import { Lucide, Heroicons, Tabler, Hugeicons } from "@kunai-consulting/qwik";
+import { Lucide, Heroicons, Tabler, Hugeicons, Healthicons } from "@kunai-consulting/qwik";
 
 export default component$(() => {
   return (
