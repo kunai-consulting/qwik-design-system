@@ -149,43 +149,6 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
     return traverseAST(ast, handleNode);
   }
 
-  /**
-   * Collect virtual module IDs from icon elements
-   * @param iconElements - Array of icon elements
-   * @param aliasToPack - Map of aliases to pack names
-   * @returns Set of virtual module IDs
-   */
-  function collectVirtualIds(
-    iconElements: JSXElement[],
-    aliasToPack: Map<string, string>
-  ): Set<string> {
-    const virtualIds = new Set<string>();
-
-    for (const elem of iconElements) {
-      const name = elem.openingElement.name;
-      if (name.type === "JSXMemberExpression") {
-        const memberExpr = name as JSXMemberExpression;
-        if (
-          memberExpr.object.type === "JSXIdentifier" &&
-          memberExpr.property.type === "JSXIdentifier"
-        ) {
-          const alias = (memberExpr.object as JSXIdentifier).name;
-          const iconName = (memberExpr.property as JSXIdentifier).name;
-          const pack = aliasToPack.get(alias);
-
-          if (pack) {
-            const packConfig = options.packs?.[pack] || { iconifyPrefix: pack.toLowerCase() };
-            const prefix = packConfig.iconifyPrefix;
-            const kebabName = toKebabCase(iconName);
-            const virtualId = `virtual:icons/${prefix}/${kebabName}`;
-            virtualIds.add(virtualId);
-          }
-        }
-      }
-    }
-
-    return virtualIds;
-  }
 
   function toKebabCase(str: string): string {
     return str
