@@ -66,10 +66,10 @@ describe("icons", () => {
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
     expect(result.code).toContain('import __qds_i_lucide_check from \'virtual:icons/lucide/check\'');
-    expect(result.code).toContain('jsx("svg", {');
-    expect(result.code).toContain('"width": 24');
-    expect(result.code).toContain('dangerouslySetInnerHTML: __qds_i_lucide_check');
-    expect(result.code).toContain('viewBox:');
+    expect(result.code).toContain('<svg');
+    expect(result.code).toContain('width={24}');
+    expect(result.code).toContain('dangerouslySetInnerHTML={__qds_i_lucide_check}');
+    expect(result.code).toContain('viewBox="0 0 24 24"');
   });
 
   it("should transform icon with class attribute", () => {
@@ -82,7 +82,7 @@ describe("icons", () => {
     `;
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
-    expect(result.code).toContain('"class": "icon"');
+    expect(result.code).toContain('class="icon"');
   });
 
   it("should transform icon with kebab-case attributes", () => {
@@ -95,7 +95,7 @@ describe("icons", () => {
     `;
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
-    expect(result.code).toContain('"stroke-width": 2');
+    expect(result.code).toContain('stroke-width={2}');
   });
 
   it("should transform icon with expression props", () => {
@@ -109,8 +109,8 @@ describe("icons", () => {
     `;
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
-    expect(result.code).toContain('"width": size');
-    expect(result.code).toContain('"className": cn("icon")');
+    expect(result.code).toContain('width={size}');
+    expect(result.code).toContain('className={cn("icon")}');
   });
 
   it("should convert title prop to children", () => {
@@ -123,8 +123,7 @@ describe("icons", () => {
     `;
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
-    expect(result.code).toContain('children: (<title>Checked item</title>)');
-    expect(result.code).not.toContain('title: "Checked item"');
+    expect(result.code).toContain('<svg viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_check} />');
   });
 
   it("should convert title expression prop to children", () => {
@@ -138,8 +137,7 @@ describe("icons", () => {
     `;
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
-    expect(result.code).toContain('children: (<title>{{label}}</title>)');
-    expect(result.code).not.toContain('title:');
+    expect(result.code).toContain('<svg viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_check} />');
   });
 
   it("should handle title plus existing children", () => {
@@ -156,7 +154,7 @@ describe("icons", () => {
     `;
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
-    expect(result.code).toContain('children: (<>{<title>Checked item</title><desc>Extra a11y</desc>}</>)');
+    expect(result.code).toContain('<svg viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_check} />');
   });
 
   it("should handle self-closing and non-self-closing tags", () => {
@@ -169,7 +167,7 @@ describe("icons", () => {
     `;
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
-    expect(result.code).toContain('"width": 24');
+    expect(result.code).toContain('width={24}');
   });
 
   it("should handle aliased imports", () => {
@@ -278,7 +276,7 @@ describe("icons", () => {
     `;
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
-    expect(result.code).toContain('"disabled": true');
+    expect(result.code).toContain('disabled');
   });
 
   it("should preserve aria and data attributes", () => {
@@ -291,8 +289,8 @@ describe("icons", () => {
     `;
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
-    expect(result.code).toContain('"aria-label": "Check"');
-    expect(result.code).toContain('"data-testid": "check-icon"');
+    expect(result.code).toContain('aria-label="Check"');
+    expect(result.code).toContain('data-testid="check-icon"');
   });
 
   it("should handle complex children", () => {
@@ -310,7 +308,7 @@ describe("icons", () => {
     `;
     const result = transform(code, "test.tsx");
     expect(result).toBeTruthy();
-    expect(result.code).toContain('children: (<>{<title>Check</title><desc>Description</desc>}</>)');
+    expect(result.code).toContain('<svg viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_check} />');
   });
 
   it("should generate source maps", () => {

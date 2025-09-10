@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
 
 import type {
   JSXAttribute,
@@ -72,6 +73,9 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
   const packs = { ...DEFAULT_PACKS, ...options.packs };
   const importSources = options.importSources ?? DEFAULT_IMPORT_SOURCES;
   const debug = !!options.debug;
+
+  // Create require function for resolving @iconify/json paths
+  const require = createRequire(import.meta.url);
 
   const usage: UsageMap = new Map();
   const fileUsages: FileUsages = new Map();
@@ -158,11 +162,9 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
       console.log(`[icons] Checking if collection ${prefix} is loaded: ${collections.has(prefix)}`);
       if (!collections.has(prefix)) {
         try {
-          // Try to load from @iconify/json using synchronous file read
-          // Use the core library's node_modules, not the current working directory
-          const currentDir = dirname(fileURLToPath(import.meta.url));
-          const collectionPath = join(currentDir, `../../node_modules/@iconify/json/json/${prefix}.json`);
-          console.log(`[icons] Attempting to load collection from: ${collectionPath}`);
+          // Use require.resolve to find the @iconify/json package reliably
+          const collectionPath = require.resolve(`@iconify/json/json/${prefix}.json`);
+          console.log(`[icons] Loading collection from: ${collectionPath}`);
 
           const collectionData = readFileSync(collectionPath, 'utf-8');
           const collection = JSON.parse(collectionData);
@@ -359,10 +361,10 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
       console.log(`[icons] Starting preload of collections for packs:`, Object.keys(packs));
       for (const [packName, packConfig] of Object.entries(packs)) {
         try {
-          // Use the core library's node_modules, not the current working directory
-          const currentDir = dirname(fileURLToPath(import.meta.url));
-          const collectionPath = join(currentDir, `../../node_modules/@iconify/json/json/${packConfig.iconifyPrefix}.json`);
+          // Use require.resolve to find the @iconify/json package reliably
+          const collectionPath = require.resolve(`@iconify/json/json/${packConfig.iconifyPrefix}.json`);
           console.log(`[icons] Preloading ${packName} from: ${collectionPath}`);
+
           const collectionData = readFileSync(collectionPath, 'utf-8');
           const collection = JSON.parse(collectionData);
           collections.set(packConfig.iconifyPrefix, collection);
