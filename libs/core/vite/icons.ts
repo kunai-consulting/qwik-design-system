@@ -140,11 +140,13 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
    * @returns Array of JSX elements that are icon elements
    */
   function findIconElements(ast: Program, pack: Map<string, string>): JSXElement[] {
-    return traverseAST(ast, (node) => {
+    const handleNode = (node: Node) => {
       if (isJSXElement(node) && isIconElement(node, pack)) {
         return node;
       }
-    });
+    }
+
+    return traverseAST(ast, handleNode);
   }
 
   /**

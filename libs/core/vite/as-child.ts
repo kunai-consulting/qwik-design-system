@@ -62,11 +62,13 @@ export const asChild = (options: AsChildPluginOptions = {}): VitePlugin => {
       const ast: Program = parsed.program;
       const s = new MagicString(code);
 
-      traverseAST(ast, (node) => {
+      const handleNode = (node: Node) => {
         if (isJSXElement(node) && hasAsChild(node.openingElement)) {
           processAsChild(node, s, code);
         }
-      });
+      }
+
+      traverseAST(ast, handleNode);
 
       if (s.hasChanged()) {
         return {
