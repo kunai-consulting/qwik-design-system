@@ -364,7 +364,7 @@ describe("icons", () => {
 
       debugTransform(code, "test.tsx");
 
-      expect(consoleSpy).toHaveBeenCalledWith("[icons] Processing test.tsx with 1 aliases:", [["Lucide", "Lucide"]]);
+      expect(consoleSpy).toHaveBeenCalledWith("[icons] [TRANSFORM] Processing test.tsx with 1 aliases:", [["Lucide", "Lucide"]]);
 
       consoleSpy.mockRestore();
     });
@@ -1006,5 +1006,262 @@ export default component$(() => {
       console.error("Generated code:", result!.code);
     }
     expect(validation.isValid).toBe(true);
+  });
+});
+
+describe("HMR (Hot Module Replacement)", () => {
+  let plugin: any;
+  let handleHotUpdate: any;
+
+  beforeAll(async () => {
+    plugin = icons({ debug: true });
+    handleHotUpdate = plugin.handleHotUpdate.bind(plugin);
+
+    // Wait for plugin initialization
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Preload collections for testing
+    try {
+      const lucideCollection = await lookupCollection("lucide");
+      if (plugin && (plugin as any).lazyCollections) {
+        (plugin as any).lazyCollections.set("lucide", Promise.resolve(lucideCollection));
+        (plugin as any).availableCollections.add("lucide");
+      }
+    } catch (error) {
+      console.warn("Failed to preload Lucide collection for HMR tests:", error);
+    }
+  });
+
+  describe("handleHotUpdate function", () => {
+    it("should trigger full reload for TSX files with icon imports", async () => {
+      const mockCtx = {
+        file: "/test/component.tsx",
+        read: vi.fn().mockReturnValue(`
+          import { Lucide } from "@kunai-consulting/qwik";
+          export default function Test() {
+            return <Lucide.Check />;
+          }
+        `),
+        server: {
+          ws: {
+            send: vi.fn()
+          }
+        }
+      };
+
+      const result = await handleHotUpdate(mockCtx);
+
+      expect(mockCtx.server.ws.send).toHaveBeenCalledWith({ type: "full-reload" });
+      expect(result).toEqual([]);
+    });
+
+    it("should trigger full reload for JSX files with icon imports", async () => {
+      const mockCtx = {
+        file: "/test/component.jsx",
+        read: vi.fn().mockReturnValue(`
+          import { Heroicons } from "@kunai-consulting/qwik";
+          export default function Test() {
+            return <Heroicons.CheckCircle />;
+          }
+        `),
+        server: {
+          ws: {
+            send: vi.fn()
+          }
+        }
+      };
+
+      const result = await handleHotUpdate(mockCtx);
+
+      expect(mockCtx.server.ws.send).toHaveBeenCalledWith({ type: "full-reload" });
+      expect(result).toEqual([]);
+    });
+
+    it("should not trigger reload for files without icon imports", async () => {
+      const mockCtx = {
+        file: "/test/component.tsx",
+        read: vi.fn().mockReturnValue(`
+          import React from "react";
+          export default function Test() {
+            return <div>Hello</div>;
+          }
+        `),
+        server: {
+          ws: {
+            send: vi.fn()
+          }
+        }
+      };
+
+      const result = await handleHotUpdate(mockCtx);
+
+      expect(mockCtx.server.ws.send).not.toHaveBeenCalled();
+      expect(result).toEqual([]);
+    });
+
+    it("should handle files with imports but no icon usage", async () => {
+      const mockCtx = {
+        file: "/test/component.tsx",
+        read: vi.fn().mockReturnValue(`
+          import { Lucide } from "@kunai-consulting/qwik";
+          import { useState } from "react";
+          export default function Test() {
+            const [count, setCount] = useState(0);
+            return <div>{count}</div>;
+          }
+        `),
+        server: {
+          ws: {
+            send: vi.fn()
+          }
+        }
+      };
+
+      const result = await handleHotUpdate(mockCtx);
+
+      // Should still trigger reload because imports are present
+      expect(mockCtx.server.ws.send).toHaveBeenCalledWith({ type: "full-reload" });
+      expect(result).toEqual([]);
+    });
+
+    it("should handle async read operations", async () => {
+      const mockCtx = {
+        file: "/test/component.tsx",
+        read: vi.fn().mockResolvedValue(`
+          import { Lucide } from "@kunai-consulting/qwik";
+          export default function Test() {
+            return <Lucide.Star />;
+          }
+        `),
+        server: {
+          ws: {
+            send: vi.fn()
+          }
+        }
+      };
+
+      const result = await handleHotUpdate(mockCtx);
+
+      expect(mockCtx.server.ws.send).toHaveBeenCalledWith({ type: "full-reload" });
+      expect(result).toEqual([]);
+    });
+
+    it("should handle read errors gracefully", async () => {
+      const mockCtx = {
+        file: "/test/component.tsx",
+        read: vi.fn().mockReturnValue(null),
+        server: {
+          ws: {
+            send: vi.fn()
+          }
+        }
+      };
+
+      const result = await handleHotUpdate(mockCtx);
+
+      expect(mockCtx.server.ws.send).not.toHaveBeenCalled();
+      expect(result).toEqual([]);
+    });
+
+    it("should handle parsing errors gracefully", async () => {
+      const mockCtx = {
+        file: "/test/component.tsx",
+        read: vi.fn().mockReturnValue(`
+          import { Lucide } from "@kunai-consulting/qwik";
+          export default function Test() {
+            return <Lucide.Check // syntax error
+          }
+        `),
+        server: {
+          ws: {
+            send: vi.fn()
+          }
+        }
+      };
+
+      const result = await handleHotUpdate(mockCtx);
+
+      expect(mockCtx.server.ws.send).not.toHaveBeenCalled();
+      expect(result).toEqual([]);
+    });
+
+    it("should ignore non-JSX/TSX files", async () => {
+      const mockCtx = {
+        file: "/test/component.js",
+        read: vi.fn().mockReturnValue(`
+          import { Lucide } from "@kunai-consulting/qwik";
+          export default function Test() {
+            return "Hello";
+          }
+        `),
+        server: {
+          ws: {
+            send: vi.fn()
+          }
+        }
+      };
+
+      const result = await handleHotUpdate(mockCtx);
+
+      expect(mockCtx.server.ws.send).not.toHaveBeenCalled();
+      expect(result).toEqual([]);
+    });
+
+    it("should handle multiple icon collections", async () => {
+      const mockCtx = {
+        file: "/test/component.tsx",
+        read: vi.fn().mockReturnValue(`
+          import { Lucide, Heroicons, Tabler } from "@kunai-consulting/qwik";
+          export default function Test() {
+            return (
+              <div>
+                <Lucide.Check />
+                <Heroicons.Star />
+                <Tabler.Heart />
+              </div>
+            );
+          }
+        `),
+        server: {
+          ws: {
+            send: vi.fn()
+          }
+        }
+      };
+
+      const result = await handleHotUpdate(mockCtx);
+
+      expect(mockCtx.server.ws.send).toHaveBeenCalledWith({ type: "full-reload" });
+      expect(result).toEqual([]);
+    });
+
+    it("should handle complex icon expressions with props", async () => {
+      const mockCtx = {
+        file: "/test/component.tsx",
+        read: vi.fn().mockReturnValue(`
+          import { Lucide } from "@kunai-consulting/qwik";
+          export default function Test() {
+            return (
+              <Lucide.Check
+                width={24}
+                height={24}
+                className="icon"
+                title="Check mark"
+              />
+            );
+          }
+        `),
+        server: {
+          ws: {
+            send: vi.fn()
+          }
+        }
+      };
+
+      const result = await handleHotUpdate(mockCtx);
+
+      expect(mockCtx.server.ws.send).toHaveBeenCalledWith({ type: "full-reload" });
+      expect(result).toEqual([]);
+    });
   });
 });
