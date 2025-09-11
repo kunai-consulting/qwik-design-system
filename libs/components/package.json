@@ -30,7 +30,7 @@
     "uqr": "^0.1.2",
     "vite": "^7",
     "vite-tsconfig-paths": "^4.2.1",
-    "@qwik.dev/core": "2.0.0-beta.8",
+    "@qwik.dev/core": "2.0.0-beta.9",
     "vitest-browser-qwik": "https://pkg.pr.new/kunai-consulting/vitest-browser-qwik@949e6ac"
   },
   "dependencies": {
