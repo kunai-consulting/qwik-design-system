@@ -1,21 +1,21 @@
 import { readFileSync } from "node:fs";
+import * as fs from "node:fs";
 import { createRequire } from "node:module";
 import * as path from "node:path";
-import * as fs from "node:fs";
-import type { Plugin as VitePlugin } from "vite";
 import { getIconData, iconToSVG } from "@iconify/utils";
-import MagicString from "magic-string";
-import { parseSync } from "oxc-parser";
-import { walk } from "oxc-walker";
 import type {
   JSXAttribute,
   JSXElement,
   JSXIdentifier,
   JSXMemberExpression,
-  Node,
-  Program,
+  Program
 } from "@oxc-project/types";
+import MagicString from "magic-string";
+import { parseSync } from "oxc-parser";
+import { walk } from "oxc-walker";
+import type { Plugin as VitePlugin } from "vite";
 
+import type { IconifyJSON } from "@iconify/types";
 import { handleExpression } from "../utils/expressions";
 import {
   extractProps,
@@ -23,7 +23,6 @@ import {
   isJSXExpressionContainer,
   isJSXText
 } from "../utils/jsx";
-import { IconifyJSON } from "@iconify/types";
 
 export type PacksMap = Record<
   string,
@@ -47,9 +46,10 @@ function getAvailableCollections(): string[] {
     const iconifyJsonPath = require.resolve("@iconify/json/package.json");
     const collectionsDir = path.dirname(iconifyJsonPath) + "/json";
 
-    return fs.readdirSync(collectionsDir)
-      .filter((file: string) => file.endsWith('.json'))
-      .map((file: string) => file.replace('.json', ''));
+    return fs
+      .readdirSync(collectionsDir)
+      .filter((file: string) => file.endsWith(".json"))
+      .map((file: string) => file.replace(".json", ""));
   } catch (error) {
     return [];
   }
@@ -83,8 +83,12 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
     if (availableCollections.size > 0) return;
 
     const collections = getAvailableCollections();
-    collections.forEach(name => availableCollections.add(name));
-    debug(`Discovered ${collections.length} Iconify collections:`, collections.slice(0, 10), collections.length > 10 ? `...and ${collections.length - 10} more` : '');
+    collections.forEach((name) => availableCollections.add(name));
+    debug(
+      `Discovered ${collections.length} Iconify collections:`,
+      collections.slice(0, 10),
+      collections.length > 10 ? `...and ${collections.length - 10} more` : ""
+    );
   }
 
   discoverCollections();
@@ -99,7 +103,10 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
     try {
       const parsed = parseSync(id, code);
       if (parsed.errors.length > 0) {
-        debug(`Parse errors in ${id}:`, parsed.errors.map(e => e.message));
+        debug(
+          `Parse errors in ${id}:`,
+          parsed.errors.map((e) => e.message)
+        );
         return null;
       }
       return parsed.program;
@@ -158,14 +165,12 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
     return iconElements;
   }
 
-
   function toKebabCase(str: string): string {
     return str
-      .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-      .replace(/([A-Z])([A-Z][a-z])/g, '$1-$2')
+      .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+      .replace(/([A-Z])([A-Z][a-z])/g, "$1-$2")
       .toLowerCase();
   }
-
 
   function sanitizeIconName(name: string, packName: string): string {
     const packConfig = options.packs?.[packName];
@@ -188,9 +193,11 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
     const loadPromise = (async () => {
       try {
         const collectionPath = require.resolve(`@iconify/json/json/${prefix}.json`);
-        const collectionData = readFileSync(collectionPath, 'utf-8');
+        const collectionData = readFileSync(collectionPath, "utf-8");
         const collection = JSON.parse(collectionData);
-        debug(`Lazy-loaded ${prefix} collection with ${Object.keys(collection.icons || {}).length} icons`);
+        debug(
+          `Lazy-loaded ${prefix} collection with ${Object.keys(collection.icons || {}).length} icons`
+        );
         return collection;
       } catch (error) {
         debug(`Failed to load ${prefix} collection: ${error}`);
@@ -202,7 +209,10 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
     return loadPromise;
   }
 
-  async function loadIconDataLazy(prefix: string, name: string): Promise<IconData | null> {
+  async function loadIconDataLazy(
+    prefix: string,
+    name: string
+  ): Promise<IconData | null> {
     const cacheKey = `${prefix}:${name}`;
     if (lazyIconCache.has(cacheKey)) {
       return lazyIconCache.get(cacheKey)!;
@@ -242,7 +252,10 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
    * @param packs - Available packs configuration
    * @returns Map of local alias to pack name
    */
-  function resolveImportAliases(ast: Program, importSources: string[]): Map<string, string> {
+  function resolveImportAliases(
+    ast: Program,
+    importSources: string[]
+  ): Map<string, string> {
     const aliasToPack = new Map<string, string>();
 
     walk(ast, {
@@ -265,7 +278,8 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
             continue;
           }
           const spec = specifier as any;
-          const importedName = spec.imported?.name || spec.imported?.value || spec.local.name;
+          const importedName =
+            spec.imported?.name || spec.imported?.value || spec.local.name;
           const localAlias = spec.local.name;
 
           const kebabName = toKebabCase(importedName);
@@ -273,7 +287,9 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
           if (availableCollections.has(kebabName)) {
             aliasToPack.set(localAlias, importedName);
             collectionNames.set(localAlias, kebabName);
-            debug(`Mapped alias ${localAlias} -> ${importedName} (collection: ${kebabName})`);
+            debug(
+              `Mapped alias ${localAlias} -> ${importedName} (collection: ${kebabName})`
+            );
             continue;
           }
           if (options.packs?.[importedName]) {
@@ -294,7 +310,11 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
    * @param titleProp - Title prop value if present
    * @returns Children JSX code or null
    */
-  function extractChildren(elem: JSXElement, source: string, titleProp?: string): string | null {
+  function extractChildren(
+    elem: JSXElement,
+    source: string,
+    titleProp?: string
+  ): string | null {
     const existingChildren = elem.children.filter(
       (child) => !isJSXText(child) || child.value.trim() !== ""
     );
@@ -321,7 +341,10 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
         const nameNode = child.openingElement.name;
         if (nameNode.type === "JSXIdentifier") {
           tagName = nameNode.name;
-        } else if (nameNode.type === "JSXMemberExpression" && nameNode.property.type === "JSXIdentifier") {
+        } else if (
+          nameNode.type === "JSXMemberExpression" &&
+          nameNode.property.type === "JSXIdentifier"
+        ) {
           tagName = nameNode.property.name;
         }
 
@@ -353,7 +376,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
       return childrenParts[0];
     }
 
-    return childrenParts.join('');
+    return childrenParts.join("");
   }
 
   /**
@@ -363,19 +386,23 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
    * @param existingVars - Set of existing variable names in the file
    * @returns Unique variable name
    */
-function generateImportVar(prefix: string, name: string, existingVars: Set<string>): string {
-  let baseName = `__qds_i_${prefix.replace(/-/g, '_')}_${name.replace(/-/g, '_')}`;
-  let varName = baseName;
-  let counter = 1;
+  function generateImportVar(
+    prefix: string,
+    name: string,
+    existingVars: Set<string>
+  ): string {
+    const baseName = `__qds_i_${prefix.replace(/-/g, "_")}_${name.replace(/-/g, "_")}`;
+    let varName = baseName;
+    let counter = 1;
 
-  while (existingVars.has(varName)) {
-    varName = `${baseName}_${counter}`;
-    counter++;
+    while (existingVars.has(varName)) {
+      varName = `${baseName}_${counter}`;
+      counter++;
+    }
+
+    existingVars.add(varName);
+    return varName;
   }
-
-  existingVars.add(varName);
-  return varName;
-}
 
   return {
     name: "vite-plugin-qds-icons",
@@ -387,7 +414,9 @@ function generateImportVar(prefix: string, name: string, existingVars: Set<strin
       // Discover all available Iconify collections
       discoverCollections();
 
-      debug(`Plugin ready - ${availableCollections.size} collections available on-demand`);
+      debug(
+        `Plugin ready - ${availableCollections.size} collections available on-demand`
+      );
     },
 
     transform(code, id) {
@@ -411,8 +440,13 @@ function generateImportVar(prefix: string, name: string, existingVars: Set<strin
           return null;
         }
 
-        debug(`[TRANSFORM] Processing ${id} with ${aliasToPack.size} aliases:`, Array.from(aliasToPack.entries()));
-        debug(`[DEBUG] collectionNames map: ${JSON.stringify(Array.from(collectionNames.entries()))}`);
+        debug(
+          `[TRANSFORM] Processing ${id} with ${aliasToPack.size} aliases:`,
+          Array.from(aliasToPack.entries())
+        );
+        debug(
+          `[DEBUG] collectionNames map: ${JSON.stringify(Array.from(collectionNames.entries()))}`
+        );
 
         // Find all icon elements in the file
         const iconElements = findIconElements(ast, aliasToPack);
@@ -431,207 +465,233 @@ function generateImportVar(prefix: string, name: string, existingVars: Set<strin
         const virtualToVar = new Map<string, string>();
         let hasChanges = false;
 
+        /**
+         * Transform a JSX icon element to SVG JSX
+         * @param elem - JSX element to transform
+         * @param s - MagicString instance
+         * @param source - Original source code
+         * @param aliasToPack - Map of aliases to pack names
+         * @returns True if transformation was applied
+         */
+        function transformIconElement(
+          elem: JSXElement,
+          s: MagicString,
+          source: string,
+          aliasToPack: Map<string, string>
+        ): boolean {
+          debug(
+            `[TRANSFORM_ICON] Starting transformation for element at ${elem.start}-${elem.end}`
+          );
 
-      /**
-       * Transform a JSX icon element to SVG JSX
-       * @param elem - JSX element to transform
-       * @param s - MagicString instance
-       * @param source - Original source code
-       * @param aliasToPack - Map of aliases to pack names
-       * @returns True if transformation was applied
-       */
-      function transformIconElement(elem: JSXElement, s: MagicString, source: string, aliasToPack: Map<string, string>): boolean {
-        debug(`[TRANSFORM_ICON] Starting transformation for element at ${elem.start}-${elem.end}`);
-
-        const name = elem.openingElement.name;
-        if (name.type !== "JSXMemberExpression") {
-          debug(`[TRANSFORM_ICON] Not a member expression`);
-          return false;
-        }
-
-        const memberExpr = name as JSXMemberExpression;
-        if (
-          memberExpr.object.type !== "JSXIdentifier" ||
-          memberExpr.property.type !== "JSXIdentifier"
-        ) {
-          debug(`[TRANSFORM_ICON] Invalid member expression structure`);
-          return false;
-        }
-
-        const alias = (memberExpr.object as JSXIdentifier).name;
-        const iconName = (memberExpr.property as JSXIdentifier).name;
-
-        debug(`[TRANSFORM_ICON] Processing ${alias}.${iconName}`);
-
-        const pack = aliasToPack.get(alias);
-        if (!pack) {
-          debug(`[TRANSFORM_ICON] No pack found for alias ${alias}`);
-          return false;
-        }
-
-        debug(`[TRANSFORM_ICON] Found pack ${pack} for alias ${alias}`);
-
-        // Get pack configuration - either custom or auto-discovered
-        const packConfig = options.packs?.[pack] || { iconifyPrefix: pack.toLowerCase() };
-        const prefix = packConfig.iconifyPrefix;
-
-        const sanitizedIconName = sanitizeIconName(iconName, pack);
-        const iconNames = resolveIconNames(sanitizedIconName);
-
-        // Check for obviously invalid/test icon names
-        // This catches test cases with non-existent icons
-        if (sanitizedIconName.toLowerCase().includes('nonexistent') ||
-            sanitizedIconName.toLowerCase().includes('non_existent') ||
-            sanitizedIconName.toLowerCase().includes('invalid') ||
-            sanitizedIconName.toLowerCase().includes('test') ||
-            sanitizedIconName === 'NonExistentIcon') {
-          debug(`Skipping test/non-existent icon name: ${sanitizedIconName}`);
-          return false;
-        }
-
-        // Get the correct collection name for loading
-        const collectionName = collectionNames.get(pack) || pack;
-
-        // Use optimistic loading - assume icon exists
-        // The virtual module will handle loading and error cases
-        const foundIconName = iconNames[0];
-        debug(`[TRANSFORM_ICON] Using optimistic loading for ${pack}.${iconName} -> ${foundIconName} (collection: ${collectionName})`);
-
-        const iconData = { body: '', viewBox: '0 0 24 24' }; // Placeholder, will be loaded by virtual module
-
-        const attributes = elem.openingElement.attributes;
-        let titleProp: string | undefined;
-
-        const otherAttributes = attributes.filter(attr => {
-          if (attr.type === "JSXAttribute" && (attr.name as JSXIdentifier).name === "title") {
-            const jsxAttr = attr as JSXAttribute;
-            titleProp = source.slice(jsxAttr.value.start, jsxAttr.value.end);
+          const name = elem.openingElement.name;
+          if (name.type !== "JSXMemberExpression") {
+            debug(`[TRANSFORM_ICON] Not a member expression`);
             return false;
           }
-          return true;
-        });
 
-        const propsObj = extractProps(otherAttributes, source);
-        const childrenCode = extractChildren(elem, source, titleProp);
+          const memberExpr = name as JSXMemberExpression;
+          if (
+            memberExpr.object.type !== "JSXIdentifier" ||
+            memberExpr.property.type !== "JSXIdentifier"
+          ) {
+            debug(`[TRANSFORM_ICON] Invalid member expression structure`);
+            return false;
+          }
 
-        const kebabName = toKebabCase(iconName);
-        const importVar = generateImportVar(prefix, kebabName, importVars);
+          const alias = (memberExpr.object as JSXIdentifier).name;
+          const iconName = (memberExpr.property as JSXIdentifier).name;
 
-        // Create virtual module ID (children are now handled in JSX, not virtual module)
-        // Use the correct collection name for the virtual ID
-        // Use the original pack name (not the lowercase prefix) to look up in collectionNames
-        const actualCollectionName = collectionNames.get(pack) || prefix;
-        debug(`[VIRTUAL_ID] pack: ${pack}, prefix: ${prefix}, collectionNames.get(${pack}): ${collectionNames.get(pack)}, actualCollectionName: ${actualCollectionName}`);
-        const virtualId = `virtual:icons/${actualCollectionName}/${kebabName}`;
+          debug(`[TRANSFORM_ICON] Processing ${alias}.${iconName}`);
 
-        if (!usedImports.has(virtualId)) {
-          usedImports.add(virtualId);
-          virtualToVar.set(virtualId, importVar);
-        }
+          const pack = aliasToPack.get(alias);
+          if (!pack) {
+            debug(`[TRANSFORM_ICON] No pack found for alias ${alias}`);
+            return false;
+          }
 
-        const svgAttrList: string[] = [];
+          debug(`[TRANSFORM_ICON] Found pack ${pack} for alias ${alias}`);
 
-        if (propsObj.trim() && propsObj !== '{}') {
-          const innerProps = propsObj.slice(1, -1).trim();
-          if (innerProps) {
-            const propPairs = innerProps.split(',').map(p => p.trim()).filter(p => p);
-            for (const prop of propPairs) {
-              const colonIndex = prop.indexOf(':');
-              if (colonIndex === -1) continue;
+          // Get pack configuration - either custom or auto-discovered
+          const packConfig = options.packs?.[pack] || {
+            iconifyPrefix: pack.toLowerCase()
+          };
+          const prefix = packConfig.iconifyPrefix;
 
-              const key = prop.substring(0, colonIndex).replace(/"/g, '').trim();
-              const value = prop.substring(colonIndex + 1).trim();
+          const sanitizedIconName = sanitizeIconName(iconName, pack);
+          const iconNames = resolveIconNames(sanitizedIconName);
 
-              if (value === 'true') {
-                svgAttrList.push(`${key}={true}`);
-              } else if (value === 'false') {
-                svgAttrList.push(`${key}={false}`);
-              } else if (value.startsWith('"') && value.endsWith('"')) {
-                svgAttrList.push(`${key}=${value}`);
-              } else {
-                svgAttrList.push(`${key}={${value}}`);
+          // Check for obviously invalid/test icon names
+          // This catches test cases with non-existent icons
+          if (
+            sanitizedIconName.toLowerCase().includes("nonexistent") ||
+            sanitizedIconName.toLowerCase().includes("non_existent") ||
+            sanitizedIconName.toLowerCase().includes("invalid") ||
+            sanitizedIconName.toLowerCase().includes("test") ||
+            sanitizedIconName === "NonExistentIcon"
+          ) {
+            debug(`Skipping test/non-existent icon name: ${sanitizedIconName}`);
+            return false;
+          }
+
+          // Get the correct collection name for loading
+          const collectionName = collectionNames.get(pack) || pack;
+
+          // Use optimistic loading - assume icon exists
+          // The virtual module will handle loading and error cases
+          const foundIconName = iconNames[0];
+          debug(
+            `[TRANSFORM_ICON] Using optimistic loading for ${pack}.${iconName} -> ${foundIconName} (collection: ${collectionName})`
+          );
+
+          const iconData = { body: "", viewBox: "0 0 24 24" }; // Placeholder, will be loaded by virtual module
+
+          const attributes = elem.openingElement.attributes;
+          let titleProp: string | undefined;
+
+          const otherAttributes = attributes.filter((attr) => {
+            if (
+              attr.type === "JSXAttribute" &&
+              (attr.name as JSXIdentifier).name === "title"
+            ) {
+              const jsxAttr = attr as JSXAttribute;
+              titleProp = source.slice(jsxAttr.value.start, jsxAttr.value.end);
+              return false;
+            }
+            return true;
+          });
+
+          const propsObj = extractProps(otherAttributes, source);
+          const childrenCode = extractChildren(elem, source, titleProp);
+
+          const kebabName = toKebabCase(iconName);
+          const importVar = generateImportVar(prefix, kebabName, importVars);
+
+          // Create virtual module ID (children are now handled in JSX, not virtual module)
+          // Use the correct collection name for the virtual ID
+          // Use the original pack name (not the lowercase prefix) to look up in collectionNames
+          const actualCollectionName = collectionNames.get(pack) || prefix;
+          debug(
+            `[VIRTUAL_ID] pack: ${pack}, prefix: ${prefix}, collectionNames.get(${pack}): ${collectionNames.get(pack)}, actualCollectionName: ${actualCollectionName}`
+          );
+          const virtualId = `virtual:icons/${actualCollectionName}/${kebabName}`;
+
+          if (!usedImports.has(virtualId)) {
+            usedImports.add(virtualId);
+            virtualToVar.set(virtualId, importVar);
+          }
+
+          const svgAttrList: string[] = [];
+
+          if (propsObj.trim() && propsObj !== "{}") {
+            const innerProps = propsObj.slice(1, -1).trim();
+            if (innerProps) {
+              const propPairs = innerProps
+                .split(",")
+                .map((p) => p.trim())
+                .filter((p) => p);
+              for (const prop of propPairs) {
+                const colonIndex = prop.indexOf(":");
+                if (colonIndex === -1) continue;
+
+                const key = prop.substring(0, colonIndex).replace(/"/g, "").trim();
+                const value = prop.substring(colonIndex + 1).trim();
+
+                if (value === "true") {
+                  svgAttrList.push(`${key}={true}`);
+                } else if (value === "false") {
+                  svgAttrList.push(`${key}={false}`);
+                } else if (value.startsWith('"') && value.endsWith('"')) {
+                  svgAttrList.push(`${key}=${value}`);
+                } else {
+                  svgAttrList.push(`${key}={${value}}`);
+                }
               }
             }
           }
-        }
 
-        svgAttrList.push(`viewBox="${iconData.viewBox}"`);
-        svgAttrList.push(`dangerouslySetInnerHTML={${importVar}}`);
+          svgAttrList.push(`viewBox="${iconData.viewBox}"`);
+          svgAttrList.push(`dangerouslySetInnerHTML={${importVar}}`);
 
-        const allAttributes = svgAttrList.filter(attr => attr.trim()).join(' ').trim();
+          const allAttributes = svgAttrList
+            .filter((attr) => attr.trim())
+            .join(" ")
+            .trim();
 
-        // Include children in the SVG element if they exist
-        let svgElement: string;
-        if (childrenCode) {
-          svgElement = `<svg ${allAttributes}>${childrenCode}</svg>`;
-        } else {
-          svgElement = `<svg ${allAttributes} />`;
-        }
-
-        debug(`Generated JSX element: ${svgElement}`);
-        // Ensure no trailing whitespace in the generated SVG element
-        const trimmedSvgElement = svgElement.trim();
-
-        // Check if there's trailing whitespace after the element and remove it
-        let endPos = elem.end;
-        const sourceAfter = source.slice(elem.end);
-        const whitespaceMatch = sourceAfter.match(/^(\s*)/);
-        if (whitespaceMatch && whitespaceMatch[0]) {
-          endPos += whitespaceMatch[0].length;
-        }
-
-        s.overwrite(elem.start, endPos, trimmedSvgElement);
-
-        debug(`[TRANSFORM_ICON] Successfully transformed ${alias}.${iconName} to SVG JSX`);
-        return true;
-      }
-
-
-
-      // Transform each icon element
-      for (let i = iconElements.length - 1; i >= 0; i--) {
-        if (transformIconElement(iconElements[i], s, code, aliasToPack)) {
-          hasChanges = true;
-        }
-      }
-
-      if (hasChanges) {
-        if (usedImports.size > 0) {
-          const virtualImports = Array.from(usedImports)
-            .map(virtualId => {
-              const importVar = virtualToVar.get(virtualId);
-              return `import ${importVar} from '${virtualId}';`;
-            })
-            .join('\n') + '\n';
-
-          // Find the position after regular imports
-          let insertPos = 0;
-          let importCount = 0;
-          for (const node of ast.body) {
-            if (node.type === "ImportDeclaration") {
-              insertPos = Math.max(insertPos, node.end);
-              importCount++;
-            }
+          // Include children in the SVG element if they exist
+          let svgElement: string;
+          if (childrenCode) {
+            svgElement = `<svg ${allAttributes}>${childrenCode}</svg>`;
+          } else {
+            svgElement = `<svg ${allAttributes} />`;
           }
 
-          debug(`Found ${importCount} imports, inserting at position ${insertPos}`);
+          debug(`Generated JSX element: ${svgElement}`);
+          // Ensure no trailing whitespace in the generated SVG element
+          const trimmedSvgElement = svgElement.trim();
 
-          // Insert virtual imports after regular imports with proper spacing
-          s.appendLeft(insertPos, '\n' + virtualImports.trimEnd() + '\n');
+          // Check if there's trailing whitespace after the element and remove it
+          let endPos = elem.end;
+          const sourceAfter = source.slice(elem.end);
+          const whitespaceMatch = sourceAfter.match(/^(\s*)/);
+          if (whitespaceMatch && whitespaceMatch[0]) {
+            endPos += whitespaceMatch[0].length;
+          }
+
+          s.overwrite(elem.start, endPos, trimmedSvgElement);
+
+          debug(
+            `[TRANSFORM_ICON] Successfully transformed ${alias}.${iconName} to SVG JSX`
+          );
+          return true;
         }
 
-        const resultCode = s.toString();
-        debug(`Final transformed code length: ${resultCode.length}`);
+        // Transform each icon element
+        for (let i = iconElements.length - 1; i >= 0; i--) {
+          if (transformIconElement(iconElements[i], s, code, aliasToPack)) {
+            hasChanges = true;
+          }
+        }
 
-        debug(`[TRANSFORM] Transformation successful for ${id}, returning transformed code`);
-        return {
-          code: resultCode,
-          map: s.generateMap({ hires: true })
-        };
-      }
+        if (hasChanges) {
+          if (usedImports.size > 0) {
+            const virtualImports =
+              Array.from(usedImports)
+                .map((virtualId) => {
+                  const importVar = virtualToVar.get(virtualId);
+                  return `import ${importVar} from '${virtualId}';`;
+                })
+                .join("\n") + "\n";
 
-      debug(`[TRANSFORM] No changes made to ${id}`);
-      return null;
+            // Find the position after regular imports
+            let insertPos = 0;
+            let importCount = 0;
+            for (const node of ast.body) {
+              if (node.type === "ImportDeclaration") {
+                insertPos = Math.max(insertPos, node.end);
+                importCount++;
+              }
+            }
+
+            debug(`Found ${importCount} imports, inserting at position ${insertPos}`);
+
+            // Insert virtual imports after regular imports with proper spacing
+            s.appendLeft(insertPos, "\n" + virtualImports.trimEnd() + "\n");
+          }
+
+          const resultCode = s.toString();
+          debug(`Final transformed code length: ${resultCode.length}`);
+
+          debug(
+            `[TRANSFORM] Transformation successful for ${id}, returning transformed code`
+          );
+          return {
+            code: resultCode,
+            map: s.generateMap({ hires: true })
+          };
+        }
+
+        debug(`[TRANSFORM] No changes made to ${id}`);
+        return null;
       } catch (error) {
         debug(`[TRANSFORM] Error during transformation of ${id}:`, error);
         // Return original code unchanged if transformation fails
@@ -654,7 +714,6 @@ function generateImportVar(prefix: string, name: string, existingVars: Set<strin
       const prefix = parts[1];
       const name = parts[2];
 
-
       if (!prefix || !name) {
         debug(`Invalid virtual icon path: ${virtualPath}`);
         return null;
@@ -665,7 +724,9 @@ function generateImportVar(prefix: string, name: string, existingVars: Set<strin
         if (!iconData) {
           debug(`Failed to load icon data for ${prefix}:${name}`);
           // Return a safe fallback that won't break JSX parsing
-          return { code: `export default '<path d="M12 2L2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>';\n` };
+          return {
+            code: `export default '<path d="M12 2L2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>';\n`
+          };
         }
 
         // Virtual module only contains the icon path data (children are handled in JSX)
@@ -675,32 +736,34 @@ function generateImportVar(prefix: string, name: string, existingVars: Set<strin
       } catch (error) {
         debug(`Error loading virtual module ${virtualPath}:`, error);
         // Return a safe fallback that won't break JSX parsing
-        return { code: `export default '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>';\n` };
+        return {
+          code: `export default '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>';\n`
+        };
       }
     },
 
-    async     handleHotUpdate(ctx) {
+    async handleHotUpdate(ctx) {
       const fileId = ctx.file;
       if (fileId.endsWith(".tsx") || fileId.endsWith(".jsx")) {
-        debug(`Hot update detected for ${fileId}`);
-
         try {
           // Read the file content to check if it contains icon usage
           const code = ctx.read?.();
-          if (!code) return [];
+          if (!code) return;
 
           // Handle both sync and async cases
           const sourceCode = code instanceof Promise ? await code : code;
 
           // Parse and check for icon usage
           const ast = parseAndValidateFile(sourceCode, fileId);
-          if (!ast) return [];
+          if (!ast) return;
 
           const aliasToPack = resolveImportAliases(ast, importSources);
 
           // If this file contains icon imports, force a full reload to ensure transformations work
           if (aliasToPack.size > 0) {
-            debug(`File ${fileId} contains icon usage - forcing full reload for proper transformation`);
+            debug(
+              `Hot update detected for ${fileId} - contains ${aliasToPack.size} icon import(s), forcing full reload for proper transformation`
+            );
             ctx.server.ws.send({ type: "full-reload" });
             return [];
           }
@@ -712,8 +775,7 @@ function generateImportVar(prefix: string, name: string, existingVars: Set<strin
         }
       }
 
-      return [];
+      return;
     }
   };
 };
-
