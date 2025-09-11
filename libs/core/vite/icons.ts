@@ -44,7 +44,7 @@ export type IconsPluginOptions = {
 function getAvailableCollections(): string[] {
   try {
     const iconifyJsonPath = require.resolve("@iconify/json/package.json");
-    const collectionsDir = path.dirname(iconifyJsonPath) + "/json";
+    const collectionsDir = `${path.dirname(iconifyJsonPath)}/json`;
 
     return fs
       .readdirSync(collectionsDir)
@@ -74,7 +74,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
   const availableCollections = new Set<string>();
   const collectionNames = new Map<string, string>();
 
-  const debug = (message: string, ...data: any[]) => {
+  const debug = (message: string, ...data: unknown[]) => {
     if (!isDebugMode) return;
     console.log(`[icons] ${message}`, ...data);
   };
@@ -83,7 +83,9 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
     if (availableCollections.size > 0) return;
 
     const collections = getAvailableCollections();
-    collections.forEach((name) => availableCollections.add(name));
+    for (const name of collections) {
+      availableCollections.add(name);
+    }
     debug(
       `Discovered ${collections.length} Iconify collections:`,
       collections.slice(0, 10),
@@ -141,7 +143,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
       return false;
     }
 
-    const collectionName = collectionNames.get(memberName) || pack.get(memberName)!;
+    const collectionName = collectionNames.get(memberName) || pack.get(memberName);
     return availableCollections.has(collectionName);
   }
 
@@ -187,7 +189,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
 
   async function loadCollectionLazy(prefix: string): Promise<IconifyJSON> {
     if (lazyCollections.has(prefix)) {
-      return lazyCollections.get(prefix)!;
+      return await lazyCollections.get(prefix);
     }
 
     const loadPromise = (async () => {
@@ -215,7 +217,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
   ): Promise<IconData | null> {
     const cacheKey = `${prefix}:${name}`;
     if (lazyIconCache.has(cacheKey)) {
-      return lazyIconCache.get(cacheKey)!;
+      return await lazyIconCache.get(cacheKey);
     }
 
     const loadPromise = (async () => {
@@ -277,6 +279,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
           if (specifier.type !== "ImportSpecifier") {
             continue;
           }
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           const spec = specifier as any;
           const importedName =
             spec.imported?.name || spec.imported?.value || spec.local.name;
@@ -485,7 +488,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
 
           const name = elem.openingElement.name;
           if (name.type !== "JSXMemberExpression") {
-            debug(`[TRANSFORM_ICON] Not a member expression`);
+            debug("[TRANSFORM_ICON] Not a member expression");
             return false;
           }
 
@@ -494,7 +497,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
             memberExpr.object.type !== "JSXIdentifier" ||
             memberExpr.property.type !== "JSXIdentifier"
           ) {
-            debug(`[TRANSFORM_ICON] Invalid member expression structure`);
+            debug("[TRANSFORM_ICON] Invalid member expression structure");
             return false;
           }
 
@@ -633,7 +636,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
           let endPos = elem.end;
           const sourceAfter = source.slice(elem.end);
           const whitespaceMatch = sourceAfter.match(/^(\s*)/);
-          if (whitespaceMatch && whitespaceMatch[0]) {
+          if (whitespaceMatch?.[0]) {
             endPos += whitespaceMatch[0].length;
           }
 
@@ -654,15 +657,13 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
 
         if (hasChanges) {
           if (usedImports.size > 0) {
-            const virtualImports =
-              Array.from(usedImports)
-                .map((virtualId) => {
-                  const importVar = virtualToVar.get(virtualId);
-                  return `import ${importVar} from '${virtualId}';`;
-                })
-                .join("\n") + "\n";
+            const virtualImports = `${Array.from(usedImports)
+              .map((virtualId) => {
+                const importVar = virtualToVar.get(virtualId);
+                return `import ${importVar} from '${virtualId}';`;
+              })
+              .join("\n")}\n`;
 
-            // Find the position after regular imports
             let insertPos = 0;
             let importCount = 0;
             for (const node of ast.body) {
@@ -674,8 +675,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
 
             debug(`Found ${importCount} imports, inserting at position ${insertPos}`);
 
-            // Insert virtual imports after regular imports with proper spacing
-            s.appendLeft(insertPos, "\n" + virtualImports.trimEnd() + "\n");
+            s.appendLeft(insertPos, `\n${virtualImports.trimEnd()}\n`);
           }
 
           const resultCode = s.toString();

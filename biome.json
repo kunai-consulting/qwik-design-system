@@ -60,7 +60,7 @@
       },
       "complexity": {
         "recommended": true,
-        "useSimplifiedLogicExpression": "warn"
+        "useSimplifiedLogicExpression": "off"
       },
       "correctness": {
         "noUndeclaredVariables": "error",

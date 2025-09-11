@@ -33,7 +33,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
   return {
     plugins: [
       asChild(),
-      icons({ debug: true }),
+      icons(),
       tailwindcss(),
       qwikRouter({
         mdx: {
