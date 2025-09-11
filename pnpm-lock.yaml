@@ -200,8 +200,8 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1
       '@oxc-project/types':
-        specifier: ^0.78.0
-        version: 0.78.0
+        specifier: ^0.87.0
+        version: 0.87.0
       magic-string:
         specifier: ^0.30.17
         version: 0.30.17
@@ -1070,9 +1070,6 @@ packages:
 
   '@oxc-project/types@0.75.1':
     resolution: {integrity: sha512-7ZJy+51qWpZRvynaQUezeYfjCtaSdiXIWFUZIlOuTSfDXpXqnSl/m1IUPLx6XrOy6s0SFv3CLE14vcZy63bz7g==}
-
-  '@oxc-project/types@0.78.0':
-    resolution: {integrity: sha512-8FvExh0WRWN1FoSTjah1xa9RlavZcJQ8/yxRbZ7ElmSa2Ij5f5Em7MvRbSthE6FbwC6Wh8iAw0Gpna7QdoqLGg==}
 
   '@oxc-project/types@0.80.0':
     resolution: {integrity: sha512-xxHQm8wfCv2e8EmtaDwpMeAHOWqgQDAYg+BJouLXSQt5oTKu9TIXrgNMGSrM2fLvKmECsRd9uUFAAD+hPyootA==}
@@ -4269,8 +4266,6 @@ snapshots:
   '@oxc-project/types@0.73.2': {}
 
   '@oxc-project/types@0.75.1': {}
-
-  '@oxc-project/types@0.78.0': {}
 
   '@oxc-project/types@0.80.0': {}
 
