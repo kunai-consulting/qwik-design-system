@@ -72,6 +72,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
   const lazyCollections: LazyCollections = new Map();
   const lazyIconCache: LazyIconCache = new Map();
   const availableCollections = new Set<string>();
+  const collectionNames = new Map<string, string>();
 
   const debug = (message: string, ...data: any[]) => {
     if (!isDebugMode) return;
@@ -129,7 +130,12 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
     }
 
     const memberName = (memberExpr.object as JSXIdentifier).name;
-    return pack.has(memberName);
+    if (!pack.has(memberName)) {
+      return false;
+    }
+
+    const collectionName = collectionNames.get(memberName) || pack.get(memberName)!;
+    return availableCollections.has(collectionName);
   }
 
   /**
@@ -262,9 +268,12 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
           const importedName = spec.imported?.name || spec.imported?.value || spec.local.name;
           const localAlias = spec.local.name;
 
-          if (availableCollections.has(importedName.toLowerCase())) {
+          const kebabName = toKebabCase(importedName);
+
+          if (availableCollections.has(kebabName)) {
             aliasToPack.set(localAlias, importedName);
-            debug(`Mapped alias ${localAlias} -> ${importedName} (auto-discovered)`);
+            collectionNames.set(localAlias, kebabName);
+            debug(`Mapped alias ${localAlias} -> ${importedName} (collection: ${kebabName})`);
             continue;
           }
           if (options.packs?.[importedName]) {
@@ -354,19 +363,19 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
    * @param existingVars - Set of existing variable names in the file
    * @returns Unique variable name
    */
-  function generateImportVar(prefix: string, name: string, existingVars: Set<string>): string {
-    let baseName = `__qds_i_${prefix}_${name.replace(/-/g, '_')}`;
-    let varName = baseName;
-    let counter = 1;
+function generateImportVar(prefix: string, name: string, existingVars: Set<string>): string {
+  let baseName = `__qds_i_${prefix.replace(/-/g, '_')}_${name.replace(/-/g, '_')}`;
+  let varName = baseName;
+  let counter = 1;
 
-    while (existingVars.has(varName)) {
-      varName = `${baseName}_${counter}`;
-      counter++;
-    }
-
-    existingVars.add(varName);
-    return varName;
+  while (existingVars.has(varName)) {
+    varName = `${baseName}_${counter}`;
+    counter++;
   }
+
+  existingVars.add(varName);
+  return varName;
+}
 
   return {
     name: "vite-plugin-qds-icons",
@@ -403,6 +412,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
         }
 
         debug(`[TRANSFORM] Processing ${id} with ${aliasToPack.size} aliases:`, Array.from(aliasToPack.entries()));
+        debug(`[DEBUG] collectionNames map: ${JSON.stringify(Array.from(collectionNames.entries()))}`);
 
         // Find all icon elements in the file
         const iconElements = findIconElements(ast, aliasToPack);
@@ -479,30 +489,13 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
           return false;
         }
 
-        // For lazy loading, check if collection exists first
-        // If collection doesn't exist, don't transform
-        if (!availableCollections.has(prefix.toLowerCase())) {
-          debug(`Collection not found: ${prefix}`);
-          return false;
-        }
+        // Get the correct collection name for loading
+        const collectionName = collectionNames.get(pack) || pack;
 
-        // Use optimistic loading - assume icon exists if collection is available
+        // Use optimistic loading - assume icon exists
         // The virtual module will handle loading and error cases
-        let foundIconName = null;
-
-        if (availableCollections.has(prefix.toLowerCase())) {
-          // Collection is available, assume the first variant exists
-          foundIconName = iconNames[0];
-          debug(`[TRANSFORM_ICON] Using optimistic loading for ${pack}.${iconName} -> ${foundIconName}`);
-        } else {
-          debug(`[TRANSFORM_ICON] Collection not available for ${prefix}`);
-          return false;
-        }
-
-        if (!foundIconName) {
-          debug(`[TRANSFORM_ICON] No valid icon name found for ${pack}.${iconName}`);
-          return false;
-        }
+        const foundIconName = iconNames[0];
+        debug(`[TRANSFORM_ICON] Using optimistic loading for ${pack}.${iconName} -> ${foundIconName} (collection: ${collectionName})`);
 
         const iconData = { body: '', viewBox: '0 0 24 24' }; // Placeholder, will be loaded by virtual module
 
@@ -525,7 +518,11 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
         const importVar = generateImportVar(prefix, kebabName, importVars);
 
         // Create virtual module ID (children are now handled in JSX, not virtual module)
-        const virtualId = `virtual:icons/${prefix}/${kebabName}`;
+        // Use the correct collection name for the virtual ID
+        // Use the original pack name (not the lowercase prefix) to look up in collectionNames
+        const actualCollectionName = collectionNames.get(pack) || prefix;
+        debug(`[VIRTUAL_ID] pack: ${pack}, prefix: ${prefix}, collectionNames.get(${pack}): ${collectionNames.get(pack)}, actualCollectionName: ${actualCollectionName}`);
+        const virtualId = `virtual:icons/${actualCollectionName}/${kebabName}`;
 
         if (!usedImports.has(virtualId)) {
           usedImports.add(virtualId);
@@ -656,6 +653,7 @@ export const icons = (options: IconsPluginOptions = {}): VitePlugin => {
       const parts = virtualPath.split("/");
       const prefix = parts[1];
       const name = parts[2];
+
 
       if (!prefix || !name) {
         debug(`Invalid virtual icon path: ${virtualPath}`);
