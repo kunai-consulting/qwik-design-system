@@ -6,7 +6,6 @@ import { parseSync } from "oxc-parser";
 
 type TransformResult = { code: string; map: unknown } | null;
 
-// Helper function to validate JSX syntax using oxc-parser
 function validateJSXSyntax(code: string): { isValid: boolean; errors: string[] } {
   try {
     const result = parseSync(code, "test.tsx", {
@@ -36,7 +35,6 @@ describe("icons", () => {
   beforeAll(async () => {
     plugin = icons({ debug: true });
 
-    // Preload collections for testing
     const collections: Map<string, IconifyJSON> = new Map();
     try {
       const lucideCollection = await lookupCollection("lucide");
@@ -526,6 +524,61 @@ describe("icons", () => {
       expect(result).toBeTruthy();
       expect(result.code).toContain('import __qds_i_tabler_check from \'virtual:icons/tabler/check\'');
       expect(result.code).toContain('<svg width={24} class="text-green-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_tabler_check} />');
+    });
+
+    it("should transform icon sets with multiple words in name (AkarIcons example)", () => {
+      const code = `
+        import { AkarIcons } from "@kunai-consulting/qwik";
+
+        function App() {
+          return <AkarIcons.Airpods viewBox="0 0 24 24" />;
+        }
+      `;
+      const result = transform(code, "test.tsx");
+      expect(result).toBeTruthy();
+
+      expect(result.code).toContain('import __qds_i_akaricons_airpods from \'virtual:icons/akar-icons/airpods\'');
+
+      expect(result.code).toContain('__qds_i_akaricons_airpods');
+
+      expect(result.code).toContain('<svg viewBox="0 0 24 24" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_akaricons_airpods} />');
+
+      expect(result.code).not.toContain('__qds_i_akar-icons_airpods');
+    });
+
+    it("should transform icon sets with multiple words in name (MaterialSymbols example)", () => {
+      const code = `
+        import { MaterialSymbols } from "@kunai-consulting/qwik";
+
+        function App() {
+          return <MaterialSymbols.AcUnitRounded class="text-blue-500" />;
+        }
+      `;
+      const result = transform(code, "test.tsx");
+      expect(result).toBeTruthy();
+
+      expect(result.code).toContain('import __qds_i_materialsymbols_ac_unit_rounded from \'virtual:icons/material-symbols/ac-unit-rounded\'');
+
+      expect(result.code).toContain('__qds_i_materialsymbols_ac_unit_rounded');
+
+      expect(result.code).toContain('<svg class="text-blue-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_materialsymbols_ac_unit_rounded} />');
+
+      expect(result.code).not.toContain('__qds_i_material-symbols_ac-unit-rounded');
+    });
+
+    it("should allow consumer props to override icon defaults", () => {
+      const code = `
+        import { Lucide } from "@kunai-consulting/qwik";
+
+        function App() {
+          return <Lucide.Check viewBox="0 0 32 32" width={32} />;
+        }
+      `;
+      const result = transform(code, "test.tsx");
+      expect(result).toBeTruthy();
+
+      // Should include consumer's viewBox and width
+      expect(result.code).toContain('<svg viewBox="0 0 32 32" width={32} viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_check} />');
     });
 
     it("should transform the complete icon-example.tsx content", () => {
