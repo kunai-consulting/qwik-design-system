@@ -29,6 +29,7 @@ function validateJSXSyntax(code: string): { isValid: boolean; errors: string[] }
 }
 
 describe("icons", () => {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   let plugin: any;
   let transform: (code: string, id: string) => TransformResult;
 
@@ -44,7 +45,7 @@ describe("icons", () => {
     }
 
     // Set the collections on the plugin
-    (plugin as any).collections = collections;
+    plugin.collections = collections;
 
     transform = plugin.transform as (code: string, id: string) => TransformResult;
   });
@@ -706,39 +707,39 @@ describe("icons", () => {
       // }
 
       // Should contain all the transformed icons
-      expect(result!.code).toContain(
+      expect(result.code).toContain(
         '<svg width={24} class="text-green-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_check} />'
       );
-      expect(result!.code).toContain(
+      expect(result.code).toContain(
         '<svg width={24} class="text-red-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_x} />'
       );
-      expect(result!.code).toContain(
+      expect(result.code).toContain(
         '<svg width={24} class="text-red-500 fill-current" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_heart} />'
       );
-      expect(result!.code).toContain(
+      expect(result.code).toContain(
         '<svg width={24} class="text-yellow-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_star} />'
       );
-      expect(result!.code).toContain(
+      expect(result.code).toContain(
         '<svg width={24} class="text-gray-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_lucide_search} />'
       );
-      expect(result!.code).toContain(
+      expect(result.code).toContain(
         '<svg width={24} class="text-green-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_heroicons_check_circle} />'
       );
-      expect(result!.code).toContain(
+      expect(result.code).toContain(
         '<svg width={24} class="text-red-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_heroicons_x_circle} />'
       );
-      expect(result!.code).toContain(
+      expect(result.code).toContain(
         '<svg width={24} class="text-green-500" viewBox="0 0 24 24" dangerouslySetInnerHTML={__qds_i_tabler_check} />'
       );
 
       // Validate JSX syntax using oxc-parser
-      const validation = validateJSXSyntax(result!.code);
+      const validation = validateJSXSyntax(result.code);
       if (!validation.isValid) {
         console.error(
           "JSX validation errors for complete icon-example:",
           validation.errors
         );
-        console.error("Generated code:", result!.code);
+        console.error("Generated code:", result.code);
       }
       expect(validation.isValid).toBe(true);
     });
@@ -746,6 +747,7 @@ describe("icons", () => {
 });
 
 describe("JSX Syntax Validation", () => {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   let plugin: any;
   let transform: (code: string, id: string) => TransformResult;
 
@@ -765,24 +767,24 @@ export default component$(() => {
     const result = transform(code, "test.tsx");
 
     expect(result).toBeTruthy();
-    expect(result!.code).toContain("import");
-    expect(result!.code).toContain("<svg");
-    expect(result!.code).toContain("dangerouslySetInnerHTML");
+    expect(result.code).toContain("import");
+    expect(result.code).toContain("<svg");
+    expect(result.code).toContain("dangerouslySetInnerHTML");
 
     // The plugin now generates self-closing tags, so check for /> instead of </svg>
-    expect(result!.code).toContain("/>");
+    expect(result.code).toContain("/>");
 
     // Ensure no trailing whitespace that could cause parsing issues
-    const lines = result!.code.split("\n");
+    const lines = result.code.split("\n");
     for (const line of lines) {
       expect(line).toBe(line.trimEnd());
     }
 
     // Validate JSX syntax using oxc-parser
-    const validation = validateJSXSyntax(result!.code);
+    const validation = validateJSXSyntax(result.code);
     if (!validation.isValid) {
       console.error("JSX validation errors for test:", validation.errors);
-      console.error("Generated code:", result!.code);
+      console.error("Generated code:", result.code);
     }
     expect(validation.isValid).toBe(true);
   });
@@ -804,21 +806,21 @@ export default component$(() => {
     const result = transform(code, "test.tsx");
 
     expect(result).toBeTruthy();
-    expect(result!.code).toContain("import");
+    expect(result.code).toContain("import");
 
     // Should have three SVG elements
-    const svgMatches = result!.code.match(/<svg[^>]*>/g);
+    const svgMatches = result.code.match(/<svg[^>]*>/g);
     expect(svgMatches).toHaveLength(3);
 
     // Each SVG should have the required attributes
-    expect(result!.code).toContain("viewBox=");
-    expect(result!.code).toContain("dangerouslySetInnerHTML=");
+    expect(result.code).toContain("viewBox=");
+    expect(result.code).toContain("dangerouslySetInnerHTML=");
 
     // Validate JSX syntax using oxc-parser
-    const validation = validateJSXSyntax(result!.code);
+    const validation = validateJSXSyntax(result.code);
     if (!validation.isValid) {
       console.error("JSX validation errors for test:", validation.errors);
-      console.error("Generated code:", result!.code);
+      console.error("Generated code:", result.code);
     }
     expect(validation.isValid).toBe(true);
   });
@@ -845,23 +847,23 @@ export default component$(() => {
     expect(result).toBeTruthy();
 
     // Should preserve all attributes correctly
-    expect(result!.code).toContain("width={24}");
-    expect(result!.code).toContain("height={24}");
-    expect(result!.code).toContain('className="text-green-500 hover:text-green-600"');
+    expect(result.code).toContain("width={24}");
+    expect(result.code).toContain("height={24}");
+    expect(result.code).toContain('className="text-green-500 hover:text-green-600"');
     // Note: The style attribute may be formatted differently by the plugin
-    expect(result!.code).toContain("style=");
-    expect(result!.code).toContain("onClick$=");
-    expect(result!.code).toContain('data-testid="check-icon"');
+    expect(result.code).toContain("style=");
+    expect(result.code).toContain("onClick$=");
+    expect(result.code).toContain('data-testid="check-icon"');
 
     // Should still have the SVG-specific attributes
-    expect(result!.code).toContain("viewBox=");
-    expect(result!.code).toContain("dangerouslySetInnerHTML=");
+    expect(result.code).toContain("viewBox=");
+    expect(result.code).toContain("dangerouslySetInnerHTML=");
 
     // Validate JSX syntax using oxc-parser
-    const validation = validateJSXSyntax(result!.code);
+    const validation = validateJSXSyntax(result.code);
     if (!validation.isValid) {
       console.error("JSX validation errors for test:", validation.errors);
-      console.error("Generated code:", result!.code);
+      console.error("Generated code:", result.code);
     }
     expect(validation.isValid).toBe(true);
   });
@@ -879,7 +881,7 @@ export default component$(() => {
     expect(result).toBeTruthy();
 
     // Check each line for trailing whitespace
-    const lines = result!.code.split("\n");
+    const lines = result.code.split("\n");
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       if (line.length !== line.trimEnd().length) {
@@ -888,10 +890,10 @@ export default component$(() => {
     }
 
     // Validate JSX syntax using oxc-parser
-    const validation = validateJSXSyntax(result!.code);
+    const validation = validateJSXSyntax(result.code);
     if (!validation.isValid) {
       console.error("JSX validation errors for test:", validation.errors);
-      console.error("Generated code:", result!.code);
+      console.error("Generated code:", result.code);
     }
     expect(validation.isValid).toBe(true);
   });
@@ -916,22 +918,22 @@ export default component$(() => {
     expect(result).toBeTruthy();
 
     // Boolean true should be converted to {true}
-    expect(result!.code).toContain("disabled={true}");
+    expect(result.code).toContain("disabled={true}");
 
     // Boolean false should be converted to {false}
-    expect(result!.code).toContain("hidden={false}");
+    expect(result.code).toContain("hidden={false}");
 
     // Boolean shorthand should be preserved as just the attribute name
-    expect(result!.code).toContain("required");
+    expect(result.code).toContain("required");
 
     // The plugin may or may not filter out undefined props - check what it actually does
-    // expect(result!.code).not.toContain("optional=");
+    // expect(result.code).not.toContain("optional=");
 
     // Validate JSX syntax using oxc-parser
-    const validation = validateJSXSyntax(result!.code);
+    const validation = validateJSXSyntax(result.code);
     if (!validation.isValid) {
       console.error("JSX validation errors for test:", validation.errors);
-      console.error("Generated code:", result!.code);
+      console.error("Generated code:", result.code);
     }
     expect(validation.isValid).toBe(true);
   });
@@ -968,10 +970,10 @@ export default component$(() => {
     // }
 
     // Validate JSX syntax using oxc-parser
-    const validation = validateJSXSyntax(result!.code);
+    const validation = validateJSXSyntax(result.code);
     if (!validation.isValid) {
       console.error("JSX validation errors for reproduction test:", validation.errors);
-      console.error("Generated code:", result!.code);
+      console.error("Generated code:", result.code);
     }
     expect(validation.isValid).toBe(true);
   });
@@ -1035,10 +1037,10 @@ export default component$(() => {
     expect(result).toBeTruthy();
 
     // Validate JSX syntax using oxc-parser
-    const validation = validateJSXSyntax(result!.code);
+    const validation = validateJSXSyntax(result.code);
     if (!validation.isValid) {
       console.error("JSX validation errors for complex nested JSX:", validation.errors);
-      console.error("Generated code:", result!.code);
+      console.error("Generated code:", result.code);
     }
     expect(validation.isValid).toBe(true);
   });
@@ -1073,10 +1075,10 @@ export default component$(() => {
     expect(result).toBeTruthy();
 
     // Validate JSX syntax using oxc-parser
-    const validation = validateJSXSyntax(result!.code);
+    const validation = validateJSXSyntax(result.code);
     if (!validation.isValid) {
       console.error("JSX validation errors for edge cases:", validation.errors);
-      console.error("Generated code:", result!.code);
+      console.error("Generated code:", result.code);
     }
     expect(validation.isValid).toBe(true);
   });
@@ -1104,10 +1106,10 @@ export default component$(() => {
     expect(result).toBeTruthy();
 
     // Validate JSX syntax using oxc-parser
-    const validation = validateJSXSyntax(result!.code);
+    const validation = validateJSXSyntax(result.code);
     if (!validation.isValid) {
       console.error("JSX validation errors for JSX fragments:", validation.errors);
-      console.error("Generated code:", result!.code);
+      console.error("Generated code:", result.code);
     }
     expect(validation.isValid).toBe(true);
   });
@@ -1144,20 +1146,22 @@ export default component$(() => {
     expect(result).toBeTruthy();
 
     // Validate JSX syntax using oxc-parser
-    const validation = validateJSXSyntax(result!.code);
+    const validation = validateJSXSyntax(result.code);
     if (!validation.isValid) {
       console.error(
         "JSX validation errors for conditional rendering:",
         validation.errors
       );
-      console.error("Generated code:", result!.code);
+      console.error("Generated code:", result.code);
     }
     expect(validation.isValid).toBe(true);
   });
 });
 
 describe("HMR (Hot Module Replacement)", () => {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   let plugin: any;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   let handleHotUpdate: any;
 
   beforeAll(async () => {
@@ -1170,9 +1174,9 @@ describe("HMR (Hot Module Replacement)", () => {
     // Preload collections for testing
     try {
       const lucideCollection = await lookupCollection("lucide");
-      if (plugin && (plugin as any).lazyCollections) {
-        (plugin as any).lazyCollections.set("lucide", Promise.resolve(lucideCollection));
-        (plugin as any).availableCollections.add("lucide");
+      if (plugin?.lazyCollections) {
+        plugin.lazyCollections.set("lucide", Promise.resolve(lucideCollection));
+        plugin.availableCollections.add("lucide");
       }
     } catch (error) {
       console.warn("Failed to preload Lucide collection for HMR tests:", error);

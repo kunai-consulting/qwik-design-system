@@ -3,7 +3,6 @@ import type {
   JSXElement,
   JSXIdentifier,
   JSXOpeningElement,
-  Node,
   Program
 } from "@oxc-project/types";
 import MagicString from "magic-string";

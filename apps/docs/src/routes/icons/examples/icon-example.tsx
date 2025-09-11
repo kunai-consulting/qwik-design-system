@@ -1,5 +1,5 @@
+import { AkarIcons, Heroicons, Lucide, Tabler } from "@kunai-consulting/qwik";
 import { component$ } from "@qwik.dev/core";
-import { Lucide, Heroicons, Tabler, Hugeicons, Healthicons, MaterialSymbols, Arcticons, AkarIcons } from "@kunai-consulting/qwik";
 
 export default component$(() => {
   return (
@@ -15,7 +15,6 @@ export default component$(() => {
           {/* <Hugeicons.Abacus /> */}
           <AkarIcons.Air class="size-6 text-green-500" />
           <AkarIcons.Airpods />
-
         </div>
       </div>
 

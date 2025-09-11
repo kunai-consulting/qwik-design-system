@@ -1,10 +1,9 @@
-import { describe, it, expect, vi } from "vitest";
-import { writeFileSync } from "node:fs";
-import { sanitizeIconName, DEFAULT_PACKS } from "./generate-icon-types";
+import { describe, expect, it, vi } from "vitest";
+import { DEFAULT_PACKS, sanitizeIconName } from "./generate-icon-types";
 
 // Mock fs module
 vi.mock("node:fs", () => ({
-  writeFileSync: vi.fn(),
+  writeFileSync: vi.fn()
 }));
 
 describe("generate-icon-types", () => {
@@ -20,7 +19,9 @@ describe("generate-icon-types", () => {
     });
 
     it("should handle multiple hyphens", () => {
-      expect(sanitizeIconName("align-horizontal-distribute-center")).toBe("AlignHorizontalDistributeCenter");
+      expect(sanitizeIconName("align-horizontal-distribute-center")).toBe(
+        "AlignHorizontalDistributeCenter"
+      );
     });
 
     it("should handle numbers", () => {

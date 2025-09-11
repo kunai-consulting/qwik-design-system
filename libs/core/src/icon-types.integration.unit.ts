@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 // This test verifies that the generated icon types work correctly
 // It imports the types and verifies they have the expected structure

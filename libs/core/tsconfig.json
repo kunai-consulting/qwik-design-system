@@ -8,9 +8,5 @@
     "resolveJsonModule": true,
     "skipLibCheck": true
   },
-  "include": [
-    "vite/**/*",
-    "src/**/*",
-    "utils/**/*"
-  ]
+  "include": ["vite/**/*", "src/**/*", "utils/**/*"]
 }

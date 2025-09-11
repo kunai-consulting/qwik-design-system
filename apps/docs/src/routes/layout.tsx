@@ -11,11 +11,11 @@ import {
 import { type ContentHeading, type RequestHandler, useContent } from "@qwik.dev/router";
 import { components } from "~/mdx/components";
 import { MDXProvider } from "~/mdx/provider";
-import styles from "./layout.css?inline";
 import { NavFooter } from "../docs-widgets/nav-footer/nav-footer";
 import { SearchModal } from "../docs-widgets/search/search";
 import { Sidebar } from "../docs-widgets/sidebar/sidebar";
 import { TOC } from "../docs-widgets/toc/toc";
+import styles from "./layout.css?inline";
 type RootContext = {
   allHeadingsSig: Signal<ContentHeading[]>;
 };
