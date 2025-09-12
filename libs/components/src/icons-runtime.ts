@@ -11,7 +11,9 @@ const proxyHandler = {
   // biome-ignore lint/suspicious/noExplicitAny: need any type here
   get(target: any, prop: string | symbol) {
     // This will never be called at runtime - the Vite plugin transforms the JSX
-    throw new Error(`Icon components should be transformed by the Vite plugin. Tried to access: ${String(prop)}`);
+    throw new Error(
+      `Icon components should be transformed by the Vite plugin. Tried to access: ${String(prop)}`
+    );
   }
 };
 
@@ -28,7 +30,10 @@ export const Basil: typeof GeneratedTypes.Basil = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
 export const Bi: typeof GeneratedTypes.Bi = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const BitcoinIcons: typeof GeneratedTypes.BitcoinIcons = new Proxy({}, proxyHandler);
+export const BitcoinIcons: typeof GeneratedTypes.BitcoinIcons = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
 export const Bpmn: typeof GeneratedTypes.Bpmn = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
@@ -72,9 +77,15 @@ export const Codicon: typeof GeneratedTypes.Codicon = new Proxy({}, proxyHandler
 // Use the generated types from the .d.ts file
 export const Covid: typeof GeneratedTypes.Covid = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const Cryptocurrency: typeof GeneratedTypes.Cryptocurrency = new Proxy({}, proxyHandler);
+export const Cryptocurrency: typeof GeneratedTypes.Cryptocurrency = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const CryptocurrencyColor: typeof GeneratedTypes.CryptocurrencyColor = new Proxy({}, proxyHandler);
+export const CryptocurrencyColor: typeof GeneratedTypes.CryptocurrencyColor = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
 export const Cuida: typeof GeneratedTypes.Cuida = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
@@ -84,9 +95,15 @@ export const Devicon: typeof GeneratedTypes.Devicon = new Proxy({}, proxyHandler
 // Use the generated types from the .d.ts file
 export const DeviconLine: typeof GeneratedTypes.DeviconLine = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const DeviconOriginal: typeof GeneratedTypes.DeviconOriginal = new Proxy({}, proxyHandler);
+export const DeviconOriginal: typeof GeneratedTypes.DeviconOriginal = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const DeviconPlain: typeof GeneratedTypes.DeviconPlain = new Proxy({}, proxyHandler);
+export const DeviconPlain: typeof GeneratedTypes.DeviconPlain = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
 export const DinkieIcons: typeof GeneratedTypes.DinkieIcons = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
@@ -98,13 +115,19 @@ export const El: typeof GeneratedTypes.El = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
 export const Emojione: typeof GeneratedTypes.Emojione = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const EmojioneMonotone: typeof GeneratedTypes.EmojioneMonotone = new Proxy({}, proxyHandler);
+export const EmojioneMonotone: typeof GeneratedTypes.EmojioneMonotone = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
 export const EmojioneV1: typeof GeneratedTypes.EmojioneV1 = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
 export const Entypo: typeof GeneratedTypes.Entypo = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const EntypoSocial: typeof GeneratedTypes.EntypoSocial = new Proxy({}, proxyHandler);
+export const EntypoSocial: typeof GeneratedTypes.EntypoSocial = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
 export const EosIcons: typeof GeneratedTypes.EosIcons = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
@@ -150,7 +173,10 @@ export const Flag: typeof GeneratedTypes.Flag = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
 export const Flagpack: typeof GeneratedTypes.Flagpack = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const FlatColorIcons: typeof GeneratedTypes.FlatColorIcons = new Proxy({}, proxyHandler);
+export const FlatColorIcons: typeof GeneratedTypes.FlatColorIcons = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
 export const FlatUi: typeof GeneratedTypes.FlatUi = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
@@ -162,9 +188,13 @@ export const FluentColor: typeof GeneratedTypes.FluentColor = new Proxy({}, prox
 // Use the generated types from the .d.ts file
 export const FluentEmoji: typeof GeneratedTypes.FluentEmoji = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const FluentEmojiFlat: typeof GeneratedTypes.FluentEmojiFlat = new Proxy({}, proxyHandler);
+export const FluentEmojiFlat: typeof GeneratedTypes.FluentEmojiFlat = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const FluentEmojiHighContrast: typeof GeneratedTypes.FluentEmojiHighContrast = new Proxy({}, proxyHandler);
+export const FluentEmojiHighContrast: typeof GeneratedTypes.FluentEmojiHighContrast =
+  new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
 export const FluentMdl2: typeof GeneratedTypes.FluentMdl2 = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
@@ -194,7 +224,10 @@ export const GravityUi: typeof GeneratedTypes.GravityUi = new Proxy({}, proxyHan
 // Use the generated types from the .d.ts file
 export const Gridicons: typeof GeneratedTypes.Gridicons = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const GrommetIcons: typeof GeneratedTypes.GrommetIcons = new Proxy({}, proxyHandler);
+export const GrommetIcons: typeof GeneratedTypes.GrommetIcons = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
 export const Guidance: typeof GeneratedTypes.Guidance = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
@@ -202,9 +235,15 @@ export const Healthicons: typeof GeneratedTypes.Healthicons = new Proxy({}, prox
 // Use the generated types from the .d.ts file
 export const Heroicons: typeof GeneratedTypes.Heroicons = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const HeroiconsOutline: typeof GeneratedTypes.HeroiconsOutline = new Proxy({}, proxyHandler);
+export const HeroiconsOutline: typeof GeneratedTypes.HeroiconsOutline = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const HeroiconsSolid: typeof GeneratedTypes.HeroiconsSolid = new Proxy({}, proxyHandler);
+export const HeroiconsSolid: typeof GeneratedTypes.HeroiconsSolid = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
 export const Hugeicons: typeof GeneratedTypes.Hugeicons = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
@@ -216,11 +255,20 @@ export const IcomoonFree: typeof GeneratedTypes.IcomoonFree = new Proxy({}, prox
 // Use the generated types from the .d.ts file
 export const IconPark: typeof GeneratedTypes.IconPark = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const IconParkOutline: typeof GeneratedTypes.IconParkOutline = new Proxy({}, proxyHandler);
+export const IconParkOutline: typeof GeneratedTypes.IconParkOutline = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const IconParkSolid: typeof GeneratedTypes.IconParkSolid = new Proxy({}, proxyHandler);
+export const IconParkSolid: typeof GeneratedTypes.IconParkSolid = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const IconParkTwotone: typeof GeneratedTypes.IconParkTwotone = new Proxy({}, proxyHandler);
+export const IconParkTwotone: typeof GeneratedTypes.IconParkTwotone = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
 export const Iconamoon: typeof GeneratedTypes.Iconamoon = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
@@ -266,11 +314,20 @@ export const Map: typeof GeneratedTypes.Map = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
 export const Marketeq: typeof GeneratedTypes.Marketeq = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const MaterialIconTheme: typeof GeneratedTypes.MaterialIconTheme = new Proxy({}, proxyHandler);
+export const MaterialIconTheme: typeof GeneratedTypes.MaterialIconTheme = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const MaterialSymbols: typeof GeneratedTypes.MaterialSymbols = new Proxy({}, proxyHandler);
+export const MaterialSymbols: typeof GeneratedTypes.MaterialSymbols = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const MaterialSymbolsLight: typeof GeneratedTypes.MaterialSymbolsLight = new Proxy({}, proxyHandler);
+export const MaterialSymbolsLight: typeof GeneratedTypes.MaterialSymbolsLight = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
 export const Mdi: typeof GeneratedTypes.Mdi = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
@@ -316,11 +373,17 @@ export const Pajamas: typeof GeneratedTypes.Pajamas = new Proxy({}, proxyHandler
 // Use the generated types from the .d.ts file
 export const Pepicons: typeof GeneratedTypes.Pepicons = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const PepiconsPencil: typeof GeneratedTypes.PepiconsPencil = new Proxy({}, proxyHandler);
+export const PepiconsPencil: typeof GeneratedTypes.PepiconsPencil = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
 export const PepiconsPop: typeof GeneratedTypes.PepiconsPop = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const PepiconsPrint: typeof GeneratedTypes.PepiconsPrint = new Proxy({}, proxyHandler);
+export const PepiconsPrint: typeof GeneratedTypes.PepiconsPrint = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
 export const Ph: typeof GeneratedTypes.Ph = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
@@ -328,7 +391,10 @@ export const Picon: typeof GeneratedTypes.Picon = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
 export const Pixel: typeof GeneratedTypes.Pixel = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const Pixelarticons: typeof GeneratedTypes.Pixelarticons = new Proxy({}, proxyHandler);
+export const Pixelarticons: typeof GeneratedTypes.Pixelarticons = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
 export const Prime: typeof GeneratedTypes.Prime = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
@@ -336,7 +402,10 @@ export const Proicons: typeof GeneratedTypes.Proicons = new Proxy({}, proxyHandl
 // Use the generated types from the .d.ts file
 export const Ps: typeof GeneratedTypes.Ps = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const QlementineIcons: typeof GeneratedTypes.QlementineIcons = new Proxy({}, proxyHandler);
+export const QlementineIcons: typeof GeneratedTypes.QlementineIcons = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
 export const Quill: typeof GeneratedTypes.Quill = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
@@ -352,11 +421,17 @@ export const Si: typeof GeneratedTypes.Si = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
 export const SiGlyph: typeof GeneratedTypes.SiGlyph = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const Sidekickicons: typeof GeneratedTypes.Sidekickicons = new Proxy({}, proxyHandler);
+export const Sidekickicons: typeof GeneratedTypes.Sidekickicons = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
 export const SimpleIcons: typeof GeneratedTypes.SimpleIcons = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const SimpleLineIcons: typeof GeneratedTypes.SimpleLineIcons = new Proxy({}, proxyHandler);
+export const SimpleLineIcons: typeof GeneratedTypes.SimpleLineIcons = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
 export const SkillIcons: typeof GeneratedTypes.SkillIcons = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
@@ -366,51 +441,106 @@ export const Stash: typeof GeneratedTypes.Stash = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
 export const Streamline: typeof GeneratedTypes.Streamline = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const StreamlineBlock: typeof GeneratedTypes.StreamlineBlock = new Proxy({}, proxyHandler);
+export const StreamlineBlock: typeof GeneratedTypes.StreamlineBlock = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const StreamlineColor: typeof GeneratedTypes.StreamlineColor = new Proxy({}, proxyHandler);
+export const StreamlineColor: typeof GeneratedTypes.StreamlineColor = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const StreamlineCyber: typeof GeneratedTypes.StreamlineCyber = new Proxy({}, proxyHandler);
+export const StreamlineCyber: typeof GeneratedTypes.StreamlineCyber = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const StreamlineCyberColor: typeof GeneratedTypes.StreamlineCyberColor = new Proxy({}, proxyHandler);
+export const StreamlineCyberColor: typeof GeneratedTypes.StreamlineCyberColor = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const StreamlineEmojis: typeof GeneratedTypes.StreamlineEmojis = new Proxy({}, proxyHandler);
+export const StreamlineEmojis: typeof GeneratedTypes.StreamlineEmojis = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const StreamlineFlex: typeof GeneratedTypes.StreamlineFlex = new Proxy({}, proxyHandler);
+export const StreamlineFlex: typeof GeneratedTypes.StreamlineFlex = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const StreamlineFlexColor: typeof GeneratedTypes.StreamlineFlexColor = new Proxy({}, proxyHandler);
+export const StreamlineFlexColor: typeof GeneratedTypes.StreamlineFlexColor = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const StreamlineFreehand: typeof GeneratedTypes.StreamlineFreehand = new Proxy({}, proxyHandler);
+export const StreamlineFreehand: typeof GeneratedTypes.StreamlineFreehand = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const StreamlineFreehandColor: typeof GeneratedTypes.StreamlineFreehandColor = new Proxy({}, proxyHandler);
+export const StreamlineFreehandColor: typeof GeneratedTypes.StreamlineFreehandColor =
+  new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const StreamlineGuidance: typeof GeneratedTypes.StreamlineGuidance = new Proxy({}, proxyHandler);
+export const StreamlineGuidance: typeof GeneratedTypes.StreamlineGuidance = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const StreamlineKameleonColor: typeof GeneratedTypes.StreamlineKameleonColor = new Proxy({}, proxyHandler);
+export const StreamlineKameleonColor: typeof GeneratedTypes.StreamlineKameleonColor =
+  new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const StreamlineLogos: typeof GeneratedTypes.StreamlineLogos = new Proxy({}, proxyHandler);
+export const StreamlineLogos: typeof GeneratedTypes.StreamlineLogos = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const StreamlinePixel: typeof GeneratedTypes.StreamlinePixel = new Proxy({}, proxyHandler);
+export const StreamlinePixel: typeof GeneratedTypes.StreamlinePixel = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const StreamlinePlump: typeof GeneratedTypes.StreamlinePlump = new Proxy({}, proxyHandler);
+export const StreamlinePlump: typeof GeneratedTypes.StreamlinePlump = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const StreamlinePlumpColor: typeof GeneratedTypes.StreamlinePlumpColor = new Proxy({}, proxyHandler);
+export const StreamlinePlumpColor: typeof GeneratedTypes.StreamlinePlumpColor = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const StreamlineSharp: typeof GeneratedTypes.StreamlineSharp = new Proxy({}, proxyHandler);
+export const StreamlineSharp: typeof GeneratedTypes.StreamlineSharp = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const StreamlineSharpColor: typeof GeneratedTypes.StreamlineSharpColor = new Proxy({}, proxyHandler);
+export const StreamlineSharpColor: typeof GeneratedTypes.StreamlineSharpColor = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const StreamlineStickiesColor: typeof GeneratedTypes.StreamlineStickiesColor = new Proxy({}, proxyHandler);
+export const StreamlineStickiesColor: typeof GeneratedTypes.StreamlineStickiesColor =
+  new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const StreamlineUltimate: typeof GeneratedTypes.StreamlineUltimate = new Proxy({}, proxyHandler);
+export const StreamlineUltimate: typeof GeneratedTypes.StreamlineUltimate = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
-export const StreamlineUltimateColor: typeof GeneratedTypes.StreamlineUltimateColor = new Proxy({}, proxyHandler);
+export const StreamlineUltimateColor: typeof GeneratedTypes.StreamlineUltimateColor =
+  new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
 export const Subway: typeof GeneratedTypes.Subway = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
 export const SvgSpinners: typeof GeneratedTypes.SvgSpinners = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const SystemUicons: typeof GeneratedTypes.SystemUicons = new Proxy({}, proxyHandler);
+export const SystemUicons: typeof GeneratedTypes.SystemUicons = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
 export const Tabler: typeof GeneratedTypes.Tabler = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
@@ -420,7 +550,10 @@ export const Teenyicons: typeof GeneratedTypes.Teenyicons = new Proxy({}, proxyH
 // Use the generated types from the .d.ts file
 export const Token: typeof GeneratedTypes.Token = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
-export const TokenBranded: typeof GeneratedTypes.TokenBranded = new Proxy({}, proxyHandler);
+export const TokenBranded: typeof GeneratedTypes.TokenBranded = new Proxy(
+  {},
+  proxyHandler
+);
 // Use the generated types from the .d.ts file
 export const Topcoat: typeof GeneratedTypes.Topcoat = new Proxy({}, proxyHandler);
 // Use the generated types from the .d.ts file
