@@ -30,6 +30,6 @@
     "oxc-parser": "^0.87",
     "oxc-walker": "^0.5.2",
     "tsdown": "latest",
-    "vite": "^7.0.6"
+    "vite": "^7.0.7"
   }
 }
