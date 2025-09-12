@@ -16,7 +16,8 @@
   },
   "scripts": {
     "build": "tsdown && pnpm generate-icon-types",
-    "dev": "tsdown --watch",
+    "dev": "tsdown",
+    "dev:watch": "tsdown --watch",
     "test": "vitest",
     "generate-icon-types": "tsx src/generate-icon-types.ts"
   },
