@@ -1,8 +1,10 @@
 import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import {
   type PropsOf,
+  type QRL,
   Slot,
   component$,
+  useContext,
   useContextProvider,
   useSignal,
   useStyles$,
@@ -36,24 +38,19 @@ export const OtpRoot = component$((props: PublicOtpRootProps) => {
     disabled: false
   });
 
-  const itemIds = useSignal<string[]>([]);
   const currentIndex = useSignal(0);
   const numItems = 0;
   const nativeInputRef = useSignal<HTMLInputElement>();
   const isFocused = useSignal(false);
   const selectionStart = useSignal<number | null>(null);
   const selectionEnd = useSignal<number | null>(null);
-  const isInitialLoad = useSignal(true);
   const hasBeenFocused = useSignal(false);
-
-  itemIds.value = [];
 
   const context = {
     code,
     currentIndex,
     numItems,
     nativeInputRef,
-    itemIds,
     hasBeenFocused,
     isFocused,
     isDisabled,
@@ -61,24 +58,6 @@ export const OtpRoot = component$((props: PublicOtpRootProps) => {
     selectionEnd,
     shiftPWManagers
   };
-
-  useTask$(async ({ track }) => {
-    track(code);
-
-    if (!isInitialLoad.value) {
-      await onChange$?.(code.value);
-    }
-
-    isInitialLoad.value = false;
-
-    const isPopulated = code.value.length > 0;
-    const isFull = code.value.length === context.numItems;
-
-    if (!isPopulated) return;
-    if (!isFull) return;
-
-    await onComplete$?.();
-  });
 
   useContextProvider(OTPContextId, context);
 
@@ -92,6 +71,41 @@ export const OtpRoot = component$((props: PublicOtpRootProps) => {
       {...rest}
     >
       <Slot />
+      <PostRender onComplete$={onComplete$} onChange$={onChange$} />
     </Render>
   );
+});
+
+type PostRenderProps = {
+  onComplete$: QRL<() => void> | undefined;
+  onChange$: QRL<(value: string) => void> | undefined;
+};
+
+const PostRender = component$<PostRenderProps>((props: PostRenderProps) => {
+  const context = useContext(OTPContextId);
+  const isInitialLoad = useSignal(true);
+
+  const { onComplete$, onChange$ } = props;
+
+  useTask$(async ({ track }) => {
+    track(context.code);
+
+    if (!isInitialLoad.value) {
+      await onChange$?.(context.code.value);
+    }
+
+    isInitialLoad.value = false;
+
+    const isPopulated = context.code.value.length > 0;
+
+    // this is in post render because numItems is not updated until the items are rendered
+    const isFull = context.code.value.length === context.numItems;
+
+    if (!isPopulated) return;
+    if (!isFull) return;
+
+    await onComplete$?.();
+  });
+
+  return <></>;
 });
