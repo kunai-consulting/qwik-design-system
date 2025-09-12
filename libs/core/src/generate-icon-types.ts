@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { writeFileSync } from "node:fs";
+import { existsSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -185,7 +185,9 @@ async function generateRuntimeProxies(
 
   const output = declarations.join("\n");
 
-  writeFileSync(finalOutputPath, output, "utf-8");
+  if (existsSync(finalOutputPath)) {
+    writeFileSync(finalOutputPath, output, "utf-8");
+  }
 
   console.log(`✓ Generated runtime proxies for ${packNames.length} packs:`);
   for (const name of packNames) {
