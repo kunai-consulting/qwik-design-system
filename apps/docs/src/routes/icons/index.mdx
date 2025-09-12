@@ -1,95 +1,192 @@
-<Showcase name="icon-example" />
+import IconExample from "./examples/icon-example";
+
+<IconExample />
 
 # Icons
 
-Qwik Icons is a comprehensive icon system that provides access to multiple popular icon libraries in your Qwik applications. The system is inspired and forked from `@qwikest/icons` but has diverged in some ways as well.
+Qwik Icons is a modern, build-time icon system that transforms JSX icon components into optimized SVG elements. The system uses a Vite plugin to convert `<Pack.Icon />` syntax into direct `jsx("svg", {...})` calls at build time.
 
+## Key Features
+
+- ✅ **Build-time transformation** - No runtime icon components
+- ✅ **Type-safe** - Full TypeScript support with autocomplete
+- ✅ **Optimized bundles** - Only used icons are included
+- ✅ **A11y support** - Title props and custom children
+- ✅ **Framework agnostic** - Works with any JSX runtime
 
 ## Supported Icon Packs
 
-Our icon system includes the following icon libraries:
+Our icon system includes icons from popular libraries:
 
-- **Bs**: Bootstrap Icons
-- **Fa**: Font Awesome 6 Free
-- **Fl**: Flowbite Icons
-- **Go**: Octicons by GitHub
-- **Hi**: Heroicons by Tailwind
-- **In**: Iconoir
-- **Io**: Ionicons by Ionic
-- **Lu**: Lucide (superset of feather icons)
-- **Mat**: Material Icons
-- **Mo**: Mono Icons
-- **Si**: Simple Icons (brand icons)
-- **Tb**: Tabler Icons
+- **Lucide** - Beautiful, consistent icon library
+- **Heroicons** - Tailwind CSS icon library
+- **Tabler** - Premium icon library
+- **And more** - Any Iconify-supported pack
 
 ## Installation
 
-The icons package is included in our design system by default. If you need to install it separately:
+Icons are included with the Qwik design system:
 
 ```bash
-npm i @kunai-consulting/qwik-icons
+npm i @kunai-consulting/qwik
 ```
 
 ## Usage
 
-Icons can be imported from their respective packages and used directly in your components. They inherit size and color from their parent elements by default.
+Import and use icons directly in your components:
 
 ```tsx
-import { LuRocket } from "@kunai-consulting/qwik-icons";
+import { component$ } from "@qwik.dev/core";
+import { Lucide, Heroicons, Tabler } from "@kunai-consulting/qwik";
 
 export const MyComponent = component$(() => {
   return (
-    <div style={{ color: "red", fontSize: "40px" }}>
-      <LuRocket />
+    <div class="flex gap-4">
+      <Lucide.Check width={24} class="text-green-500" />
+      <Heroicons.Heart width={24} class="text-red-500" />
+      <Tabler.Star width={24} class="text-yellow-500" />
     </div>
   );
 });
 ```
 
-## Icon Packs Examples
+## Icon Properties
 
-Here are examples of icons from each supported pack:
+Icons accept all standard SVG properties:
 
 ```tsx
-import { 
-  Bs1Circle,
-  Fa0Solid,
-  FlAdressBookSolid,
-  HiAcademicCapMini,
-  In1StMedal,
-  IoAirplaneOutline,
-  LuRocket,
-  MatGifBoxSharp,
-  MoAdd,
-  GoFlame24,
-  Si1Password,
-  Tb123
-} from "@kunai-consulting/qwik-icons";
+<Lucide.Check
+  width={24}
+  height={24}
+  class="text-blue-500"
+  stroke-width={2}
+  fill="currentColor"
+/>
 ```
 
-## Styling Icons
+## Accessibility (A11y)
 
-Icons inherit their parent's color and size by default. You can customize them using CSS:
+### Title Prop (Syntactic Sugar)
+
+Use the `title` prop for simple accessibility:
 
 ```tsx
-<div style={{ color: "red", fontSize: "24px" }}>
-  <LuRocket />
+<Lucide.Info title="Information about this feature" width={24} />
+```
+
+This automatically generates:
+```tsx
+<svg ...>
+  <title>Information about this feature</title>
+  <!-- icon paths -->
+</svg>
+```
+
+### Custom Children
+
+For more complex accessibility or additional elements:
+
+```tsx
+<Lucide.User width={24}>
+  <title>Profile</title>
+  <desc>Click to view user profile</desc>
+</Lucide.User>
+```
+
+## Styling
+
+Icons inherit color and size from their parent:
+
+```tsx
+<div class="text-red-500 text-2xl">
+  <Lucide.Heart /> {/* Will be red and 24px */}
 </div>
 ```
 
-> In the example above, the icon will be red and 24px in size.
+You can also style individual icons:
 
-## Differences from Qwikest Icons
+```tsx
+<Lucide.Check class="text-green-500 hover:text-green-700" width={32} />
+```
 
-- Each component is a regular Qwik component (it uses `component$`).
-- Every icons can be grabbed from `@kunai-consulting/qwik-icons`, rather than having to grab from the `/lucide` or `/feather` subpaths.
-- Icons are part of the Icon namespace, and autocomplete to the specific icon you're searching for.
+## Build-time Transformation
 
-## Roadmap
+The Vite plugin transforms icon JSX at build time:
 
-- The ability to place child markup inside the svg (e.g `<title>` or `<desc>`)
-- An action that updates the latest new icons over time
-- New icon packs (requested so far: `css.gg`, `phosphor`, `remixicon`)
+**Input:**
+```tsx
+<Lucide.Check width={24} class="icon" />
+```
+
+**Output:**
+```tsx
+{jsx("svg", {
+  width: 24,
+  class: "icon",
+  viewBox: "0 0 24 24",
+  dangerouslySetInnerHTML: __qds_i_lucide_check
+})}
+```
+
+## TypeScript Support
+
+Full type safety with autocomplete:
+
+```tsx
+import { Lucide } from "@kunai-consulting/qwik";
+
+// ✅ TypeScript knows this is Component<PropsOf<"svg">>
+const checkIcon = <Lucide.Check />;
+
+// ✅ All SVG props are available
+<Lucide.Check
+  width={24}
+  height={24}
+  class="custom-class"
+  onClick$={handleClick}
+  aria-label="Check mark"
+/>
+```
+
+## Performance Benefits
+
+- **Zero runtime** - Icons are transformed at build time
+- **Tree-shaking** - Only used icons are included in bundles
+- **Small bundles** - No icon component overhead
+- **Fast rendering** - Direct SVG elements
+
+## Migration from Old System
+
+If you're migrating from the old `@kunai-consulting/qwik-icons`:
+
+```tsx
+// Old way
+import { LuRocket } from "@kunai-consulting/qwik-icons";
+<LuRocket />
+
+// New way
+import { Lucide } from "@kunai-consulting/qwik";
+<Lucide.Rocket />
+```
+
+## Available Icon Packs
+
+All Iconify-supported packs are available through type declarations. The most commonly used:
+
+- `Lucide` - Modern, consistent icons
+- `Heroicons` - Tailwind's icon library
+- `Tabler` - Premium icon set
+- `Material` - Google's Material Design icons
+- And hundreds more...
+
+## Custom Icon Packs
+
+You can use any icon pack supported by Iconify. Just import the namespace and use the icons:
+
+```tsx
+import { CustomPack } from "@kunai-consulting/qwik";
+<CustomPack.MyIcon />
+```
 
 
 

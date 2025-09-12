@@ -60,7 +60,7 @@
       },
       "complexity": {
         "recommended": true,
-        "useSimplifiedLogicExpression": "warn"
+        "useSimplifiedLogicExpression": "off"
       },
       "correctness": {
         "noUndeclaredVariables": "error",
@@ -83,7 +83,8 @@
         "noApproximativeNumericConstant": "error",
         "noMisrefactoredShorthandAssign": "warn",
         "recommended": true,
-        "noAssignInExpressions": "off"
+        "noAssignInExpressions": "off",
+        "noShadowRestrictedNames": "off"
       },
       "security": {
         "noDangerouslySetInnerHtml": "error"
