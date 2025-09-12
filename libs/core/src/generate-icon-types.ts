@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { existsSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -98,9 +98,13 @@ async function generateIconTypes(packs?: Record<string, { iconifyPrefix: string 
 
   const output = declarations.join("\n");
 
-  if (existsSync(outputPath)) {
-    writeFileSync(outputPath, output, "utf-8");
+  // Create directory if it doesn't exist
+  const outputDir = dirname(outputPath);
+  if (!existsSync(outputDir)) {
+    mkdirSync(outputDir, { recursive: true });
   }
+
+  writeFileSync(outputPath, output, "utf-8");
 
   console.log("✓ Generated type declarations:");
   for (const [packName, count] of Object.entries(iconCounts)) {
@@ -187,9 +191,12 @@ async function generateRuntimeProxies(
 
   const output = declarations.join("\n");
 
-  if (existsSync(finalOutputPath)) {
-    writeFileSync(finalOutputPath, output, "utf-8");
+  const finalOutputDir = dirname(finalOutputPath);
+  if (!existsSync(finalOutputDir)) {
+    mkdirSync(finalOutputDir, { recursive: true });
   }
+
+  writeFileSync(finalOutputPath, output, "utf-8");
 
   console.log(`✓ Generated runtime proxies for ${packNames.length} packs:`);
   for (const name of packNames) {
