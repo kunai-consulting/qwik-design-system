@@ -28,7 +28,7 @@
     "@types/node": "22.14.0",
     "typescript": "5.4.5",
     "uqr": "^0.1.2",
-    "vite": "^7",
+    "vite": "^5",
     "vite-tsconfig-paths": "^4.2.1",
     "@qwik.dev/core": "2.0.0-beta.9",
     "vitest-browser-qwik": "https://pkg.pr.new/kunai-consulting/vitest-browser-qwik@949e6ac"
