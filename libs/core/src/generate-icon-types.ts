@@ -98,7 +98,9 @@ async function generateIconTypes(packs?: Record<string, { iconifyPrefix: string 
 
   const output = declarations.join("\n");
 
-  writeFileSync(outputPath, output, "utf-8");
+  if (existsSync(outputPath)) {
+    writeFileSync(outputPath, output, "utf-8");
+  }
 
   console.log("✓ Generated type declarations:");
   for (const [packName, count] of Object.entries(iconCounts)) {
