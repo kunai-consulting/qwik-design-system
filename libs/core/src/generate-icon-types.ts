@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 import { writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 // Export for testing
 export { sanitizeIconName, generateIconTypes, generateRuntimeProxies };
@@ -32,7 +34,8 @@ async function generateIconTypes(packs?: Record<string, { iconifyPrefix: string 
   console.log("Generating icon type declarations...");
 
   const packsToUse = packs || discoverAllIconifyCollections();
-  const outputPath = "../components/lib-types/virtual-qds-icons.d.ts";
+  const scriptDir = dirname(fileURLToPath(import.meta.url));
+  const outputPath = join(scriptDir, "../../components/lib-types/virtual-qds-icons.d.ts");
   const declarations: string[] = [];
   const iconCounts: Record<string, number> = {};
 
@@ -110,12 +113,15 @@ async function generateIconTypes(packs?: Record<string, { iconifyPrefix: string 
  * @param packs - Icon packs to generate proxies for (defaults to all discovered packs)
  */
 async function generateRuntimeProxies(
-  outputPath = "../components/src/icons-runtime.ts",
+  outputPath?: string,
   packs?: Record<string, { iconifyPrefix: string }>
 ) {
   console.log("Generating runtime proxy exports...");
 
   const packsToUse = packs || discoverAllIconifyCollections();
+  const scriptDir = dirname(fileURLToPath(import.meta.url));
+  const defaultOutputPath = join(scriptDir, "../../components/src/icons-runtime.ts");
+  const finalOutputPath = outputPath || defaultOutputPath;
   const declarations: string[] = [];
 
   // Header
@@ -135,6 +141,9 @@ async function generateRuntimeProxies(
   declarations.push('type IconComponent = Component<PropsOf<"svg">>;');
   declarations.push("");
   declarations.push("const proxyHandler = {");
+  declarations.push(
+    "  // biome-ignore lint/suspicious/noExplicitAny: need any type here"
+  );
   declarations.push("  get(target: any, prop: string | symbol) {");
   declarations.push(
     "    // This will never be called at runtime - the Vite plugin transforms the JSX"
@@ -176,13 +185,13 @@ async function generateRuntimeProxies(
 
   const output = declarations.join("\n");
 
-  writeFileSync(outputPath, output, "utf-8");
+  writeFileSync(finalOutputPath, output, "utf-8");
 
   console.log(`✓ Generated runtime proxies for ${packNames.length} packs:`);
   for (const name of packNames) {
     console.log(`  - ${name}`);
   }
-  console.log(`✓ Output: ${outputPath}`);
+  console.log(`✓ Output: ${finalOutputPath}`);
 }
 
 // Run the generators
@@ -199,7 +208,7 @@ async function main() {
     console.log(`\n${"=".repeat(50)}\n`);
 
     // Generate runtime proxies
-    await generateRuntimeProxies("../components/src/icons-runtime.ts", allPacks);
+    await generateRuntimeProxies(undefined, allPacks);
 
     console.log("\n✅ Icon generation completed successfully!");
   } catch (error) {
