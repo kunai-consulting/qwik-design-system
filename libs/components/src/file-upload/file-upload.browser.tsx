@@ -1,6 +1,6 @@
 import { component$ } from "@qwik.dev/core";
 import { page, userEvent } from "@vitest/browser/context";
-import { beforeEach, expect, test } from "vitest";
+import { beforeEach, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-qwik";
 import { FileUpload } from "..";
 import type { FileInfo } from "./file-upload-context";
@@ -13,30 +13,29 @@ declare global {
   }
 }
 
-// Reset shared window state before each test in this file
 beforeEach(() => {
   window.__processedFiles = [];
   window.onFilesChange = undefined;
 });
 
-// Top-level locator constants using data-testid
 const Root = page.getByTestId("root");
 const Dropzone = page.getByTestId("dropzone");
 const Input = page.getByTestId("input");
 const Trigger = page.getByTestId("trigger");
 
-// Example components used across tests
 const Basic = component$((props: PublicFileUploadProps) => {
   return (
     <FileUpload.Root
       data-testid="root"
-      onFilesChange$={(files) => {
+      onChange$={(files) => {
         window.onFilesChange?.(files);
         window.__processedFiles = files;
+        // @ts-ignore - for tests
+        window.hasChangeEventFired = "yes";
       }}
       {...props}
     >
-      <FileUpload.Input data-testid="input" />
+      <FileUpload.HiddenInput data-testid="input" />
       <FileUpload.Dropzone data-testid="dropzone">
         <p>Drag and drop files here or</p>
         <FileUpload.Trigger data-testid="trigger">Browse Files</FileUpload.Trigger>
@@ -45,7 +44,6 @@ const Basic = component$((props: PublicFileUploadProps) => {
   );
 });
 
-// Helpers
 function makeFile(name: string, type: string, content: string | Uint8Array) {
   const blob =
     content instanceof Uint8Array
@@ -66,46 +64,38 @@ async function waitForProcessedFiles(expectedCount = 1, timeoutMs = 2000) {
   throw new Error("File processing timed out");
 }
 
-// critical functionality
-
 test("should render required elements", async () => {
   render(<Basic />);
 
   await expect.element(Root).toBeVisible();
   await expect.element(Dropzone).toBeVisible();
-  await expect.element(Input).not.toBeVisible();
+  await expect.element(Input).toBeInTheDocument();
   await expect.element(Trigger).toBeVisible();
 });
 
-test("clicking trigger should click hidden input", async () => {
+test("trigger should call showPicker when available", async () => {
   render(<Basic />);
+
+  await expect.element(Input).toBeInTheDocument();
+  await expect.element(Input).toBeVisible();
 
   const inputEl = (await Input.element()) as HTMLInputElement | null;
   if (!inputEl) throw new Error("input not found");
 
-  const clickPromise = new Promise<boolean>((resolve) => {
-    const timeout = setTimeout(() => resolve(false), 1000);
-    inputEl.addEventListener(
-      "click",
-      () => {
-        clearTimeout(timeout);
-        resolve(true);
-      },
-      { once: true }
-    );
-  });
+  const showPickerSpy = vi.fn().mockResolvedValue(undefined);
+  inputEl.showPicker = showPickerSpy;
+
+  await expect.element(Trigger).toBeVisible();
 
   await userEvent.click(Trigger);
 
-  const clicked = await clickPromise;
-  expect(clicked).toBe(true);
+  expect(showPickerSpy).toHaveBeenCalledTimes(1);
 });
-
-// drag and drop functionality
 
 test("dragging over dropzone should set dragging state", async () => {
   render(<Basic />);
 
+  await expect.element(Dropzone).toBeVisible();
   const dz = (await Dropzone.element()) as HTMLDivElement | null;
   if (!dz) throw new Error("dropzone not found");
 
@@ -125,13 +115,14 @@ test("dragging over dropzone should set dragging state", async () => {
 test("drag leave should remove dragging state", async () => {
   render(<Basic />);
 
+  await expect.element(Dropzone).toBeVisible();
   const dz = (await Dropzone.element()) as HTMLDivElement | null;
   if (!dz) throw new Error("dropzone not found");
 
-  // drag enter first
   const enterEvent = new Event("dragenter", { bubbles: true }) as unknown as {
     dataTransfer: unknown;
   };
+
   (enterEvent as { dataTransfer: unknown }).dataTransfer = {
     types: ["Files"],
     items: [{ kind: "file" }],
@@ -139,12 +130,15 @@ test("drag leave should remove dragging state", async () => {
     effectAllowed: "all",
     dropEffect: "copy"
   } as unknown;
+
   dz.dispatchEvent(enterEvent as unknown as Event);
 
-  // drag leave
+  await expect.element(Dropzone).toHaveAttribute("data-dragging");
+
   const leaveEvent = new Event("dragleave", { bubbles: true }) as unknown as {
     dataTransfer: unknown;
   };
+
   (leaveEvent as { dataTransfer: unknown }).dataTransfer = {
     types: ["Files"],
     items: [],
@@ -153,6 +147,8 @@ test("drag leave should remove dragging state", async () => {
     dropEffect: "none"
   } as unknown;
   dz.dispatchEvent(leaveEvent as unknown as Event);
+
+  await expect.element(Dropzone).toBeVisible();
 
   await expect.element(Dropzone).not.toHaveAttribute("data-dragging");
 });
@@ -226,28 +222,17 @@ test("selecting single file should process it", async () => {
 test("selecting a file should fire change event", async () => {
   render(<Basic />);
 
-  const inputEl = (await Input.element()) as HTMLInputElement | null;
-  if (!inputEl) throw new Error("input not found");
+  await expect.element(Input).toBeVisible();
 
-  const changePromise = new Promise<boolean>((resolve) => {
-    const timeout = setTimeout(() => resolve(false), 1000);
-    inputEl.addEventListener(
-      "change",
-      () => {
-        clearTimeout(timeout);
-        resolve(true);
-      },
-      { once: true }
-    );
-  });
+  await expect.element(Input).toBeInTheDocument();
 
-  await userEvent.upload(
-    inputEl,
-    makeFile("test.jpg", "image/jpeg", "fake image content")
-  );
+  await userEvent.upload(Input, makeFile("test.jpg", "image/jpeg", "fake image content"));
 
-  const changed = await changePromise;
-  expect(changed).toBe(true);
+  await expect.element(Input).toBeVisible();
+  await expect.element(Input).toBeInTheDocument();
+
+  // @ts-ignore - for tests
+  await expect(window.hasChangeEventFired).toBe("yes");
 });
 
 test("multiple=true should process multiple files", async () => {

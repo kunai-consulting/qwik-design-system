@@ -10,11 +10,10 @@ export interface FileInfo {
 
 export interface FileUploadContext {
   inputRef: Signal<HTMLInputElement | undefined>;
-  isDragging: Signal<boolean>;
   files: Signal<FileInfo[]>;
   multiple: boolean;
   accept?: string;
-  disabled?: boolean;
+  isDisabled: Signal<boolean>;
   onFilesChange$?: (files: FileInfo[]) => void;
 }
 
