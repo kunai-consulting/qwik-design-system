@@ -32,7 +32,7 @@ export const FileUploadHiddenInput = component$<PublicInputProps>((props) => {
       context.files.value = newFiles.slice(0, 1);
     }
 
-    context.onFilesChange$?.(context.files.value);
+    context.onChange$?.(context.files.value);
   });
 
   return (

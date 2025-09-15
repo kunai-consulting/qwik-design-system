@@ -14,7 +14,7 @@ export interface FileUploadContext {
   multiple: boolean;
   accept?: string;
   isDisabled: Signal<boolean>;
-  onFilesChange$?: (files: FileInfo[]) => void;
+  onChange$?: (files: FileInfo[]) => void;
 }
 
 export const fileUploadContextId =
