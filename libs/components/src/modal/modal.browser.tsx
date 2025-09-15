@@ -102,12 +102,12 @@ test("modal closes when escape key is pressed", async () => {
 test("body has overflow hidden when modal is opened", async () => {
   render(<Basic />);
 
-  // Note: Body overflow styles tested via computed style evaluation
+  await expect.element(document.body).not.toHaveStyle({ overflow: "hidden" });
 
   await userEvent.click(Trigger);
   await expect.element(Content).toBeVisible();
 
-  // Note: Body overflow:hidden tested via computed style evaluation
+  await expect.element(document.body).toHaveStyle({ overflow: "hidden" });
 });
 
 test("body overflow is restored when modal is closed", async () => {
@@ -115,12 +115,13 @@ test("body overflow is restored when modal is closed", async () => {
 
   await userEvent.click(Trigger);
   await expect.element(Content).toBeVisible();
-  // Note: Body overflow:hidden tested via computed style evaluation
+
+  await expect.element(document.body).toHaveStyle({ overflow: "hidden" });
 
   await userEvent.keyboard("{Escape}");
   await expect.element(Content).not.toBeVisible();
 
-  // Note: Body overflow styles tested via computed style evaluation
+  await expect.element(document.body).not.toHaveStyle({ overflow: "hidden" });
 });
 
 const Nested = component$((props: PropsOf<typeof Modal.Root>) => {
