@@ -1,4 +1,3 @@
-import { ScrollArea } from "@kunai-consulting/qwik";
 import {
   type Signal,
   Slot,
@@ -9,12 +8,12 @@ import {
   useStyles$
 } from "@qwik.dev/core";
 import { type ContentHeading, type RequestHandler, useContent } from "@qwik.dev/router";
-import { NavFooter } from "~/docs-widgets/nav-footer/nav-footer";
-import { SearchModal } from "~/docs-widgets/search/search";
-import { Sidebar } from "~/docs-widgets/sidebar/sidebar";
-import { TOC } from "~/docs-widgets/toc/toc";
 import { components } from "~/mdx/components";
 import { MDXProvider } from "~/mdx/provider";
+import { NavFooter } from "../docs-widgets/nav-footer/nav-footer";
+import { SearchModal } from "../docs-widgets/search/search";
+import { Sidebar } from "../docs-widgets/sidebar/sidebar";
+import { TOC } from "../docs-widgets/toc/toc";
 import styles from "./layout.css?inline";
 type RootContext = {
   allHeadingsSig: Signal<ContentHeading[]>;
@@ -54,17 +53,7 @@ export default component$(() => {
           <Slot />
         </main>
         <aside class="hidden w-60 xl:block">
-          <ScrollArea.Root class="fixed h-[calc(100vh-160px)] w-60 overflow-hidden">
-            <ScrollArea.Viewport class="w-full h-full">
-              <TOC headings={headings || []} />
-            </ScrollArea.Viewport>
-            <ScrollArea.Scrollbar
-              orientation="vertical"
-              class="w-4 p-0.5 bg-neutral-primary"
-            >
-              <ScrollArea.Thumb class="h-12 w-3 bg-neutral-foreground transition-[background] duration-160 ease-out hover:bg-[#FFFFFF80]" />
-            </ScrollArea.Scrollbar>
-          </ScrollArea.Root>
+          <TOC headings={headings || []} />
         </aside>
       </div>
     </MDXProvider>

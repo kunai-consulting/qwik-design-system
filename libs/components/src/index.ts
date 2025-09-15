@@ -19,3 +19,5 @@ export * as Menu from "./menu";
 export * as Progress from "./progress";
 
 export { Render } from "./render/render";
+
+export * from "./icons-runtime";
