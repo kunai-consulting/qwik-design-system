@@ -5,6 +5,8 @@ import { render } from "vitest-browser-qwik";
 import { Modal } from "..";
 import { pointer } from "../../utils/vitest-pointer";
 
+pointer.showDebugDots = true;
+
 // Top-level locator constants using data-testid
 const Root = page.getByTestId("root");
 const Trigger = page.getByTestId("trigger");
@@ -60,7 +62,9 @@ test("modal closes when backdrop is pressed outside", async () => {
   await userEvent.click(Trigger);
   await expect.element(Content).toBeVisible();
 
-  await pointer.tapOutside(Content, { side: "top-left", distance: 50 });
+  await expect.element(Trigger).toBeVisible();
+
+  await pointer.tapOutside(Content, { side: "top", distance: 50 });
 
   await expect.element(Content).not.toBeVisible();
 });
