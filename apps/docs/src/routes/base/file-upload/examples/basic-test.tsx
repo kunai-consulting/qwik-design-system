@@ -4,13 +4,13 @@ import { component$ } from "@qwik.dev/core";
 export default component$(() => {
   return (
     <FileUpload.Root
-      onFilesChange$={(files) => {
+      onChange$={(files) => {
         console.log("Files changed:", files);
         // @ts-ignore - for tests
         window.onFilesChange?.(files);
       }}
     >
-      <FileUpload.Input />
+      <FileUpload.HiddenInput />
       <FileUpload.Dropzone>
         <p>Drag and drop files here or</p>
         <FileUpload.Trigger>Browse Files</FileUpload.Trigger>

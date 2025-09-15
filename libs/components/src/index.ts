@@ -20,3 +20,5 @@ export * as Progress from "./progress";
 export * as Modal from "./modal";
 
 export { Render } from "./render/render";
+
+export * from "./icons-runtime";

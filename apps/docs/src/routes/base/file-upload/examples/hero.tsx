@@ -9,7 +9,7 @@ export default component$(() => {
     <FileUpload.Root
       multiple
       accept="image/*" // Accept only image files
-      onFilesChange$={(files) => {
+      onChange$={(files) => {
         // Process each uploaded file
         for (const fileInfo of files) {
           // Create FormData for potential server upload
@@ -28,7 +28,7 @@ export default component$(() => {
       }}
       class="file-upload-root"
     >
-      <FileUpload.Input />
+      <FileUpload.HiddenInput />
       <FileUpload.Dropzone class="file-upload-dropzone">
         <div class="file-upload-content">
           <p class="file-upload-text">Drag and drop files here or</p>

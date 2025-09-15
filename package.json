@@ -6,6 +6,7 @@
   "packageManager": "pnpm@9.14.4",
   "scripts": {
     "dev": "pnpm --filter ./libs/core dev & pnpm --filter ./apps/docs dev",
+    "dev.watch": "pnpm --filter ./libs/core dev:watch & pnpm --filter ./apps/docs dev",
     "dev.ct": "pnpm --filter ./apps/component-tests dev -- --port 6174",
     "build": "pnpm --filter ./libs/core build && pnpm --filter ./libs/utils build && pnpm --filter ./libs/components build && pnpm --filter ./apps/docs build && cp -r ./apps/docs/dist/pagefind ./apps/docs/public",
     "preview": "pnpm --filter ./apps/docs preview",
@@ -29,7 +30,7 @@
     "@changesets/cli": "^2.27.7",
     "@linear/sdk": "^27.0.0",
     "@playwright/test": "^1.46.0",
-    "@qwik.dev/core": "2.0.0-beta.7",
+    "@qwik.dev/core": "2.0.0-beta.9",
     "@types/node": "22.14.0",
     "@vitest/browser": "^3.2.4",
     "axe-core": "^4.10.3",
