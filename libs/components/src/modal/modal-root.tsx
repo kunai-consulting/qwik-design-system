@@ -8,6 +8,8 @@ import {
   component$,
   createContextId,
   noSerialize,
+  useConstant,
+  useContext,
   useContextProvider,
   useSignal,
   useTask$
@@ -20,6 +22,7 @@ type ModalContext = {
   contentRef: Signal<HTMLDialogElement | undefined>;
   isOpen: Signal<boolean>;
   closeOnOutsideClick: boolean;
+  level: number;
 };
 
 type ModalRootProps = PropsOf<"div"> &
@@ -34,6 +37,12 @@ export const ModalRoot = component$((props: ModalRootProps) => {
   const isInitialized = useSignal(false);
   const disablePageScrollFn = useSignal<() => void>();
   const enablePageScrollFn = useSignal<() => void>();
+
+  // handling nested state
+  const parentContext = useContext(modalContextId, null);
+  const level = useConstant(() => {
+    return (parentContext?.level ?? 0) + 1;
+  });
 
   const { closeOnOutsideClick = true, ...restProps } = props;
 
@@ -66,6 +75,7 @@ export const ModalRoot = component$((props: ModalRootProps) => {
     }
 
     cleanup(() => {
+      if (level > 1) return;
       enablePageScrollFn.value?.();
     });
   });
@@ -73,7 +83,8 @@ export const ModalRoot = component$((props: ModalRootProps) => {
   const context: ModalContext = {
     contentRef,
     isOpen,
-    closeOnOutsideClick
+    closeOnOutsideClick,
+    level
   };
 
   useContextProvider(modalContextId, context);
