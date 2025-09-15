@@ -5,13 +5,13 @@ export default component$(() => {
   return (
     <FileUpload.Root
       accept="image/*"
-      onFilesChange$={(files) => {
+      onChange$={(files) => {
         console.log("Files changed:", files);
         // @ts-ignore - for tests
         window.onFilesChange?.(files);
       }}
     >
-      <FileUpload.Input />
+      <FileUpload.HiddenInput />
       <FileUpload.Dropzone>
         <p>Drop image here or</p>
         <FileUpload.Trigger>Select Image</FileUpload.Trigger>
