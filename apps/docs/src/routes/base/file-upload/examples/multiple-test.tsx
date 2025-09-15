@@ -5,13 +5,13 @@ export default component$(() => {
   return (
     <FileUpload.Root
       multiple
-      onFilesChange$={(files) => {
+      onChange$={(files) => {
         console.log("Files changed:", files);
         // @ts-ignore - for tests
         window.onFilesChange?.(files);
       }}
     >
-      <FileUpload.Input />
+      <FileUpload.HiddenInput />
       <FileUpload.Dropzone>
         <p>Drag and drop multiple files here or</p>
         <FileUpload.Trigger>Browse Files</FileUpload.Trigger>

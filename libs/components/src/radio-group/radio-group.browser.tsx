@@ -140,7 +140,8 @@ test("horizontal orientation attribute", async () => {
 
 test("disabled radio group prevents interaction", async () => {
   render(<Basic disabled />);
-  await expect(Triggers.nth(0)).toBeDisabled();
+  await expect.element(Triggers.nth(0)).toBeInTheDocument();
+  await expect.element(Triggers.nth(0)).toBeDisabled();
 });
 
 test("radio group with initial value", async () => {

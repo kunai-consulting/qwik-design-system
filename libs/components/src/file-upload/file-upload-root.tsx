@@ -1,3 +1,4 @@
+import { useBindings } from "@kunai-consulting/qwik-utils";
 import {
   type PropsOf,
   Slot,
@@ -5,44 +6,52 @@ import {
   useContextProvider,
   useSignal
 } from "@qwik.dev/core";
+import { Render } from "../render/render";
 import { type FileInfo, fileUploadContextId } from "./file-upload-context";
-type HTMLDivProps = PropsOf<"div">;
-/**
- * Props specific to file upload functionality
- */
 export interface PublicFileUploadProps {
   /** Whether multiple files can be selected or uploaded at once */
-  multiple?: boolean; // Allow multiple file selection
-  accept?: string; // File type filter (e.g. "image/*")
-  disabled?: boolean; // Disable file upload
-  onFilesChange$?: (files: FileInfo[]) => void; // File change callback
+  multiple?: boolean;
+  // File type filter (e.g. "image/*")
+  accept?: string;
+  // Disable file upload
+  disabled?: boolean;
+  // File change callback
+  onChange$?: (files: FileInfo[]) => void;
 }
-type PublicRootProps = HTMLDivProps & PublicFileUploadProps;
-/**
- * Root component for file upload functionality
- * Provides context and state management for child components
- */
+type PublicRootProps = Omit<PropsOf<"div">, "onChange$"> & PublicFileUploadProps;
+
 /** Root component for file upload functionality
  * Provides context and state management for child components */
 export const FileUploadRoot = component$<PublicRootProps>((props) => {
+  const { multiple, accept, disabled, onChange$, ...rest } = props;
+
   const inputRef = useSignal<HTMLInputElement>();
-  const isDragging = useSignal(false);
   const files = useSignal<FileInfo[]>([]);
+
+  const { disabledSig: isDisabled } = useBindings(props, {
+    disabled: false
+  });
+
   const context = {
     inputRef,
-    isDragging,
     files,
     multiple: props.multiple ?? false,
     accept: props.accept,
-    disabled: props.disabled,
-    onFilesChange$: props.onFilesChange$
+    isDisabled,
+    onChange$
   };
+
   useContextProvider(fileUploadContextId, context);
-  const { multiple, accept, disabled, onFilesChange$, ...htmlProps } = props;
+
   return (
     // The root container element for the entire file upload component
-    <div {...htmlProps} data-file-upload-root data-disabled={disabled ? "" : undefined}>
+    <Render
+      fallback="div"
+      {...rest}
+      data-file-upload-root
+      data-disabled={isDisabled.value ? "" : undefined}
+    >
       <Slot />
-    </div>
+    </Render>
   );
 });

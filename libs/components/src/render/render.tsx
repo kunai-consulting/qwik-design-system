@@ -21,7 +21,8 @@ type RenderInternalProps<T extends AllowedFallbacks> = {
 
   jsxType?: unknown;
   movedProps?: Record<string, unknown>;
-} & QwikIntrinsicElements[T];
+} & QwikIntrinsicElements[T] &
+  Record<`${string}$`, unknown>;
 
 /**
  * Render component enables flexible composition by allowing a component to be rendered with a fallback
