@@ -2,7 +2,6 @@ import { createNoScroll, markScrollable } from "@fluejs/noscroll";
 import { initTouchHandler, resetTouchHandler } from "@fluejs/noscroll/touch";
 import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import {
-  $,
   type PropsOf,
   type Signal,
   Slot,
@@ -10,7 +9,6 @@ import {
   createContextId,
   noSerialize,
   useContextProvider,
-  useOnWindow,
   useSignal,
   useTask$
 } from "@qwik.dev/core";
@@ -71,20 +69,6 @@ export const ModalRoot = component$((props: ModalRootProps) => {
       enablePageScrollFn.value?.();
     });
   });
-
-  /**
-   * Escape key calls the native close method, so we need to update the state in this case.
-   */
-  useOnWindow(
-    "keydown",
-    $((event) => {
-      if (!isOpen.value) return;
-
-      if (event.key === "Escape") {
-        isOpen.value = false;
-      }
-    })
-  );
 
   const context: ModalContext = {
     contentRef,

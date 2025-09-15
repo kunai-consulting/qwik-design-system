@@ -176,12 +176,10 @@ test("closing nested modal maintains scroll lock", async () => {
   await userEvent.click(NestedTrigger);
   await expect.element(page.getByRole("dialog").nth(1)).toBeVisible();
 
-  // Close nested modal via backdrop (click outside)
-  await userEvent.click(document.body);
+  await pointer.tapOutside(Content, { side: "top-left", distance: 50 });
   await expect.element(page.getByRole("dialog").nth(1)).not.toBeVisible();
   await expect.element(Content).toBeVisible();
 
-  // Check body overflow via direct evaluation
   const bodyHasOverflowHidden = getComputedStyle(document.body).overflow === "hidden";
   expect(bodyHasOverflowHidden).toBe(true);
 });

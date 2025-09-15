@@ -28,15 +28,17 @@ export const ModalContent = component$((props: PropsOf<"dialog">) => {
     }
   );
 
-  const handleBackdropDown$ = $(async (event: PointerEvent) => {
+  const handleBackdropDown$ = $(async (e: PointerEvent) => {
+    e.stopPropagation();
     if (!context.contentRef.value) {
       isDownOnBackdrop.value = false;
       return;
     }
-    isDownOnBackdrop.value = await isBackdropEvent$(context.contentRef.value, event);
+    isDownOnBackdrop.value = await isBackdropEvent$(context.contentRef.value, e);
   });
 
-  const handleBackdropSlide$ = $(async (event: PointerEvent) => {
+  const handleBackdropSlide$ = $(async (e: PointerEvent) => {
+    e.stopPropagation();
     if (!isDownOnBackdrop.value) {
       isDownOnBackdrop.value = false;
       return;
@@ -52,7 +54,7 @@ export const ModalContent = component$((props: PropsOf<"dialog">) => {
       return;
     }
 
-    const isBackdrop = await isBackdropEvent$(context.contentRef.value, event);
+    const isBackdrop = await isBackdropEvent$(context.contentRef.value, e);
 
     if (isBackdrop) {
       context.isOpen.value = false;
@@ -61,12 +63,17 @@ export const ModalContent = component$((props: PropsOf<"dialog">) => {
     isDownOnBackdrop.value = false;
   });
 
+  const handleClose$ = $(() => {
+    context.isOpen.value = false;
+  });
+
   return (
     <dialog
       {...props}
       ref={context.contentRef}
       onPointerDown$={[handleBackdropDown$, props.onPointerDown$]}
       onPointerUp$={[handleBackdropSlide$, props.onPointerUp$]}
+      onClose$={[handleClose$, props.onClose$]}
     >
       <Slot />
     </dialog>
