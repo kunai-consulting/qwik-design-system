@@ -12,7 +12,10 @@ const Content = page.getByTestId("content"); // This is the <dialog> element
 const Title = page.getByTestId("title");
 const Description = page.getByTestId("description");
 const CloseButton = page.getByTestId("close");
-const NestedTrigger = page.getByRole("button", { name: "Nested Modal Trigger" });
+const ParentTrigger = page.getByTestId("parent-trigger");
+const ParentContent = page.getByTestId("parent-content");
+const NestedTrigger = page.getByTestId("child-trigger");
+const NestedContent = page.getByTestId("child-content");
 
 const Basic = component$((props: PropsOf<typeof Modal.Root>) => {
   return (
@@ -128,16 +131,16 @@ const Nested = component$((props: PropsOf<typeof Modal.Root>) => {
   const nestedOpen = useSignal(false);
 
   return (
-    <Modal.Root {...props} data-testid="root">
-      <Modal.Trigger data-testid="trigger">Open Modal</Modal.Trigger>
-      <Modal.Content data-testid="content">
-        <Modal.Title data-testid="title">First Modal</Modal.Title>
+    <Modal.Root {...props} data-testid="parent-root">
+      <Modal.Trigger data-testid="parent-trigger">Open Modal</Modal.Trigger>
+      <Modal.Content data-testid="parent-content">
+        <Modal.Title data-testid="parent-title">First Modal</Modal.Title>
         <p>This is the first modal.</p>
 
         {/* Nested Modal */}
         <Modal.Root bind:open={nestedOpen}>
-          <Modal.Trigger>Nested Modal Trigger</Modal.Trigger>
-          <Modal.Content>
+          <Modal.Trigger data-testid="child-trigger">Nested Modal Trigger</Modal.Trigger>
+          <Modal.Content data-testid="child-content">
             <Modal.Title>Nested Modal Title</Modal.Title>
             <p>Nested Modal Content</p>
             <Modal.Close>Close Nested</Modal.Close>
@@ -153,14 +156,12 @@ const Nested = component$((props: PropsOf<typeof Modal.Root>) => {
 test("nested modals maintain scroll lock", async () => {
   render(<Nested />);
 
-  await userEvent.click(Trigger);
-  await expect.element(Content).toBeVisible();
+  await userEvent.click(ParentTrigger);
+  await expect.element(ParentContent).toBeVisible();
 
   await userEvent.click(NestedTrigger);
-  await expect.element(page.getByRole("dialog").nth(1)).toBeVisible();
-  await expect
-    .element(page.getByRole("dialog").nth(1))
-    .toHaveTextContent("Nested Modal Content");
+  await expect.element(NestedContent).toBeVisible();
+  await expect.element(NestedContent).toHaveTextContent("Nested Modal Content");
 
   // Check body overflow via direct evaluation
   const bodyHasOverflowHidden = getComputedStyle(document.body).overflow === "hidden";
@@ -170,15 +171,15 @@ test("nested modals maintain scroll lock", async () => {
 test("closing nested modal maintains scroll lock", async () => {
   render(<Nested />);
 
-  await userEvent.click(Trigger);
-  await expect.element(Content).toBeVisible();
+  await userEvent.click(ParentTrigger);
+  await expect.element(ParentContent).toBeVisible();
 
   await userEvent.click(NestedTrigger);
-  await expect.element(page.getByRole("dialog").nth(1)).toBeVisible();
+  await expect.element(NestedContent).toBeVisible();
 
-  await pointer.tapOutside(Content, { side: "top-left", distance: 50 });
-  await expect.element(page.getByRole("dialog").nth(1)).not.toBeVisible();
-  await expect.element(Content).toBeVisible();
+  await pointer.tapOutside(NestedContent, { side: "top-left", distance: 50 });
+  await expect.element(NestedContent).not.toBeVisible();
+  await expect.element(ParentContent).toBeVisible();
 
   const bodyHasOverflowHidden = getComputedStyle(document.body).overflow === "hidden";
   expect(bodyHasOverflowHidden).toBe(true);
@@ -213,30 +214,29 @@ test("focus traps within modal elements", async () => {
 test("nested modal opens with enter key", async () => {
   render(<Nested />);
 
-  await userEvent.click(Trigger);
-  await expect.element(Content).toBeVisible();
+  await userEvent.click(ParentTrigger);
+  await expect.element(ParentContent).toBeVisible();
 
-  const nestedTriggerEl = NestedTrigger;
-  await expect.element(nestedTriggerEl).toBeVisible();
-  ((await nestedTriggerEl.element()) as HTMLButtonElement).focus();
+  await expect(NestedTrigger).toBeVisible();
+  ((await NestedTrigger.element()) as HTMLButtonElement).focus();
   await userEvent.keyboard("{Enter}");
 
-  await expect.element(page.getByRole("dialog").nth(1)).toBeVisible();
+  await expect.element(NestedContent).toBeVisible();
 });
 
 test("escape key closes only the top modal in nested setup", async () => {
   render(<Nested />);
 
-  await userEvent.click(Trigger);
-  await expect.element(Content).toBeVisible();
+  await userEvent.click(ParentTrigger);
+  await expect.element(ParentContent).toBeVisible();
 
   await userEvent.click(NestedTrigger);
-  await expect.element(page.getByRole("dialog").nth(1)).toBeVisible();
+  await expect.element(NestedContent).toBeVisible();
 
   await userEvent.keyboard("{Escape}");
 
-  await expect.element(page.getByRole("dialog").nth(1)).not.toBeVisible();
-  await expect.element(Content).toBeVisible();
+  await expect.element(NestedContent).not.toBeVisible();
+  await expect.element(ParentContent).toBeVisible();
 });
 
 test("modal has accessible name via aria-labelledby", async () => {
