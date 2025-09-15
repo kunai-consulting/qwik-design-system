@@ -3,6 +3,7 @@ import { page, userEvent } from "@vitest/browser/context";
 import { expect, test } from "vitest";
 import { render } from "vitest-browser-qwik";
 import { Modal } from "..";
+import { pointer } from "../../utils/vitest-pointer";
 
 // Top-level locator constants using data-testid
 const Root = page.getByTestId("root");
@@ -50,36 +51,13 @@ test("modal opens with trigger click", async () => {
   await expect.element(Content).toBeVisible();
 });
 
-test("modal closes when backdrop pointer down/up sequence occurs", async () => {
+test("modal closes when backdrop is pressed outside", async () => {
   render(<Basic />);
 
   await userEvent.click(Trigger);
   await expect.element(Content).toBeVisible();
 
-  const dialogElement = await Content.element();
-
-  const dialogRect = dialogElement.getBoundingClientRect();
-
-  const pointerEventProps = {
-    bubbles: true,
-    cancelable: true,
-    pointerId: 1,
-    pointerType: "mouse" as const,
-    isPrimary: true,
-    clientX: dialogRect.left - 50, // Well outside to the left
-    clientY: dialogRect.top - 50 // Well outside to the top
-  };
-
-  const pointerDownEvent = new PointerEvent("pointerdown", pointerEventProps);
-  const pointerUpEvent = new PointerEvent("pointerup", pointerEventProps);
-
-  // Dispatch the events in sequence to mimic real user interaction
-  async function dispatchEvents() {
-    await dialogElement.dispatchEvent(pointerDownEvent);
-    await dialogElement.dispatchEvent(pointerUpEvent);
-  }
-
-  await dispatchEvents();
+  await pointer.tapOutside(Content, { side: "top-left", distance: 50 });
 
   await expect.element(Content).not.toBeVisible();
 });
@@ -90,60 +68,24 @@ test("modal does not close when pointer down/up happens in different locations (
   await userEvent.click(Trigger);
   await expect.element(Content).toBeVisible();
 
-  const dialogElement = await Content.element();
+  await pointer.drag(
+    Content,
+    { client: { x: 10, y: 10 } },
+    { client: { x: 100, y: 100 } }
+  );
 
-  // Pointer down on backdrop
-  const pointerDownEvent = new PointerEvent("pointerdown", {
-    bubbles: true,
-    cancelable: true,
-    pointerId: 1,
-    pointerType: "mouse" as const,
-    isPrimary: true,
-    clientX: 10,
-    clientY: 10
-  });
-
-  // Pointer up on different location (simulating drag)
-  const pointerUpEvent = new PointerEvent("pointerup", {
-    bubbles: true,
-    cancelable: true,
-    pointerId: 1,
-    pointerType: "mouse" as const,
-    isPrimary: true,
-    clientX: 100, // Different location
-    clientY: 100 // Different location
-  });
-
-  dialogElement.dispatchEvent(pointerDownEvent);
-  dialogElement.dispatchEvent(pointerUpEvent);
-
-  // Modal should still be visible since this was a drag operation
   await expect.element(Content).toBeVisible();
 });
 
-test("modal does not close when keyboard events trigger pointer events", async () => {
+test("modal does not close when keyboard-triggered pointer events occur", async () => {
   render(<Basic />);
 
   await userEvent.click(Trigger);
   await expect.element(Content).toBeVisible();
 
-  const dialogElement = await Content.element();
+  // pointer event from keyboard
+  await pointer.up(Content, { client: { x: 10, y: 10 } }, { pointerId: -1 });
 
-  // Simulate keyboard-triggered pointer events (like space/enter on a button)
-  // These have pointerId: -1 and should not close the modal
-  const keyboardPointerEvent = new PointerEvent("pointerup", {
-    bubbles: true,
-    cancelable: true,
-    pointerId: -1, // Keyboard-triggered events have pointerId: -1
-    pointerType: "mouse" as const,
-    isPrimary: true,
-    clientX: 10,
-    clientY: 10
-  });
-
-  dialogElement.dispatchEvent(keyboardPointerEvent);
-
-  // Modal should still be visible since keyboard events shouldn't close it
   await expect.element(Content).toBeVisible();
 });
 
