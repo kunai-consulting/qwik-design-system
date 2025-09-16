@@ -4,6 +4,8 @@ import { modalContextId } from "./modal-root";
 export const ModalContent = component$((props: PropsOf<"dialog">) => {
   const context = useContext(modalContextId);
   const isDownOnBackdrop = useSignal(false);
+  const descriptionId = `${context.localId}-description`;
+  const titleId = `${context.localId}-title`;
 
   /**
    * Determines if the backdrop of the Modal has been clicked.
@@ -74,6 +76,8 @@ export const ModalContent = component$((props: PropsOf<"dialog">) => {
       onPointerDown$={[handleBackdropDown$, props.onPointerDown$]}
       onPointerUp$={[handleBackdropSlide$, props.onPointerUp$]}
       onClose$={[handleClose$, props.onClose$]}
+      aria-labelledby={context.isTitle.value ? titleId : undefined}
+      aria-describedby={context.isDescription.value ? descriptionId : undefined}
     >
       <Slot />
     </dialog>

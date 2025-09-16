@@ -25,9 +25,6 @@ const Basic = component$((props: PropsOf<typeof Modal.Root>) => {
       <Modal.Trigger data-testid="trigger">Open Modal</Modal.Trigger>
       <Modal.Content data-testid="content">
         <Modal.Title data-testid="title">Modal Title</Modal.Title>
-        <Modal.Description data-testid="description">
-          This is a modal description that provides context.
-        </Modal.Description>
         <p>Modal content goes here.</p>
         <input type="text" aria-label="inside input" />
         <button type="button" aria-label="inside button">
@@ -246,30 +243,45 @@ test("escape key closes only the top modal in nested setup", async () => {
   await expect.element(ParentContent).toBeVisible();
 });
 
+const Accessibility = component$(() => {
+  return (
+    <Modal.Root data-testid="root">
+      <Modal.Trigger data-testid="trigger">Open Modal</Modal.Trigger>
+      <Modal.Content data-testid="content">
+        <Modal.Title data-testid="title">Modal Title</Modal.Title>
+        <Modal.Description data-testid="description">
+          This is a modal description that provides context.
+        </Modal.Description>
+      </Modal.Content>
+    </Modal.Root>
+  );
+});
+
 test("modal has accessible name via aria-labelledby", async () => {
-  render(<Basic />);
+  render(<Accessibility />);
 
   await userEvent.click(Trigger);
   await expect.element(Content).toBeVisible();
 
-  const titleElement = await Title.element();
-  const titleId = titleElement?.getAttribute("id");
-  if (titleId) {
-    await expect.element(Content).toHaveAttribute("aria-labelledby", titleId);
-  }
+  await expect.element(Content).toHaveAttribute("aria-labelledby");
 });
 
 test("modal has description via aria-describedby", async () => {
+  render(<Accessibility />);
+
+  await userEvent.click(Trigger);
+  await expect.element(Content).toBeVisible();
+
+  await expect.element(Content).toHaveAttribute("aria-describedby");
+});
+
+test("if description is not provided, aria-describedby is not set", async () => {
   render(<Basic />);
 
   await userEvent.click(Trigger);
   await expect.element(Content).toBeVisible();
 
-  const descriptionElement = await Description.element();
-  const descriptionId = descriptionElement?.getAttribute("id");
-  if (descriptionId) {
-    await expect.element(Content).toHaveAttribute("aria-describedby", descriptionId);
-  }
+  await expect.element(Content).not.toHaveAttribute("aria-describedby");
 });
 
 test("modal does not close on backdrop click when set to false", async () => {

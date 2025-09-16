@@ -11,6 +11,7 @@ import {
   useConstant,
   useContext,
   useContextProvider,
+  useId,
   useSignal,
   useTask$
 } from "@qwik.dev/core";
@@ -23,6 +24,9 @@ type ModalContext = {
   isOpen: Signal<boolean>;
   closeOnOutsideClick: boolean;
   level: number;
+  isTitle: Signal<boolean>;
+  isDescription: Signal<boolean>;
+  localId: string;
 };
 
 type ModalRootProps = PropsOf<"div"> &
@@ -37,6 +41,9 @@ export const ModalRoot = component$((props: ModalRootProps) => {
   const isInitialized = useSignal(false);
   const disablePageScrollFn = useSignal<() => void>();
   const enablePageScrollFn = useSignal<() => void>();
+  const isTitle = useSignal(false);
+  const isDescription = useSignal(false);
+  const localId = useId();
 
   // handling nested state
   const parentContext = useContext(modalContextId, null);
@@ -84,7 +91,10 @@ export const ModalRoot = component$((props: ModalRootProps) => {
     contentRef,
     isOpen,
     closeOnOutsideClick,
-    level
+    level,
+    isTitle,
+    isDescription,
+    localId
   };
 
   useContextProvider(modalContextId, context);
