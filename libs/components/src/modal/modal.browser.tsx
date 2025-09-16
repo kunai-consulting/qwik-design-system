@@ -3,7 +3,7 @@ import { page, userEvent } from "@vitest/browser/context";
 import { expect, test } from "vitest";
 import { render } from "vitest-browser-qwik";
 import { Modal } from "..";
-import { pointer } from "../../utils/vitest-pointer";
+import { pointer } from "../../vitest/pointer";
 
 pointer.showDebugDots = true;
 
@@ -69,7 +69,7 @@ test("modal closes when backdrop is pressed outside", async () => {
   await expect.element(Content).not.toBeVisible();
 });
 
-test("modal does not close when pointer down/up happens in different locations (drag)", async () => {
+test("modal does not close when drag happens in different locations", async () => {
   render(<Basic />);
 
   await userEvent.click(Trigger);

@@ -1,5 +1,5 @@
 import type { Locator } from "@vitest/browser/context";
-
+import { nextTick } from "./tick";
 export type Target = Locator | HTMLElement | Document | Window;
 
 export type Edge =
@@ -20,7 +20,6 @@ export type Position =
 export interface PointerOpts {
   pointerId?: number; // default 1; use -1 to simulate keyboard-triggered pointer events
   pointerType?: "mouse" | "touch" | "pen"; // default "mouse"
-  delay?: number; // delay in ms before dispatching the event (for race condition prevention)
 }
 
 function createDebugDot(x: number, y: number, type: "down" | "up") {
@@ -122,11 +121,7 @@ async function dispatchPointer(
   const et = await toEventTarget(target);
   const { x, y } = resolvePoint(et, pos);
 
-  if (opts?.delay && opts.delay > 0) {
-    await new Promise<void>((resolve) => {
-      setTimeout(() => resolve(), opts.delay);
-    });
-  }
+  await nextTick();
 
   // Show debug dot if enabled
   if (pointer.showDebugDots) {
@@ -155,11 +150,7 @@ export const pointer = {
   ) {
     const p: Position = { outside: { side: opts?.side, distance: opts?.distance } };
     await dispatchPointer(target, "pointerdown", p, opts);
-
-    // Dispatch pointerup with delay to prevent race conditions
-    // Default delay of 10ms allows modal's backdrop detection to process
-    const upOpts = { ...opts, delay: opts?.delay ?? 10 };
-    await dispatchPointer(target, "pointerup", p, upOpts);
+    await dispatchPointer(target, "pointerup", p, opts);
   },
 
   async down(target: Target, pos: Position, opts?: PointerOpts) {
@@ -173,10 +164,6 @@ export const pointer = {
   // Optional convenience; current modal tests only need down+up
   async drag(target: Target, from: Position, to: Position, opts?: PointerOpts) {
     await dispatchPointer(target, "pointerdown", from, opts);
-
-    // Dispatch pointerup with delay to prevent race conditions
-    // Default delay of 10ms for drag operations
-    const upOpts = { ...opts, delay: opts?.delay ?? 10 };
-    await dispatchPointer(target, "pointerup", to, upOpts);
+    await dispatchPointer(target, "pointerup", to, opts);
   }
 };
