@@ -181,12 +181,13 @@ test("closing nested modal maintains scroll lock", async () => {
   await userEvent.click(NestedTrigger);
   await expect.element(NestedContent).toBeVisible();
 
-  await pointer.tapOutside(NestedContent, { side: "top-left", distance: 50 });
+  await pointer.tapOutside(NestedContent, { side: "bottom", distance: 50 });
+
   await expect.element(NestedContent).not.toBeVisible();
+
   await expect.element(ParentContent).toBeVisible();
 
-  const bodyHasOverflowHidden = getComputedStyle(document.body).overflow === "hidden";
-  expect(bodyHasOverflowHidden).toBe(true);
+  await expect.element(document.body).toHaveStyle({ overflow: "hidden" });
 });
 
 test("focus goes to first focusable element when modal opens", async () => {
@@ -212,7 +213,9 @@ test("focus traps within modal elements", async () => {
   await userEvent.keyboard("{Tab}");
   await expect.element(insideButton).toHaveFocus();
   await userEvent.keyboard("{Tab}");
-  await expect.element(insideInput).toHaveFocus();
+  await expect.element(CloseButton).toHaveFocus();
+  await userEvent.keyboard("{Tab}");
+  await expect.element(Trigger).not.toHaveFocus();
 });
 
 test("nested modal opens with enter key", async () => {
