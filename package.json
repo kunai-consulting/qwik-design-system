@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "version": "0.0.0",
+  "packageManager": "pnpm@9.14.4",
   "scripts": {
     "dev": "pnpm --filter ./libs/core dev & pnpm --filter ./apps/docs dev",
     "dev.watch": "pnpm --filter ./libs/core dev:watch & pnpm --filter ./apps/docs dev",
@@ -36,6 +37,7 @@
     "oxc-parser": "^0.75.0",
     "pagefind": "1.2.0",
     "pathe": "^2.0.3",
+    "pkg-pr-new": "^0.0.56",
     "tsx": "^4.19.3",
     "vitest": "^3.2.4"
   }

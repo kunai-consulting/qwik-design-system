@@ -17,6 +17,7 @@ export * as Tabs from "./tabs";
 export * as Toggle from "./toggle";
 export * as Menu from "./menu";
 export * as Progress from "./progress";
+export * as Modal from "./modal";
 
 export { Render } from "./render/render";
 

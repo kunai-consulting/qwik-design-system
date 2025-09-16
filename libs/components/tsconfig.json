@@ -20,6 +20,6 @@
     "isolatedModules": true,
     "types": ["vite/client", "node"]
   },
-  "include": ["src"],
+  "include": ["src", "vitest"],
   "references": [{ "path": "../utils" }]
 }
