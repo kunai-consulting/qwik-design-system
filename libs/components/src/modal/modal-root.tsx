@@ -1,7 +1,14 @@
 import { createNoScroll, markScrollable } from "@fluejs/noscroll";
 import { initTouchHandler, resetTouchHandler } from "@fluejs/noscroll/touch";
-import { type BindableProps, useBindings } from "@kunai-consulting/qwik-utils";
 import {
+  type BindableProps,
+  type Focusables,
+  getFocusableElements,
+  trapFocus,
+  useBindings
+} from "@kunai-consulting/qwik-utils";
+import {
+  $,
   type PropsOf,
   type Signal,
   Slot,
@@ -27,6 +34,8 @@ type ModalContext = {
   isTitle: Signal<boolean>;
   isDescription: Signal<boolean>;
   localId: string;
+  focusables: Signal<Focusables | undefined>;
+  isActiveFocusTrap: Signal<boolean>;
 };
 
 type ModalRootProps = PropsOf<"div"> &
@@ -44,8 +53,9 @@ export const ModalRoot = component$((props: ModalRootProps) => {
   const isTitle = useSignal(false);
   const isDescription = useSignal(false);
   const localId = useId();
+  const focusables = useSignal<Focusables | undefined>();
+  const isActiveFocusTrap = useSignal(false);
 
-  // handling nested state
   const parentContext = useContext(modalContextId, null);
   const level = useConstant(() => {
     return (parentContext?.level ?? 0) + 1;
@@ -57,9 +67,7 @@ export const ModalRoot = component$((props: ModalRootProps) => {
     open: false
   });
 
-  useTask$(({ track, cleanup }) => {
-    track(isOpen);
-
+  const handlePageScroll = $(() => {
     if (!isInitialized.value) {
       if (!contentRef.value) return;
       markScrollable(contentRef.value);
@@ -73,17 +81,76 @@ export const ModalRoot = component$((props: ModalRootProps) => {
       disablePageScrollFn.value = noSerialize(disablePageScroll);
       enablePageScrollFn.value = noSerialize(enablePageScroll);
     }
+  });
 
-    if (isOpen.value) {
-      contentRef.value?.showModal();
-      disablePageScrollFn.value?.();
-    } else {
-      contentRef.value?.close();
+  useTask$(async ({ track, cleanup }) => {
+    track(isOpen);
+
+    console.log("isOpen", isOpen.value);
+
+    await handlePageScroll();
+
+    if (!isInitialized.value || !contentRef.value) {
+      return;
     }
 
-    cleanup(() => {
+    const cleanupEnableScroll = () => {
       if (level > 1) return;
       enablePageScrollFn.value?.();
+    };
+
+    if (isOpen.value) {
+      contentRef.value.showModal();
+      disablePageScrollFn.value?.();
+
+      focusables.value = getFocusableElements(contentRef.value);
+
+      if (parentContext) {
+        parentContext.isActiveFocusTrap.value = false;
+      }
+
+      isActiveFocusTrap.value = true;
+      cleanup(cleanupEnableScroll);
+      return;
+    }
+
+    contentRef.value.close();
+
+    focusables.value = undefined;
+    isActiveFocusTrap.value = false;
+
+    if (parentContext) {
+      parentContext.isActiveFocusTrap.value = true;
+    }
+
+    cleanup(cleanupEnableScroll);
+  });
+
+  useTask$(({ track, cleanup }) => {
+    track(isActiveFocusTrap);
+    track(focusables);
+
+    if (!isActiveFocusTrap.value || !focusables.value) {
+      return;
+    }
+
+    const handleKeyDown = $((event: KeyboardEvent) => {
+      if (!isActiveFocusTrap.value || !focusables.value) {
+        return;
+      }
+
+      console.log("key handler");
+
+      trapFocus({
+        event,
+        focusables: focusables.value
+      });
+    });
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    cleanup(() => {
+      document.removeEventListener("keydown", handleKeyDown);
     });
   });
 
@@ -94,7 +161,9 @@ export const ModalRoot = component$((props: ModalRootProps) => {
     level,
     isTitle,
     isDescription,
-    localId
+    localId,
+    focusables,
+    isActiveFocusTrap
   };
 
   useContextProvider(modalContextId, context);

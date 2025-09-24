@@ -213,6 +213,7 @@ test("focus traps within modal elements", async () => {
   await expect.element(CloseButton).toHaveFocus();
   await userEvent.keyboard("{Tab}");
   await expect.element(Trigger).not.toHaveFocus();
+  await expect.element(insideInput).toHaveFocus();
 });
 
 test("nested modal opens with enter key", async () => {
