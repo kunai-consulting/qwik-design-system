@@ -240,6 +240,7 @@ export const OtpHiddenInput = component$((props: PublicOtpNativeInputProps) => {
       // Indicates whether password manager suggestions should be shifted
       data-shift={context.shiftPWManagers ? "" : undefined}
       inputMode="numeric"
+      autoComplete="one-time-code"
       onInput$={[handleInput, props.onInput$]}
       onKeyDown$={[handleKeyDownSync$, handleKeyDown, props.onKeyDown$]}
       pattern={props.pattern ?? "^[0-9]*$"}
