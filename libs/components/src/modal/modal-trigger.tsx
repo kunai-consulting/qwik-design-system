@@ -10,7 +10,12 @@ export const ModalTrigger = component$((props: PropsOf<"button">) => {
   });
 
   return (
-    <Render fallback="button" onClick$={[handleToggle$, props.onClick$]} {...props}>
+    <Render
+      fallback="button"
+      onClick$={[handleToggle$, props.onClick$]}
+      aria-haspopup="dialog"
+      {...props}
+    >
       <Slot />
     </Render>
   );
