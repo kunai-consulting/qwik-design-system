@@ -1,6 +1,6 @@
 <img src="./apps/docs/src/assets/logo/cauldron-white.svg" width="120" height="120" />
 
-# Qwik Design System
+# Qwik Design System (QDS)
 
 > Production Ready
 
