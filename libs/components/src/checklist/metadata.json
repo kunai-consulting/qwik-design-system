@@ -1,4 +1,16 @@
 {
+  "features": [
+    "Select all/unselect all functionality",
+    "Mixed state handling for partial selections",
+    "Individual item selection tracking",
+    "WAI-ARIA checkbox list pattern",
+    "Form input integration",
+    "Dynamic item state synchronization",
+    "Nested accessibility descriptions per item",
+    "Independent item state management",
+    "Automated item indexing",
+    "Context-based state propagation"
+  ],
   "keyboard": [
     {
       "key": "Space",
@@ -16,17 +28,5 @@
       "key": "Shift+Tab",
       "comment": "Moves focus to the previous checkbox trigger"
     }
-  ],
-  "features": [
-    "Select all/unselect all functionality",
-    "Mixed state handling for partial selections",
-    "Individual item selection tracking",
-    "WAI-ARIA checkbox list pattern",
-    "Form input integration",
-    "Dynamic item state synchronization",
-    "Nested accessibility descriptions per item",
-    "Independent item state management",
-    "Automated item indexing",
-    "Context-based state propagation"
   ]
 }

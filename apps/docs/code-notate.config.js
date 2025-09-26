@@ -1,6 +1,6 @@
 /** @type {import('@kunai-consulting/code-notate').CodeNotateConfig} */
 export default {
-  aiModel: "claude-3-7-sonnet-20250219",
+  aiModel: "claude-sonnet-4-20250514",
   aiProvider: "anthropic",
   documentationFolder: "./src/routes/base",
   formatCommand: "pnpm format",

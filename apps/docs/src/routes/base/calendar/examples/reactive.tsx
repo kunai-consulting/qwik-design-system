@@ -11,7 +11,7 @@ export default component$(() => {
 
   return (
     <div class="calendar-example-container">
-      <Calendar.Root class="calendar-roott" bind:date={selectedDate}>
+      <Calendar.Root class="calendar-root" bind:date={selectedDate}>
         <Calendar.Field>
           <Calendar.Month />
           <span>/</span>

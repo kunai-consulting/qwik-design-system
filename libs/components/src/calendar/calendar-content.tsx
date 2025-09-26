@@ -9,9 +9,8 @@ import { calendarContextId } from "./calendar-context";
 export const CalendarContentBase = component$(() => {
   useStyles$(styles);
   const context = useContext(calendarContextId);
-  const mode = context.mode;
 
-  if (mode === "popover") {
+  if (context.mode.value === "popover") {
     return (
       <PopoverContentBase data-qds-calendar-content data-qds-calendar-popover-content>
         <Slot />

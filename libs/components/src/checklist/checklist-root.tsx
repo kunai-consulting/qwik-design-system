@@ -12,6 +12,7 @@ import { type ChecklistContext, checklistContextId } from "./checklist-context";
 
 type PublicChecklistRootProps = Omit<PropsOf<"div">, "onChange$">;
 
+/** Root container component for the checklist */
 export const ChecklistRootBase = component$((props: PublicChecklistRootProps) => {
   const isAllCheckedSig = useSignal(false);
   const checkedStatesSig = useSignal<(boolean | "mixed")[]>([]);

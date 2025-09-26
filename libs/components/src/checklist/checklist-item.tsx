@@ -58,6 +58,7 @@ export const ChecklistItemBase = component$((props: PublicChecklistItemProps) =>
   );
 });
 
+/** Individual item component within a checklist with asChild functionality */
 export const ChecklistItem = withAsChild(ChecklistItemBase, (props) => {
   props._index = getNextIndex("qds-checklist");
 

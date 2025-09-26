@@ -7,8 +7,8 @@ export type CalendarContext = {
   locale: Locale;
   dateSig: Signal<ISODate | null>;
   dateToFocus: Signal<ISODate>;
-  showWeekNumber: boolean;
-  showDaysOfWeek: boolean;
+  showWeekNumber: Signal<boolean>;
+  showDaysOfWeek: Signal<boolean>;
   daysOfWeek: [
     "Sunday",
     "Monday",
@@ -24,6 +24,6 @@ export type CalendarContext = {
   currentDate: ISODate;
   localId: string;
   isPopoverOpenSig: Signal<boolean>;
-  mode: "inline" | "popover";
+  mode: Signal<"inline" | "popover">;
   disabledSig: Signal<boolean>;
 };
