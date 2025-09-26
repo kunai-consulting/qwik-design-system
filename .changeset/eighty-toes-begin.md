@@ -1,5 +1,5 @@
 ---
-"@kunai-consulting/qwik": major
+"@kunai-consulting/qwik": patch
 ---
 
 unpublish calendar component
