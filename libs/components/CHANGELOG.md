@@ -1,5 +1,11 @@
 # @kunai-consulting/qwik-headless
 
+## 1.0.1
+
+### Patch Changes
+
+- 60c704c: unpublish calendar component
+
 ## 1.0.0
 
 ### Major Changes
