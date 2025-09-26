@@ -39,7 +39,7 @@
     "undici": "*",
     "uqr": "^0.1.2",
     "vite": "7.1.7",
-    "vite-tsconfig-paths": "5.1.3"
+    "vite-tsconfig-paths": "5.1.4"
   },
   "dependencies": {
     "@oddbird/css-anchor-positioning": "^0.6"
