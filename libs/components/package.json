@@ -31,9 +31,9 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.9.1",
-    "@builder.io/qwik": "^1.14.1",
+    "@builder.io/qwik": "1.16.1",
     "@kunai-consulting/qwik-utils": "workspace:*",
-    "@qwik-ui/headless": "^0.6.5",
+    "@qwik-ui/headless": "0.6.5",
     "@types/node": "22.14.0",
     "typescript": "5.4.5",
     "undici": "*",
