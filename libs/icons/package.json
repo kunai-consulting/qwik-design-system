@@ -1,6 +1,6 @@
 {
   "name": "@kunai-consulting/qwik-icons",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "Create a Qwik library",
   "main": "./lib/index.qwik.mjs",
   "qwik": "./lib/index.qwik.mjs",
@@ -13,7 +13,10 @@
     }
   },
   "license": "MIT",
-  "files": ["lib", "lib-types"],
+  "files": [
+    "lib",
+    "lib-types"
+  ],
   "engines": {
     "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
   },

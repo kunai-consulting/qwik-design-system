@@ -1,5 +1,11 @@
 # @kunai-consulting/qwik-headless
 
+## 1.0.0
+
+### Major Changes
+
+- 41a39e8: pin version
+
 ## 0.3.0
 
 ### Minor Changes
