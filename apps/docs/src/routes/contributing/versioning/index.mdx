@@ -1,0 +1,106 @@
+import { Image } from "~/docs-widgets/image/image";
+import changesetPrompt from "~/assets/docs/versioning/changeset-prompt.png";
+import packageSelected from "~/assets/docs/versioning/package-selected.png";
+import versionType from "~/assets/docs/versioning/version-type.png";
+import releasePullRequest from "~/assets/docs/versioning/release-pull-request.png";
+import releaseToNpm from "~/assets/docs/versioning/release-to-npm.png";
+import changesetFile from "~/assets/docs/versioning/changeset-file.png";
+
+# Versioning Packages
+
+QDS is a [monorepo](https://monorepo.tools/) that contains the source code for multiple packages on npm.
+
+> This page explains how to version and publish a specific package in the QDS monorepo. It assumes you are already familiar with the [pnpm](https://pnpm.io/) package manager.
+## The versioning tool
+
+[Changesets](https://changesets-docs.vercel.app/en) is a versioning and changelog management tool designed for multi-package repositories like QDS.
+
+It allows contributors to declare how their changes should be released while automating version bumps, changelog updates, and package publishing across interdependent packages.
+
+## Doing a release
+
+To do a release, there needs to be at least one changeset that is merged into the main branch.
+
+There is a [GitHub Actions workflow](https://github.com/kunai-consulting/qwik-design-system/blob/main/.github/workflows/release.yml) that will check for changesets and create a release pull request.
+
+### Creating a changeset
+
+To create a changeset, you need to run the following command in the terminal:
+
+```bash
+pnpm changeset
+```
+
+After running the command, you'll see a vertical rounded checklist:
+
+<Image src={changesetPrompt} alt="Changeset prompt" />
+
+You can navigate the checklist using the arrow keys and select the packages you want to include in the changeset using the `space` key.
+
+<Image src={packageSelected} alt="Package selected" />
+
+In this case, imagine you have made some changes to the `@kunai-consulting/core` package.
+
+The next step is to select the version type for the changeset. You can choose from the following types:
+
+- `major`: A major version bump (1.0.0 -> 2.0.0) => **Library Wide Breaking changes**
+- `minor`: A minor version bump (1.0.0 -> 1.1.0) => **New features, breaking changes or bug fixes**
+- `patch`: A patch version bump (1.0.0 -> 1.0.1) => **Bug fixes, security patches, or other non-breaking changes**
+
+**DO NOT** choose 🚨 `major` 🚨 unless you are sure the changes are library wide and breaking.
+
+The UI for this is admittedly quite confusing. **To skip the current type, you can press `enter` to continue.**
+
+#### IMPORTANT: SKIPPING THE CURRENT TYPE 🚨
+
+To skip the current type, you can press `enter` to continue. To select the current type, you can press `space` to select it.
+
+<Image src={versionType} alt="Version type" />
+
+In the case above, the enter key was pressed three times to skip to the `patch` type.
+
+In the summary section, add a short description of the changes that were made. For example, we can make a changeset for an aria attribute that was missing in the modal trigger.
+
+```md
+- feat: added proper aria attributes for the modal trigger
+```
+
+Then, pressing the `enter` key will create the changeset file.
+
+### The changeset file
+
+Once the changeset is created, a file will be created in the `.changeset` directory. Each changeset is a unique randomized file name, that contains part of the changelog for the next release.
+
+<Image src={changesetFile} alt="Changeset file" />
+
+Now the changes can be committed, once part of the main branch, the GitHub Actions workflow will create a release pull request.
+
+## Changeset Video Summary
+
+<div>
+ <iframe class="rounded-xl mt-8 bg-transparent" width="560" height="315" src="https://www.youtube.com/embed/b-S80rToxIw?si=Qc6QfydqY-3gjFQr" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
+</div>
+
+## The Release Pull Request
+
+Once the git branch with the changes is merged into the main branch, the GitHub Actions workflow will create a release pull request.
+
+The release pull request contains the changelog that will show up in the release notes for the selected packages.
+
+<Image src={releasePullRequest} alt="Release pull request" />
+
+Once the release pull request is approved, you can merge it into the main branch, which will trigger the release workflow again.
+
+The release workflow will then publish the selected packages to npm
+
+<Image src={releaseToNpm} alt="Release to npm" />
+
+You have now learned how to:
+
+- 📝 Create a changeset 
+- 🚀 Create a release pull request
+- 📦 Publish the packages to npm
+
+
+
+
